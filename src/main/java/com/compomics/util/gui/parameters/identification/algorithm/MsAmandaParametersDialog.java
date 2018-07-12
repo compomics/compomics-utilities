@@ -354,11 +354,6 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         outputFormatLabel.setText("Output Format");
 
         outputFormatCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "csv", "mzIdentML" }));
-        outputFormatCmb.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                outputFormatCmbActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
         advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
@@ -654,24 +649,6 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
     private void maxSpectraLoadedTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxSpectraLoadedTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_maxSpectraLoadedTxtKeyReleased
-
-    /**
-     * Show warning if mzIdentML is selected.
-     *
-     * @param evt
-     */
-    private void outputFormatCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_outputFormatCmbActionPerformed
-        if (outputFormatCmb.getSelectedIndex() != 0 && this.isVisible()) {
-            // invoke later to give time for components to update
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    JOptionPane.showMessageDialog(MsAmandaParametersDialog.this, JOptionEditorPane.getJOptionEditorPane(
-                            "Note that the MS Amanda mzIdentML format is not yet compatible with <a href=\"https://compomics.github.io/projects/peptide-shaker.html\">PeptideShaker</a>."),
-                            "Format Warning", JOptionPane.WARNING_MESSAGE);
-                }
-            });
-        }
-    }//GEN-LAST:event_outputFormatCmbActionPerformed
 
     /**
      * Inspects the parameters validity.

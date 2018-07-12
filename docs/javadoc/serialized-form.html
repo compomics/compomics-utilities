@@ -3852,6 +3852,536 @@
 </ul>
 </li>
 <li class="blockList">
+<h2 title="Package">Package&nbsp;com.compomics.util.experiment.identification.protein_inference.fm_index</h2>
+<ul class="blockList">
+<li class="blockList"><a name="com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>indexParts</h4>
+<pre>int indexParts</pre>
+<div class="block">Number of chunks of complete index.</div>
+</li>
+<li class="blockList">
+<h4>indexChunkSize</h4>
+<pre>int indexChunkSize</pre>
+<div class="block">Byte size of index chuck.</div>
+</li>
+<li class="blockList">
+<h4>suffixArraysPrimary</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; suffixArraysPrimary</pre>
+<div class="block">Sampled suffix array.</div>
+</li>
+<li class="blockList">
+<h4>occurrenceTablesPrimary</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; occurrenceTablesPrimary</pre>
+<div class="block">Wavelet tree for storing the burrows wheeler transform.</div>
+</li>
+<li class="blockList">
+<h4>occurrenceTablesReversed</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; occurrenceTablesReversed</pre>
+<div class="block">Wavelet tree for storing the burrows wheeler transform reversed.</div>
+</li>
+<li class="blockList">
+<h4>lessTablesPrimary</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; lessTablesPrimary</pre>
+<div class="block">Less table for doing an update step according to the LF step.</div>
+</li>
+<li class="blockList">
+<h4>lessTablesReversed</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; lessTablesReversed</pre>
+<div class="block">Less table for doing an update step according to the LF step reversed.</div>
+</li>
+<li class="blockList">
+<h4>indexStringLengths</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; indexStringLengths</pre>
+<div class="block">Length of the indexed string (all concatenated protein sequences).</div>
+</li>
+<li class="blockList">
+<h4>samplingShift</h4>
+<pre>int samplingShift</pre>
+<div class="block">Every 2^samplingShift suffix array entry will be sampled.</div>
+</li>
+<li class="blockList">
+<h4>samplingMask</h4>
+<pre>int samplingMask</pre>
+<div class="block">Mask of fast modulo operations.</div>
+</li>
+<li class="blockList">
+<h4>sampling</h4>
+<pre>int sampling</pre>
+<div class="block">Bit shifting for fast multiplying / dividing operations.</div>
+</li>
+<li class="blockList">
+<h4>boundaries</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; boundaries</pre>
+<div class="block">Storing the starting positions of the protein sequences.</div>
+</li>
+<li class="blockList">
+<h4>accessions</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; accessions</pre>
+<div class="block">List of all accession IDs in the FASTA file.</div>
+</li>
+<li class="blockList">
+<h4>decoyAccessions</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; decoyAccessions</pre>
+<div class="block">The decoy accessions contained in this index.</div>
+</li>
+<li class="blockList">
+<h4>accessionMetaData</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; accessionMetaData</pre>
+<div class="block">The accessions ending positions in the index, important for getSequences
+ function</div>
+</li>
+<li class="blockList">
+<h4>aaMasses</h4>
+<pre>double[] aaMasses</pre>
+<div class="block">List of all amino acid masses.</div>
+</li>
+<li class="blockList">
+<h4>aaMassIndexes</h4>
+<pre>int[] aaMassIndexes</pre>
+<div class="block">List of all indexes for valid amino acid masses</div>
+</li>
+<li class="blockList">
+<h4>numMasses</h4>
+<pre>int numMasses</pre>
+<div class="block">List of all indexes for valid amino acid masses</div>
+</li>
+<li class="blockList">
+<h4>modifictationLabels</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[] modifictationLabels</pre>
+<div class="block">List of all amino acid masses.</div>
+</li>
+<li class="blockList">
+<h4>modificationFlags</h4>
+<pre>boolean[] modificationFlags</pre>
+<div class="block">List of all amino acid masses.</div>
+</li>
+<li class="blockList">
+<h4>withVariableModifications</h4>
+<pre>boolean withVariableModifications</pre>
+<div class="block">If true, variable modifications are included.</div>
+</li>
+<li class="blockList">
+<h4>BSubstitutions</h4>
+<pre>int[] BSubstitutions</pre>
+<div class="block">Characters that can be substituted by B</div>
+</li>
+<li class="blockList">
+<h4>JSubstitutions</h4>
+<pre>int[] JSubstitutions</pre>
+<div class="block">Characters that can be substituted by J</div>
+</li>
+<li class="blockList">
+<h4>ZSubstitutions</h4>
+<pre>int[] ZSubstitutions</pre>
+<div class="block">Characters that can be substituted by Z</div>
+</li>
+<li class="blockList">
+<h4>fmodc</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; fmodc</pre>
+</li>
+<li class="blockList">
+<h4>fmodcMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; fmodcMass</pre>
+</li>
+<li class="blockList">
+<h4>fmodcaa</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] fmodcaa</pre>
+</li>
+<li class="blockList">
+<h4>fmodcaaMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] fmodcaaMass</pre>
+</li>
+<li class="blockList">
+<h4>fmodn</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; fmodn</pre>
+</li>
+<li class="blockList">
+<h4>fmodnMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; fmodnMass</pre>
+</li>
+<li class="blockList">
+<h4>fmodnaa</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] fmodnaa</pre>
+</li>
+<li class="blockList">
+<h4>fmodnaaMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] fmodnaaMass</pre>
+</li>
+<li class="blockList">
+<h4>fmodcp</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; fmodcp</pre>
+</li>
+<li class="blockList">
+<h4>fmodcpMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; fmodcpMass</pre>
+</li>
+<li class="blockList">
+<h4>fmodcpaa</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] fmodcpaa</pre>
+</li>
+<li class="blockList">
+<h4>fmodcpaaMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] fmodcpaaMass</pre>
+</li>
+<li class="blockList">
+<h4>fmodnp</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; fmodnp</pre>
+</li>
+<li class="blockList">
+<h4>fmodnpMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; fmodnpMass</pre>
+</li>
+<li class="blockList">
+<h4>fmodnpaa</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] fmodnpaa</pre>
+</li>
+<li class="blockList">
+<h4>fmodnpaaMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] fmodnpaaMass</pre>
+</li>
+<li class="blockList">
+<h4>vmodc</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; vmodc</pre>
+</li>
+<li class="blockList">
+<h4>vmodcMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; vmodcMass</pre>
+</li>
+<li class="blockList">
+<h4>vmodcaa</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] vmodcaa</pre>
+</li>
+<li class="blockList">
+<h4>vmodcaaMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] vmodcaaMass</pre>
+</li>
+<li class="blockList">
+<h4>vmodn</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; vmodn</pre>
+</li>
+<li class="blockList">
+<h4>vmodnMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; vmodnMass</pre>
+</li>
+<li class="blockList">
+<h4>vmodnaa</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] vmodnaa</pre>
+</li>
+<li class="blockList">
+<h4>vmodnaaMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] vmodnaaMass</pre>
+</li>
+<li class="blockList">
+<h4>vmodcp</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; vmodcp</pre>
+</li>
+<li class="blockList">
+<h4>vmodcpMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; vmodcpMass</pre>
+</li>
+<li class="blockList">
+<h4>vmodcpaa</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] vmodcpaa</pre>
+</li>
+<li class="blockList">
+<h4>vmodcpaaMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] vmodcpaaMass</pre>
+</li>
+<li class="blockList">
+<h4>vmodnp</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; vmodnp</pre>
+</li>
+<li class="blockList">
+<h4>vmodnpMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; vmodnpMass</pre>
+</li>
+<li class="blockList">
+<h4>vmodnpaa</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] vmodnpaa</pre>
+</li>
+<li class="blockList">
+<h4>vmodnpaaMass</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt;[] vmodnpaaMass</pre>
+</li>
+<li class="blockList">
+<h4>hasCTermDirectionModification</h4>
+<pre>boolean hasCTermDirectionModification</pre>
+</li>
+<li class="blockList">
+<h4>hasNTermDirectionModification</h4>
+<pre>boolean hasNTermDirectionModification</pre>
+</li>
+<li class="blockList">
+<h4>hasModificationatTerminus</h4>
+<pre>boolean hasModificationatTerminus</pre>
+</li>
+<li class="blockList">
+<h4>hasFixedModification_CatTerminus</h4>
+<pre>boolean hasFixedModification_CatTerminus</pre>
+</li>
+<li class="blockList">
+<h4>hasFixedModification_NatTerminus</h4>
+<pre>boolean hasFixedModification_NatTerminus</pre>
+</li>
+<li class="blockList">
+<h4>negativeModificationMass</h4>
+<pre>double negativeModificationMass</pre>
+</li>
+<li class="blockList">
+<h4>genericVariantMatching</h4>
+<pre>boolean genericVariantMatching</pre>
+<div class="block">Either search with one maximal number of variants or use an upper limit
+ for every variant (insertion / deletion / substitution)</div>
+</li>
+<li class="blockList">
+<h4>maxNumberVariants</h4>
+<pre>int maxNumberVariants</pre>
+<div class="block">Number of allowed variant operations.</div>
+</li>
+<li class="blockList">
+<h4>maxNumberInsertions</h4>
+<pre>int maxNumberInsertions</pre>
+<div class="block">Number of allowed insertion operations.</div>
+</li>
+<li class="blockList">
+<h4>maxNumberDeletions</h4>
+<pre>int maxNumberDeletions</pre>
+<div class="block">Number of allowed deletion operations.</div>
+</li>
+<li class="blockList">
+<h4>maxNumberSubstitutions</h4>
+<pre>int maxNumberSubstitutions</pre>
+<div class="block">Number of allowed substitution operations.</div>
+</li>
+<li class="blockList">
+<h4>substitutionMatrix</h4>
+<pre>boolean[][] substitutionMatrix</pre>
+<div class="block">Allowed substitutions.</div>
+</li>
+<li class="blockList">
+<h4>lookupMultiplier</h4>
+<pre>double lookupMultiplier</pre>
+<div class="block">Precision for the masses in lookup table.</div>
+</li>
+<li class="blockList">
+<h4>massAccuracyType</h4>
+<pre><a href="com/compomics/util/parameters/identification/search/SearchParameters.MassAccuracyType.html" title="enum in com.compomics.util.parameters.identification.search">SearchParameters.MassAccuracyType</a> massAccuracyType</pre>
+<div class="block">The mass accuracy type.</div>
+</li>
+<li class="blockList">
+<h4>massTolerance</h4>
+<pre>double massTolerance</pre>
+<div class="block">Lookup tolerance mass.</div>
+</li>
+<li class="blockList">
+<h4>lookupMaxMass</h4>
+<pre>double lookupMaxMass</pre>
+<div class="block">Maximum mass for lookup table [Da].</div>
+</li>
+<li class="blockList">
+<h4>lookupMasses</h4>
+<pre>long[] lookupMasses</pre>
+<div class="block">Mass lookup table.</div>
+</li>
+<li class="blockList">
+<h4>maxXPerTag</h4>
+<pre>int maxXPerTag</pre>
+<div class="block">maximum supported number of Xs per tag.</div>
+</li>
+<li class="blockList">
+<h4>Xlookup</h4>
+<pre>long[][] Xlookup</pre>
+<div class="block">Lookup table for up to maxXPerTag Xs per mass tag.</div>
+</li>
+<li class="blockList">
+<h4>modificationPatterns</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; modificationPatterns</pre>
+<div class="block">List for patterns of complex modifications.</div>
+</li>
+<li class="blockList">
+<h4>modificationPatternNames</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; modificationPatternNames</pre>
+<div class="block">Mapping dictionary mod name -&gt; (modificationPattern index, relative
+ starting position, pattern length).</div>
+</li>
+<li class="blockList">
+<h4>longestModificationpattern</h4>
+<pre>int longestModificationpattern</pre>
+<div class="block">Longest modification pattern.</div>
+</li>
+<li class="blockList">
+<h4>allPermutations</h4>
+<pre>int[][][] allPermutations</pre>
+<div class="block">All permutations.</div>
+</li>
+<li class="blockList">
+<h4>massIndexMaps</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; massIndexMaps</pre>
+<div class="block">Arraylist for sorted masses to index mappings.</div>
+</li>
+<li class="blockListLast">
+<h4>cache</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt;[] cache</pre>
+<div class="block">List of cached intermediate tag to proteome mapping results.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex.MassIndexMap">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.MassIndexMap.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex.MassIndexMap</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>mass</h4>
+<pre>double mass</pre>
+</li>
+<li class="blockListLast">
+<h4>indexes</h4>
+<pre>int[] indexes</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.protein_inference.fm_index.Rank">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">com.compomics.util.experiment.identification.protein_inference.fm_index.Rank</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>length</h4>
+<pre>int length</pre>
+<div class="block">The length.</div>
+</li>
+<li class="blockList">
+<h4>bitfield</h4>
+<pre>long[] bitfield</pre>
+<div class="block">The bit field.</div>
+</li>
+<li class="blockList">
+<h4>sums</h4>
+<pre>int[] sums</pre>
+<div class="block">The sums.</div>
+</li>
+<li class="blockList">
+<h4>sumsSecondLevel</h4>
+<pre>byte[] sumsSecondLevel</pre>
+<div class="block">The sums.</div>
+</li>
+<li class="blockList">
+<h4>shift</h4>
+<pre>int shift</pre>
+<div class="block">The shift.</div>
+</li>
+<li class="blockListLast">
+<h4>mask</h4>
+<pre>int mask</pre>
+<div class="block">The mask.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.protein_inference.fm_index.WaveletTree">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">com.compomics.util.experiment.identification.protein_inference.fm_index.WaveletTree</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>rank</h4>
+<pre><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">Rank</a> rank</pre>
+<div class="block">Instance of a rank.</div>
+</li>
+<li class="blockList">
+<h4>alphabetDirections</h4>
+<pre>long[] alphabetDirections</pre>
+<div class="block">Stored alphabet in a 128 bitfield.</div>
+</li>
+<li class="blockList">
+<h4>firstChar</h4>
+<pre>int firstChar</pre>
+<div class="block">First character in alphabet.</div>
+</li>
+<li class="blockList">
+<h4>lastChar</h4>
+<pre>int lastChar</pre>
+<div class="block">Last character in alphabet.</div>
+</li>
+<li class="blockList">
+<h4>lenText</h4>
+<pre>int lenText</pre>
+<div class="block">Text length.</div>
+</li>
+<li class="blockList">
+<h4>continueLeftRangeQuery</h4>
+<pre>boolean continueLeftRangeQuery</pre>
+<div class="block">Continue range query for left child.</div>
+</li>
+<li class="blockList">
+<h4>continueRightRangeQuery</h4>
+<pre>boolean continueRightRangeQuery</pre>
+<div class="block">Continue range query for right child.</div>
+</li>
+<li class="blockList">
+<h4>leftChild</h4>
+<pre><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a> leftChild</pre>
+<div class="block">Left child of the wavelet tree.</div>
+</li>
+<li class="blockList">
+<h4>rightChild</h4>
+<pre><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a> rightChild</pre>
+<div class="block">Right child of the wavelet tree.</div>
+</li>
+<li class="blockList">
+<h4>shift</h4>
+<pre>int shift</pre>
+<div class="block">Shift number for fast bitwise divisions.</div>
+</li>
+<li class="blockList">
+<h4>mask</h4>
+<pre>int mask</pre>
+<div class="block">Mask for fast bitwise modulo operations.</div>
+</li>
+<li class="blockList">
+<h4>numMasses</h4>
+<pre>int numMasses</pre>
+<div class="block">number of masses</div>
+</li>
+<li class="blockList">
+<h4>leftRightMask</h4>
+<pre>int leftRightMask</pre>
+<div class="block">left right mask</div>
+</li>
+<li class="blockListLast">
+<h4>less</h4>
+<pre>int[] less</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList">
 <h2 title="Package">Package&nbsp;com.compomics.util.experiment.identification.spectrum_annotation</h2>
 <ul class="blockList">
 <li class="blockList"><a name="com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters">

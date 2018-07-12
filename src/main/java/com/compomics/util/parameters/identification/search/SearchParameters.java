@@ -109,7 +109,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      */
     private File fastaFile;
     /**
-     * The parameters to use to parse the fasta file.
+     * The parameters to use to parse the FASTA file.
      */
     private FastaParameters fastaParameters;
     /**

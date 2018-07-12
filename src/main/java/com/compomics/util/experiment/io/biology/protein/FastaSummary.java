@@ -254,7 +254,7 @@ public class FastaSummary {
 
             }
 
-            String accession = header.getAccession();
+            String accession = header.getAccessionOrRest();
 
             if (!ProteinUtils.isDecoy(accession, fastaParameters)) {
 

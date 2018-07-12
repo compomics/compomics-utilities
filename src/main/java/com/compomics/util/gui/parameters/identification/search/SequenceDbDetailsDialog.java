@@ -1144,7 +1144,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * Buffers proteins sampled from the database.
      *
      * @throws IOException exception thrown if an error occurred while reading
-     * the fasta file
+     * the FASTA file
      */
     private void bufferProteins() throws IOException {
 
@@ -1167,18 +1167,18 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Returns the selected fasta file.
+     * Returns the selected FASTA file.
      *
-     * @return the selected fasta file
+     * @return the selected FASTA file
      */
     public File getSelectedFastaFile() {
         return selectedFastaFile;
     }
 
     /**
-     * Returns the fasta parameters.
+     * Returns the FASTA parameters.
      *
-     * @return the fasta parameters
+     * @return the FASTA parameters
      */
     public FastaParameters getFastaParameters() {
         return fastaParameters;

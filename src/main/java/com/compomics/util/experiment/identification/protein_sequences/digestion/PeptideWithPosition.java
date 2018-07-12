@@ -12,38 +12,26 @@ public class PeptideWithPosition {
     /**
      * The peptide.
      */
-    private final Peptide peptide;
+    public final Peptide peptide;
     /**
      * The position of the peptide on the protein.
      */
-    private final int position;
+    public final int position;
+    /**
+     * The fixed modifications of the peptide.
+     */
+    public final String[] fixedModifications;
 
     /**
      * Constructor.
      *
      * @param peptide the peptide
      * @param position the position of the peptide on the protein
+     * @param fixedModifications the fixed modifications on the peptide
      */
-    public PeptideWithPosition(Peptide peptide, int position) {
+    public PeptideWithPosition(Peptide peptide, int position, String[] fixedModifications) {
         this.peptide = peptide;
         this.position = position;
-    }
-
-    /**
-     * Returns the peptide.
-     *
-     * @return the peptide
-     */
-    public Peptide getPeptide() {
-        return peptide;
-    }
-
-    /**
-     * Returns the position on the protein.
-     *
-     * @return the position on the protein
-     */
-    public int getPosition() {
-        return position;
+        this.fixedModifications = fixedModifications;
     }
 }

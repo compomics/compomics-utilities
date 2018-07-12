@@ -72,19 +72,15 @@ public class FragmentAnnotatorNL {
     private final ArrayList<ArrayList<NeutralLoss>> complementaryNeutralLosses;
 
     /**
-     * Constructor.
+     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
      *
      * @param peptide the peptide
-     * @param modificationParameters the modification parameters the
-     * modification parameters
-     * @param sequenceProvider a protein sequence provider
-     * @param modificationsSequenceMatchingParameters the sequence matching
-     * parameters to use for modifications
+     * @param fixedModifications the fixed modifications of the peptide
      * @param ionSeries the ion series to annotate
      * @param sequenceDependent boolean indicating whether the H2O and NH3
      * losses should be adapted to the sequence
      */
-    public FragmentAnnotatorNL(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, IonSeries ionSeries, boolean sequenceDependent) {
+    public FragmentAnnotatorNL(Peptide peptide, String[] fixedModifications, IonSeries ionSeries, boolean sequenceDependent) {
 
         char[] aas = peptide.getSequence().toCharArray();
         peptideLength = aas.length;
@@ -105,7 +101,6 @@ public class FragmentAnnotatorNL {
 
         // Keep track of the modified amino acids and possible losses
         HashMap<String, int[]> modificationLossesSites = new HashMap<>(1);
-        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
 
         for (int i = 0; i < fixedModifications.length; i++) {
 
@@ -275,14 +270,10 @@ public class FragmentAnnotatorNL {
     }
 
     /**
-     * Constructor.
+     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
      *
      * @param peptide the peptide
-     * @param modificationParameters the modification parameters the
-     * modification parameters
-     * @param sequenceProvider a protein sequence provider
-     * @param modificationsSequenceMatchingParameters the sequence matching
-     * parameters to use for modifications
+     * @param fixedModifications the fixed modifications
      * @param ionSeries the ion series to annotate
      * @param sequenceDependent boolean indicating whether the H2O and NH3
      * losses should be adapted to the sequence
@@ -291,7 +282,7 @@ public class FragmentAnnotatorNL {
      * @param complementary boolean indicating whether complementary ions should
      * be annotated
      */
-    public FragmentAnnotatorNL(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, IonSeries ionSeries, boolean sequenceDependent, boolean forward, boolean complementary) {
+    public FragmentAnnotatorNL(Peptide peptide, String[] fixedModifications, IonSeries ionSeries, boolean sequenceDependent, boolean forward, boolean complementary) {
 
         char[] aas = peptide.getSequence().toCharArray();
         peptideLength = aas.length;
@@ -312,7 +303,6 @@ public class FragmentAnnotatorNL {
 
         // Keep track of the modified amino acids and possible losses
         HashMap<String, int[]> modificationLossesSites = new HashMap<>(1);
-        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
 
         for (int i = 0; i < fixedModifications.length; i++) {
 

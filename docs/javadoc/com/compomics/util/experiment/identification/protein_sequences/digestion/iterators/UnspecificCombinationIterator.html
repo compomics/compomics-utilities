@@ -139,10 +139,10 @@ implements <a href="../../../../../../../../com/compomics/util/experiment/identi
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/iterators/UnspecificCombinationIterator.html#UnspecificCombinationIterator-com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils-java.lang.String-java.lang.Double-java.lang.Double-">UnspecificCombinationIterator</a></span>(<a href="../../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ProteinIteratorUtils.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">ProteinIteratorUtils</a>&nbsp;proteinIteratorUtils,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/iterators/UnspecificCombinationIterator.html#UnspecificCombinationIterator-com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils-java.lang.String-double-double-">UnspecificCombinationIterator</a></span>(<a href="../../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ProteinIteratorUtils.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">ProteinIteratorUtils</a>&nbsp;proteinIteratorUtils,
                              <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinSequence,
-                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massMin,
-                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massMax)</code>
+                             double&nbsp;massMin,
+                             double&nbsp;massMax)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
@@ -162,7 +162,7 @@ implements <a href="../../../../../../../../com/compomics/util/experiment/identi
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/PeptideWithPosition.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">PeptideWithPosition</a></code></td>
+<td class="colFirst"><code><a href="../../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ExtendedPeptide.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">ExtendedPeptide</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/iterators/UnspecificCombinationIterator.html#getNextPeptide--">getNextPeptide</a></span>()</code>
 <div class="block">Returns the next peptide that can be generated from the iterator.</div>
 </td>
@@ -189,7 +189,7 @@ implements <a href="../../../../../../../../com/compomics/util/experiment/identi
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="UnspecificCombinationIterator-com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils-java.lang.String-java.lang.Double-java.lang.Double-">
+<a name="UnspecificCombinationIterator-com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils-java.lang.String-double-double-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -197,8 +197,8 @@ implements <a href="../../../../../../../../com/compomics/util/experiment/identi
 <h4>UnspecificCombinationIterator</h4>
 <pre>public&nbsp;UnspecificCombinationIterator(<a href="../../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ProteinIteratorUtils.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">ProteinIteratorUtils</a>&nbsp;proteinIteratorUtils,
                                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinSequence,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massMin,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massMax)</pre>
+                                     double&nbsp;massMin,
+                                     double&nbsp;massMax)</pre>
 <div class="block">Constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -223,8 +223,8 @@ implements <a href="../../../../../../../../com/compomics/util/experiment/identi
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getNextPeptide</h4>
-<pre>public&nbsp;<a href="../../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/PeptideWithPosition.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">PeptideWithPosition</a>&nbsp;getNextPeptide()
-                                   throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;<a href="../../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ExtendedPeptide.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">ExtendedPeptide</a>&nbsp;getNextPeptide()
+                               throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/SequenceIterator.html#getNextPeptide--">SequenceIterator</a></code></span></div>
 <div class="block">Returns the next peptide that can be generated from the iterator. Null if none left.</div>
 <dl>

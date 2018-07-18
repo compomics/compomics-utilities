@@ -134,10 +134,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/PrecursorAnnotator.html#PrecursorAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">PrecursorAnnotator</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
-                  <a href="../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
-                  <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
-                  <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/spectrum_annotation/simple_annotators/PrecursorAnnotator.html#PrecursorAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-java.lang.String:A-">PrecursorAnnotator</a></span>(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
+                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;fixedModifications)</code>
 <div class="block">Constructor.</div>
 </td>
 </tr>
@@ -186,25 +184,19 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="PrecursorAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">
+<a name="PrecursorAnnotator-com.compomics.util.experiment.biology.proteins.Peptide-java.lang.String:A-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>PrecursorAnnotator</h4>
 <pre>public&nbsp;PrecursorAnnotator(<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;peptide,
-                          <a href="../../../../../../../com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationParameters,
-                          <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>&nbsp;sequenceProvider,
-                          <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;modificationsSequenceMatchingParameters)</pre>
-<div class="block">Constructor.</div>
+                          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>[]&nbsp;fixedModifications)</pre>
+<div class="block">Constructor. Fixed modifications must be indexed as provided by the peptide class.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the peptide of interest.</dd>
-<dd><code>modificationParameters</code> - the modification parameters the
- modification parameters</dd>
-<dd><code>sequenceProvider</code> - a protein sequence provider</dd>
-<dd><code>modificationsSequenceMatchingParameters</code> - the sequence matching
- parameters to use for modifications</dd>
+<dd><code>fixedModifications</code> - the fixed modifications</dd>
 </dl>
 </li>
 </ul>

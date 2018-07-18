@@ -3,11 +3,11 @@ package com.compomics.util.experiment.identification.protein_sequences.digestion
 import com.compomics.util.experiment.biology.proteins.Peptide;
 
 /**
- * This class packages together a peptide and its position on the protein.
+ * This class packages together a peptide, its fixed modifications and its position on the protein.
  *
  * @author Marc Vaudel
  */
-public class PeptideWithPosition {
+public class ExtendedPeptide {
 
     /**
      * The peptide.
@@ -29,7 +29,7 @@ public class PeptideWithPosition {
      * @param position the position of the peptide on the protein
      * @param fixedModifications the fixed modifications on the peptide
      */
-    public PeptideWithPosition(Peptide peptide, int position, String[] fixedModifications) {
+    public ExtendedPeptide(Peptide peptide, int position, String[] fixedModifications) {
         this.peptide = peptide;
         this.position = position;
         this.fixedModifications = fixedModifications;

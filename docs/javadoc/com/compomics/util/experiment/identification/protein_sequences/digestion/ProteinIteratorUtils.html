@@ -49,7 +49,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/PeptideWithPosition.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/PeptideDraft.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/SequenceIterator.html" title="interface in com.compomics.util.experiment.identification.protein_sequences.digestion"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -223,7 +223,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></code></td>
+<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ExtendedPeptide.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">ExtendedPeptide</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ProteinIteratorUtils.html#getPeptideFromProtein-char:A-int-double-double-">getPeptideFromProtein</a></span>(char[]&nbsp;proteinSequence,
                      int&nbsp;indexOnProtein,
                      double&nbsp;massMin,
@@ -232,7 +232,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></code></td>
+<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ExtendedPeptide.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">ExtendedPeptide</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ProteinIteratorUtils.html#getPeptideFromProtein-char:A-java.lang.String-int-java.lang.Double-java.lang.Double-">getPeptideFromProtein</a></span>(char[]&nbsp;peptideSequence,
                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinSequence,
                      int&nbsp;indexOnProtein,
@@ -242,12 +242,12 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ProteinIteratorUtils.html#getPeptideFromProtein-char:A-java.lang.String-int-java.lang.Double-java.lang.Double-com.compomics.util.general.BoxedObject-">getPeptideFromProtein</a></span>(char[]&nbsp;peptideSequence,
+<td class="colFirst"><code><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ExtendedPeptide.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">ExtendedPeptide</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ProteinIteratorUtils.html#getPeptideFromProtein-char:A-java.lang.String-int-double-double-com.compomics.util.general.BoxedObject-">getPeptideFromProtein</a></span>(char[]&nbsp;peptideSequence,
                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinSequence,
                      int&nbsp;indexOnProtein,
-                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massMin,
-                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massMax,
+                     double&nbsp;massMin,
+                     double&nbsp;massMax,
                      <a href="../../../../../../../com/compomics/util/general/BoxedObject.html" title="class in com.compomics.util.general">BoxedObject</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;&nbsp;smallMass)</code>
 <div class="block">Returns a peptide from the given sequence on the given protein.</div>
 </td>
@@ -444,10 +444,10 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <ul class="blockList">
 <li class="blockList">
 <h4>getPeptideFromProtein</h4>
-<pre>public&nbsp;<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;getPeptideFromProtein(char[]&nbsp;proteinSequence,
-                                     int&nbsp;indexOnProtein,
-                                     double&nbsp;massMin,
-                                     double&nbsp;massMax)</pre>
+<pre>public&nbsp;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ExtendedPeptide.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">ExtendedPeptide</a>&nbsp;getPeptideFromProtein(char[]&nbsp;proteinSequence,
+                                             int&nbsp;indexOnProtein,
+                                             double&nbsp;massMin,
+                                             double&nbsp;massMax)</pre>
 <div class="block">Returns a peptide from the given sequence. The sequence should not
  contain ambiguous amino acids. Peptides are filtered according to the
  given masses. Filters are ignored if null.</div>
@@ -468,11 +468,11 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <ul class="blockList">
 <li class="blockList">
 <h4>getPeptideFromProtein</h4>
-<pre>public&nbsp;<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;getPeptideFromProtein(char[]&nbsp;peptideSequence,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinSequence,
-                                     int&nbsp;indexOnProtein,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massMin,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massMax)</pre>
+<pre>public&nbsp;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ExtendedPeptide.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">ExtendedPeptide</a>&nbsp;getPeptideFromProtein(char[]&nbsp;peptideSequence,
+                                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinSequence,
+                                             int&nbsp;indexOnProtein,
+                                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massMin,
+                                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massMax)</pre>
 <div class="block">Returns a peptide from the given sequence on the given protein. The
  sequence should not contain ambiguous amino acids. Peptides are filtered
  according to the given masses. Filters are ignored if null.</div>
@@ -488,18 +488,18 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </dl>
 </li>
 </ul>
-<a name="getPeptideFromProtein-char:A-java.lang.String-int-java.lang.Double-java.lang.Double-com.compomics.util.general.BoxedObject-">
+<a name="getPeptideFromProtein-char:A-java.lang.String-int-double-double-com.compomics.util.general.BoxedObject-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getPeptideFromProtein</h4>
-<pre>public&nbsp;<a href="../../../../../../../com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a>&nbsp;getPeptideFromProtein(char[]&nbsp;peptideSequence,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinSequence,
-                                     int&nbsp;indexOnProtein,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massMin,
-                                     <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a>&nbsp;massMax,
-                                     <a href="../../../../../../../com/compomics/util/general/BoxedObject.html" title="class in com.compomics.util.general">BoxedObject</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;&nbsp;smallMass)</pre>
+<pre>public&nbsp;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/ExtendedPeptide.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">ExtendedPeptide</a>&nbsp;getPeptideFromProtein(char[]&nbsp;peptideSequence,
+                                             <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinSequence,
+                                             int&nbsp;indexOnProtein,
+                                             double&nbsp;massMin,
+                                             double&nbsp;massMax,
+                                             <a href="../../../../../../../com/compomics/util/general/BoxedObject.html" title="class in com.compomics.util.general">BoxedObject</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Boolean.html?is-external=true" title="class or interface in java.lang">Boolean</a>&gt;&nbsp;smallMass)</pre>
 <div class="block">Returns a peptide from the given sequence on the given protein. The
  sequence should not contain ambiguous amino acids. Peptides are filtered
  according to the given masses. Filters are ignored if null.</div>
@@ -545,7 +545,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/PeptideWithPosition.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/PeptideDraft.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_sequences/digestion/SequenceIterator.html" title="interface in com.compomics.util.experiment.identification.protein_sequences.digestion"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">

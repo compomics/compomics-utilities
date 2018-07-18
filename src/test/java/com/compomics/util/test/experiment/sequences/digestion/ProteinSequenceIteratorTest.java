@@ -3,7 +3,7 @@ package com.compomics.util.test.experiment.sequences.digestion;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.IteratorFactory;
-import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.ExtendedPeptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import java.io.IOException;
@@ -41,13 +41,13 @@ public class ProteinSequenceIteratorTest extends TestCase {
         
         // No modification
         SequenceIterator sequenceIterator = iteratorFactoryNoModifications.getSequenceIterator(testSequence, digestionPreferences, 0.0, Double.MAX_VALUE);
-        ArrayList<PeptideWithPosition> peptides = new ArrayList<>();
-        PeptideWithPosition peptideWithPosition;
+        ArrayList<ExtendedPeptide> peptides = new ArrayList<>();
+        ExtendedPeptide peptideWithPosition;
         while ((peptideWithPosition = sequenceIterator.getNextPeptide()) != null) {
             peptides.add(peptideWithPosition);
         }
         Assert.assertTrue(peptides.size() == 1);
-        Peptide peptide = peptides.get(0).getPeptide();
+        Peptide peptide = peptides.get(0).peptide;
         Assert.assertTrue(peptide.getSequence().equals(testSequence));
         Assert.assertTrue(peptide.getVariableModifications().length == 0);
         
@@ -82,7 +82,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
             peptides.add(peptideWithPosition);
         }
         Assert.assertTrue(peptides.size() == 1);
-        peptide = peptides.get(0).getPeptide();
+        peptide = peptides.get(0).peptide;
         Assert.assertTrue(peptide.getSequence().equals(testSequence));
         Assert.assertTrue(peptide.getVariableModifications().length == 0);
         
@@ -97,7 +97,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
             peptides.add(peptideWithPosition);
         }
         Assert.assertTrue(peptides.size() == 1);
-        peptide = peptides.get(0).getPeptide();
+        peptide = peptides.get(0).peptide;
         Assert.assertTrue(peptide.getSequence().equals(testSequence));
         Assert.assertTrue(peptide.getVariableModifications().length == 0);
         Assert.assertTrue(Math.abs(peptide.getMass() -  (1734.7287955683 + modMass)) < 1e-6);
@@ -224,7 +224,7 @@ public class ProteinSequenceIteratorTest extends TestCase {
             peptides.add(peptideWithPosition);
         }
         Assert.assertTrue(peptides.size() == 1);
-        peptide = peptides.get(0).getPeptide();
+        peptide = peptides.get(0).peptide;
         Assert.assertTrue(peptide.getSequence().equals("CTESCTK"));
         Assert.assertTrue(peptide.getVariableModifications().length == 0);
         Assert.assertTrue(Math.abs(peptide.getMass() -  (770.29387569618 + modMass)) < 1e-6);

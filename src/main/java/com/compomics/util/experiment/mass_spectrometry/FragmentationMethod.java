@@ -1,13 +1,12 @@
 package com.compomics.util.experiment.mass_spectrometry;
 
-import java.io.Serializable;
 
 /**
  * Enum for the different fragmentation methods.
  *
  * @author Marc Vaudel
  */
-public enum FragmentationMethod implements Serializable {
+public enum FragmentationMethod {
 
     CID("CID"), HCD("HCD"), ETD("ETD");
 

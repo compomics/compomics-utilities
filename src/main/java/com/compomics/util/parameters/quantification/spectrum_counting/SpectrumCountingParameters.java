@@ -5,7 +5,6 @@ import com.compomics.util.experiment.quantification.spectrumcounting.SpectrumCou
 import com.compomics.util.experiment.units.MetricsPrefix;
 import com.compomics.util.experiment.units.StandardUnit;
 import com.compomics.util.experiment.units.UnitOfMeasurement;
-import java.io.Serializable;
 
 /**
  * This class contains the spectrum counting parameters.
@@ -13,7 +12,7 @@ import java.io.Serializable;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class SpectrumCountingParameters implements Serializable {
+public class SpectrumCountingParameters {
 
     /**
      * Serial version UID for post-serialization compatibility.

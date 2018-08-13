@@ -247,7 +247,6 @@ public class ObjectsCache {
         synchronized (loadedObjectMutex) {
 
             if (!readOnly) {
-
                 if (waitingHandler != null) {
 
                     waitingHandler.resetSecondaryProgressCounter();
@@ -257,6 +256,7 @@ public class ObjectsCache {
 
                 ListIterator<Long> listIterator = objectQueue.listIterator();
                 PersistenceManager pm = objectsDB.getDB();
+
 
                 for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i) {
 

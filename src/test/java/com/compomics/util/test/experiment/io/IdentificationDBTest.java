@@ -44,121 +44,126 @@ public class IdentificationDBTest extends TestCase {
             ObjectsDB objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", true);
 
             Identification identification = new Identification(objectsDB);
-
-            try {
                 
-                String spectrumFile = "spectrum_file";
-                String spectrumTitle = "spectrum_title";
-                String projectParametersTitle = "project_parameters_title";
-                String spectrumKey = Spectrum.getSpectrumKey(spectrumFile, spectrumTitle);
-                long spectrumMatchKey = ExperimentObject.asLong(spectrumKey);
-                String peptideSequence = "PEPTIDE";
-                long peptideMatchKey = ExperimentObject.asLong(peptideSequence);
-                String proteinAccession = "test_protein";
-                long proteinMatchKey = ExperimentObject.asLong(proteinAccession);
-                Assert.assertTrue(peptideMatchKey != proteinMatchKey);
+            String spectrumFile = "spectrum_file";
+            String spectrumTitle = "spectrum_title";
+            String projectParametersTitle = "project_parameters_title";
+            String spectrumKey = Spectrum.getSpectrumKey(spectrumFile, spectrumTitle);
+            long spectrumMatchKey = ExperimentObject.asLong(spectrumKey);
+            String peptideSequence = "PEPTIDE";
+            String proteinAccession = "test_protein";
 
-                TreeMap<String, int[]> testProteins = new TreeMap<>();
-                testProteins.put("test protein1", new int[]{0, 12});
-                testProteins.put("test protein2", new int[]{1259});
+            TreeMap<String, int[]> testProteins = new TreeMap<>();
+            testProteins.put("test protein1", new int[]{0, 12});
+            testProteins.put("test protein2", new int[]{1259});
 
-                Peptide peptide = new Peptide(peptideSequence);
-                SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);
-                testSpectrumMatch.addPeptideAssumption(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), 2, 0.1, "no file"));
-                identification.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);
+            Peptide peptide = new Peptide(peptideSequence);
+            SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);
+            testSpectrumMatch.addPeptideAssumption(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), 2, 0.1, "no file"));
+            identification.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);
 
-                peptide.setProteinMapping(testProteins);
-                PeptideMatch testPeptideMatch = new PeptideMatch(peptide, peptide.getKey(), 0);
-                identification.addObject(testPeptideMatch.getKey(), testPeptideMatch);
+            peptide.setProteinMapping(testProteins);
+            PeptideMatch testPeptideMatch = new PeptideMatch(peptide, peptide.getKey(), 0);
+            identification.addObject(testPeptideMatch.getKey(), testPeptideMatch);
 
-                ProteinMatch testProteinMatch = new ProteinMatch(proteinAccession);
-                identification.addObject(testProteinMatch.getKey(), testProteinMatch);
+            ProteinMatch testProteinMatch = new ProteinMatch(proteinAccession);
+            identification.addObject(testProteinMatch.getKey(), testProteinMatch);
 
-                ProjectParameters projectParameters = new ProjectParameters(projectParametersTitle);
-                identification.addObject(ProjectParameters.key, projectParameters);
 
-                identification.getObjectsDB().dumpToDB();
-                identification.close();
+            long peptideMatchKey = testPeptideMatch.getKey();
+            long proteinMatchKey = testProteinMatch.getKey();
+            Assert.assertTrue(peptideMatchKey != proteinMatchKey);
 
-                objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", false);
-                identification = new Identification(objectsDB);
 
-                ProjectParameters retrieve = (ProjectParameters) identification.retrieveObject(ProjectParameters.key);
-                Assert.assertTrue(retrieve != null);
-                Assert.assertTrue(retrieve.getProjectUniqueName().equals(projectParametersTitle));
 
-                testSpectrumMatch = (SpectrumMatch) identification.retrieveObject(spectrumMatchKey);
-                Assert.assertTrue(testSpectrumMatch.getKey() == spectrumMatchKey);
+            ProjectParameters projectParameters = new ProjectParameters(projectParametersTitle);
+            identification.addObject(ProjectParameters.key, projectParameters);
 
-                HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> assumptionsMap = testSpectrumMatch.getPeptideAssumptionsMap();
-                TreeMap<Double, ArrayList<PeptideAssumption>> mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
-                Assert.assertTrue(mascotAssumptions.size() == 1);
-                ArrayList<Double> mascotScores = new ArrayList<>(mascotAssumptions.keySet());
-                Assert.assertTrue(mascotScores.size() == 1);
-                double bestScore = mascotScores.get(0);
-                Assert.assertTrue(bestScore == 0.1);
-                ArrayList<PeptideAssumption> bestAssumptions = mascotAssumptions.get(bestScore);
-                PeptideAssumption bestAssumption = (PeptideAssumption) bestAssumptions.get(0);
-                Peptide bestPeptide = bestAssumption.getPeptide();
-                String[] accessionsExpectation = testProteins.keySet().stream()
-                        .sorted()
-                        .toArray(String[]::new);
-                String[] accessionsResult = bestPeptide.getProteinMapping().navigableKeySet().stream()
-                        .toArray(String[]::new);
-                Assert.assertTrue(accessionsResult.length == accessionsExpectation.length);
-                
-                for (int i = 0; i < accessionsResult.length; i++) {
-                    Assert.assertTrue(accessionsResult[i].equals(accessionsExpectation[i]));
-                    int[] positionsResult = bestPeptide.getProteinMapping().get(accessionsResult[i]);
-                    int[] positionsExpectation = bestPeptide.getProteinMapping().get(accessionsExpectation[i]);
-                    Assert.assertTrue(positionsResult.length == positionsExpectation.length);
-                    for (int j = 0; j < positionsExpectation.length; j++) {
-                        Assert.assertTrue(positionsResult[j] == positionsExpectation[j]);
-                    }
+
+
+            // closing and reopening database
+            identification.getObjectsDB().dumpToDB();
+            identification.close();
+            objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", false);
+            identification = new Identification(objectsDB);
+
+
+
+
+            ProjectParameters retrieve = (ProjectParameters) identification.retrieveObject(ProjectParameters.key);
+            Assert.assertTrue(retrieve != null);
+            Assert.assertTrue(retrieve.getProjectUniqueName().equals(projectParametersTitle));
+
+            testSpectrumMatch = (SpectrumMatch) identification.retrieveObject(spectrumMatchKey);
+            Assert.assertTrue(testSpectrumMatch.getKey() == spectrumMatchKey);
+
+            HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> assumptionsMap = testSpectrumMatch.getPeptideAssumptionsMap();
+            TreeMap<Double, ArrayList<PeptideAssumption>> mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
+            Assert.assertTrue(mascotAssumptions.size() == 1);
+            ArrayList<Double> mascotScores = new ArrayList<>(mascotAssumptions.keySet());
+            Assert.assertTrue(mascotScores.size() == 1);
+            double bestScore = mascotScores.get(0);
+            Assert.assertTrue(bestScore == 0.1);
+            ArrayList<PeptideAssumption> bestAssumptions = mascotAssumptions.get(bestScore);
+            PeptideAssumption bestAssumption = (PeptideAssumption) bestAssumptions.get(0);
+            Peptide bestPeptide = bestAssumption.getPeptide();
+            String[] accessionsExpectation = testProteins.keySet().stream()
+                    .sorted()
+                    .toArray(String[]::new);
+            String[] accessionsResult = bestPeptide.getProteinMapping().navigableKeySet().stream()
+                    .toArray(String[]::new);
+            Assert.assertTrue(accessionsResult.length == accessionsExpectation.length);
+
+            for (int i = 0; i < accessionsResult.length; i++) {
+                Assert.assertTrue(accessionsResult[i].equals(accessionsExpectation[i]));
+                int[] positionsResult = bestPeptide.getProteinMapping().get(accessionsResult[i]);
+                int[] positionsExpectation = bestPeptide.getProteinMapping().get(accessionsExpectation[i]);
+                Assert.assertTrue(positionsResult.length == positionsExpectation.length);
+                for (int j = 0; j < positionsExpectation.length; j++) {
+                    Assert.assertTrue(positionsResult[j] == positionsExpectation[j]);
                 }
-
-                testSpectrumMatch = (SpectrumMatch) identification.retrieveObject(spectrumMatchKey);
-                assumptionsMap = testSpectrumMatch.getPeptideAssumptionsMap();
-                mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
-                Assert.assertTrue(mascotAssumptions.size() == 1);
-                mascotScores = new ArrayList<>(mascotAssumptions.keySet());
-                Assert.assertTrue(mascotScores.size() == 1);
-                bestScore = mascotScores.get(0);
-                Assert.assertTrue(bestScore == 0.1);
-                bestAssumptions = mascotAssumptions.get(bestScore);
-                bestAssumption = (PeptideAssumption) bestAssumptions.get(0);
-                bestPeptide = bestAssumption.getPeptide();
-                accessionsResult = bestPeptide.getProteinMapping().navigableKeySet().stream()
-                        .sorted()
-                        .toArray(String[]::new);
-                Assert.assertTrue(accessionsResult.length == accessionsExpectation.length);
-                for (int i = 0; i < accessionsResult.length; i++) {
-                    Assert.assertTrue(accessionsResult[i].equals(accessionsExpectation[i]));
-                    int[] positionsResult = bestPeptide.getProteinMapping().get(accessionsResult[i]);
-                    int[] positionsExpectation = bestPeptide.getProteinMapping().get(accessionsExpectation[i]);
-                    Assert.assertTrue(positionsResult.length == positionsExpectation.length);
-                    for (int j = 0; j < positionsExpectation.length; j++) {
-                        Assert.assertTrue(positionsResult[j] == positionsExpectation[j]);
-                    }
-                }
-
-                testPeptideMatch = (PeptideMatch) identification.retrieveObject(peptideMatchKey);
-                Assert.assertTrue(testPeptideMatch.getKey() == peptideMatchKey);
-
-                testProteinMatch = (ProteinMatch) identification.retrieveObject(proteinMatchKey);
-                Assert.assertTrue(testProteinMatch.getKey() == proteinMatchKey);
-
-                double testScore = 12.3;
-                PepnovoAssumptionDetails testParameter = new PepnovoAssumptionDetails();
-                testParameter.setRankScore(testScore);
-                long parametersKey = testParameter.getParameterKey();
-                identification.addObject(parametersKey, testParameter);
-                testParameter = (PepnovoAssumptionDetails) identification.retrieveObject(parametersKey);
-                Assert.assertTrue(testParameter.getRankScore() == testScore);
-                identification.close();
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
+            testSpectrumMatch = (SpectrumMatch) identification.retrieveObject(spectrumMatchKey);
+            assumptionsMap = testSpectrumMatch.getPeptideAssumptionsMap();
+            mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
+            Assert.assertTrue(mascotAssumptions.size() == 1);
+            mascotScores = new ArrayList<>(mascotAssumptions.keySet());
+            Assert.assertTrue(mascotScores.size() == 1);
+            bestScore = mascotScores.get(0);
+            Assert.assertTrue(bestScore == 0.1);
+            bestAssumptions = mascotAssumptions.get(bestScore);
+            bestAssumption = (PeptideAssumption) bestAssumptions.get(0);
+            bestPeptide = bestAssumption.getPeptide();
+            accessionsResult = bestPeptide.getProteinMapping().navigableKeySet().stream()
+                    .sorted()
+                    .toArray(String[]::new);
+            Assert.assertTrue(accessionsResult.length == accessionsExpectation.length);
+            for (int i = 0; i < accessionsResult.length; i++) {
+                Assert.assertTrue(accessionsResult[i].equals(accessionsExpectation[i]));
+                int[] positionsResult = bestPeptide.getProteinMapping().get(accessionsResult[i]);
+                int[] positionsExpectation = bestPeptide.getProteinMapping().get(accessionsExpectation[i]);
+                Assert.assertTrue(positionsResult.length == positionsExpectation.length);
+                for (int j = 0; j < positionsExpectation.length; j++) {
+                    Assert.assertTrue(positionsResult[j] == positionsExpectation[j]);
+                }
+            }
+
+            testPeptideMatch = (PeptideMatch) identification.retrieveObject(peptideMatchKey);
+            Assert.assertTrue(testPeptideMatch.getKey() == peptideMatchKey);
+
+            testProteinMatch = (ProteinMatch) identification.retrieveObject(proteinMatchKey);
+            Assert.assertTrue(testProteinMatch.getKey() == proteinMatchKey);
+
+            double testScore = 12.3;
+            PepnovoAssumptionDetails testParameter = new PepnovoAssumptionDetails();
+            testParameter.setRankScore(testScore);
+            long parametersKey = testParameter.getParameterKey();
+            identification.addObject(parametersKey, testParameter);
+            testParameter = (PepnovoAssumptionDetails) identification.retrieveObject(parametersKey);
+            Assert.assertTrue(testParameter.getRankScore() == testScore);
+            identification.close();
+                
         } finally {
             Util.deleteDir(dbFolder);
         }

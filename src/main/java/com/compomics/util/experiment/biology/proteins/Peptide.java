@@ -32,10 +32,6 @@ import java.util.stream.Collectors;
 public class Peptide extends ExperimentObject {
 
     /**
-     * The version UID for serialization/deserialization compatibility.
-     */
-    static final long serialVersionUID = 5632064601627536034L;
-    /**
      * The peptide sequence.
      */
     private String sequence;

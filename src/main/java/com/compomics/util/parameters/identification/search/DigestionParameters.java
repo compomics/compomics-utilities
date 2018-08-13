@@ -1,10 +1,11 @@
 package com.compomics.util.parameters.identification.search;
 
 import com.compomics.util.Util;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
-import java.io.Serializable;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +15,7 @@ import java.util.HashSet;
  *
  * @author Marc Vaudel
  */
-public class DigestionParameters implements Serializable {
+public class DigestionParameters extends ExperimentObject {
 
     /**
      * Enum for the different types of enzyme specificity.
@@ -237,6 +238,9 @@ public class DigestionParameters implements Serializable {
      * @return a boolean indicating whether enzyme settings were set
      */
     public boolean hasEnzymes() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
         return enzymes != null && !enzymes.isEmpty();
     }
 
@@ -246,6 +250,9 @@ public class DigestionParameters implements Serializable {
      * @return the enzymes used for digestion in a list
      */
     public ArrayList<Enzyme> getEnzymes() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
         return enzymes;
     }
 
@@ -255,6 +262,7 @@ public class DigestionParameters implements Serializable {
      * @param enzymes the enzymes used for digestion in a list
      */
     public void setEnzymes(ArrayList<Enzyme> enzymes) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         this.enzymes = enzymes;
     }
 
@@ -265,6 +273,7 @@ public class DigestionParameters implements Serializable {
      * @param enzyme an enzyme used for digestion.
      */
     public void addEnzyme(Enzyme enzyme) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (enzymes == null) {
             enzymes = new ArrayList<>(1);
         }
@@ -277,6 +286,7 @@ public class DigestionParameters implements Serializable {
      * Clears the parameters.
      */
     public void clear() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         cleavageParameter = null;
         enzymes = null;
         nMissedCleavages = null;
@@ -287,6 +297,7 @@ public class DigestionParameters implements Serializable {
      * Clears the enzymes set including specificity and missed cleavages.
      */
     public void clearEnzymes() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         enzymes = null;
         nMissedCleavages = null;
         specificity = null;
@@ -301,6 +312,9 @@ public class DigestionParameters implements Serializable {
      * @return the number of allowed missed cleavages
      */
     public Integer getnMissedCleavages(String enzymeName) {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
         if (nMissedCleavages == null) {
             return null;
         }
@@ -314,6 +328,7 @@ public class DigestionParameters implements Serializable {
      * @param enzymeMissedCleavages the number of allowed missed cleavages
      */
     public void setnMissedCleavages(String enzymeName, int enzymeMissedCleavages) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (nMissedCleavages == null) {
             nMissedCleavages = new HashMap<>(1);
         }
@@ -328,6 +343,9 @@ public class DigestionParameters implements Serializable {
      * @return the specificity
      */
     public Specificity getSpecificity(String enzymeName) {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
         if (specificity == null) {
             return null;
         }
@@ -342,6 +360,7 @@ public class DigestionParameters implements Serializable {
      * @param enzymeSpecificity the expected specificity of the enzyme
      */
     public void setSpecificity(String enzymeName, Specificity enzymeSpecificity) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (specificity == null) {
             specificity = new HashMap<>(1);
         }
@@ -354,6 +373,9 @@ public class DigestionParameters implements Serializable {
      * @return the cleavage parameters
      */
     public CleavageParameter getCleavageParameter() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
         return cleavageParameter;
     }
 
@@ -363,6 +385,7 @@ public class DigestionParameters implements Serializable {
      * @param cleavageParameter the cleavage parameters
      */
     public void setCleavageParameter(CleavageParameter cleavageParameter) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         this.cleavageParameter = cleavageParameter;
     }
 
@@ -372,6 +395,9 @@ public class DigestionParameters implements Serializable {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
         DigestionParameters defaultParameters = DigestionParameters.getDefaultParameters();
         StringBuilder stringBuilder = new StringBuilder();
         String newLine = System.getProperty("line.separator");
@@ -416,6 +442,10 @@ public class DigestionParameters implements Serializable {
      * same as the given other parameters
      */
     public boolean isSameAs(DigestionParameters otherDigestionParameters) {
+        System.out.println("huhu");
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
         if (cleavageParameter != otherDigestionParameters.getCleavageParameter()) {
             return false;
         }
@@ -455,6 +485,9 @@ public class DigestionParameters implements Serializable {
      * @return the enzyme X!Tandem format as String
      */
     public String getXTandemFormat() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
 
         switch (cleavageParameter) {
             case wholeProtein:
@@ -523,6 +556,9 @@ public class DigestionParameters implements Serializable {
      * @return the enzyme MyriMatch format as String
      */
     public String getMyriMatchFormat() {
+        ObjectsDB.increaseRWCounter();
+        zooActivateRead();
+        ObjectsDB.decreaseRWCounter();
 
         // example: trypsin corresponds to "[|R|K . . ]"
         // details: http://htmlpreview.github.io/?https://github.com/ProteoWizard/pwiz/blob/master/pwiz_tools/Bumbershoot/myrimatch/doc/index.html

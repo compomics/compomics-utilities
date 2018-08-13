@@ -24,7 +24,7 @@ import java.util.HashMap;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ModificationFactory implements Serializable {
+public class ModificationFactory {
 
     /**
      * Serial number for serialization compatibility.

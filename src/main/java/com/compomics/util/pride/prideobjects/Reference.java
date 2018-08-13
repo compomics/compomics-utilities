@@ -1,14 +1,13 @@
 package com.compomics.util.pride.prideobjects;
 
 import com.compomics.util.pride.PrideObject;
-import java.io.Serializable;
 
 /**
  * A simple publication reference object.
  *
  * @author Harald Barsnes
  */
-public class Reference implements PrideObject, Serializable {
+public class Reference implements PrideObject {
 
     /**
      * Serialization number for backward compatibility.

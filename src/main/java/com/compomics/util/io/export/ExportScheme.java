@@ -1,6 +1,5 @@
 package com.compomics.util.io.export;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,7 +8,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class ExportScheme implements Serializable {
+public class ExportScheme {
 
     /**
      * Serial number for backward compatibility.

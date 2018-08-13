@@ -12,7 +12,6 @@ import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.TreeMap;
 
@@ -22,7 +21,7 @@ import java.util.TreeMap;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class PeptideAssumptionFilter implements Serializable {
+public class PeptideAssumptionFilter {
 
     /**
      * Serial number for backward compatibility.

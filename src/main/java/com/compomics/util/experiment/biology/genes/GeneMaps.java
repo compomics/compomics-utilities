@@ -2,9 +2,6 @@ package com.compomics.util.experiment.biology.genes;
 
 import com.compomics.util.experiment.biology.genes.ensembl.GeneMapping;
 import com.compomics.util.experiment.biology.genes.go.GoMapping;
-import com.compomics.util.experiment.io.biology.protein.Header;
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -14,7 +11,7 @@ import java.util.HashSet;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class GeneMaps implements Serializable {
+public class GeneMaps {
 
     /**
      * The Ensembl versions for each species.

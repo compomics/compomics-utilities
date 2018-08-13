@@ -1,9 +1,9 @@
 package com.compomics.util.experiment.biology.ions;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
-import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -11,7 +11,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class NeutralLoss extends ExperimentObject implements Serializable {
+public class NeutralLoss extends ExperimentObject {
 
     /**
      * Serial number for backward compatibility.
@@ -149,6 +149,7 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      * @return the CV term for the neutral loss.
      */
     public CvTerm getPsiMsCvTerm() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (psiCvTerm != null) {
             return psiCvTerm;
         }
@@ -162,6 +163,7 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      * @return a boolean indicating whether the neutral loss is fixed or not
      */
     public boolean isFixed() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return fixed;
     }
 
@@ -171,6 +173,7 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      * @param fixed a boolean indicating whether the loss is fixed or not
      */
     public void setFixed(boolean fixed) {
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.fixed = fixed;
     }
 
@@ -180,6 +183,7 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      * @return The composition of the loss
      */
     public AtomChain getComposition() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return composition;
     }
 
@@ -189,6 +193,7 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      * @param composition the composition of the neutral loss
      */
     public void setComposition(AtomChain composition) {
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.composition = composition;
     }
 
@@ -199,6 +204,7 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      * @return the mass of the neutral loss
      */
     public double getMass() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
             return composition.getMass();
     }
 
@@ -212,11 +218,13 @@ public class NeutralLoss extends ExperimentObject implements Serializable {
      * the one considered
      */
     public boolean isSameAs(NeutralLoss anotherNeutralLoss) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return anotherNeutralLoss.name.equals(name);
     }
 
     @Override
     public NeutralLoss clone() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return new NeutralLoss(name, composition.clone(), fixed, aminoAcids, false);
     }
 }

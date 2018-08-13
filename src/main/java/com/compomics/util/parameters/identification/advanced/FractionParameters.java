@@ -1,6 +1,5 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import no.uib.jsparklines.data.XYDataPoint;
 
@@ -10,7 +9,7 @@ import no.uib.jsparklines.data.XYDataPoint;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class FractionParameters implements Serializable {
+public class FractionParameters {
 
     /**
      * Serial version UID for backward compatibility.

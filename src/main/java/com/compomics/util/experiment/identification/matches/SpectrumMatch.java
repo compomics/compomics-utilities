@@ -20,10 +20,6 @@ import java.util.stream.Stream;
 public class SpectrumMatch extends IdentificationMatch {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility.
-     */
-    static final long serialVersionUID = 3227760855215444318L;
-    /**
      * The key of the spectrum.
      */
     private String spectrumKey;

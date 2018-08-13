@@ -13,7 +13,7 @@ import java.util.HashSet;
  *
  * @author Marc Vaudel
  */
-public class UtilitiesUserParameters implements Serializable {
+public class UtilitiesUserParameters {
 
     /**
      * Serial version UID for post-serialization compatibility.

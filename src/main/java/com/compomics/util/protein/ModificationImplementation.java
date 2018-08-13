@@ -13,10 +13,8 @@
 package com.compomics.util.protein;
 import org.apache.log4j.Logger;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 /*
  * CVS information:
@@ -30,7 +28,7 @@ import java.util.Hashtable;
  *
  * @author Lennart Martens
  */
-public class ModificationImplementation implements com.compomics.util.interfaces.Modification, Cloneable, Serializable {
+public class ModificationImplementation implements com.compomics.util.interfaces.Modification, Cloneable {
 
     // Class specific log4j logger for ModificationImplementation instances.
     Logger logger = Logger.getLogger(ModificationImplementation.class);

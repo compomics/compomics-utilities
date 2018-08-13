@@ -13,10 +13,6 @@ import com.compomics.util.experiment.identification.SpectrumIdentificationAssump
 public class PeptideAssumption extends SpectrumIdentificationAssumption {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility.
-     */
-    static final long serialVersionUID = 3606509518581203063L;
-    /**
      * The theoretic peptide.
      */
     private Peptide peptide;

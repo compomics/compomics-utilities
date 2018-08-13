@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology.proteins;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
@@ -75,6 +76,7 @@ public class Protein extends ExperimentObject {
      * @return the protein accession
      */
     public String getAccession() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
         return accession;
         
@@ -86,6 +88,7 @@ public class Protein extends ExperimentObject {
      * @return the protein sequence
      */
     public String getSequence() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
         return sequence;
         
@@ -97,6 +100,7 @@ public class Protein extends ExperimentObject {
      * @return the key for protein indexing.
      */
     public String getProteinKey() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
         return accession;
         
@@ -108,6 +112,7 @@ public class Protein extends ExperimentObject {
      * @return the number of amino acids in the sequence
      */
     public int getLength() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
         return sequence.length();
         

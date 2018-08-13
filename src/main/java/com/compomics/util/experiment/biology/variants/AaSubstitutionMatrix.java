@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.biology.variants;
 
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -11,7 +10,7 @@ import java.util.HashSet;
  *
  * @author Marc Vaudel
  */
-public class AaSubstitutionMatrix implements Serializable {
+public class AaSubstitutionMatrix {
 
     /**
      * Serial number for backward compatibility.

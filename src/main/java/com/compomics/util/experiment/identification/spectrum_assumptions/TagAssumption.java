@@ -8,7 +8,6 @@ import com.compomics.util.experiment.identification.SpectrumIdentificationAssump
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
-import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
 
 /**
@@ -17,12 +16,8 @@ import java.util.ArrayList;
  *
  * @author Marc Vaudel
  */
-public class TagAssumption extends SpectrumIdentificationAssumption implements UrParameter {
+public class TagAssumption extends SpectrumIdentificationAssumption {
 
-    /**
-     * Serial number for backward compatibility.
-     */
-    static final long serialVersionUID = 8514376202742537298L;
     /**
      * List of mass gaps.
      */
@@ -175,12 +170,5 @@ public class TagAssumption extends SpectrumIdentificationAssumption implements U
     public String toString() {
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return tag.asSequence() + ", " + Charge.toString(identificationCharge) + " (" + score + ")";
-    }
-
-    @Override
-    public long getParameterKey() {
-        
-        return serialVersionUID;
-        
     }
 }

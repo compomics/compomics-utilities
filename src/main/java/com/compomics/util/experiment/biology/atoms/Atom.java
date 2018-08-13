@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology.atoms;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.atoms.impl.Carbon;
 import com.compomics.util.experiment.biology.atoms.impl.Fluorine;
 import com.compomics.util.experiment.biology.atoms.impl.Helium;
@@ -13,7 +14,6 @@ import com.compomics.util.experiment.biology.atoms.impl.Selenium;
 import com.compomics.util.experiment.biology.atoms.impl.Sodium;
 import com.compomics.util.experiment.biology.atoms.impl.Sulfur;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,7 +23,7 @@ import java.util.HashMap;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public abstract class Atom extends ExperimentObject implements Serializable {
+public abstract class Atom extends ExperimentObject {
 
     /**
      * The version UID for Serialization/Deserialization compatibility.
@@ -155,6 +155,7 @@ public abstract class Atom extends ExperimentObject implements Serializable {
      * @return the monoisotopic mass in Da
      */
     public Double getMonoisotopicMass() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return monoisotopicMass;
     }
 
@@ -164,6 +165,7 @@ public abstract class Atom extends ExperimentObject implements Serializable {
      * @return the name of the atom
      */
     public String getName() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return name;
     }
 
@@ -173,6 +175,7 @@ public abstract class Atom extends ExperimentObject implements Serializable {
      * @return the single letter code of the atom
      */
     public String getLetter() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return letter;
     }
 
@@ -183,6 +186,7 @@ public abstract class Atom extends ExperimentObject implements Serializable {
      * @return a list of isotopes for which a mass is available
      */
     public ArrayList<Integer> getImplementedIsotopes() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (isotopeMap != null) {
             return new ArrayList<>(isotopeMap.keySet());
         }
@@ -199,6 +203,7 @@ public abstract class Atom extends ExperimentObject implements Serializable {
      * @return the corresponding mass
      */
     public Double getIsotopeMass(int isotopeNumber) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (isotopeMap != null) {
             return isotopeMap.get(isotopeNumber);
         }
@@ -216,6 +221,7 @@ public abstract class Atom extends ExperimentObject implements Serializable {
      * monoisotopic mass
      */
     public Double getDifferenceToMonoisotopic(int isotopeNumber) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         Double isotopeMass = null;
         if (isotopeMap != null) {
             isotopeMass = isotopeMap.get(isotopeNumber);
@@ -228,6 +234,7 @@ public abstract class Atom extends ExperimentObject implements Serializable {
     
     @Override
     public String toString() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return getLetter();
     }
 }

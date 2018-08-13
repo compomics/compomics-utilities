@@ -14,10 +14,6 @@ import java.util.Arrays;
 public class PeptideMatch extends IdentificationMatch {
 
     /**
-     * The version UID for serialization/deserialization compatibility.
-     */
-    static final long serialVersionUID = 7195830246336841081L;
-    /**
      * The peptide.
      */
     private Peptide peptide;
@@ -53,6 +49,16 @@ public class PeptideMatch extends IdentificationMatch {
         
         this.key = newKey;
     }
+    
+    
+    /**
+     * Default Constructor for the peptide match.
+     */
+    
+    
+    public PeptideMatch(){
+        
+    }
 
     /**
      * Constructor for the peptide match.
@@ -62,6 +68,10 @@ public class PeptideMatch extends IdentificationMatch {
      * @param spectrumMatchKey the key of a spectrum match linked to this peptide
      */
     public PeptideMatch(Peptide peptide, long matchKey, long spectrumMatchKey) {
+        
+        ObjectsDB.increaseRWCounter();
+        zooActivateWrite();
+        ObjectsDB.decreaseRWCounter();
         
         this.peptide = peptide;
         this.key = matchKey;

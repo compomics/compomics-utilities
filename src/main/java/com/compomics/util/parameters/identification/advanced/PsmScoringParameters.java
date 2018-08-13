@@ -3,7 +3,6 @@ package com.compomics.util.parameters.identification.advanced;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.psm_scoring.PsmScore;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +13,7 @@ import java.util.Set;
  *
  * @author Marc Vaudel
  */
-public class PsmScoringParameters implements Serializable {
+public class PsmScoringParameters {
 
     /**
      * Serial version UID for backward compatibility.

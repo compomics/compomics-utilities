@@ -1,5 +1,7 @@
 package com.compomics.util.test.io;
 
+import com.compomics.util.Util;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
@@ -43,6 +45,20 @@ public class TestSearchParameterMarshaller {
      */
     @Test
     public void testMarshallSearchParametersToJson() {
+        String path = this.getClass().getResource("TestSearchParameterMarshaller.class").getPath();
+        path = path.substring(1, path.indexOf("/target/"));
+        path += "/src/test/resources/experiment/identificationDB";
+        File dbFolder = new File(path);
+        if (!dbFolder.exists()) {
+            dbFolder.mkdir();
+        }
+        ObjectsDB objectsDB = null;
+
+        try {
+            objectsDB = new ObjectsDB(path, "experimentTestDB2.zdb", true);
+        
+        
+        
         Class objectType = SearchParameters.class;
         SearchParameters parameters = createMockUpParameters();
         IdentificationParametersMarshaller instance = new IdentificationParametersMarshaller();
@@ -54,6 +70,10 @@ public class TestSearchParameterMarshaller {
         //System.out.println(jsonAsParameters);
         //3. Compare both
         assertTrue(parameters.equals(jsonAsParameters));
+        } finally {
+            if (objectsDB != null) objectsDB.close();
+            Util.deleteDir(dbFolder);
+        }
     }
 
     /**

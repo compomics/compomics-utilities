@@ -17,10 +17,6 @@ import java.util.ArrayList;
 public abstract class SpectrumIdentificationAssumption extends ExperimentObject {
 
     /**
-     * Serialization id for backward compatibility.
-     */
-    static final long serialVersionUID = 496273793273328259L;
-    /**
      * The rank of the peptide assumption for the concerned spectrum.
      */
     protected int rank;

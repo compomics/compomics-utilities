@@ -1,13 +1,12 @@
 package com.compomics.util.experiment.biology.atoms;
 
-import java.io.Serializable;
 
 /**
  * Class for a specific atom.
  *
  * @author Marc Vaudel
  */
-public class AtomImpl implements Serializable {
+public class AtomImpl {
 
     /**
      * Serial number for backward compatibility.

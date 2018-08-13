@@ -13,10 +13,6 @@ import java.util.HashMap;
 public abstract class ExperimentObject extends DbObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility.
-     */
-    static final long serialVersionUID = 1929697552061121072L;
-    /**
      * The hash values list.
      */
     private final static long[] HASHVALUELIST = {
@@ -67,7 +63,6 @@ public abstract class ExperimentObject extends DbObject {
      * @param parameter The parameter
      */
     public void addUrParam(UrParameter parameter) {
-        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         
         if (urParams == null) {
@@ -86,7 +81,6 @@ public abstract class ExperimentObject extends DbObject {
      * @param paramterKey the key of the parameter
      */
     public void removeUrParam(long paramterKey) {
-        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         
         if (urParams != null) {
@@ -100,7 +94,6 @@ public abstract class ExperimentObject extends DbObject {
      * Creates the parameters map unless done by another thread already.
      */
     private synchronized void createParamsMap() {
-        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         
         if (urParams == null) {
@@ -118,7 +111,6 @@ public abstract class ExperimentObject extends DbObject {
      * @return the value stored. Null if not found.
      */
     public UrParameter getUrParam(UrParameter parameter) {
-        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
         if (urParams == null) {
@@ -134,7 +126,6 @@ public abstract class ExperimentObject extends DbObject {
      * Clears the loaded parameters.
      */
     public void clearParametersMap() {
-        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         
         urParams = null;
@@ -146,7 +137,6 @@ public abstract class ExperimentObject extends DbObject {
      * @param urParams the user parameters map
      */
     public void setUrParams(HashMap<Long, UrParameter> urParams){
-        
         ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         
         this.urParams = urParams;
@@ -158,7 +148,6 @@ public abstract class ExperimentObject extends DbObject {
      * @return the user parameters map
      */
     public HashMap<Long, UrParameter> getUrParams(){
-        
         ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
         return urParams;

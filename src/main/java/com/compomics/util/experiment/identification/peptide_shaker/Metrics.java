@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.peptide_shaker;
 
 import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import java.util.stream.IntStream;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class Metrics implements Serializable {
+public class Metrics {
 
     /**
      * Serial number for versions compatibility.

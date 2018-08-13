@@ -44,7 +44,6 @@ import java.util.TreeSet;
 import org.jsuffixarrays.*;
 import java.util.concurrent.Semaphore;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
-import java.io.Serializable;
 import java.util.stream.Collectors;
 
 /**
@@ -53,7 +52,7 @@ import java.util.stream.Collectors;
  * @author Dominik Kopczynski
  * @author Marc Vaudel
  */
-public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsProvider, Serializable {
+public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
 
     /**
      * Semaphore for caching.
@@ -298,7 +297,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     /**
      * struct for building own data structure for mass to index mapping.
      */
-    public class MassIndexMap implements Serializable {
+    public class MassIndexMap {
 
         public double mass;
         public int[] indexes;
@@ -5218,8 +5217,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     public String getSubsequence(String accession, int start, int end) {
 
         String proteinSequence = getSequence(accession);
-
-        return proteinSequence.substring(Math.max(start, 0), Math.min(end, proteinSequence.length() - 1));
+        return proteinSequence.substring(Math.max(start, 0), Math.min(end, proteinSequence.length()));
 
     }
 
@@ -5301,7 +5299,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     /**
      * Class gathering metadata on a protein accession.
      */
-    private class AccessionMetaData implements Serializable {
+    private class AccessionMetaData {
 
         /**
          * The header as string

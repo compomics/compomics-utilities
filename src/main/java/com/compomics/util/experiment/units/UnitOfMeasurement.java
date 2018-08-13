@@ -1,13 +1,12 @@
 package com.compomics.util.experiment.units;
 
-import java.io.Serializable;
 
 /**
  * The unit to use for a measure.
  *
  * @author Marc Vaudel
  */
-public class UnitOfMeasurement implements Serializable {
+public class UnitOfMeasurement {
 
     /**
      * Serial number for backward compatibility.

@@ -1,13 +1,12 @@
 package com.compomics.util.math.clustering.settings;
 
-import java.io.Serializable;
 
 /**
  * Settings for k-means clustering.
  *
  * @author Marc Vaudel
  */
-public class KMeansClusteringSettings implements Serializable {
+public class KMeansClusteringSettings {
 
     /**
      * The number of clusters to use.

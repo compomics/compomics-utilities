@@ -10,7 +10,6 @@ import com.compomics.util.experiment.identification.SpectrumIdentificationAssump
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class AnnotationParameters implements Serializable {
+public class AnnotationParameters {
 
     /**
      * Enum of the types of intensity thresholds available.

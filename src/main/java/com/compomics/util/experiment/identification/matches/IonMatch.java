@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.matches;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.ions.impl.TagFragmentIon;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
@@ -54,6 +55,7 @@ public class IonMatch extends ExperimentObject {
      * @return the absolute matching error
      */
     public double getAbsoluteError() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         double theoreticMz = ion.getTheoreticMz(charge);
         return peak.mz - theoreticMz;
     }
@@ -67,6 +69,7 @@ public class IonMatch extends ExperimentObject {
      * @return the absolute matching error
      */
     public double getAbsoluteError(int minIsotope, int maxIsotope) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         double theoreticMz = ion.getTheoreticMz(charge);
         double measuredMz = peak.mz;
         measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge;
@@ -79,6 +82,7 @@ public class IonMatch extends ExperimentObject {
      * @return the relative matching error
      */
     public double getRelativeError() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         double theoreticMz = ion.getTheoreticMz(charge);
         double measuredMz = peak.mz;
         return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;
@@ -93,6 +97,7 @@ public class IonMatch extends ExperimentObject {
      * @return the relative matching error
      */
     public double getRelativeError(int minIsotope, int maxIsotope) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         double theoreticMz = ion.getTheoreticMz(charge);
         double measuredMz = peak.mz;
         measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge;
@@ -111,6 +116,7 @@ public class IonMatch extends ExperimentObject {
      * and theoretic mass
      */
     public int getIsotopeNumber(int minIsotope, int maxIsotope) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         double experimentalMass = peak.mz * charge - charge * ElementaryIon.proton.getTheoreticMass();
         double result = (experimentalMass - ion.getTheoreticMass()) / Atom.C.getDifferenceToMonoisotopic(1);
         return Math.min(Math.max((int) Math.round(result), minIsotope), maxIsotope);
@@ -127,6 +133,7 @@ public class IonMatch extends ExperimentObject {
      * @return the match m/z error
      */
     public double getError(boolean isPpm, int minIsotope, int maxIsotope) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (isPpm) {
             return getRelativeError(minIsotope, maxIsotope);
         } else {
@@ -143,6 +150,7 @@ public class IonMatch extends ExperimentObject {
      * @return the match m/z error
      */
     public double getError(boolean isPpm) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (isPpm) {
             return getRelativeError();
         } else {
@@ -156,6 +164,7 @@ public class IonMatch extends ExperimentObject {
      * @return the annotation to use for the given ion match
      */
     public String getPeakAnnotation() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return getPeakAnnotation(false, ion, charge);
     }
 
@@ -364,6 +373,7 @@ public class IonMatch extends ExperimentObject {
      * @return the annotation to use for the given ion match
      */
     public String getPeakAnnotation(boolean html) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return getPeakAnnotation(html, ion, charge);
     }
 
@@ -373,6 +383,7 @@ public class IonMatch extends ExperimentObject {
      * @return the pride CV term for the ion match m/z
      */
     public CvTerm getMZPrideCvTerm() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return new CvTerm("PRIDE", "PRIDE:0000188", "product ion m/z", peak.mz + "");
     }
 
@@ -382,6 +393,7 @@ public class IonMatch extends ExperimentObject {
      * @return the pride CV term for the ion match intensity
      */
     public CvTerm getIntensityPrideCvTerm() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return new CvTerm("PRIDE", "PRIDE:0000189", "product ion intensity", peak.intensity + "");
     }
 
@@ -394,6 +406,7 @@ public class IonMatch extends ExperimentObject {
      * @return the pride CV term for the ion match error
      */
     public CvTerm getIonMassErrorPrideCvTerm(int minIsotope, int maxIsotope) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return new CvTerm("PRIDE", "PRIDE:0000190", "product ion mass error", getAbsoluteError(minIsotope, maxIsotope) + "");
     }
 
@@ -403,6 +416,7 @@ public class IonMatch extends ExperimentObject {
      * @return the pride CV term for the ion match charge
      */
     public CvTerm getChargePrideCvTerm() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return new CvTerm("PRIDE", "PRIDE:0000204", "product ion charge", charge + "");
     }
 

@@ -12,7 +12,6 @@
  */
 package com.compomics.util.experiment.io.biology.protein;
 
-import java.io.Serializable;
 import org.apache.log4j.Logger;
 
 import java.util.StringTokenizer;
@@ -28,7 +27,7 @@ import java.util.StringTokenizer;
  * @author Harald Barsnes
  * @author Marc Vaudel
  */
-public class Header implements Cloneable, Serializable {
+public class Header implements Cloneable {
 
     /**
      * The version UID for Serialization/Deserialization compatibility.

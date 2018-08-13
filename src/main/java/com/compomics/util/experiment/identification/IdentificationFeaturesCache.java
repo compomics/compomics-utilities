@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
@@ -11,7 +10,7 @@ import java.util.concurrent.Semaphore;
  *
  * @author Marc Vaudel
  */
-public class IdentificationFeaturesCache implements Serializable {
+public class IdentificationFeaturesCache {
 
     /**
      * Serial number for backward compatibility.

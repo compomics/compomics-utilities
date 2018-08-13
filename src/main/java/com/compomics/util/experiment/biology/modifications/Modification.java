@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology.modifications;
 
 import com.compomics.util.Util;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
 import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
@@ -144,6 +145,7 @@ public class Modification extends ExperimentObject {
      * @return the modification type
      */
     public ModificationType getModificationType() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return modificationType;
     }
 
@@ -153,6 +155,7 @@ public class Modification extends ExperimentObject {
      * @return the modification name
      */
     public String getName() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return name;
     }
 
@@ -162,6 +165,7 @@ public class Modification extends ExperimentObject {
      * @param name the modification name
      */
     public void setName(String name) {
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.name = name;
     }
 
@@ -171,6 +175,7 @@ public class Modification extends ExperimentObject {
      * @return the short modification name
      */
     public String getShortName() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return shortName;
     }
 
@@ -180,6 +185,7 @@ public class Modification extends ExperimentObject {
      * @param shortName the modification name
      */
     public void setShortName(String shortName) {
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.shortName = shortName;
     }
 
@@ -189,6 +195,7 @@ public class Modification extends ExperimentObject {
      * @return the mass difference induced by the modification
      */
     public double getMass() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (mass == null) {
             estimateMass();
         }
@@ -199,6 +206,7 @@ public class Modification extends ExperimentObject {
      * Estimates the mass of the modification and stores it in the mass attribute.
      */
     private synchronized void estimateMass() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (mass == null) {
             Double tempMass = 0.0;
             if (atomChainAdded != null) {
@@ -217,6 +225,7 @@ public class Modification extends ExperimentObject {
      * @return the ambiguity key
      */
     public String getAmbiguityKey() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         
         if (ambiguityKey == null) {
             setAmbiguityKey();
@@ -229,6 +238,7 @@ public class Modification extends ExperimentObject {
      * Sets the ambiguity key.
      */
     private void setAmbiguityKey() {
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.ambiguityKey = getMass() + "";
     }
 
@@ -239,6 +249,7 @@ public class Modification extends ExperimentObject {
      * @return the rounded mass difference induced by the modification
      */
     public double getRoundedMass(int numberOfDecimals) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         double roundedMass = getMass();
         return Util.roundDouble(roundedMass, numberOfDecimals);
     }
@@ -250,6 +261,7 @@ public class Modification extends ExperimentObject {
      * @return the rounded mass difference induced by the modification
      */
     public double getRoundedMass() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return getRoundedMass(NUMBER_OF_ROUNDED_DECIMALS);
     }
 
@@ -259,6 +271,7 @@ public class Modification extends ExperimentObject {
      * @return the atom chain added
      */
     public AtomChain getAtomChainAdded() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return atomChainAdded;
     }
 
@@ -268,6 +281,7 @@ public class Modification extends ExperimentObject {
      * @param atomChainAdded the atom chain added
      */
     public void setAtomChainAdded(AtomChain atomChainAdded) {
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.atomChainAdded = atomChainAdded;
         mass = null;
     }
@@ -278,6 +292,7 @@ public class Modification extends ExperimentObject {
      * @return the atom chain removed
      */
     public AtomChain getAtomChainRemoved() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return atomChainRemoved;
     }
 
@@ -287,6 +302,7 @@ public class Modification extends ExperimentObject {
      * @param atomChainRemoved the atom chain removed
      */
     public void setAtomChainRemoved(AtomChain atomChainRemoved) {
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.atomChainRemoved = atomChainRemoved;
         mass = null;
     }
@@ -301,6 +317,7 @@ public class Modification extends ExperimentObject {
      * other one
      */
     public boolean isSameAtomicComposition(Modification anotherModification) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (atomChainAdded != null && !atomChainAdded.isSameCompositionAs(anotherModification.getAtomChainAdded())
                 || atomChainRemoved != null && !atomChainRemoved.isSameCompositionAs(anotherModification.getAtomChainRemoved())) {
             return false;
@@ -322,6 +339,7 @@ public class Modification extends ExperimentObject {
      * one
      */
     public boolean isSamePattern(Modification anotherModification) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (pattern == null && anotherModification.getPattern() != null && anotherModification.getPattern().length() > 0) {
             return false;
         }
@@ -339,6 +357,7 @@ public class Modification extends ExperimentObject {
      * @return true if the modification is the same as the other one
      */
     public boolean isSameAs(Modification anotherModification) {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         if (modificationType != anotherModification.getModificationType()) {
 //            System.out.println("type difference");
 //            System.out.println("local: " + type);
@@ -368,6 +387,7 @@ public class Modification extends ExperimentObject {
      * @return the neutral losses possibly encountered with this modification
      */
     public ArrayList<NeutralLoss> getNeutralLosses() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return neutralLosses;
     }
 
@@ -378,6 +398,7 @@ public class Modification extends ExperimentObject {
      * modification
      */
     public void setNeutralLosses(ArrayList<NeutralLoss> neutralLosses) {
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.neutralLosses = neutralLosses;
     }
 
@@ -396,6 +417,7 @@ public class Modification extends ExperimentObject {
      * @return the reporter ions possibly encountered with this modification
      */
     public ArrayList<ReporterIon> getReporterIons() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return reporterIons;
     }
 
@@ -406,6 +428,7 @@ public class Modification extends ExperimentObject {
      * modification
      */
     public void setReporterIons(ArrayList<ReporterIon> reporterIons) {
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.reporterIons = reporterIons;
     }
 
@@ -424,6 +447,7 @@ public class Modification extends ExperimentObject {
      * @return the amino acid pattern targeted by this modification
      */
     public AminoAcidPattern getPattern() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return pattern;
     }
 
@@ -433,6 +457,7 @@ public class Modification extends ExperimentObject {
      * @param pattern the amino acid pattern targeted by this modification
      */
     public void setPattern(AminoAcidPattern pattern) {
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.pattern = pattern;
     }
 
@@ -445,6 +470,7 @@ public class Modification extends ExperimentObject {
      * standard search engines
      */
     public boolean isStandardSearch() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return pattern == null || pattern.length() == 1;
     }
 
@@ -454,6 +480,7 @@ public class Modification extends ExperimentObject {
      * @return information about the modification as an HTML tooltip
      */
     public String getHtmlTooltip() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
 
         String tooltip = "<html>";
 
@@ -504,6 +531,7 @@ public class Modification extends ExperimentObject {
      * @return the cvTerm
      */
     public CvTerm getCvTerm() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
         return cvTerm;
     }
 
@@ -513,11 +541,13 @@ public class Modification extends ExperimentObject {
      * @param cvTerm the cvTerm to set
      */
     public void setCvTerm(CvTerm cvTerm) {
+        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
         this.cvTerm = cvTerm;
     }
 
     @Override
     public String toString() {
+        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
 
         String target = "";
         switch (modificationType) {

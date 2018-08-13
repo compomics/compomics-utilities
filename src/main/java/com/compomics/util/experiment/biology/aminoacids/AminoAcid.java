@@ -28,7 +28,6 @@ import com.compomics.util.experiment.biology.aminoacids.impl.X;
 import com.compomics.util.experiment.biology.aminoacids.impl.Asparagine;
 import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,12 +38,8 @@ import java.util.List;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public abstract class AminoAcid implements Serializable {
+public abstract class AminoAcid {
 
-    /**
-     * Serial number for backward compatibility.
-     */
-    static final long serialVersionUID = -3158896310928354857L;
 
     public static final AminoAcid A = new Alanine();
     public static final AminoAcid C = new Cysteine();

@@ -1,7 +1,6 @@
 package com.compomics.util.db.object;
 
 
-import java.io.Serializable;
 import org.zoodb.api.impl.ZooPC;
 
 /**
@@ -10,7 +9,7 @@ import org.zoodb.api.impl.ZooPC;
  * 
  * @author Dominik Kopczynski
  */
-public class DbObject extends ZooPC implements Serializable {
+public class DbObject extends ZooPC {
     
     /**
      * Unique identifier.
@@ -77,4 +76,29 @@ public class DbObject extends ZooPC implements Serializable {
         this.firstLevel = firstLevel;
     
     }
+    
+    /**
+     * Sets the ZooDB to read mode
+     */
+    public void readDBMode(){
+        ObjectsDB.increaseRWCounter();
+        
+        zooActivateRead();
+        
+        ObjectsDB.decreaseRWCounter();
+    }
+    
+    
+    
+    /**
+     * Sets the ZooDB to write mode
+     */
+    public void writeDBMode(){
+        ObjectsDB.increaseRWCounter();
+        
+        zooActivateWrite();
+        
+        ObjectsDB.decreaseRWCounter();
+    }
+            
 }

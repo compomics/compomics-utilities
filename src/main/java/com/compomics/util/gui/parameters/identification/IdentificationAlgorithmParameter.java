@@ -1,14 +1,13 @@
 package com.compomics.util.gui.parameters.identification;
 
 import com.compomics.util.experiment.identification.Advocate;
-import java.io.Serializable;
 
 /**
  * Interface for the algorithm specific parameters.
  *
  * @author Marc Vaudel
  */
-public interface IdentificationAlgorithmParameter extends Serializable {
+public interface IdentificationAlgorithmParameter {
 
     /**
      * Returns the identification algorithm.

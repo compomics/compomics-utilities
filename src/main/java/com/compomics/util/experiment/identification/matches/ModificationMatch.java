@@ -12,10 +12,6 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class ModificationMatch extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility.
-     */
-    static final long serialVersionUID = 7129515983284796207L;
-    /**
      * The modification name. The modification can be accessed via
      * the factory.
      */

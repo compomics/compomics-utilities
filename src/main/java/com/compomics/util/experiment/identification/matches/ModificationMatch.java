@@ -61,7 +61,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public String getModification() {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return modification;
     }
@@ -73,7 +73,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public void setModification(String modName) {
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         
         this.modification = modName;
     }
@@ -88,7 +88,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public int getSite() {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return modifiedSite;
     }
@@ -100,7 +100,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public void setSite(int site) {
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         
         this.modifiedSite = site;
     }
@@ -114,7 +114,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public boolean getConfident() {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return confident;
     }
@@ -127,7 +127,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public void setConfident(boolean confident) {
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         
         this.confident = confident;
     }
@@ -141,7 +141,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public boolean getInferred() {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return inferred;
     }
@@ -154,7 +154,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public void setInferred(boolean inferred) {
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         
         this.inferred = inferred;
     }
@@ -171,7 +171,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public boolean isSameAs(ModificationMatch anotherModificationMatch) {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return modification.equals(anotherModificationMatch.getModification());
         
@@ -184,7 +184,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public ModificationMatch clone() {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         ModificationMatch newMatch = new ModificationMatch(modification, modifiedSite);
         newMatch.setConfident(confident);

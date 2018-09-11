@@ -238,9 +238,9 @@ public class DigestionParameters extends ExperimentObject {
      * @return a boolean indicating whether enzyme settings were set
      */
     public boolean hasEnzymes() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return enzymes != null && !enzymes.isEmpty();
     }
 
@@ -250,9 +250,9 @@ public class DigestionParameters extends ExperimentObject {
      * @return the enzymes used for digestion in a list
      */
     public ArrayList<Enzyme> getEnzymes() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return enzymes;
     }
 
@@ -262,7 +262,7 @@ public class DigestionParameters extends ExperimentObject {
      * @param enzymes the enzymes used for digestion in a list
      */
     public void setEnzymes(ArrayList<Enzyme> enzymes) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         this.enzymes = enzymes;
     }
 
@@ -273,7 +273,7 @@ public class DigestionParameters extends ExperimentObject {
      * @param enzyme an enzyme used for digestion.
      */
     public void addEnzyme(Enzyme enzyme) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         if (enzymes == null) {
             enzymes = new ArrayList<>(1);
         }
@@ -286,7 +286,7 @@ public class DigestionParameters extends ExperimentObject {
      * Clears the parameters.
      */
     public void clear() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         cleavageParameter = null;
         enzymes = null;
         nMissedCleavages = null;
@@ -297,7 +297,7 @@ public class DigestionParameters extends ExperimentObject {
      * Clears the enzymes set including specificity and missed cleavages.
      */
     public void clearEnzymes() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         enzymes = null;
         nMissedCleavages = null;
         specificity = null;
@@ -312,9 +312,9 @@ public class DigestionParameters extends ExperimentObject {
      * @return the number of allowed missed cleavages
      */
     public Integer getnMissedCleavages(String enzymeName) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         if (nMissedCleavages == null) {
             return null;
         }
@@ -328,7 +328,7 @@ public class DigestionParameters extends ExperimentObject {
      * @param enzymeMissedCleavages the number of allowed missed cleavages
      */
     public void setnMissedCleavages(String enzymeName, int enzymeMissedCleavages) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         if (nMissedCleavages == null) {
             nMissedCleavages = new HashMap<>(1);
         }
@@ -343,9 +343,9 @@ public class DigestionParameters extends ExperimentObject {
      * @return the specificity
      */
     public Specificity getSpecificity(String enzymeName) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         if (specificity == null) {
             return null;
         }
@@ -360,7 +360,7 @@ public class DigestionParameters extends ExperimentObject {
      * @param enzymeSpecificity the expected specificity of the enzyme
      */
     public void setSpecificity(String enzymeName, Specificity enzymeSpecificity) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         if (specificity == null) {
             specificity = new HashMap<>(1);
         }
@@ -373,9 +373,9 @@ public class DigestionParameters extends ExperimentObject {
      * @return the cleavage parameters
      */
     public CleavageParameter getCleavageParameter() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return cleavageParameter;
     }
 
@@ -385,7 +385,7 @@ public class DigestionParameters extends ExperimentObject {
      * @param cleavageParameter the cleavage parameters
      */
     public void setCleavageParameter(CleavageParameter cleavageParameter) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         this.cleavageParameter = cleavageParameter;
     }
 
@@ -395,9 +395,9 @@ public class DigestionParameters extends ExperimentObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         DigestionParameters defaultParameters = DigestionParameters.getDefaultParameters();
         StringBuilder stringBuilder = new StringBuilder();
         String newLine = System.getProperty("line.separator");
@@ -442,10 +442,9 @@ public class DigestionParameters extends ExperimentObject {
      * same as the given other parameters
      */
     public boolean isSameAs(DigestionParameters otherDigestionParameters) {
-        System.out.println("huhu");
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         if (cleavageParameter != otherDigestionParameters.getCleavageParameter()) {
             return false;
         }
@@ -463,6 +462,7 @@ public class DigestionParameters extends ExperimentObject {
                 enzymeNames.add(enzyme.getName());
             }
             ArrayList<String> otherNames = new ArrayList<>(otherEnzymes.size());
+            
             for (Enzyme enzyme : otherEnzymes) {
                 otherNames.add(enzyme.getName());
             }
@@ -485,9 +485,9 @@ public class DigestionParameters extends ExperimentObject {
      * @return the enzyme X!Tandem format as String
      */
     public String getXTandemFormat() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         switch (cleavageParameter) {
             case wholeProtein:
@@ -556,9 +556,9 @@ public class DigestionParameters extends ExperimentObject {
      * @return the enzyme MyriMatch format as String
      */
     public String getMyriMatchFormat() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         // example: trypsin corresponds to "[|R|K . . ]"
         // details: http://htmlpreview.github.io/?https://github.com/ProteoWizard/pwiz/blob/master/pwiz_tools/Bumbershoot/myrimatch/doc/index.html

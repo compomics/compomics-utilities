@@ -33,7 +33,7 @@ public class IdentificationMethod extends ExperimentObject {
      * @param index the index of the method as indexed by the static fields
      */
     public IdentificationMethod(int index) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         this.index = index;
     }
 
@@ -42,7 +42,7 @@ public class IdentificationMethod extends ExperimentObject {
      * @return the index of the identification method
      */
     public int getIndex() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return index;
     }
 }

@@ -29,9 +29,9 @@ public class PeptideMatch extends IdentificationMatch {
     @Override
     public long getKey() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return key;
     }
@@ -43,9 +43,9 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public void setKey(long newKey) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         this.key = newKey;
     }
@@ -69,9 +69,9 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public PeptideMatch(Peptide peptide, long matchKey, long spectrumMatchKey) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         this.peptide = peptide;
         this.key = matchKey;
@@ -88,9 +88,9 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public Peptide getPeptide() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return peptide;
     }
@@ -102,9 +102,9 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public void setPeptide(Peptide peptide) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         this.peptide = peptide;
     }
@@ -116,9 +116,9 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public long[] getSpectrumMatchesKeys() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return spectrumMatchesKeys;
         
@@ -131,9 +131,9 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public void setSpectrumMatchesKeys(long[] spectrumMatchesKeys) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         this.spectrumMatchesKeys = spectrumMatchesKeys;
         
@@ -146,9 +146,9 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public void addSpectrumMatchKey(long spectrumMatchKey) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         spectrumMatchesKeys =  Arrays.copyOf(spectrumMatchesKeys, spectrumMatchesKeys.length + 1);
         
@@ -163,9 +163,9 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public int getSpectrumCount() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return spectrumMatchesKeys.length;
     }

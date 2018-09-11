@@ -62,14 +62,14 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public String getExtension() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return ".res";
     }
 
     @Override
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
     }
 
@@ -77,7 +77,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         String mgfFile = Util.removeExtension(fileName) + ".mgf"; //@TODO: make this generic?
 
@@ -156,7 +156,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * @return the corresponding assumption
      */
     private PeptideAssumption getAssumptionFromLine(String line, int rank) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         String[] temp = line.trim().split("\t");
 
@@ -192,7 +192,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         HashMap<String, ArrayList<String>> result = new HashMap<>();
         ArrayList<String> versions = new ArrayList<>();
         versions.add("1.5.3.4");
@@ -202,7 +202,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public boolean hasDeNovoTags() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return false;
     }
 }

@@ -149,7 +149,7 @@ public class NeutralLoss extends ExperimentObject {
      * @return the CV term for the neutral loss.
      */
     public CvTerm getPsiMsCvTerm() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         if (psiCvTerm != null) {
             return psiCvTerm;
         }
@@ -163,7 +163,7 @@ public class NeutralLoss extends ExperimentObject {
      * @return a boolean indicating whether the neutral loss is fixed or not
      */
     public boolean isFixed() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return fixed;
     }
 
@@ -173,7 +173,7 @@ public class NeutralLoss extends ExperimentObject {
      * @param fixed a boolean indicating whether the loss is fixed or not
      */
     public void setFixed(boolean fixed) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.fixed = fixed;
     }
 
@@ -183,7 +183,7 @@ public class NeutralLoss extends ExperimentObject {
      * @return The composition of the loss
      */
     public AtomChain getComposition() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return composition;
     }
 
@@ -193,7 +193,7 @@ public class NeutralLoss extends ExperimentObject {
      * @param composition the composition of the neutral loss
      */
     public void setComposition(AtomChain composition) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.composition = composition;
     }
 
@@ -204,7 +204,7 @@ public class NeutralLoss extends ExperimentObject {
      * @return the mass of the neutral loss
      */
     public double getMass() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
             return composition.getMass();
     }
 
@@ -218,13 +218,13 @@ public class NeutralLoss extends ExperimentObject {
      * the one considered
      */
     public boolean isSameAs(NeutralLoss anotherNeutralLoss) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return anotherNeutralLoss.name.equals(name);
     }
 
     @Override
     public NeutralLoss clone() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return new NeutralLoss(name, composition.clone(), fixed, aminoAcids, false);
     }
 }

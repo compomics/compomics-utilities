@@ -186,7 +186,6 @@ public class ModificationImplementation implements com.compomics.util.interfaces
      * @return  <code>true</code> if this object is the same as the obj
      *          argument; <code>false</code> otherwise.
      * @see     #hashCode()
-     * @see     Hashtable
      */
     public boolean equals(Object obj) {
         boolean result = true;
@@ -236,7 +235,6 @@ public class ModificationImplementation implements com.compomics.util.interfaces
      *
      * @return  a hash code value for this object.
      * @see     Object#equals(Object)
-     * @see     Hashtable
      */
     public int hashCode() {
         return iTemplate.hashCode();

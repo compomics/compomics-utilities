@@ -38,9 +38,9 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
      */
     public double getRankScore() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return rankScore;
     }
@@ -52,9 +52,9 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
      */
     public void setRankScore(double rankScore) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         this.rankScore = rankScore;
     }
@@ -65,9 +65,9 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
      * @return the PepNovo mH
      */
     public double getMH() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return mH;
     }
 
@@ -78,9 +78,9 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
      */
     public void setMH(double mH) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         this.mH = mH;
     }

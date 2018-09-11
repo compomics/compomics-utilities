@@ -83,7 +83,7 @@ public class ObjectsDB {
     /**
      * The access counter.
      */
-    private volatile static AtomicInteger ACCESSCOUNTER = new AtomicInteger(0);
+    public volatile static AtomicInteger ACCESSCOUNTER = new AtomicInteger(0);
     /**
      * The commit counter.
      */
@@ -117,16 +117,18 @@ public class ObjectsDB {
         COMMITBLOCKER.set(true);
        
         while (ACCESSCOUNTER.get() != 0) {
-            System.out.println(ACCESSCOUNTER.get());
             // YOU SHALL NOT PASS
             // while processes are potentially accessing the database
         }
 
-        pm.currentTransaction().commit();
-        pm.currentTransaction().begin();
-        currentAdded = 0;
-
-        COMMITBLOCKER.set(false);
+        try {
+            pm.currentTransaction().commit();
+            pm.currentTransaction().begin();
+            currentAdded = 0;
+        }
+        finally {
+            COMMITBLOCKER.set(false);
+        }
     
     }
 
@@ -820,7 +822,6 @@ public class ObjectsDB {
      * @param clearing clearing all database structures
      */
     public void close(boolean clearing) {
-        
         synchronized (dbMutex) {
             
             if (debugInteractions) {

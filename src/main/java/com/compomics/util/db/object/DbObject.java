@@ -32,7 +32,7 @@ public class DbObject extends ZooPC {
      */
     public long getId(){
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return id;
     
@@ -45,7 +45,7 @@ public class DbObject extends ZooPC {
      */
     public void setId(long id){
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         
         this.id = id;
     
@@ -58,7 +58,7 @@ public class DbObject extends ZooPC {
      */
     public boolean getFirstLevel(){
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return firstLevel;
     
@@ -71,7 +71,7 @@ public class DbObject extends ZooPC {
      */
     public void setFirstLevel(boolean firstLevel){
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         this.firstLevel = firstLevel;
     
@@ -81,11 +81,13 @@ public class DbObject extends ZooPC {
      * Sets the ZooDB to read mode
      */
     public void readDBMode(){
-        ObjectsDB.increaseRWCounter();
-        
-        zooActivateRead();
-        
-        ObjectsDB.decreaseRWCounter();
+        try {
+            ObjectsDB.increaseRWCounter();
+            zooActivateRead();
+        }
+        finally {
+            ObjectsDB.decreaseRWCounter();
+        }
     }
     
     
@@ -94,11 +96,13 @@ public class DbObject extends ZooPC {
      * Sets the ZooDB to write mode
      */
     public void writeDBMode(){
-        ObjectsDB.increaseRWCounter();
-        
-        zooActivateWrite();
-        
-        ObjectsDB.decreaseRWCounter();
+        try {
+            ObjectsDB.increaseRWCounter();
+            zooActivateWrite();
+        }
+        finally {
+            ObjectsDB.decreaseRWCounter();
+        }
     }
             
 }

@@ -35,14 +35,14 @@ public class MassGap extends ExperimentObject implements TagComponent {
      * @param value the mass of the gap
      */
     public void setMass(double value) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.value = value;
         sequence = null;
     }
 
     @Override
     public String asSequence() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         if (sequence == null) {
         
@@ -59,19 +59,19 @@ public class MassGap extends ExperimentObject implements TagComponent {
 
     @Override
     public double getMass() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return value;
     }
 
     @Override
     public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return (anotherCompontent instanceof MassGap) && anotherCompontent.getMass() == value;
     }
 
     @Override
     public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return isSameAs(anotherCompontent, sequenceMatchingPreferences);
     }
 }

@@ -140,9 +140,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public double getProbability() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return probability;
 
@@ -155,9 +155,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setProbability(double probability) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.probability = probability;
 
@@ -165,9 +165,9 @@ public class PSParameter extends DbObject implements UrParameter {
 
     public void setGroupClass(int groupClass) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.proteinInferenceGroupClass = groupClass;
 
@@ -180,9 +180,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public double getScore() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return score;
 
@@ -206,9 +206,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setScore(double score) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.score = score;
 
@@ -221,9 +221,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public double getConfidence() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         double confidence = 100.0 * (1 - probability);
 
@@ -242,9 +242,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getAlgorithmDeltaPEP() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return algorithmDeltaPEP;
 
@@ -261,9 +261,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setAlgorithmDeltaPEP(Double deltaPEP) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.algorithmDeltaPEP = deltaPEP;
 
@@ -280,9 +280,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getDeltaPEP() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return deltaPEP;
 
@@ -299,9 +299,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setDeltaPEP(Double deltaPEP) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.deltaPEP = deltaPEP;
 
@@ -314,9 +314,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setQcFilters(HashMap<String, Boolean> qcFilters) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.qcFilters = qcFilters;
 
@@ -329,9 +329,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public MatchValidationLevel getMatchValidationLevel() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return matchValidationLevel;
 
@@ -344,9 +344,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setMatchValidationLevel(MatchValidationLevel matchValidationLevel) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.matchValidationLevel = matchValidationLevel;
 
@@ -359,9 +359,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setHidden(boolean hidden) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.hidden = hidden;
 
@@ -374,9 +374,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public boolean getHidden() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return hidden;
 
@@ -389,9 +389,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setStarred(boolean starred) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.starred = starred;
 
@@ -404,9 +404,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public boolean getStarred() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return starred;
 
@@ -419,9 +419,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public int getProteinInferenceGroupClass() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return proteinInferenceGroupClass;
 
@@ -435,9 +435,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public String getProteinInferenceClassAsString() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return getProteinInferenceClassAsString(proteinInferenceGroupClass);
 
@@ -486,9 +486,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setProteinInferenceClass(int groupClass) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.proteinInferenceGroupClass = groupClass;
 
@@ -501,9 +501,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Integer> getValidatedPeptidesPerFraction() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return validatedPeptidesPerFraction;
 
@@ -516,9 +516,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Integer> getValidatedSpectraPerFraction() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return validatedSpectraPerFraction;
     }
@@ -531,9 +531,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setFractionScore(String fraction, Double confidence) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         if (fractionScore == null) {
 
@@ -552,9 +552,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setFractionScore(HashMap<String, Double> fractionScore) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.fractionScore = fractionScore;
 
@@ -568,9 +568,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getFractionScore(String fraction) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         if (fractionScore == null) {
 
@@ -589,9 +589,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Set<String> getFractions() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return fractionScore == null ? null
                 : fractionScore.keySet();
@@ -605,9 +605,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Double> getFractionScore() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return fractionScore;
 
@@ -621,9 +621,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setFractionPEP(String fraction, Double confidence) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         if (fractionPEP == null) {
 
@@ -637,9 +637,9 @@ public class PSParameter extends DbObject implements UrParameter {
 
     public void setFractionPEP(HashMap<String, Double> fractionPEP) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.fractionPEP = fractionPEP;
 
@@ -653,9 +653,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getFractionPEP(String fraction) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return fractionPEP == null ? null : fractionPEP.get(fraction);
 
@@ -668,9 +668,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Double> getFractionPEP() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return fractionPEP;
 
@@ -685,9 +685,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getFractionConfidence(String fraction) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return fractionPEP == null || fractionPEP.get(fraction) == null ? null
                 : 100 * (1 - fractionPEP.get(fraction));
@@ -702,9 +702,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Integer getFractionValidatedPeptides(String fraction) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return validatedPeptidesPerFraction == null ? 0
                 : validatedPeptidesPerFraction.get(fraction);
@@ -719,9 +719,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setValidatedPeptidesPerFraction(HashMap<String, Integer> validatedPeptidesPerFraction) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.validatedPeptidesPerFraction = validatedPeptidesPerFraction;
 
@@ -735,9 +735,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Integer getFractionValidatedSpectra(String fraction) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return validatedSpectraPerFraction == null ? 0
                 : validatedSpectraPerFraction.get(fraction);
@@ -751,9 +751,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setValidatedSpectraPepFraction(HashMap<String, Integer> validatedSpectraPerFraction) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.validatedSpectraPerFraction = validatedSpectraPerFraction;
 
@@ -767,9 +767,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public ArrayList<Double> getPrecursorIntensityPerFraction(String fraction) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return precursorIntensityPerFraction == null ? new ArrayList<>(0)
                 : precursorIntensityPerFraction.get(fraction);
@@ -783,9 +783,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, ArrayList<Double>> getPrecursorIntensityPerFraction() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return precursorIntensityPerFraction;
 
@@ -799,9 +799,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setPrecursorIntensityAveragePerFraction(HashMap<String, Double> precursorIntensityAveragePerFraction) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.precursorIntensityAveragePerFraction = precursorIntensityAveragePerFraction;
 
@@ -815,9 +815,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setPrecursorIntensitySummedPerFraction(HashMap<String, Double> precursorIntensitySummedPerFraction) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.precursorIntensitySummedPerFraction = precursorIntensitySummedPerFraction;
 
@@ -831,9 +831,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setPrecursorIntensityPerFraction(HashMap<String, ArrayList<Double>> precursorIntensityPerFraction) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.precursorIntensityPerFraction = precursorIntensityPerFraction;
 
@@ -876,9 +876,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getPrecursorIntensityAveragePerFraction(String fraction) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return precursorIntensityAveragePerFraction == null ? null
                 : precursorIntensityAveragePerFraction.get(fraction);
@@ -892,9 +892,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Double> getPrecursorIntensityAveragePerFraction() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return precursorIntensityAveragePerFraction;
 
@@ -908,9 +908,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getPrecursorIntensitySummedPerFraction(String fraction) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return precursorIntensitySummedPerFraction == null ? null
                 : precursorIntensitySummedPerFraction.get(fraction);
@@ -924,9 +924,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Double> getPrecursorIntensitySummedPerFraction() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return precursorIntensitySummedPerFraction;
 
@@ -940,9 +940,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public boolean getManualValidation() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return manualValidation;
 
@@ -956,9 +956,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setManualValidation(boolean manualValidation) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.manualValidation = manualValidation;
 
@@ -972,9 +972,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setQcResult(String criterion, boolean validated) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         if (qcFilters == null) {
 
@@ -995,9 +995,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Boolean isQcPassed(String criterion) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return qcFilters == null ? null
                 : qcFilters.get(criterion);
@@ -1011,9 +1011,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Set<String> getQcCriteria() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return qcFilters == null ? new HashSet<>(0)
                 : qcFilters.keySet();
@@ -1026,9 +1026,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Boolean> getQcFilters() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return qcFilters;
 
@@ -1039,9 +1039,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void resetQcResults() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         if (qcFilters == null) {
 
@@ -1062,9 +1062,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public boolean hasQcFilters() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return qcFilters != null && !qcFilters.isEmpty();
 
@@ -1078,9 +1078,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setIntermediateScore(Integer scoreId, Double score) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         if (intermediateScores == null) {
 
@@ -1094,9 +1094,9 @@ public class PSParameter extends DbObject implements UrParameter {
 
     public void setIntermediateScores(HashMap<Integer, Double> intermediateScores) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.intermediateScores = intermediateScores;
 
@@ -1107,9 +1107,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public synchronized void createIntermediateScoreMap() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         if (intermediateScores == null) {
 
@@ -1127,9 +1127,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getIntermediateScore(int scoreId) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return intermediateScores == null ? null :
                 intermediateScores.get(scoreId);
@@ -1143,9 +1143,9 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<Integer, Double> getIntermediateScores() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return intermediateScores;
 

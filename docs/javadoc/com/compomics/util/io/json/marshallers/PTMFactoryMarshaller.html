@@ -94,10 +94,25 @@
 <li><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
+<li>org.zoodb.api.impl.ZooPC</li>
+<li>
+<ul class="inheritance">
+<li><a href="../../../../../../com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">com.compomics.util.db.object.DbObject</a></li>
+<li>
+<ul class="inheritance">
+<li><a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">com.compomics.util.experiment.personalization.ExperimentObject</a></li>
+<li>
+<ul class="inheritance">
 <li><a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html" title="class in com.compomics.util.io.json">com.compomics.util.io.json.JsonMarshaller</a></li>
 <li>
 <ul class="inheritance">
 <li>com.compomics.util.io.json.marshallers.PTMFactoryMarshaller</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -135,6 +150,13 @@ extends <a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.htm
 <h3>Fields inherited from class&nbsp;com.compomics.util.io.json.<a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html" title="class in com.compomics.util.io.json">JsonMarshaller</a></h3>
 <code><a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html#builder">builder</a>, <a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html#gson">gson</a></code></li>
 </ul>
+<ul class="blockList">
+<li class="blockList"><a name="fields.inherited.from.class.com.compomics.util.experiment.personalization.ExperimentObject">
+<!--   -->
+</a>
+<h3>Fields inherited from class&nbsp;com.compomics.util.experiment.personalization.<a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></h3>
+<code><a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#NO_KEY">NO_KEY</a></code></li>
+</ul>
 </li>
 </ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -170,11 +192,32 @@ extends <a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.htm
 <code><a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html#fromJson-java.lang.Class-java.io.File-">fromJson</a>, <a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html#fromJson-java.lang.Class-java.lang.String-">fromJson</a>, <a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html#fromJson-java.lang.Class-java.net.URL-">fromJson</a>, <a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html#fromJson-java.lang.reflect.Type-java.io.File-">fromJson</a>, <a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html#fromJson-java.lang.reflect.Type-java.lang.String-">fromJson</a>, <a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html#fromJson-java.lang.reflect.Type-java.net.URL-">fromJson</a>, <a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html#getJsonStringFromFile-java.io.File-">getJsonStringFromFile</a>, <a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html#init--">init</a>, <a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html#saveObjectToJson-java.lang.Object-java.io.File-">saveObjectToJson</a>, <a href="../../../../../../com/compomics/util/io/json/JsonMarshaller.html#toJson-java.lang.Object-">toJson</a></code></li>
 </ul>
 <ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.experiment.personalization.ExperimentObject">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.compomics.util.experiment.personalization.<a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></h3>
+<code><a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#addUrParam-com.compomics.util.experiment.personalization.UrParameter-">addUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#asLong-java.lang.String-">asLong</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#clearParametersMap--">clearParametersMap</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParam-com.compomics.util.experiment.personalization.UrParameter-">getUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParams--">getUrParams</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#removeUrParam-long-">removeUrParam</a>, <a href="../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#setUrParams-java.util.HashMap-">setUrParams</a></code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.db.object.DbObject">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.compomics.util.db.object.<a href="../../../../../../com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a></h3>
+<code><a href="../../../../../../com/compomics/util/db/object/DbObject.html#getFirstLevel--">getFirstLevel</a>, <a href="../../../../../../com/compomics/util/db/object/DbObject.html#getId--">getId</a>, <a href="../../../../../../com/compomics/util/db/object/DbObject.html#readDBMode--">readDBMode</a>, <a href="../../../../../../com/compomics/util/db/object/DbObject.html#setFirstLevel-boolean-">setFirstLevel</a>, <a href="../../../../../../com/compomics/util/db/object/DbObject.html#setId-long-">setId</a>, <a href="../../../../../../com/compomics/util/db/object/DbObject.html#writeDBMode--">writeDBMode</a></code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.org.zoodb.api.impl.ZooPC">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;org.zoodb.api.impl.ZooPC</h3>
+<code>jdoZooEvict, jdoZooGetBackup, jdoZooGetClassDef, jdoZooGetContext, jdoZooGetNode, jdoZooGetOid, jdoZooGetTimestamp, jdoZooHasState, jdoZooInit, jdoZooIsDeleted, jdoZooIsDetached, jdoZooIsDirty, jdoZooIsNew, jdoZooIsPersistent, jdoZooIsStateHollow, jdoZooIsTransactional, jdoZooMarkClean, jdoZooMarkDeleted, jdoZooMarkDetached, jdoZooMarkDirty, jdoZooMarkHollow, jdoZooMarkTransient, jdoZooSetOid, jdoZooSetTimestamp, toString, zooActivateRead, zooActivateWrite, zooActivateWrite</code></li>
+</ul>
+<ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></h3>
-<code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#toString--" title="class or interface in java.lang">toString</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
+<code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
 </ul>
 </li>
 </ul>

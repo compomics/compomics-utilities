@@ -79,18 +79,18 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @return the peptide
      */
     public Peptide getPeptide() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return peptide;
     }
     
     public void setPeptide(Peptide peptide){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.peptide = peptide;
     }
 
     @Override
     public double getTheoreticMass() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return peptide.getMass();
     }
 }

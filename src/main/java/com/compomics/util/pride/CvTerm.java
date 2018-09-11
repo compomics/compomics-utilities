@@ -49,9 +49,9 @@ public class CvTerm extends ExperimentObject {
      * @return the ontology
      */
     public String getOntology() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return ontology;
     }
 
@@ -61,7 +61,7 @@ public class CvTerm extends ExperimentObject {
      * @param ontology the ontology to set
      */
     public void setOntology(String ontology) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.ontology = ontology;
     }
 
@@ -71,9 +71,9 @@ public class CvTerm extends ExperimentObject {
      * @return the accession
      */
     public String getAccession() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return accession;
     }
 
@@ -83,7 +83,7 @@ public class CvTerm extends ExperimentObject {
      * @param accession the accession to set
      */
     public void setAccession(String accession) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.accession = accession;
     }
 
@@ -93,9 +93,9 @@ public class CvTerm extends ExperimentObject {
      * @return the name
      */
     public String getName() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return name;
     }
 
@@ -105,7 +105,7 @@ public class CvTerm extends ExperimentObject {
      * @param name the name to set
      */
     public void setName(String name) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.name = name;
     }
 
@@ -115,9 +115,9 @@ public class CvTerm extends ExperimentObject {
      * @return the value
      */
     public String getValue() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return value;
     }
 
@@ -127,7 +127,7 @@ public class CvTerm extends ExperimentObject {
      * @param value the value to set
      */
     public void setValue(String value) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.value = value;
     }
 }

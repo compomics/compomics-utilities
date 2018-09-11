@@ -63,9 +63,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setPeptideAssumptionMap(HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> peptideAssumptionsMap) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         this.peptideAssumptionsMap = peptideAssumptionsMap;
     }
@@ -77,9 +77,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setTagAssumptionMap(HashMap<Integer, TreeMap<Double, ArrayList<TagAssumption>>> tagAssumptionsMap) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         this.tagAssumptionsMap = tagAssumptionsMap;
     }
@@ -122,9 +122,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public PeptideAssumption getBestPeptideAssumption() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return bestPeptideAssumption;
     }
@@ -136,9 +136,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setBestPeptideAssumption(PeptideAssumption bestPeptideAssumption) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         this.bestPeptideAssumption = bestPeptideAssumption;
     }
@@ -150,9 +150,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public TagAssumption getBestTagAssumption() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return bestTagAssumption;
     }
@@ -164,9 +164,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setBestTagAssumption(TagAssumption bestTagAssumption) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         this.bestTagAssumption = bestTagAssumption;
     }
@@ -178,9 +178,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public String getSpectrumKey() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return spectrumKey;
     }
@@ -188,9 +188,9 @@ public class SpectrumMatch extends IdentificationMatch {
     @Override
     public long getKey() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return key;
     }
@@ -205,9 +205,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public TreeMap<Double, ArrayList<PeptideAssumption>> getAllPeptideAssumptions(int advocateId) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return peptideAssumptionsMap.get(advocateId);
     }
@@ -222,9 +222,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public TreeMap<Double, ArrayList<TagAssumption>> getAllTagAssumptions(int advocateId) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return tagAssumptionsMap.get(advocateId);
     }
@@ -236,9 +236,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public Stream<PeptideAssumption> getAllPeptideAssumptions() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return peptideAssumptionsMap.values().stream()
                 .flatMap(algorithmMap -> algorithmMap.values().stream())
@@ -252,9 +252,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public Stream<TagAssumption> getAllTagAssumptions() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return tagAssumptionsMap.values().stream()
                 .flatMap(algorithmMap -> algorithmMap.values().stream())
@@ -269,9 +269,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> getPeptideAssumptionsMap() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return peptideAssumptionsMap;
     }
@@ -284,9 +284,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public HashMap<Integer, TreeMap<Double, ArrayList<TagAssumption>>> getTagAssumptionsMap() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return tagAssumptionsMap;
     }
@@ -299,9 +299,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void addPeptideAssumption(int advocateId, PeptideAssumption peptideAssumption) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         TreeMap<Double, ArrayList<PeptideAssumption>> advocateMap = peptideAssumptionsMap.get(advocateId);
         
@@ -333,9 +333,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void addTagAssumption(int advocateId, TagAssumption tagAssumption) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         TreeMap<Double, ArrayList<TagAssumption>> advocateMap = tagAssumptionsMap.get(advocateId);
         
@@ -362,9 +362,9 @@ public class SpectrumMatch extends IdentificationMatch {
     @Override
     public MatchType getType() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return MatchType.Spectrum;
     }
@@ -377,9 +377,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setSpectrumKey(String spectrumKey) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         this.spectrumKey = spectrumKey;
         this.key = ExperimentObject.asLong(spectrumKey);
@@ -393,9 +393,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void removePeptideAssumption(PeptideAssumption peptideAssumption) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         int se = peptideAssumption.getAdvocate();
         TreeMap<Double, ArrayList<PeptideAssumption>> algorithmMap = peptideAssumptionsMap.get(se);
@@ -421,9 +421,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void removeTagAssumption(TagAssumption tagAssumption) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         int se = tagAssumption.getAdvocate();
         TreeMap<Double, ArrayList<TagAssumption>> algorithmMap = tagAssumptionsMap.get(se);
@@ -451,9 +451,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public boolean hasPeptideAssumption() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return peptideAssumptionsMap.values().stream().flatMap(algorithmMap -> algorithmMap.values().stream())
                 .anyMatch(assumptionsList -> !assumptionsList.isEmpty());
@@ -467,9 +467,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public boolean hasTagAssumption() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return tagAssumptionsMap.values().stream().flatMap(algorithmMap -> algorithmMap.values().stream())
                 .anyMatch(assumptionsList -> !assumptionsList.isEmpty());
@@ -486,9 +486,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public boolean hasPeptideAssumption(int advocateId) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         TreeMap<Double, ArrayList<PeptideAssumption>> algorithmIds = peptideAssumptionsMap.get(advocateId);
 
@@ -506,9 +506,9 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public boolean hasTagAssumption(int advocateId) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         TreeMap<Double, ArrayList<TagAssumption>> algorithmIds = tagAssumptionsMap.get(advocateId);
 

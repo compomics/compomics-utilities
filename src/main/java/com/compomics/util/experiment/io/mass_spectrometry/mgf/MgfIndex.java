@@ -2,6 +2,7 @@ package com.compomics.util.experiment.io.mass_spectrometry.mgf;
 
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -12,7 +13,7 @@ import java.util.HashMap;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class MgfIndex extends ExperimentObject {
+public class MgfIndex extends ExperimentObject implements Serializable {
 
     /**
      * The map of all indexes: spectrum title &gt; index in the file.
@@ -179,7 +180,7 @@ public class MgfIndex extends ExperimentObject {
      * @return the corresponding index
      */
     public Long getIndex(String spectrumTitle) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return indexMap.get(spectrumTitle);
     }
 
@@ -192,7 +193,7 @@ public class MgfIndex extends ExperimentObject {
      * @return the corresponding spectrum index
      */
     public Integer getSpectrumIndex(String spectrumTitle) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (spectrumNumberIndexMap == null) {
             return null;
@@ -216,7 +217,7 @@ public class MgfIndex extends ExperimentObject {
      * @return the precursor mz
      */
     public Double getPrecursorMz(int spectrumIndex) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (precursorMzMap == null) {
             return null;
@@ -240,7 +241,7 @@ public class MgfIndex extends ExperimentObject {
      * @return the title of the spectrum of interest
      */
     public String getSpectrumTitle(int number) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return spectrumTitles.get(number);
     }
 
@@ -253,7 +254,7 @@ public class MgfIndex extends ExperimentObject {
      * this index
      */
     public boolean containsSpectrum(String spectrumTitle) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return indexMap.containsKey(spectrumTitle);
     }
 
@@ -263,7 +264,7 @@ public class MgfIndex extends ExperimentObject {
      * @return an ordered list of all spectrum titles
      */
     public ArrayList<String> getSpectrumTitles() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         if (spectrumTitles != null) {
             return spectrumTitles;
         } else {
@@ -277,7 +278,7 @@ public class MgfIndex extends ExperimentObject {
      * @return a map of the duplicated spectrum titles, can be null
      */
     public HashMap<String, Integer> getDuplicatedSpectrumTitles() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return duplicatedSpectrumTitles;
     }
 
@@ -287,7 +288,7 @@ public class MgfIndex extends ExperimentObject {
      * @return the name of the indexed file
      */
     public String getFileName() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return fileName;
     }
 
@@ -297,7 +298,7 @@ public class MgfIndex extends ExperimentObject {
      * @return the maximal RT in this file
      */
     public Double getMaxRT() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return maxRT;
     }
 
@@ -307,7 +308,7 @@ public class MgfIndex extends ExperimentObject {
      * @param maxRT the maximal RT in this file
      */
     public void setMaxRT(Double maxRT) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.maxRT = maxRT;
     }
 
@@ -317,7 +318,7 @@ public class MgfIndex extends ExperimentObject {
      * @return the maximum m/z in this file
      */
     public Double getMaxMz() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return maxMz;
     }
 
@@ -327,7 +328,7 @@ public class MgfIndex extends ExperimentObject {
      * @param maxCharge the maximum charge in this file
      */
     public void setMaxCharge(Integer maxCharge) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.maxCharge = maxCharge;
     }
 
@@ -337,7 +338,7 @@ public class MgfIndex extends ExperimentObject {
      * @return the maximal charge found in the mgf file
      */
     public Integer getMaxCharge() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return maxCharge;
     }
 
@@ -347,7 +348,7 @@ public class MgfIndex extends ExperimentObject {
      * @param maxMz the maximum m/z in this file
      */
     public void setMaxMz(Double maxMz) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.maxMz = maxMz;
     }
 
@@ -357,7 +358,7 @@ public class MgfIndex extends ExperimentObject {
      * @return the maximum precursor intensity in this file
      */
     public Double getMaxIntensity() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return maxIntensity;
     }
 
@@ -367,7 +368,7 @@ public class MgfIndex extends ExperimentObject {
      * @param maxIntensity the maximum precursor intensity in this file
      */
     public void setMaxIntensity(Double maxIntensity) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.maxIntensity = maxIntensity;
     }
 
@@ -377,7 +378,7 @@ public class MgfIndex extends ExperimentObject {
      * @return the minimum RT in this file
      */
     public Double getMinRT() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return minRT;
     }
 
@@ -387,7 +388,7 @@ public class MgfIndex extends ExperimentObject {
      * @param minRT the minimum RT in this file
      */
     public void setMinRT(Double minRT) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.minRT = minRT;
     }
 
@@ -397,7 +398,7 @@ public class MgfIndex extends ExperimentObject {
      * @return the maximum peak count in this file
      */
     public Integer getMaxPeakCount() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return maxPeakCount;
     }
 
@@ -407,7 +408,7 @@ public class MgfIndex extends ExperimentObject {
      * @param maxPeakCount the maximum peak count in this file
      */
     public void setMaxPeakCount(Integer maxPeakCount) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.maxPeakCount = maxPeakCount;
     }
 
@@ -417,7 +418,7 @@ public class MgfIndex extends ExperimentObject {
      * @return the number of imported spectra
      */
     public int getNSpectra() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         if (spectrumCount == null) {
             spectrumCount = spectrumTitles.size();
         }
@@ -431,7 +432,7 @@ public class MgfIndex extends ExperimentObject {
      * @return a long indicating when the file was last modified
      */
     public Long getLastModified() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return lastModified;
     }
 
@@ -443,7 +444,7 @@ public class MgfIndex extends ExperimentObject {
      * spectra
      */
     public Boolean isPeakPicked() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         if (peakPicked == null) {
             peakPicked = true;
         }
@@ -456,7 +457,7 @@ public class MgfIndex extends ExperimentObject {
      * @param peakPicked the peakPicked to set
      */
     public void setPeakPicked(Boolean peakPicked) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.peakPicked = peakPicked;
     }
 
@@ -467,7 +468,7 @@ public class MgfIndex extends ExperimentObject {
      * @return true if the at least one spectrum is missing the precursor charge
      */
     public Boolean isPrecursorChargesMissing() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return precursorChargesMissing;
     }
 
@@ -477,7 +478,7 @@ public class MgfIndex extends ExperimentObject {
      * @param precursorChargesMissing the precursorChargesMissing to set
      */
     public void setPrecursorChargesMissing(Boolean precursorChargesMissing) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.precursorChargesMissing = precursorChargesMissing;
     }
 }

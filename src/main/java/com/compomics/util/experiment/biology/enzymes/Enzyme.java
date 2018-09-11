@@ -64,10 +64,7 @@ public class Enzyme extends ExperimentObject {
      * @return the enzyme name as String
      */
     public String getName() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
-        
+        readDBMode();
         return name;
     }
 
@@ -77,7 +74,7 @@ public class Enzyme extends ExperimentObject {
      * @return the enzyme number
      */
     public int getEnzymeId() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return enzymeId;
     }
 
@@ -88,7 +85,7 @@ public class Enzyme extends ExperimentObject {
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addAminoAcidAfter(Character aminoAcid) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         aminoAcidAfter.add(aminoAcid);
     }
 
@@ -99,7 +96,7 @@ public class Enzyme extends ExperimentObject {
      * @return the amino acids potentially following the cleavage
      */
     public HashSet<Character> getAminoAcidAfter() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return aminoAcidAfter;
     }
 
@@ -110,7 +107,7 @@ public class Enzyme extends ExperimentObject {
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addAminoAcidBefore(Character aminoAcid) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         aminoAcidBefore.add(aminoAcid);
     }
 
@@ -121,7 +118,7 @@ public class Enzyme extends ExperimentObject {
      * @return the amino acids potentially preceding the cleavage
      */
     public HashSet<Character> getAminoAcidBefore() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return aminoAcidBefore;
     }
 
@@ -132,7 +129,7 @@ public class Enzyme extends ExperimentObject {
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addRestrictionAfter(Character aminoAcid) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         restrictionAfter.add(aminoAcid);
     }
 
@@ -143,7 +140,7 @@ public class Enzyme extends ExperimentObject {
      * @return the amino acids restricting when following the cleavage
      */
     public HashSet<Character> getRestrictionAfter() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return restrictionAfter;
     }
 
@@ -154,7 +151,7 @@ public class Enzyme extends ExperimentObject {
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addRestrictionBefore(Character aminoAcid) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         restrictionBefore.add(aminoAcid);
     }
 
@@ -165,7 +162,7 @@ public class Enzyme extends ExperimentObject {
      * @return the amino acids restricting when preceding the cleavage
      */
     public HashSet<Character> getRestrictionBefore() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return restrictionBefore;
     }
 
@@ -180,7 +177,7 @@ public class Enzyme extends ExperimentObject {
      * @return true if the amino acid combination can represent a cleavage site
      */
     public boolean isCleavageSite(String aaBefore, String aaAfter) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (aaBefore.length() == 0 || aaAfter.length() == 0) {
 
@@ -202,7 +199,7 @@ public class Enzyme extends ExperimentObject {
      * @return true if the amino acid combination can represent a cleavage site
      */
     public boolean isCleavageSite(char aaBefore, char aaAfter) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         AminoAcid aminoAcid1 = AminoAcid.getAminoAcid(aaBefore);
         AminoAcid aminoAcid2 = AminoAcid.getAminoAcid(aaAfter);
@@ -270,7 +267,7 @@ public class Enzyme extends ExperimentObject {
      * @return true if the amino acid combination can represent a cleavage site
      */
     public boolean isCleavageSiteNoCombination(Character aaBefore, Character aaAfter) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         return aminoAcidBefore.contains(aaBefore) && !restrictionAfter.contains(aaAfter)
                 || aminoAcidAfter.contains(aaAfter) && !restrictionBefore.contains(aaBefore);
@@ -285,7 +282,7 @@ public class Enzyme extends ExperimentObject {
      * @return the number of missed cleavages
      */
     public int getNmissedCleavages(String sequence) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         int result = 0;
 
@@ -315,7 +312,7 @@ public class Enzyme extends ExperimentObject {
      * @return a list of expected peptide sequences
      */
     public HashSet<String> digest(String sequence, int nMissedCleavages, Integer nMin, Integer nMax) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
 
         char aa, aaBefore;
         char aaAfter = sequence.charAt(0);
@@ -428,7 +425,7 @@ public class Enzyme extends ExperimentObject {
      * @return a list of expected peptide sequences
      */
     public HashSet<String> digest(String sequence, int nMissedCleavages, Double massMin, Double massMax) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
 
         char aa, aaBefore;
         char aaAfter = sequence.charAt(0);
@@ -545,7 +542,7 @@ public class Enzyme extends ExperimentObject {
      * @return true of the two enzymes are identical
      */
     public boolean equals(Enzyme otherEnzyme) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (otherEnzyme == null) {
             return false;
@@ -578,7 +575,7 @@ public class Enzyme extends ExperimentObject {
      * @return the description of the cleavage of this enzyme
      */
     public String getDescription() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         StringBuilder description = new StringBuilder();
         description.append("Cleaves ");
@@ -646,7 +643,7 @@ public class Enzyme extends ExperimentObject {
      * @return the CV term associated with this enzyme
      */
     public CvTerm getCvTerm() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return cvTerm;
     }
 
@@ -656,7 +653,7 @@ public class Enzyme extends ExperimentObject {
      * @param cvTerm the CV term associated with this enzyme
      */
     public void setCvTerm(CvTerm cvTerm) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.cvTerm = cvTerm;
     }
 }

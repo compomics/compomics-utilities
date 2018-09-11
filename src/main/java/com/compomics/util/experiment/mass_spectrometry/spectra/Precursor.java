@@ -118,7 +118,7 @@ public class Precursor extends ExperimentObject {
      * @return precursor retention time in seconds
      */
     public double getRt() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return rt;
     }
 
@@ -128,7 +128,7 @@ public class Precursor extends ExperimentObject {
      * @return the retention time in minutes
      */
     public double getRtInMinutes() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return rt / 60;
     }
 
@@ -140,7 +140,7 @@ public class Precursor extends ExperimentObject {
      * implemented
      */
     public boolean hasRTWindow() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return rtMin != null && rtMax != null && rtMin != -1 && rtMax != -1 && !rtMin.equals(rtMax);
     }
 
@@ -150,7 +150,7 @@ public class Precursor extends ExperimentObject {
      * @return an array containing the min and max of the RT window
      */
     public double[] getRtWindow() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         if (rtMin == null) {
             rtMin = rt;
         }
@@ -166,7 +166,7 @@ public class Precursor extends ExperimentObject {
      * @return precursor m/z
      */
     public double getMz() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return mz;
     }
 
@@ -176,7 +176,7 @@ public class Precursor extends ExperimentObject {
      * @return precursor intensity
      */
     public double getIntensity() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return intensity;
     }
 
@@ -186,7 +186,7 @@ public class Precursor extends ExperimentObject {
      * @return the possible charges
      */
     public ArrayList<Integer> getPossibleCharges() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return possibleCharges;
     }
     
@@ -196,7 +196,7 @@ public class Precursor extends ExperimentObject {
      * @return the possible charges as a string
      */
     public String getPossibleChargesAsString() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         StringBuilder result = new StringBuilder();
         boolean first = true;
         for (Integer charge : possibleCharges) {
@@ -218,7 +218,7 @@ public class Precursor extends ExperimentObject {
      * @return a new recalibrated precursor
      */
     public Precursor getRecalibratedPrecursor(double mzCorrection, double rtCorrection) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return new Precursor(rt - rtCorrection, mz - mzCorrection, intensity, possibleCharges);
     }
 
@@ -232,7 +232,7 @@ public class Precursor extends ExperimentObject {
      * proton
      */
     public double getMassPlusProton(int chargeValue) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return getMass(chargeValue) + ElementaryIon.proton.getTheoreticMass();
     }
 
@@ -244,7 +244,7 @@ public class Precursor extends ExperimentObject {
      * @return the mass of the precursor with the given charge
      */
     public double getMass(int chargeValue) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return mz * chargeValue - chargeValue * ElementaryIon.proton.getTheoreticMass();
     }
 }

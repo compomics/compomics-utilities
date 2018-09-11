@@ -211,7 +211,7 @@ public abstract class Ion extends ExperimentObject {
      * @return a boolean indicating whether the ion has a neutral loss
      */
     public boolean hasNeutralLosses() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         switch (type) {
             case PEPTIDE_FRAGMENT_ION:
             case TAG_FRAGMENT_ION:
@@ -237,7 +237,7 @@ public abstract class Ion extends ExperimentObject {
      * @return the neutral loss
      */
     public String getNeutralLossesAsString() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         if (neutralLossesAsString == null) {
             neutralLossesAsString = getNeutralLossesAsString(getNeutralLosses());
         }
@@ -273,7 +273,7 @@ public abstract class Ion extends ExperimentObject {
      * @return the theoretic mass
      */
     public double getTheoreticMass() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         if (atomChain != null) {
             return atomChain.getMass();
         }
@@ -288,7 +288,7 @@ public abstract class Ion extends ExperimentObject {
      * @return the m/z expected for this ion
      */
     public double getTheoreticMz(Integer charge) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         double protonMass = ElementaryIon.proton.getTheoreticMass();
         double mz = getTheoreticMass() + protonMass;
         if (charge > 1) {
@@ -303,7 +303,7 @@ public abstract class Ion extends ExperimentObject {
      * @return the atomic composition
      */
     public AtomChain getAtomicComposition() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return atomChain;
     }
 
@@ -313,7 +313,7 @@ public abstract class Ion extends ExperimentObject {
      * @param atomChain the atomic composition
      */
     public void setAtomicComposition(AtomChain atomChain) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.atomChain = atomChain;
     }
 
@@ -323,7 +323,7 @@ public abstract class Ion extends ExperimentObject {
      * @param theoreticMass a new theoretic mass
      */
     public void setTheoreticMass(double theoreticMass) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.theoreticMass1 = theoreticMass;
     }
 
@@ -333,7 +333,7 @@ public abstract class Ion extends ExperimentObject {
      * @return the ion type
      */
     public IonType getType() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return type;
     }
 
@@ -361,7 +361,7 @@ public abstract class Ion extends ExperimentObject {
      * @return the type of ion as string
      */
     public String getTypeAsString() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return getTypeAsString(type);
     }
 

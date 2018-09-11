@@ -30,6 +30,7 @@ public interface IdfileReader {
      * file, null if not known
      */
     public HashMap<String, ArrayList<String>> getSoftwareVersions();
+    
 
     /**
      * Returns the extension of the file for which this IdfileReader can be

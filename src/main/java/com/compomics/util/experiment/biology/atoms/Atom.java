@@ -155,7 +155,7 @@ public abstract class Atom extends ExperimentObject {
      * @return the monoisotopic mass in Da
      */
     public Double getMonoisotopicMass() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return monoisotopicMass;
     }
 
@@ -165,7 +165,7 @@ public abstract class Atom extends ExperimentObject {
      * @return the name of the atom
      */
     public String getName() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return name;
     }
 
@@ -175,7 +175,7 @@ public abstract class Atom extends ExperimentObject {
      * @return the single letter code of the atom
      */
     public String getLetter() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return letter;
     }
 
@@ -186,7 +186,7 @@ public abstract class Atom extends ExperimentObject {
      * @return a list of isotopes for which a mass is available
      */
     public ArrayList<Integer> getImplementedIsotopes() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         if (isotopeMap != null) {
             return new ArrayList<>(isotopeMap.keySet());
         }
@@ -203,7 +203,7 @@ public abstract class Atom extends ExperimentObject {
      * @return the corresponding mass
      */
     public Double getIsotopeMass(int isotopeNumber) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         if (isotopeMap != null) {
             return isotopeMap.get(isotopeNumber);
         }
@@ -221,7 +221,7 @@ public abstract class Atom extends ExperimentObject {
      * monoisotopic mass
      */
     public Double getDifferenceToMonoisotopic(int isotopeNumber) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         Double isotopeMass = null;
         if (isotopeMap != null) {
             isotopeMass = isotopeMap.get(isotopeNumber);
@@ -234,7 +234,7 @@ public abstract class Atom extends ExperimentObject {
     
     @Override
     public String toString() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return getLetter();
     }
 }

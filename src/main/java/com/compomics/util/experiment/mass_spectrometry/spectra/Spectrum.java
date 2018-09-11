@@ -216,7 +216,7 @@ public class Spectrum extends ExperimentObject {
      * @return the key of the spectrum
      */
     public String getSpectrumKey() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (key == null) {
 
@@ -237,7 +237,7 @@ public class Spectrum extends ExperimentObject {
      * @return the file name
      */
     public String getFileName() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return fileName;
     }
 
@@ -247,7 +247,7 @@ public class Spectrum extends ExperimentObject {
      * @param fileName the file name
      */
     public void setFileName(String fileName) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.fileName = fileName;
     }
 
@@ -257,7 +257,7 @@ public class Spectrum extends ExperimentObject {
      * @return spectrum title
      */
     public String getSpectrumTitle() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return spectrumTitle;
     }
 
@@ -267,7 +267,7 @@ public class Spectrum extends ExperimentObject {
      * @param spectrumTitle the title to set
      */
     public void setSpectrumTitle(String spectrumTitle) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.spectrumTitle = spectrumTitle;
     }
 
@@ -277,7 +277,7 @@ public class Spectrum extends ExperimentObject {
      * @return the spectrum scan number
      */
     public String getScanNumber() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return scanNumber;
     }
 
@@ -287,7 +287,7 @@ public class Spectrum extends ExperimentObject {
      * @param scanNumber or range
      */
     public synchronized void setScanNumber(String scanNumber) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.scanNumber = scanNumber;
     }
 
@@ -297,7 +297,7 @@ public class Spectrum extends ExperimentObject {
      * @return a peak map
      */
     public HashMap<Double, Peak> getPeakMap() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return peakMap;
     }
 
@@ -307,7 +307,7 @@ public class Spectrum extends ExperimentObject {
      * @param peakMap the peak map
      */
     public void setPeakMap(HashMap<Double, Peak> peakMap) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
 
         this.peakMap = peakMap;
 
@@ -320,7 +320,7 @@ public class Spectrum extends ExperimentObject {
      * @param peaks the peaks to set
      */
     public void setPeaks(ArrayList<Peak> peaks) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
 
         peakMap = peaks.stream().collect(Collectors.toMap(
                 peak -> peak.mz,
@@ -339,7 +339,7 @@ public class Spectrum extends ExperimentObject {
      * @return at which level the spectrum was recorded
      */
     public int getLevel() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return level;
     }
 
@@ -349,7 +349,7 @@ public class Spectrum extends ExperimentObject {
      * @return the peak list
      */
     public Collection<Peak> getPeakList() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return peakMap.values();
     }
 
@@ -360,7 +360,7 @@ public class Spectrum extends ExperimentObject {
      * @return the peak list as an array list formatted as text
      */
     public String getPeakListAsString() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         StringBuilder sb = new StringBuilder();
 
@@ -382,7 +382,7 @@ public class Spectrum extends ExperimentObject {
      * @return the scan start time
      */
     public double getScanStartTime() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return scanStartTime;
     }
 
@@ -392,7 +392,7 @@ public class Spectrum extends ExperimentObject {
      * @param scanStartTime the time point when the spectrum was recorded
      */
     public void setScanStartTime(double scanStartTime) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.scanStartTime = scanStartTime;
     }
 
@@ -402,7 +402,7 @@ public class Spectrum extends ExperimentObject {
      * @return an array of the m/z values sorted in ascending order
      */
     public double[] getOrderedMzValues() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (mzValuesAsArraySorted == null) {
 
@@ -422,7 +422,7 @@ public class Spectrum extends ExperimentObject {
      * @param intensityValuesAsArray the intensity values array
      */
     public void setIntensityValuesAsArray(double[] intensityValuesAsArray) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.intensityValuesAsArray = intensityValuesAsArray;
     }
 
@@ -432,7 +432,7 @@ public class Spectrum extends ExperimentObject {
      * @return the intensity values as an array
      */
     public double[] getIntensityValuesAsArray() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (intensityValuesAsArray == null || (intensityValuesAsArray.length != peakMap.size())) {
 
@@ -452,7 +452,7 @@ public class Spectrum extends ExperimentObject {
      * @return the normalized intensity values as an array
      */
     public double[] getIntensityValuesNormalizedAsArray() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (intensityValuesNormalizedAsArray == null) {
 
@@ -482,7 +482,7 @@ public class Spectrum extends ExperimentObject {
      * @return the m/z and intensity values as an array
      */
     public double[][] getMzAndIntensityAsArray() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (mzAndIntensityAsArray == null) {
 
@@ -510,7 +510,7 @@ public class Spectrum extends ExperimentObject {
      * @return the total intensity. 0 if no peak.
      */
     public double getTotalIntensity() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (totalIntensity == -1.0) {
 
@@ -529,7 +529,7 @@ public class Spectrum extends ExperimentObject {
      * @return the max intensity value. 0 if no peak.
      */
     public double getMaxIntensity() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (maxIntensity == -1.0) {
 
@@ -548,7 +548,7 @@ public class Spectrum extends ExperimentObject {
      * @return the max mz value
      */
     public double getMaxMz() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (maxMz == -1.0) {
 
@@ -568,7 +568,7 @@ public class Spectrum extends ExperimentObject {
      * @return the min mz value
      */
     public double getMinMz() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (minMz == -1.0) {
 
@@ -592,7 +592,7 @@ public class Spectrum extends ExperimentObject {
      * provided threshold
      */
     public DoubleStream getPeaksAboveIntensityThreshold(double threshold) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         return peakMap.values().stream()
                 .mapToDouble(peak -> peak.intensity)
@@ -608,7 +608,7 @@ public class Spectrum extends ExperimentObject {
      * @return the intensity limit
      */
     public double getIntensityLimit(AnnotationParameters.IntensityThresholdType intensityThresholdType, double intensityFraction) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (intensityLimit == -1.0 || intensityThresholdType != this.intensityThresholdType || intensityLimitLevel != intensityFraction) {
 
@@ -630,7 +630,7 @@ public class Spectrum extends ExperimentObject {
      * @return the intensity limit
      */
     private double estimateIntenistyLimit(AnnotationParameters.IntensityThresholdType intensityThresholdType, double intensityThreshold) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (intensityThreshold == 0) {
 
@@ -675,7 +675,7 @@ public class Spectrum extends ExperimentObject {
      * @return the recalibrated list of peaks indexed by m/z
      */
     public HashMap<Double, Peak> getRecalibratedPeakList(HashMap<Double, Double> mzCorrections) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         HashMap<Double, Peak> result = new HashMap<>(peakMap.size());
         ArrayList<Double> keys = new ArrayList<>(mzCorrections.keySet());
@@ -732,7 +732,7 @@ public class Spectrum extends ExperimentObject {
      * @return a peak list which does not contain the peak matched
      */
     public HashMap<Double, Peak> getDesignaledPeakList(ArrayList<IonMatch> matches) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         HashMap<Double, Peak> result = new HashMap<>(peakMap);
 
@@ -756,7 +756,7 @@ public class Spectrum extends ExperimentObject {
      * mzMax (exclusive)
      */
     public HashMap<Double, Peak> getSubSpectrum(double mzMin, double mzMax) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         return peakMap.entrySet().stream()
                 .filter(entry -> entry.getKey() >= mzMin && entry.getKey() < mzMax)
@@ -774,7 +774,7 @@ public class Spectrum extends ExperimentObject {
      * @return the peak list in a map where peaks are indexed by their intensity
      */
     public HashMap<Double, ArrayList<Peak>> getIntensityMap() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (intensityPeakMap == null) {
 
@@ -794,7 +794,7 @@ public class Spectrum extends ExperimentObject {
      * @return the number of peaks in the spectrum
      */
     public int getNPeaks() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         return peakMap == null ? 0 : peakMap.size();
     }
@@ -805,7 +805,7 @@ public class Spectrum extends ExperimentObject {
      * @return a boolean indicating whether the spectrum is empty
      */
     public boolean isEmpty() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return getNPeaks() == 0;
     }
 
@@ -834,7 +834,7 @@ public class Spectrum extends ExperimentObject {
      * @return the intensity of the log of the peaks intensities
      */
     public SimpleNoiseDistribution getIntensityLogDistribution() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         if (binnedCumulativeFunction == null) {
             binnedCumulativeFunction = new SimpleNoiseDistribution(peakMap);
@@ -848,7 +848,7 @@ public class Spectrum extends ExperimentObject {
      * @return precursor charge
      */
     public Precursor getPrecursor() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return precursor;
     }
 
@@ -858,7 +858,7 @@ public class Spectrum extends ExperimentObject {
      * @param precursor the precursor to set
      */
     public void setPrecursor(Precursor precursor) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.precursor = precursor;
     }
 
@@ -880,7 +880,7 @@ public class Spectrum extends ExperimentObject {
      * @return the peak list as an mgf bloc
      */
     public String asMgf(HashMap<String, String> additionalTags) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
 
         StringBuilder result = new StringBuilder();
         String lineBreak = System.getProperty("line.separator");
@@ -951,7 +951,7 @@ public class Spectrum extends ExperimentObject {
      * @throws IOException if an IOException occurs
      */
     public void writeMgf(BufferedWriter mgfWriter, HashMap<String, String> additionalTags) throws IOException {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         String spectrumAsMgf = asMgf(additionalTags);
         mgfWriter.write(spectrumAsMgf);
     }

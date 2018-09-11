@@ -65,7 +65,7 @@ public class BlobObject extends DbObject {
      * @param blob the blob as byte array
      */
     public void setBlob(byte[] blob){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.blob = blob;
     }
     
@@ -75,7 +75,7 @@ public class BlobObject extends DbObject {
      * @return the byte representation of the object
      */
     public byte[] getBlob(){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return blob;
     }
     
@@ -88,7 +88,7 @@ public class BlobObject extends DbObject {
      */
     public Object unBlob() throws IOException {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         Object object;
         ByteArrayInputStream bais = new ByteArrayInputStream(blob);

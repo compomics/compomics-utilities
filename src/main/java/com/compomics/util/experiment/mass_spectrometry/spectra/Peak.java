@@ -59,13 +59,13 @@ public class Peak extends ExperimentObject {
      * @return true if the peak has the same mz and intensity
      */
     public boolean isSameAs(Peak aPeak) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return mz == aPeak.mz && intensity == aPeak.intensity && rt == aPeak.rt;
     }
 
     @Override
     public int hashCode() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         int hash = 3;
         hash = 97 * hash + (int) (Double.doubleToLongBits(this.mz) ^ (Double.doubleToLongBits(this.mz) >>> 32));
         hash = 97 * hash + (int) (Double.doubleToLongBits(this.rt) ^ (Double.doubleToLongBits(this.rt) >>> 32));
@@ -75,7 +75,7 @@ public class Peak extends ExperimentObject {
 
     @Override
     public boolean equals(Object obj) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         if (obj == null) {
             return false;
         }
@@ -103,7 +103,7 @@ public class Peak extends ExperimentObject {
      * @return the mass of the compound with the given charge
      */
     public double getMass(int chargeValue) {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return mz * chargeValue - chargeValue * ElementaryIon.proton.getTheoreticMass();
     }
 
@@ -142,7 +142,7 @@ public class Peak extends ExperimentObject {
     
     @Override
     public String toString() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         StringBuilder sb = new StringBuilder(15);
         

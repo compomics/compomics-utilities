@@ -200,7 +200,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * Set the advanced settings to the default values.
      */
     public void setDefaultAdvancedSettings() {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         setDefaultAdvancedSettings(null);
     }
 
@@ -213,7 +213,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * settings from
      */
     public void setDefaultAdvancedSettings(SearchParameters searchParameters) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
 
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.omssa.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.omssa.getIndex(), new OmssaParameters());
@@ -293,9 +293,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the reference mass used to convert ppm to Da
      */
     public double getRefMass() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return refMass;
     }
@@ -306,7 +306,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param refMass the reference mass used to convert ppm to Da
      */
     public void setRefMass(double refMass) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.refMass = refMass;
     }
 
@@ -316,9 +316,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the modification settings
      */
     public ModificationParameters getModificationParameters() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return modificationParameters;
     }
 
@@ -328,7 +328,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param modificationParameters the modification settings
      */
     public void setModificationParameters(ModificationParameters modificationParameters) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.modificationParameters = modificationParameters;
     }
 
@@ -338,9 +338,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the MS2 ion m/z tolerance
      */
     public double getFragmentIonAccuracy() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return fragmentIonMZTolerance;
     }
 
@@ -351,9 +351,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the absolute fragment ion tolerance in Dalton
      */
     public double getFragmentIonAccuracyInDaltons() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return getFragmentIonAccuracyInDaltons(refMass);
     }
 
@@ -367,9 +367,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the absolute fragment ion tolerance in Dalton
      */
     public double getFragmentIonAccuracyInDaltons(double refMass) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         switch (fragmentAccuracyType) {
             case DA:
                 return fragmentIonMZTolerance;
@@ -386,7 +386,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param fragmentIonMZTolerance the fragment ion m/z tolerance
      */
     public void setFragmentIonAccuracy(double fragmentIonMZTolerance) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.fragmentIonMZTolerance = fragmentIonMZTolerance;
     }
 
@@ -396,9 +396,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the digestion preferences
      */
     public DigestionParameters getDigestionParameters() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return digestionParameters;
     }
@@ -409,7 +409,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param digestionParameters the digestion preferences
      */
     public void setDigestionParameters(DigestionParameters digestionParameters) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.digestionParameters = digestionParameters;
     }
 
@@ -419,9 +419,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the sequence database file used for identification
      */
     public File getFastaFile() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return fastaFile;
     }
 
@@ -431,7 +431,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param fastaFile the sequence database file used for identification
      */
     public void setFastaFile(File fastaFile) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.fastaFile = fastaFile;
     }
 
@@ -441,9 +441,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the parameters to use to parse the FASTA file
      */
     public FastaParameters getFastaParameters() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return fastaParameters;
     }
 
@@ -453,7 +453,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param fastaParameters the parameters to use to parse the FASTA file
      */
     public void setFastaParameters(FastaParameters fastaParameters) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.fastaParameters = fastaParameters;
     }
 
@@ -464,9 +464,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the forward ions searched
      */
     public ArrayList<Integer> getForwardIons() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return forwardIons;
     }
@@ -478,7 +478,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param forwardIons the forward ions searched
      */
     public void setForwardIons(ArrayList<Integer> forwardIons) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.forwardIons = forwardIons;
     }
 
@@ -489,9 +489,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the rewind ions searched
      */
     public ArrayList<Integer> getRewindIons() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return rewindIons;
     }
@@ -503,7 +503,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param rewindIons the rewind ions searched
      */
     public void setRewindIons(ArrayList<Integer> rewindIons) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.rewindIons = rewindIons;
     }
 
@@ -529,9 +529,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the precursor tolerance
      */
     public double getPrecursorAccuracy() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return precursorTolerance;
     }
 
@@ -541,7 +541,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param precursorTolerance the precursor tolerance
      */
     public void setPrecursorAccuracy(double precursorTolerance) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.precursorTolerance = precursorTolerance;
     }
 
@@ -551,9 +551,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the precursor accuracy type
      */
     public MassAccuracyType getPrecursorAccuracyType() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return precursorAccuracyType;
     }
 
@@ -563,7 +563,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param precursorAccuracyType the precursor accuracy type
      */
     public void setPrecursorAccuracyType(MassAccuracyType precursorAccuracyType) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.precursorAccuracyType = precursorAccuracyType;
     }
 
@@ -573,9 +573,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the fragment accuracy type
      */
     public MassAccuracyType getFragmentAccuracyType() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return fragmentAccuracyType;
     }
 
@@ -585,7 +585,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param fragmentAccuracyType the fragment accuracy type
      */
     public void setFragmentAccuracyType(MassAccuracyType fragmentAccuracyType) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.fragmentAccuracyType = fragmentAccuracyType;
     }
 
@@ -595,9 +595,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return true if the current precursor accuracy type is ppm
      */
     public Boolean isPrecursorAccuracyTypePpm() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return getPrecursorAccuracyType() == MassAccuracyType.PPM;
     }
 
@@ -607,9 +607,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the maximal charge searched
      */
     public int getMaxChargeSearched() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return maxChargeSearched;
     }
 
@@ -619,7 +619,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param maxChargeSearched the maximal charge searched
      */
     public void setMaxChargeSearched(int maxChargeSearched) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.maxChargeSearched = maxChargeSearched;
     }
 
@@ -629,9 +629,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the minimal charge searched
      */
     public int getMinChargeSearched() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return minChargeSearched;
     }
 
@@ -641,7 +641,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param minChargeSearched the minimal charge searched
      */
     public void setMinChargeSearched(int minChargeSearched) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.minChargeSearched = minChargeSearched;
     }
 
@@ -652,9 +652,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the algorithm specific parameters in a map
      */
     public HashMap<Integer, IdentificationAlgorithmParameter> getAlgorithmSpecificParameters() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return algorithmParameters;
     }
 
@@ -667,9 +667,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the algorithm specific parameters
      */
     public IdentificationAlgorithmParameter getIdentificationAlgorithmParameter(int algorithmID) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         if (algorithmParameters == null) {
             return null;
         }
@@ -684,7 +684,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param identificationAlgorithmParameter the specific parameters
      */
     public void setIdentificationAlgorithmParameter(int algorithmID, IdentificationAlgorithmParameter identificationAlgorithmParameter) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         if (algorithmParameters == null) {
             algorithmParameters = new HashMap<>();
         }
@@ -699,9 +699,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * of indexes as listed in the Advocate class
      */
     public Set<Integer> getAlgorithms() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         if (algorithmParameters == null) {
             return new HashSet<>(0);
         }
@@ -714,9 +714,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the minimal isotopic correction
      */
     public int getMinIsotopicCorrection() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return minIsotopicCorrection;
     }
 
@@ -726,7 +726,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param minIsotopicCorrection the minimal isotopic correction
      */
     public void setMinIsotopicCorrection(int minIsotopicCorrection) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.minIsotopicCorrection = minIsotopicCorrection;
     }
 
@@ -736,9 +736,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the maximal isotopic correction
      */
     public int getMaxIsotopicCorrection() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return maxIsotopicCorrection;
     }
 
@@ -748,7 +748,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param maxIsotopicCorrection the maximal isotopic correction
      */
     public void setMaxIsotopicCorrection(int maxIsotopicCorrection) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.maxIsotopicCorrection = maxIsotopicCorrection;
     }
 
@@ -831,7 +831,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @throws IOException if an IOException occurs
      */
     public void saveIdentificationParametersAsTextFile(File file) throws IOException {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         FileWriter fw = new FileWriter(file);
         try {
             BufferedWriter bw = new BufferedWriter(fw);
@@ -856,9 +856,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         SearchParameters defaultParameters = new SearchParameters();
         String newLine = System.getProperty("line.separator");
@@ -937,9 +937,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the search parameters as a string
      */
     public String toString(boolean html) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         String newLine;
         if (html) {
@@ -1084,9 +1084,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return true if the search parameter objects have identical settings
      */
     public boolean equals(SearchParameters otherSearchParameters) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         if (otherSearchParameters == null) {
             return false;
@@ -1174,15 +1174,15 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
 
     @Override
     public void setType() {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         marshallableParameterType = Type.search_parameters.name();
     }
 
     @Override
     public Type getType() {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         if (marshallableParameterType == null) {
             return null;
         }

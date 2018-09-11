@@ -14,6 +14,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.zoodb.internal.util.DBTracer;
 
 /**
  * Test for the SearchParameterMarshaller.
@@ -55,7 +56,8 @@ public class TestSearchParameterMarshaller {
         ObjectsDB objectsDB = null;
 
         try {
-            objectsDB = new ObjectsDB(path, "experimentTestDB2.zdb", true);
+            DBTracer.enable(true);
+            //objectsDB = new ObjectsDB(path, "experimentTestDB2.zdb", true);
         
         
         
@@ -71,7 +73,9 @@ public class TestSearchParameterMarshaller {
         //3. Compare both
         assertTrue(parameters.equals(jsonAsParameters));
         } finally {
-            if (objectsDB != null) objectsDB.close();
+            if (objectsDB != null){
+                objectsDB.close();
+            }
             Util.deleteDir(dbFolder);
         }
     }

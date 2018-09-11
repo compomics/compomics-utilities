@@ -48,7 +48,7 @@ public class JsonMarshaller extends ExperimentObject {
      * Initializes the marshaller with (custom) type adapters and date format
      */
     protected void init() {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         builder.registerTypeAdapter(File.class, new FileAdapter());
     }
 
@@ -76,9 +76,9 @@ public class JsonMarshaller extends ExperimentObject {
      * @return the JSON representation of an object
      */
     public String toJson(Object anObject) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return gson.toJson(anObject);
     }
 
@@ -92,7 +92,7 @@ public class JsonMarshaller extends ExperimentObject {
      * JSON file
      */
     public void saveObjectToJson(Object anObject, File jsonFile) throws IOException {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         BufferedWriter out = new BufferedWriter(new FileWriter(jsonFile));
         try {
             out.append(toJson(anObject)).flush();
@@ -110,9 +110,9 @@ public class JsonMarshaller extends ExperimentObject {
      * @return an instance of the objectType containing the JSON information
      */
     public Object fromJson(Class objectType, String jsonString) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return gson.fromJson(jsonString, objectType);
     }
 
@@ -128,9 +128,9 @@ public class JsonMarshaller extends ExperimentObject {
      * file
      */
     public Object fromJson(Class objectType, File jsonFile) throws IOException {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         String jsonString = getJsonStringFromFile(jsonFile);
         return gson.fromJson(jsonString, objectType);
     }
@@ -147,9 +147,9 @@ public class JsonMarshaller extends ExperimentObject {
      * file
      */
     public Object fromJson(Class objectType, URL jsonURL) throws IOException {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
     }
 
@@ -162,9 +162,9 @@ public class JsonMarshaller extends ExperimentObject {
      * @return an instance of the objectType containing the JSON information
      */
     public Object fromJson(Type objectType, String jsonString) {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return gson.fromJson(jsonString, objectType);
     }
 
@@ -196,9 +196,9 @@ public class JsonMarshaller extends ExperimentObject {
      * file
      */
     public Object fromJson(Type objectType, URL jsonURL) throws IOException {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
     }
 
@@ -214,9 +214,9 @@ public class JsonMarshaller extends ExperimentObject {
      * file
      */
     protected String getJsonStringFromFile(File jsonFile) throws FileNotFoundException, IOException {
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile)));
         try {

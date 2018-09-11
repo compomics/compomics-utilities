@@ -45,20 +45,15 @@ public class PrecursorAnnotator {
     private NeutralLoss[] neutralLosses = null;
 
     /**
-     * Constructor.
+     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
      *
      * @param peptide the peptide of interest.
-     * @param modificationParameters the modification parameters the
-     * modification parameters
-     * @param sequenceProvider a protein sequence provider
-     * @param modificationsSequenceMatchingParameters the sequence matching
-     * parameters to use for modifications
+     * @param fixedModifications the fixed modifications
      */
-    public PrecursorAnnotator(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+    public PrecursorAnnotator(Peptide peptide, String[] fixedModifications) {
 
         precursorMass = peptide.getMass();
 
-        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
         HashSet<String> fixedModificationLosses = Arrays.stream(fixedModifications)
                 .filter(modName -> modName != null)
                 .map(modName -> modificationFactory.getModification(modName))

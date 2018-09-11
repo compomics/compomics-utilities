@@ -107,7 +107,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      */
     private File fastaFile;
     /**
-     * The parameters to use to parse the fasta file.
+     * The parameters to use to parse the FASTA file.
      */
     private FastaParameters fastaParameters;
     /**

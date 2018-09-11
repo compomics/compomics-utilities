@@ -13,6 +13,7 @@ import com.compomics.util.experiment.mass_spectrometry.SimpleNoiseDistribution;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.commons.math.util.FastMath;
@@ -29,18 +30,11 @@ public class SnrScore {
      * Log10 value of the lowest limit of a double.
      */
     private static final double limitLog10 = -FastMath.log10(Double.MIN_VALUE);
-    /**
-     * The occurrence of amino acids in the database.
-     */
-    private final AaOccurrence aaOccurrence;
     
     /**
      * Constructor.
-     * 
-     * @param aaOccurrence the amino acid occurrence in the database
      */
-    public SnrScore(AaOccurrence aaOccurrence) {
-        this.aaOccurrence = aaOccurrence;
+    public SnrScore() {
     }
 
     /**
@@ -61,9 +55,9 @@ public class SnrScore {
      */
     public double getScore(Peptide peptide, Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator, 
             ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
-        IonMatch[] ionMatchesList = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, 
-                    modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, false);
-        return getScore(peptide, spectrum, ionMatchesList);
+        ArrayList<IonMatch> ionMatches = Lists.newArrayList(peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, 
+                    modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, false));
+        return getScore(peptide, spectrum, ionMatches);
     }
 
     /**
@@ -75,8 +69,8 @@ public class SnrScore {
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, Spectrum spectrum, IonMatch[] ionMatchesList) {
-        HashMap<Double, ArrayList<IonMatch>> ionMatches = new HashMap<>(ionMatchesList.length);
+    public double getScore(Peptide peptide, Spectrum spectrum, ArrayList<IonMatch> ionMatchesList) {
+        HashMap<Double, ArrayList<IonMatch>> ionMatches = new HashMap<>(ionMatchesList.size());
         for (IonMatch ionMatch : ionMatchesList) {
             double mz = ionMatch.peak.mz;
             ArrayList<IonMatch> peakMatches = ionMatches.get(mz);
@@ -102,7 +96,6 @@ public class SnrScore {
     public double getScore(Peptide peptide, Spectrum spectrum, HashMap<Double, ArrayList<IonMatch>> ionMatches) {
 
         char[] sequence = peptide.getSequence().toCharArray();
-        int sequenceLength = sequence.length;
         
         SimpleNoiseDistribution binnedCumulativeFunction = spectrum.getIntensityLogDistribution();
         
@@ -125,15 +118,7 @@ public class SnrScore {
 
                     if (!peptideFragmentIon.hasNeutralLosses() && number >= 2) {
 
-                        double aasP;
-                        if (peptideFragmentIon.getSubType() == PeptideFragmentIon.A_ION
-                                || peptideFragmentIon.getSubType() == PeptideFragmentIon.B_ION
-                                || peptideFragmentIon.getSubType() == PeptideFragmentIon.C_ION) {
-                            aasP = aaOccurrence.getP(sequence, 0, number, 4);
-                        } else {
-                            aasP = aaOccurrence.getP(sequence, sequenceLength-number, sequenceLength, 4);
-                        }
-                        pFragmentIonMinusLog += pMinusLog + aasP;
+                        pFragmentIonMinusLog += pMinusLog;
                         break;
 
                     }

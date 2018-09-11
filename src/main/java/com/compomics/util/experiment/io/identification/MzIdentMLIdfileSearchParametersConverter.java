@@ -65,10 +65,14 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
             for (CvParam cvParam : tempFragmentTolerance.getCvParam()) {
                 if (cvParam.getAccession().equalsIgnoreCase("MS:1001412")) {
                     fragmentMaxTolerance = Double.valueOf(cvParam.getValue());
-                    fragmentToleranceTypeIsPpm = cvParam.getUnitAccession().equalsIgnoreCase("UO:0000169");
+                    if (cvParam.getUnitAccession() != null) {
+                        fragmentToleranceTypeIsPpm = cvParam.getUnitAccession().equalsIgnoreCase("UO:0000169");
+                    }
                 } else if (cvParam.getAccession().equalsIgnoreCase("MS:1001413")) {
                     fragmentMinTolerance = Double.valueOf(cvParam.getValue());
-                    fragmentToleranceTypeIsPpm = cvParam.getUnitAccession().equalsIgnoreCase("UO:0000169");
+                    if (cvParam.getUnitAccession() != null) {
+                        fragmentToleranceTypeIsPpm = cvParam.getUnitAccession().equalsIgnoreCase("UO:0000169");
+                    }
                 }
             }
         }

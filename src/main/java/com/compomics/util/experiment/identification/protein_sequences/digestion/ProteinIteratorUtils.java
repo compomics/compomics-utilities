@@ -387,7 +387,7 @@ public class ProteinIteratorUtils {
      *
      * @return a peptide from the given sequence
      */
-    public Peptide getPeptideFromProtein(char[] proteinSequence, int indexOnProtein, double massMin, double massMax) {
+    public ExtendedPeptide getPeptideFromProtein(char[] proteinSequence, int indexOnProtein, double massMin, double massMax) {
         return ProteinIteratorUtils.this.getPeptideFromProtein(proteinSequence, new String(proteinSequence), indexOnProtein, massMin, massMax);
     }
 
@@ -404,7 +404,7 @@ public class ProteinIteratorUtils {
      *
      * @return a peptide from the given sequence
      */
-    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, Double massMin, Double massMax) {
+    public ExtendedPeptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, Double massMin, Double massMax) {
         return getPeptideFromProtein(peptideSequence, proteinSequence, indexOnProtein, massMin, massMax, new BoxedObject<>(Boolean.TRUE));
     }
 
@@ -423,7 +423,8 @@ public class ProteinIteratorUtils {
      *
      * @return a peptide from the given sequence
      */
-    public Peptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, Double massMin, Double massMax, BoxedObject<Boolean> smallMass) {
+    public ExtendedPeptide getPeptideFromProtein(char[] peptideSequence, String proteinSequence, int indexOnProtein, 
+            double massMin, double massMax, BoxedObject<Boolean> smallMass) {
 
         char nTermAaChar = peptideSequence[0];
         String nTermModification = getNtermModification(indexOnProtein == 0, nTermAaChar, proteinSequence);
@@ -436,18 +437,24 @@ public class ProteinIteratorUtils {
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aaChar);
             peptideMass += aminoAcid.getMonoisotopicMass();
 
-            if (massMax != null && peptideMass + minCtermMass > massMax) {
+            if (peptideMass + minCtermMass > massMax) {
+                
                 smallMass.setObject(Boolean.FALSE);
                 return null;
+            
             }
 
             String modificationAtAa = fixedModificationsAtAa.get(aaChar);
 
             if (modificationAtAa != null) {
+                
+                
                 AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
                 if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, i)) {
+                
                     peptideModifications.put(i + 1, modificationAtAa);
                     peptideMass += modificationsMasses.get(modificationAtAa);
+                
                 }
             }
         }
@@ -455,11 +462,14 @@ public class ProteinIteratorUtils {
         PeptideDraft peptideDraft = new PeptideDraft(peptideSequence, nTermModification, peptideModifications, peptideMass);
 
         String cTermModification = getCtermModification(peptideDraft, proteinSequence, indexOnProtein);
+        
         if (cTermModification != null) {
+        
             double modificationMass = modificationsMasses.get(cTermModification);
             peptideMass = peptideDraft.getMass() + modificationMass;
             peptideDraft.setMass(peptideMass);
             peptideDraft.setcTermModification(cTermModification);
+        
         }
 
         return peptideDraft.getPeptide(massMin, massMax);

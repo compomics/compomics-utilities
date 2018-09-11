@@ -1,11 +1,12 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion.iterators;
 
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
-import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.AmbiguousSequenceIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
-import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.ExtendedPeptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.ModificationParameters;
 
 /**
  * Iterator for no digestion of a sequence containing amino acid combinations.
@@ -23,29 +24,17 @@ public class NoDigestionCombinationIterator implements SequenceIterator {
      */
     private final String proteinSequence;
     /**
-     * The protein sequence as char array.
-     */
-    private char[] proteinSequenceAsCharArray;
-    /**
      * The minimal mass to consider.
      */
-    private final Double massMin;
+    private final double massMin;
     /**
      * The maximal mass to consider.
      */
-    private final Double massMax;
-    /**
-     * The peptide beginning index of the iterator.
-     */
-    private final int index1 = 0;
-    /**
-     * The peptide end index of the iterator.
-     */
-    private final int index2 = 1;
+    private final double massMax;
     /**
      * The ambiguous sequence iterator.
      */
-    AmbiguousSequenceIterator ambiguousSequenceIterator = null;
+    private AmbiguousSequenceIterator ambiguousSequenceIterator = null;
 
     /**
      * Constructor.
@@ -56,18 +45,18 @@ public class NoDigestionCombinationIterator implements SequenceIterator {
      * @param massMax the maximal mass of a peptide
      */
     public NoDigestionCombinationIterator(ProteinIteratorUtils proteinIteratorUtils, String proteinSequence, Double massMin, Double massMax) {
-        
+
         this.proteinIteratorUtils = proteinIteratorUtils;
         this.proteinSequence = proteinSequence;
         this.massMin = massMin;
         this.massMax = massMax;
         ambiguousSequenceIterator = getSequenceIterator();
-        
+
     }
 
     /**
      * Returns the sequence iterator.
-     * 
+     *
      * @return the sequence iterator
      */
     private AmbiguousSequenceIterator getSequenceIterator() {
@@ -78,18 +67,27 @@ public class NoDigestionCombinationIterator implements SequenceIterator {
         double minPossibleMass = 0.0;
         double maxPossibleMass = 0.0;
         char[] sequenceAsCharArray = proteinSequence.toCharArray();
+
         for (int i = 0; i < sequenceAsCharArray.length; i++) {
+
             char aa = sequenceAsCharArray[i];
+
             if (aa == 'X') {
+
                 nX++;
+
                 if (nX > proteinIteratorUtils.getMaxXsInSequence()) {
-                    
+
                     // Skip iteration
                     return new AmbiguousSequenceIterator("", 0);
+
                 }
             }
+
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+
             if (aminoAcid.iscombination()) {
+
                 nCombinations++;
                 char[] possibleAas = aminoAcid.getSubAminoAcids(false);
                 char subAa = possibleAas[0];
@@ -97,28 +95,39 @@ public class NoDigestionCombinationIterator implements SequenceIterator {
                 double tempMass = subAminoAcid.getMonoisotopicMass();
                 double tempMassMin = tempMass;
                 double tempMassMax = tempMass;
+
                 for (int j = 1; j < possibleAas.length; j++) {
+
                     subAa = possibleAas[j];
                     subAminoAcid = AminoAcid.getAminoAcid(subAa);
                     tempMass = subAminoAcid.getMonoisotopicMass();
+
                     if (tempMass < tempMassMin) {
+
                         tempMassMin = tempMass;
+
                     } else if (tempMass > tempMassMax) {
+
                         tempMassMax = tempMass;
+
                     }
                 }
+
                 minPossibleMass += tempMassMin;
                 maxPossibleMass += tempMassMax;
+
             } else {
+
                 double tempMass = aminoAcid.getMonoisotopicMass();
                 minPossibleMass += tempMass;
                 maxPossibleMass += tempMass;
+
             }
         }
 
-        // See if we have a valid mass
-        if (massMin != null && maxPossibleMass < massMin
-                || massMax != null && minPossibleMass > massMax) {
+        // See if the mass is outside min and max boundaries
+        if (maxPossibleMass < massMin
+                || minPossibleMass > massMax) {
 
             // Skip iteration
             return new AmbiguousSequenceIterator("", 0);
@@ -130,24 +139,29 @@ public class NoDigestionCombinationIterator implements SequenceIterator {
     }
 
     @Override
-    public PeptideWithPosition getNextPeptide() throws InterruptedException {
-        
+    public ExtendedPeptide getNextPeptide() throws InterruptedException {
+
         // Get the next sequence
         char[] sequence = ambiguousSequenceIterator.getNextSequence();
-        
+
         // Iteration finished
         if (sequence == null) {
             return null;
         }
 
         // Create the new peptide
-        Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence, 0, massMin, massMax);
-        if (peptide != null
-                && (massMin == null || peptide.getMass() >= massMin)
-                && (massMax == null || peptide.getMass() <= massMax)) {
-            return new PeptideWithPosition(peptide, 0);
+        ExtendedPeptide extendedPeptide = proteinIteratorUtils.getPeptideFromProtein(sequence, 0, massMin, massMax);
+
+        if (extendedPeptide != null
+                && extendedPeptide.peptide.getMass() >= massMin
+                && extendedPeptide.peptide.getMass() <= massMax) {
+
+            return extendedPeptide;
+
         } else {
+
             return getNextPeptide();
+
         }
     }
 }

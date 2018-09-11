@@ -142,7 +142,7 @@ public class FastaIterator implements ProteinIterator {
             if (sequence.length() > 0) {
 
                 lastHeader = header;
-                return new Protein(header.getAccession(), sequence);
+                return new Protein(header.getAccessionOrRest(), sequence);
 
             } else if (header == null) {
 
@@ -150,7 +150,7 @@ public class FastaIterator implements ProteinIterator {
 
             } else {
 
-                throw new IllegalArgumentException("No sequence found for protein accession " + header.getAccession() + ".");
+                throw new IllegalArgumentException("No sequence found for protein accession " + header.getAccessionOrRest()+ ".");
 
             }
 

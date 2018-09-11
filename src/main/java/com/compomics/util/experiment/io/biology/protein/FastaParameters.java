@@ -218,9 +218,9 @@ public class FastaParameters {
     }
 
     /**
-     * Sets default name and version from the given fasta file.
+     * Sets default name and version from the given FASTA file.
      *
-     * @param fastaFile the fasta file
+     * @param fastaFile the FASTA file
      */
     public void setDefaultAttributes(File fastaFile) {
 
@@ -233,9 +233,9 @@ public class FastaParameters {
     /**
      * Infers the parameters used to parse the file.
      *
-     * @param fastaFile a fasta file
+     * @param fastaFile a FASTA file
      *
-     * @return returns fasta parameters inferred from the file
+     * @return returns FASTA parameters inferred from the file
      *
      * @throws IOException exception thrown if an error occurred while iterating
      * the file
@@ -249,10 +249,10 @@ public class FastaParameters {
     /**
      * Infers the parameters used to parse the file.
      *
-     * @param fastaFile a fasta file
+     * @param fastaFile a FASTA file
      * @param waitingHandler a handler to allow canceling the import
      *
-     * @return returns fasta parameters inferred from the file
+     * @return returns FASTA parameters inferred from the file
      *
      * @throws IOException exception thrown if an error occurred while iterating
      * the file
@@ -272,7 +272,7 @@ public class FastaParameters {
             if (i > offset && i < offset + 10) {
 
                 Header header = Header.parseFromFASTA(fastaHeader);
-                String accession = header.getAccession();
+                String accession = header.getAccessionOrRest();
                 String accessionLowerCase = accession.toLowerCase();
 
                 for (String decoyFlagLowerCase : decoyFlags) {

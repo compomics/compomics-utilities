@@ -1157,7 +1157,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             Advocate advocate = tempEValue.getAdvocate();
             Double eValue = tempEValue.getEValue();
             Double rawScore = tempEValue.getRawScore();
-
+            
             // get the peptide reference
             if (peptideRef == null) {
                 peptideRef = tempPeptideEvidenceMap.get(peptideEvidenceRef);
@@ -1411,7 +1411,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         // MS Amanda
         cvTerm = "MS:1002319";
         if (scoreMap.containsKey(cvTerm)) {
-            return getEValueObject(scoreMap, Advocate.msAmanda, cvTerm, RawValueConversionType.baseTenPowerPlusValue);
+            return getEValueObject(scoreMap, Advocate.msAmanda, cvTerm, RawValueConversionType.baseTenPowerMinusValue);
         }
 
         // Andromeda

@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequen
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.AmbiguousSequenceIterator;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
-import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.ExtendedPeptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
 import com.compomics.util.general.BoxedObject;
 import java.util.Arrays;
@@ -31,11 +31,11 @@ public class UnspecificCombinationIterator implements SequenceIterator {
     /**
      * The minimal mass to consider.
      */
-    private final Double massMin;
+    private final double massMin;
     /**
      * The maximal mass to consider.
      */
-    private final Double massMax;
+    private final double massMax;
     /**
      * The peptide beginning index of the iterator.
      */
@@ -57,7 +57,7 @@ public class UnspecificCombinationIterator implements SequenceIterator {
      * @param massMin the minimal mass of a peptide
      * @param massMax the maximal mass of a peptide
      */
-    public UnspecificCombinationIterator(ProteinIteratorUtils proteinIteratorUtils, String proteinSequence, Double massMin, Double massMax) {
+    public UnspecificCombinationIterator(ProteinIteratorUtils proteinIteratorUtils, String proteinSequence, double massMin, double massMax) {
         this.proteinIteratorUtils = proteinIteratorUtils;
         this.proteinSequence = proteinSequence;
         this.proteinSequenceAsCharArray = proteinSequence.toCharArray();
@@ -66,7 +66,7 @@ public class UnspecificCombinationIterator implements SequenceIterator {
     }
 
     @Override
-    public PeptideWithPosition getNextPeptide() throws InterruptedException {
+    public ExtendedPeptide getNextPeptide() throws InterruptedException {
 
         // See if an ambiguous sequence is being iterated
         if (ambiguousSequenceIterator != null) {
@@ -81,13 +81,13 @@ public class UnspecificCombinationIterator implements SequenceIterator {
             }
 
             // Construct the peptide
-            Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence, proteinSequence, index1, massMin, massMax);
+            ExtendedPeptide extendedPeptide = proteinIteratorUtils.getPeptideFromProtein(sequence, proteinSequence, index1, massMin, massMax);
 
             // Return the peptide if it passes the filters, continue iterating otherwise
-            if (peptide != null
-                    && (massMin == null || peptide.getMass() >= massMin)
-                    && (massMax == null || peptide.getMass() <= massMax)) {
-                return new PeptideWithPosition(peptide, index1);
+            if (extendedPeptide != null
+                    && extendedPeptide.peptide.getMass() >= massMin
+                    && extendedPeptide.peptide.getMass() <= massMax) {
+                return new ExtendedPeptide(extendedPeptide.peptide, index1, extendedPeptide.fixedModifications);
             } else {
                 return getNextPeptide();
             }
@@ -111,7 +111,7 @@ public class UnspecificCombinationIterator implements SequenceIterator {
 
         // Construct the peptide
         BoxedObject<Boolean> smallMass = new BoxedObject<>(Boolean.TRUE);
-        Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence, proteinSequence, index1, massMin, massMax, smallMass);
+        ExtendedPeptide extendedPeptide = proteinIteratorUtils.getPeptideFromProtein(sequence, proteinSequence, index1, massMin, massMax, smallMass);
 
         // Skip too heavy peptides
         if (!smallMass.getObject()) {
@@ -123,10 +123,10 @@ public class UnspecificCombinationIterator implements SequenceIterator {
         }
 
         // Return the peptide if it passes the filters, continue iterating otherwise
-        if (peptide != null
-                && (massMin == null || peptide.getMass() >= massMin)
-                && (massMax == null || peptide.getMass() <= massMax)) {
-            return new PeptideWithPosition(peptide, index1);
+        if (extendedPeptide != null
+                && extendedPeptide.peptide.getMass() >= massMin
+                && extendedPeptide.peptide.getMass() <= massMax) {
+            return new ExtendedPeptide(extendedPeptide.peptide, index1, extendedPeptide.fixedModifications);
         } else {
             return getNextPeptide();
         }

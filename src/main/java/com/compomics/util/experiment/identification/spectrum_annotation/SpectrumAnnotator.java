@@ -247,14 +247,14 @@ public abstract class SpectrumAnnotator {
             this.intensityLimit = intensityLimit;
 
             // See whether the index was previously stored
-            spectrumIndex = new SpectrumIndex();
-            spectrumIndex = (SpectrumIndex) spectrum.getUrParam(spectrumIndex);
+            //spectrumIndex = new SpectrumIndex();
+            //spectrumIndex = (SpectrumIndex) spectrum.getUrParam(spectrumIndex);
 
             // Create new index
-            if (spectrumIndex == null || spectrumIndex.intensityLimit != intensityLimit) {
+            //if (spectrumIndex == null || spectrumIndex.intensityLimit != intensityLimit) { // @TODO: see if this if can/should be readded? results in the accuracy slider not updating the plot though
                 spectrumIndex = new SpectrumIndex(spectrum.getPeakMap(), intensityLimit, mzTolerance, isPpm);
                 spectrum.addUrParam(spectrumIndex);
-            }
+            //}
         }
     }
 

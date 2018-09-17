@@ -106,7 +106,7 @@ public class GeneFactory {
      * reading the species mapping
      */
     public void initialize(String jarFilePath) throws IOException {
-    
+
         // load the previous ensembl version numbers
         File ensemblVersionsFile = getEnsemblVersionsFile();
         if (ensemblVersionsFile.exists()) {
@@ -133,7 +133,8 @@ public class GeneFactory {
      *
      * @throws java.io.IOException thrown whenever an error occurs while reading
      * or writing data.
-     * @throws java.lang.InterruptedException exception thrown whenever a threading issue occurs.
+     * @throws java.lang.InterruptedException exception thrown whenever a
+     * threading issue occurs.
      */
     public GeneMaps getGeneMaps(GenePreferences genePreferences, WaitingHandler waitingHandler) throws IOException, InterruptedException {
 
@@ -160,7 +161,7 @@ public class GeneFactory {
                         if (ensemblDatasetName != null) {
                             File geneMappingFile = getGeneMappingFile(ensemblDatasetName);
                             File goMappingFile = getGoMappingFile(ensemblDatasetName);
-                            
+
                             if (genePreferences.getAutoUpdate()) {
                                 boolean success = true;
                                 try {
@@ -367,7 +368,7 @@ public class GeneFactory {
                 + "<Attribute name = " + accessionMapping + " />";
 
         requestXml += "<Attribute name = \"goslim_goa_accession\" />"
-                    + "<Attribute name = \"goslim_goa_description\" />";
+                + "<Attribute name = \"goslim_goa_description\" />";
 
         requestXml += "</Dataset>"
                 + "</Query>";
@@ -644,10 +645,10 @@ public class GeneFactory {
      *
      * @param jarFilePath the Ensembl versions file
      * @param sourceEnsemblVersionsFile the Ensembl versions file
-     * @param sourceGoDomainsFile the GO domains file    
+     * @param sourceGoDomainsFile the GO domains file
      * @param updateEqualVersion if true, the version is updated with equal
      * version numbers, false, only update if the new version is newer
-     */  
+     */
     public void createDefaultGeneMappingFilesGeneric(String jarFilePath, File sourceEnsemblVersionsFile, File sourceGoDomainsFile, boolean updateEqualVersion) {
 
         if (!getGeneMappingFolder().exists()) {
@@ -660,7 +661,7 @@ public class GeneFactory {
 
         File targetEnsemblVersionsFile = getEnsemblVersionsFile();
         File targetGoDomainsFile = getGoDomainsFile();
-        
+
         HashMap<String, String> localEnsemblVersionsMap = new HashMap<String, String>();
         HashMap<String, Boolean> localUpdateSpeciesEnsembl = new HashMap<String, Boolean>();
 
@@ -674,40 +675,39 @@ public class GeneFactory {
                 }
 
                 Util.copyFile(sourceEnsemblVersionsFile, targetEnsemblVersionsFile);
-                
+
                 localEnsemblVersionsMap = getEnsemblSpeciesVersions(targetEnsemblVersionsFile);
                 for (Map.Entry<String, String> entry : localEnsemblVersionsMap.entrySet()) {
                     Integer speciesEnsemblVersionNew = getEnsemblVersionFromFile(sourceEnsemblVersionsFile, entry.getKey());
                     updateEnsemblVersion(entry.getKey(), "Ensembl " + speciesEnsemblVersionNew); // we actually just need to update the map
                     localUpdateSpeciesEnsembl.put(entry.getKey(), true);
                 }
-                                
+
             } else {
 
                 // file exists, just update every species ensembl version
                 // read the "new" species Ensembl versions number
                 localEnsemblVersionsMap = getEnsemblSpeciesVersions(targetEnsemblVersionsFile);
                 for (Map.Entry<String, String> entry : localEnsemblVersionsMap.entrySet()) { // entry.getKey(): species ; entry.getValue() : version
-                                       
+
                     Integer speciesEnsemblVersionNew = getEnsemblVersionFromFile(sourceEnsemblVersionsFile, entry.getKey());
 
                     if (speciesEnsemblVersionNew != null) {
 
                         Integer speciesEnsemblVersionOld = getEnsemblVersionFromFile(targetEnsemblVersionsFile, entry.getKey());
+
                         if (speciesEnsemblVersionOld == null
                                 || speciesEnsemblVersionOld.equals(speciesEnsemblVersionNew) && updateEqualVersion
                                 || speciesEnsemblVersionOld < speciesEnsemblVersionNew) {
                             localUpdateSpeciesEnsembl.put(entry.getKey(), true);
                             updateEnsemblVersion(entry.getKey(), "Ensembl " + speciesEnsemblVersionNew);
-                        }else{
+                        } else {
                             localUpdateSpeciesEnsembl.put(entry.getKey(), false);
                         }
-                    }else{
+                    } else {
                         localUpdateSpeciesEnsembl.put(entry.getKey(), false);
                     }
-                    
-                }     
-                
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -728,13 +728,14 @@ public class GeneFactory {
         }
 
         for (Map.Entry<String, Boolean> entry : localUpdateSpeciesEnsembl.entrySet()) {
-            if (entry.getValue()) { 
 
-                File sourceSpeciesGoMappingsFile = new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + entry.getKey()+GO_MAPPING_FILE_SUFFIX);
-                File sourceSpeciesGeneMappingFile = new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + entry.getKey()+GENE_MAPPING_FILE_SUFFIX);                
+            if (entry.getValue()) {
+
+                File sourceSpeciesGoMappingsFile = new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + entry.getKey() + GO_MAPPING_FILE_SUFFIX);
+                File sourceSpeciesGeneMappingFile = new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + entry.getKey() + GENE_MAPPING_FILE_SUFFIX);
                 File targetSpeciesGoMappingsFile = new File(getGeneMappingFolder(), sourceSpeciesGoMappingsFile.getName());
                 File targetSpeciesGeneMappingFile = new File(getGeneMappingFolder(), sourceSpeciesGeneMappingFile.getName());
-                
+
                 try {
                     if (!targetSpeciesGoMappingsFile.exists()) {
                         boolean fileCreated = targetSpeciesGoMappingsFile.createNewFile();
@@ -832,7 +833,6 @@ public class GeneFactory {
         return version;
     }
 
-    
     /**
      * Gets the information contained into the Ensembl species file.
      *
@@ -849,7 +849,7 @@ public class GeneFactory {
         try {
             BufferedReader br = new BufferedReader(r);
             try {
-                
+
                 String line = br.readLine();
 
                 while (line != null) {
@@ -865,7 +865,7 @@ public class GeneFactory {
         }
         return localEnsemblVersionsMap;
     }
-    
+
     /**
      * Loads the given Ensembl species file.
      *
@@ -1054,7 +1054,7 @@ public class GeneFactory {
      * @return rue if a newer version of the species mapping exists in Ensemble
      */
     public boolean newVersionExists(Integer taxon) {
-        
+
         EnsemblGenomeDivision ensemblGenomeDivision = SpeciesFactory.getInstance().getEnsemblGenomesSpecies().getDivision(taxon);
 
         Integer latestEnsemblVersion = EnsemblVersion.getCurrentEnsemblVersion(ensemblGenomeDivision);
@@ -1071,7 +1071,7 @@ public class GeneFactory {
                 e.printStackTrace();
                 currentEnsemblVersion = latestEnsemblVersion;
             }
-            
+
             return currentEnsemblVersion < latestEnsemblVersion;
         }
 

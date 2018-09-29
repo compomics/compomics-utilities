@@ -625,7 +625,7 @@ public class UtilitiesUserPreferences implements Serializable {
             }
             SerializationUtils.writeObject(userPreferences, file);
         } catch (Exception e) {
-            System.err.println("An error occurred while saving " + USER_PREFERENCES_FILE + " (see below).");
+            System.err.println("An error occurred while saving " + USER_PREFERENCES_FILE + ".");
             e.printStackTrace();
         }
     }
@@ -647,7 +647,7 @@ public class UtilitiesUserPreferences implements Serializable {
             try {
                 userPreferences = (UtilitiesUserPreferences) SerializationUtils.readObject(file);
             } catch (Exception e) {
-                System.err.println("An error occurred while loading " + UtilitiesUserPreferences.USER_PREFERENCES_FILE + " (see below). Preferences set back to default.");
+                System.err.println("An error occurred while loading " + UtilitiesUserPreferences.USER_PREFERENCES_FILE + ". Preferences set back to default.");
                 e.printStackTrace();
                 userPreferences = new UtilitiesUserPreferences();
                 UtilitiesUserPreferences.saveUserPreferences(userPreferences);

@@ -169,7 +169,7 @@ public class IdentificationParametersInputBean {
             try {
                 IdentificationParameters.getIdentificationParameters(fileIn);
             } catch (Exception e) {
-                System.out.println(System.getProperty("line.separator") + "An error occurred while importing the parameters file " + fileIn + " (see below)." + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator") + "An error occurred while importing the parameters file " + fileIn + "." + System.getProperty("line.separator"));
                 e.printStackTrace();
                 return false;
             }

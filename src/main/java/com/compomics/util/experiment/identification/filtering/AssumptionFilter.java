@@ -5,7 +5,7 @@ import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.biology.genes.GeneMaps;
 import com.compomics.util.experiment.filtering.FilterItem;
 import com.compomics.util.experiment.identification.Identification;
-import com.compomics.util.experiment.identification.IdentificationFeaturesGenerator;
+import com.compomics.util.experiment.identification.features.IdentificationFeaturesGenerator;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.matches.IonMatch;

@@ -1,5 +1,7 @@
 package com.compomics.util.io.json;
 
+import com.compomics.util.db.object.ObjectsDB;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.io.json.adapter.FileAdapter;
 import com.compomics.util.io.json.adapter.InterfaceAdapter;
 import com.google.gson.Gson;
@@ -21,7 +23,7 @@ import java.net.URL;
  * @author Kenneth Verheggen
  * @author Marc Vaudel
  */
-public class JsonMarshaller {
+public class JsonMarshaller extends ExperimentObject {
 
     /**
      * GSON parser instance to convert JSON to Java objects and back.
@@ -46,6 +48,7 @@ public class JsonMarshaller {
      * Initializes the marshaller with (custom) type adapters and date format
      */
     protected void init() {
+        writeDBMode();
         builder.registerTypeAdapter(File.class, new FileAdapter());
     }
 
@@ -73,6 +76,9 @@ public class JsonMarshaller {
      * @return the JSON representation of an object
      */
     public String toJson(Object anObject) {
+        
+        readDBMode();
+        
         return gson.toJson(anObject);
     }
 
@@ -86,6 +92,7 @@ public class JsonMarshaller {
      * JSON file
      */
     public void saveObjectToJson(Object anObject, File jsonFile) throws IOException {
+        writeDBMode();
         BufferedWriter out = new BufferedWriter(new FileWriter(jsonFile));
         try {
             out.append(toJson(anObject)).flush();
@@ -103,6 +110,9 @@ public class JsonMarshaller {
      * @return an instance of the objectType containing the JSON information
      */
     public Object fromJson(Class objectType, String jsonString) {
+        
+        readDBMode();
+        
         return gson.fromJson(jsonString, objectType);
     }
 
@@ -118,6 +128,9 @@ public class JsonMarshaller {
      * file
      */
     public Object fromJson(Class objectType, File jsonFile) throws IOException {
+        
+        readDBMode();
+        
         String jsonString = getJsonStringFromFile(jsonFile);
         return gson.fromJson(jsonString, objectType);
     }
@@ -134,6 +147,9 @@ public class JsonMarshaller {
      * file
      */
     public Object fromJson(Class objectType, URL jsonURL) throws IOException {
+        
+        readDBMode();
+        
         return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
     }
 
@@ -146,6 +162,9 @@ public class JsonMarshaller {
      * @return an instance of the objectType containing the JSON information
      */
     public Object fromJson(Type objectType, String jsonString) {
+        
+        readDBMode();
+        
         return gson.fromJson(jsonString, objectType);
     }
 
@@ -177,6 +196,9 @@ public class JsonMarshaller {
      * file
      */
     public Object fromJson(Type objectType, URL jsonURL) throws IOException {
+        
+        readDBMode();
+        
         return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
     }
 
@@ -192,6 +214,9 @@ public class JsonMarshaller {
      * file
      */
     protected String getJsonStringFromFile(File jsonFile) throws FileNotFoundException, IOException {
+        
+        readDBMode();
+        
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile)));
         try {

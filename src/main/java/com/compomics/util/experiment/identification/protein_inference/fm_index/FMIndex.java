@@ -44,7 +44,6 @@ import java.util.TreeSet;
 import org.jsuffixarrays.*;
 import java.util.concurrent.Semaphore;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
-import java.io.Serializable;
 import java.util.stream.Collectors;
 
 /**
@@ -53,7 +52,7 @@ import java.util.stream.Collectors;
  * @author Dominik Kopczynski
  * @author Marc Vaudel
  */
-public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsProvider, Serializable {
+public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
 
     /**
      * Semaphore for caching.
@@ -298,7 +297,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     /**
      * struct for building own data structure for mass to index mapping.
      */
-    public class MassIndexMap implements Serializable {
+    public class MassIndexMap {
 
         public double mass;
         public int[] indexes;
@@ -5218,8 +5217,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     public String getSubsequence(String accession, int start, int end) {
 
         String proteinSequence = getSequence(accession);
-
-        return proteinSequence.substring(Math.max(start, 0), Math.min(end, proteinSequence.length() - 1));
+        return proteinSequence.substring(Math.max(start, 0), Math.min(end, proteinSequence.length()));
 
     }
 
@@ -5296,66 +5294,5 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         Header header = accessionMeta.getHeader();
         return header.getProteinEvidence();
 
-    }
-
-    /**
-     * Class gathering metadata on a protein accession.
-     */
-    private class AccessionMetaData implements Serializable {
-
-        /**
-         * The header as string
-         */
-        String headerAsString;
-        /**
-         * The header
-         */
-        private Header header = null;
-        /**
-         * The index
-         */
-        int index;
-        /**
-         * the index part
-         */
-        int indexPart;
-
-        /**
-         * Constructor.
-         *
-         * @param header the header as parsed from the fasta file
-         */
-        public AccessionMetaData(String header) {
-            this.headerAsString = header;
-        }
-
-        /**
-         * Constructor.
-         *
-         * @param header the header as parsed from the fasta file
-         * @param index the index
-         * @param indexPart the index part
-         */
-        public AccessionMetaData(String header, int index, int indexPart) {
-            this.headerAsString = header;
-            this.index = index;
-            this.indexPart = indexPart;
-        }
-
-        /**
-         * Returns the parsed header.
-         *
-         * @return the parsed header
-         */
-        public Header getHeader() {
-
-            if (header == null) {
-
-                header = Header.parseFromFASTA(headerAsString);
-
-            }
-
-            return header;
-        }
     }
 }

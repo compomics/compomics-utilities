@@ -13,10 +13,8 @@
 package com.compomics.util.protein;
 import org.apache.log4j.Logger;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 /*
  * CVS information:
@@ -30,7 +28,7 @@ import java.util.Hashtable;
  *
  * @author Lennart Martens
  */
-public class ModificationImplementation implements com.compomics.util.interfaces.Modification, Cloneable, Serializable {
+public class ModificationImplementation implements com.compomics.util.interfaces.Modification, Cloneable {
 
     // Class specific log4j logger for ModificationImplementation instances.
     Logger logger = Logger.getLogger(ModificationImplementation.class);
@@ -188,7 +186,6 @@ public class ModificationImplementation implements com.compomics.util.interfaces
      * @return  <code>true</code> if this object is the same as the obj
      *          argument; <code>false</code> otherwise.
      * @see     #hashCode()
-     * @see     Hashtable
      */
     public boolean equals(Object obj) {
         boolean result = true;
@@ -238,7 +235,6 @@ public class ModificationImplementation implements com.compomics.util.interfaces
      *
      * @return  a hash code value for this object.
      * @see     Object#equals(Object)
-     * @see     Hashtable
      */
     public int hashCode() {
         return iTemplate.hashCode();

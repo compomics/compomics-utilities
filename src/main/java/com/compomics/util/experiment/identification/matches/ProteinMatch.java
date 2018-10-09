@@ -92,9 +92,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void setAccessions(String[] newAccessions) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.accessions = newAccessions;
         leadingAccession = accessions[0];
@@ -109,9 +109,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public String[] getAccessions() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return accessions;
     }
@@ -123,9 +123,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public String getLeadingAccession() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return leadingAccession;
         
@@ -138,9 +138,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void setLeadingAccession(String leadingAccession) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.leadingAccession = leadingAccession;
     }
@@ -152,9 +152,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public boolean isDecoy() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return decoy;
         
@@ -167,9 +167,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void setDecoy(boolean decoy) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.decoy = decoy;
         
@@ -182,9 +182,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public long[] getPeptideMatchesKeys() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return peptideMatchesKeys;
     }
@@ -196,9 +196,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void addPeptideMatchKey(long peptideMatchKey) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         peptideMatchesKeys = Arrays.copyOf(peptideMatchesKeys, peptideMatchesKeys.length + 1);
         peptideMatchesKeys[peptideMatchesKeys.length - 1] = peptideMatchKey;
@@ -212,9 +212,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void addPeptideMatchKeys(long[] newKeys) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
         
         peptideMatchesKeys = LongStream.concat(Arrays.stream(peptideMatchesKeys), 
                 Arrays.stream(newKeys))
@@ -230,9 +230,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void setPeptideMatchesKeys(long[] peptideMatchKeys) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         peptideMatchesKeys = peptideMatchKeys;
     }
@@ -244,9 +244,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public int getPeptideCount() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return peptideMatchesKeys.length;
     }
@@ -254,9 +254,9 @@ public class ProteinMatch extends IdentificationMatch {
     @Override
     public long getKey() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return matchKey;
     }
@@ -266,9 +266,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     private void setMatchKey() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         matchKey = ExperimentObject.asLong(
                 Arrays.stream(accessions)
@@ -299,9 +299,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public int getNProteins() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return accessions.length;
     }
@@ -316,9 +316,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public boolean contains(String aProtein) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return Arrays.stream(accessions)
                 .anyMatch(accession -> accession.equals(aProtein));

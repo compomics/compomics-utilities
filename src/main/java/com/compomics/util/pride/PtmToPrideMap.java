@@ -4,7 +4,6 @@ import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -13,7 +12,7 @@ import java.util.HashMap;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class PtmToPrideMap implements Serializable {
+public class PtmToPrideMap {
 
     /**
      * Serial number for backward compatibility.

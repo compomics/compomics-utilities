@@ -61,9 +61,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public void addModificationScoring(String modName, ModificationScoring modificationScoring) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         modificationMap.put(modName, modificationScoring);
 
@@ -79,9 +79,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public ModificationScoring getModificationScoring(String modName) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return modificationMap.get(modName);
 
@@ -96,9 +96,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public boolean containsModification(String modName) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return modificationMap.containsKey(modName);
 
@@ -111,9 +111,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public Set<String> getScoredModifications() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return modificationMap.keySet();
 
@@ -127,9 +127,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public void addConfidentModificationSite(String modName, int modificationSite) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         // add the modification to the site map
         if (mainModificationSites == null) {
@@ -177,9 +177,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     private void removeFromAmbiguousSitesMaps(String modName, int modificationSite) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         if (ambiguousModificationsByModName != null) {
 
@@ -238,9 +238,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public void addAmbiguousModificationSites(int representativeSite, HashMap<Integer, HashSet<String>> possibleModifications) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         if (ambiguousModificationsByRepresentativeSite == null) {
 
@@ -319,9 +319,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public void changeRepresentativeSite(String modName, int originalRepresentativeSite, int newRepresentativeSite) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         HashMap<Integer, HashSet<String>> ambiguousSites = ambiguousModificationsByRepresentativeSite.get(originalRepresentativeSite);
 
@@ -409,9 +409,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public boolean isConfidentModificationSite(int site, String modificationName) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return mainModificationSites != null
                 && mainModificationSites.containsKey(site)
@@ -429,9 +429,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public HashSet<String> getConfidentModificationsAt(int site) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return mainModificationSites == null || !mainModificationSites.containsKey(site) ? EmptyCollections.emptyStringSet
                 : mainModificationSites.get(site);
@@ -449,9 +449,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public HashSet<String> getModificationsAtRepresentativeSite(int site) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         HashMap<Integer, HashSet<String>> modificationsAtSite = getAmbiguousModificationsAtRepresentativeSite(site);
         
@@ -472,9 +472,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public HashSet<Integer> getConfidentSitesForModification(String modName) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return confidentModificationsByModName == null || !confidentModificationsByModName.containsKey(modName) ? EmptyCollections.emptyIntSet
                 : confidentModificationsByModName.get(modName);
@@ -492,9 +492,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public HashMap<Integer, HashSet<String>> getAmbiguousModificationsAtRepresentativeSite(int representativeSite) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return ambiguousModificationsByRepresentativeSite == null || !ambiguousModificationsByRepresentativeSite.containsKey(representativeSite) 
                 ? new HashMap<>(0)
@@ -511,9 +511,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public HashMap<Integer, HashSet<Integer>> getAmbiguousModificationsSites(String modName) {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return ambiguousModificationsByModName == null ? new HashMap<>(0)
                 : ambiguousModificationsByModName.get(modName);
@@ -527,9 +527,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public TreeSet<Integer> getConfidentSites() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return mainModificationSites == null ? new TreeSet<>() :
                 new TreeSet<>(mainModificationSites.keySet());
@@ -543,9 +543,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public TreeSet<Integer> getRepresentativeSites() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return ambiguousModificationsByRepresentativeSite == null ? EmptyCollections.emptyIntTreeSet
                 : new TreeSet<>(ambiguousModificationsByRepresentativeSite.keySet());
@@ -559,9 +559,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public TreeSet<String> getConfidentlyLocalizedModifications() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return confidentModificationsByModName == null ? EmptyCollections.emptyStringTreeSet
                 : new TreeSet<>(confidentModificationsByModName.keySet());
@@ -575,9 +575,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public TreeSet<String> getAmbiguouslyLocalizedModifications() {
         
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
         
         return ambiguousModificationsByModName == null ? EmptyCollections.emptyStringTreeSet
                 : new TreeSet<>(ambiguousModificationsByModName.keySet());

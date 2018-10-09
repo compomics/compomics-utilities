@@ -1,7 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
 import com.compomics.util.experiment.filtering.Filter;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +10,7 @@ import java.util.ArrayList;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ValidationQcParameters implements Serializable {
+public class ValidationQcParameters {
 
     /**
      * Serial number for backward compatibility.

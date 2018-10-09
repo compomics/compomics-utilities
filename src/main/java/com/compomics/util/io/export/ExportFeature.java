@@ -1,6 +1,5 @@
 package com.compomics.util.io.export;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -8,7 +7,7 @@ import java.util.ArrayList;
  *
  * @author Marc Vaudel
  */
-public interface ExportFeature extends Serializable {
+public interface ExportFeature {
 
     /**
      * Serial number for backward compatibility.

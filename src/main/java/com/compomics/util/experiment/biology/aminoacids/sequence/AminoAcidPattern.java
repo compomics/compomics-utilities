@@ -3,6 +3,7 @@ package com.compomics.util.experiment.biology.aminoacids.sequence;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.Util;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -150,6 +151,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the map of targeted amino acids
      */
     public HashMap<Integer, ArrayList<Character>> getAaTargeted() {
+        readDBMode();
         return residueTargeted;
     }
 
@@ -176,6 +178,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param toRow to row
      */
     public void swapRows(int fromRow, int toRow) {
+        writeDBMode();
 
         if (residueTargeted == null) {
             residueTargeted = new HashMap<>(1);
@@ -203,6 +206,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the index of the amino acid of interest in the pattern.
      */
     public int getTarget() {
+        readDBMode();
         
         return 0;
     }
@@ -213,6 +217,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the minimal index where amino acids are found
      */
     public int getMinIndex() {
+        readDBMode();
         
         return Math.min(residueTargeted.keySet().stream()
                 .mapToInt(index -> index)
@@ -227,6 +232,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the maximal index where amino acids are found
      */
     public int getMaxIndex() {
+        readDBMode();
         
         return Math.max(residueTargeted.keySet().stream()
                 .mapToInt(index -> (int) index)
@@ -241,6 +247,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param target the index of the amino acid of interest in the pattern.
      */
     public void setTarget(Integer target) {
+        writeDBMode();
         
         if (residueTargeted == null) {
             residueTargeted = new HashMap<>(1);
@@ -265,6 +272,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the targeted amino acids at position "target"
      */
     public ArrayList<Character> getAminoAcidsAtTarget() {
+        readDBMode();
         return getTargetedAA(0);
     }
 
@@ -274,6 +282,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return a set containing the amino acids at target
      */
     public HashSet<Character> getAminoAcidsAtTargetSet() {
+        readDBMode();
         if (aaAtTarget == null) {
             ArrayList<Character> aaAtTargetList = getAminoAcidsAtTarget();
             aaAtTarget = new HashSet<>(aaAtTargetList);
@@ -289,6 +298,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param targets the amino acids targeted
      */
     public void setTargeted(int index, ArrayList<Character> targets) {
+        writeDBMode();
         if (residueTargeted == null) {
             residueTargeted = new HashMap<>(1);
         }
@@ -307,6 +317,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param exceptions the amino acids to exclude
      */
     public void setExcluded(int index, ArrayList<Character> exceptions) {
+        writeDBMode();
         if (residueTargeted == null) {
             residueTargeted = new HashMap<>(1);
         }
@@ -344,6 +355,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the targeted amino acids
      */
     public ArrayList<Character> getTargetedAA(int index) {
+        readDBMode();
         if (residueTargeted != null) {
             ArrayList<Character> result = residueTargeted.get(index);
             if (result != null) {
@@ -362,6 +374,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the number of excluded amino acids
      */
     public int getNTargetedAA(int index) {
+        readDBMode();
         if (residueTargeted == null) {
             return 0;
         }
@@ -375,6 +388,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param index the index of the amino acid to remove
      */
     public void removeAA(int index) {
+        writeDBMode();
 
         if (residueTargeted != null) {
             ArrayList<Integer> indexes = new ArrayList<>(residueTargeted.keySet());
@@ -403,6 +417,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the amino acid pattern as java string pattern
      */
     public Pattern getAsStringPattern(SequenceMatchingParameters sequenceMatchingParameters, boolean includeMutations) {
+        readDBMode();
 
         MatchingType matchingType = sequenceMatchingParameters.getSequenceMatchingType();
 
@@ -473,6 +488,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the pattern in the PROSITE format
      */
     public String getPrositeFormat() {
+        readDBMode();
 
         StringBuilder result = new StringBuilder();
         int cpt = 0;
@@ -531,6 +547,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return a list of indexes where the amino acid pattern was found
      */
     public int[] getIndexes(String input, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         
         ArrayList<Integer> result = new ArrayList<>(1);
         int index = 0;
@@ -555,6 +572,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return a list of indexes where the amino acid pattern was found
      */
     public ArrayList<Integer> getIndexes(AminoAcidPattern input, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         ArrayList<Integer> result = new ArrayList<>(1);
         int index = 0;
         while ((index = firstIndex(input, sequenceMatchingParameters, index)) >= 0) {
@@ -574,6 +592,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the first index where the amino acid pattern is found
      */
     public int firstIndex(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         return firstIndex(aminoAcidSequence, sequenceMatchingParameters, 0);
     }
 
@@ -587,6 +606,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the first index where the amino acid pattern is found
      */
     public int firstIndex(AminoAcidSequence aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         return firstIndex(aminoAcidSequence.getSequence(), sequenceMatchingParameters, 0);
     }
 
@@ -600,6 +620,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the first index where the amino acid pattern is found
      */
     public int firstIndex(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         return firstIndex(aminoAcidPattern, sequenceMatchingParameters, 0);
     }
 
@@ -612,6 +633,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the first index where the amino acid pattern is found
      */
     public boolean contains(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         AminoAcidPattern pattern = getAminoAcidPatternFromString(aminoAcidSequence);
         return pattern.firstIndex(this, sequenceMatchingParameters) >= 0;
     }
@@ -625,6 +647,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the first index where the amino acid pattern is found
      */
     public boolean contains(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         return aminoAcidPattern.firstIndex(this, sequenceMatchingParameters) >= 0;
     }
 
@@ -639,6 +662,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the first index where the amino acid pattern is found
      */
     public int firstIndex(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters, int startIndex) {
+        readDBMode();
 
         int patternLength = length();
         int aminoAcidPatternLength = aminoAcidSequence.length();
@@ -675,6 +699,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the first index where the amino acid pattern is found
      */
     public int firstIndex(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters, int startIndex) {
+        readDBMode();
 
         int patternLength = length();
         int aminoAcidPatternLength = aminoAcidPattern.length();
@@ -717,6 +742,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * targeted
      */
     public boolean isTargeted(Character aa, int index, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
 
         if (residueTargeted != null) {
 
@@ -771,6 +797,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * amino acid sequence
      */
     public boolean matchesIn(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         return firstIndex(aminoAcidSequence, sequenceMatchingParameters) >= 0;
     }
 
@@ -784,6 +811,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * amino acid sequence
      */
     public boolean matchesIn(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         return firstIndex(aminoAcidPattern, sequenceMatchingParameters) >= 0;
     }
 
@@ -800,6 +828,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * amino acid sequence at the given index
      */
     public boolean matchesAt(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters, int index) {
+        readDBMode();
         int startIndex = index;
         int endIndex = length();
         if (startIndex < 0) {
@@ -821,6 +850,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return a boolean indicating whether the pattern matches the given amino acid sequence
      */
     public boolean matches(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingParameters) >= 0;
     }
 
@@ -833,6 +863,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return a boolean indicating whether the pattern matches the given amino acid sequence
      */
     public boolean matches(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         return length() == aminoAcidPattern.length() && firstIndex(aminoAcidPattern, sequenceMatchingParameters) >= 0;
     }
 
@@ -846,6 +877,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * with the pattern
      */
     public boolean isStarting(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         int patternLength = length();
         return matchesIn(aminoAcidSequence.substring(0, patternLength), sequenceMatchingParameters);
     }
@@ -860,6 +892,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * with the pattern
      */
     public boolean isStarting(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         int patternLength = length();
         return matchesIn(aminoAcidPattern.getSubPattern(0, patternLength, false), sequenceMatchingParameters);
     }
@@ -874,6 +907,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * with the pattern
      */
     public boolean isEnding(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         int patternLength = length();
         return matchesIn(aminoAcidPattern.getSubPattern(aminoAcidPattern.length() - patternLength, false), sequenceMatchingParameters);
     }
@@ -888,6 +922,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * with the pattern
      */
     public boolean isEnding(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
         int patternLength = length();
         return matchesIn(aminoAcidSequence.substring(aminoAcidSequence.length() - patternLength), sequenceMatchingParameters);
     }
@@ -903,6 +938,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return true if the other AminoAcidPattern targets the same pattern
      */
     public boolean isSameAs(AminoAcidPattern anotherPattern, SequenceMatchingParameters sequenceMatchingParameters) {
+        readDBMode();
 
         if (anotherPattern == null) {
             return false;
@@ -921,6 +957,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the length of the pattern in amino acids
      */
     public int length() {
+        readDBMode();
         if (residueTargeted == null) {
             return 0;
         }
@@ -934,6 +971,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return a pattern which can be searched by standard search engines
      */
     public AminoAcidPattern getStandardSearchPattern() {
+        readDBMode();
         AminoAcidPattern result = new AminoAcidPattern();
         result.setTarget(0);
         result.setTargeted(0, getAminoAcidsAtTarget());
@@ -967,6 +1005,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param otherPattern another pattern to be merged with this
      */
     public void merge(AminoAcidPattern otherPattern) {
+        writeDBMode();
 
         HashMap<Integer, ArrayList<Character>> otherInclusionMap = otherPattern.getAaTargeted();
 
@@ -1001,6 +1040,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param otherPattern the other pattern to append.
      */
     public void append(AminoAcidPattern otherPattern) {
+        writeDBMode();
         
         int patternLength = length();
         HashMap<Integer, ArrayList<Character>> otherTargetedMap = otherPattern.getAaTargeted();
@@ -1045,6 +1085,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * string builder
      */
     public StringBuilder asStringBuilder() {
+        readDBMode();
         StringBuilder result = new StringBuilder(length());
         for (int i = 0; i < length(); i++) {
             if (getNTargetedAA(i) == 1) {
@@ -1080,6 +1121,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the component of the amino acid pattern at the given index
      */
     public String asSequence(int index) {
+        readDBMode();
         return asStringBuilder().substring(index, index + 1);
     }
 
@@ -1090,6 +1132,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param ModificationSite valid amino acids for this site
      */
     public void addModificationSite(int localization, ArrayList<Character> ModificationSite) {
+        writeDBMode();
         if (residueTargeted == null) {
             residueTargeted = new HashMap<>(1);
         }
@@ -1105,6 +1148,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * amino acids
      */
     public ArrayList<String> getAllPossibleSequences() {
+        readDBMode();
 
         ArrayList<StringBuilder> stringBuilders = new ArrayList<>(1);
         int tempLength = length();
@@ -1175,6 +1219,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return a sub pattern
      */
     public AminoAcidPattern getSubPattern(int startIndex, int endIndex, boolean updateTarget) {
+        readDBMode();
 
         AminoAcidPattern aminoAcidPattern = new AminoAcidPattern();
 
@@ -1207,6 +1252,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return a sub pattern
      */
     public AminoAcidPattern getSubPattern(int startIndex, boolean updateTarget) {
+        readDBMode();
         return getSubPattern(startIndex, length(), updateTarget);
     }
 
@@ -1218,6 +1264,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * pattern
      */
     public AminoAcidPattern reverse() {
+        readDBMode();
 
         AminoAcidPattern newPattern = new AminoAcidPattern();
 

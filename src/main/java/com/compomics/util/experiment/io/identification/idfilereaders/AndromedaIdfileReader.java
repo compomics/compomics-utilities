@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.io.identification.idfilereaders;
 
 import com.compomics.util.Util;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
@@ -61,12 +62,14 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public String getExtension() {
+        readDBMode();
         return ".res";
     }
 
     @Override
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        readDBMode();
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
     }
 
@@ -74,6 +77,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        readDBMode();
 
         String mgfFile = Util.removeExtension(fileName) + ".mgf"; //@TODO: make this generic?
 
@@ -152,6 +156,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      * @return the corresponding assumption
      */
     private PeptideAssumption getAssumptionFromLine(String line, int rank) {
+        readDBMode();
 
         String[] temp = line.trim().split("\t");
 
@@ -187,6 +192,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
+        readDBMode();
         HashMap<String, ArrayList<String>> result = new HashMap<>();
         ArrayList<String> versions = new ArrayList<>();
         versions.add("1.5.3.4");
@@ -196,6 +202,7 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
 
     @Override
     public boolean hasDeNovoTags() {
+        readDBMode();
         return false;
     }
 }

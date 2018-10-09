@@ -6,11 +6,10 @@ import com.compomics.util.experiment.biology.genes.GeneMaps;
 import com.compomics.util.experiment.filtering.Filter;
 import com.compomics.util.experiment.filtering.FilterItem;
 import com.compomics.util.experiment.identification.Identification;
-import com.compomics.util.experiment.identification.IdentificationFeaturesGenerator;
+import com.compomics.util.experiment.identification.features.IdentificationFeaturesGenerator;
 import com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.parameters.identification.IdentificationParameters;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -20,7 +19,7 @@ import java.util.Map.Entry;
  *
  * @author Marc Vaudel
  */
-public abstract class MatchFilter implements Serializable, Filter {
+public abstract class MatchFilter implements Filter {
 
     /**
      * Serial number for serialization compatibility.

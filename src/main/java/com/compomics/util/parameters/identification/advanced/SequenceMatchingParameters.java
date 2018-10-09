@@ -1,6 +1,5 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import java.io.Serializable;
 
 /**
  * The sequence matching options.
@@ -8,7 +7,7 @@ import java.io.Serializable;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class SequenceMatchingParameters implements Serializable {
+public class SequenceMatchingParameters {
 
     /**
      * Serialization number for backward compatibility.

@@ -38,7 +38,7 @@ public class BoxedObject<K> extends DbObject {
      * @return the boxed object
      */
     public K getObject() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return object;
     }
 
@@ -48,7 +48,7 @@ public class BoxedObject<K> extends DbObject {
      * @param object the boxed object
      */
     public void setObject(K object) {
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.object = object;
     }
 }

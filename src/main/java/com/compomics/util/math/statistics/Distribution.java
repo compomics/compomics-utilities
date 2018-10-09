@@ -1,6 +1,5 @@
 package com.compomics.util.math.statistics;
 
-import java.io.Serializable;
 
 /**
  * This class represents a statistical distribution model like a Gaussian
@@ -8,7 +7,7 @@ import java.io.Serializable;
  *
  * @author Marc Vaudel
  */
-public interface Distribution extends Serializable {
+public interface Distribution {
 
     /**
      * Returns the density function value at a given position.

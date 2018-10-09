@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.io.mass_spectrometry.mgf;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -179,6 +180,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the corresponding index
      */
     public Long getIndex(String spectrumTitle) {
+        readDBMode();
         return indexMap.get(spectrumTitle);
     }
 
@@ -191,6 +193,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the corresponding spectrum index
      */
     public Integer getSpectrumIndex(String spectrumTitle) {
+        readDBMode();
 
         if (spectrumNumberIndexMap == null) {
             return null;
@@ -214,6 +217,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the precursor mz
      */
     public Double getPrecursorMz(int spectrumIndex) {
+        readDBMode();
 
         if (precursorMzMap == null) {
             return null;
@@ -237,6 +241,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the title of the spectrum of interest
      */
     public String getSpectrumTitle(int number) {
+        readDBMode();
         return spectrumTitles.get(number);
     }
 
@@ -249,6 +254,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * this index
      */
     public boolean containsSpectrum(String spectrumTitle) {
+        readDBMode();
         return indexMap.containsKey(spectrumTitle);
     }
 
@@ -258,6 +264,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return an ordered list of all spectrum titles
      */
     public ArrayList<String> getSpectrumTitles() {
+        readDBMode();
         if (spectrumTitles != null) {
             return spectrumTitles;
         } else {
@@ -271,6 +278,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return a map of the duplicated spectrum titles, can be null
      */
     public HashMap<String, Integer> getDuplicatedSpectrumTitles() {
+        readDBMode();
         return duplicatedSpectrumTitles;
     }
 
@@ -280,6 +288,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the name of the indexed file
      */
     public String getFileName() {
+        readDBMode();
         return fileName;
     }
 
@@ -289,6 +298,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the maximal RT in this file
      */
     public Double getMaxRT() {
+        readDBMode();
         return maxRT;
     }
 
@@ -298,6 +308,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param maxRT the maximal RT in this file
      */
     public void setMaxRT(Double maxRT) {
+        writeDBMode();
         this.maxRT = maxRT;
     }
 
@@ -307,6 +318,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the maximum m/z in this file
      */
     public Double getMaxMz() {
+        readDBMode();
         return maxMz;
     }
 
@@ -316,6 +328,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param maxCharge the maximum charge in this file
      */
     public void setMaxCharge(Integer maxCharge) {
+        writeDBMode();
         this.maxCharge = maxCharge;
     }
 
@@ -325,6 +338,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the maximal charge found in the mgf file
      */
     public Integer getMaxCharge() {
+        readDBMode();
         return maxCharge;
     }
 
@@ -334,6 +348,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param maxMz the maximum m/z in this file
      */
     public void setMaxMz(Double maxMz) {
+        writeDBMode();
         this.maxMz = maxMz;
     }
 
@@ -343,6 +358,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the maximum precursor intensity in this file
      */
     public Double getMaxIntensity() {
+        readDBMode();
         return maxIntensity;
     }
 
@@ -352,6 +368,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param maxIntensity the maximum precursor intensity in this file
      */
     public void setMaxIntensity(Double maxIntensity) {
+        writeDBMode();
         this.maxIntensity = maxIntensity;
     }
 
@@ -361,6 +378,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the minimum RT in this file
      */
     public Double getMinRT() {
+        readDBMode();
         return minRT;
     }
 
@@ -370,6 +388,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param minRT the minimum RT in this file
      */
     public void setMinRT(Double minRT) {
+        writeDBMode();
         this.minRT = minRT;
     }
 
@@ -379,6 +398,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the maximum peak count in this file
      */
     public Integer getMaxPeakCount() {
+        readDBMode();
         return maxPeakCount;
     }
 
@@ -388,6 +408,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param maxPeakCount the maximum peak count in this file
      */
     public void setMaxPeakCount(Integer maxPeakCount) {
+        writeDBMode();
         this.maxPeakCount = maxPeakCount;
     }
 
@@ -397,6 +418,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the number of imported spectra
      */
     public int getNSpectra() {
+        readDBMode();
         if (spectrumCount == null) {
             spectrumCount = spectrumTitles.size();
         }
@@ -410,6 +432,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return a long indicating when the file was last modified
      */
     public Long getLastModified() {
+        readDBMode();
         return lastModified;
     }
 
@@ -421,6 +444,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * spectra
      */
     public Boolean isPeakPicked() {
+        readDBMode();
         if (peakPicked == null) {
             peakPicked = true;
         }
@@ -433,6 +457,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param peakPicked the peakPicked to set
      */
     public void setPeakPicked(Boolean peakPicked) {
+        writeDBMode();
         this.peakPicked = peakPicked;
     }
 
@@ -443,6 +468,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return true if the at least one spectrum is missing the precursor charge
      */
     public Boolean isPrecursorChargesMissing() {
+        readDBMode();
         return precursorChargesMissing;
     }
 
@@ -452,6 +478,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param precursorChargesMissing the precursorChargesMissing to set
      */
     public void setPrecursorChargesMissing(Boolean precursorChargesMissing) {
+        writeDBMode();
         this.precursorChargesMissing = precursorChargesMissing;
     }
 }

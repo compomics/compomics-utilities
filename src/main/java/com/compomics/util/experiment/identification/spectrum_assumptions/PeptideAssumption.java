@@ -13,10 +13,6 @@ import com.compomics.util.experiment.identification.SpectrumIdentificationAssump
 public class PeptideAssumption extends SpectrumIdentificationAssumption {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility.
-     */
-    static final long serialVersionUID = 3606509518581203063L;
-    /**
      * The theoretic peptide.
      */
     private Peptide peptide;
@@ -83,18 +79,18 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @return the peptide
      */
     public Peptide getPeptide() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return peptide;
     }
     
     public void setPeptide(Peptide peptide){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.peptide = peptide;
     }
 
     @Override
     public double getTheoreticMass() {
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return peptide.getMass();
     }
 }

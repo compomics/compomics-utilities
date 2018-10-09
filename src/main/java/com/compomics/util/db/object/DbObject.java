@@ -1,7 +1,6 @@
 package com.compomics.util.db.object;
 
 
-import java.io.Serializable;
 import org.zoodb.api.impl.ZooPC;
 
 /**
@@ -10,7 +9,7 @@ import org.zoodb.api.impl.ZooPC;
  * 
  * @author Dominik Kopczynski
  */
-public class DbObject extends ZooPC implements Serializable {
+public class DbObject extends ZooPC {
     
     /**
      * Unique identifier.
@@ -33,7 +32,7 @@ public class DbObject extends ZooPC implements Serializable {
      */
     public long getId(){
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return id;
     
@@ -46,7 +45,7 @@ public class DbObject extends ZooPC implements Serializable {
      */
     public void setId(long id){
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         
         this.id = id;
     
@@ -59,7 +58,7 @@ public class DbObject extends ZooPC implements Serializable {
      */
     public boolean getFirstLevel(){
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return firstLevel;
     
@@ -72,9 +71,38 @@ public class DbObject extends ZooPC implements Serializable {
      */
     public void setFirstLevel(boolean firstLevel){
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         this.firstLevel = firstLevel;
     
     }
+    
+    /**
+     * Sets the ZooDB to read mode
+     */
+    public void readDBMode(){
+        try {
+            ObjectsDB.increaseRWCounter();
+            zooActivateRead();
+        }
+        finally {
+            ObjectsDB.decreaseRWCounter();
+        }
+    }
+    
+    
+    
+    /**
+     * Sets the ZooDB to write mode
+     */
+    public void writeDBMode(){
+        try {
+            ObjectsDB.increaseRWCounter();
+            zooActivateWrite();
+        }
+        finally {
+            ObjectsDB.decreaseRWCounter();
+        }
+    }
+            
 }

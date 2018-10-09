@@ -31,52 +31,52 @@ public class ProjectParameters extends DbObject {
     }
     
     public Date getCreationTime(){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return creationTime;
     }
     
     public void setCreationTime(Date creationTime){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         this.creationTime = creationTime;
     }
     
     public String getProjectUniqueName(){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return projectUniqueName;
     }
     
     public void getProjectUniqueName(String projectUniqueName){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         this.projectUniqueName = projectUniqueName;
     }
     
     public void setStringParameter(String key, String parameter){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         stringParameters.put(key, parameter);
     }
     
     public String getStringParameter(String key){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return stringParameters.get(key);
     }
     
     public void setIntegerParameter(String key, Integer parameter){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         integerParameters.put(key, parameter);
     }
     
     public int getIntegerParameter(String key){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return integerParameters.get(key);
     }
     
     public void setNumericParameter(String key, Double parameter){
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         numericParameters.put(key, parameter);
     }
     
     public double getNumericParameter(String key){
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         return numericParameters.get(key);
     }
 }

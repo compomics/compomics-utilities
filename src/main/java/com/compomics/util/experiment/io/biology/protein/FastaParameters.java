@@ -5,7 +5,6 @@ import com.compomics.util.experiment.io.biology.protein.iterators.HeaderIterator
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +12,7 @@ import java.util.Date;
  *
  * @author Marc Vaudel
  */
-public class FastaParameters implements Serializable {
+public class FastaParameters {
 
     /**
      * The version UID for serialization/deserialization compatibility.

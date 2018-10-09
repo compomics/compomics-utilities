@@ -2,7 +2,6 @@ package com.compomics.util.parameters.identification.tool_specific;
 
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +10,7 @@ import java.util.ArrayList;
  * @author Thilo Muth
  * @author Harald Barsnes
  */
-public class DirecTagParameters implements Serializable, IdentificationAlgorithmParameter {
+public class DirecTagParameters implements IdentificationAlgorithmParameter {
 
     // @TODO: options not implemented: OutputSuffix, StartSpectraScanNum, EndSpectraScanNum 
     //        (advanced: ClassSizeMultiplier, NumBatches, ThreadCountMultiplier, UseMultipleProcessors)

@@ -70,28 +70,28 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     
     public HashMap<Integer, HashMap<Double, Peak>> getPeaksMap(){
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return peaksMap;
     }
     
     public boolean getPpm(){
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return ppm;
     }
     
     public double getPrecursorToleance(){
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return precursorTolerance;
     }
     
     public double getScalingFactor(){
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return scalingFactor;
     }
@@ -163,7 +163,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public int getBin(double mz) {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         if (ppm) {
             
@@ -186,7 +186,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     private int getBinAbsolute(double mz) {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         int bin = (int) (mz / precursorTolerance);
         
@@ -203,7 +203,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     private int getBinPpm(double mz) {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         int bin = (int) ((FastMath.log(mz) - mzAnchorLog) / scalingFactor);
         
@@ -220,7 +220,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public ArrayList<Peak> getMatchingPeaks(double mz) {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         int bin0;
         if (ppm) {
@@ -293,7 +293,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public ArrayList<Integer> getBins() {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return new ArrayList<>(peaksMap.keySet());
         
@@ -306,7 +306,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public Set<Integer> getRawBins() {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return peaksMap.keySet();
         
@@ -321,7 +321,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public HashMap<Double, Peak> getPeaksInBin(Integer bin) {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return peaksMap.get(bin);
         
@@ -336,7 +336,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public Double getMass(int bin) {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return ppm ?  FastMath.exp((scalingFactor * bin) + mzAnchorLog)
                 : precursorTolerance * (0.5 + bin);
@@ -350,7 +350,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public Integer getBinMax() {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return binMax;
         
@@ -363,7 +363,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public Integer getBinMin() {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return binMin;
         
@@ -376,7 +376,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public Double getTotalIntensity() {
         
-        ObjectsDB.increaseRWCounter(); zooActivateRead(); ObjectsDB.decreaseRWCounter();
+        readDBMode();
         
         return totalIntensity;
         
@@ -391,7 +391,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     
     public void setBinMax(Integer binMax){
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         
         this.binMax = binMax;
         
@@ -399,7 +399,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     
     public void setBinMin(Integer binMin){
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         
         this.binMin = binMin;
         
@@ -407,7 +407,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     
     public void setPeaksMap(HashMap<Integer, HashMap<Double, Peak>> peaksMap){
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         
         this.peaksMap = peaksMap;
         
@@ -415,7 +415,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     
     public void setPpm(boolean ppm){
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         
         this.ppm = ppm;
         
@@ -423,7 +423,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     
     public void setPrecursorTolerance(double precursorTolerance){
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         
         this.precursorTolerance = precursorTolerance;
         
@@ -431,7 +431,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     
     public void setScalingFactor(double scalingFactor){
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         
         this.scalingFactor = scalingFactor;
         
@@ -439,7 +439,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     
     public void setTotalIntensity(Double totalIntensity){
         
-        ObjectsDB.increaseRWCounter(); zooActivateWrite(); ObjectsDB.decreaseRWCounter();
+        writeDBMode();
         
         this.totalIntensity = totalIntensity;
         

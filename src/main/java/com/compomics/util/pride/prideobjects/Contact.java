@@ -1,14 +1,13 @@
 package com.compomics.util.pride.prideobjects;
 
 import com.compomics.util.pride.PrideObject;
-import java.io.*;
 
 /**
  * An object for storing Contact details.
  *
  * @author Harald Barsnes
  */
-public class Contact implements PrideObject, Serializable {
+public class Contact implements PrideObject {
 
     /**
      * Serialization number for backward compatibility.

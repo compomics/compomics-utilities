@@ -1,6 +1,5 @@
 package com.compomics.util.io.file;
 
-import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -8,7 +7,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class LastSelectedFolder implements Serializable {
+public class LastSelectedFolder {
 
     /**
      * Serial version UID for backward compatibility.

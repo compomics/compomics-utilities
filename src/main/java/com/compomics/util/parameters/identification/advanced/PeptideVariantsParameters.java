@@ -1,14 +1,13 @@
 package com.compomics.util.parameters.identification.advanced;
 
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
-import java.io.Serializable;
 
 /**
  * Preferences for the allowed variants in peptide sequences.
  *
  * @author Marc Vaudel
  */
-public class PeptideVariantsParameters implements Serializable {
+public class PeptideVariantsParameters {
 
     /**
      * Serial number for backward compatibility.

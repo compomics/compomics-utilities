@@ -43,4 +43,15 @@
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-quick</actionName>
+            <displayName>quick</displayName>
+            <goals>
+                <goal>install</goal>
+                
+            </goals>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+        </action>
     </actions>

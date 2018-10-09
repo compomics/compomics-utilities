@@ -52,36 +52,28 @@ public class FragmentAnnotator {
     private final int complementaryIonType;
 
     /**
-     * Constructor.
+     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
      *
      * @param peptide the peptide
-     * @param modificationParameters the modification parameters the
-     * modification parameters
-     * @param sequenceProvider a protein sequence provider
-     * @param modificationsSequenceMatchingParameters the sequence matching
-     * parameters to use for modifications
+     * @param fixedModifications the fixed modifications on the peptide
      * @param ionSeries the ion series to annotate
      */
-    public FragmentAnnotator(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, IonSeries ionSeries) {
-        this(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, ionSeries, true, true);
+    public FragmentAnnotator(Peptide peptide, String[] fixedModifications, IonSeries ionSeries) {
+        this(peptide, fixedModifications, ionSeries, true, true);
     }
 
     /**
-     * Constructor.
+     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
      *
      * @param peptide the peptide
-     * @param modificationParameters the modification parameters the
-     * modification parameters
-     * @param sequenceProvider a protein sequence provider
-     * @param modificationsSequenceMatchingParameters the sequence matching
-     * parameters to use for modifications
+     * @param fixedModifications the fixed modifications on the peptide
      * @param ionSeries the ion series to annotate
      * @param forward boolean indicating whether forward ions should be
      * annotated
      * @param complementary boolean indicating whether complementary ions should
      * be annotated
      */
-    public FragmentAnnotator(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, IonSeries ionSeries, boolean forward, boolean complementary) {
+    public FragmentAnnotator(Peptide peptide, String[] fixedModifications, IonSeries ionSeries, boolean forward, boolean complementary) {
 
         char[] aas = peptide.getSequence().toCharArray();
         peptideLength = aas.length;
@@ -89,23 +81,6 @@ public class FragmentAnnotator {
         complementaryIonMz1 = new double[peptideLength];
 
         double[] modificationsMasses = new double[peptideLength];
-
-        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
-
-        for (int i = 0; i < fixedModifications.length; i++) {
-
-            String modName = fixedModifications[i];
-
-            if (modName != null) {
-
-                Modification modification = modificationFactory.getModification(modName);
-
-                int site = ModificationUtils.getSite(i, peptideLength) - 1;
-
-                modificationsMasses[site] += modification.getMass();
-
-            }
-        }
 
         ModificationMatch[] modificationMatches = peptide.getVariableModifications();
 

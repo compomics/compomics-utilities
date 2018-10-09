@@ -2,7 +2,7 @@ package com.compomics.util.experiment.identification.protein_sequences.digestion
 
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
-import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.ExtendedPeptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
 
 /**
@@ -19,7 +19,7 @@ public class NoDigestionIterator implements SequenceIterator {
     /**
      * The peptide with position inferred from the sequence.
      */
-    private PeptideWithPosition peptideWithPosition = null;
+    private ExtendedPeptide peptideWithPosition = null;
 
     /**
      * Constructor.
@@ -40,8 +40,8 @@ public class NoDigestionIterator implements SequenceIterator {
     }
 
     @Override
-    public PeptideWithPosition getNextPeptide() {
-        PeptideWithPosition result = peptideWithPosition;
+    public ExtendedPeptide getNextPeptide() {
+        ExtendedPeptide result = peptideWithPosition;
         peptideWithPosition = null;
         return result;
     }
@@ -61,12 +61,12 @@ public class NoDigestionIterator implements SequenceIterator {
      */
     private void setPeptide(String sequence, double massMin, double massMax) throws InterruptedException {
 
-        Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(sequence.toCharArray(), sequence, 0, massMin, massMax);
+        ExtendedPeptide extendedPeptide = proteinIteratorUtils.getPeptideFromProtein(sequence.toCharArray(), sequence, 0, massMin, massMax);
 
-        if (peptide != null
-                && peptide.getMass() >= massMin
-                && peptide.getMass() <= massMax) {
-            peptideWithPosition = new PeptideWithPosition(peptide, 0);
+        if (extendedPeptide != null
+                && extendedPeptide.peptide.getMass() >= massMin
+                && extendedPeptide.peptide.getMass() <= massMax) {
+            peptideWithPosition = extendedPeptide;
         }
     }
 }

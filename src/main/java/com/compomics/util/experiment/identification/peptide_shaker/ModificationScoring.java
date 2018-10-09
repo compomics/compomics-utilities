@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.peptide_shaker;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,7 +11,7 @@ import java.util.Set;
  *
  * @author Marc Vaudel
  */
-public class ModificationScoring implements Serializable {
+public class ModificationScoring {
 
     /**
      * Serial version UID for post-serialization compatibility.

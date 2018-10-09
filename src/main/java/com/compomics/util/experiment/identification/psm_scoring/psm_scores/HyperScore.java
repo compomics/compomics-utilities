@@ -18,6 +18,7 @@ import com.compomics.util.math.statistics.linear_regression.LinearRegression;
 import com.compomics.util.math.statistics.linear_regression.RegressionStatistics;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -89,7 +90,7 @@ public class HyperScore {
      */
     public double getScore(Peptide peptide, Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator, 
             ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
-        IonMatch[] ionMatches = peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
+        ArrayList<IonMatch> ionMatches = Lists.newArrayList(peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters));
         return getScore(peptide, specificAnnotationSettings.getPrecursorCharge(), spectrum, ionMatches);
     }
 
@@ -103,7 +104,7 @@ public class HyperScore {
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, int charge, Spectrum spectrum, IonMatch[] ionMatches) {
+    public double getScore(Peptide peptide, int charge, Spectrum spectrum, ArrayList<IonMatch> ionMatches) {
 
         boolean peakMatched = false;
         Double coveredIntensity = 0.0;
@@ -132,7 +133,7 @@ public class HyperScore {
         double xCorr = 0;
         HashSet<Integer> ionsForward = new HashSet<>(1);
         HashSet<Integer> ionsRewind = new HashSet<>(1);
-        HashSet<Double> accountedFor = new HashSet<>(ionMatches.length);
+        HashSet<Double> accountedFor = new HashSet<>(ionMatches.size());
         for (IonMatch ionMatch : ionMatches) {
             Peak peakI = ionMatch.peak;
             Double mz = peakI.mz;

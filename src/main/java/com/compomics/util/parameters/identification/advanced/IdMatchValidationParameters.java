@@ -1,6 +1,5 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import java.io.Serializable;
 
 /**
  * Generic class grouping the identification matches validation preferences.
@@ -8,7 +7,7 @@ import java.io.Serializable;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class IdMatchValidationParameters implements Serializable {
+public class IdMatchValidationParameters {
 
     /**
      * Serial version UID for backward compatibility.

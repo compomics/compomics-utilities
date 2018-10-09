@@ -5,7 +5,6 @@ import com.compomics.util.experiment.identification.filtering.MatchFilter.Filter
 import com.compomics.util.experiment.identification.filtering.PeptideFilter;
 import com.compomics.util.experiment.identification.filtering.ProteinFilter;
 import com.compomics.util.experiment.identification.filtering.PsmFilter;
-import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -13,7 +12,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class FilterParameters implements Serializable {
+public class FilterParameters {
 
     /**
      * Serial number for serialization compatibility.

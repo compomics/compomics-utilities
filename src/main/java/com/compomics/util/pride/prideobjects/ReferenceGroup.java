@@ -1,7 +1,6 @@
 package com.compomics.util.pride.prideobjects;
 
 import com.compomics.util.pride.PrideObject;
-import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +8,7 @@ import java.util.ArrayList;
  *
  * @author Harald Barsnes
  */
-public class ReferenceGroup implements PrideObject, Serializable {
+public class ReferenceGroup implements PrideObject {
 
     /**
      * Serialization number for backward compatibility.

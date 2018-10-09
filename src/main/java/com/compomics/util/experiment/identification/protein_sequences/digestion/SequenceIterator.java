@@ -15,5 +15,5 @@ public interface SequenceIterator {
      * @throws java.lang.InterruptedException exception thrown if a thread is
      * interrupted
      */
-    public PeptideWithPosition getNextPeptide() throws InterruptedException;
+    public ExtendedPeptide getNextPeptide() throws InterruptedException;
 }

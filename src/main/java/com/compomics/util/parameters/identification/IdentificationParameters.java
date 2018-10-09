@@ -18,7 +18,6 @@ import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 
 /**
  * Generic class grouping the parameters used for protein identification.
@@ -26,7 +25,7 @@ import java.io.Serializable;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class IdentificationParameters implements Serializable, MarshallableParameter {
+public class IdentificationParameters implements MarshallableParameter {
 
     /**
      * Serial number for backward compatibility.

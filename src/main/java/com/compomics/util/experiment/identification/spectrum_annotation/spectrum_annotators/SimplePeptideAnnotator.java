@@ -97,18 +97,14 @@ public class SimplePeptideAnnotator {
     private ReporterIonAnnotator reporterIonAnnotator;
     
     /**
-     * Constructor.
+     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
      * 
      * @param peptide the peptide to annotate
-     * @param modificationParameters the modification parameters the
-     * modification parameters
-     * @param sequenceProvider a protein sequence provider
-     * @param modificationsSequenceMatchingParameters the sequence matching
-     * parameters to use for modifications
+     * @param fixedModifications the fixed modifications of the peptide
      * @param charge the charge of the peptide
      * @param annotationSettings the annotation preferences
      */
-    public SimplePeptideAnnotator(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, int charge, AnnotationParameters annotationSettings) {
+    public SimplePeptideAnnotator(Peptide peptide, String[] fixedModifications, int charge, AnnotationParameters annotationSettings) {
 
         boolean neutralLossesSequence = annotationSettings.areNeutralLossesSequenceAuto();
         ArrayList<NeutralLoss> neutralLosses = annotationSettings.getNeutralLosses();
@@ -126,9 +122,9 @@ public class SimplePeptideAnnotator {
                     case PeptideFragmentIon.X_ION:
                         ionSeries = IonSeries.ax;
                         if (axFragmentAnnotator == null) {
-                            axFragmentAnnotator = new FragmentAnnotator(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, ionSeries, peptideFragmentIons.contains(PeptideFragmentIon.A_ION), peptideFragmentIons.contains(PeptideFragmentIon.X_ION));
+                            axFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, ionSeries, peptideFragmentIons.contains(PeptideFragmentIon.A_ION), peptideFragmentIons.contains(PeptideFragmentIon.X_ION));
                             if (!neutralLosses.isEmpty()) {
-                                axFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, ionSeries, neutralLossesSequence, peptideFragmentIons.contains(PeptideFragmentIon.A_ION), peptideFragmentIons.contains(PeptideFragmentIon.X_ION));
+                                axFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, ionSeries, neutralLossesSequence, peptideFragmentIons.contains(PeptideFragmentIon.A_ION), peptideFragmentIons.contains(PeptideFragmentIon.X_ION));
                             }
                         }
                         break;
@@ -136,9 +132,9 @@ public class SimplePeptideAnnotator {
                     case PeptideFragmentIon.Y_ION:
                         ionSeries = IonSeries.by;
                         if (byFragmentAnnotator == null) {
-                            byFragmentAnnotator = new FragmentAnnotator(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, ionSeries, peptideFragmentIons.contains(PeptideFragmentIon.B_ION), peptideFragmentIons.contains(PeptideFragmentIon.Y_ION));
+                            byFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, ionSeries, peptideFragmentIons.contains(PeptideFragmentIon.B_ION), peptideFragmentIons.contains(PeptideFragmentIon.Y_ION));
                             if (!neutralLosses.isEmpty()) {
-                                byFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, ionSeries, neutralLossesSequence, peptideFragmentIons.contains(PeptideFragmentIon.B_ION), peptideFragmentIons.contains(PeptideFragmentIon.Y_ION));
+                                byFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, ionSeries, neutralLossesSequence, peptideFragmentIons.contains(PeptideFragmentIon.B_ION), peptideFragmentIons.contains(PeptideFragmentIon.Y_ION));
                             }
                         }
                         break;
@@ -146,9 +142,9 @@ public class SimplePeptideAnnotator {
                     case PeptideFragmentIon.Z_ION:
                         ionSeries = IonSeries.cz;
                         if (czFragmentAnnotator == null) {
-                            czFragmentAnnotator = new FragmentAnnotator(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, ionSeries, peptideFragmentIons.contains(PeptideFragmentIon.C_ION), peptideFragmentIons.contains(PeptideFragmentIon.Z_ION));
+                            czFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, ionSeries, peptideFragmentIons.contains(PeptideFragmentIon.C_ION), peptideFragmentIons.contains(PeptideFragmentIon.Z_ION));
                             if (!neutralLosses.isEmpty()) {
-                                czFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, ionSeries, neutralLossesSequence, peptideFragmentIons.contains(PeptideFragmentIon.C_ION), peptideFragmentIons.contains(PeptideFragmentIon.Z_ION));
+                                czFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, ionSeries, neutralLossesSequence, peptideFragmentIons.contains(PeptideFragmentIon.C_ION), peptideFragmentIons.contains(PeptideFragmentIon.Z_ION));
                             }
                         }
                         break;
@@ -159,7 +155,7 @@ public class SimplePeptideAnnotator {
         }
 
         if (ionTypes.containsKey(IonType.PRECURSOR_ION)) {
-            precursorAnnotator = new PrecursorAnnotator(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
+            precursorAnnotator = new PrecursorAnnotator(peptide, fixedModifications);
         }
         
         if (ionTypes.containsKey(IonType.IMMONIUM_ION) || ionTypes.containsKey(IonType.RELATED_ION)) {
@@ -179,14 +175,10 @@ public class SimplePeptideAnnotator {
     }
 
     /**
-     * Constructor.
+     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
      * 
      * @param peptide the peptide to annotate
-     * @param modificationParameters the modification parameters the
-     * modification parameters
-     * @param sequenceProvider a protein sequence provider
-     * @param modificationsSequenceMatchingParameters the sequence matching
-     * parameters to use for modifications
+     * @param fixedModifications the fixed modifications of the peptide
      * @param charge the charge of the peptide
      * @param a boolean indicating whether a ions should be annotated
      * @param b boolean indicating whether b ions should be annotated
@@ -202,45 +194,45 @@ public class SimplePeptideAnnotator {
      * @param neutralLossesSequenceDependent  boolean indicating whether the neutral losses should be selected depending on the sequence
      * @param reporterIons the reporter ions to annotate
      */
-    public SimplePeptideAnnotator(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, 
+    public SimplePeptideAnnotator(Peptide peptide, String[] fixedModifications, 
             int charge, boolean a, boolean b, boolean c, boolean x, boolean y, boolean z,
             boolean precursor, boolean immonium, boolean related, boolean reporter, boolean neutralLosses, boolean neutralLossesSequenceDependent, ReporterIon[] reporterIons) {
         
         if (a & x) {
-            axFragmentAnnotator = new FragmentAnnotator(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, IonSeries.ax);
+            axFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, IonSeries.ax);
             if (neutralLosses) {
-                axFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, IonSeries.ax, neutralLossesSequenceDependent);
+                axFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, IonSeries.ax, neutralLossesSequenceDependent);
             }
         } else if (a || x) {
-            axFragmentAnnotator = new FragmentAnnotator(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, IonSeries.ax, a, x);
+            axFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, IonSeries.ax, a, x);
             if (neutralLosses) {
-                axFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, IonSeries.ax, neutralLossesSequenceDependent, a, x);
+                axFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, IonSeries.ax, neutralLossesSequenceDependent, a, x);
             }
         }
         if (b & y) {
-            byFragmentAnnotator = new FragmentAnnotator(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, IonSeries.by);
+            byFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, IonSeries.by);
             if (neutralLosses) {
-                byFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, IonSeries.by, neutralLossesSequenceDependent);
+                byFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, IonSeries.by, neutralLossesSequenceDependent);
             }
         } else if (b || y) {
-            byFragmentAnnotator = new FragmentAnnotator(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, IonSeries.by, b, y);
+            byFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, IonSeries.by, b, y);
             if (neutralLosses) {
-                byFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, IonSeries.by, neutralLossesSequenceDependent, b, y);
+                byFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, IonSeries.by, neutralLossesSequenceDependent, b, y);
             }
         }
         if (c & z) {
-            czFragmentAnnotator = new FragmentAnnotator(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, IonSeries.cz);
+            czFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, IonSeries.cz);
             if (neutralLosses) {
-                czFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, IonSeries.cz, neutralLossesSequenceDependent);
+                czFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, IonSeries.cz, neutralLossesSequenceDependent);
             }
         } else if (c || z) {
-            czFragmentAnnotator = new FragmentAnnotator(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, IonSeries.cz, c, z);
+            czFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, IonSeries.cz, c, z);
             if (neutralLosses) {
-                czFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters, IonSeries.cz, neutralLossesSequenceDependent, c, z);
+                czFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, IonSeries.cz, neutralLossesSequenceDependent, c, z);
             }
         }
         if (precursor) {
-            precursorAnnotator = new PrecursorAnnotator(peptide, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
+            precursorAnnotator = new PrecursorAnnotator(peptide, fixedModifications);
         }
         if (immonium || related) {
             immoniumIonAnnotator = new ImmoniumIonAnnotator(peptide.getSequence().toCharArray(), immonium, related);

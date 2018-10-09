@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.spectrum_annotation;
 
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,7 +10,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class NeutralLossesMap implements Serializable {
+public class NeutralLossesMap {
 
     /**
      * The version UID for Serialization/Deserialization compatibility.

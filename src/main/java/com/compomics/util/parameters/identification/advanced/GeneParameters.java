@@ -4,8 +4,6 @@ import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import java.io.File;
-import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -15,7 +13,7 @@ import java.util.TreeMap;
  * @author Harald Barsnes
  * @author Marc Vaudel
  */
-public class GeneParameters implements Serializable {
+public class GeneParameters {
 
     /**
      * The serial number for serialization compatibility.

@@ -1,6 +1,5 @@
 package com.compomics.util.io.export;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -8,7 +7,7 @@ import java.util.ArrayList;
  *
  * @author Marc Vaudel
  */
-public interface ExportFactory extends Serializable {
+public interface ExportFactory {
 
     /**
      * Returns the export scheme indexed by the given name.

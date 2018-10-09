@@ -1,6 +1,5 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import java.io.Serializable;
 
 /**
  * Generic class grouping the protein inference preferences.
@@ -8,7 +7,7 @@ import java.io.Serializable;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ProteinInferenceParameters implements Serializable {
+public class ProteinInferenceParameters {
 
     /**
      * Serial version UID for backward compatibility.

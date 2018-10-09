@@ -1,13 +1,12 @@
 package com.compomics.util.experiment.units;
 
-import java.io.Serializable;
 
 /**
  * Enumeration of the metrics prefixes.
  *
  * @author Marc Vaudel
  */
-public enum MetricsPrefix implements Serializable {
+public enum MetricsPrefix {
 
     yotta("yotta", "Y", 24),
     zetta("zetta", "Z", 21),

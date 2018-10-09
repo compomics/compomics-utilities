@@ -1,7 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
 import com.compomics.util.experiment.identification.modification.ModificationLocalizationScore;
-import java.io.Serializable;
 
 /**
  * This class contains the modification localization preferences.
@@ -9,7 +8,7 @@ import java.io.Serializable;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ModificationLocalizationParameters implements Serializable {
+public class ModificationLocalizationParameters {
 
     /**
      * Serial number for backward compatibility.

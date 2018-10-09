@@ -3,7 +3,7 @@ package com.compomics.util.experiment.identification.protein_sequences.digestion
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
-import com.compomics.util.experiment.identification.protein_sequences.digestion.PeptideWithPosition;
+import com.compomics.util.experiment.identification.protein_sequences.digestion.ExtendedPeptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
 import com.compomics.util.general.BoxedObject;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class SpecificSingleEnzymeIterator implements SequenceIterator {
     /**
      * The peptides found.
      */
-    private final ArrayList<PeptideWithPosition> result;
+    private final ArrayList<ExtendedPeptide> result;
     /**
      * Index of the result iterator.
      */
@@ -86,7 +86,7 @@ public class SpecificSingleEnzymeIterator implements SequenceIterator {
     }
 
     @Override
-    public PeptideWithPosition getNextPeptide() throws InterruptedException {
+    public ExtendedPeptide getNextPeptide() throws InterruptedException {
 
         // Return the next result if any
         resultIndex++;
@@ -126,11 +126,11 @@ public class SpecificSingleEnzymeIterator implements SequenceIterator {
         result.clear();
         char[] newSequence = Arrays.copyOfRange(proteinSequenceAsCharArray, initialIndex, sequenceIndex);
         BoxedObject<Boolean> smallMass = new BoxedObject<>(Boolean.TRUE);
-        Peptide peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, initialIndex, massMin, massMax, smallMass);
-        if (peptide != null
-                && peptide.getMass() >= massMin
-                && peptide.getMass() <= massMax) {
-            result.add(new PeptideWithPosition(peptide, initialIndex));
+        ExtendedPeptide extendedPeptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, initialIndex, massMin, massMax, smallMass);
+        if (extendedPeptide != null
+                && extendedPeptide.peptide.getMass() >= massMin
+                && extendedPeptide.peptide.getMass() <= massMax) {
+            result.add(new ExtendedPeptide(extendedPeptide.peptide, initialIndex, extendedPeptide.fixedModifications));
         }
 
         if (nMissedCleavages > 0) {
@@ -140,11 +140,11 @@ public class SpecificSingleEnzymeIterator implements SequenceIterator {
                 for (int peptideStart : peptideStartMap.keySet()) {
                     newSequence = Arrays.copyOfRange(proteinSequenceAsCharArray, peptideStart, sequenceIndex);
                     smallMass.setObject(Boolean.TRUE);
-                    peptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, peptideStart, massMin, massMax, smallMass);
-                    if (peptide != null
-                            && peptide.getMass() >= massMin
-                            && peptide.getMass() <= massMax) {
-                        result.add(new PeptideWithPosition(peptide, peptideStart));
+                    extendedPeptide = proteinIteratorUtils.getPeptideFromProtein(newSequence, proteinSequence, peptideStart, massMin, massMax, smallMass);
+                    if (extendedPeptide != null
+                            && extendedPeptide.peptide.getMass() >= massMin
+                            && extendedPeptide.peptide.getMass() <= massMax) {
+                        result.add(new ExtendedPeptide(extendedPeptide.peptide, peptideStart, extendedPeptide.fixedModifications));
                     }
                     int peptideMissedCleavages = peptideStartMap.get(peptideStart);
                     if (smallMass.getObject() && peptideMissedCleavages + 1 < nMissedCleavages) {

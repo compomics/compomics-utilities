@@ -1,6 +1,7 @@
 package com.compomics.util.parameters.identification.search;
 
 import com.compomics.util.Util;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;
@@ -21,6 +22,7 @@ import com.compomics.util.io.file.SerializationUtils;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import com.compomics.util.experiment.io.parameters.DummyParameters;
 import com.compomics.util.experiment.io.parameters.MarshallableParameter;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.parameters.identification.IdentificationParameters;
 import static com.compomics.util.parameters.identification.IdentificationParameters.CURRENT_VERSION;
@@ -37,12 +39,8 @@ import java.util.stream.Collectors;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class SearchParameters implements Serializable, MarshallableParameter {
+public class SearchParameters extends ExperimentObject implements MarshallableParameter {
 
-    /**
-     * Serial number for backward compatibility.
-     */
-    static final long serialVersionUID = -2773993307168773763L;
     /**
      * Name of the type of marshalled parameter.
      */
@@ -202,6 +200,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * Set the advanced settings to the default values.
      */
     public void setDefaultAdvancedSettings() {
+        writeDBMode();
         setDefaultAdvancedSettings(null);
     }
 
@@ -214,6 +213,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * settings from
      */
     public void setDefaultAdvancedSettings(SearchParameters searchParameters) {
+        writeDBMode();
 
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.omssa.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.omssa.getIndex(), new OmssaParameters());
@@ -293,6 +293,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the reference mass used to convert ppm to Da
      */
     public double getRefMass() {
+        
+        readDBMode();
+        
 
         return refMass;
     }
@@ -303,6 +306,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param refMass the reference mass used to convert ppm to Da
      */
     public void setRefMass(double refMass) {
+        writeDBMode();
         this.refMass = refMass;
     }
 
@@ -312,6 +316,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the modification settings
      */
     public ModificationParameters getModificationParameters() {
+        
+        readDBMode();
+        
         return modificationParameters;
     }
 
@@ -321,6 +328,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param modificationParameters the modification settings
      */
     public void setModificationParameters(ModificationParameters modificationParameters) {
+        writeDBMode();
         this.modificationParameters = modificationParameters;
     }
 
@@ -330,6 +338,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the MS2 ion m/z tolerance
      */
     public double getFragmentIonAccuracy() {
+        
+        readDBMode();
+        
         return fragmentIonMZTolerance;
     }
 
@@ -340,6 +351,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the absolute fragment ion tolerance in Dalton
      */
     public double getFragmentIonAccuracyInDaltons() {
+        
+        readDBMode();
+        
         return getFragmentIonAccuracyInDaltons(refMass);
     }
 
@@ -353,6 +367,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the absolute fragment ion tolerance in Dalton
      */
     public double getFragmentIonAccuracyInDaltons(double refMass) {
+        
+        readDBMode();
+        
         switch (fragmentAccuracyType) {
             case DA:
                 return fragmentIonMZTolerance;
@@ -369,6 +386,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param fragmentIonMZTolerance the fragment ion m/z tolerance
      */
     public void setFragmentIonAccuracy(double fragmentIonMZTolerance) {
+        writeDBMode();
         this.fragmentIonMZTolerance = fragmentIonMZTolerance;
     }
 
@@ -378,6 +396,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the digestion preferences
      */
     public DigestionParameters getDigestionParameters() {
+        
+        readDBMode();
+        
 
         return digestionParameters;
     }
@@ -388,6 +409,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param digestionParameters the digestion preferences
      */
     public void setDigestionParameters(DigestionParameters digestionParameters) {
+        writeDBMode();
         this.digestionParameters = digestionParameters;
     }
 
@@ -397,6 +419,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the sequence database file used for identification
      */
     public File getFastaFile() {
+        
+        readDBMode();
+        
         return fastaFile;
     }
 
@@ -406,6 +431,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param fastaFile the sequence database file used for identification
      */
     public void setFastaFile(File fastaFile) {
+        writeDBMode();
         this.fastaFile = fastaFile;
     }
 
@@ -415,6 +441,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the parameters to use to parse the FASTA file
      */
     public FastaParameters getFastaParameters() {
+        
+        readDBMode();
+        
         return fastaParameters;
     }
 
@@ -424,6 +453,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param fastaParameters the parameters to use to parse the FASTA file
      */
     public void setFastaParameters(FastaParameters fastaParameters) {
+        writeDBMode();
         this.fastaParameters = fastaParameters;
     }
 
@@ -434,6 +464,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the forward ions searched
      */
     public ArrayList<Integer> getForwardIons() {
+        
+        readDBMode();
+        
 
         return forwardIons;
     }
@@ -445,6 +478,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param forwardIons the forward ions searched
      */
     public void setForwardIons(ArrayList<Integer> forwardIons) {
+        writeDBMode();
         this.forwardIons = forwardIons;
     }
 
@@ -455,6 +489,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the rewind ions searched
      */
     public ArrayList<Integer> getRewindIons() {
+        
+        readDBMode();
+        
 
         return rewindIons;
     }
@@ -466,6 +503,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param rewindIons the rewind ions searched
      */
     public void setRewindIons(ArrayList<Integer> rewindIons) {
+        writeDBMode();
         this.rewindIons = rewindIons;
     }
 
@@ -491,6 +529,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the precursor tolerance
      */
     public double getPrecursorAccuracy() {
+        
+        readDBMode();
+        
         return precursorTolerance;
     }
 
@@ -500,6 +541,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param precursorTolerance the precursor tolerance
      */
     public void setPrecursorAccuracy(double precursorTolerance) {
+        writeDBMode();
         this.precursorTolerance = precursorTolerance;
     }
 
@@ -509,6 +551,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the precursor accuracy type
      */
     public MassAccuracyType getPrecursorAccuracyType() {
+        
+        readDBMode();
+        
         return precursorAccuracyType;
     }
 
@@ -518,6 +563,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param precursorAccuracyType the precursor accuracy type
      */
     public void setPrecursorAccuracyType(MassAccuracyType precursorAccuracyType) {
+        writeDBMode();
         this.precursorAccuracyType = precursorAccuracyType;
     }
 
@@ -527,6 +573,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the fragment accuracy type
      */
     public MassAccuracyType getFragmentAccuracyType() {
+        
+        readDBMode();
+        
         return fragmentAccuracyType;
     }
 
@@ -536,6 +585,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param fragmentAccuracyType the fragment accuracy type
      */
     public void setFragmentAccuracyType(MassAccuracyType fragmentAccuracyType) {
+        writeDBMode();
         this.fragmentAccuracyType = fragmentAccuracyType;
     }
 
@@ -545,6 +595,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return true if the current precursor accuracy type is ppm
      */
     public Boolean isPrecursorAccuracyTypePpm() {
+        
+        readDBMode();
+        
         return getPrecursorAccuracyType() == MassAccuracyType.PPM;
     }
 
@@ -554,6 +607,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the maximal charge searched
      */
     public int getMaxChargeSearched() {
+        
+        readDBMode();
+        
         return maxChargeSearched;
     }
 
@@ -563,6 +619,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param maxChargeSearched the maximal charge searched
      */
     public void setMaxChargeSearched(int maxChargeSearched) {
+        writeDBMode();
         this.maxChargeSearched = maxChargeSearched;
     }
 
@@ -572,6 +629,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the minimal charge searched
      */
     public int getMinChargeSearched() {
+        
+        readDBMode();
+        
         return minChargeSearched;
     }
 
@@ -581,6 +641,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param minChargeSearched the minimal charge searched
      */
     public void setMinChargeSearched(int minChargeSearched) {
+        writeDBMode();
         this.minChargeSearched = minChargeSearched;
     }
 
@@ -591,6 +652,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the algorithm specific parameters in a map
      */
     public HashMap<Integer, IdentificationAlgorithmParameter> getAlgorithmSpecificParameters() {
+        
+        readDBMode();
+        
         return algorithmParameters;
     }
 
@@ -603,6 +667,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the algorithm specific parameters
      */
     public IdentificationAlgorithmParameter getIdentificationAlgorithmParameter(int algorithmID) {
+        
+        readDBMode();
+        
         if (algorithmParameters == null) {
             return null;
         }
@@ -617,6 +684,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param identificationAlgorithmParameter the specific parameters
      */
     public void setIdentificationAlgorithmParameter(int algorithmID, IdentificationAlgorithmParameter identificationAlgorithmParameter) {
+        writeDBMode();
         if (algorithmParameters == null) {
             algorithmParameters = new HashMap<>();
         }
@@ -631,6 +699,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * of indexes as listed in the Advocate class
      */
     public Set<Integer> getAlgorithms() {
+        
+        readDBMode();
+        
         if (algorithmParameters == null) {
             return new HashSet<>(0);
         }
@@ -643,6 +714,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the minimal isotopic correction
      */
     public int getMinIsotopicCorrection() {
+        
+        readDBMode();
+        
         return minIsotopicCorrection;
     }
 
@@ -652,6 +726,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param minIsotopicCorrection the minimal isotopic correction
      */
     public void setMinIsotopicCorrection(int minIsotopicCorrection) {
+        writeDBMode();
         this.minIsotopicCorrection = minIsotopicCorrection;
     }
 
@@ -661,6 +736,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the maximal isotopic correction
      */
     public int getMaxIsotopicCorrection() {
+        
+        readDBMode();
+        
         return maxIsotopicCorrection;
     }
 
@@ -670,6 +748,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @param maxIsotopicCorrection the maximal isotopic correction
      */
     public void setMaxIsotopicCorrection(int maxIsotopicCorrection) {
+        writeDBMode();
         this.maxIsotopicCorrection = maxIsotopicCorrection;
     }
 
@@ -685,7 +764,6 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public static SearchParameters getIdentificationParameters(File searchParametersFile) throws IOException, ClassNotFoundException {
-
         Object savedObject;
 
         try {
@@ -753,6 +831,7 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @throws IOException if an IOException occurs
      */
     public void saveIdentificationParametersAsTextFile(File file) throws IOException {
+        writeDBMode();
         FileWriter fw = new FileWriter(file);
         try {
             BufferedWriter bw = new BufferedWriter(fw);
@@ -777,6 +856,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
+        
+        readDBMode();
+        
 
         SearchParameters defaultParameters = new SearchParameters();
         String newLine = System.getProperty("line.separator");
@@ -855,6 +937,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return the search parameters as a string
      */
     public String toString(boolean html) {
+        
+        readDBMode();
+        
 
         String newLine;
         if (html) {
@@ -999,6 +1084,9 @@ public class SearchParameters implements Serializable, MarshallableParameter {
      * @return true if the search parameter objects have identical settings
      */
     public boolean equals(SearchParameters otherSearchParameters) {
+        
+        readDBMode();
+        
 
         if (otherSearchParameters == null) {
             return false;
@@ -1086,11 +1174,15 @@ public class SearchParameters implements Serializable, MarshallableParameter {
 
     @Override
     public void setType() {
+        writeDBMode();
         marshallableParameterType = Type.search_parameters.name();
     }
 
     @Override
     public Type getType() {
+        
+        readDBMode();
+        
         if (marshallableParameterType == null) {
             return null;
         }

@@ -16,6 +16,12 @@ import java.util.concurrent.atomic.*;
 
 import org.zoodb.jdo.ZooJdoHelper;
 import org.zoodb.tools.ZooHelper;
+/*
+import org.zoodb.jdo.ZooJdoProperties;
+import org.zoodb.tools.impl.DataStoreManager;
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManagerFactory;
+*/
 
 /**
  * A database which can easily be used to store objects.
@@ -25,10 +31,6 @@ import org.zoodb.tools.ZooHelper;
  */
 public class ObjectsDB {
 
-    /**
-     * The version UID for serialization/deserialization compatibility.
-     */
-    static final long serialVersionUID = -8595805180622832745L;
     /**
      * The name of the database.
      */
@@ -53,7 +55,7 @@ public class ObjectsDB {
     /**
      * OrientDB database connection.
      */
-    PersistenceManager pm = null;
+    private PersistenceManager pm = null;
     /**
      * HashMap to map hash IDs of entries into DB ids.
      */
@@ -69,7 +71,7 @@ public class ObjectsDB {
     /**
      * Boolean indicating if the connection is active.
      */
-    private boolean connectionActive = false;
+    private static boolean connectionActive = false;
     /**
      * The class counter.
      */
@@ -81,11 +83,11 @@ public class ObjectsDB {
     /**
      * The access counter.
      */
-    private final static AtomicInteger ACCESSCOUNTER = new AtomicInteger(0);
+    public volatile static AtomicInteger ACCESSCOUNTER = new AtomicInteger(0);
     /**
      * The commit counter.
      */
-    private final static AtomicBoolean COMMITBLOCKER = new AtomicBoolean(false);
+    private volatile static AtomicBoolean COMMITBLOCKER = new AtomicBoolean(false);
 
     /**
      * Function for increasing the counter of processes accessing objects from
@@ -119,11 +121,14 @@ public class ObjectsDB {
             // while processes are potentially accessing the database
         }
 
-        pm.currentTransaction().commit();
-        pm.currentTransaction().begin();
-        currentAdded = 0;
-
-        COMMITBLOCKER.set(false);
+        try {
+            pm.currentTransaction().commit();
+            pm.currentTransaction().begin();
+            currentAdded = 0;
+        }
+        finally {
+            COMMITBLOCKER.set(false);
+        }
     
     }
 
@@ -798,7 +803,7 @@ public class ObjectsDB {
      *
      * @return true if the connection to the DB is active
      */
-    public boolean isConnectionActive() {
+    public static boolean isConnectionActive() {
         return connectionActive;
     }
 
@@ -817,7 +822,6 @@ public class ObjectsDB {
      * @param clearing clearing all database structures
      */
     public void close(boolean clearing) {
-        
         synchronized (dbMutex) {
             
             if (debugInteractions) {
@@ -872,14 +876,25 @@ public class ObjectsDB {
 
             }
             
-            idMap.clear();
-            classCounter.clear();
-
+            /*
+            DataStoreManager dsm = ZooHelper.getDataStoreManager();
+            if (!dsm.dbExists(dbFile.getAbsolutePath())) {
+                dsm.createDb(dbFile.getAbsolutePath());
+            }
+            
+            
+            ZooJdoProperties props = new ZooJdoProperties(dbFile.getAbsolutePath());
+            PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(props);
+            pm = pmf.getPersistenceManager();
+            */
             pm = ZooJdoHelper.openOrCreateDB(dbFile.getAbsolutePath());
+            
             pm.currentTransaction().begin();
             connectionActive = true;
 
             if (loading) {
+                idMap.clear();
+                classCounter.clear();
                 
                 Query q = pm.newQuery(DbObject.class, "firstLevel == true");
                 

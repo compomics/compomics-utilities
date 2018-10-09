@@ -1,19 +1,16 @@
 
 package com.compomics.util.pride;
 
-import java.io.Serializable;
+import com.compomics.util.db.object.ObjectsDB;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * A simple CvTerm object.
  * 
  * @author Harald Barsnes
  */
-public class CvTerm implements Serializable {
+public class CvTerm extends ExperimentObject {
     
-    /**
-     * serialization number for backward compatibility
-     */
-    static final long serialVersionUID = -2890434198335005181L;
     /**
      * The ontology.
      */
@@ -52,6 +49,9 @@ public class CvTerm implements Serializable {
      * @return the ontology
      */
     public String getOntology() {
+        
+        readDBMode();
+        
         return ontology;
     }
 
@@ -61,6 +61,7 @@ public class CvTerm implements Serializable {
      * @param ontology the ontology to set
      */
     public void setOntology(String ontology) {
+        writeDBMode();
         this.ontology = ontology;
     }
 
@@ -70,6 +71,9 @@ public class CvTerm implements Serializable {
      * @return the accession
      */
     public String getAccession() {
+        
+        readDBMode();
+        
         return accession;
     }
 
@@ -79,6 +83,7 @@ public class CvTerm implements Serializable {
      * @param accession the accession to set
      */
     public void setAccession(String accession) {
+        writeDBMode();
         this.accession = accession;
     }
 
@@ -88,6 +93,9 @@ public class CvTerm implements Serializable {
      * @return the name
      */
     public String getName() {
+        
+        readDBMode();
+        
         return name;
     }
 
@@ -97,6 +105,7 @@ public class CvTerm implements Serializable {
      * @param name the name to set
      */
     public void setName(String name) {
+        writeDBMode();
         this.name = name;
     }
 
@@ -106,6 +115,9 @@ public class CvTerm implements Serializable {
      * @return the value
      */
     public String getValue() {
+        
+        readDBMode();
+        
         return value;
     }
 
@@ -115,6 +127,7 @@ public class CvTerm implements Serializable {
      * @param value the value to set
      */
     public void setValue(String value) {
+        writeDBMode();
         this.value = value;
     }
 }

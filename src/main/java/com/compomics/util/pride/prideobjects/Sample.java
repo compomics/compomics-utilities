@@ -2,7 +2,6 @@ package com.compomics.util.pride.prideobjects;
 
 import com.compomics.util.pride.CvTerm;
 import com.compomics.util.pride.PrideObject;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -11,7 +10,7 @@ import java.util.Arrays;
  *
  * @author Harald Barsnes
  */
-public class Sample implements PrideObject, Serializable {
+public class Sample implements PrideObject {
 
     /**
      * Serialization number for backward compatibility.

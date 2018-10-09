@@ -32,10 +32,6 @@ import java.util.stream.Collectors;
 public class Identification extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility.
-     */
-    static final long serialVersionUID = -2551700699384242554L;
-    /**
      * List of the keys of all imported proteins.
      */
     protected HashSet<Long> proteinIdentification = new HashSet<>();
@@ -80,6 +76,7 @@ public class Identification extends ExperimentObject {
      * @return the objects database used in this class
      */
     public ObjectsDB getObjectsDB() {
+        readDBMode();
         return objectsDB;
     }
 
@@ -87,6 +84,7 @@ public class Identification extends ExperimentObject {
      * Fills the spectra per file map.
      */
     private void fillSpectrumIdentification() {
+        writeDBMode();
 
         try {
 
@@ -109,6 +107,7 @@ public class Identification extends ExperimentObject {
      * @return a map of the spectrum matches keys indexed by spectrum file name
      */
     public HashMap<String, HashSet<Long>> getSpectrumIdentification() {
+        readDBMode();
 
         if (spectrumIdentification == null) {
 
@@ -125,6 +124,7 @@ public class Identification extends ExperimentObject {
      * @return the number of spectrum identifications
      */
     public int getSpectrumIdentificationSize() {
+        readDBMode();
         return objectsDB.getNumber(SpectrumMatch.class);
     }
 
@@ -136,6 +136,7 @@ public class Identification extends ExperimentObject {
      * @return the number of objects
      */
     public int getNumber(Class className) {
+        readDBMode();
         return objectsDB.getNumber(className);
     }
 
@@ -148,6 +149,7 @@ public class Identification extends ExperimentObject {
      * @return the iterator
      */
     public Iterator<?> getIterator(Class className, String filters) {
+        readDBMode();
 
         try {
 
@@ -168,6 +170,7 @@ public class Identification extends ExperimentObject {
      * @return the keys of the objects
      */
     public HashSet<Long> getClassObjects(Class className) {
+        readDBMode();
         return objectsDB.getClassObjects(className);
     }
 
@@ -184,6 +187,7 @@ public class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public void loadObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+        readDBMode();
         objectsDB.loadObjects(className, waitingHandler, displayProgress);
     }
 
@@ -200,6 +204,7 @@ public class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public void loadObjects(ArrayList<Long> keyList, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+        readDBMode();
         objectsDB.loadObjects(keyList, waitingHandler, displayProgress);
     }
 
@@ -211,6 +216,7 @@ public class Identification extends ExperimentObject {
      * @return the objects
      */
     public Object retrieveObject(long longKey) {
+        readDBMode();
 
         return objectsDB.retrieveObject(longKey);
 
@@ -224,6 +230,7 @@ public class Identification extends ExperimentObject {
      * @return the spectrum match with the given key
      */
     public SpectrumMatch getSpectrumMatch(long key) {
+        readDBMode();
 
         return (SpectrumMatch) retrieveObject(key);
 
@@ -237,6 +244,7 @@ public class Identification extends ExperimentObject {
      * @return the peptide match with the given key
      */
     public PeptideMatch getPeptideMatch(long key) {
+        readDBMode();
 
         return (PeptideMatch) retrieveObject(key);
 
@@ -250,6 +258,7 @@ public class Identification extends ExperimentObject {
      * @return the protein match with the given key
      */
     public ProteinMatch getProteinMatch(long key) {
+        readDBMode();
 
         return (ProteinMatch) retrieveObject(key);
 
@@ -267,6 +276,7 @@ public class Identification extends ExperimentObject {
      * @return list of objects
      */
     public ArrayList<Object> retrieveObjects(Collection<Long> keyList, WaitingHandler waitingHandler, boolean displayProgress) {
+        readDBMode();
 
         try {
 
@@ -291,6 +301,7 @@ public class Identification extends ExperimentObject {
      * @return list of objects
      */
     public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
+        readDBMode();
 
         try {
 
@@ -310,6 +321,7 @@ public class Identification extends ExperimentObject {
      * @param object the object
      */
     public void addObject(long key, Object object) {
+        writeDBMode();
 
         try {
 
@@ -334,6 +346,7 @@ public class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public void addObjects(HashMap<Long, Object> objects, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+        writeDBMode();
         objectsDB.insertObjects(objects, waitingHandler, displayProgress);
     }
 
@@ -343,6 +356,7 @@ public class Identification extends ExperimentObject {
      * @param key the key of the object
      */
     public void removeObject(long key) {
+        writeDBMode();
 
         Object object = objectsDB.retrieveObject(key);
 
@@ -389,6 +403,7 @@ public class Identification extends ExperimentObject {
      * @return true if database contains a certain object otherwise false
      */
     public boolean contains(long key) {
+        readDBMode();
 
         return objectsDB.inDB(key);
 
@@ -406,6 +421,7 @@ public class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public void removeObjects(ArrayList<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+        writeDBMode();
         objectsDB.removeObjects(keys, waitingHandler, displayProgress);
     }
 
@@ -415,6 +431,7 @@ public class Identification extends ExperimentObject {
      * @return the database directory
      */
     public String getDatabaseDirectory() {
+        readDBMode();
         return dbDirectory;
     }
 
@@ -424,6 +441,7 @@ public class Identification extends ExperimentObject {
      * @return the corresponding identification results
      */
     public HashSet<Long> getProteinIdentification() {
+        readDBMode();
         return proteinIdentification;
     }
 
@@ -433,6 +451,7 @@ public class Identification extends ExperimentObject {
      * @return the corresponding identification results
      */
     public HashSet<Long> getPeptideIdentification() {
+        readDBMode();
         return peptideIdentification;
     }
 
@@ -444,6 +463,7 @@ public class Identification extends ExperimentObject {
      * @param peptideMatch the peptide match
      */
     public void addPeptideMatch(long key, PeptideMatch peptideMatch) {
+        writeDBMode();
 
         peptideIdentification.add(key);
 
@@ -466,6 +486,7 @@ public class Identification extends ExperimentObject {
      * @param proteinMatch the protein match
      */
     public void addProteinMatch(long key, ProteinMatch proteinMatch) {
+        writeDBMode();
 
         for (String proteinAccession : proteinMatch.getAccessions()) {
 
@@ -503,6 +524,7 @@ public class Identification extends ExperimentObject {
      * protein indexed by its accession.
      */
     public HashMap<String, HashSet<Long>> getProteinMap() {
+        readDBMode();
         return proteinMap;
     }
 
@@ -521,6 +543,7 @@ public class Identification extends ExperimentObject {
      * @return true if the connection to the DB is active
      */
     public boolean isConnectionActive() {
+        readDBMode();
         return objectsDB.isConnectionActive();
     }
 
@@ -532,6 +555,7 @@ public class Identification extends ExperimentObject {
      * @return the keys of the protein matches
      */
     public HashSet<Long> getProteinMatches(Peptide peptide) {
+        readDBMode();
 
         return peptide.getProteinMapping().navigableKeySet().stream()
                 .filter(accession -> proteinMap.containsKey(accession))
@@ -548,6 +572,7 @@ public class Identification extends ExperimentObject {
      * @return a spectrum matches iterator
      */
     public SpectrumMatchesIterator getSpectrumMatchesIterator(long[] spectrumMatches, WaitingHandler waitingHandler) {
+        readDBMode();
         return new SpectrumMatchesIterator(spectrumMatches, this, waitingHandler, false);
     }
 
@@ -559,6 +584,7 @@ public class Identification extends ExperimentObject {
      * @return a spectrum matches iterator
      */
     public SpectrumMatchesIterator getSpectrumMatchesIterator(WaitingHandler waitingHandler) {
+        readDBMode();
         return new SpectrumMatchesIterator(this, waitingHandler, false);
     }
 
@@ -571,6 +597,7 @@ public class Identification extends ExperimentObject {
      * @return a peptide matches iterator
      */
     public SpectrumMatchesIterator getSpectrumMatchesIterator(WaitingHandler waitingHandler, String filters) {
+        readDBMode();
         return new SpectrumMatchesIterator(null, this, waitingHandler, false, filters);
     }
 
@@ -583,6 +610,7 @@ public class Identification extends ExperimentObject {
      * @return a peptide matches iterator
      */
     public PeptideMatchesIterator getPeptideMatchesIterator(long[] peptideKeys, WaitingHandler waitingHandler) {
+        readDBMode();
         return new PeptideMatchesIterator(peptideKeys, this, waitingHandler, false);
     }
 
@@ -594,6 +622,7 @@ public class Identification extends ExperimentObject {
      * @return a peptide matches iterator
      */
     public PeptideMatchesIterator getPeptideMatchesIterator(WaitingHandler waitingHandler) {
+        readDBMode();
         return new PeptideMatchesIterator(this, waitingHandler, false);
     }
 
@@ -606,6 +635,7 @@ public class Identification extends ExperimentObject {
      * @return a peptide matches iterator
      */
     public ProteinMatchesIterator getProteinMatchesIterator(long[] proteinKeys, WaitingHandler waitingHandler) {
+        readDBMode();
         return new ProteinMatchesIterator(proteinKeys, this, waitingHandler, false);
     }
 
@@ -617,6 +647,7 @@ public class Identification extends ExperimentObject {
      * @return a peptide matches iterator
      */
     public ProteinMatchesIterator getProteinMatchesIterator(WaitingHandler waitingHandler) {
+        readDBMode();
         return new ProteinMatchesIterator(this, waitingHandler, false);
     }
 
@@ -627,6 +658,7 @@ public class Identification extends ExperimentObject {
      * @param fraction the fraction name
      */
     public void addFraction(String fraction) {
+        writeDBMode();
 
         TreeSet orderedFractions = new TreeSet(fractions);
         orderedFractions.add(fraction);
@@ -641,6 +673,7 @@ public class Identification extends ExperimentObject {
      * @return the fractions
      */
     public ArrayList<String> getFractions() {
+        readDBMode();
         return fractions;
     }
 
@@ -650,6 +683,7 @@ public class Identification extends ExperimentObject {
      * @param fractions the fractions
      */
     public void setFractions(ArrayList<String> fractions) {
+        writeDBMode();
 
         this.fractions = fractions;
 

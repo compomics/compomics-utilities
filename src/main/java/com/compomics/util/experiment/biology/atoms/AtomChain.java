@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.biology.atoms;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,7 +9,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class AtomChain implements Serializable {
+public class AtomChain {
 
     /**
      * Serial number for backward compatibility.

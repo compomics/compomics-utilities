@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology.enzymes;
 
 import com.compomics.util.Util;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
@@ -17,11 +18,6 @@ import java.util.stream.Collectors;
  * @author Harald Barsnes
  */
 public class Enzyme extends ExperimentObject {
-
-    /**
-     * The version UID for Serialization/Deserialization compatibility.
-     */
-    static final long serialVersionUID = -1852087173903613377L;
     /*
      * The enzyme id.
     
@@ -68,6 +64,7 @@ public class Enzyme extends ExperimentObject {
      * @return the enzyme name as String
      */
     public String getName() {
+        readDBMode();
         return name;
     }
 
@@ -77,6 +74,7 @@ public class Enzyme extends ExperimentObject {
      * @return the enzyme number
      */
     public int getEnzymeId() {
+        readDBMode();
         return enzymeId;
     }
 
@@ -87,6 +85,7 @@ public class Enzyme extends ExperimentObject {
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addAminoAcidAfter(Character aminoAcid) {
+        writeDBMode();
         aminoAcidAfter.add(aminoAcid);
     }
 
@@ -97,6 +96,7 @@ public class Enzyme extends ExperimentObject {
      * @return the amino acids potentially following the cleavage
      */
     public HashSet<Character> getAminoAcidAfter() {
+        readDBMode();
         return aminoAcidAfter;
     }
 
@@ -107,6 +107,7 @@ public class Enzyme extends ExperimentObject {
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addAminoAcidBefore(Character aminoAcid) {
+        writeDBMode();
         aminoAcidBefore.add(aminoAcid);
     }
 
@@ -117,6 +118,7 @@ public class Enzyme extends ExperimentObject {
      * @return the amino acids potentially preceding the cleavage
      */
     public HashSet<Character> getAminoAcidBefore() {
+        readDBMode();
         return aminoAcidBefore;
     }
 
@@ -127,6 +129,7 @@ public class Enzyme extends ExperimentObject {
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addRestrictionAfter(Character aminoAcid) {
+        writeDBMode();
         restrictionAfter.add(aminoAcid);
     }
 
@@ -137,6 +140,7 @@ public class Enzyme extends ExperimentObject {
      * @return the amino acids restricting when following the cleavage
      */
     public HashSet<Character> getRestrictionAfter() {
+        readDBMode();
         return restrictionAfter;
     }
 
@@ -147,6 +151,7 @@ public class Enzyme extends ExperimentObject {
      * @param aminoAcid an amino acid represented by its single amino acid code.
      */
     public void addRestrictionBefore(Character aminoAcid) {
+        writeDBMode();
         restrictionBefore.add(aminoAcid);
     }
 
@@ -157,6 +162,7 @@ public class Enzyme extends ExperimentObject {
      * @return the amino acids restricting when preceding the cleavage
      */
     public HashSet<Character> getRestrictionBefore() {
+        readDBMode();
         return restrictionBefore;
     }
 
@@ -171,6 +177,7 @@ public class Enzyme extends ExperimentObject {
      * @return true if the amino acid combination can represent a cleavage site
      */
     public boolean isCleavageSite(String aaBefore, String aaAfter) {
+        readDBMode();
 
         if (aaBefore.length() == 0 || aaAfter.length() == 0) {
 
@@ -192,6 +199,7 @@ public class Enzyme extends ExperimentObject {
      * @return true if the amino acid combination can represent a cleavage site
      */
     public boolean isCleavageSite(char aaBefore, char aaAfter) {
+        readDBMode();
 
         AminoAcid aminoAcid1 = AminoAcid.getAminoAcid(aaBefore);
         AminoAcid aminoAcid2 = AminoAcid.getAminoAcid(aaAfter);
@@ -259,6 +267,7 @@ public class Enzyme extends ExperimentObject {
      * @return true if the amino acid combination can represent a cleavage site
      */
     public boolean isCleavageSiteNoCombination(Character aaBefore, Character aaAfter) {
+        readDBMode();
 
         return aminoAcidBefore.contains(aaBefore) && !restrictionAfter.contains(aaAfter)
                 || aminoAcidAfter.contains(aaAfter) && !restrictionBefore.contains(aaBefore);
@@ -273,6 +282,7 @@ public class Enzyme extends ExperimentObject {
      * @return the number of missed cleavages
      */
     public int getNmissedCleavages(String sequence) {
+        readDBMode();
 
         int result = 0;
 
@@ -302,6 +312,7 @@ public class Enzyme extends ExperimentObject {
      * @return a list of expected peptide sequences
      */
     public HashSet<String> digest(String sequence, int nMissedCleavages, Integer nMin, Integer nMax) {
+        writeDBMode();
 
         char aa, aaBefore;
         char aaAfter = sequence.charAt(0);
@@ -414,6 +425,7 @@ public class Enzyme extends ExperimentObject {
      * @return a list of expected peptide sequences
      */
     public HashSet<String> digest(String sequence, int nMissedCleavages, Double massMin, Double massMax) {
+        writeDBMode();
 
         char aa, aaBefore;
         char aaAfter = sequence.charAt(0);
@@ -530,6 +542,7 @@ public class Enzyme extends ExperimentObject {
      * @return true of the two enzymes are identical
      */
     public boolean equals(Enzyme otherEnzyme) {
+        readDBMode();
 
         if (otherEnzyme == null) {
             return false;
@@ -562,6 +575,7 @@ public class Enzyme extends ExperimentObject {
      * @return the description of the cleavage of this enzyme
      */
     public String getDescription() {
+        readDBMode();
 
         StringBuilder description = new StringBuilder();
         description.append("Cleaves ");
@@ -629,6 +643,7 @@ public class Enzyme extends ExperimentObject {
      * @return the CV term associated with this enzyme
      */
     public CvTerm getCvTerm() {
+        readDBMode();
         return cvTerm;
     }
 
@@ -638,6 +653,7 @@ public class Enzyme extends ExperimentObject {
      * @param cvTerm the CV term associated with this enzyme
      */
     public void setCvTerm(CvTerm cvTerm) {
+        writeDBMode();
         this.cvTerm = cvTerm;
     }
 }

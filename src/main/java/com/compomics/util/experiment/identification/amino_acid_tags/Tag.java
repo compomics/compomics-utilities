@@ -91,9 +91,9 @@ public class Tag extends ExperimentObject {
      */
     public ArrayList<TagComponent> getContent() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return content;
 
@@ -106,9 +106,9 @@ public class Tag extends ExperimentObject {
      */
     public void setContent(ArrayList<TagComponent> content) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         this.content = content;
 
@@ -121,9 +121,9 @@ public class Tag extends ExperimentObject {
      */
     public void addMassGap(double massGap) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         if (massGap != 0) {
 
@@ -139,9 +139,9 @@ public class Tag extends ExperimentObject {
      */
     public void addAminoAcidSequence(AminoAcidSequence aminoAcidSequence) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateWrite();
-        ObjectsDB.decreaseRWCounter();
+        
+        writeDBMode();
+        
 
         if (aminoAcidSequence.length() > 0) {
 
@@ -171,9 +171,9 @@ public class Tag extends ExperimentObject {
      */
     public String asSequence() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return content.stream()
                 .map(TagComponent::asSequence)
@@ -188,9 +188,9 @@ public class Tag extends ExperimentObject {
      */
     public String getLongestAminoAcidSequence() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         String result = "";
         AminoAcidSequence lastAminoAcidSequence = null;
@@ -241,9 +241,9 @@ public class Tag extends ExperimentObject {
      */
     public double getMass() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return StandardMasses.h2o.mass
                 + content.stream()
@@ -264,9 +264,9 @@ public class Tag extends ExperimentObject {
      */
     public double getMass(boolean includeCTermGap, boolean includeNTermGap) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         double mass = getMass();
 
@@ -293,9 +293,9 @@ public class Tag extends ExperimentObject {
      */
     public double getNTerminalGap() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         if (content.isEmpty()) {
 
@@ -323,9 +323,9 @@ public class Tag extends ExperimentObject {
      */
     public double getCTerminalGap() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         if (content.isEmpty()) {
 
@@ -371,9 +371,9 @@ public class Tag extends ExperimentObject {
             boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps, 
             SequenceMatchingParameters modificationsSequenceMatchingParameters, HashSet<String> displayedModifications) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, includeTerminalGaps, modificationsSequenceMatchingParameters, displayedModifications);
 
@@ -457,9 +457,9 @@ public class Tag extends ExperimentObject {
      */
     public String getNTerminal(boolean includeTerminalGaps, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         if (content.isEmpty()) {
             return "";
@@ -506,9 +506,9 @@ public class Tag extends ExperimentObject {
      */
     public String getCTerminal(boolean includeTerminalGaps, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         if (content.isEmpty()) {
 
@@ -553,9 +553,9 @@ public class Tag extends ExperimentObject {
      */
     public int getLengthInAminoAcid() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         int length = 0;
 
@@ -594,9 +594,9 @@ public class Tag extends ExperimentObject {
      */
     public ArrayList<Integer> getPotentialModificationSites(Modification modification, SequenceMatchingParameters modificationSequenceMatchingPreferences) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         ArrayList<Integer> possibleSites = new ArrayList<>();
         AminoAcidPattern modificationPattern = modification.getPattern();
@@ -728,9 +728,9 @@ public class Tag extends ExperimentObject {
      */
     public boolean isSameAs(Tag anotherTag, SequenceMatchingParameters sequenceMatchingPreferences) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         if (content.size() != anotherTag.getContent().size()) {
 
@@ -765,9 +765,9 @@ public class Tag extends ExperimentObject {
      */
     public boolean isSameSequenceAndModificationStatusAs(Tag anotherTag, SequenceMatchingParameters sequenceMatchingPreferences) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         if (content.size() != anotherTag.getContent().size()) {
 
@@ -871,9 +871,9 @@ public class Tag extends ExperimentObject {
      */
     public Tag reverse(boolean yIon) {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         Tag newTag = new Tag();
 
@@ -935,9 +935,9 @@ public class Tag extends ExperimentObject {
      */
     public boolean canReverse() {
 
-        ObjectsDB.increaseRWCounter();
-        zooActivateRead();
-        ObjectsDB.decreaseRWCounter();
+        
+        readDBMode();
+        
 
         TagComponent terminalComponent = content.get(0);
 

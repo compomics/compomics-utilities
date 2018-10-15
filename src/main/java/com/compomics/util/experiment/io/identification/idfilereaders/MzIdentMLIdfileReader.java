@@ -1613,10 +1613,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         if (scoreMap.containsKey(cvTerm)) {
             return getEValueObject(scoreMap, Advocate.identiPy, cvTerm, RawValueConversionType.noConversion);
         }
-//        cvTerm = "MS:1001331";
-//        if (scoreMap.containsKey(cvTerm)) {
-//            return getEValueObject(scoreMap, Advocate.identiPy, cvTerm, RawValueConversionType.baseTenPowerMinusValue); // @TODO: the cv term is for the xtandem hyperscore...
-//        }
+        cvTerm = "MS:1002989";
+        if (scoreMap.containsKey(cvTerm)) {
+            return getEValueObject(scoreMap, Advocate.identiPy, cvTerm, RawValueConversionType.baseTenPowerMinusValue); // @TODO: could also add "IdentiPy:RHNS" (MS:1002988)?
+        }
 
         // Protein Pilot
         cvTerm = "MS:1001166";

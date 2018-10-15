@@ -4,7 +4,7 @@ import com.compomics.util.experiment.filtering.FilterItemComparator;
 import com.compomics.util.experiment.biology.genes.GeneMaps;
 import com.compomics.util.experiment.filtering.FilterItem;
 import com.compomics.util.experiment.identification.Identification;
-import com.compomics.util.experiment.identification.IdentificationFeaturesGenerator;
+import com.compomics.util.experiment.identification.features.IdentificationFeaturesGenerator;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider;

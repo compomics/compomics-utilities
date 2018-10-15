@@ -3,10 +3,6 @@ com.compomics.cli.fasta
 com.compomics.cli.identification_parameters
 com.compomics.cli.modifications
 com.compomics.cli.peptide_mapper
-<<<<<<< HEAD
-=======
-com.compomics.scripts_marc
->>>>>>> f50b7930c517c6e727358bc516143b7bada66571
 com.compomics.software
 com.compomics.software.autoupdater
 com.compomics.software.cli

@@ -50,7 +50,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/AccessionMetaData.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.MassIndexMap.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/MassIndexMap.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../../index.html?com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" target="_top">Frames</a></li>
@@ -74,7 +74,7 @@ var activeTableTab = "activeTableTab";
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
 <li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -100,7 +100,22 @@ var activeTableTab = "activeTableTab";
 <li><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
+<li>org.zoodb.api.impl.ZooPC</li>
+<li>
+<ul class="inheritance">
+<li><a href="../../../../../../../com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">com.compomics.util.db.object.DbObject</a></li>
+<li>
+<ul class="inheritance">
+<li><a href="../../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">com.compomics.util.experiment.personalization.ExperimentObject</a></li>
+<li>
+<ul class="inheritance">
 <li>com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -114,7 +129,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">FMIndex</span>
-extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>
+extends <a href="../../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a>
 implements <a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/FastaMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">FastaMapper</a>, <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>, <a href="../../../../../../../com/compomics/util/experiment/io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a></pre>
 <div class="block">The FM index.</div>
 <dl>
@@ -127,27 +142,6 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- ======== NESTED CLASS SUMMARY ======== -->
-<ul class="blockList">
-<li class="blockList"><a name="nested.class.summary">
-<!--   -->
-</a>
-<h3>Nested Class Summary</h3>
-<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Nested Class Summary table, listing nested classes, and an explanation">
-<caption><span>Nested Classes</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Class and Description</th>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.MassIndexMap.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex.MassIndexMap</a></span></code>
-<div class="block">struct for building own data structure for mass to index mapping.</div>
-</td>
-</tr>
-</table>
-</li>
-</ul>
 <!-- =========== FIELD SUMMARY =========== -->
 <ul class="blockList">
 <li class="blockList"><a name="field.summary">
@@ -191,6 +185,13 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="fields.inherited.from.class.com.compomics.util.experiment.personalization.ExperimentObject">
+<!--   -->
+</a>
+<h3>Fields inherited from class&nbsp;com.compomics.util.experiment.personalization.<a href="../../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></h3>
+<code><a href="../../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#NO_KEY">NO_KEY</a></code></li>
+</ul>
 </li>
 </ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -419,11 +420,32 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </tr>
 </table>
 <ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.experiment.personalization.ExperimentObject">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.compomics.util.experiment.personalization.<a href="../../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></h3>
+<code><a href="../../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#addUrParam-com.compomics.util.experiment.personalization.UrParameter-">addUrParam</a>, <a href="../../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#asLong-java.lang.String-">asLong</a>, <a href="../../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#clearParametersMap--">clearParametersMap</a>, <a href="../../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParam-com.compomics.util.experiment.personalization.UrParameter-">getUrParam</a>, <a href="../../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#getUrParams--">getUrParams</a>, <a href="../../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#removeUrParam-long-">removeUrParam</a>, <a href="../../../../../../../com/compomics/util/experiment/personalization/ExperimentObject.html#setUrParams-java.util.HashMap-">setUrParams</a></code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.com.compomics.util.db.object.DbObject">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.compomics.util.db.object.<a href="../../../../../../../com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a></h3>
+<code><a href="../../../../../../../com/compomics/util/db/object/DbObject.html#getFirstLevel--">getFirstLevel</a>, <a href="../../../../../../../com/compomics/util/db/object/DbObject.html#getId--">getId</a>, <a href="../../../../../../../com/compomics/util/db/object/DbObject.html#readDBMode--">readDBMode</a>, <a href="../../../../../../../com/compomics/util/db/object/DbObject.html#setFirstLevel-boolean-">setFirstLevel</a>, <a href="../../../../../../../com/compomics/util/db/object/DbObject.html#setId-long-">setId</a>, <a href="../../../../../../../com/compomics/util/db/object/DbObject.html#writeDBMode--">writeDBMode</a></code></li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="methods.inherited.from.class.org.zoodb.api.impl.ZooPC">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;org.zoodb.api.impl.ZooPC</h3>
+<code>jdoZooEvict, jdoZooGetBackup, jdoZooGetClassDef, jdoZooGetContext, jdoZooGetNode, jdoZooGetOid, jdoZooGetTimestamp, jdoZooHasState, jdoZooInit, jdoZooIsDeleted, jdoZooIsDetached, jdoZooIsDirty, jdoZooIsNew, jdoZooIsPersistent, jdoZooIsStateHollow, jdoZooIsTransactional, jdoZooMarkClean, jdoZooMarkDeleted, jdoZooMarkDetached, jdoZooMarkDirty, jdoZooMarkHollow, jdoZooMarkTransient, jdoZooSetOid, jdoZooSetTimestamp, toString, zooActivateRead, zooActivateWrite, zooActivateWrite</code></li>
+</ul>
+<ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;java.lang.<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></h3>
-<code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#toString--" title="class or interface in java.lang">toString</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
+<code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#clone--" title="class or interface in java.lang">clone</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#equals-java.lang.Object-" title="class or interface in java.lang">equals</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#finalize--" title="class or interface in java.lang">finalize</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#getClass--" title="class or interface in java.lang">getClass</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#hashCode--" title="class or interface in java.lang">hashCode</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notify--" title="class or interface in java.lang">notify</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#notifyAll--" title="class or interface in java.lang">notifyAll</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait--" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-" title="class or interface in java.lang">wait</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true#wait-long-int-" title="class or interface in java.lang">wait</a></code></li>
 </ul>
 </li>
 </ul>
@@ -1086,7 +1108,7 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/AccessionMetaData.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.MassIndexMap.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/MassIndexMap.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../../index.html?com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" target="_top">Frames</a></li>
@@ -1110,7 +1132,7 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <div>
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
-<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
+<li>Nested&nbsp;|&nbsp;</li>
 <li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>

@@ -42,8 +42,8 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 import org.jsuffixarrays.*;
-import java.util.concurrent.Semaphore;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.stream.Collectors;
 
 /**
@@ -52,12 +52,12 @@ import java.util.stream.Collectors;
  * @author Dominik Kopczynski
  * @author Marc Vaudel
  */
-public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
+public class FMIndex extends ExperimentObject implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
 
     /**
      * Semaphore for caching.
      */
-    static Semaphore cacheMutex = new Semaphore(1);
+    static Object cacheMutex = new Object();
     /**
      * Number of chunks of complete index.
      */
@@ -294,19 +294,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         {2, 1, 3, 0}, {2, 3, 0, 1}, {2, 3, 1, 0}, {3, 0, 1, 2}, {3, 0, 2, 1},
         {3, 1, 0, 2}, {3, 1, 2, 0}, {3, 2, 0, 1}, {3, 2, 1, 0}}};
 
-    /**
-     * struct for building own data structure for mass to index mapping.
-     */
-    public class MassIndexMap {
-
-        public double mass;
-        public int[] indexes;
-
-        public MassIndexMap(double mass, int[] indexes) {
-            this.mass = mass;
-            this.indexes = indexes;
-        }
-    }
 
     /**
      * Arraylist for sorted masses to index mappings.
@@ -5138,18 +5125,13 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
         ArrayList<MatrixContent> cached = null;
 
-        try {
-            cacheMutex.acquire();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        synchronized(cacheMutex){
+            String key = tagComponents[1].sequence + String.format("%.5f", tagComponents[2].mass);
+            CacheElement cacheElement = cache[indexPart].get(key);
+            if (cacheElement != null) {
+                cached = cacheElement.cachedPrimary;
+            }
         }
-
-        String key = tagComponents[1].sequence + String.format("%.5f", tagComponents[2].mass);
-        CacheElement cacheElement = cache[indexPart].get(key);
-        if (cacheElement != null) {
-            cached = cacheElement.cachedPrimary;
-        }
-        cacheMutex.release();
         return cached;
     }
 
@@ -5163,23 +5145,19 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         if (tagComponents.length != 3 || !tagComponents[0].isMass || tagComponents[1].isMass || !tagComponents[2].isMass) {
             return;
         }
-        try {
-            cacheMutex.acquire();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        synchronized(cacheMutex){
 
-        ArrayList<MatrixContent> cacheContentPrimary = new ArrayList<>();
-        for (MatrixContent matrixContent : cachedPrimary) {
-            cacheContentPrimary.add(new MatrixContent(matrixContent));
-        }
+            ArrayList<MatrixContent> cacheContentPrimary = new ArrayList<>();
+            for (MatrixContent matrixContent : cachedPrimary) {
+                cacheContentPrimary.add(new MatrixContent(matrixContent));
+            }
 
-        String key = tagComponents[1].sequence + String.format("%.5f", tagComponents[2].mass);
-        CacheElement cacheElement = new CacheElement(tagComponents[0].mass, tagComponents[1].sequence, tagComponents[2].mass, cacheContentPrimary);
-        if (!cache[indexPart].containsKey(key)) {
-            cache[indexPart].put(key, cacheElement);
+            String key = tagComponents[1].sequence + String.format("%.5f", tagComponents[2].mass);
+            CacheElement cacheElement = new CacheElement(tagComponents[0].mass, tagComponents[1].sequence, tagComponents[2].mass, cacheContentPrimary);
+            if (!cache[indexPart].containsKey(key)) {
+                cache[indexPart].put(key, cacheElement);
+            }
         }
-        cacheMutex.release();
     }
 
     @Override

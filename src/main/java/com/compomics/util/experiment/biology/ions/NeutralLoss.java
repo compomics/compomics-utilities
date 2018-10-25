@@ -78,6 +78,16 @@ public class NeutralLoss extends ExperimentObject {
     public NeutralLoss(String name, AtomChain composition, boolean fixed, char[] aminoAcids) {
         this(name, composition, fixed, aminoAcids, true);
     }
+    
+    /**
+     * Default construtor
+     */
+    public NeutralLoss(){
+        this.name = "";
+        this.composition = null;
+        this.fixed = false;
+        this.aminoAcids = null;
+    }
 
     /**
      * Constructor for a user defined neutral loss. The neutral loss is added to

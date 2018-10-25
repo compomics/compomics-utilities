@@ -29,6 +29,8 @@ public class EnzymesCLI {
     public EnzymesCLI(EnzymesCLIInputBean enzymesCLIInputBean) {
         this.enzymesCLIInputBean = enzymesCLIInputBean;
     }
+    
+    
 
     /**
      * Header message when printing the usage.

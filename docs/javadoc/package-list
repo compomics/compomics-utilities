@@ -40,6 +40,7 @@ com.compomics.util.experiment.biology.variants.amino_acids
 com.compomics.util.experiment.filtering
 com.compomics.util.experiment.identification
 com.compomics.util.experiment.identification.amino_acid_tags
+com.compomics.util.experiment.identification.features
 com.compomics.util.experiment.identification.filtering
 com.compomics.util.experiment.identification.filtering.items
 com.compomics.util.experiment.identification.identification_parameters

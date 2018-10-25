@@ -158,4 +158,17 @@ public enum MsFormat {
 
         return rawFormats;
     }
+
+    /**
+     * Empty default constructor
+     */
+    private MsFormat() {
+        index = 0;
+        commandLineOption = "";
+        name = "";
+        description = "";
+        rawFormat = false;
+        fileNameEnding = "";
+        outputFormat = false;
+    }
 }

@@ -10,6 +10,12 @@ import com.compomics.util.pride.PrideObject;
 public class Reference implements PrideObject {
 
     /**
+     * Empty default constructor
+     */
+    public Reference() {
+    }
+
+    /**
      * Serialization number for backward compatibility.
      */
     static final long serialVersionUID = -5449836209751629549L; // @TODO: has to be updated?

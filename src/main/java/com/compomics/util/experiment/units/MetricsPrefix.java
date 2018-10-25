@@ -54,4 +54,13 @@ public enum MetricsPrefix {
         this.SYMBOL = symbol;
         this.POWER = power;
     }
+
+    /**
+     * Empty default constructor
+     */
+    private MetricsPrefix() {
+        POWER = 0;
+        PREFIX = "";
+        SYMBOL = "";
+    }
 }

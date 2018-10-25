@@ -24,6 +24,12 @@ import java.awt.*;
  */
 public class ProgressDialog extends JDialog {
 
+    /**
+     * Empty default constructor
+     */
+    public ProgressDialog() {
+    }
+
     // Class specific log4j logger for ProgressDialog instances.
     Logger logger = Logger.getLogger(ProgressDialog.class);
 

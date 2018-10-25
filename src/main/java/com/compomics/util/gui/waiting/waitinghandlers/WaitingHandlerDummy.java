@@ -13,6 +13,12 @@ import com.compomics.util.waiting.WaitingHandler;
 public class WaitingHandlerDummy implements WaitingHandler {
 
     /**
+     * Empty default constructor
+     */
+    public WaitingHandlerDummy() {
+    }
+
+    /**
      * Boolean indicating whether the process is finished.
      */
     private boolean runFinished = false;

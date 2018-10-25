@@ -17,6 +17,12 @@ import java.net.URL;
 public class PdbBlock {
 
     /**
+     * Empty default constructor
+     */
+    public PdbBlock() {
+    }
+
+    /**
      * The block.
      */
     private String iBlock;

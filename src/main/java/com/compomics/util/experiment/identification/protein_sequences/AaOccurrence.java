@@ -12,6 +12,14 @@ import org.apache.commons.math.util.FastMath;
 public class AaOccurrence {
 
     /**
+     * Empty default constructor
+     */
+    public AaOccurrence() {
+        uniqueAaOccurrence = null;
+        uniqueAaShareLog = null;
+    }
+
+    /**
      * Occurrences of the amino acids without combinations indexed as in the
      * AminoAcid class.
      */

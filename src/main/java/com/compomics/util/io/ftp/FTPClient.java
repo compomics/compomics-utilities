@@ -31,6 +31,12 @@ import java.io.*;
  */
 public class FTPClient {
 
+    /**
+     * Empty default constructor
+     */
+    public FTPClient() {
+    }
+
     // Class specific log4j logger for FTPClient instances.
     Logger logger = Logger.getLogger(FTPClient.class);
 

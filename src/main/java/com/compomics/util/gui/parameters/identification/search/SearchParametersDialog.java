@@ -142,6 +142,13 @@ public class SearchParametersDialog extends javax.swing.JDialog {
     private FastaParameters fastaParameters = null;
 
     /**
+     * Empty default constructor
+     */
+    public SearchParametersDialog() {
+        lastSelectedFolder = null;
+    }
+
+    /**
      * Creates a new SearchSettingsDialog with a frame as owner.
      *
      * @param parentFrame the parent frame

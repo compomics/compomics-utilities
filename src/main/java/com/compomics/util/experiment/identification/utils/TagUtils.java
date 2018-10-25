@@ -13,4 +13,10 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
  * @author Marc Vaudel
  */
 public class TagUtils {
+
+    /**
+     * Empty default constructor
+     */
+    public TagUtils() {
+    }
 }

@@ -11,6 +11,12 @@ import java.util.ArrayList;
 public class TagFactory {
 
     /**
+     * Empty default constructor
+     */
+    public TagFactory() {
+    }
+
+    /**
      * Returns all the amino acid combinations for a given tag length.
      *
      * @param length the length of the tag

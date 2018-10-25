@@ -16,6 +16,12 @@ import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialo
 public class PNovoParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
 
     /**
+     * Empty default constructor
+     */
+    public PNovoParametersDialog() {
+    }
+
+    /**
      * True if the dialog was canceled by the user.
      */
     private boolean canceled = false;

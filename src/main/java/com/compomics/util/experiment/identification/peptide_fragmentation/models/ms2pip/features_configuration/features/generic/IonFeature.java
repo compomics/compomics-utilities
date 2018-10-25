@@ -10,6 +10,12 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
 public abstract class IonFeature implements Ms2pipFeature {
 
     /**
+     * Empty default constructor
+     */
+    public IonFeature() {
+    }
+
+    /**
      * Enum for the possible features.
      */
     public enum Property {

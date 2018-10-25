@@ -23,6 +23,12 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 public class AplExporter {
 
     /**
+     * Empty default constructor
+     */
+    public AplExporter() {
+    }
+
+    /**
      * Writes the content of the given file name into the destination file in
      * the APL format. The spectra must be loaded in the factory.
      *

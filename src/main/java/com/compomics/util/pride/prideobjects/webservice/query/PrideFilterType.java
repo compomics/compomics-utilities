@@ -16,4 +16,10 @@ public enum PrideFilterType {
     quantificationFilter,
     projectTagFilter,
     submissionTypeFilter;
+
+    /**
+     * Empty default constructor
+     */
+    private PrideFilterType() {
+    }
 }

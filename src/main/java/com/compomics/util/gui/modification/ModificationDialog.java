@@ -38,6 +38,12 @@ import no.uib.jsparklines.extra.TrueFalseIconRenderer;
 public class ModificationDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public ModificationDialog() {
+    }
+
+    /**
      * The post translational modifications factory.
      */
     private ModificationFactory modificationFactory = ModificationFactory.getInstance();

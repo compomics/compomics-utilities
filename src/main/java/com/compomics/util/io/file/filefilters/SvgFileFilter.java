@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class SvgFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public SvgFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.svg files.
      *
      * @param f the file

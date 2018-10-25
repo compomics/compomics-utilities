@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class PdfFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public PdfFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.pdf files.
      *
      * @param f the file

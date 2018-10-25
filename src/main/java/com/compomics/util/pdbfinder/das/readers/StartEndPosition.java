@@ -8,6 +8,14 @@ package com.compomics.util.pdbfinder.das.readers;
 public class StartEndPosition {
 
     /**
+     * Empty default constructor
+     */
+    public StartEndPosition() {
+        iStart = 0;
+        iEnd = 0;
+    }
+
+    /**
      * The start.
      */
     private final int iStart;

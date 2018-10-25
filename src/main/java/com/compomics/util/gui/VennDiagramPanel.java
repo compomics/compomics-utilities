@@ -124,6 +124,18 @@ public class VennDiagramPanel extends javax.swing.JPanel {
     private final Color datasetDColor;
 
     /**
+     * Empty default constructor
+     */
+    public VennDiagramPanel() {
+        vennDiagramResults = null;
+        groupNames = null;
+        datasetAColor = null;
+        datasetBColor = null;
+        datasetCColor = null;
+        datasetDColor = null;
+    }
+
+    /**
      * Creates a new VennDiagramPanel.
      *
      * @param a dataset A

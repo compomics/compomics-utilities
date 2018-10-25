@@ -15,6 +15,12 @@ import javax.swing.table.TableCellRenderer;
 public class AlignedTableCellRenderer implements TableCellRenderer {
 
     /**
+     * Empty default constructor
+     */
+    public AlignedTableCellRenderer() {
+    }
+
+    /**
      * One of the following constants defined in SwingConstants: LEFT, CENTER
      * (the default for image-only labels), RIGHT, LEADING (the default for
      * text-only labels) or TRAILING.

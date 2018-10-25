@@ -74,6 +74,12 @@ public class MassErrorBubblePlot extends JPanel {
     private ArrayList<Color> dataSeriesfragmentIonColors = new ArrayList<>();
 
     /**
+     * Empty default constructor
+     */
+    public MassErrorBubblePlot() {
+    }
+
+    /**
      * Creates a new MassErrorBubblePlot.
      *
      * @param dataIndexes the data set indexes/labels

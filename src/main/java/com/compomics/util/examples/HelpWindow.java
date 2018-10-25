@@ -14,6 +14,12 @@ import java.net.URL;
 public class HelpWindow extends javax.swing.JFrame {
 
     /**
+     * Empty default constructor
+     */
+    public HelpWindow() {
+    }
+
+    /**
      * Creates a new HelpWindow object with a Frame as a parent.
      *
      * @param parent the parent frame

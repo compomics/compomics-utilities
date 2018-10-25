@@ -46,4 +46,12 @@ public enum StandardUnit {
         }
         return null;
     }
+
+    /**
+     * Empty default constructor
+     */
+    private StandardUnit() {
+        FULL_NAME = "";
+        ABBREVIATION = "";
+    }
 }

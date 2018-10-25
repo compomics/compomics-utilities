@@ -14,6 +14,12 @@ import org.apache.commons.math.util.FastMath;
 public class BasicMathFunctions {
 
     /**
+     * Empty default constructor
+     */
+    public BasicMathFunctions() {
+    }
+
+    /**
      * Cache for the base used for the log.
      */
     private static double logBase = 0;

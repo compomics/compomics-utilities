@@ -13,6 +13,12 @@ import java.util.Arrays;
 public class AmbiguousSequenceIterator {
 
     /**
+     * Empty default constructor
+     */
+    public AmbiguousSequenceIterator() {
+    }
+
+    /**
      * The sequence as char array.
      */
     private char[] sequenceAsCharArray;

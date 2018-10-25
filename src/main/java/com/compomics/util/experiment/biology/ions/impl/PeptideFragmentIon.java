@@ -15,6 +15,12 @@ import java.util.List;
 public class PeptideFragmentIon extends Ion {
 
     /**
+     * Empty default constructor
+     */
+    public PeptideFragmentIon() {
+    }
+
+    /**
      * Serial number for backward compatibility
      */
     static final long serialVersionUID = 8283809283803740651L;

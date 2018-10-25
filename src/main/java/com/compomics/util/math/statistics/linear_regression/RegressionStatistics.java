@@ -9,6 +9,17 @@ package com.compomics.util.math.statistics.linear_regression;
 public class RegressionStatistics {
 
     /**
+     * Empty default constructor
+     */
+    public RegressionStatistics() {
+        a = null;
+        b = null;
+        rSquared = null;
+        meanDistance = null;
+        medianDistance = null;
+    }
+
+    /**
      * a in y = a.x + b
      */
     public final Double a;

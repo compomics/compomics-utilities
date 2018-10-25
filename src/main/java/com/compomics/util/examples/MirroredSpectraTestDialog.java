@@ -16,6 +16,12 @@ import java.util.Vector;
 public class MirroredSpectraTestDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public MirroredSpectraTestDialog() {
+    }
+
+    /**
      * Creates a new MirroredSpectraTestDialog
      *
      * @param parent the parent frame

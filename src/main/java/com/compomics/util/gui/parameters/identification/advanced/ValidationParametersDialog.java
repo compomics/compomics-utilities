@@ -16,6 +16,12 @@ import javax.swing.SwingConstants;
 public class ValidationParametersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public ValidationParametersDialog() {
+    }
+
+    /**
      * The parent frame.
      */
     private java.awt.Frame parentFrame;

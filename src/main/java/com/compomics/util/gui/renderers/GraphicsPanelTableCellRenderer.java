@@ -20,6 +20,14 @@ import javax.swing.table.TableCellRenderer;
 public class GraphicsPanelTableCellRenderer extends JLabel implements TableCellRenderer {
 
     /**
+     * Empty default constructor
+     */
+    public GraphicsPanelTableCellRenderer() {
+        minXAxisValue = 0;
+        maxXAxisValue = 0;
+    }
+
+    /**
      * The minimum x-axis value.
      */
     private final double minXAxisValue;

@@ -38,6 +38,12 @@ import java.text.SimpleDateFormat;
  */
 public class FolderMonitor implements Runnable {
 
+    /**
+     * Empty default constructor
+     */
+    public FolderMonitor() {
+    }
+
     // Class specific log4j logger for FolderMonitor instances.
     static Logger logger = Logger.getLogger(FolderMonitor.class);
 

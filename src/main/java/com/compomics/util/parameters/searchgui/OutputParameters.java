@@ -123,4 +123,13 @@ public enum OutputParameters {
         }
         return commandLine.toString();
     }
+
+    /**
+     * Empty default constructor
+     */
+    private OutputParameters() {
+        id = 0;
+        name = "";
+        description = "";
+    }
 }

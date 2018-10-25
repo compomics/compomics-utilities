@@ -10,6 +10,12 @@ import javax.swing.ImageIcon;
  */
 public class FileFilterUtils {
 
+    /**
+     * Empty default constructor
+     */
+    public FileFilterUtils() {
+    }
+
     public final static String dat = "dat";
     public final static String xml = "xml";
     public final static String mgf = "mgf";

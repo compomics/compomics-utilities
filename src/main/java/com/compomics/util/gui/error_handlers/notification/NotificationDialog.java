@@ -8,6 +8,14 @@ package com.compomics.util.gui.error_handlers.notification;
 public class NotificationDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public NotificationDialog() {
+        notificationDialogParent = null;
+        notificationType = "";
+    }
+
+    /**
      * The notification dialog parent.
      */
     private final NotificationDialogParent notificationDialogParent;

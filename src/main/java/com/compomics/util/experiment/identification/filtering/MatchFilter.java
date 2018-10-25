@@ -22,6 +22,12 @@ import java.util.Map.Entry;
 public abstract class MatchFilter implements Filter {
 
     /**
+     * Empty default constructor
+     */
+    public MatchFilter() {
+    }
+
+    /**
      * Serial number for serialization compatibility.
      */
     static final long serialVersionUID = 7413446840381260115L;

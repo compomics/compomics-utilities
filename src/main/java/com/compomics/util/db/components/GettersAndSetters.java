@@ -30,6 +30,12 @@ import com.compomics.util.db.DBMetaData;
  */
 public class GettersAndSetters {
 
+    /**
+     * Empty default constructor
+     */
+    public GettersAndSetters() {
+    }
+
     // Class specific log4j logger for GettersAndSetters instances.
     Logger logger = Logger.getLogger(GettersAndSetters.class);
 

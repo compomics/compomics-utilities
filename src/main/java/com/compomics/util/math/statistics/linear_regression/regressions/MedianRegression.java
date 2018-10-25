@@ -12,6 +12,12 @@ import java.util.ArrayList;
 public class MedianRegression {
 
     /**
+     * Empty default constructor
+     */
+    public MedianRegression() {
+    }
+
+    /**
      * Returns a robust linear regression based on the median of statistics.
      *
      * @param x the x series

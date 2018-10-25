@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class PepXmlFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public PepXmlFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.pep.xml, *.pepxml and *.xml files.
      *
      * @param f the file

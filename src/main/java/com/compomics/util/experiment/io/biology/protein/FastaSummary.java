@@ -21,6 +21,18 @@ import no.uib.jsparklines.renderers.util.Util;
 public class FastaSummary {
 
     /**
+     * Empty default constructor
+     */
+    public FastaSummary() {
+        fastaFile = null;
+        speciesOccurrence = null;
+        databaseType = null;
+        nSequences = 0;
+        nTarget = 0;
+        lastModified = 0;
+    }
+
+    /**
      * The file this summary represents.
      */
     public final File fastaFile;

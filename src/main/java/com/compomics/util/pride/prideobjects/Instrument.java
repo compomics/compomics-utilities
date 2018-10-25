@@ -13,6 +13,12 @@ import java.util.Arrays;
 public class Instrument implements PrideObject {
 
     /**
+     * Empty default constructor
+     */
+    public Instrument() {
+    }
+
+    /**
      * Serialization number for backward compatibility.
      */
     static final long serialVersionUID = -8802861658166703745L;

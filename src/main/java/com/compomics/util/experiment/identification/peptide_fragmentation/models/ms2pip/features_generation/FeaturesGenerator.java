@@ -40,6 +40,13 @@ import java.util.HashSet;
 public class FeaturesGenerator {
 
     /**
+     * Empty default constructor
+     */
+    public FeaturesGenerator() {
+        featuresMap = null;
+    }
+
+    /**
      * The PTM factory.
      */
     private final ModificationFactory modificationFactory = ModificationFactory.getInstance();

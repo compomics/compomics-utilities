@@ -12,6 +12,12 @@ import javax.xml.stream.events.XMLEvent;
 public class MetaDataXMLParser {
 
     /**
+     * Empty default constructor
+     */
+    public MetaDataXMLParser() {
+    }
+
+    /**
      * The highest version number.
      */
     private String highestVersionNumber;

@@ -8,6 +8,13 @@ package com.compomics.util.experiment.biology.ions;
 public class NeutralLossCombination {
 
     /**
+     * Empty default constructor
+     */
+    public NeutralLossCombination() {
+        neutralLossCombination = null;
+    }
+
+    /**
      * The neutral losses.
      */
     private final NeutralLoss[] neutralLossCombination;

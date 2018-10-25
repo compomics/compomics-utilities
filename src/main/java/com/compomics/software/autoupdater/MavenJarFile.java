@@ -15,6 +15,7 @@ import java.util.jar.JarFile;
  */
 public class MavenJarFile extends JarFile {
 
+
     /**
      * The Maven properties.
      */

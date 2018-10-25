@@ -26,6 +26,12 @@ import java.util.HashMap;
 public abstract class Atom extends ExperimentObject {
 
     /**
+     * Empty default constructor
+     */
+    public Atom() {
+    }
+
+    /**
      * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 1059024301538472131L;

@@ -27,6 +27,12 @@ import org.apache.log4j.Logger;
  */
 public class FtpLoginException extends FtpProtocolException {
 
+    /**
+     * Empty default constructor
+     */
+    public FtpLoginException() {
+    }
+
     // Class specific log4j logger for FtpLoginException instances.
     Logger logger = Logger.getLogger(FtpLoginException.class);
     

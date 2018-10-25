@@ -28,6 +28,12 @@ import org.apache.commons.io.IOUtils;
 public abstract class FileDAO {
 
     /**
+     * Empty default constructor
+     */
+    public FileDAO() {
+    }
+
+    /**
      * Creates a new Desktop Shortcut to the Maven jar file, atm windows only.
      *
      * @param file the Maven jarfile to make a shortcut to

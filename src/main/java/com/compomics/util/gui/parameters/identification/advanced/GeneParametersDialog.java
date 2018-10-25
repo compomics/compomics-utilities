@@ -24,6 +24,12 @@ import javax.swing.SwingConstants;
 public class GeneParametersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public GeneParametersDialog() {
+    }
+
+    /**
      * The parent frame.
      */
     private java.awt.Frame parentFrame;

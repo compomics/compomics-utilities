@@ -29,6 +29,12 @@ import com.compomics.util.db.DBMetaData;
  */
 public class InstanceVariables {
 
+    /**
+     * Empty default constructor
+     */
+    public InstanceVariables() {
+    }
+
     // Class specific log4j logger for InstanceVariables instances.
     Logger logger = Logger.getLogger(InstanceVariables.class);
 

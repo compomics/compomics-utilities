@@ -8,6 +8,14 @@ package com.compomics.util.pride.prideobjects.webservice.query;
 public class PrideFilter {
 
     /**
+     * Empty default constructor
+     */
+    public PrideFilter() {
+        value = "";
+        type = null;
+    }
+
+    /**
      * A list containing the project summaries.
      */
     private final String value;

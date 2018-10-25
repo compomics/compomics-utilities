@@ -11,6 +11,12 @@ import java.util.HashMap;
 public class VennDiagram {
 
     /**
+     * Empty default constructor
+     */
+    public VennDiagram() {
+    }
+
+    /**
      * Create the Venn diagram groupings based on the provided data.
      *
      * @param groupA the data in group A

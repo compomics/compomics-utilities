@@ -17,6 +17,12 @@ import java.io.IOException;
 public class GenericFastaConverter {
 
     /**
+     * Empty default constructor
+     */
+    public GenericFastaConverter() {
+    }
+
+    /**
      * Appends decoy sequences to the provided FASTA file.
      *
      * @param fastaIn the FASTA file to read

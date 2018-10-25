@@ -10,6 +10,12 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
 public abstract class AAIdentityFeature implements Ms2pipFeature {
 
     /**
+     * Empty default constructor
+     */
+    public AAIdentityFeature() {
+    }
+
+    /**
      * The index on the sequence.
      */
     protected int aaIndex;

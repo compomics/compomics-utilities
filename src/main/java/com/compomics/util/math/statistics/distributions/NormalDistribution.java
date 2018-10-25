@@ -15,6 +15,14 @@ import org.apache.commons.math.distribution.NormalDistributionImpl;
 public class NormalDistribution implements Distribution {
 
     /**
+     * Empty default constructor
+     */
+    public NormalDistribution() {
+        mean = 0;
+        std = 0;
+    }
+
+    /**
      * Serial version number for backward compatibility.
      */
     static final long serialVersionUID = -4944773548279233917L;

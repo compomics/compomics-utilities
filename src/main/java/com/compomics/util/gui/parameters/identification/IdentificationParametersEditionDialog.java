@@ -123,6 +123,17 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     private IdentificationParametersFactory identificationParametersFactory = IdentificationParametersFactory.getInstance();
 
     /**
+     * Empty default constructor
+     */
+    public IdentificationParametersEditionDialog() {
+        parentFrame = null;
+        normalIcon = null;
+        waitingIcon = null;
+        lastSelectedFolder = null;
+        editable = false;
+    }
+
+    /**
      * Creates a new IdentificationParametersEditionDialog with a frame as
      * owner.
      *

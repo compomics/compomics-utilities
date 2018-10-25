@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class PngFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public PngFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.png files.
      *
      * @param f the file

@@ -13,6 +13,12 @@ import java.util.ArrayList;
  * @author Dominik Kopczynski
  */
 public class SpectrumMatchesIterator extends MatchesIterator {
+
+    /**
+     * Empty default constructor
+     */
+    public SpectrumMatchesIterator() {
+    }
     /**
      * Constructor.
      *

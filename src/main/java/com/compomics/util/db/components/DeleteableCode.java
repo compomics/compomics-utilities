@@ -29,6 +29,12 @@ import com.compomics.util.db.DBMetaData;
  */
 public class DeleteableCode {
 
+    /**
+     * Empty default constructor
+     */
+    public DeleteableCode() {
+    }
+
     // Class specific log4j logger for DeleteableCode instances.
     Logger logger = Logger.getLogger(DeleteableCode.class);
 

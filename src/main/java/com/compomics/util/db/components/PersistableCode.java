@@ -32,6 +32,12 @@ import java.sql.Types;
  */
 public class PersistableCode {
 
+    /**
+     * Empty default constructor
+     */
+    public PersistableCode() {
+    }
+
     // Class specific log4j logger for PersistableCode instances.
     Logger logger = Logger.getLogger(PersistableCode.class);
 

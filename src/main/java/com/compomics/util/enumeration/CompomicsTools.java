@@ -53,4 +53,12 @@ public enum CompomicsTools {
     public String getPackageName() {
         return iPackageName;
     }
+
+    /**
+     * Empty default constructor
+     */
+    private CompomicsTools() {
+        iName = "";
+        iPackageName = "";
+    }
 }

@@ -19,6 +19,13 @@ import java.util.Arrays;
 public class PeptideAndProteinBuilder {
 
     /**
+     * Empty default constructor
+     */
+    public PeptideAndProteinBuilder() {
+        identification = null;
+    }
+
+    /**
      * The identification object.
      */
     private final Identification identification;

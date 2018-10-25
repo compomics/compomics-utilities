@@ -16,6 +16,12 @@ import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialo
 public class DirecTagParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
 
     /**
+     * Empty default constructor
+     */
+    public DirecTagParametersDialog() {
+    }
+
+    /**
      * True if the dialog was canceled by the user.
      */
     private boolean canceled = false;

@@ -32,6 +32,12 @@ import java.util.StringTokenizer;
  */
 public class PushBackStringReader {
 
+    /**
+     * Empty default constructor
+     */
+    public PushBackStringReader() {
+    }
+
     // Class specific log4j logger for PushBackStringReader instances.
     Logger logger = Logger.getLogger(PushBackStringReader.class);
 

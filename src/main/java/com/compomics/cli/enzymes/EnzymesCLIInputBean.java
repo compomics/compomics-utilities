@@ -18,6 +18,12 @@ import org.apache.commons.cli.CommandLine;
 public class EnzymesCLIInputBean {
 
     /**
+     * Empty default constructor
+     */
+    public EnzymesCLIInputBean() {
+    }
+
+    /**
      * Verifies the command line start parameters.
      *
      * @param aLine the command line to validate

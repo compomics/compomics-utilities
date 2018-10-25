@@ -29,6 +29,14 @@ import no.uib.jsparklines.extra.HtmlLinksRenderer;
 public class GeneDetailsDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public GeneDetailsDialog() {
+        geneMaps = null;
+        goTermDescriptions = null;
+    }
+
+    /**
      * The Gene maps.
      */
     private final GeneMaps geneMaps;

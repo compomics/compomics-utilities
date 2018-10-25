@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class Ms2FileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public Ms2FileFilter() {
+    }
+
+    /**
      * Accept all directories, *.ms2 files.
      *
      * @param f the file

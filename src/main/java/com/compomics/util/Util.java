@@ -32,6 +32,12 @@ import org.apache.commons.codec.binary.Base64;
 public class Util {
 
     /**
+     * Empty default constructor
+     */
+    public Util() {
+    }
+
+    /**
      * Forbidden characters in file names.
      */
     public static final String[] forbiddenCharacters = {"!", ":", ";", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "\\|"};

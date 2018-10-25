@@ -22,6 +22,12 @@ import uk.ac.ebi.pride.archive.web.service.model.protein.ProteinDetailList;
 public class PrideWebService {
 
     /**
+     * Empty default constructor
+     */
+    public PrideWebService() {
+    }
+
+    /**
      * The pride json marshaller to interpret json objects.
      */
     private static final PrideMarshaller MARSHALLER = new PrideMarshaller();

@@ -8,6 +8,12 @@ import com.compomics.util.experiment.biology.variants.Variant;
  * @author Marc Vaudel
  */
 public class Deletion implements Variant {
+
+    /**
+     * Empty default constructor
+     */
+    public Deletion() {
+    }
     
     /**
      * The single character code of the deleted amino acid.

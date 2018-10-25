@@ -24,6 +24,12 @@ import no.uib.jsparklines.extra.TrueFalseIconRenderer;
 public class PeptideVariantsParametersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public PeptideVariantsParametersDialog() {
+    }
+
+    /**
      * The parent frame.
      */
     private java.awt.Frame parentFrame;

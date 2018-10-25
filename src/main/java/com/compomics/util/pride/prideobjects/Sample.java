@@ -13,6 +13,12 @@ import java.util.Arrays;
 public class Sample implements PrideObject {
 
     /**
+     * Empty default constructor
+     */
+    public Sample() {
+    }
+
+    /**
      * Serialization number for backward compatibility.
      */
     static final long serialVersionUID = -7142471175737857227L;

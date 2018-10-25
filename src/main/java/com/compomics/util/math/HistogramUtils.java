@@ -15,6 +15,12 @@ import java.util.HashMap;
 public class HistogramUtils {
 
     /**
+     * Empty default constructor
+     */
+    public HistogramUtils() {
+    }
+
+    /**
      * Returns the median of a histogram.
      *
      * @param histogram the histogram

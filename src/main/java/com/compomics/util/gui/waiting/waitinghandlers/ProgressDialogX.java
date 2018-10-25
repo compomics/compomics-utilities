@@ -15,6 +15,12 @@ import javax.swing.*;
 public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandler {
 
     /**
+     * Empty default constructor
+     */
+    public ProgressDialogX() {
+    }
+
+    /**
      * If set to true, trying to close the progress bar will be ignored. Use
      * this option if the process being monitored can not be stopped. <br> Note:
      * replaced by unstoppable.

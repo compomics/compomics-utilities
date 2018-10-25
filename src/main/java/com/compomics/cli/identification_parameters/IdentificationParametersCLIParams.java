@@ -671,4 +671,14 @@ public enum IdentificationParametersCLIParams {
 
         return output;
     }
+
+    /**
+     * Empty default constructor
+     */
+    private IdentificationParametersCLIParams() {
+        id = "";
+        description = "";
+        mandatory = false;
+        hasArgument = false;
+    }
 }

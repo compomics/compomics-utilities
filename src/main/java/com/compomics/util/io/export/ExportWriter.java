@@ -14,6 +14,12 @@ import java.io.IOException;
 public abstract class ExportWriter {
 
     /**
+     * Empty default constructor
+     */
+    public ExportWriter() {
+    }
+
+    /**
      * Key to store the last export folder.
      */
     public static final String lastFolderKey = "export";

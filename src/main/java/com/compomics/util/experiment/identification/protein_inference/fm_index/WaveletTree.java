@@ -45,6 +45,12 @@ public class WaveletTree {
      * Continue range query for right child.
      */
     private boolean continueRightRangeQuery = false;
+
+    /**
+     * Empty default constructor
+     */
+    public WaveletTree() {
+    }
     
     /**
      * Left child of the wavelet tree.

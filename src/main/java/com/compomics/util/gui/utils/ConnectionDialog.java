@@ -37,6 +37,12 @@ import java.util.ArrayList;
  */
 public class ConnectionDialog extends JDialog {
 
+    /**
+     * Empty default constructor
+     */
+    public ConnectionDialog() {
+    }
+
     // Class specific log4j logger for ConnectionDialog instances.
     Logger logger = Logger.getLogger(ConnectionDialog.class);
 

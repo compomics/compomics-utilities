@@ -24,6 +24,12 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
 public class FeaturesMapManager {
 
     /**
+     * Empty default constructor
+     */
+    public FeaturesMapManager() {
+    }
+
+    /**
      * Returns the default features map used in the c implementation, see
      * https://github.com/mvaudel/ms2pip_c.
      *

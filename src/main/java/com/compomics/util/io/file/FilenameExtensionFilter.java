@@ -31,6 +31,12 @@ import java.io.File;
  */
 public class FilenameExtensionFilter extends FileFilter implements FilenameFilter {
 
+    /**
+     * Empty default constructor
+     */
+    public FilenameExtensionFilter() {
+    }
+
     // Class specific log4j logger for FilenameExtensionFilter instances.
     Logger logger = Logger.getLogger(FilenameExtensionFilter.class);
 

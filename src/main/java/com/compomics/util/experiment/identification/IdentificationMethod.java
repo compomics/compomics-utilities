@@ -12,6 +12,13 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class IdentificationMethod extends ExperimentObject {
 
     /**
+     * Empty default constructor
+     */
+    public IdentificationMethod() {
+        index = 0;
+    }
+
+    /**
      * The version UID for Serialization/Deserialization compatibility
      */
     static final long serialVersionUID = 4601179275244591663L;

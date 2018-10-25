@@ -15,6 +15,14 @@ import java.util.HashMap;
 public class Glycan extends Ion {
 
     /**
+     * Empty default constructor
+     */
+    public Glycan() {
+        name = "";
+        longName = "";
+    }
+
+    /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -2278483206647518565L;

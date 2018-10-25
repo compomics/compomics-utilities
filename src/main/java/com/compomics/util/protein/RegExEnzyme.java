@@ -16,6 +16,12 @@ import java.util.*;
  */
 public class RegExEnzyme extends Enzyme {
 
+    /**
+     * Empty default constructor
+     */
+    public RegExEnzyme() {
+    }
+
     // Class specific log4j logger for RegExEnzyme instances.
     Logger logger = Logger.getLogger(RegExEnzyme.class);
 

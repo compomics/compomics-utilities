@@ -14,6 +14,17 @@ import java.util.stream.Collectors;
 public class NonSymmetricalNormalDistribution implements Distribution {
 
     /**
+     * Empty default constructor
+     */
+    public NonSymmetricalNormalDistribution() {
+        stdUp = 0;
+        stdDown = 0;
+        mean = 0;
+        distributionUp = null;
+        distributionDown = null;
+    }
+
+    /**
      * Serial version number for backward compatibility.
      */
     static final long serialVersionUID = -5258258835569357886L;

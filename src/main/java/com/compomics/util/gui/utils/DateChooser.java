@@ -27,6 +27,12 @@ import javax.swing.border.BevelBorder;
  */
 public class DateChooser extends JDialog {
 
+    /**
+     * Empty default constructor
+     */
+    public DateChooser() {
+    }
+
     // Class specific log4j logger for DateChooser instances.
     static Logger logger = Logger.getLogger(DateChooser.class);
 

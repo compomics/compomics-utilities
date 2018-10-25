@@ -21,6 +21,16 @@ import java.util.Iterator;
 public class SequenceModificationPanel extends JPanel {
 
     /**
+     * Empty default constructor
+     */
+    public SequenceModificationPanel() {
+        fragmentIonRectangles = null;
+        profiles = null;
+        score1Name = "";
+        score2Name = "";
+    }
+
+    /**
      * A map of the rectangles used to draw each profile peak. This map is later
      * used for the tooltip for each peak.
      */

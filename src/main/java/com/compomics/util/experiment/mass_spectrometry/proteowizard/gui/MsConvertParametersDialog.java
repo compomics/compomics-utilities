@@ -30,6 +30,12 @@ import javax.swing.table.TableColumnModel;
 public class MsConvertParametersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public MsConvertParametersDialog() {
+    }
+
+    /**
      * Boolean indicating whether the editing was canceled.
      */
     private boolean canceled = false;

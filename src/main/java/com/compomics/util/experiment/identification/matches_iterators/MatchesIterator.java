@@ -20,6 +20,12 @@ import java.util.Iterator;
 public abstract class MatchesIterator {
 
     /**
+     * Empty default constructor
+     */
+    public MatchesIterator() {
+    }
+
+    /**
      * Iterator for spectrum matches
      */
     private Iterator<?> iterator = null;

@@ -8,6 +8,12 @@ import java.util.Vector;
  * @author  Niklaas Colaert
  */
 public class DasAlignment {
+
+    /**
+     * Empty default constructor
+     */
+    public DasAlignment() {
+    }
     
     /**
      * The alignment.

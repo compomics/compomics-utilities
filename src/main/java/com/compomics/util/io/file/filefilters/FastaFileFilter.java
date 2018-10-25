@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class FastaFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public FastaFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.fasta files.
      *
      * @param f the file

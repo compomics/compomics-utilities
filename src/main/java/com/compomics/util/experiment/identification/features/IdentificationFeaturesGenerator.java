@@ -91,6 +91,16 @@ public class IdentificationFeaturesGenerator {
     private HashMap<String, NonSymmetricalNormalDistribution> massErrorDistribution = null;
 
     /**
+     * Empty default constructor
+     */
+    public IdentificationFeaturesGenerator() {
+        sequenceProvider = null;
+        metrics = null;
+        identification = null;
+        identificationParameters = null;
+    }
+
+    /**
      * Constructor.
      *
      * @param identification an identification object allowing retrieving

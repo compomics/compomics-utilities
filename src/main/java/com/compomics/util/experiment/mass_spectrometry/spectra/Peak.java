@@ -13,6 +13,15 @@ import java.util.Comparator;
 public class Peak extends ExperimentObject {
 
     /**
+     * Empty default constructor
+     */
+    public Peak() {
+        mz = 0;
+        rt = 0;
+        intensity = 0;
+    }
+
+    /**
      * The version UID for Serialization/Deserialization compatibility
      */
     static final long serialVersionUID = -7425947046833405676L;

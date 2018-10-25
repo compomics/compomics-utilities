@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class SequestParamsFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public SequestParamsFileFilter() {
+    }
+
+    /**
      * Accept all directories, sequest.params files.
      *
      * @param f the file

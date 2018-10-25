@@ -109,6 +109,12 @@ public class SequenceFragmentationPanel extends JPanel {
     private Color rewindColor;
 
     /**
+     * Empty default constructor
+     */
+    public SequenceFragmentationPanel() {
+    }
+
+    /**
      * Creates a new SequenceFragmentationPanel working with B and Y ions.
      *
      * @param aSequence String with the Modified Sequence of an peptide

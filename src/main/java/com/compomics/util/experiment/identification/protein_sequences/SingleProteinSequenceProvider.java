@@ -12,6 +12,13 @@ import java.util.HashSet;
  * @author Marc Vaudel
  */
 public class SingleProteinSequenceProvider implements SequenceProvider {
+
+    /**
+     * Empty default constructor
+     */
+    public SingleProteinSequenceProvider() {
+        protein = null;
+    }
     
     /**
      * The protein.

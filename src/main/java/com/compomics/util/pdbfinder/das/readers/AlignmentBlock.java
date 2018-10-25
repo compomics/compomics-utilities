@@ -6,6 +6,18 @@ package com.compomics.util.pdbfinder.das.readers;
  * @author Niklaas Colaert
  */
 public class AlignmentBlock {
+
+    /**
+     * Empty default constructor
+     */
+    public AlignmentBlock() {
+        iPdbStart = 0;
+        iPdbEnd = 0;
+        iSpStart = 0;
+        iSpEnd = 0;
+        iPdbAccession = "";
+        iSpAccession = "";
+    }
     
     /**
      * The PDB start.

@@ -24,6 +24,12 @@ import javax.swing.border.EtchedBorder;
 public class ChromatogramPanel extends GraphicsPanel {
 
     /**
+     * Empty default constructor
+     */
+    public ChromatogramPanel() {
+    }
+
+    /**
      * Color in which the profileChromatogram polyline is rendered. Defaults to
      * gray.
      */

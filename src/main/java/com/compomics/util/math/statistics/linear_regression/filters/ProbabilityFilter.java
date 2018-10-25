@@ -13,6 +13,12 @@ import java.util.HashMap;
 public class ProbabilityFilter {
 
     /**
+     * Empty default constructor
+     */
+    public ProbabilityFilter() {
+    }
+
+    /**
      * Returns a list containing first the filtered xs and then the filtered ys.
      * Doublets are filtered to the given (non cumulative) probability p of
      * belonging to the distribution of points based on the distance to the

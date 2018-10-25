@@ -19,6 +19,12 @@ import java.util.HashMap;
 public class ProteinIteratorUtils {
 
     /**
+     * Empty default constructor
+     */
+    public ProteinIteratorUtils() {
+    }
+
+    /**
      * The maximal number of Xs allowed to derive peptide sequences. When
      * allowing multiple Xs all possible combinations will be generated.
      */

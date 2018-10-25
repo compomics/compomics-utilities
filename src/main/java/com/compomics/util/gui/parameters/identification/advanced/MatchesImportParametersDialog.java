@@ -17,6 +17,12 @@ import javax.swing.SwingConstants;
 public class MatchesImportParametersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public MatchesImportParametersDialog() {
+    }
+
+    /**
      * Boolean indicating whether the user canceled the editing.
      */
     private boolean canceled = false;

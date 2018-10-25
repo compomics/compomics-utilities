@@ -15,6 +15,12 @@ import java.util.HashMap;
 public class PeptideDraft {
 
     /**
+     * Empty default constructor
+     */
+    public PeptideDraft() {
+    }
+
+    /**
      * The amino acid sequence as char array.
      */
     private char[] sequence;

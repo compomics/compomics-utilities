@@ -123,6 +123,12 @@ public class SpectrumPanel extends GraphicsPanel {
     }
 
     /**
+     * Empty default constructor
+     */
+    public SpectrumPanel() {
+    }
+
+    /**
      * This constructor creates a SpectrumPanel based on the spectrum
      * information in the specified SpectrumFile with the specified drawing
      * style.

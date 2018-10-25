@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class MzXmlFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public MzXmlFileFilter() {
+    }
+
+    /**
      * Accept all directories, and *.mzXML files.
      *
      * @param f the file

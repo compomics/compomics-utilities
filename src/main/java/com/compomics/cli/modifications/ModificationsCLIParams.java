@@ -98,4 +98,14 @@ public enum ModificationsCLIParams {
         return output;
     }
 
+
+    /**
+     * Empty default constructor
+     */
+    private ModificationsCLIParams() {
+        id = "";
+        description = "";
+        mandatory = false;
+        hasArgument = false;
+    }
 }

@@ -26,6 +26,12 @@ import java.util.List;
 public abstract class GraphicsPanel extends JPanel {
 
     /**
+     * Empty default constructor
+     */
+    public GraphicsPanel() {
+    }
+
+    /**
      * The width used for the annotated peaks.
      */
     private float peakWidth = 1.0f;

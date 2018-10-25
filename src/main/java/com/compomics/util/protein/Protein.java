@@ -37,6 +37,12 @@ import java.io.PrintWriter;
  */
 public class Protein {
 
+    /**
+     * Empty default constructor
+     */
+    public Protein() {
+    }
+
     // Class specific log4j logger for Protein instances.
     Logger logger = Logger.getLogger(Protein.class);
 

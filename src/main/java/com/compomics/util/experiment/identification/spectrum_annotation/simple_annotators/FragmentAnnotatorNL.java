@@ -29,6 +29,21 @@ import java.util.HashMap;
 public class FragmentAnnotatorNL {
 
     /**
+     * Empty default constructor
+     */
+    public FragmentAnnotatorNL() {
+        forwardIonMz1 = null;
+        complementaryIonMz1 = null;
+        peptideLength = 0;
+        forwardIonType = 0;
+        complementaryIonType = 0;
+        forwardNeutralLossesMasses = null;
+        forwardNeutralLosses = null;
+        complementaryNeutralLossesMasses = null;
+        complementaryNeutralLosses = null;
+    }
+
+    /**
      * The modifications factory.
      */
     private final ModificationFactory modificationFactory = ModificationFactory.getInstance();

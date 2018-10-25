@@ -17,6 +17,14 @@ import java.util.ArrayList;
 public class ImmoniumIonAnnotator {
 
     /**
+     * Empty default constructor
+     */
+    public ImmoniumIonAnnotator() {
+        aas = null;
+        immoniumIonsMz = null;
+    }
+
+    /**
      * Array of amino acids that can generate immonium ions.
      */
     private final char[] aas;

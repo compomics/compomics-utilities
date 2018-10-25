@@ -12,6 +12,12 @@ import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 public class SequestFragmentationModel {
 
     /**
+     * Empty default constructor
+     */
+    public SequestFragmentationModel() {
+    }
+
+    /**
      * Returns the intensity expected for the given ion. 50.0 for b and y ions
      * with no neutral losses. 25.0 for a ions and b and y ions with neutral
      * losses. 0.0 for other peaks.

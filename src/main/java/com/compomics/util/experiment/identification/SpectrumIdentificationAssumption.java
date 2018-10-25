@@ -17,6 +17,12 @@ import java.util.ArrayList;
 public abstract class SpectrumIdentificationAssumption extends ExperimentObject {
 
     /**
+     * Empty default constructor
+     */
+    public SpectrumIdentificationAssumption() {
+    }
+
+    /**
      * The rank of the peptide assumption for the concerned spectrum.
      */
     protected int rank;

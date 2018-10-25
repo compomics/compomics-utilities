@@ -35,4 +35,13 @@ public enum PeptideFragmentationModel {
         this.name = name;
         this.description = description;
     }
+
+    /**
+     * Empty default constructor
+     */
+    private PeptideFragmentationModel() {
+        index = 0;
+        name = "";
+        description = "";
+    }
 }

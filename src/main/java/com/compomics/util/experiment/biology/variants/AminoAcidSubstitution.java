@@ -8,6 +8,14 @@ package com.compomics.util.experiment.biology.variants;
 public class AminoAcidSubstitution {
 
     /**
+     * Empty default constructor
+     */
+    public AminoAcidSubstitution() {
+        originalAminoAcid = '0';
+        variantAminoAcid = '0';
+    }
+
+    /**
      * The original amino acid represented by its single letter code.
      */
     public final char originalAminoAcid;

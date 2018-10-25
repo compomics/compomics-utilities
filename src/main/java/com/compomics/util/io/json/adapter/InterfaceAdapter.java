@@ -16,6 +16,12 @@ import java.lang.reflect.Type;
  */
 public class InterfaceAdapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
 
+    /**
+     * Empty default constructor
+     */
+    public InterfaceAdapter() {
+    }
+
     @Override
     public JsonElement serialize(T object, Type interfaceType, JsonSerializationContext context) {
         final JsonObject wrapper = new JsonObject();

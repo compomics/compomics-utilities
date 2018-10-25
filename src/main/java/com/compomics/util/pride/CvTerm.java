@@ -10,6 +10,12 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
  * @author Harald Barsnes
  */
 public class CvTerm extends ExperimentObject {
+
+    /**
+     * Empty default constructor
+     */
+    public CvTerm() {
+    }
     
     /**
      * The ontology.

@@ -41,6 +41,12 @@ import java.io.*;
  */
 public class MascotEnzymeReader {
 
+    /**
+     * Empty default constructor
+     */
+    public MascotEnzymeReader() {
+    }
+
     // Class specific log4j logger for MascotEnzymeReader instances.
     Logger logger = Logger.getLogger(MascotEnzymeReader.class);
 

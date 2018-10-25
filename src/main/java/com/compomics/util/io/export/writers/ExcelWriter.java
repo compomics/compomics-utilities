@@ -22,6 +22,14 @@ import org.apache.poi.ss.usermodel.CellStyle;
 public class ExcelWriter extends ExportWriter {
 
     /**
+     * Empty default constructor
+     */
+    public ExcelWriter() {
+        workbook = null;
+        destinationFile = null;
+    }
+
+    /**
      * The workbook for excel exports.
      */
     private final HSSFWorkbook workbook;

@@ -10,6 +10,12 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
  * @author Marc Vaudel
  */
 public abstract class AASequenceFeature implements Ms2pipFeature, SingleAAPropertyFeature {
+
+    /**
+     * Empty default constructor
+     */
+    public AASequenceFeature() {
+    }
     
     /**
      * The different functions implemented to compare the amino acid features.

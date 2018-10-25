@@ -38,6 +38,12 @@ import java.io.IOException;
  */
 public class NucleotideSequenceImpl implements Sequence {
 
+    /**
+     * Empty default constructor
+     */
+    public NucleotideSequenceImpl() {
+    }
+
     // Class specific log4j logger for NucleotideSequenceImpl instances.
     Logger logger = Logger.getLogger(NucleotideSequenceImpl.class);
 

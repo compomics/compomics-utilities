@@ -8,6 +8,12 @@ package com.compomics.util.memory;
 public class MemoryConsumptionStatus {
 
     /**
+     * Empty default constructor
+     */
+    public MemoryConsumptionStatus() {
+    }
+
+    /**
      * Indicates whether a GB of memory is free.
      *
      * @return a boolean indicating whether a GB of memory is free

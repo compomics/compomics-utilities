@@ -19,6 +19,12 @@ import java.util.HashMap;
 public class MDScore {
 
     /**
+     * Empty default constructor
+     */
+    public MDScore() {
+    }
+
+    /**
      * Returns the MD score for the given peptide in a spectrum match. Null if
      * not identified by Mascot. If the peptide is the not the best scoring for
      * Mascot the score will be negative.

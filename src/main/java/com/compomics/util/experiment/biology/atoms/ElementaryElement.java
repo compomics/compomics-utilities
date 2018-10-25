@@ -10,6 +10,13 @@ import com.compomics.util.db.object.DbObject;
 public class ElementaryElement extends DbObject {
 
     /**
+     * Empty default constructor
+     */
+    public ElementaryElement() {
+        name = "";
+    }
+
+    /**
      * The name of the element.
      */
     private final String name;

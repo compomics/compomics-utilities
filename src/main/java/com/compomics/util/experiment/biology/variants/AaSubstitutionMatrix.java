@@ -13,6 +13,12 @@ import java.util.HashSet;
 public class AaSubstitutionMatrix {
 
     /**
+     * Empty default constructor
+     */
+    public AaSubstitutionMatrix() {
+    }
+
+    /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -4257237524665484732L;

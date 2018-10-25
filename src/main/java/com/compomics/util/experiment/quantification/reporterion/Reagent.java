@@ -10,6 +10,12 @@ import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 public class Reagent {
 
     /**
+     * Empty default constructor
+     */
+    public Reagent() {
+    }
+
+    /**
      * The name of the reagent.
      */
     private String name;

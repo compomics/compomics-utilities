@@ -8,6 +8,12 @@ import com.compomics.util.experiment.biology.variants.Variant;
  * @author Marc Vaudel
  */
 public class Swap implements Variant {
+
+    /**
+     * Empty default constructor
+     */
+    public Swap() {
+    }
     
     /**
      * The single character code of the amino acid originally to the left.

@@ -35,6 +35,12 @@ public class MassErrorPlot extends JPanel {
     private ChartPanel chartPanel;
 
     /**
+     * Empty default constructor
+     */
+    public MassErrorPlot() {
+    }
+
+    /**
      * Creates a new MassErrorPlot.
      *
      * @param annotations the full list of spectrum annotations

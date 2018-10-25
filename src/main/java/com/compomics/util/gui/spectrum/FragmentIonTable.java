@@ -98,6 +98,22 @@ public class FragmentIonTable extends JTable {
     private final SequenceMatchingParameters modificationSequenceMatchingParameters;
 
     /**
+     * Empty default constructor
+     */
+    public FragmentIonTable() {
+        currentFragmentIonTypes = null;
+        neutralLosses = null;
+        singleCharge = false;
+        twoCharges = false;
+        currentPeptide = null;
+        peptideSequence = "";
+        allAnnotations = null;
+        modificationParameters = null;
+        sequenceProvider = null;
+        modificationSequenceMatchingParameters = null;
+    }
+
+    /**
      * Creates a traditional fragment ion table with the theoretical mz values
      * and the detected fragment ions highlighted.
      *

@@ -9,6 +9,12 @@ import java.util.concurrent.Semaphore;
  * @author Marc Vaudel
  */
 public class MutexMap {
+
+    /**
+     * Empty default constructor
+     */
+    public MutexMap() {
+    }
     
     /**
      * Semaphore for the different object types.

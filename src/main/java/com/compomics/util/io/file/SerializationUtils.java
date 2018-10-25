@@ -11,6 +11,12 @@ import java.io.*;
 public class SerializationUtils {
 
     /**
+     * Empty default constructor
+     */
+    public SerializationUtils() {
+    }
+
+    /**
      * Writes an object to the destination file.
      *
      * @param object the object

@@ -20,6 +20,12 @@ import javax.swing.SwingUtilities;
 public class MsAmandaParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
 
     /**
+     * Empty default constructor
+     */
+    public MsAmandaParametersDialog() {
+    }
+
+    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;

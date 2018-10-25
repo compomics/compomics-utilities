@@ -14,6 +14,15 @@ import org.apache.commons.math.special.Beta;
 public class BinomialDistribution implements Distribution {
 
     /**
+     * Empty default constructor
+     */
+    public BinomialDistribution() {
+        binomialDistributionImpl = null;
+        n = 0;
+        p = 0;
+    }
+
+    /**
      * Instance of the apache distribution.
      */
     private final BinomialDistributionImpl binomialDistributionImpl;

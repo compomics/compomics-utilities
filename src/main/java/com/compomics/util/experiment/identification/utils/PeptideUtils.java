@@ -27,6 +27,12 @@ import java.util.stream.IntStream;
 public class PeptideUtils {
 
     /**
+     * Empty default constructor
+     */
+    public PeptideUtils() {
+    }
+
+    /**
      * Returns a boolean indicating whether the peptide matches a decoy
      * sequence.
      *

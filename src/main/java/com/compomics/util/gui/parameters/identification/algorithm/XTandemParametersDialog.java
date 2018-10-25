@@ -38,6 +38,12 @@ import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialo
 public class XTandemParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
 
     /**
+     * Empty default constructor
+     */
+    public XTandemParametersDialog() {
+    }
+
+    /**
      * The modification profile used for the search.
      */
     private ModificationParameters modificationProfile;

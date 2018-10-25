@@ -11,6 +11,12 @@ import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpe
 public class EnsemblVersion {
 
     /**
+     * Empty default constructor
+     */
+    public EnsemblVersion() {
+    }
+
+    /**
      * Returns the current Ensembl version number. Null if not found.
      *
      * @param ensemblGenomeDivision the Ensembl genome division, null if not

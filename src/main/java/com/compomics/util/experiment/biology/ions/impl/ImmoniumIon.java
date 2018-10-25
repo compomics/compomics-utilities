@@ -15,6 +15,14 @@ import com.compomics.util.pride.CvTerm;
 public class ImmoniumIon extends Ion {
 
     /**
+     * Empty default constructor
+     */
+    public ImmoniumIon() {
+        subType = 0;
+        aa = '0';
+    }
+
+    /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -3403620196563864756L;

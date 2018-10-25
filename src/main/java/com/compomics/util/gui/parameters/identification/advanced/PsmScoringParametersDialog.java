@@ -27,6 +27,12 @@ import no.uib.jsparklines.extra.TrueFalseIconRenderer;
 public class PsmScoringParametersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public PsmScoringParametersDialog() {
+    }
+
+    /**
      * The parent frame.
      */
     private java.awt.Frame parentFrame;

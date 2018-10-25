@@ -21,6 +21,12 @@ import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialo
 public class AndromedaParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
 
     /**
+     * Empty default constructor
+     */
+    public AndromedaParametersDialog() {
+    }
+
+    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;

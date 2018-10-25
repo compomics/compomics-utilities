@@ -10,6 +10,13 @@ import java.util.Vector;
 public class DasAnnotationServerResultReader {
 
     /**
+     * Empty default constructor
+     */
+    public DasAnnotationServerResultReader() {
+        iXml = "";
+    }
+
+    /**
      * The XML string to parse.
      */
     private final String iXml;

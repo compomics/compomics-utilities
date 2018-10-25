@@ -44,6 +44,12 @@ import org.apache.commons.math.util.FastMath;
 public class PhosphoRS {
 
     /**
+     * Empty default constructor
+     */
+    public PhosphoRS() {
+    }
+
+    /**
      * The window size in m/z.
      */
     public static final double WINDOW_SIZE = 100.0;

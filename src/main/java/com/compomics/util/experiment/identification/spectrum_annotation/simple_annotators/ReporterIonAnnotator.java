@@ -15,6 +15,14 @@ import java.util.ArrayList;
 public class ReporterIonAnnotator {
 
     /**
+     * Empty default constructor
+     */
+    public ReporterIonAnnotator() {
+        reporterIonsMz = null;
+        reporterIons = null;
+    }
+
+    /**
      * Array of the m/z of the reporter ions to annotate.
      */
     private final double[] reporterIonsMz;

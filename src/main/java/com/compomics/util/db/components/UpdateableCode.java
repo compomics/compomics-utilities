@@ -30,6 +30,12 @@ import com.compomics.util.db.DBMetaData;
  */
 public class UpdateableCode {
 
+    /**
+     * Empty default constructor
+     */
+    public UpdateableCode() {
+    }
+
     // Class specific log4j logger for UpdateableCode instances.
     Logger logger = Logger.getLogger(UpdateableCode.class);
 

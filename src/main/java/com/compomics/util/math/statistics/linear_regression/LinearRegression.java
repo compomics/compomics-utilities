@@ -13,6 +13,12 @@ import java.util.ArrayList;
 public class LinearRegression {
 
     /**
+     * Empty default constructor
+     */
+    public LinearRegression() {
+    }
+
+    /**
      * Returns a simple linear regression.
      *
      * @param x the x series

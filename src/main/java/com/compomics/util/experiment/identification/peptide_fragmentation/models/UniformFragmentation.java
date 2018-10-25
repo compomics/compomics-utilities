@@ -8,6 +8,12 @@ package com.compomics.util.experiment.identification.peptide_fragmentation.model
 public class UniformFragmentation {
 
     /**
+     * Empty default constructor
+     */
+    public UniformFragmentation() {
+    }
+
+    /**
      * Returns a default intensity of 1.0.
      *
      * @return a default intensity of 1.0

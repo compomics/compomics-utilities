@@ -11,6 +11,12 @@ import java.math.MathContext;
 public class BigMathUtils {
 
     /**
+     * Empty default constructor
+     */
+    public BigMathUtils() {
+    }
+
+    /**
      * Big decimal value of E.
      */
     public static final BigDecimal E = new BigDecimal(Math.E);

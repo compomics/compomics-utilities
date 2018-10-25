@@ -11,6 +11,12 @@ import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 public class PeptideAminoAcidFeature extends AASequenceFeature {
 
     /**
+     * Empty default constructor
+     */
+    public PeptideAminoAcidFeature() {
+    }
+
+    /**
      * The index of this ms2pip feature.
      */
     public static final int index = 1;

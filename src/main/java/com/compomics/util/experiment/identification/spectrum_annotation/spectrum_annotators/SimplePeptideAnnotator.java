@@ -175,6 +175,12 @@ public class SimplePeptideAnnotator {
     }
 
     /**
+     * Empty default constructor
+     */
+    public SimplePeptideAnnotator() {
+    }
+
+    /**
      * Constructor. Fixed modifications must be indexed as provided by the peptide class.
      * 
      * @param peptide the peptide to annotate

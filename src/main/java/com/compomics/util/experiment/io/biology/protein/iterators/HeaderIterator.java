@@ -16,6 +16,13 @@ import java.util.concurrent.Semaphore;
 public class HeaderIterator {
 
     /**
+     * Empty default constructor
+     */
+    public HeaderIterator() {
+        br = null;
+    }
+
+    /**
      * Mutex for the buffering of the fasta file.
      */
     private final Semaphore bufferingMutex = new Semaphore(1);

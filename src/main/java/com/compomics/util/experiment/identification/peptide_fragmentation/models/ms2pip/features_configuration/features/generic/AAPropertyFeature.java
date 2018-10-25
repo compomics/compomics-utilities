@@ -12,6 +12,12 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
 public abstract class AAPropertyFeature implements Ms2pipFeature, SingleAAPropertyFeature {
 
     /**
+     * Empty default constructor
+     */
+    public AAPropertyFeature() {
+    }
+
+    /**
      * The index on the sequence.
      */
     protected int aaIndex;

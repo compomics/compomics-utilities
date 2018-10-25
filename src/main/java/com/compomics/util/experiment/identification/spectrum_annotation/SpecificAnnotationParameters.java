@@ -16,6 +16,14 @@ import java.util.HashSet;
 public class SpecificAnnotationParameters {
 
     /**
+     * Empty default constructor
+     */
+    public SpecificAnnotationParameters() {
+        spectrumKey = "";
+        spectrumIdentificationAssumption = null;
+    }
+
+    /**
      * The key of the currently annotated spectrum.
      */
     private final String spectrumKey;

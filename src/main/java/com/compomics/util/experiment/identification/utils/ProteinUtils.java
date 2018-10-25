@@ -16,6 +16,12 @@ import java.util.Arrays;
 public class ProteinUtils {
 
     /**
+     * Empty default constructor
+     */
+    public ProteinUtils() {
+    }
+
+    /**
      * Returns a boolean indicating whether the given accession corresponds to a decoy sequence according to the given fasta parameters.
      * 
      * @param accession the protein accession

@@ -11,6 +11,12 @@ import javax.swing.JOptionPane;
 public class IdentificationParametersNameDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public IdentificationParametersNameDialog() {
+    }
+
+    /**
      * The parent frame.
      */
     private java.awt.Frame parentFrame;

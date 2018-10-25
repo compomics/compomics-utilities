@@ -124,4 +124,12 @@ public enum ModificationLocalizationScore {
                 .collect(Collectors.joining(","));
         
     }
+
+    /**
+     * Empty default constructor
+     */
+    private ModificationLocalizationScore() {
+        id = 0;
+        name = "";
+    }
 }

@@ -12,6 +12,13 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
 public class FragmentItensityPredictor {
 
     /**
+     * Empty default constructor
+     */
+    public FragmentItensityPredictor() {
+        peptideFragmentationModel = null;
+    }
+
+    /**
      * The model to use for the fragmentation of peptides.
      */
     private final PeptideFragmentationModel peptideFragmentationModel;

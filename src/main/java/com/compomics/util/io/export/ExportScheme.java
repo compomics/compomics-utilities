@@ -64,6 +64,12 @@ public class ExportScheme {
     private Boolean includeDecoy = false;
 
     /**
+     * Empty default constructor
+     */
+    public ExportScheme() {
+    }
+
+    /**
      * Constructor.
      *
      * @param name the name of the scheme

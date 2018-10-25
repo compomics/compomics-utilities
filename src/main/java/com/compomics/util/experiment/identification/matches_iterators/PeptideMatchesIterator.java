@@ -13,6 +13,12 @@ import java.util.ArrayList;
  * @author Dominik Kopczynski
  */
 public class PeptideMatchesIterator extends MatchesIterator {
+
+    /**
+     * Empty default constructor
+     */
+    public PeptideMatchesIterator() {
+    }
     
     /**
      * Constructor.

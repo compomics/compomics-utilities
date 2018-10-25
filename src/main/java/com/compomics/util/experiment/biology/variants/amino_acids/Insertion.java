@@ -8,6 +8,12 @@ import com.compomics.util.experiment.biology.variants.Variant;
  * @author Marc Vaudel
  */
 public class Insertion implements Variant {
+
+    /**
+     * Empty default constructor
+     */
+    public Insertion() {
+    }
     
     /**
      * The single character code of the inserted amino acid.

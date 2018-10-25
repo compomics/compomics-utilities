@@ -10,6 +10,12 @@ import java.util.HashSet;
 public abstract class ExceptionHandler {
 
     /**
+     * Empty default constructor
+     */
+    public ExceptionHandler() {
+    }
+
+    /**
      * List of caught exceptions.
      */
     protected HashSet<String> exceptionCaught = new HashSet<>();

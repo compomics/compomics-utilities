@@ -26,6 +26,12 @@ import java.awt.*;
 public class DefaultSpectrumAnnotation implements SpectrumAnnotation {
 
     /**
+     * Empty default constructor
+     */
+    public DefaultSpectrumAnnotation() {
+    }
+
+    /**
      * Class specific log4j logger for DefaultSpectrumAnnotation instances.
      */
     Logger logger = Logger.getLogger(DefaultSpectrumAnnotation.class);

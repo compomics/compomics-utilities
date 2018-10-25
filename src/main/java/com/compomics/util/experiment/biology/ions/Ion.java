@@ -27,6 +27,12 @@ import java.util.stream.Collectors;
 public abstract class Ion extends ExperimentObject {
 
     /**
+     * Empty default constructor
+     */
+    public Ion() {
+    }
+
+    /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -1505719074403886934L;

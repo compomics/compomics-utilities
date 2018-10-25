@@ -13,6 +13,12 @@ import javax.swing.table.DefaultTableModel;
 public class AaSubstitutionMatrixTableModel extends DefaultTableModel {
 
     /**
+     * Empty default constructor
+     */
+    public AaSubstitutionMatrixTableModel() {
+    }
+
+    /**
      * The possible amino acids represented by their single character code.
      */
     private final char[] aminoAcids = AminoAcid.getUniqueAminoAcids();

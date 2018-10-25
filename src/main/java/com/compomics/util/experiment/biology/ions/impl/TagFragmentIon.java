@@ -13,6 +13,12 @@ import java.util.ArrayList;
 public class TagFragmentIon extends Ion {
 
     /**
+     * Empty default constructor
+     */
+    public TagFragmentIon() {
+    }
+
+    /**
      * Identifier for an a ion.
      */
     public static final int A_ION = PeptideFragmentIon.A_ION;

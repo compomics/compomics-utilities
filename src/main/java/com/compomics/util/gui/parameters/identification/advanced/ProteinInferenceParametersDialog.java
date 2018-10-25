@@ -38,6 +38,12 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
     private boolean editable;
 
     /**
+     * Empty default constructor
+     */
+    public ProteinInferenceParametersDialog() {
+    }
+
+    /**
      * Creates a new ProteinInferenceSettingsDialog with a frame as owner.
      *
      * @param parentFrame a parent frame

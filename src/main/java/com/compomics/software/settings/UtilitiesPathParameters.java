@@ -23,6 +23,12 @@ import java.util.ArrayList;
 public class UtilitiesPathParameters {
 
     /**
+     * Empty default constructor
+     */
+    public UtilitiesPathParameters() {
+    }
+
+    /**
      * Default name for the path configuration file.
      */
     public static final String configurationFileName = "resources/conf/paths.txt";

@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class DtaFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public DtaFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.dta files.
      *
      * @param f the file

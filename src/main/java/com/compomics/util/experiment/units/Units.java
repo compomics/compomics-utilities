@@ -6,6 +6,12 @@ package com.compomics.util.experiment.units;
  * @author Marc Vaudel
  */
 public class Units {
+
+    /**
+     * Empty default constructor
+     */
+    public Units() {
+    }
     
     /**
      * Femtomol.

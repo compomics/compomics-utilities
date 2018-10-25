@@ -92,4 +92,12 @@ public enum ModificationType {
         
     }
 
+
+    /**
+     * Empty default constructor
+     */
+    private ModificationType() {
+        index = 0;
+        description = "";
+    }
 }

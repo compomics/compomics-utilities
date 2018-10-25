@@ -10,6 +10,12 @@ package com.compomics.util.parameters.identification.advanced;
 public class ProteinInferenceParameters {
 
     /**
+     * Empty default constructor
+     */
+    public ProteinInferenceParameters() {
+    }
+
+    /**
      * Serial version UID for backward compatibility.
      */
     static final long serialVersionUID = 447785006299636157L;

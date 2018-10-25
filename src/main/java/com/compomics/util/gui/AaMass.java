@@ -13,6 +13,12 @@ import java.awt.event.KeyEvent;
 public class AaMass extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public AaMass() {
+    }
+
+    /**
      * Creates a form AaMass.
      *
      * @param parent the parent frame

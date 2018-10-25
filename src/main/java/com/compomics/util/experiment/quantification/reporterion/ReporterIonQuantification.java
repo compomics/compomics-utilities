@@ -16,6 +16,12 @@ import java.util.Set;
 public class ReporterIonQuantification extends Quantification {
 
     /**
+     * Empty default constructor
+     */
+    public ReporterIonQuantification() {
+    }
+
+    /**
      * The sample assignment to the various reporter ions indexed by their name.
      */
     private final HashMap<String, String> sampleAssignement = new HashMap<>();

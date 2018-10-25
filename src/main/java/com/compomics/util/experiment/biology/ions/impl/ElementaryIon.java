@@ -13,6 +13,14 @@ import java.util.ArrayList;
 public class ElementaryIon extends Ion {
 
     /**
+     * Empty default constructor
+     */
+    public ElementaryIon() {
+        name = "";
+        subType = 0;
+    }
+
+    /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -1578136397635015592L;

@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class JpegFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public JpegFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.jpeg files.
      *
      * @param f the file

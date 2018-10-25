@@ -8,6 +8,12 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
  * @author Marc Vaudel
  */
 public class ComplementaryIonFeature extends IonFeature {
+
+    /**
+     * Empty default constructor
+     */
+    public ComplementaryIonFeature() {
+    }
     
     /**
      * The index of this ms2pip feature.

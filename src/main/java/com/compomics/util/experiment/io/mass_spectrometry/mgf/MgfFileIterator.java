@@ -14,6 +14,14 @@ import java.io.IOException;
 public class MgfFileIterator {
 
     /**
+     * Empty default constructor
+     */
+    public MgfFileIterator() {
+        br = null;
+        mgfFileName = "";
+    }
+
+    /**
      * The reader going through the file.
      */
     private final BufferedReader br;

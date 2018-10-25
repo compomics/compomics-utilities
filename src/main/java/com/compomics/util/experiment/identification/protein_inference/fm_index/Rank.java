@@ -9,6 +9,16 @@ package com.compomics.util.experiment.identification.protein_inference.fm_index;
 public class Rank {
 
     /**
+     * Empty default constructor
+     */
+    public Rank() {
+        length = 0;
+        bitfield = null;
+        sums = null;
+        sumsSecondLevel = null;
+    }
+
+    /**
      * The length.
      */
     public final int length;

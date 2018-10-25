@@ -18,6 +18,12 @@ import javax.swing.plaf.basic.BasicComboBoxRenderer;
 public class ToolTipComboBoxRenderer extends BasicComboBoxRenderer {
 
     /**
+     * Empty default constructor
+     */
+    public ToolTipComboBoxRenderer() {
+    }
+
+    /**
      * The tooltips for each element in the list.
      */
     private Vector tooltips;

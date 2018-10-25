@@ -10,6 +10,12 @@ import java.io.File;
 public class FileAndFileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public FileAndFileFilter() {
+    }
+
+    /**
      * The selected file.
      */
     private File file;

@@ -15,6 +15,12 @@ import java.util.HashSet;
 public class Precursor extends ExperimentObject {
 
     /**
+     * Empty default constructor
+     */
+    public Precursor() {
+    }
+
+    /**
      * The version UID for serialization/deserialization compatibility.
      */
     static final long serialVersionUID = -2711244157697138296L;

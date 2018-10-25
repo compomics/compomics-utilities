@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class PeffFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public PeffFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.peff files.
      *
      * @param f the file

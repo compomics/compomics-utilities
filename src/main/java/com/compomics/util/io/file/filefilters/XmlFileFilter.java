@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class XmlFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public XmlFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.xml files.
      *
      * @param f the file

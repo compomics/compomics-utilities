@@ -12,6 +12,12 @@ import java.util.ArrayList;
  * @author Marc Vaudel
  */
 public class CommandLineUtils {
+
+    /**
+     * Empty default constructor
+     */
+    public CommandLineUtils() {
+    }
     
     /**
      * The format to use for string output.

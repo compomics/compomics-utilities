@@ -41,6 +41,12 @@ public class NucleotideSequence {
     Logger logger = Logger.getLogger(NucleotideSequence.class);
 
     /**
+     * Empty default constructor
+     */
+    public NucleotideSequence() {
+    }
+
+    /**
      * This variable contains the nucleotide sequence.
      */
     private NucleotideSequenceImpl iSequence = null;

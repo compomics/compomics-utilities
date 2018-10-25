@@ -18,6 +18,13 @@ import java.util.stream.Collectors;
  * @author Harald Barsnes
  */
 public class Enzyme extends ExperimentObject {
+
+    /**
+     * Empty default constructor
+     */
+    public Enzyme() {
+        name = "";
+    }
     /*
      * The enzyme id.
     

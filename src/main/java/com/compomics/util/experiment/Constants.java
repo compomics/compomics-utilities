@@ -8,6 +8,12 @@ package com.compomics.util.experiment;
 public class Constants {
 
     /**
+     * Empty default constructor
+     */
+    public Constants() {
+    }
+
+    /**
      * The Avogadro constant without exponent.
      */
     public static final double AVOGADRO_NO_EXP = 6.02214129;

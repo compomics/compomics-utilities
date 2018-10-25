@@ -8,6 +8,12 @@ package com.compomics.util;
 public class XYZDataPoint {
 
     /**
+     * Empty default constructor
+     */
+    public XYZDataPoint() {
+    }
+
+    /**
      * The x value.
      */
     private double x;

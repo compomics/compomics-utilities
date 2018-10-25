@@ -11,6 +11,12 @@ import java.util.ArrayList;
 public class ReferenceGroup implements PrideObject {
 
     /**
+     * Empty default constructor
+     */
+    public ReferenceGroup() {
+    }
+
+    /**
      * Serialization number for backward compatibility.
      */
     static final long serialVersionUID = -9182316910747747823L; // @TODO: has to be updated!!!

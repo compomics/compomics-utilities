@@ -26,6 +26,12 @@ import java.util.stream.DoubleStream;
 public class Spectrum extends ExperimentObject {
 
     /**
+     * Empty default constructor
+     */
+    public Spectrum() {
+    }
+
+    /**
      * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 7152424141470431489L;

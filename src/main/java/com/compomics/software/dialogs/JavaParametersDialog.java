@@ -17,6 +17,16 @@ import no.uib.jsparklines.renderers.util.Util;
 public class JavaParametersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public JavaParametersDialog() {
+        javaHomeOrMemoryDialogParent = null;
+        frameParent = null;
+        toolName = "";
+        welcomeDialog = null;
+    }
+
+    /**
      * Reference to the JavaHomeOrMemoryDialogParent.
      */
     private final JavaHomeOrMemoryDialogParent javaHomeOrMemoryDialogParent;

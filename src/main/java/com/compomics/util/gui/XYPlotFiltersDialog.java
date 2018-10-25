@@ -15,6 +15,13 @@ import javax.swing.table.DefaultTableModel;
 public class XYPlotFiltersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public XYPlotFiltersDialog() {
+        xyPlottingDialog = null;
+    }
+
+    /**
      * The XYPlottingDialog parent.
      */
     private final XYPlottingDialog xyPlottingDialog;

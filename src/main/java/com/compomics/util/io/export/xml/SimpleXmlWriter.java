@@ -12,6 +12,13 @@ import java.util.HashMap;
 public class SimpleXmlWriter {
 
     /**
+     * Empty default constructor
+     */
+    public SimpleXmlWriter() {
+        bw = null;
+    }
+
+    /**
      * Integer keeping track of the number of indents to include at the
      * beginning of each line.
      */

@@ -94,4 +94,13 @@ public enum ProteoWizardFilter {
         }
         return null;
     }
+
+    /**
+     * Empty default constructor
+     */
+    private ProteoWizardFilter() {
+        number = 0;
+        name = "";
+        description = "";
+    }
 }

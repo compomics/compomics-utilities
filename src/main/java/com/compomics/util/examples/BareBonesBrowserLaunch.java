@@ -18,6 +18,12 @@ import javax.swing.JOptionPane;
  */
 public class BareBonesBrowserLaunch {
 
+    /**
+     * Empty default constructor
+     */
+    public BareBonesBrowserLaunch() {
+    }
+
     private static final String errMsg = "Error attempting to launch web browser";
 
     /**

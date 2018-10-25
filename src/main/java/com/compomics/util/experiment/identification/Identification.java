@@ -32,6 +32,13 @@ import java.util.stream.Collectors;
 public class Identification extends ExperimentObject {
 
     /**
+     * Empty default constructor
+     */
+    public Identification() {
+        objectsDB = null;
+    }
+
+    /**
      * List of the keys of all imported proteins.
      */
     protected HashSet<Long> proteinIdentification = new HashSet<>();

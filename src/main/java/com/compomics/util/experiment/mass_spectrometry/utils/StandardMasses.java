@@ -43,4 +43,11 @@ public enum StandardMasses {
         this.mass = mass;
     }
 
+
+    /**
+     * Empty default constructor
+     */
+    private StandardMasses() {
+        mass = 0;
+    }
 }

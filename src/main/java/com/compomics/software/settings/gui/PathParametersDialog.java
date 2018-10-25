@@ -23,6 +23,14 @@ import no.uib.jsparklines.extra.TrueFalseIconRenderer;
 public class PathParametersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public PathParametersDialog() {
+        toolName = "";
+        pathsToolTips = null;
+    }
+
+    /**
      * Boolean indicating whether the process was canceled by the user.
      */
     private boolean canceled = false;

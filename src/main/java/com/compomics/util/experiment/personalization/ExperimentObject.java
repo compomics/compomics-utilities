@@ -13,6 +13,12 @@ import java.util.HashMap;
 public abstract class ExperimentObject extends DbObject {
 
     /**
+     * Empty default constructor
+     */
+    public ExperimentObject() {
+    }
+
+    /**
      * The hash values list.
      */
     private final static long[] HASHVALUELIST = {

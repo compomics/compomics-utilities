@@ -12,6 +12,12 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 public class MassGap extends ExperimentObject implements TagComponent {
 
     /**
+     * Empty default constructor
+     */
+    public MassGap() {
+    }
+
+    /**
      * The value of the mass gap.
      */
     private double value;

@@ -85,6 +85,12 @@ public class MgfIndex extends ExperimentObject implements Serializable {
     private Boolean precursorChargesMissing = null;
 
     /**
+     * Empty default constructor
+     */
+    public MgfIndex() {
+    }
+
+    /**
      * Constructor.
      *
      * @param spectrumTitles an ordered list of all spectrum titles

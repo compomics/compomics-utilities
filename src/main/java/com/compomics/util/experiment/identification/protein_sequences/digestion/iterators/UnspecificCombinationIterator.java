@@ -17,6 +17,17 @@ import java.util.Arrays;
 public class UnspecificCombinationIterator implements SequenceIterator {
 
     /**
+     * Empty default constructor
+     */
+    public UnspecificCombinationIterator() {
+        proteinIteratorUtils = null;
+        proteinSequence = "";
+        proteinSequenceAsCharArray = null;
+        massMin = 0;
+        massMax = 0;
+    }
+
+    /**
      * Utilities classes for the digestion.
      */
     private final ProteinIteratorUtils proteinIteratorUtils;

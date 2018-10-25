@@ -34,6 +34,12 @@ public class IntensityHistogram extends JPanel {
     private ChartPanel chartPanel;
 
     /**
+     * Empty default constructor
+     */
+    public IntensityHistogram() {
+    }
+
+    /**
      * Creates an IntensityHistogram plot
      *
      * @param annotations the full list of spectrum annotations

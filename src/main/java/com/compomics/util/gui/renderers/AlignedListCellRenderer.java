@@ -13,6 +13,13 @@ import javax.swing.JList;
 public class AlignedListCellRenderer extends DefaultListCellRenderer {
 
     /**
+     * Empty default constructor
+     */
+    public AlignedListCellRenderer() {
+        align = 0;
+    }
+
+    /**
      * One of the following constants defined in SwingConstants: LEFT, CENTER
      * (the default for image-only labels), RIGHT, LEADING (the default for
      * text-only labels) or TRAILING.

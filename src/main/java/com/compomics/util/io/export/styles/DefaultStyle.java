@@ -18,6 +18,13 @@ import org.apache.poi.ss.usermodel.Font;
 public class DefaultStyle implements WorkbookStyle {
 
     /**
+     * Empty default constructor
+     */
+    public DefaultStyle() {
+        workbook = null;
+    }
+
+    /**
      * Workbook.
      */
     private final HSSFWorkbook workbook;

@@ -33,6 +33,12 @@ import java.text.SimpleDateFormat;
  */
 public class DBAccessor {
 
+    /**
+     * Empty default constructor
+     */
+    public DBAccessor() {
+    }
+
     // Class specific log4j logger for DBAccessor instances.
     Logger logger = Logger.getLogger(DBAccessor.class);
 

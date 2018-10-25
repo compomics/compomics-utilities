@@ -20,6 +20,17 @@ import no.uib.jsparklines.renderers.util.Util;
 public class KMeansClustering {
 
     /**
+     * Empty default constructor
+     */
+    public KMeansClustering() {
+        NUM_CLUSTERS = 0;
+        NUM_SAMPLES = 0;
+        NUM_VALUES = 0;
+        SAMPLES = null;
+        SAMPLE_IDS = null;
+    }
+
+    /**
      * The number of clusters.
      */
     private final int NUM_CLUSTERS;

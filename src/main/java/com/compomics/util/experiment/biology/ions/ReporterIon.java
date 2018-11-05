@@ -132,6 +132,10 @@ public class ReporterIon extends Ion {
      */
     public final static ReporterIon TMT_131 = new ReporterIon("TMT_131", getComposition("TMT_131"));
     /**
+     * Standard reporter ion TMT 131C.
+     */
+    public final static ReporterIon TMT_131C = new ReporterIon("TMT_131C", getComposition("TMT_131C"));
+    /**
      * Standard reporter ion TMT 126 with ETD fragmentation.
      */
     public final static ReporterIon TMT_126_ETD = new ReporterIon("TMT_126_ETD", getComposition("TMT_126_ETD"));
@@ -171,6 +175,10 @@ public class ReporterIon extends Ion {
      * Standard reporter ion TMT 131 with ETD fragmentation.
      */
     public final static ReporterIon TMT_131_ETD = new ReporterIon("TMT_131_ETD", getComposition("TMT_131_ETD"));
+    /**
+     * Standard reporter ion TMT 131C with ETD fragmentation.
+     */
+    public final static ReporterIon TMT_131C_ETD = new ReporterIon("TMT_131C_ETD", getComposition("TMT_131C_ETD"));
     /**
      * Standard reporter ion TMT (reporter + balancer).
      */
@@ -400,7 +408,9 @@ public class ReporterIon extends Ion {
                 cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "130C");
             } else if (name.equalsIgnoreCase("TMT_131")) {
                 cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "131");
-            } else if (name.equalsIgnoreCase("TMT_126_ETD")) {
+            } else if (name.equalsIgnoreCase("TMT_131C")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "131C");
+            }else if (name.equalsIgnoreCase("TMT_126_ETD")) {
                 cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "126");
             } else if (name.equalsIgnoreCase("TMT_127N_ETD")) {
                 cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "127N");
@@ -420,6 +430,8 @@ public class ReporterIon extends Ion {
                 cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "130C");
             } else if (name.equalsIgnoreCase("TMT_131_ETD")) {
                 cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "131");
+            } else if (name.equalsIgnoreCase("TMT_131C_ETD")) {
+                cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "131C");
             }
 
         } else if (name.contains("iTRAQ")) {
@@ -750,6 +762,13 @@ public class ReporterIon extends Ion {
             atomChain.append(new AtomImpl(Atom.H, 0), 15);
             atomChain.append(new AtomImpl(Atom.N, 1), 1);
             return atomChain;
+        } else if (reporterIonName.equals("TMT_131C")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 3);
+            atomChain.append(new AtomImpl(Atom.C, 1), 5);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
         } else if (reporterIonName.equals("TMT_126_ETD")) {
             AtomChain atomChain = new AtomChain();
             atomChain.append(new AtomImpl(Atom.C, 0), 7);
@@ -815,6 +834,13 @@ public class ReporterIon extends Ion {
             atomChain.append(new AtomImpl(Atom.C, 1), 4);
             atomChain.append(new AtomImpl(Atom.H, 0), 15);
             atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("TMT_131C_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 3);
+            atomChain.append(new AtomImpl(Atom.C, 1), 4);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
             return atomChain;
         }
         throw new UnsupportedOperationException("Atomic composition not implemented for reporter ion " + reporterIonName + ".");

@@ -377,7 +377,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
      *
      * @param index the index of the amino acid to remove
      */
-    public void removeAA(int index) {
+    public void removeAA(int index) { // @TODO: delete does not always work...
 
         if (residueTargeted != null) {
             ArrayList<Integer> indexes = new ArrayList<Integer>(residueTargeted.keySet());
@@ -385,7 +385,7 @@ public class AminoAcidPattern extends ExperimentObject implements TagComponent {
             for (int aa : indexes) {
                 if (aa >= index) {
                     if (aa > index) {
-                        residueTargeted.put(aa - 1, residueTargeted.get(aa));
+                        residueTargeted.put(aa - 1, residueTargeted.get(aa)); 
                     }
                     residueTargeted.remove(aa);
                 }

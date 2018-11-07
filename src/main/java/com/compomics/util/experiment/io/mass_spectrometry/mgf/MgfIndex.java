@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.io.mass_spectrometry.mgf;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -299,11 +299,34 @@ public class Util {
     /**
      * Converts a color to hex format for use in HTML tags.
      *
+     * @param colorRGB the color in rgb representation
+     * 
+     * @return the color in hex format
+     */
+    public static String color2Hex(int colorRGB) {
+        return Integer.toHexString(colorRGB & 0x00ffffff);
+    }
+
+    /**
+     * Converts a color to hex format for use in HTML tags.
+     *
      * @param color the color to convert
+     * 
      * @return the color in hex format
      */
     public static String color2Hex(Color color) {
-        return Integer.toHexString(color.getRGB() & 0x00ffffff);
+        return color2Hex(color.getRGB());
+    }
+    
+    /**
+     * Returns the color object corresponding to the given rgb representation.
+     * 
+     * @param colorRGB the color in rgb representation
+     * 
+     * @return the color object
+     */
+    public static Color getColor(int colorRGB) {
+        return new Color((colorRGB >> 16) & 0xFF, (colorRGB >> 8) & 0xFF, colorRGB & 0xFF);
     }
 
     /**

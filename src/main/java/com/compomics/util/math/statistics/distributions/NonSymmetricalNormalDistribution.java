@@ -3,7 +3,6 @@ package com.compomics.util.math.statistics.distributions;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.Distribution;
 import java.util.ArrayList;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**

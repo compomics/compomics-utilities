@@ -1,5 +1,6 @@
 package com.compomics.util.gui.spectrum;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.stream.Stream;
 
 /**
  * This class was imported from the Peptizer and MascotDatfile parser, and was
@@ -258,10 +258,10 @@ public class SequenceFragmentationPanel extends JPanel {
             // if modified, highlight the modification if highlighting is selected
             if (modified) {
 
-                Color color = modificationProfile.getColor(modification); // not that this mapping works on the short name while the proper mapping is on the long name...
-                if (color == null) {
-                    color = forwardColor;
-                }
+                int colorRBG = modificationProfile.getColor(modification); // note that this mapping works on the short name while the proper mapping is on the long name...
+                
+                Color color = Util.getColor(colorRBG);
+                
                 g2.setColor(color);
 
                 String ptmName = modification.substring(1, modification.length() - 1); // remove the start and end tags

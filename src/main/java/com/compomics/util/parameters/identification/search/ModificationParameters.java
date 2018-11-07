@@ -248,6 +248,7 @@ public class ModificationParameters {
      * Returns the color used to code the given modification.
      *
      * @param modification the name of the given expected modification
+     * 
      * @return the corresponding color
      */
     public int getColor(String modification) {

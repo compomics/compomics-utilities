@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification.matches_iterators;
 import com.compomics.util.experiment.identification.Identification;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.waiting.WaitingHandler;
-import java.util.ArrayList;
 
 /**
  * An iterator for peptide matches.

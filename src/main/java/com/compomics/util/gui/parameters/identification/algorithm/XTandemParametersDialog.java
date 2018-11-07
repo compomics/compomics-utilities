@@ -2328,10 +2328,11 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
 
         if (row != -1) {
             if (column == modificationsTable.getColumn(" ").getModelIndex()) {
+                
                 Color newColor = JColorChooser.showDialog(this, "Pick a Color", (Color) modificationsTable.getValueAt(row, column));
 
                 if (newColor != null) {
-                    modificationFactory.setColor((String) modificationsTable.getValueAt(row, 1), newColor);
+                    modificationFactory.setColor((String) modificationsTable.getValueAt(row, 1), newColor.getRGB());
                     modificationsTable.setValueAt(newColor, row, 0);
                     ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
                     modificationsTable.repaint();

@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.biology.enzymes;
 
 import com.compomics.util.Util;
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;

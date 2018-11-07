@@ -3,9 +3,6 @@ package com.compomics.util.experiment.biology.ions.impl;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.pride.CvTerm;
-import java.util.ArrayList;
-import static java.util.Arrays.asList;
-import java.util.List;
 
 /**
  * This class models a peptide fragment ion.

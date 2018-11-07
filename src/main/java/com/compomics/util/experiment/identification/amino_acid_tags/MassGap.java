@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.amino_acid_tags;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 

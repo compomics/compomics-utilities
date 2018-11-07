@@ -1525,7 +1525,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
                 if (newColor != null) {
 
-                    searchParameters.getModificationParameters().setColor((String) fixedModsTable.getValueAt(row, 1), newColor);
+                    searchParameters.getModificationParameters().setColor((String) fixedModsTable.getValueAt(row, 1), newColor.getRGB());
                     fixedModsTable.setValueAt(newColor, row, 0);
                     ((DefaultTableModel) fixedModsTable.getModel()).fireTableDataChanged();
                     fixedModsTable.repaint();
@@ -1598,7 +1598,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
                 if (newColor != null) {
 
-                    modificationFactory.setColor((String) modificationsTable.getValueAt(row, 1), newColor);
+                    modificationFactory.setColor((String) modificationsTable.getValueAt(row, 1), newColor.getRGB());
                     modificationsTable.setValueAt(newColor, row, 0);
                     ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
                     modificationsTable.repaint();
@@ -1715,7 +1715,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
                 if (newColor != null) {
 
-                    searchParameters.getModificationParameters().setColor((String) variableModsTable.getValueAt(row, 1), newColor);
+                    searchParameters.getModificationParameters().setColor((String) variableModsTable.getValueAt(row, 1), newColor.getRGB());
                     variableModsTable.setValueAt(newColor, row, 0);
                     ((DefaultTableModel) variableModsTable.getModel()).fireTableDataChanged();
                     variableModsTable.repaint();
@@ -2509,11 +2509,14 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         boolean pyroConflict = false;
         ModificationParameters modificationProfile = new ModificationParameters();
         for (int i = 0; i < fixedModsTable.getRowCount(); i++) {
+            
             String modName = (String) fixedModsTable.getValueAt(i, 1);
             Modification modification = modificationFactory.getModification(modName);
+            Color modificationColor = (Color) fixedModsTable.getValueAt(i, 0);
+            
             modificationProfile.addFixedModification(modification);
             modificationProfile.addRefinementFixedModification(modification);
-            modificationProfile.setColor(modName, (Color) fixedModsTable.getValueAt(i, 0));
+            modificationProfile.setColor(modName, modificationColor.getRGB());
             if ((modification.getModificationType() == ModificationType.modn_peptide || modification.getModificationType() == ModificationType.modnaa_peptide || modification.getModificationType() == ModificationType.modn_protein || modification.getModificationType() == ModificationType.modnaa_protein) && Math.abs(modification.getMass() - 42.010565) < fragmentIonToleranceDa) {
                 acetylConflict = true;
             }
@@ -2523,9 +2526,13 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         }
 
         for (int i = 0; i < variableModsTable.getRowCount(); i++) {
+            
             String modName = (String) variableModsTable.getValueAt(i, 1);
+            Color modificationColor = (Color) fixedModsTable.getValueAt(i, 0);
+            
             modificationProfile.addVariableModification(modificationFactory.getModification(modName));
-            modificationProfile.setColor(modName, (Color) variableModsTable.getValueAt(i, 0));
+            modificationProfile.setColor(modName, modificationColor.getRGB());
+            
         }
 
         // re-add the variable refinement modifications

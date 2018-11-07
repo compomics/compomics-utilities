@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.biology.modifications;
 
 import com.compomics.util.Util;
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
 import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
@@ -239,7 +238,7 @@ public class Modification extends ExperimentObject {
      */
     private void setAmbiguityKey() {
         writeDBMode();
-        this.ambiguityKey = getMass() + "";
+        this.ambiguityKey = Double.toString(getMass());
     }
 
     /**

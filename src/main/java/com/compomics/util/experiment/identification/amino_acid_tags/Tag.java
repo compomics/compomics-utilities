@@ -1,13 +1,10 @@
 package com.compomics.util.experiment.identification.amino_acid_tags;
 
 import com.compomics.util.Util;
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.modifications.Modification;
-import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.experiment.mass_spectrometry.utils.StandardMasses;
 import com.compomics.util.experiment.personalization.ExperimentObject;
@@ -91,9 +88,7 @@ public class Tag extends ExperimentObject {
      */
     public ArrayList<TagComponent> getContent() {
 
-        
         readDBMode();
-        
 
         return content;
 
@@ -106,9 +101,7 @@ public class Tag extends ExperimentObject {
      */
     public void setContent(ArrayList<TagComponent> content) {
 
-        
         writeDBMode();
-        
 
         this.content = content;
 
@@ -121,9 +114,7 @@ public class Tag extends ExperimentObject {
      */
     public void addMassGap(double massGap) {
 
-        
         writeDBMode();
-        
 
         if (massGap != 0) {
 
@@ -139,9 +130,7 @@ public class Tag extends ExperimentObject {
      */
     public void addAminoAcidSequence(AminoAcidSequence aminoAcidSequence) {
 
-        
         writeDBMode();
-        
 
         if (aminoAcidSequence.length() > 0) {
 
@@ -171,9 +160,7 @@ public class Tag extends ExperimentObject {
      */
     public String asSequence() {
 
-        
         readDBMode();
-        
 
         return content.stream()
                 .map(TagComponent::asSequence)
@@ -188,9 +175,7 @@ public class Tag extends ExperimentObject {
      */
     public String getLongestAminoAcidSequence() {
 
-        
         readDBMode();
-        
 
         String result = "";
         AminoAcidSequence lastAminoAcidSequence = null;
@@ -241,9 +226,7 @@ public class Tag extends ExperimentObject {
      */
     public double getMass() {
 
-        
         readDBMode();
-        
 
         return StandardMasses.h2o.mass
                 + content.stream()
@@ -264,9 +247,7 @@ public class Tag extends ExperimentObject {
      */
     public double getMass(boolean includeCTermGap, boolean includeNTermGap) {
 
-        
         readDBMode();
-        
 
         double mass = getMass();
 
@@ -293,9 +274,7 @@ public class Tag extends ExperimentObject {
      */
     public double getNTerminalGap() {
 
-        
         readDBMode();
-        
 
         if (content.isEmpty()) {
 
@@ -323,9 +302,7 @@ public class Tag extends ExperimentObject {
      */
     public double getCTerminalGap() {
 
-        
         readDBMode();
-        
 
         if (content.isEmpty()) {
 
@@ -367,13 +344,11 @@ public class Tag extends ExperimentObject {
      *
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, 
-            boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps, 
+    public String getTaggedModifiedSequence(ModificationParameters modificationProfile,
+            boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps,
             SequenceMatchingParameters modificationsSequenceMatchingParameters, HashSet<String> displayedModifications) {
 
-        
         readDBMode();
-        
 
         return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, includeTerminalGaps, modificationsSequenceMatchingParameters, displayedModifications);
 
@@ -457,9 +432,7 @@ public class Tag extends ExperimentObject {
      */
     public String getNTerminal(boolean includeTerminalGaps, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
 
-        
         readDBMode();
-        
 
         if (content.isEmpty()) {
             return "";
@@ -506,9 +479,7 @@ public class Tag extends ExperimentObject {
      */
     public String getCTerminal(boolean includeTerminalGaps, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
 
-        
         readDBMode();
-        
 
         if (content.isEmpty()) {
 
@@ -553,9 +524,7 @@ public class Tag extends ExperimentObject {
      */
     public int getLengthInAminoAcid() {
 
-        
         readDBMode();
-        
 
         int length = 0;
 
@@ -594,9 +563,7 @@ public class Tag extends ExperimentObject {
      */
     public ArrayList<Integer> getPotentialModificationSites(Modification modification, SequenceMatchingParameters modificationSequenceMatchingPreferences) {
 
-        
         readDBMode();
-        
 
         ArrayList<Integer> possibleSites = new ArrayList<>();
         AminoAcidPattern modificationPattern = modification.getPattern();
@@ -728,9 +695,7 @@ public class Tag extends ExperimentObject {
      */
     public boolean isSameAs(Tag anotherTag, SequenceMatchingParameters sequenceMatchingPreferences) {
 
-        
         readDBMode();
-        
 
         if (content.size() != anotherTag.getContent().size()) {
 
@@ -765,9 +730,7 @@ public class Tag extends ExperimentObject {
      */
     public boolean isSameSequenceAndModificationStatusAs(Tag anotherTag, SequenceMatchingParameters sequenceMatchingPreferences) {
 
-        
         readDBMode();
-        
 
         if (content.size() != anotherTag.getContent().size()) {
 
@@ -871,9 +834,7 @@ public class Tag extends ExperimentObject {
      */
     public Tag reverse(boolean yIon) {
 
-        
         readDBMode();
-        
 
         Tag newTag = new Tag();
 
@@ -935,9 +896,7 @@ public class Tag extends ExperimentObject {
      */
     public boolean canReverse() {
 
-        
         readDBMode();
-        
 
         TagComponent terminalComponent = content.get(0);
 

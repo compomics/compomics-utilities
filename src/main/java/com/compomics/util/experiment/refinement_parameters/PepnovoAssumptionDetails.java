@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.refinement_parameters;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 

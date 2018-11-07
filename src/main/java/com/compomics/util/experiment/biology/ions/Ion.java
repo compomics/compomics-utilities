@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.biology.ions;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.biology.ions.impl.PrecursorIon;
 import com.compomics.util.experiment.biology.ions.impl.Glycan;

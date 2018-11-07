@@ -11,7 +11,6 @@
  * Time: 8:39:31
  */
 package com.compomics.util.general;
-import org.apache.log4j.Logger;
 
 
 import java.io.BufferedWriter;

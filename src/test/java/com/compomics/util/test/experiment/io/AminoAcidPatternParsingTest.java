@@ -1,7 +1,6 @@
 package com.compomics.util.test.experiment.io;
 
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
-import com.compomics.util.experiment.biology.atoms.AtomChain;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 

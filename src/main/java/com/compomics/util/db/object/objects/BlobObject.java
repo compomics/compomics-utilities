@@ -1,7 +1,6 @@
 package com.compomics.util.db.object.objects;
 
 import com.compomics.util.db.object.DbObject;
-import com.compomics.util.db.object.ObjectsDB;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

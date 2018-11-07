@@ -5,8 +5,6 @@ import com.compomics.util.experiment.identification.protein_sequences.AmbiguousS
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ProteinIteratorUtils;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.ExtendedPeptide;
 import com.compomics.util.experiment.identification.protein_sequences.digestion.SequenceIterator;
-import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
-import com.compomics.util.parameters.identification.search.ModificationParameters;
 
 /**
  * Iterator for no digestion of a sequence containing amino acid combinations.

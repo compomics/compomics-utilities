@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.biology.proteins;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**

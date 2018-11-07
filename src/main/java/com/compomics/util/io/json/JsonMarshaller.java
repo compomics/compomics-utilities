@@ -1,6 +1,5 @@
 package com.compomics.util.io.json;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.io.json.adapter.FileAdapter;
 import com.compomics.util.io.json.adapter.InterfaceAdapter;

@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.mass_spectrometry.spectra;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.mass_spectrometry.SimpleNoiseDistribution;

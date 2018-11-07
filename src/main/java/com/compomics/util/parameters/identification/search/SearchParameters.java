@@ -1,7 +1,6 @@
 package com.compomics.util.parameters.identification.search;
 
 import com.compomics.util.Util;
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.Advocate;

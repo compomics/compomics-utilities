@@ -2,9 +2,7 @@ package com.compomics.util.test.experiment.sequences.digestion;
 
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import junit.framework.Assert;
 import junit.framework.TestCase;

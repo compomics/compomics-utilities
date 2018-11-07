@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.peptide_shaker;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.experiment.identification.validation.MatchValidationLevel;

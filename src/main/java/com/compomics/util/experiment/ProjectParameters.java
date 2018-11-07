@@ -1,6 +1,5 @@
 package com.compomics.util.experiment;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.Date;

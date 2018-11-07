@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.spectrum_assumptions;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.atoms.Atom;
 import com.compomics.util.experiment.biology.ions.Charge;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;

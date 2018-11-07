@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.matches;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;

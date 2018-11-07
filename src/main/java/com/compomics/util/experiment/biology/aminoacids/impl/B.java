@@ -1,8 +1,6 @@
 package com.compomics.util.experiment.biology.aminoacids.impl;
 
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Asn or Asp: Asx (Mascot).

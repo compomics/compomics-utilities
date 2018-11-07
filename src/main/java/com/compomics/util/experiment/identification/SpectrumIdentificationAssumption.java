@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.impl.PrecursorIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;

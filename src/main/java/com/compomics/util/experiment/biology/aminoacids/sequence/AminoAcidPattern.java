@@ -1,17 +1,9 @@
 package com.compomics.util.experiment.biology.aminoacids.sequence;
 
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
-import com.compomics.util.experiment.biology.modifications.ModificationFactory;
-import com.compomics.util.Util;
-import com.compomics.util.db.object.ObjectsDB;
-import com.compomics.util.experiment.biology.modifications.Modification;
-import com.compomics.util.experiment.biology.modifications.ModificationType;
-import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters.MatchingType;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

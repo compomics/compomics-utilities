@@ -1,7 +1,6 @@
 
 package com.compomics.util.pride;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**

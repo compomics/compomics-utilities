@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.biology.atoms;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.atoms.impl.Carbon;
 import com.compomics.util.experiment.biology.atoms.impl.Fluorine;
 import com.compomics.util.experiment.biology.atoms.impl.Helium;

@@ -2,7 +2,6 @@ package com.compomics.util.parameters.identification.search;
 
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,7 +41,7 @@ public class ModificationParameters {
     /**
      * Mapping of the expected modification names to the color used.
      */
-    private HashMap<String, Color> colors = new HashMap<>(0);
+    private HashMap<String, Integer> colors = new HashMap<>(0);
     /**
      * Back-up mapping of the modifications for portability.
      */
@@ -241,7 +240,7 @@ public class ModificationParameters {
      * @param expectedModification the name of the expected modification
      * @param color the new color
      */
-    public void setColor(String expectedModification, Color color) {
+    public void setColor(String expectedModification, int color) {
         colors.put(expectedModification, color);
     }
 
@@ -251,12 +250,20 @@ public class ModificationParameters {
      * @param modification the name of the given expected modification
      * @return the corresponding color
      */
-    public Color getColor(String modification) {
-        if (!colors.containsKey(modification)) {
+    public int getColor(String modification) {
+        
+        Integer color = colors.get(modification);
+        
+        if (color == null) {
+        
             ModificationFactory modificationFactory = ModificationFactory.getInstance();
-            setColor(modification, modificationFactory.getColor(modification));
+            color = modificationFactory.getColor(modification);
+            
+            setColor(modification, color);
+        
         }
-        return colors.get(modification);
+        
+        return color;
     }
 
     /**
@@ -264,7 +271,7 @@ public class ModificationParameters {
      *
      * @return the modifications colors as a map
      */
-    public HashMap<String, Color> getColors() {
+    public HashMap<String, Integer> getColors() {
         return colors;
     }
 

@@ -11,7 +11,6 @@
  * Time: 16:24:06
  */
 package com.compomics.util.db.interfaces;
-import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;

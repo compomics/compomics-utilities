@@ -11,7 +11,6 @@
  * Time: 14:29:17
  */
 package com.compomics.util.general;
-import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

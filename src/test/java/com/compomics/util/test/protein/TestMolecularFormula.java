@@ -13,18 +13,12 @@
 package com.compomics.util.test.protein;
 
 import com.compomics.util.enumeration.MolecularElement;
-import com.compomics.util.junit.TestCaseLM;
 import com.compomics.util.protein.AASequenceImpl;
-import com.compomics.util.protein.Enzyme;
 import com.compomics.util.protein.MolecularFormula;
-import com.compomics.util.protein.Protein;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 /**
  * This class implements a simple test scenario for the molecularformula class.

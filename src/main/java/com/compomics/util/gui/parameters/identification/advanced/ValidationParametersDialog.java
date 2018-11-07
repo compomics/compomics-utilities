@@ -5,7 +5,6 @@ import com.compomics.util.parameters.identification.advanced.IdMatchValidationPa
 import java.awt.Dialog;
 import java.awt.Toolkit;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 
 /**
  * Dialog for the edition of the sequence matching settings

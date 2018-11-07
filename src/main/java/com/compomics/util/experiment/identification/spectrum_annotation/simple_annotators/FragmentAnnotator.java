@@ -11,12 +11,8 @@ import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.SimplePeptideAnnotator.IonSeries;
-import com.compomics.util.experiment.identification.utils.ModificationUtils;
-import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
-import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
-import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
 
 /**

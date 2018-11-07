@@ -27,7 +27,6 @@ import com.compomics.util.experiment.io.biology.protein.ProteinIterator;
 import com.compomics.util.experiment.io.biology.protein.converters.DecoyConverter;
 import com.compomics.util.experiment.io.biology.protein.iterators.FastaIterator;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
-import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.File;
@@ -35,13 +34,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import org.apache.poi.hpsf.VariantTypeException;
 import org.xmlpull.v1.XmlPullParserException;
 
 /**

@@ -11,7 +11,6 @@ import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
-import com.compomics.util.gui.protein.ModificationProfile;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.awt.Color;
@@ -20,7 +19,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -587,7 +585,7 @@ public class ModificationUtils {
 
         } else {
 
-            Color modificationColor = modificationProfile.getColor(modificationName);
+            int modificationColor = modificationProfile.getColor(modificationName);
 
             switch (localizationConfidenceLevel) {
                 case 1:

@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.concurrent.Semaphore;
-import java.util.stream.Collectors;
 
 /**
  * Iterator for a fasta file.

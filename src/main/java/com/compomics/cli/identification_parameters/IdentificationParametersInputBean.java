@@ -38,7 +38,6 @@ import com.compomics.util.parameters.identification.advanced.ModificationLocaliz
 import com.compomics.util.parameters.identification.advanced.ProteinInferenceParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.stream.Stream;
 
 /**
  * This class was imported from the Peptizer and MascotDatfile parser, and was

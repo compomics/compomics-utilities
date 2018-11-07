@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.matches;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**

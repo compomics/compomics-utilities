@@ -11,7 +11,6 @@
  * Time: 15:05:12
  */
 package com.compomics.util.interfaces;
-import org.apache.log4j.Logger;
 
 import java.util.Collection;
 

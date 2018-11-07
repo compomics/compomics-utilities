@@ -5,7 +5,6 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPatter
 import com.compomics.util.experiment.biology.atoms.Atom;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
-import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.general.BoxedObject;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.ArrayList;

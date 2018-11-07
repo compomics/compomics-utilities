@@ -58,7 +58,7 @@ public class ModificationFactory {
     /**
      * Mapping of the expected modification names to the color used.
      */
-    private final HashMap<String, Color> userColors = new HashMap<>();
+    private final HashMap<String, Integer> userColors = new HashMap<>();
     /**
      * Suffix for the modification clone targeting a single amino acid instead
      * of a pattern.
@@ -387,7 +387,7 @@ public class ModificationFactory {
      * @param modification the name of the given expected modification
      * @return the corresponding color
      */
-    public Color getColor(String modification) {
+    public int getColor(String modification) {
         if (!userColors.containsKey(modification)) {
             setColor(modification, getDefaultColor(modification));
         }
@@ -400,7 +400,7 @@ public class ModificationFactory {
      * @param expectedModification the name of the expected modification
      * @param color the new color
      */
-    public void setColor(String expectedModification, Color color) {
+    public void setColor(String expectedModification, int color) {
         userColors.put(expectedModification, color);
     }
 
@@ -410,30 +410,30 @@ public class ModificationFactory {
      * @param modification the name of the modification
      * @return a default color.
      */
-    public static Color getDefaultColor(String modification) {
+    public static int getDefaultColor(String modification) {
         if (modification.contains("no modification")) {
-            return Color.LIGHT_GRAY;
+            return Color.LIGHT_GRAY.getRGB();
         } else if (modification.toLowerCase().contains("phospho")) {
-            return Color.RED;
+            return Color.RED.getRGB();
         } else if (modification.toLowerCase().contains("pyro")) {
-            return new Color(255, 102, 51);
+            return new Color(255, 102, 51).getRGB();
         } else if (modification.toLowerCase().contains("ox")) {
-            return Color.BLUE;
+            return Color.BLUE.getRGB();
         } else if (modification.toLowerCase().contains("itraq")) {
-            return Color.ORANGE;
+            return Color.ORANGE.getRGB();
         } else if (modification.toLowerCase().contains("tmt")) {
-            return Color.ORANGE;
+            return Color.ORANGE.getRGB();
         } else if (modification.toLowerCase().contains("carbamido")) {
-            return Color.LIGHT_GRAY;
+            return Color.LIGHT_GRAY.getRGB();
         } else if (modification.toLowerCase().contains("ace")) {
-            return new Color(153, 153, 0);
+            return new Color(153, 153, 0).getRGB();
         } else if (modification.toLowerCase().contains("glyco")) {
-            return Color.MAGENTA;
+            return Color.MAGENTA.getRGB();
         } else {
             float r = (float) Math.random();
             float g = (float) Math.random();
             float b = (float) Math.random();
-            return new Color(r, g, b);
+            return new Color(r, g, b).getRGB();
         }
     }
 

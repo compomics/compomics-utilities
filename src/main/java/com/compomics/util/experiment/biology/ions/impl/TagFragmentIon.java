@@ -3,7 +3,6 @@ package com.compomics.util.experiment.biology.ions.impl;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.pride.CvTerm;
-import java.util.ArrayList;
 
 /**
  * A fragment ion obtained from a tag.

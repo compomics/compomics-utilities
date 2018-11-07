@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.mass_spectrometry.indexes;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.personalization.UrParameter;

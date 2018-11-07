@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.io.identification.idfilereaders;
 
 import com.compomics.util.Util;
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;

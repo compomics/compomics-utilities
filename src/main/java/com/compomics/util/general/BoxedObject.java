@@ -1,6 +1,5 @@
 package com.compomics.util.general;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.db.object.DbObject;
 
 /**

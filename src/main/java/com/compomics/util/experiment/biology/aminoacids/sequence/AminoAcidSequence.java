@@ -3,7 +3,6 @@ package com.compomics.util.experiment.biology.aminoacids.sequence;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.Modification;
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;

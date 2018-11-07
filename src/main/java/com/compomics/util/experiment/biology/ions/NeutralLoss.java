@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.biology.ions;
 
-import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;

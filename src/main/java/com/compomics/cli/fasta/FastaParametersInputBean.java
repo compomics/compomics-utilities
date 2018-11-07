@@ -3,8 +3,6 @@ package com.compomics.cli.fasta;
 import com.compomics.software.cli.CommandParameter;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.io.biology.protein.FastaParameters;
-import com.compomics.util.experiment.io.biology.protein.FastaSummary;
-import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;

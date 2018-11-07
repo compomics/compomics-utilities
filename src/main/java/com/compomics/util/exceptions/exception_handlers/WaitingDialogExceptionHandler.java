@@ -11,6 +11,12 @@ import com.compomics.util.gui.waiting.waitinghandlers.WaitingDialog;
 public class WaitingDialogExceptionHandler extends ExceptionHandler {
 
     /**
+     * Empty default constructor
+     */
+    public WaitingDialogExceptionHandler() {
+    }
+
+    /**
      * The waiting handler used to notify the user.
      */
     private WaitingDialog waitingDialog;

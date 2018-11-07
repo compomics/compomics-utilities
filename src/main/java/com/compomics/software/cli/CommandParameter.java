@@ -20,6 +20,12 @@ import java.util.stream.Stream;
 public class CommandParameter {
 
     /**
+     * Empty default constructor
+     */
+    public CommandParameter() {
+    }
+
+    /**
      * Returns true if the input is an integer value inside the given range.
      *
      * @param argType the name of the argument

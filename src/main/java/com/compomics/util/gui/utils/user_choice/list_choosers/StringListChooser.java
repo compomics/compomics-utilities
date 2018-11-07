@@ -12,6 +12,12 @@ import javax.swing.table.TableColumnModel;
 public class StringListChooser extends ListChooser {
 
     /**
+     * Empty default constructor
+     */
+    public StringListChooser() {
+    }
+
+    /**
      * Constructor. Null values will be replaced by default.
      *
      * @param parent the parent frame

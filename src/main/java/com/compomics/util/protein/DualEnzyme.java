@@ -34,6 +34,12 @@ import java.util.*;
  */
 public class DualEnzyme extends Enzyme {
 
+    /**
+     * Empty default constructor
+     */
+    public DualEnzyme() {
+    }
+
     // Class specific log4j logger for DualEnzyme instances.
     static Logger logger = Logger.getLogger(DualEnzyme.class);
 

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.mass_spectrometry.spectra;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.mass_spectrometry.SimpleNoiseDistribution;
@@ -23,6 +24,12 @@ import java.util.stream.DoubleStream;
  * @author Harald Barsnes
  */
 public class Spectrum extends ExperimentObject {
+
+    /**
+     * Empty default constructor
+     */
+    public Spectrum() {
+    }
 
     /**
      * The version UID for Serialization/Deserialization compatibility.

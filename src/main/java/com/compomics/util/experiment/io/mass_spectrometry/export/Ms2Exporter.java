@@ -21,6 +21,12 @@ import java.util.HashMap;
 public class Ms2Exporter {
 
     /**
+     * Empty default constructor
+     */
+    public Ms2Exporter() {
+    }
+
+    /**
      * Writes the content of the given file name into the destination file in
      * the ms2 format. The spectra must be loaded in the factory.
      *

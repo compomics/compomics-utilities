@@ -13,6 +13,12 @@ import java.util.Arrays;
 public class Protocol implements PrideObject {
 
     /**
+     * Empty default constructor
+     */
+    public Protocol() {
+    }
+
+    /**
      * Serialization number for backward compatibility.
      */
     static final long serialVersionUID = -9045298216154032632L;

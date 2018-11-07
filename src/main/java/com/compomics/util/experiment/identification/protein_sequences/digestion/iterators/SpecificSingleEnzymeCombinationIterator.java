@@ -21,6 +21,20 @@ import java.util.HashMap;
 public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator {
 
     /**
+     * Empty default constructor
+     */
+    public SpecificSingleEnzymeCombinationIterator() {
+        proteinIteratorUtils = null;
+        proteinSequence = "";
+        proteinSequenceAsCharArray = null;
+        massMin = 0;
+        massMax = 0;
+        enzyme = null;
+        nMissedCleavages = 0;
+        result = null;
+    }
+
+    /**
      * Utilities classes for the digestion.
      */
     private final ProteinIteratorUtils proteinIteratorUtils;

@@ -86,4 +86,12 @@ public enum ProteinDatabase {
                 .orElse(null);
     }
     
+
+    /**
+     * Empty default constructor
+     */
+    private ProteinDatabase() {
+        fullName = "";
+        pmid = "";
+    }
 }

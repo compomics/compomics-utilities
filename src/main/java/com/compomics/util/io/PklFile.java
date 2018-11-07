@@ -16,6 +16,12 @@ import java.util.TreeSet;
 public class PklFile {
 
     /**
+     * Empty default constructor
+     */
+    public PklFile() {
+    }
+
+    /**
      * The precursor charge.
      */
     private int precurorCharge;

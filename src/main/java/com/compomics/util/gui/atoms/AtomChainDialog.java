@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.atoms.AtomImpl;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import java.awt.Component;
 import java.awt.Toolkit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import javax.swing.JDialog;
@@ -19,6 +20,12 @@ import no.uib.jsparklines.renderers.util.Util;
  * @author Marc Vaudel
  */
 public class AtomChainDialog extends javax.swing.JDialog {
+
+    /**
+     * Empty default constructor
+     */
+    public AtomChainDialog() {
+    }
 
     /**
      * The added atom chain edited by the user.

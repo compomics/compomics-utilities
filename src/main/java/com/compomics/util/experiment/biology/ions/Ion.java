@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology.ions;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.biology.ions.impl.PrecursorIon;
 import com.compomics.util.experiment.biology.ions.impl.Glycan;
@@ -24,6 +25,12 @@ import java.util.stream.Collectors;
  * @author Marc Vaudel
  */
 public abstract class Ion extends ExperimentObject {
+
+    /**
+     * Empty default constructor
+     */
+    public Ion() {
+    }
 
     /**
      * Serial number for backward compatibility.

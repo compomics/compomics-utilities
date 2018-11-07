@@ -17,6 +17,13 @@ import org.apache.commons.cli.Options;
 public class EnzymesCLI {
 
     /**
+     * Empty default constructor
+     */
+    public EnzymesCLI() {
+        enzymesCLIInputBean = null;
+    }
+
+    /**
      * The parsed command line input.
      */
     private final EnzymesCLIInputBean enzymesCLIInputBean;
@@ -29,6 +36,8 @@ public class EnzymesCLI {
     public EnzymesCLI(EnzymesCLIInputBean enzymesCLIInputBean) {
         this.enzymesCLIInputBean = enzymesCLIInputBean;
     }
+    
+    
 
     /**
      * Header message when printing the usage.

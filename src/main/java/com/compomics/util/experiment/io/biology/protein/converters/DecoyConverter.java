@@ -24,6 +24,12 @@ import java.util.stream.Collectors;
 public class DecoyConverter {
 
     /**
+     * Empty default constructor
+     */
+    public DecoyConverter() {
+    }
+
+    /**
      * The flag to append to the accessions of decoy proteins.
      */
     public static final String decoyFlag = "-REVERSED";

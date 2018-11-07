@@ -11,6 +11,12 @@ import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 public class AAPropertyFeatureRelative extends AAPropertyFeature {
 
     /**
+     * Empty default constructor
+     */
+    public AAPropertyFeatureRelative() {
+    }
+
+    /**
      * The index of this ms2pip feature.
      */
     public static final int index = 7;

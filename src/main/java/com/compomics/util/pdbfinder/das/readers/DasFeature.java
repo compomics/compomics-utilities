@@ -10,6 +10,15 @@ import java.util.Vector;
 public class DasFeature {
 
     /**
+     * Empty default constructor
+     */
+    public DasFeature() {
+        iFeature = "";
+        featureId = "";
+        featureLabel = "";
+    }
+
+    /**
      * The feature.
      */
     private final String iFeature;

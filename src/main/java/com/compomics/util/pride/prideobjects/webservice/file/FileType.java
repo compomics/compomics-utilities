@@ -7,4 +7,10 @@ package com.compomics.util.pride.prideobjects.webservice.file;
  */
 public enum FileType {
     RESULT, PEAK, SEARCH, RAW, QUANT, GEL, FASTA, SPECTRUM_LIBRARY, MS_IMAGE_DATA, OPTICAL_IMAGE, OTHER;
+
+    /**
+     * Empty default constructor
+     */
+    private FileType() {
+    }
 }

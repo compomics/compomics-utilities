@@ -32,6 +32,12 @@ import java.util.*;
  */
 public class ModificationTemplate {
 
+    /**
+     * Empty default constructor
+     */
+    public ModificationTemplate() {
+    }
+
     // Class specific log4j logger for ModificationTemplate instances.
     Logger logger = Logger.getLogger(ModificationTemplate.class);
 

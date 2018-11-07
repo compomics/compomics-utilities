@@ -14,6 +14,12 @@ import javax.swing.JOptionPane;
 public class AdvancedProteinDatabaseDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public AdvancedProteinDatabaseDialog() {
+    }
+
+    /**
      * The database folder.
      */
     private File dbFolder;

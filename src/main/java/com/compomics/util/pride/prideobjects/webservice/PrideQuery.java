@@ -60,4 +60,11 @@ public enum PrideQuery {
         }
         return temp;
     }
+
+    /**
+     * Empty default constructor
+     */
+    private PrideQuery() {
+        queryTemplate = "";
+    }
 }

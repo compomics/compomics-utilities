@@ -20,6 +20,12 @@ import javax.swing.UIManager;
 public class ProteinSequencePane {
 
     /**
+     * Empty default constructor
+     */
+    public ProteinSequencePane() {
+    }
+
+    /**
      * The map of PEFF key value pairs.
      */
     private static TreeMap<String, String> peffKeyValuePairs;

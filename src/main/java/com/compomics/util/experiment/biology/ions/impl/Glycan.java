@@ -3,6 +3,7 @@ package com.compomics.util.experiment.biology.ions.impl;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.pride.CvTerm;
+import java.util.ArrayList;
 
 import java.util.HashMap;
 
@@ -12,6 +13,14 @@ import java.util.HashMap;
  * @author Marc Vaudel
  */
 public class Glycan extends Ion {
+
+    /**
+     * Empty default constructor
+     */
+    public Glycan() {
+        name = "";
+        longName = "";
+    }
 
     /**
      * Serial number for backward compatibility.

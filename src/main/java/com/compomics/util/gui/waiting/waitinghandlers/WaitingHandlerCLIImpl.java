@@ -13,6 +13,12 @@ import java.util.Date;
 public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     /**
+     * Empty default constructor
+     */
+    public WaitingHandlerCLIImpl() {
+    }
+
+    /**
      * Boolean indicating whether the process is finished.
      */
     private boolean runFinished = false;

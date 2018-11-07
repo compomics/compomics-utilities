@@ -10,6 +10,15 @@ import com.compomics.util.experiment.biology.proteins.Peptide;
 public class ExtendedPeptide {
 
     /**
+     * Empty default constructor
+     */
+    public ExtendedPeptide() {
+        peptide = null;
+        position = 0;
+        fixedModifications = null;
+    }
+
+    /**
      * The peptide.
      */
     public final Peptide peptide;

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology.ions;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
@@ -76,6 +77,16 @@ public class NeutralLoss extends ExperimentObject {
      */
     public NeutralLoss(String name, AtomChain composition, boolean fixed, char[] aminoAcids) {
         this(name, composition, fixed, aminoAcids, true);
+    }
+    
+    /**
+     * Default construtor
+     */
+    public NeutralLoss(){
+        this.name = "";
+        this.composition = null;
+        this.fixed = false;
+        this.aminoAcids = null;
     }
 
     /**

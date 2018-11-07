@@ -11,6 +11,12 @@ import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 public class ComplementaryIonAminoAcidFeature extends AASequenceFeature {
 
     /**
+     * Empty default constructor
+     */
+    public ComplementaryIonAminoAcidFeature() {
+    }
+
+    /**
      * The index of this ms2pip feature.
      */
     public static final int index = 5;

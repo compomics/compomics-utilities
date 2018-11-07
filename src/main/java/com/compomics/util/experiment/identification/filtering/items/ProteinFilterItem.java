@@ -140,4 +140,12 @@ public enum ProteinFilterItem implements FilterItem {
                 return false;
         }
     }
+
+    /**
+     * Empty default constructor
+     */
+    private ProteinFilterItem() {
+        name = "";
+        description = "";
+    }
 }

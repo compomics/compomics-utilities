@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class PklFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public PklFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.pkl files.
      *
      * @param f the file

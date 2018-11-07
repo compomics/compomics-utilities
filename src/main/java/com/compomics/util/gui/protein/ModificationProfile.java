@@ -11,6 +11,12 @@ import java.awt.Color;
 public class ModificationProfile {
 
     /**
+     * Empty default constructor
+     */
+    public ModificationProfile() {
+    }
+
+    /**
      * The score above the sequence row index.
      */
     public static final int SCORE_1_ROW_INDEX = 0;

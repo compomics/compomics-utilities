@@ -11,6 +11,13 @@ import java.util.HashMap;
 public class Patient {
 
     /**
+     * Empty default constructor
+     */
+    public Patient() {
+        id = "";
+    }
+
+    /**
      * The patient id,
      */
     private final String id;

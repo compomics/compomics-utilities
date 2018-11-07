@@ -8,6 +8,12 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
  * @author Marc Vaudel
  */
 public class ForwardIonFeature extends IonFeature {
+
+    /**
+     * Empty default constructor
+     */
+    public ForwardIonFeature() {
+    }
     
     /**
      * The index of this ms2pip feature.

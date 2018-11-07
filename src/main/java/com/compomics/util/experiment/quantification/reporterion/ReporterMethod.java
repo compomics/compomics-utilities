@@ -15,6 +15,15 @@ import java.util.Set;
 public class ReporterMethod {
 
     /**
+     * Empty default constructor
+     */
+    public ReporterMethod() {
+        reagents = null;
+        name = "";
+        reporterIonsMap = null;
+    }
+
+    /**
      * Map of the reagents. Reagent name &gt; reagent
      */
     private final HashMap<String, Reagent> reagents;

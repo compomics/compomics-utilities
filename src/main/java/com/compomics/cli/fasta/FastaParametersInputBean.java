@@ -16,6 +16,12 @@ import org.apache.commons.cli.CommandLine;
 public class FastaParametersInputBean {
 
     /**
+     * Empty default constructor
+     */
+    public FastaParametersInputBean() {
+    }
+
+    /**
      * Verifies the command line start parameters.
      *
      * @param aLine the command line to validate

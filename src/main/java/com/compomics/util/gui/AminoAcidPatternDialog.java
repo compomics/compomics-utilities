@@ -26,6 +26,13 @@ import java.util.stream.Collectors;
 public class AminoAcidPatternDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public AminoAcidPatternDialog() {
+        editable = false;
+    }
+
+    /**
      * The pattern displayed.
      */
     private AminoAcidPattern pattern;

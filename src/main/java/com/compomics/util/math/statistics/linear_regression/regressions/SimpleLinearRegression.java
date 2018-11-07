@@ -13,6 +13,12 @@ import java.util.ArrayList;
 public class SimpleLinearRegression {
 
     /**
+     * Empty default constructor
+     */
+    public SimpleLinearRegression() {
+    }
+
+    /**
      * Returns a simple linear regression. Note: r calculation is not
      * implemented.
      *

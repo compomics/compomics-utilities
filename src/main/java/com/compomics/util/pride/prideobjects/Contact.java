@@ -10,6 +10,12 @@ import com.compomics.util.pride.PrideObject;
 public class Contact implements PrideObject {
 
     /**
+     * Empty default constructor
+     */
+    public Contact() {
+    }
+
+    /**
      * Serialization number for backward compatibility.
      */
     static final long serialVersionUID = -9182316910747747823L;

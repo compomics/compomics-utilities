@@ -12,6 +12,13 @@ import javax.swing.SwingConstants;
 public class SampleSelection extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public SampleSelection() {
+        samples = null;
+    }
+
+    /**
      * The samples found.
      */
     private final String[] samples;

@@ -21,6 +21,16 @@ import javax.swing.table.TableCellRenderer;
 public class FragmentIonTableCellRenderer implements TableCellRenderer {
 
     /**
+     * Empty default constructor
+     */
+    public FragmentIonTableCellRenderer() {
+        backgroundColor = null;
+        foregroundColor = null;
+        indices = null;
+        numberFormat = null;
+    }
+
+    /**
      * The background color to use.
      */
     private final Color backgroundColor;

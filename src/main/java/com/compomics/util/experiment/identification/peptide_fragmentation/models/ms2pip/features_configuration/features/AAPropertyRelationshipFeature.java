@@ -11,6 +11,12 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
  * @author Marc Vaudel
  */
 public class AAPropertyRelationshipFeature implements Ms2pipFeature, MultipleAAPropertyFeature {
+
+    /**
+     * Empty default constructor
+     */
+    public AAPropertyRelationshipFeature() {
+    }
     
     /**
      * The index of this ms2pip feature.

@@ -23,6 +23,12 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtils {
 
     /**
+     * Empty default constructor
+     */
+    public ZipUtils() {
+    }
+
+    /**
      * The buffer size.
      */
     private static final int BUFFER = 2048;

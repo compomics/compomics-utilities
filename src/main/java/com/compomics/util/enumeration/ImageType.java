@@ -33,4 +33,11 @@ public enum ImageType {
     public String getExtension() {
         return this.extension;
     }
+
+    /**
+     * Empty default constructor
+     */
+    private ImageType() {
+        extension = "";
+    }
 }

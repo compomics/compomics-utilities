@@ -12,6 +12,12 @@ import javax.swing.JFrame;
 public class ExportFormatSelectionDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public ExportFormatSelectionDialog() {
+    }
+
+    /**
      * True if the user canceled the dialog.
      */
     private boolean canceled = false;

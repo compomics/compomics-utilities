@@ -5,6 +5,7 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Stream;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -32,6 +33,12 @@ public class MassErrorPlot extends JPanel {
      * The chart panel.
      */
     private ChartPanel chartPanel;
+
+    /**
+     * Empty default constructor
+     */
+    public MassErrorPlot() {
+    }
 
     /**
      * Creates a new MassErrorPlot.

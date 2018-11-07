@@ -23,6 +23,12 @@ import org.apache.log4j.Logger;
  */
 public class UnknownElementMassException extends Exception {
 
+    /**
+     * Empty default constructor
+     */
+    public UnknownElementMassException() {
+    }
+
     // Class specific log4j logger for UnknownElementMassException instances.
     Logger logger = Logger.getLogger(UnknownElementMassException.class);
     

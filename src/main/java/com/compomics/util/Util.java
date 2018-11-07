@@ -32,6 +32,12 @@ import org.apache.commons.codec.binary.Base64;
 public class Util {
 
     /**
+     * Empty default constructor
+     */
+    public Util() {
+    }
+
+    /**
      * Forbidden characters in file names.
      */
     public static final String[] forbiddenCharacters = {"!", ":", ";", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "\\|"};
@@ -293,12 +299,11 @@ public class Util {
     /**
      * Converts a color to hex format for use in HTML tags.
      *
-     * @param colorRGB the color to convert in rgb representation
-     * 
+     * @param color the color to convert
      * @return the color in hex format
      */
-    public static String color2Hex(int colorRGB) {
-        return Integer.toHexString(colorRGB & 0x00ffffff);
+    public static String color2Hex(Color color) {
+        return Integer.toHexString(color.getRGB() & 0x00ffffff);
     }
 
     /**
@@ -1245,19 +1250,6 @@ public class Util {
         sb.append(value).append("(").append(attribute).append(")");
         
         return sb.toString();
-        
-    }
-    
-    /**
-     * Returns a color from an integer RGB representation obtained eg using getRGB().
-     * 
-     * @param i the integer representation of a color
-     * 
-     * @return the color
-     */
-    public static Color getColor(int i) {
-        
-        return new Color((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
         
     }
 }

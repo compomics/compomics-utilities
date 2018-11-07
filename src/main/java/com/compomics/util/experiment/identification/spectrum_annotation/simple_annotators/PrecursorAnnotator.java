@@ -24,6 +24,14 @@ import java.util.stream.Collectors;
 public class PrecursorAnnotator {
 
     /**
+     * Empty default constructor
+     */
+    public PrecursorAnnotator() {
+        precursorMass = 0;
+        neutralLossesMasses = null;
+    }
+
+    /**
      * The modifications factory.
      */
     private final ModificationFactory modificationFactory = ModificationFactory.getInstance();

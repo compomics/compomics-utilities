@@ -30,6 +30,12 @@ import com.compomics.util.db.DBMetaData;
  */
 public class RetrievableCode {
 
+    /**
+     * Empty default constructor
+     */
+    public RetrievableCode() {
+    }
+
     // Class specific log4j logger for RetrievableCode instances.
     Logger logger = Logger.getLogger(RetrievableCode.class);
 

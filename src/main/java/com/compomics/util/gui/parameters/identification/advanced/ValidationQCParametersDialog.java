@@ -23,6 +23,12 @@ import javax.swing.table.DefaultTableModel;
 public class ValidationQCParametersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public ValidationQCParametersDialog() {
+    }
+
+    /**
      * The parent frame.
      */
     private java.awt.Frame parentFrame;

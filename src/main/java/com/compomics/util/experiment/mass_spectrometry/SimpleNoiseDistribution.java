@@ -17,6 +17,16 @@ import org.apache.commons.math.util.FastMath;
 public class SimpleNoiseDistribution {
 
     /**
+     * Empty default constructor
+     */
+    public SimpleNoiseDistribution() {
+        binSize = 0;
+        orderedBins = null;
+        pLog = null;
+        intensityLogDistribution = null;
+    }
+
+    /**
      * The number of bins.
      */
     private final static int nBins = 100;

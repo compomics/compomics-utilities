@@ -9,4 +9,10 @@ public enum SpectrumCountingMethod {
     
         EMPAI, NSAF;
 
+
+    /**
+     * Empty default constructor
+     */
+    private SpectrumCountingMethod() {
+    }
 }

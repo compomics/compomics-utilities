@@ -17,6 +17,13 @@ import org.apache.commons.cli.Options;
 public class ModificationsCLI {
 
     /**
+     * Empty default constructor
+     */
+    public ModificationsCLI() {
+        modificationsCLIInputBean = null;
+    }
+
+    /**
      * The parsed command line input.
      */
     private final ModificationsCLIInputBean modificationsCLIInputBean;

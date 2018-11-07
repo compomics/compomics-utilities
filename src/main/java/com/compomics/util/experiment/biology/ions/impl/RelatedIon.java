@@ -18,6 +18,12 @@ import java.util.HashMap;
 public class RelatedIon extends Ion {
 
     /**
+     * Empty default constructor
+     */
+    public RelatedIon() {
+    }
+
+    /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -4605345486425465764L;

@@ -9,6 +9,12 @@ import java.util.TreeSet;
  * @author Marc Vaudel
  */
 public class EmptyCollections {
+
+    /**
+     * Empty default constructor
+     */
+    public EmptyCollections() {
+    }
     
     /**
      * Convenience result of an empty set.

@@ -30,6 +30,12 @@ import java.util.HashMap;
  */
 public class ModificationImplementation implements com.compomics.util.interfaces.Modification, Cloneable {
 
+    /**
+     * Empty default constructor
+     */
+    public ModificationImplementation() {
+    }
+
     // Class specific log4j logger for ModificationImplementation instances.
     Logger logger = Logger.getLogger(ModificationImplementation.class);
 

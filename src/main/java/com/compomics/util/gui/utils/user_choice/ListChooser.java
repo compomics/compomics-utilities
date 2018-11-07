@@ -19,6 +19,12 @@ import javax.swing.table.JTableHeader;
 public abstract class ListChooser extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public ListChooser() {
+    }
+
+    /**
      * The list of items the user will choose from.
      */
     public ArrayList<String> items;

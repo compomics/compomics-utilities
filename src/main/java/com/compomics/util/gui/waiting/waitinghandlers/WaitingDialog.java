@@ -108,6 +108,12 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     private String lineBreak = System.getProperty("line.separator");
 
     /**
+     * Empty default constructor
+     */
+    public WaitingDialog() {
+    }
+
+    /**
      * Creates a new WaitingDialog.
      *
      * @param waitingHandlerParent a reference to the handler parent

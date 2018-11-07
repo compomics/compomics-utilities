@@ -17,6 +17,14 @@ import javax.swing.SwingConstants;
 public class AtomPanel extends javax.swing.JPanel {
 
     /**
+     * Empty default constructor
+     */
+    public AtomPanel() {
+        atomChainDialog = null;
+        panelIndex = 0;
+    }
+
+    /**
      * Map of the isotopes as displayed: displayed string | isotope number.
      */
     private HashMap<String, Integer> isotopesMap;

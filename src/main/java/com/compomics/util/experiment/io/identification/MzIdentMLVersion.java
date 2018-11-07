@@ -60,4 +60,12 @@ public enum MzIdentMLVersion {
         }
         return stringBuilder.toString();
     }
+
+    /**
+     * Empty default constructor
+     */
+    private MzIdentMLVersion() {
+        name = "";
+        description = "";
+    }
 }

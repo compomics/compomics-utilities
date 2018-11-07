@@ -19,6 +19,12 @@ import javax.swing.JOptionPane;
 public class ToolFactory {
 
     /**
+     * Empty default constructor
+     */
+    public ToolFactory() {
+    }
+
+    /**
      * The command line argument for a cps file for PeptideShaker.
      */
     public static final String peptideShakerFileOption = "-cps";

@@ -24,6 +24,12 @@ import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
 
     /**
+     * Empty default constructor
+     */
+    public MzIdentMLIdfileSearchParametersConverter() {
+    }
+
+    /**
      * Constructor.
      *
      * @param mzIdentMLFile the mzIdentML file

@@ -20,6 +20,15 @@ import java.util.zip.GZIPOutputStream;
 public class TextWriter extends ExportWriter {
 
     /**
+     * Empty default constructor
+     */
+    public TextWriter() {
+        writer = null;
+        separator = "";
+        nSeparationLines = 0;
+    }
+
+    /**
      * Writer.
      */
     private final BufferedWriter writer;

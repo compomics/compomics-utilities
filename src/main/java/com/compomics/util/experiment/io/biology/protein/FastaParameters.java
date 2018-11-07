@@ -15,6 +15,12 @@ import java.util.Date;
 public class FastaParameters {
 
     /**
+     * Empty default constructor
+     */
+    public FastaParameters() {
+    }
+
+    /**
      * The version UID for serialization/deserialization compatibility.
      */
     static final long serialVersionUID = -7453836034514062470L;

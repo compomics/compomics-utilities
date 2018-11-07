@@ -33,6 +33,12 @@ import umontreal.iro.lecuyer.rng.RandomStream;
 public class NormalKernelDensityEstimator {
 
     /**
+     * Empty default constructor
+     */
+    public NormalKernelDensityEstimator() {
+    }
+
+    /**
      * N, estimation precision, is set to a default of 512, as in most KDE
      * algorithms default values, i.e. R "density"function, OmicSoft, Matlab
      * algorithm.

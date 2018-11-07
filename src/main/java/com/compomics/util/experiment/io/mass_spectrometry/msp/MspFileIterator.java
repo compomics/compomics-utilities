@@ -14,6 +14,14 @@ import java.io.IOException;
 public class MspFileIterator {
 
     /**
+     * Empty default constructor
+     */
+    public MspFileIterator() {
+        br = null;
+        mgfFileName = "";
+    }
+
+    /**
      * The reader going through the file.
      */
     private final BufferedReader br;

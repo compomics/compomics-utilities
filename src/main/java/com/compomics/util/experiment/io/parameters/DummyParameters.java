@@ -7,6 +7,12 @@ package com.compomics.util.experiment.io.parameters;
  * @author Marc Vaudel
  */
 public class DummyParameters implements MarshallableParameter {
+
+    /**
+     * Empty default constructor
+     */
+    public DummyParameters() {
+    }
     
     /**
      * Name of the type of marshalled parameter.

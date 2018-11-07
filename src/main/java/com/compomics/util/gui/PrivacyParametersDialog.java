@@ -14,6 +14,12 @@ import javax.swing.JOptionPane;
 public class PrivacyParametersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public PrivacyParametersDialog() {
+    }
+
+    /**
      * The normal dialog icon.
      */
     private Image normalIcon;

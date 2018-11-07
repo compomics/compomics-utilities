@@ -95,4 +95,14 @@ public enum ExportFormat {
         }
         return null;
     }
+
+    /**
+     * Empty default constructor
+     */
+    private ExportFormat() {
+        index = 0;
+        name = "";
+        extention = "";
+        description = "";
+    }
 }

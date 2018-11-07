@@ -37,4 +37,13 @@ public enum ProjectType {
         this.description = description;
     }
 
+
+    /**
+     * Empty default constructor
+     */
+    private ProjectType() {
+        index = 0;
+        name = "";
+        description = "";
+    }
 }

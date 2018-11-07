@@ -88,4 +88,14 @@ public enum FastaParametersCLIParams {
         return output;
     }
 
+
+    /**
+     * Empty default constructor
+     */
+    private FastaParametersCLIParams() {
+        id = "";
+        description = "";
+        mandatory = false;
+        hasArgument = false;
+    }
 }

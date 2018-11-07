@@ -6,4 +6,10 @@ package com.compomics.util.experiment.identification.utils;
  * @author Marc Vaudel
  */
 public class TagUtils {
+
+    /**
+     * Empty default constructor
+     */
+    public TagUtils() {
+    }
 }

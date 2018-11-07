@@ -29,6 +29,12 @@ import com.compomics.util.experiment.identification.protein_inference.FastaMappe
 public class PeptideMapperCLI {
 
     /**
+     * Empty default constructor
+     */
+    public PeptideMapperCLI() {
+    }
+
+    /**
      * Main class.
      *
      * @param args command line arguments

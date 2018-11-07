@@ -10,4 +10,10 @@ package com.compomics.util.enumeration;
  */
 public enum OperatingSystemEnum {
     MACOS, WINDOWS, UNIX;
+
+    /**
+     * Empty default constructor
+     */
+    private OperatingSystemEnum() {
+    }
 }

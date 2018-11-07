@@ -35,6 +35,12 @@ import java.io.PrintWriter;
  */
 public class JExceptionDialog extends JDialog {
 
+    /**
+     * Empty default constructor
+     */
+    public JExceptionDialog() {
+    }
+
     // Class specific log4j logger for JExceptionDialog instances.
     Logger logger = Logger.getLogger(JExceptionDialog.class);
 

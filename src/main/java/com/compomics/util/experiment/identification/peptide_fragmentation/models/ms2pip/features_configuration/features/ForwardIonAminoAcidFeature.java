@@ -11,6 +11,12 @@ import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 public class ForwardIonAminoAcidFeature extends AASequenceFeature {
 
     /**
+     * Empty default constructor
+     */
+    public ForwardIonAminoAcidFeature() {
+    }
+
+    /**
      * The index of this ms2pip feature.
      */
     public static final int index = 4;

@@ -38,6 +38,12 @@ import org.jfree.chart.plot.PlotOrientation;
 public class ModificationsDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public ModificationsDialog() {
+    }
+
+    /**
      * The post translational modifications factory.
      */
     private final ModificationFactory modificationFactory = ModificationFactory.getInstance();

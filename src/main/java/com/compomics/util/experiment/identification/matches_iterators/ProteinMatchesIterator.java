@@ -3,6 +3,7 @@ package com.compomics.util.experiment.identification.matches_iterators;
 import com.compomics.util.experiment.identification.Identification;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.waiting.WaitingHandler;
+import java.util.ArrayList;
 
 /**
  * An iterator of protein matches.
@@ -12,6 +13,12 @@ import com.compomics.util.waiting.WaitingHandler;
  * @author Dominik Kopczynski
  */
 public class ProteinMatchesIterator extends MatchesIterator {
+
+    /**
+     * Empty default constructor
+     */
+    public ProteinMatchesIterator() {
+    }
     
     /**
      * Constructor.

@@ -19,6 +19,12 @@ import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 public class TarUtils {
 
     /**
+     * Empty default constructor
+     */
+    public TarUtils() {
+    }
+
+    /**
      * Tar a given folder to a file.
      *
      * @param folder the original folder to tar

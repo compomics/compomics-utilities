@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class OmxFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public OmxFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.omx files.
      *
      * @param f the file

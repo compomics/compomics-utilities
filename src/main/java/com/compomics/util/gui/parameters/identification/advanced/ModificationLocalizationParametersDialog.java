@@ -19,6 +19,12 @@ import javax.swing.SwingConstants;
 public class ModificationLocalizationParametersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public ModificationLocalizationParametersDialog() {
+    }
+
+    /**
      * The parent frame.
      */
     private java.awt.Frame parentFrame;

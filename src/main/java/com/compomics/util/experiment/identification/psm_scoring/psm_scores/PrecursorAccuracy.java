@@ -14,6 +14,12 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 public class PrecursorAccuracy {
 
     /**
+     * Empty default constructor
+     */
+    public PrecursorAccuracy() {
+    }
+
+    /**
      * Scores the match between the given peptide and spectrum using the
      * precursor m/z accuracy.
      *

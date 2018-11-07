@@ -8,6 +8,12 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
  * @author Marc Vaudel
  */
 public class ModificationFeature implements Ms2pipFeature {
+
+    /**
+     * Empty default constructor
+     */
+    public ModificationFeature() {
+    }
     
     /**
      * The index of this ms2pip feature.

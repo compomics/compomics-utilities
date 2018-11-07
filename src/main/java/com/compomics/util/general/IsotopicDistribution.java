@@ -17,6 +17,12 @@ import java.util.Vector;
  */
 public class IsotopicDistribution {
 
+    /**
+     * Empty default constructor
+     */
+    public IsotopicDistribution() {
+    }
+
     // Class specific log4j logger for AASequenceImpl instances.
     Logger logger = Logger.getLogger(IsotopicDistribution.class);
 

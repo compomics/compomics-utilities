@@ -14,6 +14,15 @@ import java.util.Iterator;
 public class Advocate {
 
     /**
+     * Empty default constructor
+     */
+    public Advocate() {
+        index = 0;
+        name = "";
+        type = null;
+    }
+
+    /**
      * The different types of advocates.
      */
     public enum AdvocateType {

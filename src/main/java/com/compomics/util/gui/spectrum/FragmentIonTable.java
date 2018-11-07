@@ -4,6 +4,7 @@ import com.compomics.util.experiment.biology.ions.IonFactory;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.biology.proteins.Peptide;
+import com.compomics.util.experiment.biology.*;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
@@ -14,6 +15,7 @@ import com.compomics.util.gui.renderers.AlignedTableCellRenderer;
 import com.compomics.util.gui.renderers.FragmentIonTableCellRenderer;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
+import com.google.common.base.Functions;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.function.Function;
+import java.util.stream.Stream;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -92,6 +96,22 @@ public class FragmentIonTable extends JTable {
      * The modification sequence matching parameters.
      */
     private final SequenceMatchingParameters modificationSequenceMatchingParameters;
+
+    /**
+     * Empty default constructor
+     */
+    public FragmentIonTable() {
+        currentFragmentIonTypes = null;
+        neutralLosses = null;
+        singleCharge = false;
+        twoCharges = false;
+        currentPeptide = null;
+        peptideSequence = "";
+        allAnnotations = null;
+        modificationParameters = null;
+        sequenceProvider = null;
+        modificationSequenceMatchingParameters = null;
+    }
 
     /**
      * Creates a traditional fragment ion table with the theoretical mz values

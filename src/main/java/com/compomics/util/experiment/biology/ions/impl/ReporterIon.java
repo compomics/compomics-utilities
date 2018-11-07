@@ -20,6 +20,12 @@ import java.util.Set;
 public class ReporterIon extends Ion {
 
     /**
+     * Empty default constructor
+     */
+    public ReporterIon() {
+    }
+
+    /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = 1109011048958734120L;

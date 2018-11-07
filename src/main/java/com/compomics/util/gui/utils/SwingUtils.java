@@ -12,6 +12,12 @@ import javax.swing.Timer;
  * @author Harald Barsnes
  */
 public class SwingUtils {
+
+    /**
+     * Empty default constructor
+     */
+    public SwingUtils() {
+    }
     
     // @TODO: requires java 7, hence not in use at the moment, see the lines that are commented out
 

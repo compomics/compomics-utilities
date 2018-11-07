@@ -18,6 +18,12 @@ import javax.jdo.PersistenceManager;
 public class ObjectsCache {
 
     /**
+     * Empty default constructor
+     */
+    public ObjectsCache() {
+    }
+
+    /**
      * Share of the memory to be used.
      */
     private double memoryShare = 0.75;

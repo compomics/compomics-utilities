@@ -29,6 +29,12 @@ import java.io.IOException;
  */
 public class FtpProtocolException extends IOException {
 
+    /**
+     * Empty default constructor
+     */
+    public FtpProtocolException() {
+    }
+
     // Class specific log4j logger for FtpProtocolException instances.
     Logger logger = Logger.getLogger(FtpProtocolException.class);
 

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.personalization;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.db.object.DbObject;
 import java.util.HashMap;
 
@@ -10,6 +11,12 @@ import java.util.HashMap;
  * @author Marc Vaudel
  */
 public abstract class ExperimentObject extends DbObject {
+
+    /**
+     * Empty default constructor
+     */
+    public ExperimentObject() {
+    }
 
     /**
      * The hash values list.

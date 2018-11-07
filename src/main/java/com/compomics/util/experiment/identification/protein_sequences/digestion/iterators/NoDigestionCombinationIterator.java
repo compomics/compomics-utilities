@@ -14,6 +14,16 @@ import com.compomics.util.experiment.identification.protein_sequences.digestion.
 public class NoDigestionCombinationIterator implements SequenceIterator {
 
     /**
+     * Empty default constructor
+     */
+    public NoDigestionCombinationIterator() {
+        proteinIteratorUtils = null;
+        proteinSequence = "";
+        massMin = 0;
+        massMax = 0;
+    }
+
+    /**
      * Utilities classes for the digestion.
      */
     private final ProteinIteratorUtils proteinIteratorUtils;

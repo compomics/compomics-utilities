@@ -32,6 +32,12 @@ import javax.jdo.PersistenceManagerFactory;
 public class ObjectsDB {
 
     /**
+     * Empty default constructor
+     */
+    public ObjectsDB() {
+    }
+
+    /**
      * The name of the database.
      */
     private String dbName;

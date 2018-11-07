@@ -29,6 +29,13 @@ import javax.swing.table.TableColumnModel;
 public class FilterDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public FilterDialog() {
+        matchFilter = null;
+    }
+
+    /**
      * Boolean indicating whether the user canceled the filtering.
      */
     private boolean canceled = false;

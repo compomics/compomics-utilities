@@ -30,6 +30,12 @@ import java.util.HashSet;
 public class TagSpectrumAnnotator extends SpectrumAnnotator {
 
     /**
+     * Empty default constructor
+     */
+    public TagSpectrumAnnotator() {
+    }
+
+    /**
      * The tag to annotate on the spectrum.
      */
     private Tag tag;

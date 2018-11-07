@@ -19,6 +19,12 @@ import org.apache.commons.net.ftp.FTPReply;
 public class FTPDownloader {
 
     /**
+     * Empty default constructor
+     */
+    public FTPDownloader() {
+    }
+
+    /**
      * The FTP client.
      */
     private FTPClient ftp = null;

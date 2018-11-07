@@ -14,6 +14,12 @@ import org.apache.commons.math.MathException;
 public class DataRoc implements ROC {
 
     /**
+     * Empty default constructor
+     */
+    public DataRoc() {
+    }
+
+    /**
      * The x values of the ROC points.
      */
     private ArrayList<Double> xValues;

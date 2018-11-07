@@ -25,6 +25,12 @@ import javax.swing.event.TableModelEvent;
  */
 public class TableMap extends AbstractTableModel implements TableModelListener {
 
+    /**
+     * Empty default constructor
+     */
+    public TableMap() {
+    }
+
     // Class specific log4j logger for TableMap instances.
     Logger logger = Logger.getLogger(TableMap.class);
 

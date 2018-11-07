@@ -23,6 +23,17 @@ import java.util.ArrayList;
 public class FragmentAnnotator {
 
     /**
+     * Empty default constructor
+     */
+    public FragmentAnnotator() {
+        forwardIonMz1 = null;
+        complementaryIonMz1 = null;
+        peptideLength = 0;
+        forwardIonType = 0;
+        complementaryIonType = 0;
+    }
+
+    /**
      * The modifications factory.
      */
     private final ModificationFactory modificationFactory = ModificationFactory.getInstance();

@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology.enzymes;
 
 import com.compomics.util.Util;
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
@@ -17,6 +18,13 @@ import java.util.stream.Collectors;
  * @author Harald Barsnes
  */
 public class Enzyme extends ExperimentObject {
+
+    /**
+     * Empty default constructor
+     */
+    public Enzyme() {
+        name = "";
+    }
     /*
      * The enzyme id.
     

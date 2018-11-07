@@ -13,6 +13,14 @@ import java.util.HashMap;
 public class PeptideVariantMatches extends DbObject {
 
     /**
+     * Empty default constructor
+     */
+    public PeptideVariantMatches() {
+        lengthDiff = 0;
+        variantMatches = null;
+    }
+
+    /**
      * The length difference induced by the variants. +1 corresponds at a
      * protein sequence of 1 amino acid longer than the peptide sequence.
      */

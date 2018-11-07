@@ -38,6 +38,7 @@ import com.compomics.util.parameters.identification.advanced.ModificationLocaliz
 import com.compomics.util.parameters.identification.advanced.ProteinInferenceParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +53,13 @@ import org.apache.commons.cli.CommandLine;
  * @author Harald Barsnes
  */
 public class IdentificationParametersInputBean {
+
+    /**
+     * Empty default constructor
+     */
+    public IdentificationParametersInputBean() {
+        commandLine = null;
+    }
 
     /**
      * Verifies the command line start parameters.

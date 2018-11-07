@@ -18,6 +18,14 @@ import java.util.concurrent.Semaphore;
 public class FastaIterator implements ProteinIterator {
 
     /**
+     * Empty default constructor
+     */
+    public FastaIterator() {
+        br = null;
+        sanityCheck = false;
+    }
+
+    /**
      * Mutex for the buffering of the fasta file.
      */
     private final Semaphore bufferingMutex = new Semaphore(1);

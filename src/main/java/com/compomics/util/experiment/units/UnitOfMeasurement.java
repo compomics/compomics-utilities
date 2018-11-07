@@ -9,6 +9,12 @@ package com.compomics.util.experiment.units;
 public class UnitOfMeasurement {
 
     /**
+     * Empty default constructor
+     */
+    public UnitOfMeasurement() {
+    }
+
+    /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = 607774099178502699L;

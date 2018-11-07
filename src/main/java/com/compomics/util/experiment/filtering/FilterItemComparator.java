@@ -198,4 +198,12 @@ public enum FilterItemComparator {
     public String toString() {
         return name;
     }
+
+    /**
+     * Empty default constructor
+     */
+    private FilterItemComparator() {
+        name = "";
+        description = "";
+    }
 }

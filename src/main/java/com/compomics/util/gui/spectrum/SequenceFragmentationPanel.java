@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 /**
  * This class was imported from the Peptizer and MascotDatfile parser, and was
@@ -106,6 +107,12 @@ public class SequenceFragmentationPanel extends JPanel {
      * Color for the rewind ion
      */
     private Color rewindColor;
+
+    /**
+     * Empty default constructor
+     */
+    public SequenceFragmentationPanel() {
+    }
 
     /**
      * Creates a new SequenceFragmentationPanel working with B and Y ions.

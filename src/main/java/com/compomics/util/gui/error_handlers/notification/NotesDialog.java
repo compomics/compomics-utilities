@@ -11,6 +11,12 @@ import java.util.ArrayList;
 public class NotesDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public NotesDialog() {
+    }
+
+    /**
      * Creates a new NotesDialog.
      *
      * @param parent the parent frame

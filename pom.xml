@@ -403,7 +403,7 @@
         <dependency>
             <groupId>org.zoodb</groupId>
             <artifactId>zoodb</artifactId>
-            <version>0.5.1-SNAPSHOT</version>
+            <version>0.5.1</version>
         </dependency>
 
         <!-- The log4j logging framework -->

@@ -20,6 +20,17 @@ import java.util.stream.Collectors;
 public class PeptideProteinMapping {
 
     /**
+     * Empty default constructor
+     */
+    public PeptideProteinMapping() {
+        proteinAccession = "";
+        peptideSequence = "";
+        index = 0;
+        modificationMatches = null;
+        peptideVariantMatches = null;
+    }
+
+    /**
      * Accession of the protein.
      */
     private final String proteinAccession;

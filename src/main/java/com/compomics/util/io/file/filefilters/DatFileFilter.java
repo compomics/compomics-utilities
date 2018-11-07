@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class DatFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public DatFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.dat files.
      *
      * @param f the file

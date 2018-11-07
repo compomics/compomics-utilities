@@ -30,6 +30,12 @@ import com.compomics.util.db.DBMetaData;
  */
 public class Constructors {
 
+    /**
+     * Empty default constructor
+     */
+    public Constructors() {
+    }
+
     // Class specific log4j logger for Constructors instances.
     Logger logger = Logger.getLogger(Constructors.class);
 

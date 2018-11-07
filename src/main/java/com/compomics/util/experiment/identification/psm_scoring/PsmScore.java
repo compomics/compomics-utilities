@@ -88,4 +88,14 @@ public enum PsmScore {
         }
         return null;
     }
+
+    /**
+     * Empty default constructor
+     */
+    private PsmScore() {
+        index = null;
+        name = "";
+        increasing = false;
+        description = "";
+    }
 }

@@ -17,6 +17,12 @@ import javax.swing.SwingConstants;
 public class EnzymeParametersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public EnzymeParametersDialog() {
+    }
+
+    /**
      * The enzyme factory.
      */
     private EnzymeFactory enzymeFactory = EnzymeFactory.getInstance();

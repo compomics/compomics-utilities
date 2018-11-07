@@ -30,6 +30,12 @@ import java.util.stream.IntStream;
 public class ModificationUtils {
 
     /**
+     * Empty default constructor
+     */
+    public ModificationUtils() {
+    }
+
+    /**
      * Empty array for no result.
      */
     public static final int[] empty = new int[0];

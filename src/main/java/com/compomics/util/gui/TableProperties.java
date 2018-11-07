@@ -9,6 +9,12 @@ package com.compomics.util.gui;
 public class TableProperties {
 
     /**
+     * Empty default constructor
+     */
+    public TableProperties() {
+    }
+
+    /**
      * The label with for the numbers in the jsparklines columns.
      */
     private static final int labelWidth = 50;

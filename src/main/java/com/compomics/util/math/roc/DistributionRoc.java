@@ -12,6 +12,14 @@ import org.apache.commons.math.MathException;
 public class DistributionRoc implements ROC {
 
     /**
+     * Empty default constructor
+     */
+    public DistributionRoc() {
+        distributionControl = null;
+        distributionPatient = null;
+    }
+
+    /**
      * The control distribution.
      */
     private final Distribution distributionControl;

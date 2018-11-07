@@ -32,6 +32,12 @@ import java.text.SimpleDateFormat;
  */
 public class TimestampRenderer extends DefaultTableCellRenderer {
 
+    /**
+     * Empty default constructor
+     */
+    public TimestampRenderer() {
+    }
+
     // Class specific log4j logger for TimestampRenderer instances.
     Logger logger = Logger.getLogger(TimestampRenderer.class);
 

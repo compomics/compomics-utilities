@@ -37,6 +37,12 @@ import java.util.stream.Collectors;
 public abstract class SpectrumAnnotator {
 
     /**
+     * Empty default constructor
+     */
+    public SpectrumAnnotator() {
+    }
+
+    /**
      * Enum of the possibilities for ties resolution when multiple peaks can be
      * annotated.
      */

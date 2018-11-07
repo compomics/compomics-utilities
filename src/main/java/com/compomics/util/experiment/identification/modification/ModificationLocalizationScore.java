@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.modification;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -122,5 +123,13 @@ public enum ModificationLocalizationScore {
                 .map(score -> score.getId() + ": " + score.getName())
                 .collect(Collectors.joining(","));
         
+    }
+
+    /**
+     * Empty default constructor
+     */
+    private ModificationLocalizationScore() {
+        id = 0;
+        name = "";
     }
 }

@@ -14,6 +14,13 @@ import javax.swing.JOptionPane;
 public class FrameExceptionHandler extends ExceptionHandler {
 
     /**
+     * Empty default constructor
+     */
+    public FrameExceptionHandler() {
+        toolIssuesPage = "";
+    }
+
+    /**
      * The parent frame used to display feedback.
      */
     private JFrame parent = null;

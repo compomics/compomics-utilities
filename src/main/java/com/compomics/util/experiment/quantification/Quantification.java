@@ -10,6 +10,12 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public abstract class Quantification extends ExperimentObject {
 
     /**
+     * Empty default constructor
+     */
+    public Quantification() {
+    }
+
+    /**
      * The implemented quantification methods.
      */
     public enum QuantificationMethod {

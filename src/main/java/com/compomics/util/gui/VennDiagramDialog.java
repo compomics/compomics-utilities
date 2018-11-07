@@ -15,6 +15,15 @@ import javax.swing.*;
 public class VennDiagramDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public VennDiagramDialog() {
+        dialogParent = null;
+        normalIcon = null;
+        waitingIcon = null;
+    }
+
+    /**
      * The dialog parent.
      */
     private final Frame dialogParent;

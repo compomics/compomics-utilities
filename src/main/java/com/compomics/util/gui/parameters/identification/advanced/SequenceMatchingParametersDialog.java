@@ -16,6 +16,12 @@ import javax.swing.SwingConstants;
 public class SequenceMatchingParametersDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public SequenceMatchingParametersDialog() {
+    }
+
+    /**
      * The parent frame.
      */
     private java.awt.Frame parentFrame;

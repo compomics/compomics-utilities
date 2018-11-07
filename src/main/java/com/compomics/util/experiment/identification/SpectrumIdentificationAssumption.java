@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.biology.ions.impl.PrecursorIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
@@ -14,6 +15,12 @@ import java.util.ArrayList;
  * @author Dominik Kopczynski
  */
 public abstract class SpectrumIdentificationAssumption extends ExperimentObject {
+
+    /**
+     * Empty default constructor
+     */
+    public SpectrumIdentificationAssumption() {
+    }
 
     /**
      * The rank of the peptide assumption for the concerned spectrum.

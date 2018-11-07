@@ -71,6 +71,12 @@ public class ReferenceArea {
     private boolean aboveXAxis = true;
 
     /**
+     * Empty default constructor
+     */
+    public ReferenceArea() {
+    }
+
+    /**
      * Creates a new ReferenceArea.
      *
      * @param identifier the reference identifier, has to be unique

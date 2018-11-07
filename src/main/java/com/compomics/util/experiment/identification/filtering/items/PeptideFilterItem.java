@@ -123,4 +123,12 @@ public enum PeptideFilterItem implements FilterItem {
                 return false;
         }
     }
+
+    /**
+     * Empty default constructor
+     */
+    private PeptideFilterItem() {
+        name = "";
+        description = "";
+    }
 }

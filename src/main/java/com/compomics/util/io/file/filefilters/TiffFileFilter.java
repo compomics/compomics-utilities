@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class TiffFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public TiffFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.tiff files.
      *
      * @param f the file

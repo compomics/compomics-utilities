@@ -111,4 +111,12 @@ public enum PsmFilterItem implements FilterItem {
                 return false;
         }
     }
+
+    /**
+     * Empty default constructor
+     */
+    private PsmFilterItem() {
+        name = "";
+        description = "";
+    }
 }

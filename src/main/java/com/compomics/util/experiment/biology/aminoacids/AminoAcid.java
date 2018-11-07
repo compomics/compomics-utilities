@@ -40,6 +40,12 @@ import java.util.List;
  */
 public abstract class AminoAcid {
 
+    /**
+     * Empty default constructor
+     */
+    public AminoAcid() {
+    }
+
 
     public static final AminoAcid A = new Alanine();
     public static final AminoAcid C = new Cysteine();

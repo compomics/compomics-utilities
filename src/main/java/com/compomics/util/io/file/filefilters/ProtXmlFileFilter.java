@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class ProtXmlFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public ProtXmlFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.prot.xml, *.protxml and *.xml files.
      *
      * @param f the file

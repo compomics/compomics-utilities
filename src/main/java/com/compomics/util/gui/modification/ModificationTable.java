@@ -93,6 +93,19 @@ public class ModificationTable extends JTable {
     private PeptideMatch peptideMatch;
 
     /**
+     * Empty default constructor
+     */
+    public ModificationTable() {
+        annotationParameters = null;
+        identification = null;
+        modificationParameters = null;
+        sequenceProvider = null;
+        modificationSequenceMatchingParameters = null;
+        ptm = null;
+        modificationSites = null;
+    }
+
+    /**
      * Constructor.
      *
      * @param identification the identification object

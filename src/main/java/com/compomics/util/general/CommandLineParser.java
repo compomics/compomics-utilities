@@ -28,6 +28,12 @@ import java.util.ArrayList;
  */
 public class CommandLineParser {
 
+    /**
+     * Empty default constructor
+     */
+    public CommandLineParser() {
+    }
+
     // Class specific log4j logger for CommandLineParser instances.
     Logger logger = Logger.getLogger(CommandLineParser.class);
     /**

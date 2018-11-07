@@ -55,6 +55,12 @@ import java.util.stream.Collectors;
 public class FMIndex extends ExperimentObject implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
 
     /**
+     * Empty default constructor
+     */
+    public FMIndex() {
+    }
+
+    /**
      * Semaphore for caching.
      */
     static Object cacheMutex = new Object();

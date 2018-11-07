@@ -10,6 +10,12 @@ import com.compomics.util.experiment.identification.peptide_fragmentation.models
 public class AAIdentityFeatureRelative extends AAIdentityFeature {
 
     /**
+     * Empty default constructor
+     */
+    public AAIdentityFeatureRelative() {
+    }
+
+    /**
      * The index of this ms2pip feature.
      */
     public static final int index = 10;

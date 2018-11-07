@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.mass_spectrometry.spectra;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.Comparator;
@@ -10,6 +11,15 @@ import java.util.Comparator;
  * @author Marc Vaudel
  */
 public class Peak extends ExperimentObject {
+
+    /**
+     * Empty default constructor
+     */
+    public Peak() {
+        mz = 0;
+        rt = 0;
+        intensity = 0;
+    }
 
     /**
      * The version UID for Serialization/Deserialization compatibility

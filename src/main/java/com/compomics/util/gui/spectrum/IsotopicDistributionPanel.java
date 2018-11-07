@@ -30,6 +30,12 @@ import org.apache.log4j.Logger;
  */
 public class IsotopicDistributionPanel extends GraphicsPanel {
 
+    /**
+     * Empty default constructor
+     */
+    public IsotopicDistributionPanel() {
+    }
+
     // Class specific log4j logger for MolecularFormula instances.
     Logger logger = Logger.getLogger(MolecularFormula.class);
     /**

@@ -10,6 +10,12 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public abstract class IdentificationMatch extends ExperimentObject {
 
     /**
+     * Empty default constructor
+     */
+    public IdentificationMatch() {
+    }
+
+    /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = -9132138792119651421L;

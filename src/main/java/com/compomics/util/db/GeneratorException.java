@@ -27,6 +27,12 @@ import org.apache.log4j.Logger;
  */
 public class GeneratorException extends Exception {
 
+    /**
+     * Empty default constructor
+     */
+    public GeneratorException() {
+    }
+
     // Class specific log4j logger for GeneratorException instances.
     Logger logger = Logger.getLogger(GeneratorException.class);
 

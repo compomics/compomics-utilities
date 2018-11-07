@@ -3,6 +3,7 @@ package com.compomics.util.math.statistics.distributions;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.Distribution;
 import java.util.ArrayList;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -11,6 +12,17 @@ import java.util.stream.Collectors;
  * @author Marc Vaudel
  */
 public class NonSymmetricalNormalDistribution implements Distribution {
+
+    /**
+     * Empty default constructor
+     */
+    public NonSymmetricalNormalDistribution() {
+        stdUp = 0;
+        stdDown = 0;
+        mean = 0;
+        distributionUp = null;
+        distributionDown = null;
+    }
 
     /**
      * Serial version number for backward compatibility.

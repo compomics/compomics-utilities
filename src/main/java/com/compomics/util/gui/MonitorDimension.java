@@ -10,6 +10,12 @@ import java.awt.*;
  */
 public class MonitorDimension {
 
+    /**
+     * Empty default constructor
+     */
+    public MonitorDimension() {
+    }
+
     // Class specific log4j logger for MonitorDimension instances.
     Logger logger = Logger.getLogger(MonitorDimension.class);
 

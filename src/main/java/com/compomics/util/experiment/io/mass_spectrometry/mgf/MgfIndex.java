@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.io.mass_spectrometry.mgf;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -82,6 +83,12 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * null value indicated that the check was not performed.
      */
     private Boolean precursorChargesMissing = null;
+
+    /**
+     * Empty default constructor
+     */
+    public MgfIndex() {
+    }
 
     /**
      * Constructor.

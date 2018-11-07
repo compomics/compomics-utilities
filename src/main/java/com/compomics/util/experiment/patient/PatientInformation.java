@@ -8,6 +8,12 @@ package com.compomics.util.experiment.patient;
 public class PatientInformation {
 
     /**
+     * Empty default constructor
+     */
+    public PatientInformation() {
+    }
+
+    /**
      * The type of information, for example "Age".
      */
     private String type;

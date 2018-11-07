@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
@@ -9,6 +10,13 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
  * Time: 3:56:49 PM
  */
 public class IdentificationMethod extends ExperimentObject {
+
+    /**
+     * Empty default constructor
+     */
+    public IdentificationMethod() {
+        index = 0;
+    }
 
     /**
      * The version UID for Serialization/Deserialization compatibility

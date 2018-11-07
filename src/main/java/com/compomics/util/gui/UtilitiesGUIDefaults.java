@@ -17,6 +17,12 @@ import javax.swing.UIManager.LookAndFeelInfo;
 public class UtilitiesGUIDefaults {
 
     /**
+     * Empty default constructor
+     */
+    public UtilitiesGUIDefaults() {
+    }
+
+    /**
      * Sets the look and feel to the default utilities look and feel. First
      * tries to use Nimbus, if Nimbus is not supported then PlasticXPLookAndFeel
      * is used.

@@ -8,6 +8,7 @@ import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.experiment.biology.*;
 import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.gui.AminoAcidPatternDialog;
@@ -35,6 +36,12 @@ import no.uib.jsparklines.extra.TrueFalseIconRenderer;
  * @author Harald Barsnes
  */
 public class ModificationDialog extends javax.swing.JDialog {
+
+    /**
+     * Empty default constructor
+     */
+    public ModificationDialog() {
+    }
 
     /**
      * The post translational modifications factory.

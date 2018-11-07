@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.amino_acid_tags;
 
+import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 
@@ -9,6 +10,12 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
  * @author Marc
  */
 public class MassGap extends ExperimentObject implements TagComponent {
+
+    /**
+     * Empty default constructor
+     */
+    public MassGap() {
+    }
 
     /**
      * The value of the mass gap.

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadPoolExecutor;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
@@ -35,6 +36,12 @@ import javax.swing.table.TableCellRenderer;
  * @author Harald Barsnes
  */
 public abstract class SelfUpdatingTableModel extends DefaultTableModel {
+
+    /**
+     * Empty default constructor
+     */
+    public SelfUpdatingTableModel() {
+    }
 
     /**
      * The view start index of the rows being loaded.

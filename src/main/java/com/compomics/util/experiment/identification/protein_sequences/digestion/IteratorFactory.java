@@ -20,6 +20,12 @@ import java.util.ArrayList;
 public class IteratorFactory {
 
     /**
+     * Empty default constructor
+     */
+    public IteratorFactory() {
+    }
+
+    /**
      * The utils used to generate the peptides.
      */
     private ProteinIteratorUtils proteinIteratorUtils;

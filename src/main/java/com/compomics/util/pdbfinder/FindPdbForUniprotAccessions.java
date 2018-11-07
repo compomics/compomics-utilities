@@ -26,6 +26,12 @@ import java.util.Vector;
 public class FindPdbForUniprotAccessions {
 
     /**
+     * Empty default constructor
+     */
+    public FindPdbForUniprotAccessions() {
+    }
+
+    /**
      * The protein accession number.
      */
     private String iProteinAccession;

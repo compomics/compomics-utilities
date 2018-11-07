@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class OutFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public OutFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.out files.
      *
      * @param f the file

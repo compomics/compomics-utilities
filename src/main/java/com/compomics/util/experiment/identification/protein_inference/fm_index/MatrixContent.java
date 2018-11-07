@@ -12,6 +12,12 @@ import java.util.HashMap;
 public class MatrixContent {
 
     /**
+     * Empty default constructor
+     */
+    public MatrixContent() {
+    }
+
+    /**
      * Left index.
      */
     public int left;

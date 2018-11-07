@@ -17,6 +17,12 @@ import javax.swing.table.DefaultTableModel;
 public class IdentificationParametersOverviewDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public IdentificationParametersOverviewDialog() {
+    }
+
+    /**
      * The identification parameters factory.
      */
     private IdentificationParametersFactory identificationParametersFactory = IdentificationParametersFactory.getInstance();

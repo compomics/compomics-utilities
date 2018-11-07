@@ -12,6 +12,12 @@ import java.util.Collections;
 public class BinningFilter {
 
     /**
+     * Empty default constructor
+     */
+    public BinningFilter() {
+    }
+
+    /**
      * Returns a list containing first the filtered xs and then the filtered ys.
      * The filtered values correspond to the median of the points grouped in the
      * given number of bins.

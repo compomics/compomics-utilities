@@ -30,6 +30,12 @@ import java.sql.Types;
  */
 public class ColumnTypeConverter {
 
+    /**
+     * Empty default constructor
+     */
+    public ColumnTypeConverter() {
+    }
+
     // Class specific log4j logger for ColumnTypeConverter instances.
     Logger logger = Logger.getLogger(ColumnTypeConverter.class);
 

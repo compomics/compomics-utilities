@@ -27,6 +27,12 @@ import org.w3c.dom.svg.SVGDocument;
 public class Export {
 
     /**
+     * Empty default constructor
+     */
+    public Export() {
+    }
+
+    /**
      * Exports the contents of a JFreeChart to an svg, png, pdf etc.
      *
      * @param chart chart to export

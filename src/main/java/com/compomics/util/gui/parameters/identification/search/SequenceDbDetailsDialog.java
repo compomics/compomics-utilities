@@ -42,6 +42,12 @@ import javax.swing.filechooser.FileFilter;
 public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
     /**
+     * Empty default constructor
+     */
+    public SequenceDbDetailsDialog() {
+    }
+
+    /**
      * A simple progress dialog.
      */
     private static ProgressDialogX progressDialog;

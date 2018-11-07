@@ -16,6 +16,12 @@ import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialo
 public class MsgfParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
 
     /**
+     * Empty default constructor
+     */
+    public MsgfParametersDialog() {
+    }
+
+    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;

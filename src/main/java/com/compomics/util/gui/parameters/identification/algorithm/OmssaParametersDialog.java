@@ -22,6 +22,12 @@ import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialo
 public class OmssaParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
 
     /**
+     * Empty default constructor
+     */
+    public OmssaParametersDialog() {
+    }
+
+    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;

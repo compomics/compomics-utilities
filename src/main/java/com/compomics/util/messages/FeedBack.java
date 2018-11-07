@@ -14,6 +14,7 @@ public class FeedBack {
      */
     public enum FeedBackType {
 
+
         /**
          * A warning
          */
@@ -26,6 +27,11 @@ public class FeedBack {
          * Feed from a stream like twitter
          */
         FEED
+    }
+    /**
+     * Empty default constructor
+     */
+    public FeedBack() {
     }
     /**
      * The type of report.

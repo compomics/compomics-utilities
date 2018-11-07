@@ -9,6 +9,12 @@ package com.compomics.util.experiment.biology.atoms;
 public class AtomImpl {
 
     /**
+     * Empty default constructor
+     */
+    public AtomImpl() {
+    }
+
+    /**
      * Serial number for backward compatibility.
      */
     static final long serialVersionUID = 3269643086590455656L;

@@ -6,6 +6,12 @@ package com.compomics.util.experiment.biology.ions;
  * @author Marc Vaudel
  */
 public class Charge {
+
+    /**
+     * Empty default constructor
+     */
+    public Charge() {
+    }
     
      /**
      * Returns the charge as a string of + or -. One for each charge. A charge

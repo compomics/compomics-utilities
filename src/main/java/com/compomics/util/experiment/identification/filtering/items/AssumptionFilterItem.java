@@ -129,4 +129,12 @@ public enum AssumptionFilterItem implements FilterItem {
                 return false;
         }
     }
+
+    /**
+     * Empty default constructor
+     */
+    private AssumptionFilterItem() {
+        name = "";
+        description = "";
+    }
 }

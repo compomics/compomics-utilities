@@ -54,6 +54,12 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
     private double maxFragmentIonAccuracy;
 
     /**
+     * Empty default constructor
+     */
+    public AnnotationParametersDialog() {
+    }
+
+    /**
      * Creates a new AnnotationPreferencesDialog with a frame as owner.
      *
      * @param parentFrame the parent frame

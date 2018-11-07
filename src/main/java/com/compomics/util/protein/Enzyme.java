@@ -34,6 +34,12 @@ import java.util.Vector;
  */
 public class Enzyme implements Cloneable {
 
+    /**
+     * Empty default constructor
+     */
+    public Enzyme() {
+    }
+
     // Class specific log4j logger for Enzyme instances.
     Logger logger = Logger.getLogger(Enzyme.class);
     public static final int CTERM = 0; // @TODO: should be replaced by Emnum

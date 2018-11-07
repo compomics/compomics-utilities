@@ -11,6 +11,12 @@ import javax.swing.filechooser.*;
 public class MgfFileFilter extends FileFilter {
 
     /**
+     * Empty default constructor
+     */
+    public MgfFileFilter() {
+    }
+
+    /**
      * Accept all directories, *.mgf files.
      *
      * @param f the file

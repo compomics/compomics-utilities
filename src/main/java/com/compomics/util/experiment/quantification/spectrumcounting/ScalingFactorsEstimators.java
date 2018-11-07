@@ -26,6 +26,13 @@ import java.util.concurrent.TimeoutException;
 public class ScalingFactorsEstimators {
 
     /**
+     * Empty default constructor
+     */
+    public ScalingFactorsEstimators() {
+        spectrumCountingParameters = null;
+    }
+
+    /**
      * The spectrum counting parameters.
      */
     private final SpectrumCountingParameters spectrumCountingParameters;

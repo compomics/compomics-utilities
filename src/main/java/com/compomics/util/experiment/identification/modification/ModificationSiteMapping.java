@@ -14,6 +14,12 @@ import java.util.HashMap;
 public class ModificationSiteMapping {
 
     /**
+     * Empty default constructor
+     */
+    public ModificationSiteMapping() {
+    }
+
+    /**
      * Aligns two series of integer, minimizing the distance between them and
      * excluding outliers.
      *

@@ -8,6 +8,12 @@ package com.compomics.util.pdbfinder.pdb;
 public class PdbParameter {
 
     /**
+     * Empty default constructor
+     */
+    public PdbParameter() {
+    }
+
+    /**
      * The PDB accession.
      */
     private String iPdbaccession;

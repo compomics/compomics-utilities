@@ -4,11 +4,13 @@ import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.parameters.identification.tool_specific.MsAmandaParameters;
 import com.compomics.util.gui.GuiUtilities;
+import com.compomics.util.gui.JOptionEditorPane;
 import java.awt.Dialog;
 import javax.swing.SwingConstants;
 import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialog;
 import java.awt.Color;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  * Dialog for the MS Amanda specific settings.
@@ -16,6 +18,12 @@ import javax.swing.JOptionPane;
  * @author Harald Barsnes
  */
 public class MsAmandaParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
+
+    /**
+     * Empty default constructor
+     */
+    public MsAmandaParametersDialog() {
+    }
 
     /**
      * Boolean indicating whether the used canceled the editing.

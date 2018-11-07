@@ -23,4 +23,11 @@ public enum FragmentationMethod {
     private FragmentationMethod(String name) {
         this.name = name;
     }
+
+    /**
+     * Empty default constructor
+     */
+    private FragmentationMethod() {
+        name = "";
+    }
 }

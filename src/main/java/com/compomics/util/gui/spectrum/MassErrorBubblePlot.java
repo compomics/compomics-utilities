@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -70,6 +72,12 @@ public class MassErrorBubblePlot extends JPanel {
      * The data series fragment ion colors.
      */
     private ArrayList<Color> dataSeriesfragmentIonColors = new ArrayList<>();
+
+    /**
+     * Empty default constructor
+     */
+    public MassErrorBubblePlot() {
+    }
 
     /**
      * Creates a new MassErrorBubblePlot.

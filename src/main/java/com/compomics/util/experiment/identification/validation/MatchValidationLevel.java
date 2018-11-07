@@ -171,4 +171,12 @@ public enum MatchValidationLevel {
         }
         throw new IllegalArgumentException("No match validation level found for index " + index + ".");
     }
+
+    /**
+     * Empty default constructor
+     */
+    private MatchValidationLevel() {
+        index = 0;
+        name = "";
+    }
 }

@@ -31,6 +31,12 @@ import java.awt.*;
  */
 public class ByteArrayRenderer extends DefaultTableCellRenderer {
 
+    /**
+     * Empty default constructor
+     */
+    public ByteArrayRenderer() {
+    }
+
     // Class specific log4j logger for ByteArrayRenderer instances.
     Logger logger = Logger.getLogger(ByteArrayRenderer.class);
 

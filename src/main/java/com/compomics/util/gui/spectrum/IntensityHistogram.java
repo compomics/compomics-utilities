@@ -4,9 +4,11 @@ import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -30,6 +32,12 @@ public class IntensityHistogram extends JPanel {
      * The chart panel for external access.
      */
     private ChartPanel chartPanel;
+
+    /**
+     * Empty default constructor
+     */
+    public IntensityHistogram() {
+    }
 
     /**
      * Creates an IntensityHistogram plot

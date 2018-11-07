@@ -18,6 +18,12 @@ import org.jfree.chart.plot.PlotOrientation;
 public class ModificationChooser extends ListChooser {
 
     /**
+     * Empty default constructor
+     */
+    public ModificationChooser() {
+    }
+
+    /**
      * The modifications factory.
      */
     private ModificationFactory modificationsFactory = ModificationFactory.getInstance();

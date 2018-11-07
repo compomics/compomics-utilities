@@ -13,6 +13,12 @@ import org.apache.commons.math.util.FastMath;
 public class PrecursorMap {
 
     /**
+     * Empty default constructor
+     */
+    public PrecursorMap() {
+    }
+
+    /**
      * The precursor m/z tolerance.
      */
     double precursorTolerance;

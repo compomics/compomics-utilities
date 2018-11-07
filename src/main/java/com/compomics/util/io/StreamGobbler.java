@@ -11,6 +11,13 @@ import java.io.InputStreamReader;
  * @author Davy Maddelein
  */
 public class StreamGobbler implements Runnable {
+
+    /**
+     * Empty default constructor
+     */
+    public StreamGobbler() {
+        is = null;
+    }
     
     /**
      * If the reading is to continue or not.

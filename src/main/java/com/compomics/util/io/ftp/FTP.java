@@ -36,6 +36,12 @@ import java.util.Vector;
  */
 public class FTP {
 
+    /**
+     * Empty default constructor
+     */
+    public FTP() {
+    }
+
     // Class specific log4j logger for FTP instances.
     Logger logger = Logger.getLogger(FTP.class);
 

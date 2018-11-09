@@ -1734,7 +1734,7 @@ public class Header implements Cloneable, Serializable {
                 header.iProteinEvidence = header.iDescription.substring(evidenceStartIndex);
             }
 
-            // http://www.uniprot.org/manual/protein_existence
+            // https://www.uniprot.org/manual/protein_existence
         }
 
         // try to get the taxonomy name from the description

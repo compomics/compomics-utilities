@@ -19,7 +19,7 @@ public class ConnectionManager {
     /**
      * The UniProt host name.
      */
-    private static final String uniprotHost = "http://www.uniprot.org/";
+    private static final String uniprotHost = "https://www.uniprot.org/";
 
     /**
      * Returns the UniProt web site host name.

@@ -48,7 +48,7 @@ public class UniProtQuery {
     private URL getUniProtQueryURL(int taxonomy, SequenceContentType type) throws MalformedURLException {
 
         String queryPlaceHolder = "@INSERT_QUERY@";
-        String uniprotQueryTemplate = "http://www.uniprot.org/uniprot/?query=@INSERT_QUERY@+AND+organism:" + taxonomy;
+        String uniprotQueryTemplate = "https://www.uniprot.org/uniprot/?query=@INSERT_QUERY@+AND+organism:" + taxonomy;
 
         if (type.equals(SequenceContentType.REVIEWED)) {
             uniprotQueryTemplate = uniprotQueryTemplate.replace(queryPlaceHolder, "reviewed:yes");

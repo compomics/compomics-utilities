@@ -3020,7 +3020,7 @@ public class UtilitiesDemo extends javax.swing.JFrame {
         } else if (evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 
             String proteinAccession = keyValuePairs.get("Accession");
-            String proteinUniProtUrl = "http://www.uniprot.org/uniprot/" + proteinAccession.trim() + "#section_features";
+            String proteinUniProtUrl = "https://www.uniprot.org/uniprot/" + proteinAccession.trim() + "#section_features";
 
             this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
             BareBonesBrowserLaunch.openURL(proteinUniProtUrl);

@@ -116,7 +116,7 @@ public class UniprotTaxonomy {
 
         String query = URIUtil.encodeQuery(name);
 
-        URL url = new URL("http://www.uniprot.org/taxonomy/?sort=score&desc=&compress=no&query=" + query + "&format=tab&columns=id");
+        URL url = new URL("https://www.uniprot.org/taxonomy/?sort=score&desc=&compress=no&query=" + query + "&format=tab&columns=id");
 
         URLConnection conn = url.openConnection();
 
@@ -222,7 +222,7 @@ public class UniprotTaxonomy {
      */
     public static void downloadTaxonomyFile(File destinationFile) throws IOException {
 
-        URL url = new URL("http://www.uniprot.org/taxonomy/?format=tab&columns=id");
+        URL url = new URL("https://www.uniprot.org/taxonomy/?format=tab&columns=id");
 
         URLConnection conn = url.openConnection();
 

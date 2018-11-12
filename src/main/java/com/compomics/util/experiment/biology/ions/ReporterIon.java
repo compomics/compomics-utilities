@@ -188,6 +188,64 @@ public class ReporterIon extends Ion {
      */
     public final static ReporterIon TMT_226 = new ReporterIon("TMT226", 225.2); // @TODO: add the actual composition
     /**
+     * Standard reporter ion iodoTMT zero.
+     */
+    public final static ReporterIon iodoTMT_zero = new ReporterIon("iodoTMT_zero", getComposition("iodoTMT_zero"));
+    /**
+     * Standard reporter ion iodoTMT 126.
+     */
+    public final static ReporterIon iodoTMT_126 = new ReporterIon("iodoTMT_126", getComposition("iodoTMT_126"));
+    /**
+     * Standard reporter ion iodoTMT 127.
+     */
+    public final static ReporterIon iodoTMT_127 = new ReporterIon("iodoTMT_127", getComposition("iodoTMT_127"));
+    /**
+     * Standard reporter ion iodoTMT 128.
+     */
+    public final static ReporterIon iodoTMT_128 = new ReporterIon("iodoTMT_128", getComposition("iodoTMT_128"));
+    /**
+     * Standard reporter ion iodoTMT 128.
+     */
+    public final static ReporterIon iodoTMT_129 = new ReporterIon("iodoTMT_129", getComposition("iodoTMT_129"));
+    /**
+     * Standard reporter ion iodoTMT 130.
+     */
+    public final static ReporterIon iodoTMT_130 = new ReporterIon("iodoTMT_130", getComposition("iodoTMT_130"));
+    /**
+     * Standard reporter ion iodoTMT 131.
+     */
+    public final static ReporterIon iodoTMT_131 = new ReporterIon("iodoTMT_131", getComposition("iodoTMT_131"));
+    
+    /**
+     * Standard reporter ion iodoTMT zero with ETD fragmentation.
+     */
+    public final static ReporterIon iodoTMT_zero_ETD = new ReporterIon("iodoTMT_zero_ETD", getComposition("iodoTMT_zero_ETD"));
+    /**
+     * Standard reporter ion iodoTMT 126 with ETD fragmentation.
+     */
+    public final static ReporterIon iodoTMT_126_ETD = new ReporterIon("iodoTMT_126_ETD", getComposition("iodoTMT_126_ETD"));
+    /**
+     * Standard reporter ion iodoTMT 127 with ETD fragmentation.
+     */
+    public final static ReporterIon iodoTMT_127_ETD = new ReporterIon("iodoTMT_127_ETD", getComposition("iodoTMT_127_ETD"));
+    /**
+     * Standard reporter ion iodoTMT 128 with ETD fragmentation.
+     */
+    public final static ReporterIon iodoTMT_128_ETD = new ReporterIon("iodoTMT_128_ETD", getComposition("iodoTMT_128_ETD"));
+    /**
+     * Standard reporter ion iodoTMT 128 with ETD fragmentation.
+     */
+    public final static ReporterIon iodoTMT_129_ETD = new ReporterIon("iodoTMT_129_ETD", getComposition("iodoTMT_129_ETD"));
+    /**
+     * Standard reporter ion iodoTMT 130 with ETD fragmentation.
+     */
+    public final static ReporterIon iodoTMT_130_ETD = new ReporterIon("iodoTMT_130_ETD", getComposition("iodoTMT_130_ETD"));
+    /**
+     * Standard reporter ion iodoTMT 131 with ETD fragmentation.
+     */
+    public final static ReporterIon iodoTMT_131_ETD = new ReporterIon("iodoTMT_131_ETD", getComposition("iodoTMT_131_ETD"));
+    
+    /**
      * Standard reporter ion for lysine acetylation (PMID: 18338905).
      */
     public final static ReporterIon ACE_K_126 = new ReporterIon("aceK126", AtomChain.getAtomChain("C(7)H(11)ON"));
@@ -410,7 +468,7 @@ public class ReporterIon extends Ion {
                 cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "131");
             } else if (name.equalsIgnoreCase("TMT_131C")) {
                 cvTerm = new CvTerm("PSI-MS", "MS:1002670", "frag: TMT reporter ion", "131C");
-            }else if (name.equalsIgnoreCase("TMT_126_ETD")) {
+            } else if (name.equalsIgnoreCase("TMT_126_ETD")) {
                 cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "126");
             } else if (name.equalsIgnoreCase("TMT_127N_ETD")) {
                 cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "127N");
@@ -433,6 +491,8 @@ public class ReporterIon extends Ion {
             } else if (name.equalsIgnoreCase("TMT_131C_ETD")) {
                 cvTerm = new CvTerm("PSI-MS", "MS:1002671", "frag: TMT ETD reporter ion", "131C");
             }
+            
+            // @TODO: create and add cv terms for iodoTMT
 
         } else if (name.contains("iTRAQ")) {
             if (name.equalsIgnoreCase("iTRAQ4Plex_114")) {
@@ -842,7 +902,100 @@ public class ReporterIon extends Ion {
             atomChain.append(new AtomImpl(Atom.H, 0), 15);
             atomChain.append(new AtomImpl(Atom.N, 0), 1);
             return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_zero")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 8);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_126")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 8);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_127")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 8);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_128")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 6);
+            atomChain.append(new AtomImpl(Atom.C, 1), 2);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_129")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 6);
+            atomChain.append(new AtomImpl(Atom.C, 1), 2);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_130")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 4);
+            atomChain.append(new AtomImpl(Atom.C, 1), 4);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_131")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 4);
+            atomChain.append(new AtomImpl(Atom.C, 1), 4);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_zero_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 7);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_126_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 7);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_127_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 7);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_128_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 5);
+            atomChain.append(new AtomImpl(Atom.C, 1), 2);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_129_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 5);
+            atomChain.append(new AtomImpl(Atom.C, 1), 2);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_130_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 3);
+            atomChain.append(new AtomImpl(Atom.C, 1), 4);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 0), 1);
+            return atomChain;
+        } else if (reporterIonName.equals("iodoTMT_131_ETD")) {
+            AtomChain atomChain = new AtomChain();
+            atomChain.append(new AtomImpl(Atom.C, 0), 3);
+            atomChain.append(new AtomImpl(Atom.C, 1), 4);
+            atomChain.append(new AtomImpl(Atom.H, 0), 15);
+            atomChain.append(new AtomImpl(Atom.N, 1), 1);
+            return atomChain;
         }
+
         throw new UnsupportedOperationException("Atomic composition not implemented for reporter ion " + reporterIonName + ".");
     }
 }

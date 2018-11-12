@@ -31,7 +31,7 @@ public class PTMFactory implements Serializable {
      */
 //    static final long serialVersionUID = 7935264190312934466L;
     /**
-     * Instance of the factory.
+     * Instance of the factory.     
      */
     private static PTMFactory instance = null;
     /**
@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file. The version number follows the one of utilities.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.12.1.json";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.12.12.json";
     /**
      * A map linking indexes with modifications.
      */
@@ -1941,7 +1941,7 @@ public class PTMFactory implements Serializable {
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         ptmName = "mTRAQ of K light";
         ptm = new PTM(PTM.MODAA, ptmName, "mTRAQ0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 888 ", "mTRAQ", null)); // note: does not have a PSI name, using interim name
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 888", "mTRAQ", null)); // note: does not have a PSI name, using interim name
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
@@ -2390,6 +2390,50 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_130N_ETD);
         ptm.addReporterIon(ReporterIon.TMT_131_ETD);
         ptm.addReporterIon(ReporterIon.TMT_131C_ETD);
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
+        // iodoTMT zero of C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 28);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 16);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        ptmName = "iodoTMT zero of C";
+        ptm = new PTM(PTM.MODAA, ptmName, "iodoTMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1341", "iodoTMT", null)); // note: does not have a PSI name, using interim name
+        ptm.addReporterIon(ReporterIon.iodoTMT_zero);
+        ptm.addReporterIon(ReporterIon.iodoTMT_zero_ETD);
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
+        // iodoTMT 6-plex of C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 28);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 12);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        ptmName = "iodoTMT 6-plex of C";
+        ptm = new PTM(PTM.MODAA, ptmName, "iodoTMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1342", "iodoTMT", null)); // note: does not have a PSI name, using interim name
+        ptm.addReporterIon(ReporterIon.iodoTMT_126);
+        ptm.addReporterIon(ReporterIon.iodoTMT_127);
+        ptm.addReporterIon(ReporterIon.iodoTMT_128);
+        ptm.addReporterIon(ReporterIon.iodoTMT_129);
+        ptm.addReporterIon(ReporterIon.iodoTMT_130);
+        ptm.addReporterIon(ReporterIon.iodoTMT_131);
+        ptm.addReporterIon(ReporterIon.iodoTMT_126_ETD);
+        ptm.addReporterIon(ReporterIon.iodoTMT_127_ETD);
+        ptm.addReporterIon(ReporterIon.iodoTMT_128_ETD);
+        ptm.addReporterIon(ReporterIon.iodoTMT_129_ETD);
+        ptm.addReporterIon(ReporterIon.iodoTMT_130_ETD);
+        ptm.addReporterIon(ReporterIon.iodoTMT_131_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
@@ -3464,6 +3508,36 @@ public class PTMFactory implements Serializable {
         ptmName = "S-nitrosylation";
         ptm = new PTM(PTM.MODAA, ptmName, "nitrosyl", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:275", "Nitrosyl", null));
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
+        // Heme B of C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 32);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 34);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.Fe, 0), 1);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        ptmName = "Heme B of C";
+        ptm = new PTM(PTM.MODAA, ptmName, "heme", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:390", "Heme", null));
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
+        // Heme B of H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 32);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 34);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.Fe, 0), 1);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        ptmName = "Heme B of H";
+        ptm = new PTM(PTM.MODAA, ptmName, "heme", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:390", "Heme", null));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
     }

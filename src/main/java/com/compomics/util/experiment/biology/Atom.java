@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.atoms.Fluorine;
 import com.compomics.util.experiment.biology.atoms.Helium;
 import com.compomics.util.experiment.biology.atoms.Hydrogen;
 import com.compomics.util.experiment.biology.atoms.Iodine;
+import com.compomics.util.experiment.biology.atoms.Iron;
 import com.compomics.util.experiment.biology.atoms.Lithium;
 import com.compomics.util.experiment.biology.atoms.Nitrogen;
 import com.compomics.util.experiment.biology.atoms.Oxygen;
@@ -77,6 +78,10 @@ public abstract class Atom extends ExperimentObject {
      */
     public static final Atom F = new Fluorine();
     /**
+     * The Iron atom.
+     */
+    public static final Atom Fe = new Iron();
+    /**
      * The monoisotopic mass. Access is faster then querying the isotope map.
      */
     protected Double monoisotopicMass;
@@ -94,7 +99,7 @@ public abstract class Atom extends ExperimentObject {
      */
     protected String name;
     /**
-     * The single letter code of the atom.
+     * The symbol for the atom.
      */
     protected String letter;
     
@@ -106,9 +111,9 @@ public abstract class Atom extends ExperimentObject {
      */
     public static String[] getImplementedAtoms(boolean includeSelect) {
         if (includeSelect) {
-            return new String[] {"- Select -", "C", "H", "I", "N", "O", "S", "P", "He", "Li", "Na", "Se", "F"};
+            return new String[] {"- Select -", "C", "H", "I", "N", "O", "S", "P", "He", "Li", "Na", "Se", "F", "Fe"};
         } else {
-            return new String[] {"C", "H", "I", "N", "O", "S", "P", "He", "Li", "Na", "Se", "F"};
+            return new String[] {"C", "H", "I", "N", "O", "S", "P", "He", "Li", "Na", "Se", "F", "Fe"};
         }
     }
 
@@ -144,6 +149,8 @@ public abstract class Atom extends ExperimentObject {
             return Se;
         } else if (shortName.equals("F")) {
             return F;
+        } else if (shortName.equals("Fe")) {
+            return Fe;
         }
         throw new UnsupportedOperationException("Atom " + shortName + " not implemented.");
     }
@@ -167,9 +174,9 @@ public abstract class Atom extends ExperimentObject {
     }
 
     /**
-     * Returns the single letter code of the atom.
+     * Returns the symbol for the atom.
      *
-     * @return the single letter code of the atom
+     * @return the symbol for the atom
      */
     public String getLetter() {
         return letter;

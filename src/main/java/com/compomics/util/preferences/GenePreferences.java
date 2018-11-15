@@ -150,7 +150,7 @@ public class GenePreferences implements Serializable {
                         if (occurrenceMax == null || occurrence > occurrenceMax) {
                             occurrenceMax = occurrence;
                             try {
-                                Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true); 
+                                Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
                                 if (taxon != null) {
                                     setSelectedBackgroundSpecies(taxon);
                                 }

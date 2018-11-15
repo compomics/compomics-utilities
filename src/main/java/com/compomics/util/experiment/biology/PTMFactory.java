@@ -41,7 +41,7 @@ public class PTMFactory implements Serializable {
     /**
      * The name of the PTM factory back-up file. The version number follows the one of utilities.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.12.12.json";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.12.13.json";
     /**
      * A map linking indexes with modifications.
      */
@@ -2244,6 +2244,91 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_131_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
+        
+        // TMT 6-plex + K+4
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 16);
+        atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        ptmName = "TMT 6-plex of K+4";
+        ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        ptm.addReporterIon(ReporterIon.TMT_126);
+        ptm.addReporterIon(ReporterIon.TMT_127N);
+        ptm.addReporterIon(ReporterIon.TMT_128C);
+        ptm.addReporterIon(ReporterIon.TMT_129N);
+        ptm.addReporterIon(ReporterIon.TMT_130C);
+        ptm.addReporterIon(ReporterIon.TMT_131);
+        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
+        // TMT 6-plex of K+6
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 10);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        ptmName = "TMT 6-plex of K+6";
+        ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        ptm.addReporterIon(ReporterIon.TMT_126);
+        ptm.addReporterIon(ReporterIon.TMT_127N);
+        ptm.addReporterIon(ReporterIon.TMT_128C);
+        ptm.addReporterIon(ReporterIon.TMT_129N);
+        ptm.addReporterIon(ReporterIon.TMT_130C);
+        ptm.addReporterIon(ReporterIon.TMT_131);
+        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
+        // TMT 6-plex of K+8
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 10);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 3);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        ptmName = "TMT 6-plex of K+8";
+        ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        ptm.addReporterIon(ReporterIon.TMT_126);
+        ptm.addReporterIon(ReporterIon.TMT_127N);
+        ptm.addReporterIon(ReporterIon.TMT_128C);
+        ptm.addReporterIon(ReporterIon.TMT_129N);
+        ptm.addReporterIon(ReporterIon.TMT_130C);
+        ptm.addReporterIon(ReporterIon.TMT_131);
+        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
 
         // TMT 10-plex of peptide N-term
         atomChainAdded = new AtomChain();
@@ -2294,6 +2379,115 @@ public class PTMFactory implements Serializable {
         ptmName = "TMT 10-plex of K";
         ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: "PSI: Alt. Description: Also applies to TMT10plex", i.e., no term for 10-plex
+        ptm.addReporterIon(ReporterIon.TMT_126);
+        ptm.addReporterIon(ReporterIon.TMT_127C);
+        ptm.addReporterIon(ReporterIon.TMT_127N);
+        ptm.addReporterIon(ReporterIon.TMT_128C);
+        ptm.addReporterIon(ReporterIon.TMT_128N);
+        ptm.addReporterIon(ReporterIon.TMT_129C);
+        ptm.addReporterIon(ReporterIon.TMT_129N);
+        ptm.addReporterIon(ReporterIon.TMT_130C);
+        ptm.addReporterIon(ReporterIon.TMT_130N);
+        ptm.addReporterIon(ReporterIon.TMT_131);
+        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
+        // TMT 10-plex + K+4
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 16);
+        atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        ptmName = "TMT 10-plex of K+4";
+        ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        ptm.addReporterIon(ReporterIon.TMT_126);
+        ptm.addReporterIon(ReporterIon.TMT_127C);
+        ptm.addReporterIon(ReporterIon.TMT_127N);
+        ptm.addReporterIon(ReporterIon.TMT_128C);
+        ptm.addReporterIon(ReporterIon.TMT_128N);
+        ptm.addReporterIon(ReporterIon.TMT_129C);
+        ptm.addReporterIon(ReporterIon.TMT_129N);
+        ptm.addReporterIon(ReporterIon.TMT_130C);
+        ptm.addReporterIon(ReporterIon.TMT_130N);
+        ptm.addReporterIon(ReporterIon.TMT_131);
+        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
+        // TMT 10-plex of K+6
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 10);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        ptmName = "TMT 10-plex of K+6";
+        ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        ptm.addReporterIon(ReporterIon.TMT_126);
+        ptm.addReporterIon(ReporterIon.TMT_127C);
+        ptm.addReporterIon(ReporterIon.TMT_127N);
+        ptm.addReporterIon(ReporterIon.TMT_128C);
+        ptm.addReporterIon(ReporterIon.TMT_128N);
+        ptm.addReporterIon(ReporterIon.TMT_129C);
+        ptm.addReporterIon(ReporterIon.TMT_129N);
+        ptm.addReporterIon(ReporterIon.TMT_130C);
+        ptm.addReporterIon(ReporterIon.TMT_130N);
+        ptm.addReporterIon(ReporterIon.TMT_131);
+        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
+        // TMT 10-plex of K+8
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 10);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 3);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        ptmName = "TMT 10-plex of K+8";
+        ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
         ptm.addReporterIon(ReporterIon.TMT_126);
         ptm.addReporterIon(ReporterIon.TMT_127C);
         ptm.addReporterIon(ReporterIon.TMT_127N);
@@ -2379,6 +2573,118 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_130N);
         ptm.addReporterIon(ReporterIon.TMT_131);
         ptm.addReporterIon(ReporterIon.TMT_131C);
+        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_131C_ETD);
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
+        // TMT 11-plex + K+4
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 16);
+        atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        ptmName = "TMT 11-plex of K+4";
+        ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        ptm.addReporterIon(ReporterIon.TMT_126);
+        ptm.addReporterIon(ReporterIon.TMT_127C);
+        ptm.addReporterIon(ReporterIon.TMT_127N);
+        ptm.addReporterIon(ReporterIon.TMT_128C);
+        ptm.addReporterIon(ReporterIon.TMT_128N);
+        ptm.addReporterIon(ReporterIon.TMT_129C);
+        ptm.addReporterIon(ReporterIon.TMT_129N);
+        ptm.addReporterIon(ReporterIon.TMT_130C);
+        ptm.addReporterIon(ReporterIon.TMT_130N);
+        ptm.addReporterIon(ReporterIon.TMT_131);
+        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_131C_ETD);
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
+        // TMT 11-plex of K+6
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 10);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        ptmName = "TMT 11-plex of K+6";
+        ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        ptm.addReporterIon(ReporterIon.TMT_126);
+        ptm.addReporterIon(ReporterIon.TMT_127C);
+        ptm.addReporterIon(ReporterIon.TMT_127N);
+        ptm.addReporterIon(ReporterIon.TMT_128C);
+        ptm.addReporterIon(ReporterIon.TMT_128N);
+        ptm.addReporterIon(ReporterIon.TMT_129C);
+        ptm.addReporterIon(ReporterIon.TMT_129N);
+        ptm.addReporterIon(ReporterIon.TMT_130C);
+        ptm.addReporterIon(ReporterIon.TMT_130N);
+        ptm.addReporterIon(ReporterIon.TMT_131);
+        ptm.addReporterIon(ReporterIon.TMT_126_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_127N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_128N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_129N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130C_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_130N_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_131_ETD);
+        ptm.addReporterIon(ReporterIon.TMT_131C_ETD);
+        defaultMods.add(ptmName);
+        ptmMap.put(ptmName, ptm);
+        
+        // TMT 11-plex of K+8
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 10);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 3);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        ptmName = "TMT 11-plex of K+8";
+        ptm = new PTM(PTM.MODAA, ptmName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        ptm.addReporterIon(ReporterIon.TMT_126);
+        ptm.addReporterIon(ReporterIon.TMT_127C);
+        ptm.addReporterIon(ReporterIon.TMT_127N);
+        ptm.addReporterIon(ReporterIon.TMT_128C);
+        ptm.addReporterIon(ReporterIon.TMT_128N);
+        ptm.addReporterIon(ReporterIon.TMT_129C);
+        ptm.addReporterIon(ReporterIon.TMT_129N);
+        ptm.addReporterIon(ReporterIon.TMT_130C);
+        ptm.addReporterIon(ReporterIon.TMT_130N);
+        ptm.addReporterIon(ReporterIon.TMT_131);
         ptm.addReporterIon(ReporterIon.TMT_126_ETD);
         ptm.addReporterIon(ReporterIon.TMT_127C_ETD);
         ptm.addReporterIon(ReporterIon.TMT_127N_ETD);

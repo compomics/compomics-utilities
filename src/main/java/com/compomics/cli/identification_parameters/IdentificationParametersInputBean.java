@@ -3117,7 +3117,7 @@ public class IdentificationParametersInputBean {
             identificationParameters.setSearchParameters(searchParameters);
         } else {
             identificationParameters = new IdentificationParameters();
-            // apply genePreferences before setParametersFromSearch to know there gene mapping options 
+            // apply genePreferences before setParametersFromSearch to know the gene mapping options 
             identificationParameters.setGenePreferences(genePreferences);
             identificationParameters.setParametersFromSearch(searchParameters);             
             genePreferences.setPreferencesFromSearchParameters(searchParameters);           

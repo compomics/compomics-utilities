@@ -144,14 +144,13 @@ public class GenePreferences implements Serializable {
 
                 // Select the background species based on occurrence in the factory
                 for (String uniprotTaxonomy : speciesOccurrence.keySet()) {
-
-                    if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
+                    if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN) && getUseGeneMapping()) {
                         Integer occurrence = speciesOccurrence.get(uniprotTaxonomy);
 
                         if (occurrenceMax == null || occurrence > occurrenceMax) {
                             occurrenceMax = occurrence;
                             try {
-                                Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
+                                Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true); 
                                 if (taxon != null) {
                                     setSelectedBackgroundSpecies(taxon);
                                 }

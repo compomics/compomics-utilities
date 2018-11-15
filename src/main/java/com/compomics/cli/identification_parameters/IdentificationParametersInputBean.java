@@ -3065,27 +3065,20 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.id);
             novorParameters.setMassAnalyzer(arg);
         }
-
-        // Set the parameters in the identification parameters
-        if (identificationParameters != null) {
-            identificationParameters.setSearchParameters(searchParameters);
-        } else {
-            identificationParameters = new IdentificationParameters(searchParameters);
-        }
-
-        // set the parameter file name to the same as the name of the file
-        if (identificationParameters.getName() == null && destinationFile != null) {
-            identificationParameters.setName(destinationFile.getName().substring(0, destinationFile.getName().lastIndexOf(".")));
-        }
-
+        
+        
         //////////////////////////////////
         // Gene mapping preferences
         //////////////////////////////////
-        GenePreferences genePreferences = identificationParameters.getGenePreferences();
+        
+        GenePreferences genePreferences = null;
+        if (identificationParameters != null) {
+            genePreferences = identificationParameters.getGenePreferences();
+        }        
         if (genePreferences == null) {
-            genePreferences = new GenePreferences();
-            identificationParameters.setGenePreferences(genePreferences);
+            genePreferences = new GenePreferences();            
         }
+        
         if (commandLine.hasOption(IdentificationParametersCLIParams.USE_GENE_MAPPING.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.USE_GENE_MAPPING.id);
             Integer intValue = new Integer(arg);
@@ -3117,6 +3110,22 @@ public class IdentificationParametersInputBean {
                     throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.UPDATE_GENE_MAPPING.id + ": " + arg + ". 0 or 1 expected.");
             }
             genePreferences.setAutoUpdate(value);
+        }
+
+        // Set the parameters in the identification parameters
+        if (identificationParameters != null) {
+            identificationParameters.setSearchParameters(searchParameters);
+        } else {
+            identificationParameters = new IdentificationParameters();
+            // apply genePreferences before setParametersFromSearch to know there gene mapping options 
+            identificationParameters.setGenePreferences(genePreferences);
+            identificationParameters.setParametersFromSearch(searchParameters);             
+            genePreferences.setPreferencesFromSearchParameters(searchParameters);           
+        }
+
+        // set the parameter file name to the same as the name of the file
+        if (identificationParameters.getName() == null && destinationFile != null) {
+            identificationParameters.setName(destinationFile.getName().substring(0, destinationFile.getName().lastIndexOf(".")));
         }
 
         //////////////////////////////////

@@ -1201,7 +1201,12 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 case 3:
                     return modificationFactory.getModification(name).getMass();
                 case 4:
-                    return modificationFactory.getModification(name).getModificationType();
+                    ModificationType modificationType = modificationFactory.getModification(name).getModificationType();
+                    if (modificationType != null) {
+                        return modificationType.index;
+                    } else {
+                        return null;
+                    }
                 case 5:
                     String residues = "";
                     AminoAcidPattern aminoAcidPattern = modificationFactory.getModification(name).getPattern();
@@ -1296,7 +1301,12 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 case 3:
                     return modificationFactory.getModification(name).getMass();
                 case 4:
-                    return modificationFactory.getModification(name).getModificationType();
+                    ModificationType modificationType = modificationFactory.getModification(name).getModificationType();
+                    if (modificationType != null) {
+                        return modificationType.index;
+                    } else {
+                        return null;
+                    }
                 case 5:
                     String residues = "";
                     AminoAcidPattern aminoAcidPattern = modificationFactory.getModification(name).getPattern();

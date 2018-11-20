@@ -481,6 +481,10 @@ public class Modification extends ExperimentObject {
     public String getHtmlTooltip() {
         readDBMode();
 
+        if (modificationType == null) {
+            return null;
+        }
+        
         String tooltip = "<html>";
 
         tooltip += "Name: " + name + "<br>";

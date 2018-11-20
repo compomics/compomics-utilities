@@ -133,11 +133,11 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      */
     private UtilitiesUserParameters utilitiesUserParameters = null;
     /**
-     * The selected fasta file.
+     * The selected FASTA file.
      */
     private File selectedFastaFile = null;
     /**
-     * The parameters used to parse the fasta file.
+     * The parameters used to parse the FASTA file.
      */
     private FastaParameters fastaParameters = null;
 
@@ -2528,7 +2528,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         for (int i = 0; i < variableModsTable.getRowCount(); i++) {
             
             String modName = (String) variableModsTable.getValueAt(i, 1);
-            Color modificationColor = (Color) fixedModsTable.getValueAt(i, 0);
+            Color modificationColor = (Color) variableModsTable.getValueAt(i, 0);
             
             modificationProfile.addVariableModification(modificationFactory.getModification(modName));
             modificationProfile.setColor(modName, modificationColor.getRGB());

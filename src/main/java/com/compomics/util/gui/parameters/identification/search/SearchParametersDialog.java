@@ -1215,7 +1215,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         for (String fixedMod : fixedModifications) {
 
-            ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationParameters().getColor(fixedMod), fixedMod, modificationFactory.getModification(fixedMod).getMass()});
+            ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{new Color(searchParameters.getModificationParameters().getColor(fixedMod)), fixedMod, modificationFactory.getModification(fixedMod).getMass()});
 
         }
 
@@ -1266,7 +1266,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         for (String fixedMod : fixedModifications) {
 
-            ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationParameters().getColor(fixedMod), fixedMod, modificationFactory.getModification(fixedMod).getMass()});
+            ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{new Color(searchParameters.getModificationParameters().getColor(fixedMod)), fixedMod, modificationFactory.getModification(fixedMod).getMass()});
 
         }
 
@@ -1330,7 +1330,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         for (String variabledMod : variableModifications) {
 
-            ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationParameters().getColor(variabledMod), variabledMod, modificationFactory.getModification(variabledMod).getMass()});
+            ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{new Color(searchParameters.getModificationParameters().getColor(variabledMod)), variabledMod, modificationFactory.getModification(variabledMod).getMass()});
 
         }
 
@@ -1387,7 +1387,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         for (String variabledMod : variableModifications) {
 
-            ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationParameters().getColor(variabledMod), variabledMod, modificationFactory.getModification(variabledMod).getMass()});
+            ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{new Color(searchParameters.getModificationParameters().getColor(variabledMod)), variabledMod, modificationFactory.getModification(variabledMod).getMass()});
 
         }
 
@@ -2512,7 +2512,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             
             String modName = (String) fixedModsTable.getValueAt(i, 1);
             Modification modification = modificationFactory.getModification(modName);
-            Color modificationColor = new Color((int) fixedModsTable.getValueAt(i, 0));
+            Color modificationColor = (Color) fixedModsTable.getValueAt(i, 0);
             
             modificationProfile.addFixedModification(modification);
             modificationProfile.addRefinementFixedModification(modification);
@@ -2528,7 +2528,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         for (int i = 0; i < variableModsTable.getRowCount(); i++) {
             
             String modName = (String) variableModsTable.getValueAt(i, 1);
-            Color modificationColor = new Color((int) fixedModsTable.getValueAt(i, 0));
+            Color modificationColor = (Color) fixedModsTable.getValueAt(i, 0);
             
             modificationProfile.addVariableModification(modificationFactory.getModification(modName));
             modificationProfile.setColor(modName, modificationColor.getRGB());

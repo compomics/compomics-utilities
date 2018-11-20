@@ -2111,7 +2111,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
             for (String fixedMod : fixedMods) {
 
-                ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationParameters().getColor(fixedMod), fixedMod, modificationFactory.getModification(fixedMod).getMass()});
+                ((DefaultTableModel) fixedModsTable.getModel()).addRow(new Object[]{new Color(searchParameters.getModificationParameters().getColor(fixedMod)), fixedMod, modificationFactory.getModification(fixedMod).getMass()});
 
             }
 
@@ -2172,7 +2172,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             variableModel.getDataVector().removeAllElements();
             for (String variableMod : variableMods) {
 
-                ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{searchParameters.getModificationParameters().getColor(variableMod), variableMod, modificationFactory.getModification(variableMod).getMass()});
+                ((DefaultTableModel) variableModsTable.getModel()).addRow(new Object[]{new Color(searchParameters.getModificationParameters().getColor(variableMod)), variableMod, modificationFactory.getModification(variableMod).getMass()});
 
             }
 
@@ -2487,7 +2487,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         // save the digestion settings
         tempSearchParameters.setDigestionParameters(digestionPreferences);
 
-// Precursor m/z tolerance
+        // Precursor m/z tolerance
         tempSearchParameters.setPrecursorAccuracy(new Double(precursorIonAccuracyTxt.getText().trim()));
         if (precursorIonUnit.getSelectedIndex() == 0) {
             tempSearchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.PPM);
@@ -2512,7 +2512,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             
             String modName = (String) fixedModsTable.getValueAt(i, 1);
             Modification modification = modificationFactory.getModification(modName);
-            Color modificationColor = (Color) fixedModsTable.getValueAt(i, 0);
+            Color modificationColor = new Color((int) fixedModsTable.getValueAt(i, 0));
             
             modificationProfile.addFixedModification(modification);
             modificationProfile.addRefinementFixedModification(modification);
@@ -2528,7 +2528,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         for (int i = 0; i < variableModsTable.getRowCount(); i++) {
             
             String modName = (String) variableModsTable.getValueAt(i, 1);
-            Color modificationColor = (Color) fixedModsTable.getValueAt(i, 0);
+            Color modificationColor = new Color((int) fixedModsTable.getValueAt(i, 0));
             
             modificationProfile.addVariableModification(modificationFactory.getModification(modName));
             modificationProfile.setColor(modName, modificationColor.getRGB());
@@ -2769,7 +2769,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         }
 
         for (String mod : allModificationsAsArray) {
-            ((DefaultTableModel) modificationsTable.getModel()).addRow(new Object[]{modificationFactory.getColor(mod), mod, modificationFactory.getModification(mod).getMass(), defaultModifications.contains(mod)});
+            ((DefaultTableModel) modificationsTable.getModel()).addRow(new Object[]{new Color(modificationFactory.getColor(mod)), mod, modificationFactory.getModification(mod).getMass(), defaultModifications.contains(mod)});
         }
         ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
         modificationsTable.repaint();

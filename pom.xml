@@ -266,6 +266,7 @@
                 <configuration>
                     <destDir>docs/javadoc</destDir>
                     <notimestamp>true</notimestamp>
+                    <locale>en</locale>
                 </configuration>
                 <executions>
                     <execution>

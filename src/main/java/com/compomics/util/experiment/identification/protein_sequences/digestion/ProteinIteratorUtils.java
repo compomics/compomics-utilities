@@ -108,6 +108,7 @@ public class ProteinIteratorUtils {
         modificationsMasses = new HashMap<>(fixedModifications.size());
         modificationsMasses.put(null, 0.0);
         ModificationFactory ptmFactory = ModificationFactory.getInstance();
+        
         for (String ptmName : fixedModifications) {
             Modification ptm = ptmFactory.getModification(ptmName);
             switch (ptm.getModificationType()) {

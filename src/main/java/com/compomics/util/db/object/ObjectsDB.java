@@ -812,6 +812,50 @@ public class ObjectsDB {
     public static boolean isConnectionActive() {
         return connectionActive;
     }
+    
+    
+    /**
+     * Locking the db for storing.
+     */
+    public void lock() {
+        synchronized (dbMutex) {
+            
+            if (debugInteractions) {
+                
+                System.out.println("locking database");
+                
+            }
+            connectionActive = false;
+
+            objectsCache.saveCache(null, false);
+            objectsCache.clearCache();
+
+            pm.currentTransaction().commit();
+        }
+    }
+    
+    
+    
+    
+    
+    
+    /**
+     * Unlocking the db after storing.
+     */
+    public void unlock() {
+        synchronized (dbMutex) {
+            
+            if (debugInteractions) {
+                
+                System.out.println("unlocking database");
+                
+            }
+            connectionActive = true;
+            pm.currentTransaction().begin();
+        }
+    }
+    
+    
 
     /**
      * Closes the db connection.
@@ -837,6 +881,7 @@ public class ObjectsDB {
             }
 
             objectsCache.saveCache(null, clearing);
+            objectsCache.clearCache();
 
             connectionActive = false;
             pm.currentTransaction().commit();
@@ -882,19 +927,7 @@ public class ObjectsDB {
 
             }
             
-            /*
-            DataStoreManager dsm = ZooHelper.getDataStoreManager();
-            if (!dsm.dbExists(dbFile.getAbsolutePath())) {
-                dsm.createDb(dbFile.getAbsolutePath());
-            }
-            
-            
-            ZooJdoProperties props = new ZooJdoProperties(dbFile.getAbsolutePath());
-            PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(props);
-            pm = pmf.getPersistenceManager();
-            */
             pm = ZooJdoHelper.openOrCreateDB(dbFile.getAbsolutePath());
-            
             pm.currentTransaction().begin();
             connectionActive = true;
 

@@ -353,6 +353,16 @@ public class ObjectsCache {
     }
 
     /**
+     * Indicates whether the cache is empty.
+     *
+     * @return a boolean indicating whether the cache is empty
+     */
+    public void clearCache() {
+        loadedObjects.clear();
+        objectQueue.clear();
+    }
+
+    /**
      * Sets the cache in read only.
      *
      * @param readOnly boolean indicating whether the cache should be in read

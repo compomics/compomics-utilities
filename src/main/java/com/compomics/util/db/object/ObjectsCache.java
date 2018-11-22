@@ -353,9 +353,7 @@ public class ObjectsCache {
     }
 
     /**
-     * Indicates whether the cache is empty.
-     *
-     * @return a boolean indicating whether the cache is empty
+     * Clears the cache.
      */
     public void clearCache() {
         loadedObjects.clear();

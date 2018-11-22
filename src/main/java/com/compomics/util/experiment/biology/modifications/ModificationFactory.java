@@ -42,7 +42,7 @@ public class ModificationFactory {
      * The name of the Modification factory back-up file. The version number follows the
      * one of utilities.
      */
-    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-4.12.1.json";
+    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.1-SNAPSHOT.json";
     /**
      * A map linking indexes with modifications.
      */

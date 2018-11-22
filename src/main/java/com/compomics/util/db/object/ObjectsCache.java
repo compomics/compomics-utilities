@@ -263,7 +263,6 @@ public class ObjectsCache {
                 ListIterator<Long> listIterator = objectQueue.listIterator();
                 PersistenceManager pm = objectsDB.getDB();
 
-
                 for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i) {
 
                     if (waitingHandler != null) {
@@ -291,6 +290,12 @@ public class ObjectsCache {
                     if (clearEntries) {
                         loadedObjects.remove(key);
                     }
+
+                }
+                
+                if (waitingHandler != null) {
+
+                    waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 
                 }
 

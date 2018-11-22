@@ -16,26 +16,15 @@ import java.util.concurrent.atomic.*;
 
 import org.zoodb.jdo.ZooJdoHelper;
 import org.zoodb.tools.ZooHelper;
-/*
-import org.zoodb.jdo.ZooJdoProperties;
-import org.zoodb.tools.impl.DataStoreManager;
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManagerFactory;
-*/
 
 /**
  * A database which can easily be used to store objects.
  *
  * @author Marc Vaudel
  * @author Dominik Kopczynski
+ * @author Harald Barsnes
  */
 public class ObjectsDB {
-
-    /**
-     * Empty default constructor
-     */
-    public ObjectsDB() {
-    }
 
     /**
      * The name of the database.
@@ -96,6 +85,63 @@ public class ObjectsDB {
     private volatile static AtomicBoolean COMMITBLOCKER = new AtomicBoolean(false);
 
     /**
+     * Empty default constructor.
+     */
+    public ObjectsDB() {
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param folder absolute path of the folder where to establish the database
+     * @param dbName name of the database
+     */
+    public ObjectsDB(String folder, String dbName) {
+
+        this(folder, dbName, true);
+
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param folder absolute path of the folder where to establish the database
+     * @param dbName name of the database
+     * @param overwrite overwriting old database
+     */
+    public ObjectsDB(String folder, String dbName, boolean overwrite) {
+
+        if (debugInteractions) {
+
+            System.out.println(System.currentTimeMillis() + " Creating database");
+
+        }
+
+        dbFolder = new File("/" + folder);
+
+        if (!dbFolder.exists()) {
+
+            if (!dbFolder.mkdirs()) {
+
+                throw new IllegalArgumentException("Cannot create database folder!");
+
+            }
+        }
+
+        dbFile = new File(dbFolder, dbName);
+
+        if (dbFile.exists() && overwrite) {
+
+            ZooHelper.removeDb(dbFile.getAbsolutePath());
+
+        }
+
+        establishConnection();
+        objectsCache = new ObjectsCache(this);
+
+    }
+
+    /**
      * Function for increasing the counter of processes accessing objects from
      * the db.
      */
@@ -119,9 +165,9 @@ public class ObjectsDB {
      * Committing all changes into the database.
      */
     public void commit() {
-        
+
         COMMITBLOCKER.set(true);
-       
+
         while (ACCESSCOUNTER.get() != 0) {
             // YOU SHALL NOT PASS
             // while processes are potentially accessing the database
@@ -131,11 +177,10 @@ public class ObjectsDB {
             pm.currentTransaction().commit();
             pm.currentTransaction().begin();
             currentAdded = 0;
-        }
-        finally {
+        } finally {
             COMMITBLOCKER.set(false);
         }
-    
+
     }
 
     /**
@@ -145,57 +190,6 @@ public class ObjectsDB {
      */
     public int getCurrentAdded() {
         return currentAdded;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param folder absolute path of the folder where to establish the database
-     * @param dbName name of the database
-     */
-    public ObjectsDB(String folder, String dbName) {
-        
-        this(folder, dbName, true);
-    
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param folder absolute path of the folder where to establish the database
-     * @param dbName name of the database
-     * @param overwrite overwriting old database
-     */
-    public ObjectsDB(String folder, String dbName, boolean overwrite) {
-        
-        if (debugInteractions) {
-            
-            System.out.println(System.currentTimeMillis() + " Creating database");
-
-        }
-
-        dbFolder = new File("/" + folder);
-
-        if (!dbFolder.exists()) {
-
-            if (!dbFolder.mkdirs()) {
-
-                throw new IllegalArgumentException("cannot create database folder");
-
-            }
-        }
-
-        dbFile = new File(dbFolder, dbName);
-
-        if (dbFile.exists() && overwrite) {
-
-            ZooHelper.removeDb(dbFile.getAbsolutePath());
-
-        }
-
-        establishConnection();
-        objectsCache = new ObjectsCache(this);
-
     }
 
     /**
@@ -702,28 +696,28 @@ public class ObjectsDB {
             }
 
             for (long key : keys) {
-                
+
                 if (waitingHandler.isRunCanceled()) {
                     break;
                 }
-                
+
                 Long zooid = idMap.get(key);
-                
+
                 if (zooid != null) {
-                    
+
                     String className = objectsCache.removeObject(key);
-                    
+
                     if (zooid != 0) {
-                        
+
                         Object obj = pm.getObjectById((zooid));
                         pm.deletePersistent(obj);
                         className = obj.getClass().getSimpleName();
-                        
+
                     }
-                    
+
                     classCounter.get(className).remove(key);
                     idMap.remove(key);
-                    
+
                 }
             }
         }
@@ -738,29 +732,29 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public void removeObject(long key) throws InterruptedException {
-        
+
         synchronized (dbMutex) {
             if (debugInteractions) {
                 System.out.println(System.currentTimeMillis() + " removing object: " + key);
             }
 
             Long zooid = idMap.get(key);
-            
+
             if (zooid != null) {
-                
+
                 String className = objectsCache.removeObject(key);
-                
+
                 if (zooid != 0) {
-                    
+
                     Object obj = pm.getObjectById(zooid);
                     pm.deletePersistent(obj);
                     className = obj.getClass().getSimpleName();
-                    
+
                 }
-                
+
                 classCounter.get(className).remove(key);
                 idMap.remove(key);
-                
+
             }
         }
     }
@@ -775,17 +769,16 @@ public class ObjectsDB {
      * @throws InterruptedException exception thrown if a threading error occurs
      */
     public boolean inCache(long objectKey) throws InterruptedException {
-        
+
         boolean isInCache;
-        
+
         synchronized (dbMutex) {
-            
+
             isInCache = objectsCache.inCache(objectKey);
-            
+
         }
-        
+
         return isInCache;
-        
     }
 
     /**
@@ -800,7 +793,7 @@ public class ObjectsDB {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Checking db content,  key: " + objectKey);
         }
-        
+
         return idMap.containsKey(objectKey);
     }
 
@@ -812,58 +805,54 @@ public class ObjectsDB {
     public static boolean isConnectionActive() {
         return connectionActive;
     }
-    
-    
+
     /**
      * Locking the db for storing.
+     *
+     * @param waitingHandler the waiting handler
      */
-    public void lock() {
+    public void lock(WaitingHandler waitingHandler) {
         synchronized (dbMutex) {
-            
+
             if (debugInteractions) {
-                
+
                 System.out.println("locking database");
-                
+
             }
+
             connectionActive = false;
 
-            objectsCache.saveCache(null, false);
+            objectsCache.saveCache(waitingHandler, false);
             objectsCache.clearCache();
 
             pm.currentTransaction().commit();
         }
     }
-    
-    
-    
-    
-    
-    
+
     /**
      * Unlocking the db after storing.
      */
     public void unlock() {
         synchronized (dbMutex) {
-            
+
             if (debugInteractions) {
-                
+
                 System.out.println("unlocking database");
-                
+
             }
+
             connectionActive = true;
             pm.currentTransaction().begin();
         }
     }
-    
-    
 
     /**
      * Closes the db connection.
      */
     public void close() {
-        
+
         close(true);
-        
+
     }
 
     /**
@@ -873,11 +862,11 @@ public class ObjectsDB {
      */
     public void close(boolean clearing) {
         synchronized (dbMutex) {
-            
+
             if (debugInteractions) {
-                
+
                 System.out.println("closing database");
-                
+
             }
 
             objectsCache.saveCache(null, clearing);
@@ -885,20 +874,20 @@ public class ObjectsDB {
 
             connectionActive = false;
             pm.currentTransaction().commit();
-            
+
             if (pm.currentTransaction().isActive()) {
-                
+
                 pm.currentTransaction().rollback();
-                
+
             }
-            
+
             pm.close();
             pm.getPersistenceManagerFactory().close();
-            
+
             if (clearing) {
-                
+
                 idMap.clear();
-                
+
             }
         }
     }
@@ -907,7 +896,7 @@ public class ObjectsDB {
      * Establishes connection to the database.
      */
     private void establishConnection() {
-        
+
         establishConnection(true);
 
     }
@@ -920,13 +909,13 @@ public class ObjectsDB {
     public void establishConnection(boolean loading) {
 
         synchronized (dbMutex) {
-            
+
             if (debugInteractions) {
 
                 System.out.println(System.currentTimeMillis() + " Establishing database: " + dbFile.getAbsolutePath());
 
             }
-            
+
             pm = ZooJdoHelper.openOrCreateDB(dbFile.getAbsolutePath());
             pm.currentTransaction().begin();
             connectionActive = true;
@@ -934,11 +923,11 @@ public class ObjectsDB {
             if (loading) {
                 idMap.clear();
                 classCounter.clear();
-                
+
                 Query q = pm.newQuery(DbObject.class, "firstLevel == true");
-                
+
                 for (Object obj : (Collection<?>) q.execute()) {
-                    
+
                     DbObject idObj = (DbObject) obj;
                     long id = idObj.getId();
                     long zooId = idObj.jdoZooGetOid();
@@ -946,16 +935,16 @@ public class ObjectsDB {
 
                     String simpleName = obj.getClass().getSimpleName();
                     HashSet<Long> classKeys = classCounter.get(simpleName);
-                    
+
                     if (classKeys == null) {
-                        
+
                         classKeys = new HashSet<>();
                         classCounter.put(simpleName, classKeys);
-                        
+
                     }
-                    
+
                     classKeys.add(id);
-                    
+
                 }
             }
         }

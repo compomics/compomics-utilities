@@ -488,13 +488,13 @@ public abstract class MatchFilter implements Filter {
             if (isActive() != otherFilter.isActive()) {
                 return false;
             }
-            if (!Util.sameSets(exceptions, otherFilter.getExceptions())) {
+            if (!exceptions.equals(otherFilter.getExceptions())) {
                 return false;
             }
-            if (!Util.sameSets(manualValidation, otherFilter.getManualValidation())) {
+            if (!manualValidation.equals(otherFilter.getManualValidation())) {
                 return false;
             }
-            if (!Util.sameSets(getItemsNames(), otherFilter.getItemsNames())) {
+            if (!getItemsNames().equals(otherFilter.getItemsNames())) {
                 return false;
             }
             for (String itemName : getItemsNames()) {

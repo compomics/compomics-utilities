@@ -677,7 +677,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
                     .map(ModificationMatch::getSite)
                     .collect(Collectors.toCollection(HashSet::new));
 
-            if (!Util.sameSets(sites1, sites2)) {
+            if (!sites1.equals(sites2)) {
 
                 return false;
 

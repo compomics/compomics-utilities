@@ -14,7 +14,9 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -930,67 +932,35 @@ public class Util {
 
     /**
      * Convenience methods indicating whether the content of two lists have the
-     * same content. Equality is based on the hash of the objects.
-     *
+     * same content. Equality is based on the hash of the objects. Note that this method does not work for lists containing null;
+     * 
      * @param list1 the first list
      * @param list2 the second list
      *
      * @return a boolean indicating whether list1 has the same content as list2
      */
-    public static boolean sameLists(ArrayList list1, ArrayList list2) {
+    public static boolean sameLists(ArrayList<?> list1, ArrayList<?> list2) {
         
         if (list1.size() != list2.size()) {
             return false;
         }
         
-        HashSet set2 = new HashSet(list2);
+        HashMap<Object, Long> list1Occurrence = list1.stream()
+                .collect(Collectors.groupingBy(
+                        a -> a, 
+                        HashMap::new, 
+                        Collectors.counting()));
         
-        return !list1.stream()
-                .anyMatch(element -> !set2.contains(element));
-    }
-
-    /**
-     * Convenience methods indicating whether the content of two sets have the
-     * same content. Equality is based on the hash of the objects.
-     *
-     * @param set1 the first set
-     * @param set2 the second set
-     *
-     * @return a boolean indicating whether list1 has the same content as list2
-     */
-    public static boolean sameSets(HashSet set1, HashSet set2) {
+        HashMap<Object, Long> list2Occurrence = list2.stream()
+                .collect(Collectors.groupingBy(
+                        a -> a, 
+                        HashMap::new, 
+                        Collectors.counting()));
         
-        if (set1.size() != set2.size()) {
-            return false;
-        }
-        
-        return !set1.stream()
-                .anyMatch(element -> !set2.contains(element));
+        return list1Occurrence.entrySet().stream()
+                .allMatch(entry -> list2Occurrence.containsKey(entry.getKey()) && list2Occurrence.get(entry.getKey()).equals(entry.getValue()));
     }
-
-    /**
-     * Convenience methods indicating whether the content of two lists have the
-     * same content. Assumes that the first list is already sorted.
-     *
-     * @param list1 the first list
-     * @param list2 the second list
-     * @return a boolean indicating whether list1 has the same content as list2
-     */
-    public static boolean sameListsFirstListSorted(ArrayList list1, ArrayList list2) {
-        if (list1.size() != list2.size()) {
-            return false;
-        }
-
-        ArrayList list2copy = new ArrayList(list2);
-        Collections.sort(list2copy);
-        for (int i = 0; i < list1.size(); i++) {
-            if (!list1.get(i).equals(list2copy.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
+    
     /**
      * Returns the occurrence of a character in a string.
      *

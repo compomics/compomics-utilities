@@ -559,16 +559,16 @@ public class Enzyme extends ExperimentObject {
         if (!this.getName().equalsIgnoreCase(otherEnzyme.getName())) {
             return false;
         }
-        if (!Util.sameSets(this.getAminoAcidBefore(), otherEnzyme.getAminoAcidBefore())) {
+        if (!this.getAminoAcidBefore().equals(otherEnzyme.getAminoAcidBefore())) {
             return false;
         }
-        if (!Util.sameSets(this.getRestrictionBefore(), otherEnzyme.getRestrictionBefore())) {
+        if (!this.getRestrictionBefore().equals(otherEnzyme.getRestrictionBefore())) {
             return false;
         }
-        if (!Util.sameSets(this.getAminoAcidAfter(), otherEnzyme.getAminoAcidAfter())) {
+        if (!this.getAminoAcidAfter().equals(otherEnzyme.getAminoAcidAfter())) {
             return false;
         }
-        if (!Util.sameSets(this.getRestrictionAfter(), otherEnzyme.getRestrictionAfter())) {
+        if (!this.getRestrictionAfter().equals(otherEnzyme.getRestrictionAfter())) {
             return false;
         }
 

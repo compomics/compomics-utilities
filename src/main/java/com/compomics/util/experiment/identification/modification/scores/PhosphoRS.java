@@ -266,7 +266,7 @@ public class PhosphoRS {
                                 } else {
                                     boolean alreadyScored = false;
                                     for (HashSet<Double> scoredIons : scored) {
-                                        if (Util.sameSets(tempSiteDeterminingIons, scoredIons)) {
+                                        if (tempSiteDeterminingIons.equals(scoredIons)) {
                                             alreadyScored = true;
                                             break;
                                         }

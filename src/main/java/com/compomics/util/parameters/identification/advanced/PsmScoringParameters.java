@@ -236,20 +236,20 @@ public class PsmScoringParameters {
             return false;
         }
 
-        if (!Util.sameSets(defaultScores, otherPsmScoringPreferences.getDefaultScores())) {
+        if (!defaultScores.equals(otherPsmScoringPreferences.getDefaultScores())) {
             return false;
         }
 
         HashSet<Integer> thisAdvocates = new HashSet<>(getAdvocates());
         HashSet<Integer> otherAdvocates = new HashSet<>(otherPsmScoringPreferences.getAdvocates());
-        if (!Util.sameSets(thisAdvocates, otherAdvocates)) {
+        if (!thisAdvocates.equals(otherAdvocates)) {
             return false;
         }
 
         for (Integer advocate : thisAdvocates) {
             HashSet<Integer> thisScores = getScoreForAlgorithm(advocate);
             HashSet<Integer> otherScores = otherPsmScoringPreferences.getScoreForAlgorithm(advocate);
-            if (!Util.sameSets(thisScores, otherScores)) {
+            if (!thisScores.equals(otherScores)) {
                 return false;
             }
         }

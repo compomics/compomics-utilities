@@ -13,10 +13,7 @@ import java.net.URLConnection;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -34,7 +31,7 @@ import org.apache.commons.codec.binary.Base64;
 public class Util {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public Util() {
     }
@@ -98,7 +95,6 @@ public class Util {
         }
         return returnVal;
     }
-    
 
     /**
      * Retrieves the version number set in the pom file.
@@ -128,25 +124,25 @@ public class Util {
      * @return a version without forbidden characters
      */
     public static String removeCharacters(String string, char forbiddenCharacter) {
-        
+
         StringBuilder sb = new StringBuilder(string.length());
-        
+
         char[] stringChars = string.toCharArray();
-        
-        for (int i = 0 ; i < stringChars.length ; i++) {
-            
+
+        for (int i = 0; i < stringChars.length; i++) {
+
             char charAtI = stringChars[i];
-            
+
             if (charAtI == forbiddenCharacter) {
-                
+
                 continue;
-                
+
             }
-            
+
             sb.append(charAtI);
-            
+
         }
-        
+
         return sb.toString();
     }
 
@@ -159,18 +155,18 @@ public class Util {
      * @return a version without forbidden characters
      */
     public static String removeCharacters(String string, String[] forbiddenCharacters) {
-        
+
         String result = string;
-        
+
         for (String fc : forbiddenCharacters) {
-            
+
             String[] split = result.split(fc);
-            
+
             if (split.length > 1) {
-                
+
                 result = Arrays.stream(split)
                         .collect(Collectors.joining());
-                
+
             }
         }
         return result;
@@ -201,27 +197,27 @@ public class Util {
         }
         return false;
     }
-    
+
     /**
      * Replaces all characters equals to a by b in the given string.
-     * 
+     *
      * @param string the string
      * @param a a
      * @param b b
-     * 
+     *
      * @return a string equal to string with a replaced by b
      */
     public static String replaceAll(String string, char a, char b) {
-        
+
         char[] stringArray = string.toCharArray();
-        
-        for (int i = 0 ; i < stringArray.length ; i++) {
-            
+
+        for (int i = 0; i < stringArray.length; i++) {
+
             if (stringArray[i] == a) {
                 stringArray[i] = b;
             }
         }
-        
+
         return new String(stringArray);
     }
 
@@ -302,7 +298,7 @@ public class Util {
      * Converts a color to hex format for use in HTML tags.
      *
      * @param colorRGB the color in rgb representation
-     * 
+     *
      * @return the color in hex format
      */
     public static String color2Hex(int colorRGB) {
@@ -313,18 +309,18 @@ public class Util {
      * Converts a color to hex format for use in HTML tags.
      *
      * @param color the color to convert
-     * 
+     *
      * @return the color in hex format
      */
     public static String color2Hex(Color color) {
         return color2Hex(color.getRGB());
     }
-    
+
     /**
      * Returns the color object corresponding to the given rgb representation.
-     * 
+     *
      * @param colorRGB the color in rgb representation
-     * 
+     *
      * @return the color object
      */
     public static Color getColor(int colorRGB) {
@@ -863,41 +859,41 @@ public class Util {
      * @throws IOException if an error occurred while reading or writing a file
      */
     public static void copyFile(File in, File out, boolean overwrite) throws IOException {
-        
+
         long start = 0;
-        
+
         if (out.exists() && out.length() > 0) {
-        
+
             if (overwrite) {
-            
+
                 out.delete();
-            
+
             } else {
-            
+
                 start = out.length();
-            
+
             }
         }
-        
+
         FileChannel inChannel = new FileInputStream(in).getChannel();
         FileChannel outChannel = new FileOutputStream(out).getChannel();
-        
+
         try {
-        
+
             inChannel.transferTo(start, inChannel.size(), outChannel);
-        
+
         } finally {
-        
+
             if (inChannel != null) {
-            
+
                 inChannel.close();
-            
+
             }
-            
+
             if (outChannel != null) {
-            
+
                 outChannel.close();
-            
+
             }
         }
     }
@@ -932,35 +928,36 @@ public class Util {
 
     /**
      * Convenience methods indicating whether the content of two lists have the
-     * same content. Equality is based on the hash of the objects. Note that this method does not work for lists containing null;
-     * 
+     * same content. Equality is based on the hash of the objects. Note that
+     * this method does not work for lists containing null;
+     *
      * @param list1 the first list
      * @param list2 the second list
      *
      * @return a boolean indicating whether list1 has the same content as list2
      */
     public static boolean sameLists(ArrayList<?> list1, ArrayList<?> list2) {
-        
+
         if (list1.size() != list2.size()) {
             return false;
         }
-        
+
         HashMap<Object, Long> list1Occurrence = list1.stream()
                 .collect(Collectors.groupingBy(
-                        a -> a, 
-                        HashMap::new, 
+                        a -> a,
+                        HashMap::new,
                         Collectors.counting()));
-        
+
         HashMap<Object, Long> list2Occurrence = list2.stream()
                 .collect(Collectors.groupingBy(
-                        a -> a, 
-                        HashMap::new, 
+                        a -> a,
+                        HashMap::new,
                         Collectors.counting()));
-        
+
         return list1Occurrence.entrySet().stream()
                 .allMatch(entry -> list2Occurrence.containsKey(entry.getKey()) && list2Occurrence.get(entry.getKey()).equals(entry.getValue()));
     }
-    
+
     /**
      * Returns the occurrence of a character in a string.
      *
@@ -970,11 +967,11 @@ public class Util {
      * @return the occurrence of a character in a string
      */
     public static int getOccurrence(String input, char character) {
-        
+
         return (int) input.chars()
                 .filter(aa -> aa == character)
                 .count();
-        
+
     }
 
     /**
@@ -1186,63 +1183,63 @@ public class Util {
         System.arraycopy(array2, 0, result, array1.length, array2.length);
         return result;
     }
-    
+
     /**
      * Returns an array containing the unique characters of the given array.
-     * 
+     *
      * @param array the array
-     * 
+     *
      * @return the unique array
      */
     public static char[] makeUnique(char[] array) {
-        
+
         char[] arrayUnique = new char[array.length];
         int index = 0;
         char aa = array[index];
         arrayUnique[index] = aa;
         for (int i = 1; i < array.length; i++) {
-            
+
             aa = array[i];
             boolean duplicate = false;
-            
+
             for (int j = 0; j < i; j++) {
-                
+
                 char aaTemp = array[j];
-                
+
                 if (aa == aaTemp) {
-                    
+
                     duplicate = true;
                     break;
-                    
+
                 }
             }
-            
+
             if (!duplicate) {
-                
+
                 arrayUnique[index] = aa;
-                
+
             }
         }
-        
+
         System.arraycopy(arrayUnique, 0, arrayUnique, 0, index);
         return arrayUnique;
     }
-    
+
     /**
      * Returns a string in the form value(attribute).
-     * 
+     *
      * @param value the value
      * @param attribute the attribute
-     * 
+     *
      * @return a string in the form value(attribute)
      */
     public static String toString(String value, String attribute) {
-        
+
         StringBuilder sb = new StringBuilder(value.length() + attribute.length() + 2);
-        
+
         sb.append(value).append("(").append(attribute).append(")");
-        
+
         return sb.toString();
-        
+
     }
 }

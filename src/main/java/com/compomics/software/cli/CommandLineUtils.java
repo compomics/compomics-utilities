@@ -14,16 +14,9 @@ import java.util.ArrayList;
 public class CommandLineUtils {
 
     /**
-     * Empty default constructor
-     */
-    public CommandLineUtils() {
-    }
-    
-    /**
      * The format to use for string output.
      */
     public static final String formatter = "%-35s";
-
     /**
      * The command line argument separator.
      */

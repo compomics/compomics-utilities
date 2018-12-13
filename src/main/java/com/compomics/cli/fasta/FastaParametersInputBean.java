@@ -9,17 +9,11 @@ import java.util.Date;
 import org.apache.commons.cli.CommandLine;
 
 /**
- * This class gathers command line parameters for the parsing of fasta files.
+ * This class gathers command line parameters for the parsing of FASTA files.
  *
  * @author Marc Vaudel
  */
 public class FastaParametersInputBean {
-
-    /**
-     * Empty default constructor
-     */
-    public FastaParametersInputBean() {
-    }
 
     /**
      * Verifies the command line start parameters.
@@ -51,7 +45,7 @@ public class FastaParametersInputBean {
     }
 
     /**
-     * The fasta parsing parameters.
+     * The FASTA parsing parameters.
      */
     private FastaParameters fastaParameters;
 
@@ -59,7 +53,7 @@ public class FastaParametersInputBean {
      * Parses all the arguments from a command line.
      *
      * @param aLine the command line
-     * @param fastaFile the fasta file to infer the parameters from if not
+     * @param fastaFile the FASTA file to infer the parameters from if not
      * provided in the command line arguments
      *
      * @throws IOException if an error occurs while reading or writing a file.
@@ -161,12 +155,11 @@ public class FastaParametersInputBean {
     }
 
     /**
-     * Returns the fasta parameters as parsed from the command line.
+     * Returns the FASTA parameters as parsed from the command line.
      * 
-     * @return the fasta parameters as parsed from the command line
+     * @return the FASTA parameters as parsed from the command line
      */
     public FastaParameters getFastaParameters() {
         return fastaParameters;
     }
-
 }

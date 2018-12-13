@@ -12,12 +12,6 @@ import java.util.ArrayList;
 public class SplashScreen {
 
     /**
-     * Empty default constructor
-     */
-    public SplashScreen() {
-    }
-
-    /**
      * Constructor. Requires three arguments, 1) the target folder of the tool
      * with the figure to convert, 2) the jar file folder of the tool with the
      * figure to convert, and 3) the figure file name (without .svg or .png).

@@ -10,12 +10,6 @@ import java.util.Scanner;
  */
 public class CompareVersionNumbers implements Comparator<String> {
 
-    /**
-     * Empty default constructor
-     */
-    public CompareVersionNumbers() {
-    }
-
     @Override
     public int compare(String oldVersionNumber, String newVersionNumber) {
         int compareInt = -1;

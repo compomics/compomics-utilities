@@ -17,12 +17,6 @@ import javax.swing.JOptionPane;
 public class GUIFileDAO extends FileDAO {
 
     /**
-     * Empty default constructor
-     */
-    public GUIFileDAO() {
-    }
-
-    /**
      * {@inheritDoc }
      */
     @Override

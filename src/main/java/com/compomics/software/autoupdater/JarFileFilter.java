@@ -10,12 +10,6 @@ import java.io.FilenameFilter;
  */
 public class JarFileFilter implements FilenameFilter {
 
-    /**
-     * Empty default constructor
-     */
-    public JarFileFilter() {
-    }
-
     @Override
     public boolean accept(File dir, String name) {
         boolean accept = false;

@@ -19,12 +19,6 @@ import javax.swing.JOptionPane;
 public class ProteoWizardSetupDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public ProteoWizardSetupDialog() {
-    }
-
-    /**
      * The utilities preferences.
      */
     private UtilitiesUserParameters utilitiesUserParameters;

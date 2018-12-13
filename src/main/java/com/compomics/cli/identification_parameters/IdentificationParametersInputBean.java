@@ -54,13 +54,6 @@ import org.apache.commons.cli.CommandLine;
 public class IdentificationParametersInputBean {
 
     /**
-     * Empty default constructor
-     */
-    public IdentificationParametersInputBean() {
-        commandLine = null;
-    }
-
-    /**
      * Verifies the command line start parameters.
      *
      * @param aLine the command line to validate

@@ -4,7 +4,7 @@ import com.compomics.software.cli.CommandLineUtils;
 import org.apache.commons.cli.Options;
 
 /**
- * Command line parameters for the fasta files.
+ * Command line parameters for the FASTA files.
  *
  * @author Marc Vaudel
  */
@@ -86,16 +86,5 @@ public enum FastaParametersCLIParams {
         }
 
         return output;
-    }
-
-
-    /**
-     * Empty default constructor
-     */
-    private FastaParametersCLIParams() {
-        id = "";
-        description = "";
-        mandatory = false;
-        hasArgument = false;
     }
 }

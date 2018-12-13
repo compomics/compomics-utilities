@@ -82,7 +82,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * The selected fasta file.
      */
-    private File selectedFastaFile = null;
+    private String selectedFastaFile = null;
     /**
      * The parameters used to parse the fasta file.
      */
@@ -129,7 +129,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param normalImange the normal icon
      * @param waitingImage the waiting icon
      */
-    public SequenceDbDetailsDialog(Dialog owner, Frame parent, File selectedFastaFile, FastaParameters fastaParameters, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
+    public SequenceDbDetailsDialog(Dialog owner, Frame parent, String selectedFastaFile, FastaParameters fastaParameters, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
 
         super(owner, true);
         initComponents();
@@ -165,7 +165,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param normalImange the normal icon
      * @param waitingImage the waiting icon
      */
-    public SequenceDbDetailsDialog(Frame parent, File selectedFastaFile, FastaParameters fastaParameters, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
+    public SequenceDbDetailsDialog(Frame parent, String selectedFastaFile, FastaParameters fastaParameters, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
 
         super(parent, true);
 
@@ -197,9 +197,11 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     private void setUpGUI() {
 
         if (selectedFastaFile != null) {
+            
+            File fastaFile = new File(selectedFastaFile);
 
-            fileTxt.setText(selectedFastaFile.getAbsolutePath());
-            lastModifiedTxt.setText(new Date(selectedFastaFile.lastModified()).toString());
+            fileTxt.setText(selectedFastaFile);
+            lastModifiedTxt.setText(new Date(fastaFile.lastModified()).toString());
 
             if (fastaParameters != null) {
 
@@ -282,11 +284,11 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             browseButton.setEnabled(dbEditable);
             decoyFlagTxt.setEditable(dbEditable);
 
-            if (selectedFastaFile.exists()) {
+            if (fastaFile.exists()) {
 
                 try {
 
-                    proteinIterator = new FastaIterator(selectedFastaFile);
+                    proteinIterator = new FastaIterator(fastaFile);
                     bufferProteins();
 
                     accessionsSpinner.setEnabled(true);
@@ -412,7 +414,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 }
             }
 
-            loadFastaFile(file, fastaParameters == null, true);
+            loadFastaFile(file.getAbsolutePath(), fastaParameters == null, true);
 
             return true;
 
@@ -433,7 +435,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * automatically
      * @param setUpGUI if true the gui will be updated
      */
-    private void loadFastaFile(File fastaFile, boolean inferParameters, boolean setUpGUI) {
+    private void loadFastaFile(String fastaFile, boolean inferParameters, boolean setUpGUI) {
 
         this.selectedFastaFile = fastaFile;
 
@@ -499,7 +501,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                 } catch (IOException e) {
                     progressDialog.setRunFinished();
                     JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
-                            "File " + selectedFastaFile.getAbsolutePath() + " not found.",
+                            "File " + selectedFastaFile + " not found.",
                             "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
                     e.printStackTrace();
                     return;
@@ -528,14 +530,13 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      */
     private void generateTargetDecoyDatabase() {
 
-        String fastaInput = selectedFastaFile.getAbsolutePath();
-
         // set up the new fasta file name
-        String newFasta = fastaInput;
+        String newFasta = selectedFastaFile;
+        File originalFastaFile = new File(selectedFastaFile);
 
         // remove the ending .fasta (if there)
-        if (fastaInput.lastIndexOf(".") != -1) {
-            newFasta = fastaInput.substring(0, fastaInput.lastIndexOf("."));
+        if (selectedFastaFile.lastIndexOf(".") != -1) {
+            newFasta = selectedFastaFile.substring(0, selectedFastaFile.lastIndexOf("."));
         }
 
         // add the target decoy tag
@@ -550,15 +551,15 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             progressDialog.setPrimaryProgressCounter(0);
             progressDialog.setMaxPrimaryProgressCounter(fastaSummary.nSequences);
 
-            DecoyConverter.appendDecoySequences(selectedFastaFile, newFile, progressDialog);
+            DecoyConverter.appendDecoySequences(originalFastaFile, newFile, progressDialog);
 
             progressDialog.setTitle("Getting Database Details. Please Wait...");
 
             progressDialog.setPrimaryProgressCounterIndeterminate(true);
 
-            selectedFastaFile = newFile;
+            selectedFastaFile = newFile.getAbsolutePath();
             fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
-            fastaSummary = DecoyConverter.getDecoySummary(selectedFastaFile, fastaSummary);
+            fastaSummary = DecoyConverter.getDecoySummary(originalFastaFile, fastaSummary);
 
         } catch (OutOfMemoryError error) {
 
@@ -574,14 +575,14 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         } catch (FileNotFoundException e) {
 
             JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
-                    new String[]{"FASTA Import Error.", "File " + fastaInput + " not found."},
+                    new String[]{"FASTA Import Error.", "File " + selectedFastaFile + " not found."},
                     "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
 
         } catch (Exception e) {
 
             JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
-                    new String[]{"FASTA Import Error.", "File " + fastaInput + " could not be imported."},
+                    new String[]{"FASTA Import Error.", "File " + selectedFastaFile + " could not be imported."},
                     "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
             e.printStackTrace();
 
@@ -1177,7 +1178,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      *
      * @return the selected FASTA file
      */
-    public File getSelectedFastaFile() {
+    public String getSelectedFastaFile() {
         return selectedFastaFile;
     }
 

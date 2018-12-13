@@ -114,7 +114,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <div class="block">A database which can easily be used to store objects.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
-<dd>Marc Vaudel, Dominik Kopczynski</dd>
+<dd>Marc Vaudel, Dominik Kopczynski, Harald Barsnes</dd>
 </dl>
 </li>
 </ul>
@@ -156,7 +156,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsDB.html#ObjectsDB--">ObjectsDB</a></span>()</code>
-<div class="block">Empty default constructor</div>
+<div class="block">Empty default constructor.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -166,7 +166,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsDB.html#ObjectsDB-java.lang.String-java.lang.String-boolean-">ObjectsDB</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;folder,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsDB.html#ObjectsDB-java.lang.String-java.lang.String-boolean-">ObjectsDB</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
          <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;dbName,
          boolean&nbsp;overwrite)</code>
 <div class="block">Constructor.</div>
@@ -349,7 +349,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </tr>
 <tr id="i25" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsDB.html#lock--">lock</a></span>()</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/db/object/ObjectsDB.html#lock-com.compomics.util.waiting.WaitingHandler-">lock</a></span>(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</code>
 <div class="block">Locking the db for storing.</div>
 </td>
 </tr>
@@ -454,7 +454,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>ObjectsDB</h4>
 <pre>public&nbsp;ObjectsDB()</pre>
-<div class="block">Empty default constructor</div>
+<div class="block">Empty default constructor.</div>
 </li>
 </ul>
 <a name="ObjectsDB-java.lang.String-java.lang.String-">
@@ -479,13 +479,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <ul class="blockListLast">
 <li class="blockList">
 <h4>ObjectsDB</h4>
-<pre>public&nbsp;ObjectsDB(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;folder,
+<pre>public&nbsp;ObjectsDB(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;path,
                  <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;dbName,
                  boolean&nbsp;overwrite)</pre>
 <div class="block">Constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>folder</code> - absolute path of the folder where to establish the database</dd>
+<dd><code>path</code> - absolute path of the folder where to establish the database</dd>
 <dd><code>dbName</code> - name of the database</dd>
 <dd><code>overwrite</code> - overwriting old database</dd>
 </dl>
@@ -965,14 +965,18 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </dl>
 </li>
 </ul>
-<a name="lock--">
+<a name="lock-com.compomics.util.waiting.WaitingHandler-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>lock</h4>
-<pre>public&nbsp;void&nbsp;lock()</pre>
+<pre>public&nbsp;void&nbsp;lock(<a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler)</pre>
 <div class="block">Locking the db for storing.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>waitingHandler</code> - the waiting handler</dd>
+</dl>
 </li>
 </ul>
 <a name="unlock--">

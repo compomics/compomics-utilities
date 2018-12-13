@@ -102,9 +102,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      */
     private DigestionParameters digestionParameters;
     /**
-     * The sequence database file used for identification.
+     * Path to the sequence database file used for identification.
      */
-    private File fastaFile;
+    private String fastaFile;
     /**
      * The parameters to use to parse the FASTA file.
      */
@@ -413,11 +413,11 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
     }
 
     /**
-     * Returns the sequence database file used for identification.
+     * Returns the path to the sequence database file used for identification.
      *
-     * @return the sequence database file used for identification
+     * @return the path to the sequence database file used for identification
      */
-    public File getFastaFile() {
+    public String getFastaFile() {
         
         readDBMode();
         
@@ -425,11 +425,11 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
     }
 
     /**
-     * Sets the sequence database file used for identification.
+     * Sets the path to the sequence database file used for identification.
      *
      * @param fastaFile the sequence database file used for identification
      */
-    public void setFastaFile(File fastaFile) {
+    public void setFastaFile(String fastaFile) {
         writeDBMode();
         this.fastaFile = fastaFile;
     }
@@ -959,7 +959,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
 
         output.append("DATABASE_FILE=");
         if (fastaFile != null) {
-            output.append(fastaFile.getAbsolutePath());
+            output.append(fastaFile);
         }
         output.append(newLine);
 
@@ -1107,7 +1107,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
             return false;
         }
         if (this.getFastaFile() != null && otherSearchParameters.getFastaFile() != null) {
-            if (!this.getFastaFile().getAbsolutePath().equalsIgnoreCase(otherSearchParameters.getFastaFile().getAbsolutePath())) {
+            if (!this.getFastaFile().equals(otherSearchParameters.getFastaFile())) {
                 return false;
             }
         }

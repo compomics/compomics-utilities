@@ -81,7 +81,7 @@ public class FastaSummary {
     /**
      * Gathers summary data on the FASTA file content.
      *
-     * @param fastaFile a FASTA file
+     * @param fastaFile path to a FASTA file
      * @param fastaParameters the parameters to use to parse the file
      * @param waitingHandler a handler to allow canceling the import and
      * displaying progress
@@ -91,7 +91,7 @@ public class FastaSummary {
      * @throws IOException exception thrown if an error occurred while iterating
      * the file
      */
-    public static FastaSummary getSummary(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler) throws IOException {
+    public static FastaSummary getSummary(String fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler) throws IOException {
 
         FastaSummary fastaSummary = null;
 
@@ -137,7 +137,7 @@ public class FastaSummary {
      * @throws IOException exception thrown if an error occurred while reading
      * the file
      */
-    private static FastaSummary getSavedSummary(File fastaFile) throws IOException {
+    private static FastaSummary getSavedSummary(String fastaFile) throws IOException {
 
         File savedFile = getSummaryFile(fastaFile);
 
@@ -162,7 +162,7 @@ public class FastaSummary {
      * @throws IOException exception thrown if an error occurred while writing
      * the file
      */
-    private static void saveSummary(File fastaFile, FastaSummary fastaSummary) throws IOException {
+    private static void saveSummary(String fastaFile, FastaSummary fastaSummary) throws IOException {
 
         File destinationFile = getSummaryFile(fastaFile);
         File destinationFolder = destinationFile.getParentFile();
@@ -189,7 +189,7 @@ public class FastaSummary {
      *
      * @return the file used to store the summary file in the user folder
      */
-    private static File getSummaryFile(File fastaFile) {
+    private static File getSummaryFile(String fastaFile) {
 
         UtilitiesUserParameters utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
 
@@ -197,14 +197,14 @@ public class FastaSummary {
 
         int pathHash = fastaFile.hashCode();
 
-        return new File(summaryFolder, pathHash + "");
+        return new File(summaryFolder, Integer.toString(pathHash));
 
     }
 
     /**
      * Gathers summary data on the FASTA file content.
      *
-     * @param fastaFile a FASTA file
+     * @param fastaFilePath path to a FASTA file
      * @param fastaParameters the parameters to use to parse the file
      * @param waitingHandler a handler to allow canceling the import and
      * displaying progress
@@ -214,8 +214,10 @@ public class FastaSummary {
      * @throws IOException exception thrown if an error occurred while iterating
      * the file
      */
-    private static FastaSummary parseSummary(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler) throws IOException {
+    private static FastaSummary parseSummary(String fastaFilePath, FastaParameters fastaParameters, WaitingHandler waitingHandler) throws IOException {
 
+        File fastaFile = new File(fastaFilePath);
+        
         long lastModified = fastaFile.lastModified();
         
         TreeMap<String, Integer> speciesOccurrence = new TreeMap<>();

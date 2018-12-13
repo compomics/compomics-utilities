@@ -239,23 +239,23 @@ public class FastaParameters {
     /**
      * Infers the parameters used to parse the file.
      *
-     * @param fastaFile a FASTA file
+     * @param fastaFilePath path to a FASTA file
      *
      * @return returns FASTA parameters inferred from the file
      *
      * @throws IOException exception thrown if an error occurred while iterating
      * the file
      */
-    public static FastaParameters inferParameters(File fastaFile) throws IOException {
+    public static FastaParameters inferParameters(String fastaFilePath) throws IOException {
 
-        return inferParameters(fastaFile, null);
+        return inferParameters(fastaFilePath, null);
 
     }
 
     /**
      * Infers the parameters used to parse the file.
      *
-     * @param fastaFile a FASTA file
+     * @param fastaFilePath path to a FASTA file
      * @param waitingHandler a handler to allow canceling the import
      *
      * @return returns FASTA parameters inferred from the file
@@ -263,9 +263,10 @@ public class FastaParameters {
      * @throws IOException exception thrown if an error occurred while iterating
      * the file
      */
-    public static FastaParameters inferParameters(File fastaFile, WaitingHandler waitingHandler) throws IOException {
+    public static FastaParameters inferParameters(String fastaFilePath, WaitingHandler waitingHandler) throws IOException {
 
         FastaParameters fastaParameters = new FastaParameters();
+        File fastaFile = new File(fastaFilePath);
 
         fastaParameters.setDefaultAttributes(fastaFile);
 

@@ -116,7 +116,7 @@ public class GeneParametersDialog extends javax.swing.JDialog {
         Vector availableSpecies = new Vector();
         speciesMap = new HashMap<>();
 
-        File fastaFile = searchParameters.getFastaFile();
+        String fastaFile = searchParameters.getFastaFile();
 
         if (fastaFile != null) {
 

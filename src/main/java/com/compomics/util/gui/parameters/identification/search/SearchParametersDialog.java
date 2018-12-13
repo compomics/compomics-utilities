@@ -135,7 +135,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
     /**
      * The selected FASTA file.
      */
-    private File selectedFastaFile = null;
+    private String selectedFastaFile = null;
     /**
      * The parameters used to parse the FASTA file.
      */
@@ -1155,7 +1155,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 selectedFastaFile = sequenceDbDetailsDialog.getSelectedFastaFile();
                 fastaParameters = sequenceDbDetailsDialog.getFastaParameters();
 
-                databaseSettingsTxt.setText(selectedFastaFile.getAbsolutePath());
+                databaseSettingsTxt.setText(selectedFastaFile);
 
             }
 
@@ -2046,8 +2046,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         if (selectedFastaFile != null) {
 
-            String fastaPath = selectedFastaFile.getAbsolutePath();
-            databaseSettingsTxt.setText(fastaPath);
+            databaseSettingsTxt.setText(selectedFastaFile);
 
         }
 
@@ -2461,7 +2460,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         String dbPath = databaseSettingsTxt.getText().trim();
         if (!dbPath.equals("")) {
-            File fastaFile = new File(databaseSettingsTxt.getText().trim());
+            String fastaFile = databaseSettingsTxt.getText().trim();
             tempSearchParameters.setFastaFile(fastaFile);
         }
         tempSearchParameters.setFastaParameters(fastaParameters);

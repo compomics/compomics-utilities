@@ -151,7 +151,7 @@ public class FastaParametersInputBean {
 
         } else {
 
-            FastaParameters parsedParameters = FastaParameters.inferParameters(fastaFile);
+            FastaParameters parsedParameters = FastaParameters.inferParameters(fastaFile.getAbsolutePath());
 
             fastaParameters.setTargetDecoy(parsedParameters.isTargetDecoy());
             fastaParameters.setDecoyFlag(parsedParameters.getDecoyFlag());

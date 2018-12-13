@@ -131,15 +131,15 @@ public class GeneParameters {
      */
     public void setPreferencesFromSearchParameters(SearchParameters searchParameters) {
 
-        File fastaFile = searchParameters.getFastaFile();
+        String fastaFilePath = searchParameters.getFastaFile();
 
-        if (fastaFile != null) {
+        if (fastaFilePath != null) {
             
             SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
             
             try {
 
-                FastaSummary fastaSummary = FastaSummary.getSummary(fastaFile, searchParameters.getFastaParameters(), null);
+                FastaSummary fastaSummary = FastaSummary.getSummary(fastaFilePath, searchParameters.getFastaParameters(), null);
                 TreeMap<String, Integer> speciesOccurrence = fastaSummary.speciesOccurrence;
                 Integer occurrenceMax = null;
 

@@ -1814,8 +1814,7 @@ public class IdentificationParametersInputBean {
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.DB.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB.id);
-            File fastaFile = new File(arg);
-            searchParameters.setFastaFile(fastaFile);
+            searchParameters.setFastaFile(arg);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.FI.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FI.id);

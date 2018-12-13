@@ -1,5 +1,6 @@
 package com.compomics.util.db.object;
 
+import static com.compomics.util.db.object.DbMutex.dbMutex;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.util.ArrayList;
@@ -39,30 +40,18 @@ public class ObjectsDB {
      */
     private ObjectsCache objectsCache;
     /**
-     * Mutex for the interaction with the database.
-     */
-    private final Object dbMutex = new Object();
-    /**
      * Debug, if true, all interaction with the database will be logged in the
      * System.out stream.
      */
     private static boolean debugInteractions = false;
     /**
-     * OrientDB database connection.
+     * Database persistence manager.
      */
     private PersistenceManager pm = null;
     /**
      * HashMap to map hash IDs of entries into DB ids.
      */
     private final HashMap<Long, Long> idMap = new HashMap<>();
-    /**
-     * Path to the database folder.
-     */
-    private File dbFolder = null;
-    /**
-     * The actual db file.
-     */
-    private File dbFile = null;
     /**
      * Boolean indicating if the connection is active.
      */
@@ -105,11 +94,11 @@ public class ObjectsDB {
     /**
      * Constructor.
      *
-     * @param folder absolute path of the folder where to establish the database
+     * @param path absolute path of the folder where to establish the database
      * @param dbName name of the database
      * @param overwrite overwriting old database
      */
-    public ObjectsDB(String folder, String dbName, boolean overwrite) {
+    public ObjectsDB(String path, String dbName, boolean overwrite) {
 
         if (debugInteractions) {
 
@@ -117,7 +106,10 @@ public class ObjectsDB {
 
         }
 
-        dbFolder = new File("/" + folder);
+        this.path = path;
+        this.dbName = dbName;
+        
+        File dbFolder = getDbFolder();
 
         if (!dbFolder.exists()) {
 
@@ -128,7 +120,7 @@ public class ObjectsDB {
             }
         }
 
-        dbFile = new File(dbFolder, dbName);
+        File dbFile = getDbFile();
 
         if (dbFile.exists() && overwrite) {
 
@@ -207,7 +199,7 @@ public class ObjectsDB {
      * @return the database file.
      */
     public File getDbFile() {
-        return dbFile;
+        return new File(path, dbName);
     }
 
     /**
@@ -216,7 +208,7 @@ public class ObjectsDB {
      * @return the database folder.
      */
     public File getDbFolder() {
-        return dbFolder;
+        return new File(path);
     }
 
     /**
@@ -267,44 +259,44 @@ public class ObjectsDB {
      */
     public void insertObject(long objectKey, Object object) throws InterruptedException {
 
-        synchronized (dbMutex) {
+        dbMutex.acquire();
 
-            if (debugInteractions) {
-                System.out.println(System.currentTimeMillis() + " Inserting single object " + object.getClass().getSimpleName() + ", key: " + objectKey);
-            }
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " Inserting single object " + object.getClass().getSimpleName() + ", key: " + objectKey);
+        }
 
-            if (object == null) {
+        if (object == null) {
 
-                throw new InterruptedException("error: null insertion: " + objectKey);
-
-            }
-
-            ((DbObject) object).setId(objectKey);
-            ((DbObject) object).setFirstLevel(true);
-
-            if (!idMap.containsKey(objectKey)) {
-
-                idMap.put(objectKey, 0l);
-                String simpleName = object.getClass().getSimpleName();
-
-                if (!classCounter.containsKey(simpleName)) {
-
-                    classCounter.put(simpleName, new HashSet<>());
-
-                }
-
-                classCounter.get(simpleName).add(objectKey);
-
-            } else {
-
-                throw new InterruptedException("error double insertion: " + objectKey);
-
-            }
-
-            currentAdded += 1;
-            objectsCache.addObject(objectKey, object);
+            throw new InterruptedException("error: null insertion: " + objectKey);
 
         }
+
+        ((DbObject) object).setId(objectKey);
+        ((DbObject) object).setFirstLevel(true);
+
+        if (!idMap.containsKey(objectKey)) {
+
+            idMap.put(objectKey, 0l);
+            String simpleName = object.getClass().getSimpleName();
+
+            if (!classCounter.containsKey(simpleName)) {
+
+                classCounter.put(simpleName, new HashSet<>());
+
+            }
+
+            classCounter.get(simpleName).add(objectKey);
+
+        } else {
+
+            throw new InterruptedException("error double insertion: " + objectKey);
+
+        }
+
+        currentAdded += 1;
+        objectsCache.addObject(objectKey, object);
+
+        dbMutex.release();
     }
 
     /**
@@ -329,10 +321,10 @@ public class ObjectsDB {
      */
     public Iterator<?> getObjectsIterator(Class className, String filters) throws InterruptedException {
         Query q;
-        synchronized (dbMutex) {
-            dumpToDB();
-            q = pm.newQuery(className, filters);
-        }
+        dbMutex.acquire();
+        dumpToDB();
+        q = pm.newQuery(className, filters);
+        dbMutex.release();
         return ((SynchronizedROCollection<?>) q.execute()).iterator();
     }
 
@@ -350,50 +342,50 @@ public class ObjectsDB {
      */
     public void insertObjects(HashMap<Long, Object> objects, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
 
-        synchronized (dbMutex) {
+        dbMutex.acquire();
 
-            for (Entry<Long, Object> entry : objects.entrySet()) {
+        for (Entry<Long, Object> entry : objects.entrySet()) {
 
-                long objectKey = entry.getKey();
-                Object object = entry.getValue();
+            long objectKey = entry.getKey();
+            Object object = entry.getValue();
 
-                if (object == null) {
+            if (object == null) {
 
-                    throw new InterruptedException("error: null insertion: " + objectKey);
+                throw new InterruptedException("error: null insertion: " + objectKey);
 
-                }
-
-                if (debugInteractions) {
-                    System.out.println(System.currentTimeMillis() + " Inserting single object, table: " + object.getClass().getName() + ", key: " + objectKey);
-                }
-
-                ((DbObject) object).setId(objectKey);
-                ((DbObject) object).setFirstLevel(true);
-
-                if (!idMap.containsKey(objectKey)) {
-
-                    idMap.put(objectKey, 0l);
-                    String simpleName = object.getClass().getSimpleName();
-
-                    if (!classCounter.containsKey(simpleName)) {
-
-                        classCounter.put(simpleName, new HashSet<>());
-
-                    }
-
-                    classCounter.get(simpleName).add(objectKey);
-
-                } else {
-
-                    throw new InterruptedException("error double insertion: " + objectKey);
-
-                }
             }
 
-            currentAdded += objects.size();
-            objectsCache.addObjects(objects);
+            if (debugInteractions) {
+                System.out.println(System.currentTimeMillis() + " Inserting single object, table: " + object.getClass().getName() + ", key: " + objectKey);
+            }
 
+            ((DbObject) object).setId(objectKey);
+            ((DbObject) object).setFirstLevel(true);
+
+            if (!idMap.containsKey(objectKey)) {
+
+                idMap.put(objectKey, 0l);
+                String simpleName = object.getClass().getSimpleName();
+
+                if (!classCounter.containsKey(simpleName)) {
+
+                    classCounter.put(simpleName, new HashSet<>());
+
+                }
+
+                classCounter.get(simpleName).add(objectKey);
+
+            } else {
+
+                throw new InterruptedException("error double insertion: " + objectKey);
+
+            }
         }
+
+        currentAdded += objects.size();
+        objectsCache.addObjects(objects);
+
+        dbMutex.release();
     }
 
     /**
@@ -410,36 +402,36 @@ public class ObjectsDB {
      */
     public void loadObjects(Collection<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
 
-        synchronized (dbMutex) {
+        dbMutex.acquire();
 
-            if (debugInteractions) {
-                System.out.println(System.currentTimeMillis() + " loading " + keys.size() + " objects");
-            }
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " loading " + keys.size() + " objects");
+        }
 
-            HashMap<Long, Object> allObjects = new HashMap<>(keys.size());
+        HashMap<Long, Object> allObjects = new HashMap<>(keys.size());
 
-            for (long objectKey : keys) {
+        for (long objectKey : keys) {
 
-                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
 
-                    return;
-
-                }
-
-                Long zooid = idMap.get(objectKey);
-
-                if (zooid != null && zooid != 0 && !objectsCache.inCache(objectKey)) {
-
-                    Object obj = pm.getObjectById(zooid);
-                    allObjects.put(objectKey, obj);
-
-                }
+                return;
 
             }
 
-            objectsCache.addObjects(allObjects);
+            Long zooid = idMap.get(objectKey);
+
+            if (zooid != null && zooid != 0 && !objectsCache.inCache(objectKey)) {
+
+                Object obj = pm.getObjectById(zooid);
+                allObjects.put(objectKey, obj);
+
+            }
 
         }
+
+        objectsCache.addObjects(allObjects);
+
+        dbMutex.release();
     }
 
     /**
@@ -458,34 +450,34 @@ public class ObjectsDB {
 
         HashSet<Long> hashedKeys = classCounter.get(className.getSimpleName());
 
-        synchronized (dbMutex) {
+        dbMutex.acquire();
 
-            if (debugInteractions) {
-                System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
-            }
-
-            HashMap<Long, Object> allObjects = new HashMap<>(hashedKeys.size());
-
-            for (Long longKey : hashedKeys) {
-
-                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-
-                    return;
-
-                }
-
-                Long zooid = idMap.get(longKey);
-
-                if (zooid != null && zooid != 0 && !objectsCache.inCache(longKey)) {
-
-                    allObjects.put(longKey, pm.getObjectById(zooid));
-
-                }
-            }
-
-            objectsCache.addObjects(allObjects);
-
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
         }
+
+        HashMap<Long, Object> allObjects = new HashMap<>(hashedKeys.size());
+
+        for (Long longKey : hashedKeys) {
+
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+
+                return;
+
+            }
+
+            Long zooid = idMap.get(longKey);
+
+            if (zooid != null && zooid != 0 && !objectsCache.inCache(longKey)) {
+
+                allObjects.put(longKey, pm.getObjectById(zooid));
+
+            }
+        }
+
+        objectsCache.addObjects(allObjects);
+
+        dbMutex.release();
     }
 
     /**
@@ -498,26 +490,26 @@ public class ObjectsDB {
 
         Object obj = null;
 
-        synchronized (dbMutex) {
+        dbMutex.acquire();
 
-            if (debugInteractions) {
-                System.out.println(System.currentTimeMillis() + " | retrieving one objects with key: " + longKey);
-            }
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " | retrieving one objects with key: " + longKey);
+        }
 
-            Long zooid = idMap.get(longKey);
+        Long zooid = idMap.get(longKey);
 
-            if (zooid != null) {
+        if (zooid != null) {
 
-                obj = objectsCache.getObject(longKey);
+            obj = objectsCache.getObject(longKey);
 
-                if (obj == null) {
+            if (obj == null) {
 
-                    obj = pm.getObjectById(zooid);
-                    objectsCache.addObject(longKey, obj);
+                obj = pm.getObjectById(zooid);
+                objectsCache.addObject(longKey, obj);
 
-                }
             }
         }
+        dbMutex.release();
         return obj;
     }
 
@@ -533,14 +525,16 @@ public class ObjectsDB {
 
         HashSet counter;
 
-        synchronized (dbMutex) {
+        dbMutex.acquire();
 
-            if (debugInteractions) {
-                System.out.println(System.currentTimeMillis() + " query number of " + className.getSimpleName() + " objects");
-            }
-
-            counter = classCounter.get(className.getSimpleName());
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " query number of " + className.getSimpleName() + " objects");
         }
+
+        counter = classCounter.get(className.getSimpleName());
+
+        dbMutex.release();
+
         return (counter != null ? counter.size() : 0);
     }
 
@@ -551,9 +545,9 @@ public class ObjectsDB {
      * while interacting with the database
      */
     public void dumpToDB() throws InterruptedException {
-        synchronized (dbMutex) {
-            objectsCache.saveCache(null, false);
-        }
+        dbMutex.acquire();
+        objectsCache.saveCache(null, false);
+        dbMutex.release();
     }
 
     /**
@@ -574,43 +568,43 @@ public class ObjectsDB {
 
         ArrayList<Object> retrievingObjects = new ArrayList<>(keys.size());
 
-        synchronized (dbMutex) {
+        dbMutex.acquire();
 
-            if (true || debugInteractions) {
-                System.out.println(System.currentTimeMillis() + " retrieving " + keys.size() + " objects");
-            }
-
-            HashMap<Long, Object> objectsNotInCache = new HashMap<>();
-
-            for (Long objectKey : keys) {
-
-                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-
-                    return retrievingObjects;
-
-                }
-
-                Long zooid = idMap.get(objectKey);
-
-                if (zooid != null) {
-
-                    Object obj = objectsCache.getObject(objectKey);
-
-                    if (obj == null) {
-
-                        obj = pm.getObjectById(zooid);
-                        objectsNotInCache.put(objectKey, obj);
-
-                    }
-
-                    retrievingObjects.add(obj);
-
-                }
-            }
-
-            objectsCache.addObjects(objectsNotInCache);
-
+        if (true || debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " retrieving " + keys.size() + " objects");
         }
+
+        HashMap<Long, Object> objectsNotInCache = new HashMap<>();
+
+        for (Long objectKey : keys) {
+
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+
+                return retrievingObjects;
+
+            }
+
+            Long zooid = idMap.get(objectKey);
+
+            if (zooid != null) {
+
+                Object obj = objectsCache.getObject(objectKey);
+
+                if (obj == null) {
+
+                    obj = pm.getObjectById(zooid);
+                    objectsNotInCache.put(objectKey, obj);
+
+                }
+
+                retrievingObjects.add(obj);
+
+            }
+        }
+
+        objectsCache.addObjects(objectsNotInCache);
+
+        dbMutex.release();
 
         return retrievingObjects;
 
@@ -634,43 +628,43 @@ public class ObjectsDB {
 
         ArrayList<Object> retrievingObjects = new ArrayList<>();
 
-        synchronized (dbMutex) {
+        dbMutex.acquire();
 
-            if (debugInteractions) {
-                System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
-            }
-
-            HashMap<Long, Object> objectsNotInCache = new HashMap<>();
-
-            for (long longKey : classCounter.get(className.getSimpleName())) {
-
-                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-
-                    return retrievingObjects;
-
-                }
-
-                Long zooid = idMap.get(longKey);
-
-                if (zooid != null) {
-
-                    Object obj = objectsCache.getObject(longKey);
-
-                    if (obj == null) {
-
-                        obj = pm.getObjectById(zooid);
-                        objectsNotInCache.put(longKey, obj);
-
-                    }
-
-                    retrievingObjects.add(obj);
-
-                }
-            }
-
-            objectsCache.addObjects(objectsNotInCache);
-
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
         }
+
+        HashMap<Long, Object> objectsNotInCache = new HashMap<>();
+
+        for (long longKey : classCounter.get(className.getSimpleName())) {
+
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+
+                return retrievingObjects;
+
+            }
+
+            Long zooid = idMap.get(longKey);
+
+            if (zooid != null) {
+
+                Object obj = objectsCache.getObject(longKey);
+
+                if (obj == null) {
+
+                    obj = pm.getObjectById(zooid);
+                    objectsNotInCache.put(longKey, obj);
+
+                }
+
+                retrievingObjects.add(obj);
+
+            }
+        }
+
+        objectsCache.addObjects(objectsNotInCache);
+
+        dbMutex.release();
 
         return retrievingObjects;
     }
@@ -689,38 +683,40 @@ public class ObjectsDB {
      */
     public void removeObjects(Collection<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
 
-        synchronized (dbMutex) {
+        dbMutex.acquire();
 
-            if (debugInteractions) {
-                System.out.println(System.currentTimeMillis() + " removing " + keys.size() + " objects");
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " removing " + keys.size() + " objects");
+        }
+
+        for (long key : keys) {
+
+            if (waitingHandler.isRunCanceled()) {
+                break;
             }
 
-            for (long key : keys) {
+            Long zooid = idMap.get(key);
 
-                if (waitingHandler.isRunCanceled()) {
-                    break;
-                }
+            if (zooid != null) {
 
-                Long zooid = idMap.get(key);
+                String className = objectsCache.removeObject(key);
 
-                if (zooid != null) {
+                if (zooid != 0) {
 
-                    String className = objectsCache.removeObject(key);
-
-                    if (zooid != 0) {
-
-                        Object obj = pm.getObjectById((zooid));
-                        pm.deletePersistent(obj);
-                        className = obj.getClass().getSimpleName();
-
-                    }
-
-                    classCounter.get(className).remove(key);
-                    idMap.remove(key);
+                    Object obj = pm.getObjectById((zooid));
+                    pm.deletePersistent(obj);
+                    className = obj.getClass().getSimpleName();
 
                 }
+
+                classCounter.get(className).remove(key);
+                idMap.remove(key);
+
             }
         }
+
+        dbMutex.release();
+
     }
 
     /**
@@ -733,30 +729,33 @@ public class ObjectsDB {
      */
     public void removeObject(long key) throws InterruptedException {
 
-        synchronized (dbMutex) {
-            if (debugInteractions) {
-                System.out.println(System.currentTimeMillis() + " removing object: " + key);
-            }
+        dbMutex.acquire();
 
-            Long zooid = idMap.get(key);
-
-            if (zooid != null) {
-
-                String className = objectsCache.removeObject(key);
-
-                if (zooid != 0) {
-
-                    Object obj = pm.getObjectById(zooid);
-                    pm.deletePersistent(obj);
-                    className = obj.getClass().getSimpleName();
-
-                }
-
-                classCounter.get(className).remove(key);
-                idMap.remove(key);
-
-            }
+        if (debugInteractions) {
+            System.out.println(System.currentTimeMillis() + " removing object: " + key);
         }
+
+        Long zooid = idMap.get(key);
+
+        if (zooid != null) {
+
+            String className = objectsCache.removeObject(key);
+
+            if (zooid != 0) {
+
+                Object obj = pm.getObjectById(zooid);
+                pm.deletePersistent(obj);
+                className = obj.getClass().getSimpleName();
+
+            }
+
+            classCounter.get(className).remove(key);
+            idMap.remove(key);
+
+        }
+
+        dbMutex.release();
+
     }
 
     /**
@@ -772,11 +771,11 @@ public class ObjectsDB {
 
         boolean isInCache;
 
-        synchronized (dbMutex) {
+        dbMutex.acquire();
 
-            isInCache = objectsCache.inCache(objectKey);
+        isInCache = objectsCache.inCache(objectKey);
 
-        }
+        dbMutex.release();
 
         return isInCache;
     }
@@ -812,38 +811,44 @@ public class ObjectsDB {
      * @param waitingHandler the waiting handler
      */
     public void lock(WaitingHandler waitingHandler) {
-        synchronized (dbMutex) {
 
-            if (debugInteractions) {
+        dbMutex.acquire();
 
-                System.out.println("locking database");
+        if (debugInteractions) {
 
-            }
+            System.out.println("locking database");
 
-            connectionActive = false;
-
-            objectsCache.saveCache(waitingHandler, false);
-            objectsCache.clearCache();
-
-            pm.currentTransaction().commit();
         }
+
+        connectionActive = false;
+
+        objectsCache.saveCache(waitingHandler, false);
+        objectsCache.clearCache();
+
+        pm.currentTransaction().commit();
+
+        dbMutex.release();
+
     }
 
     /**
      * Unlocking the db after storing.
      */
     public void unlock() {
-        synchronized (dbMutex) {
 
-            if (debugInteractions) {
+        dbMutex.acquire();
 
-                System.out.println("unlocking database");
+        if (debugInteractions) {
 
-            }
+            System.out.println("unlocking database");
 
-            connectionActive = true;
-            pm.currentTransaction().begin();
         }
+
+        connectionActive = true;
+        pm.currentTransaction().begin();
+
+        dbMutex.release();
+
     }
 
     /**
@@ -861,35 +866,38 @@ public class ObjectsDB {
      * @param clearing clearing all database structures
      */
     public void close(boolean clearing) {
-        synchronized (dbMutex) {
 
-            if (debugInteractions) {
+        dbMutex.acquire();
 
-                System.out.println("closing database");
+        if (debugInteractions) {
 
-            }
+            System.out.println("closing database");
 
-            objectsCache.saveCache(null, clearing);
-            objectsCache.clearCache();
-
-            connectionActive = false;
-            pm.currentTransaction().commit();
-
-            if (pm.currentTransaction().isActive()) {
-
-                pm.currentTransaction().rollback();
-
-            }
-
-            pm.close();
-            pm.getPersistenceManagerFactory().close();
-
-            if (clearing) {
-
-                idMap.clear();
-
-            }
         }
+
+        objectsCache.saveCache(null, clearing);
+        objectsCache.clearCache();
+
+        connectionActive = false;
+        pm.currentTransaction().commit();
+
+        if (pm.currentTransaction().isActive()) {
+
+            pm.currentTransaction().rollback();
+
+        }
+
+        pm.close();
+        pm.getPersistenceManagerFactory().close();
+
+        if (clearing) {
+
+            idMap.clear();
+
+        }
+
+        dbMutex.release();
+
     }
 
     /**
@@ -908,46 +916,51 @@ public class ObjectsDB {
      */
     public void establishConnection(boolean loading) {
 
-        synchronized (dbMutex) {
+        dbMutex.acquire();
+        
+        File dbFile = getDbFile();
 
-            if (debugInteractions) {
+        if (debugInteractions) {
 
-                System.out.println(System.currentTimeMillis() + " Establishing database: " + dbFile.getAbsolutePath());
+            System.out.println(System.currentTimeMillis() + " Establishing database: " + dbFile.getAbsolutePath());
 
-            }
+        }
 
-            pm = ZooJdoHelper.openOrCreateDB(dbFile.getAbsolutePath());
-            pm.currentTransaction().begin();
-            connectionActive = true;
+        pm = ZooJdoHelper.openOrCreateDB(dbFile.getAbsolutePath());
+        pm.currentTransaction().begin();
+        connectionActive = true;
 
-            if (loading) {
-                idMap.clear();
-                classCounter.clear();
+        if (loading) {
+            
+            idMap.clear();
+            classCounter.clear();
 
-                Query q = pm.newQuery(DbObject.class, "firstLevel == true");
+            Query q = pm.newQuery(DbObject.class, "firstLevel == true");
 
-                for (Object obj : (Collection<?>) q.execute()) {
+            for (Object obj : (Collection<?>) q.execute()) {
 
-                    DbObject idObj = (DbObject) obj;
-                    long id = idObj.getId();
-                    long zooId = idObj.jdoZooGetOid();
-                    idMap.put(id, zooId);
+                DbObject idObj = (DbObject) obj;
+                long id = idObj.getId();
+                long zooId = idObj.jdoZooGetOid();
+                idMap.put(id, zooId);
 
-                    String simpleName = obj.getClass().getSimpleName();
-                    HashSet<Long> classKeys = classCounter.get(simpleName);
+                String simpleName = obj.getClass().getSimpleName();
+                HashSet<Long> classKeys = classCounter.get(simpleName);
 
-                    if (classKeys == null) {
+                if (classKeys == null) {
 
-                        classKeys = new HashSet<>();
-                        classCounter.put(simpleName, classKeys);
-
-                    }
-
-                    classKeys.add(id);
+                    classKeys = new HashSet<>();
+                    classCounter.put(simpleName, classKeys);
 
                 }
+
+                classKeys.add(id);
+
             }
         }
+
+        dbMutex.release();
+
     }
 
     /**
@@ -956,7 +969,9 @@ public class ObjectsDB {
      * @return the path to the database
      */
     public String getPath() {
+
         return path;
+
     }
 
     /**
@@ -965,6 +980,8 @@ public class ObjectsDB {
      * @param debug if true, the debugging is turned on
      */
     public static void setDebugInteractions(boolean debug) {
+
         debugInteractions = debug;
+
     }
 }

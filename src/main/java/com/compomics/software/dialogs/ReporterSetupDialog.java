@@ -17,12 +17,6 @@ import javax.swing.JOptionPane;
 public class ReporterSetupDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public ReporterSetupDialog() {
-    }
-
-    /**
      * The utilities preferences.
      */
     private UtilitiesUserParameters utilitiesUserParameters;

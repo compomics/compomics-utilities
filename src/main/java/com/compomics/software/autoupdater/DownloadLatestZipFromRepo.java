@@ -31,12 +31,6 @@ import org.apache.commons.io.FileUtils;
 public class DownloadLatestZipFromRepo {
 
     /**
-     * Empty default constructor
-     */
-    public DownloadLatestZipFromRepo() {
-    }
-
-    /**
      * True of a file is currently being downloaded.
      */
     private static boolean isFileBeingDownloaded = false;

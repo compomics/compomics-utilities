@@ -18,12 +18,6 @@ import org.apache.commons.cli.CommandLine;
 public class ModificationsCLIInputBean {
 
     /**
-     * Empty default constructor
-     */
-    public ModificationsCLIInputBean() {
-    }
-
-    /**
      * Verifies the command line start parameters.
      *
      * @param aLine the command line to validate
@@ -289,5 +283,4 @@ public class ModificationsCLIInputBean {
     public Modification getModificationToAdd() {
         return modificationToAdd;
     }
-
 }

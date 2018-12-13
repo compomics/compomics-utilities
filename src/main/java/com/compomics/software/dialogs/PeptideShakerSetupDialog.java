@@ -25,12 +25,6 @@ import javax.xml.stream.XMLStreamException;
 public class PeptideShakerSetupDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public PeptideShakerSetupDialog() {
-    }
-
-    /**
      * The utilities preferences.
      */
     private UtilitiesUserParameters utilitiesUserParameters;

@@ -92,15 +92,4 @@ public enum EnzymesCLIParams {
 
         return output;
     }
-
-
-    /**
-     * Empty default constructor
-     */
-    private EnzymesCLIParams() {
-        id = "";
-        description = "";
-        mandatory = false;
-        hasArgument = false;
-    }
 }

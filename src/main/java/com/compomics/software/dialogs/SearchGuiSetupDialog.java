@@ -25,12 +25,6 @@ import javax.xml.stream.XMLStreamException;
 public class SearchGuiSetupDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public SearchGuiSetupDialog() {
-    }
-
-    /**
      * The utilities preferences.
      */
     private UtilitiesUserParameters utilitiesUserParameters;

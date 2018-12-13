@@ -27,17 +27,15 @@ public class EnzymesCLI {
      * The parsed command line input.
      */
     private final EnzymesCLIInputBean enzymesCLIInputBean;
-    
+
     /**
      * Constructor.
-     * 
+     *
      * @param enzymesCLIInputBean the parsed command line input
      */
     public EnzymesCLI(EnzymesCLIInputBean enzymesCLIInputBean) {
         this.enzymesCLIInputBean = enzymesCLIInputBean;
     }
-    
-    
 
     /**
      * Header message when printing the usage.
@@ -46,10 +44,10 @@ public class EnzymesCLI {
         return System.getProperty("line.separator")
                 + "The EnzymesCLI command line allows the command line management of enzymes. It can be used to create and edit json files containing enzymes compatible with CompOmics tools." + System.getProperty("line.separator")
                 + System.getProperty("line.separator")
-//                + "For further help see https://compomics.github.io/projects/peptide-shaker.html and https://compomics.github.io/projects/peptide-shaker/wiki/peptideshakercli.html." + System.getProperty("line.separator")
-//                + System.getProperty("line.separator")
-//                + "Or contact the developers at https://groups.google.com/group/peptide-shaker." + System.getProperty("line.separator")
-//                + System.getProperty("line.separator")
+                //                + "For further help see https://compomics.github.io/projects/peptide-shaker.html and https://compomics.github.io/projects/peptide-shaker/wiki/peptideshakercli.html." + System.getProperty("line.separator")
+                //                + System.getProperty("line.separator")
+                //                + "Or contact the developers at https://groups.google.com/group/peptide-shaker." + System.getProperty("line.separator")
+                //                + System.getProperty("line.separator")
                 + "----------------------"
                 + System.getProperty("line.separator")
                 + "OPTIONS"
@@ -57,7 +55,7 @@ public class EnzymesCLI {
                 + "----------------------" + System.getProperty("line.separator")
                 + System.getProperty("line.separator");
     }
-    
+
     /**
      * Main method for the EnzymeCLI.
      *
@@ -113,7 +111,7 @@ public class EnzymesCLI {
      * @return returns 1 if the process was canceled or an error was encountered
      */
     public Object call() {
-        
+
         EnzymeFactory enzymeFactory;
         File inputFile = enzymesCLIInputBean.getFileIn();
         if (inputFile != null) {
@@ -121,7 +119,7 @@ public class EnzymesCLI {
         } else {
             enzymeFactory = EnzymeFactory.getInstance();
         }
-        
+
         if (enzymesCLIInputBean.isList()) {
             for (Enzyme enzyme : enzymeFactory.getEnzymes()) {
                 System.out.println(enzyme.getName() + ":");
@@ -130,21 +128,21 @@ public class EnzymesCLI {
             }
             return 0;
         }
-        
+
         String enzymeToRemove = enzymesCLIInputBean.getEnzymeToRemove();
         if (enzymeToRemove != null) {
             enzymeFactory.removeEnzyme(enzymeToRemove);
         }
-        
+
         Enzyme enzymeToAdd = enzymesCLIInputBean.getEnzymeToAdd();
         if (enzymeToAdd != null) {
             enzymeFactory.addEnzyme(enzymeToAdd);
         }
-        
+
         File outputFile = enzymesCLIInputBean.getFileOut();
         if (outputFile != null) {
             try {
-            EnzymeFactory.saveToFile(enzymeFactory, outputFile);
+                EnzymeFactory.saveToFile(enzymeFactory, outputFile);
             } catch (IOException e) {
                 System.out.println("An error occurred while saving the enzymes to " + outputFile + ".");
                 return 1;

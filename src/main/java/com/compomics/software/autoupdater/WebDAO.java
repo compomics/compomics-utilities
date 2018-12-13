@@ -18,12 +18,6 @@ import javax.xml.stream.XMLStreamException;
 public class WebDAO {
 
     /**
-     * Empty default constructor
-     */
-    public WebDAO() {
-    }
-
-    /**
      * The locale.
      */
     private static final Locale LOCALE = new Locale("en");

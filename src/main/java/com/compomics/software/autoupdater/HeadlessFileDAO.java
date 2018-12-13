@@ -11,12 +11,6 @@ import java.io.IOException;
 public class HeadlessFileDAO extends FileDAO {
 
     /**
-     * Empty default constructor
-     */
-    public HeadlessFileDAO() {
-    }
-
-    /**
      * {@inheritDoc }
      */
     @Override

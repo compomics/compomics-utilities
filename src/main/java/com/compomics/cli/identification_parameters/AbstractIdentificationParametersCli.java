@@ -25,12 +25,6 @@ import org.apache.commons.cli.UnrecognizedOptionException;
 public abstract class AbstractIdentificationParametersCli implements Callable {
 
     /**
-     * Empty default constructor
-     */
-    public AbstractIdentificationParametersCli() {
-    }
-
-    /**
      * The parameters input bean containing the command line arguments.
      */
     private IdentificationParametersInputBean input;

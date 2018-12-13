@@ -22,15 +22,6 @@ import javax.swing.JOptionPane;
 public class JavaHomeDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public JavaHomeDialog() {
-        javaHomeOrMemoryDialogParent = null;
-        welcomeDialog = null;
-        toolName = "";
-    }
-
-    /**
      * Reference to the JavaHomeOrMemoryDialogParent.
      */
     private final JavaHomeOrMemoryDialogParent javaHomeOrMemoryDialogParent;

@@ -122,8 +122,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      *
      * @param owner the dialog owner
      * @param parent the parent frame
-     * @param selectedFastaFile the selected fasta file
-     * @param fastaParameters the parameters used to parse the fasta file
+     * @param selectedFastaFile the selected FASTA file
+     * @param fastaParameters the parameters used to parse the FASTA file
      * @param lastSelectedFolder the last selected folder
      * @param dbEditable if the database is editable
      * @param normalImange the normal icon
@@ -158,8 +158,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * Creates a new SequenceDbDetailsDialog.
      *
      * @param parent the parent frame
-     * @param selectedFastaFile the selected fasta file
-     * @param fastaParameters the parameters used to parse the fasta file
+     * @param selectedFastaFile the selected FASTA file
+     * @param fastaParameters the parameters used to parse the FASTA file
      * @param lastSelectedFolder the last selected folder
      * @param dbEditable if the database is editable
      * @param normalImange the normal icon
@@ -351,13 +351,13 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Allows the user to select a fasta file, loads its information, and
+     * Allows the user to select a FASTA file, loads its information, and
      * returns a boolean indicating whether the process loading was successful.
      *
      * @param userCanDispose if true, the dialog is closed if the user cancels
      * the selection
      *
-     * @return a boolean indicating whether a valid fasta file was selected
+     * @return a boolean indicating whether a valid FASTA file was selected
      */
     public boolean selectDB(boolean userCanDispose) {
 
@@ -428,12 +428,12 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Loads the given fasta file.
+     * Loads the given FASTA file.
      *
-     * @param fastaFile a fasta file
-     * @param inferParameters if true fasta parsing parameters are inferred
+     * @param fastaFile a FASTA file
+     * @param inferParameters if true FASTA parsing parameters are inferred
      * automatically
-     * @param setUpGUI if true the gui will be updated
+     * @param setUpGUI if true the GUI will be updated
      */
     private void loadFastaFile(String fastaFile, boolean inferParameters, boolean setUpGUI) {
 

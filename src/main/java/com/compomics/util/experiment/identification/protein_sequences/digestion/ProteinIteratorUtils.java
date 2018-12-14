@@ -105,6 +105,7 @@ public class ProteinIteratorUtils {
      * @param fixedModifications the list of fixed modifications to consider.
      */
     private void fillPtmMaps(ArrayList<String> fixedModifications) {
+
         modificationsMasses = new HashMap<>(fixedModifications.size());
         modificationsMasses.put(null, 0.0);
         ModificationFactory ptmFactory = ModificationFactory.getInstance();

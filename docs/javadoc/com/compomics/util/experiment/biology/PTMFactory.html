@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":9,"i8":10,"i9":10,"i10":10,"i11":10,"i12":9,"i13":10,"i14":10,"i15":9,"i16":9,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":9,"i23":10,"i24":10,"i25":10,"i26":9,"i27":10,"i28":9};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":9,"i8":10,"i9":10,"i10":10,"i11":10,"i12":9,"i13":10,"i14":10,"i15":10,"i16":9,"i17":9,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":9,"i24":10,"i25":10,"i26":10,"i27":9,"i28":10,"i29":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -285,58 +285,64 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 </td>
 </tr>
 <tr id="i13" class="rowColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#getPsiModMapping-java.lang.String-">getPsiModMapping</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;ptmName)</code>
+<div class="block">Returns the PTM indexed by its name.</div>
+</td>
+</tr>
+<tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/biology/PTM.html" title="class in com.compomics.util.experiment.biology">PTM</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#getPTM-java.lang.String-">getPTM</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;name)</code>
 <div class="block">Returns the PTM indexed by its name.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#getPTMs--">getPTMs</a></span>()</code>
 <div class="block">Returns the names of all imported PTMs.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>static <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#getSerializationFolder--">getSerializationFolder</a></span>()</code>
 <div class="block">Returns the folder where the factory is saved.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/compomics/util/experiment/biology/PTM.html" title="class in com.compomics.util.experiment.biology">PTM</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#getSingleAAPTM-com.compomics.util.experiment.biology.PTM-">getSingleAAPTM</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/PTM.html" title="class in com.compomics.util.experiment.biology">PTM</a>&nbsp;modification)</code>
 <div class="block">Returns a clone of the given PTM targeting a single amino acid instead of
  a pattern.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="../../../../../com/compomics/util/experiment/biology/PTM.html" title="class in com.compomics.util.experiment.biology">PTM</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#getSingleAAPTM-java.lang.String-">getSingleAAPTM</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;modificationName)</code>
 <div class="block">Returns a clone of the given PTM targeting a single amino acid instead of
  a pattern.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#getUserModifications--">getUserModifications</a></span>()</code>
 <div class="block">Returns the names of the user defined modifications.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#getUserModificationsOrdered--">getUserModificationsOrdered</a></span>()</code>
 <div class="block">Returns the alphabetically ordered names of the user defined
  modifications.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#isUserDefined-java.lang.String-">isUserDefined</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;ptmName)</code>
 <div class="block">Convenience method returning a boolean indicating whether a PTM is user
  defined or default.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#loadBackedUpModifications-com.compomics.util.experiment.identification.identification_parameters.SearchParameters-boolean-">loadBackedUpModifications</a></span>(<a href="../../../../../com/compomics/util/experiment/identification/identification_parameters/SearchParameters.html" title="class in com.compomics.util.experiment.identification.identification_parameters">SearchParameters</a>&nbsp;searchParameters,
                          boolean&nbsp;overwrite)</code>
@@ -344,45 +350,45 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
  loaded and alerts the user in case conflicts are found.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html" title="class in com.compomics.util.experiment.biology">PTMFactory</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#loadFromFile-java.io.File-">loadFromFile</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;file)</code>
 <div class="block">Loads an enzyme factory from a file.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#reloadFactory--">reloadFactory</a></span>()</code>
 <div class="block">Reloads the factory getInstance() needs to be called afterwards.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#removeUserPtm-java.lang.String-">removeUserPtm</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;ptmName)</code>
 <div class="block">Removes a user PTM.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#saveFactory--">saveFactory</a></span>()</code>
 <div class="block">Saves the factory in the user folder.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#saveToFile-com.compomics.util.experiment.biology.PTMFactory-java.io.File-">saveToFile</a></span>(<a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html" title="class in com.compomics.util.experiment.biology">PTMFactory</a>&nbsp;ptmFactory,
           <a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;file)</code>
 <div class="block">Saves a PTM factory to a file.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#setColor-java.lang.String-java.awt.Color-">setColor</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;expectedModification,
         <a href="http://docs.oracle.com/javase/6/docs/api/java/awt/Color.html?is-external=true" title="class or interface in java.awt">Color</a>&nbsp;color)</code>
 <div class="block">Sets a new color for the given expected modification.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#setSerializationFolder-java.lang.String-">setSerializationFolder</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;serializationFolder)</code>
 <div class="block">Sets the folder where the factory is saved.</div>
@@ -627,7 +633,7 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>name</code> - the name of the desired PTM</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>The desired PTM</dd>
+<dd>the desired PTM</dd>
 </dl>
 </li>
 </ul>
@@ -1023,7 +1029,7 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <a name="setSerializationFolder-java.lang.String-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>setSerializationFolder</h4>
 <pre>public static&nbsp;void&nbsp;setSerializationFolder(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;serializationFolder)</pre>
@@ -1031,6 +1037,22 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>serializationFolder</code> - the folder where the factory is saved</dd>
+</dl>
+</li>
+</ul>
+<a name="getPsiModMapping-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getPsiModMapping</h4>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getPsiModMapping(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;ptmName)</pre>
+<div class="block">Returns the PTM indexed by its name.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ptmName</code> - the name of the PTM</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the PSI-MOD accession number, null if not set</dd>
 </dl>
 </li>
 </ul>

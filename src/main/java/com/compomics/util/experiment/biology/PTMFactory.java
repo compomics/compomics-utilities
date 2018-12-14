@@ -31,7 +31,7 @@ public class PTMFactory implements Serializable {
      */
 //    static final long serialVersionUID = 7935264190312934466L;
     /**
-     * Instance of the factory.     
+     * Instance of the factory.
      */
     private static PTMFactory instance = null;
     /**
@@ -39,7 +39,8 @@ public class PTMFactory implements Serializable {
      */
     private static String SERIALIZATION_FILE_FOLDER = System.getProperty("user.home") + "/.compomics";
     /**
-     * The name of the PTM factory back-up file. The version number follows the one of utilities.
+     * The name of the PTM factory back-up file. The version number follows the
+     * one of utilities.
      */
     private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.12.13.json";
     /**
@@ -103,41 +104,44 @@ public class PTMFactory implements Serializable {
     }
 
     /**
-     * Loads an enzyme factory from a file. The file must be an export of the factory in the json format.
-     * 
+     * Loads an enzyme factory from a file. The file must be an export of the
+     * factory in the json format.
+     *
      * @param file the file to load
-     * 
+     *
      * @return the enzyme factory saved in file
-     * 
-     * @throws IOException exception thrown whenever an error occurred while loading the file
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * loading the file
      */
     public static PTMFactory loadFromFile(File file) throws IOException {
         JsonMarshaller jsonMarshaller = new JsonMarshaller();
         PTMFactory result = (PTMFactory) jsonMarshaller.fromJson(PTMFactory.class, file);
         return result;
     }
-    
+
     /**
      * Saves a PTM factory to a file.
-     * 
+     *
      * @param ptmFactory the PTM factory to save
      * @param file the file where to save
-     * 
-     * @throws IOException exception thrown whenever an error occurred while saving the file
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * saving the file
      */
     public static void saveToFile(PTMFactory ptmFactory, File file) throws IOException {
         JsonMarshaller jsonMarshaller = new JsonMarshaller();
         jsonMarshaller.saveObjectToJson(ptmFactory, file);
     }
-    
+
     /**
      * Add neutral losses and reporter ions for the user PTMs.
      */
     private void checkUserModifications() {
         for (String tempUserMod : getUserModifications()) {
-            
+
             PTM ptm = getPTM(tempUserMod);
-            
+
             if (!ptm.getNeutralLosses().isEmpty()) {
                 for (NeutralLoss neutralLoss : ptm.getNeutralLosses()) {
                     if (NeutralLoss.getNeutralLoss(neutralLoss.name) == null) {
@@ -266,7 +270,7 @@ public class PTMFactory implements Serializable {
      * Returns the PTM indexed by its name.
      *
      * @param name the name of the desired PTM
-     * @return The desired PTM
+     * @return the desired PTM
      */
     public PTM getPTM(String name) {
         PTM ptm = ptmMap.get(name);
@@ -599,16 +603,16 @@ public class PTMFactory implements Serializable {
             throws IOException, IllegalArgumentException, InterruptedException, FileNotFoundException, ClassNotFoundException, SQLException {
 
         int indexInTag = 0, componentNumber = 0;
-        
+
         for (TagComponent tagComponent : tag.getContent()) {
-            
+
             componentNumber++;
-            
+
             if (tagComponent instanceof AminoAcidPattern) {
-                
+
                 AminoAcidPattern aminoAcidPattern = (AminoAcidPattern) tagComponent;
                 ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
-                
+
                 for (int aa : aminoAcidPattern.getModificationIndexes()) {
                     ArrayList<ModificationMatch> modificationMatches = aminoAcidPattern.getModificationsAt(aa);
                     for (ModificationMatch modMatch : modificationMatches) {
@@ -620,16 +624,16 @@ public class PTMFactory implements Serializable {
                         aminoAcidPattern.removeModificationMatch(aa, modMatch);
                     }
                 }
-                
+
                 for (int aa = 1; aa <= aminoAcidPattern.length(); aa++) {
-                    
+
                     indexInTag++;
                     Double modificationMass = null;
 
                     for (String fixedModification : modificationProfile.getFixedModifications()) {
-                        
+
                         PTM ptm = getPTM(fixedModification);
-                        
+
                         if (ptm.getType() == PTM.MODAA) {
                             if (tag.getPotentialModificationSites(ptm, sequenceMatchingPreferences).contains(indexInTag)) {
                                 if (modificationMass == null) {
@@ -657,11 +661,11 @@ public class PTMFactory implements Serializable {
                     }
                 }
             } else if (tagComponent instanceof AminoAcidSequence) {
-              
+
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
-                
+
                 ArrayList<ModificationMatch> toRemove = new ArrayList<ModificationMatch>();
-                
+
                 for (int aa : aminoAcidSequence.getModificationIndexes()) {
                     ArrayList<ModificationMatch> modificationMatches = aminoAcidSequence.getModificationsAt(aa);
                     for (ModificationMatch modMatch : modificationMatches) {
@@ -673,7 +677,7 @@ public class PTMFactory implements Serializable {
                         aminoAcidSequence.removeModificationMatch(aa, modMatch);
                     }
                 }
-                
+
                 for (int aa = 1; aa <= aminoAcidSequence.length(); aa++) {
                     indexInTag++;
                     Double modificationMass = null;
@@ -1697,7 +1701,7 @@ public class PTMFactory implements Serializable {
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:199 ", "Dimethyl:2H(4)", null));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // Dimethylation of K 2H6
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
@@ -1710,8 +1714,8 @@ public class PTMFactory implements Serializable {
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1291", "Dimethyl:2H(6)", null)); // note: does not have a PSI name, using interim name
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
-         // Dimethylation of K 2H(6) 13C(2)
+
+        // Dimethylation of K 2H(6) 13C(2)
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
@@ -2244,7 +2248,7 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_131_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // TMT 6-plex + K+4
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
@@ -2273,7 +2277,7 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_131_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // TMT 6-plex of K+6
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
@@ -2301,7 +2305,7 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_131_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // TMT 6-plex of K+8
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
@@ -2401,7 +2405,7 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_131_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // TMT 10-plex + K+4
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
@@ -2438,7 +2442,7 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_131_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // TMT 10-plex of K+6
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
@@ -2474,7 +2478,7 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_131_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // TMT 10-plex of K+8
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
@@ -2510,7 +2514,7 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_131_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // TMT 11-plex of peptide N-term
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
@@ -2586,7 +2590,7 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_131C_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // TMT 11-plex + K+4
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
@@ -2624,7 +2628,7 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_131C_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // TMT 11-plex of K+6
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
@@ -2661,7 +2665,7 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_131C_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // TMT 11-plex of K+8
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
@@ -2698,7 +2702,7 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.TMT_131C_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // iodoTMT zero of C
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 28);
@@ -2714,7 +2718,7 @@ public class PTMFactory implements Serializable {
         ptm.addReporterIon(ReporterIon.iodoTMT_zero_ETD);
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // iodoTMT 6-plex of C
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 28);
@@ -3803,7 +3807,7 @@ public class PTMFactory implements Serializable {
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:7", "Deamidated", null));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // S-nitrosylation of C
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
@@ -3816,7 +3820,7 @@ public class PTMFactory implements Serializable {
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:275", "Nitrosyl", null));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // Heme B of C
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 32);
@@ -3831,7 +3835,7 @@ public class PTMFactory implements Serializable {
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:390", "Heme", null));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
-        
+
         // Heme B of H
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 32);
@@ -3846,5 +3850,336 @@ public class PTMFactory implements Serializable {
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:390", "Heme", null));
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
+    }
+
+    /**
+     * Returns the PSI-MOD accession number. Null if not set.
+     *
+     * @param ptmName the name of the PTM
+     * @return the PSI-MOD accession number, null if not set
+     */
+    public String getPsiModName(String ptmName) {
+
+        if (ptmName.equalsIgnoreCase("18O(1) of peptide C-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("18O(2) of peptide C-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("4-Hydroxyproline")) {
+
+        } else if (ptmName.equalsIgnoreCase("Acetaldehyde +26")) {
+
+        } else if (ptmName.equalsIgnoreCase("Acetylation of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Acetylation of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Acetylation of protein N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Amidation of the peptide C-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Amidation of the protein C-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Arginine 13C(6)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Arginine 13C(6) 15N(4)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Carbamidomethylation of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Carbamidomethylation of E")) {
+
+        } else if (ptmName.equalsIgnoreCase("Carbamidomethylation of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Carbamilation of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Carbamilation of protein N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Carboxymethylation of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Citrullination of R")) {
+
+        } else if (ptmName.equalsIgnoreCase("Deamidation of N")) {
+
+        } else if (ptmName.equalsIgnoreCase("Deamidation of N 18O")) {
+
+        } else if (ptmName.equalsIgnoreCase("Deamidation of Q")) {
+
+        } else if (ptmName.equalsIgnoreCase("Dehydration of S")) {
+
+        } else if (ptmName.equalsIgnoreCase("Dehydration of T")) {
+
+        } else if (ptmName.equalsIgnoreCase("Didehydro of T")) {
+
+        } else if (ptmName.equalsIgnoreCase("Diiodination of Y")) {
+
+        } else if (ptmName.equalsIgnoreCase("Dimethylation of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Dimethylation of K 2H(4)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Dimethylation of K 2H(6)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Dimethylation of K 2H(6) 13C(2)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Dimethylation of R")) {
+
+        } else if (ptmName.equalsIgnoreCase("Dimethylation of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Dimethylation of peptide N-term 2H(4)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Dimethylation of peptide N-term 2H(6)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Dimethylation of peptide N-term 2H(6) 13C(2)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Dioxidation of M")) {
+
+        } else if (ptmName.equalsIgnoreCase("Dioxidation of W")) {
+
+        } else if (ptmName.equalsIgnoreCase("Farnesylation of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("FormylMet of protein N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Formylation of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Formylation of S")) {
+
+        } else if (ptmName.equalsIgnoreCase("Formylation of T")) {
+
+        } else if (ptmName.equalsIgnoreCase("Formylation of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Formylation of protein N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Geranyl-geranyl of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Glutathione of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Guanidination of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Guanidination of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Heme B of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Heme B of H")) {
+
+        } else if (ptmName.equalsIgnoreCase("Hex(1)NAc(1) of S")) {
+
+        } else if (ptmName.equalsIgnoreCase("Hex(1)NAc(1) of T")) {
+
+        } else if (ptmName.equalsIgnoreCase("Hex(5) HexNAc(4) NeuAc(2) Na of N")) {
+
+        } else if (ptmName.equalsIgnoreCase("Hex(5) HexNAc(4) NeuAc(2) of N")) {
+
+        } else if (ptmName.equalsIgnoreCase("HexNAc of S")) {
+
+        } else if (ptmName.equalsIgnoreCase("HexNAc of T")) {
+
+        } else if (ptmName.equalsIgnoreCase("Hexose of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Homoserine lactone of peptide C-term M")) {
+
+        } else if (ptmName.equalsIgnoreCase("Homoserine of peptide C-term M")) {
+
+        } else if (ptmName.equalsIgnoreCase("ICAT-9")) {
+
+        } else if (ptmName.equalsIgnoreCase("ICAT-O")) {
+
+        } else if (ptmName.equalsIgnoreCase("ICPL0 of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("ICPL0 of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("ICPL10 of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("ICPL10 of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("ICPL4 of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("ICPL4 of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("ICPL6 of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("ICPL6 of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Isoleucine 13C(6) 15N(1)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Label of K 2H(4)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Leucine 13C(6) 15N(1)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Lipoyl of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Lysine 13C(6)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Lysine 13C(6) 15N(2)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Lysine 2H(4)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Methylation of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Methylation of D")) {
+
+        } else if (ptmName.equalsIgnoreCase("Methylation of E")) {
+
+        } else if (ptmName.equalsIgnoreCase("Methylation of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Methylation of R")) {
+
+        } else if (ptmName.equalsIgnoreCase("Methylation of S")) {
+
+        } else if (ptmName.equalsIgnoreCase("Methylthio of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Methylthio of D")) {
+
+        } else if (ptmName.equalsIgnoreCase("Methylthio of N")) {
+
+        } else if (ptmName.equalsIgnoreCase("NIPCAM of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Nethylmaleimide of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Oxidation of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Oxidation of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Oxidation of M")) {
+
+        } else if (ptmName.equalsIgnoreCase("Oxidation of P")) {
+
+        } else if (ptmName.equalsIgnoreCase("Palmitoylation of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Palmitoylation of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Palmitoylation of S")) {
+
+        } else if (ptmName.equalsIgnoreCase("Palmitoylation of T")) {
+
+        } else if (ptmName.equalsIgnoreCase("Palmitoylation of protein N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Phosphorylation of S")) {
+
+        } else if (ptmName.equalsIgnoreCase("Phosphorylation of T")) {
+
+        } else if (ptmName.equalsIgnoreCase("Phosphorylation of Y")) {
+
+        } else if (ptmName.equalsIgnoreCase("Proline 13C(5)")) {
+
+        } else if (ptmName.equalsIgnoreCase("Propionamide of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Propionamide of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Propionamide of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Propionyl of K heavy")) {
+
+        } else if (ptmName.equalsIgnoreCase("Propionyl of K light")) {
+
+        } else if (ptmName.equalsIgnoreCase("Propionyl of peptide N-term heavy")) {
+
+        } else if (ptmName.equalsIgnoreCase("Propionyl of peptide N-term light")) {
+
+        } else if (ptmName.equalsIgnoreCase("Pyridylethyl of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Pyrolidone from E")) {
+
+        } else if (ptmName.equalsIgnoreCase("Pyrolidone from Q")) {
+
+        } else if (ptmName.equalsIgnoreCase("Pyrolidone from carbamidomethylated C")) {
+
+        } else if (ptmName.equalsIgnoreCase("S-nitrosylation")) {
+
+        } else if (ptmName.equalsIgnoreCase("SUMO-2/3 Q87R")) {
+
+        } else if (ptmName.equalsIgnoreCase("Sodium adduct to D")) {
+
+        } else if (ptmName.equalsIgnoreCase("Sodium adduct to E")) {
+
+        } else if (ptmName.equalsIgnoreCase("Sulfation of S")) {
+
+        } else if (ptmName.equalsIgnoreCase("Sulfation of T")) {
+
+        } else if (ptmName.equalsIgnoreCase("Sulfation of Y")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 10-plex of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 10-plex of K+4")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 10-plex of K+6")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 10-plex of K+8")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 10-plex of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 11-plex of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 11-plex of K+4")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 11-plex of K+6")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 11-plex of K+8")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 11-plex of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 2-plex of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 2-plex of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 6-plex of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 6-plex of K+4")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 6-plex of K+6")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 6-plex of K+8")) {
+
+        } else if (ptmName.equalsIgnoreCase("TMT 6-plex of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Thioacyl of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Trideuterated Methyl Ester of D")) {
+
+        } else if (ptmName.equalsIgnoreCase("Trideuterated Methyl Ester of E")) {
+
+        } else if (ptmName.equalsIgnoreCase("Trideuterated Methyl Ester of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Trideuterated Methyl Ester of R")) {
+
+        } else if (ptmName.equalsIgnoreCase("Trideuterated Methyl Ester of peptide C-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("Trimethylation of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("Trimethylation of R")) {
+
+        } else if (ptmName.equalsIgnoreCase("Trimethylation of protein N-term A")) {
+
+        } else if (ptmName.equalsIgnoreCase("Trioxidation of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("Ubiquitination of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("iTRAQ 4-plex of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("iTRAQ 4-plex of Y")) {
+
+        } else if (ptmName.equalsIgnoreCase("iTRAQ 4-plex of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("iTRAQ 8-plex of K")) {
+
+        } else if (ptmName.equalsIgnoreCase("iTRAQ 8-plex of Y")) {
+
+        } else if (ptmName.equalsIgnoreCase("iTRAQ 8-plex of peptide N-term")) {
+
+        } else if (ptmName.equalsIgnoreCase("iodoTMT 6-plex of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("iodoTMT zero of C")) {
+
+        } else if (ptmName.equalsIgnoreCase("mTRAQ of 13C(6) 15N(2)")) {
+
+        } else if (ptmName.equalsIgnoreCase("mTRAQ of K 13C(3) 15N")) {
+
+        } else if (ptmName.equalsIgnoreCase("mTRAQ of K light")) {
+
+        } else if (ptmName.equalsIgnoreCase("mTRAQ of peptide N-term 13C(3) 15N")) {
+
+        } else if (ptmName.equalsIgnoreCase("mTRAQ of peptide N-term 13C(6) 15N(2)")) {
+
+        } else if (ptmName.equalsIgnoreCase("mTRAQ of peptide N-term light")) {
+
+        }
+
+        return null;
     }
 }

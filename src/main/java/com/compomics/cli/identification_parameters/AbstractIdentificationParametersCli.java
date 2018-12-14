@@ -140,7 +140,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
             System.out.println("-------------------");
             for (String ptmName : ptmFactory.getUserModificationsOrdered()) {
                 PTM ptm = ptmFactory.getPTM(ptmName);
-            System.out.println(ptm);
+                System.out.println(ptm);
             }
         }
         System.out.println();

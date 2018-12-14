@@ -356,7 +356,9 @@ public class Modification extends ExperimentObject {
      * @return true if the modification is the same as the other one
      */
     public boolean isSameAs(Modification anotherModification) {
+        
         readDBMode();
+        
         if (modificationType != anotherModification.getModificationType()) {
 //            System.out.println("type difference");
 //            System.out.println("local: " + type);

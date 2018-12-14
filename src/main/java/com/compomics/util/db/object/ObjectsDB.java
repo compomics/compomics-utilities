@@ -253,11 +253,8 @@ public class ObjectsDB {
      *
      * @param objectKey the key of the object
      * @param object the object to store
-     *
-     * @throws InterruptedException exception thrown whenever a threading error
-     * occurred while interacting with the database
      */
-    public void insertObject(long objectKey, Object object) throws InterruptedException {
+    public void insertObject(long objectKey, Object object) {
 
         dbMutex.acquire();
 
@@ -267,7 +264,7 @@ public class ObjectsDB {
 
         if (object == null) {
 
-            throw new InterruptedException("error: null insertion: " + objectKey);
+            throw new IllegalArgumentException("error: null insertion: " + objectKey);
 
         }
 
@@ -289,7 +286,7 @@ public class ObjectsDB {
 
         } else {
 
-            throw new InterruptedException("error double insertion: " + objectKey);
+            throw new IllegalArgumentException("error double insertion: " + objectKey);
 
         }
 
@@ -315,11 +312,8 @@ public class ObjectsDB {
      * @param className the class name
      * @param filters filters for the class
      * @return the iterator
-     *
-     * @throws InterruptedException exception thrown whenever a threading error
-     * occurred
      */
-    public Iterator<?> getObjectsIterator(Class className, String filters) throws InterruptedException {
+    public Iterator<?> getObjectsIterator(Class className, String filters) {
         Query q;
         dbMutex.acquire();
         dumpToDB();
@@ -336,11 +330,8 @@ public class ObjectsDB {
      * null). The progress will be displayed on the secondary progress bar.
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
-     *
-     * @throws InterruptedException exception thrown whenever a threading error
-     * occurred
      */
-    public void insertObjects(HashMap<Long, Object> objects, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+    public void insertObjects(HashMap<Long, Object> objects, WaitingHandler waitingHandler, boolean displayProgress) {
 
         dbMutex.acquire();
 
@@ -351,7 +342,7 @@ public class ObjectsDB {
 
             if (object == null) {
 
-                throw new InterruptedException("error: null insertion: " + objectKey);
+                throw new IllegalArgumentException("error: null insertion: " + objectKey);
 
             }
 
@@ -377,7 +368,7 @@ public class ObjectsDB {
 
             } else {
 
-                throw new InterruptedException("error double insertion: " + objectKey);
+                throw new IllegalArgumentException("error double insertion: " + objectKey);
 
             }
         }
@@ -396,11 +387,8 @@ public class ObjectsDB {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public void loadObjects(Collection<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+    public void loadObjects(Collection<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) {
 
         dbMutex.acquire();
 
@@ -442,11 +430,8 @@ public class ObjectsDB {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
-     *
-     * @throws java.lang.InterruptedException exception thrown if a threading
-     * error occurs while interacting with the database
      */
-    public void loadObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+    public void loadObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
 
         HashSet<Long> hashedKeys = classCounter.get(className.getSimpleName());
 
@@ -540,11 +525,8 @@ public class ObjectsDB {
 
     /**
      * Triggers a dump of all objects within the cache into the database.
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public void dumpToDB() throws InterruptedException {
+    public void dumpToDB() {
         dbMutex.acquire();
         objectsCache.saveCache(null, false);
         dbMutex.release();
@@ -560,11 +542,8 @@ public class ObjectsDB {
      * method should be displayed on the waiting handler
      *
      * @return a list of objects
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public ArrayList<Object> retrieveObjects(Collection<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+    public ArrayList<Object> retrieveObjects(Collection<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) {
 
         ArrayList<Object> retrievingObjects = new ArrayList<>(keys.size());
 
@@ -620,11 +599,8 @@ public class ObjectsDB {
      * method should be displayed on the waiting handler
      *
      * @return the list of objects
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+    public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
 
         ArrayList<Object> retrievingObjects = new ArrayList<>();
 
@@ -677,11 +653,8 @@ public class ObjectsDB {
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public void removeObjects(Collection<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) throws InterruptedException {
+    public void removeObjects(Collection<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) {
 
         dbMutex.acquire();
 
@@ -723,11 +696,8 @@ public class ObjectsDB {
      * Removing an object from the cache and database.
      *
      * @param key the object key
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
-     * while interacting with the database
      */
-    public void removeObject(long key) throws InterruptedException {
+    public void removeObject(long key) {
 
         dbMutex.acquire();
 
@@ -764,10 +734,8 @@ public class ObjectsDB {
      * @param objectKey the object key
      *
      * @return a boolean indicating whether an object is loaded
-     *
-     * @throws InterruptedException exception thrown if a threading error occurs
      */
-    public boolean inCache(long objectKey) throws InterruptedException {
+    public boolean inCache(long objectKey) {
 
         boolean isInCache;
 

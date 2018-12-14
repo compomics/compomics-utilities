@@ -650,17 +650,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>insertObject</h4>
 <pre>public&nbsp;void&nbsp;insertObject(long&nbsp;objectKey,
-                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;object)
-                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                         <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;object)</pre>
 <div class="block">Stores an object in the desired table. When multiple objects are to be
  inserted, use insertObjects instead.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>objectKey</code> - the key of the object</dd>
 <dd><code>object</code> - the object to store</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown whenever a threading error
- occurred while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -687,8 +683,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <li class="blockList">
 <h4>getObjectsIterator</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Iterator.html?is-external=true" title="class or interface in java.util">Iterator</a>&lt;?&gt;&nbsp;getObjectsIterator(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
-                                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)
-                               throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                      <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;filters)</pre>
 <div class="block">Returns an iterator of all objects of a given class.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -696,9 +691,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dd><code>filters</code> - filters for the class</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the iterator</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown whenever a threading error
- occurred</dd>
 </dl>
 </li>
 </ul>
@@ -710,8 +702,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>insertObjects</h4>
 <pre>public&nbsp;void&nbsp;insertObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;objects,
                           <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                          boolean&nbsp;displayProgress)
-                   throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                          boolean&nbsp;displayProgress)</pre>
 <div class="block">Inserts a set of objects in the given table.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -720,9 +711,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
  null). The progress will be displayed on the secondary progress bar.</dd>
 <dd><code>displayProgress</code> - boolean indicating whether the progress of this
  method should be displayed on the waiting handler</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown whenever a threading error
- occurred</dd>
 </dl>
 </li>
 </ul>
@@ -734,8 +722,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>loadObjects</h4>
 <pre>public&nbsp;void&nbsp;loadObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;keys,
                         <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                        boolean&nbsp;displayProgress)
-                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                        boolean&nbsp;displayProgress)</pre>
 <div class="block">Loads objects from a table in the cache.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -744,9 +731,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
  and canceling the process</dd>
 <dd><code>displayProgress</code> - boolean indicating whether the progress of this
  method should be displayed on the waiting handler</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -758,8 +742,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>loadObjects</h4>
 <pre>public&nbsp;void&nbsp;loadObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
                         <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                        boolean&nbsp;displayProgress)
-                 throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                        boolean&nbsp;displayProgress)</pre>
 <div class="block">Loads all objects from a given class.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -768,9 +751,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
  and canceling the process</dd>
 <dd><code>displayProgress</code> - boolean indicating whether the progress of this
  method should be displayed on the waiting handler</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading
- error occurs while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -812,14 +792,8 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <ul class="blockList">
 <li class="blockList">
 <h4>dumpToDB</h4>
-<pre>public&nbsp;void&nbsp;dumpToDB()
-              throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;void&nbsp;dumpToDB()</pre>
 <div class="block">Triggers a dump of all objects within the cache into the database.</div>
-<dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
-</dl>
 </li>
 </ul>
 <a name="retrieveObjects-java.util.Collection-com.compomics.util.waiting.WaitingHandler-boolean-">
@@ -830,8 +804,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>retrieveObjects</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;retrieveObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;keys,
                                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                                         boolean&nbsp;displayProgress)
-                                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                         boolean&nbsp;displayProgress)</pre>
 <div class="block">retrieves some objects from the database or cache.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -842,9 +815,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
  method should be displayed on the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a list of objects</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -856,8 +826,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>retrieveObjects</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;retrieveObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Class.html?is-external=true" title="class or interface in java.lang">Class</a>&nbsp;className,
                                          <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                                         boolean&nbsp;displayProgress)
-                                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                                         boolean&nbsp;displayProgress)</pre>
 <div class="block">Retrieves all objects from a given class.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -868,9 +837,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
  method should be displayed on the waiting handler</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the list of objects</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -882,8 +848,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <h4>removeObjects</h4>
 <pre>public&nbsp;void&nbsp;removeObjects(<a href="http://docs.oracle.com/javase/7/docs/api/java/util/Collection.html?is-external=true" title="class or interface in java.util">Collection</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Long.html?is-external=true" title="class or interface in java.lang">Long</a>&gt;&nbsp;keys,
                           <a href="../../../../../com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-                          boolean&nbsp;displayProgress)
-                   throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+                          boolean&nbsp;displayProgress)</pre>
 <div class="block">Removing an object from the cache and database.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -892,9 +857,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
  and canceling the process</dd>
 <dd><code>displayProgress</code> - boolean indicating whether the progress of this
  method should be displayed on the waiting handler</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -904,15 +866,11 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <ul class="blockList">
 <li class="blockList">
 <h4>removeObject</h4>
-<pre>public&nbsp;void&nbsp;removeObject(long&nbsp;key)
-                  throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;void&nbsp;removeObject(long&nbsp;key)</pre>
 <div class="block">Removing an object from the cache and database.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>key</code> - the object key</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs
- while interacting with the database</dd>
 </dl>
 </li>
 </ul>
@@ -922,16 +880,13 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <ul class="blockList">
 <li class="blockList">
 <h4>inCache</h4>
-<pre>public&nbsp;boolean&nbsp;inCache(long&nbsp;objectKey)
-                throws <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></pre>
+<pre>public&nbsp;boolean&nbsp;inCache(long&nbsp;objectKey)</pre>
 <div class="block">Indicates whether an object is loaded in cache.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>objectKey</code> - the object key</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a boolean indicating whether an object is loaded</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/InterruptedException.html?is-external=true" title="class or interface in java.lang">InterruptedException</a></code> - exception thrown if a threading error occurs</dd>
 </dl>
 </li>
 </ul>

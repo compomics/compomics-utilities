@@ -1,5 +1,6 @@
 package com.compomics.util.db.object;
 
+import static com.compomics.util.db.object.DbMutex.loadObjectMutex;
 import com.compomics.util.waiting.WaitingHandler;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,10 +36,6 @@ public class ObjectsCache {
      * Linked list to manage a queue for old entries.
      */
     private final LinkedList<Long> objectQueue = new LinkedList<>();
-    /**
-     * Mutex for the edition of the object keys list.
-     */
-    private final Object loadedObjectMutex = new Object();
     /**
      * Indicates whether the cache is read only.
      */
@@ -116,13 +113,15 @@ public class ObjectsCache {
         updateCache();
         Object object = null;
 
-        synchronized (loadedObjectMutex) {
+        loadObjectMutex.acquire();
 
-            if (loadedObjects.containsKey(objectKey)) {
-                object = loadedObjects.get(objectKey);
-            }
+        if (loadedObjects.containsKey(objectKey)) {
+
+            object = loadedObjects.get(objectKey);
 
         }
+
+        loadObjectMutex.release();
 
         return object;
     }
@@ -131,21 +130,25 @@ public class ObjectsCache {
      * Removes an object from the cache
      *
      * @param objectKey the key of the object
+     * 
      * @return the class name of the object
-     *
-     * @throws InterruptedException if the thread is interrupted
      */
-    public String removeObject(long objectKey) throws InterruptedException {
+    public String removeObject(long objectKey) {
+
         String className = null;
-        synchronized (loadedObjectMutex) {
-            if (!readOnly) {
-                if (loadedObjects.containsKey(objectKey)) {
-                    className = loadedObjects.get(objectKey).getClass().getSimpleName();
-                    loadedObjects.remove(objectKey);
-                    objectQueue.removeFirstOccurrence(objectKey);
-                }
+
+        loadObjectMutex.acquire();
+
+        if (!readOnly) {
+            if (loadedObjects.containsKey(objectKey)) {
+                className = loadedObjects.get(objectKey).getClass().getSimpleName();
+                loadedObjects.remove(objectKey);
+                objectQueue.removeFirstOccurrence(objectKey);
             }
         }
+
+        loadObjectMutex.release();
+
         return className;
     }
 
@@ -159,24 +162,26 @@ public class ObjectsCache {
      */
     public void addObject(Long objectKey, Object object) {
 
-        synchronized (loadedObjectMutex) {
+        loadObjectMutex.acquire();
 
-            if (!readOnly) {
+        if (!readOnly) {
 
-                if (!loadedObjects.containsKey(objectKey)) {
+            if (!loadedObjects.containsKey(objectKey)) {
 
-                    loadedObjects.put(objectKey, object);
-                    objectQueue.add(objectKey);
+                loadedObjects.put(objectKey, object);
+                objectQueue.add(objectKey);
 
-                    if (objectsDB.getCurrentAdded() > numToCommit) {
-                        objectsDB.commit();
-                    }
+                if (objectsDB.getCurrentAdded() > numToCommit) {
+                    objectsDB.commit();
                 }
-
-                updateCache();
-
             }
+
+            updateCache();
+
         }
+
+        loadObjectMutex.release();
+
     }
 
     /**
@@ -185,23 +190,26 @@ public class ObjectsCache {
      * will be silently overwritten.
      *
      * @param objects the key / objects to store in the cache
-     * @throws InterruptedException if the thread is interrupted
      *
      */
-    public void addObjects(HashMap<Long, Object> objects) throws InterruptedException {
-        synchronized (loadedObjectMutex) {
-            if (!readOnly) {
+    public void addObjects(HashMap<Long, Object> objects) {
 
-                loadedObjects.putAll(objects);
-                objectQueue.addAll(objects.keySet());
+        loadObjectMutex.acquire();
 
-                if (objectsDB.getCurrentAdded() > numToCommit) {
-                    objectsDB.commit();
-                }
+        if (!readOnly) {
 
-                updateCache();
+            loadedObjects.putAll(objects);
+            objectQueue.addAll(objects.keySet());
+
+            if (objectsDB.getCurrentAdded() > numToCommit) {
+                objectsDB.commit();
             }
+
+            updateCache();
         }
+
+        loadObjectMutex.release();
+
     }
 
     /**
@@ -219,10 +227,8 @@ public class ObjectsCache {
      * Saves an entry in the database if modified and clears it from the cache.
      *
      * @param numLastEntries number of keys of the entries
-     *
-     * @throws InterruptedException if the thread is interrupted
      */
-    public void saveObjects(int numLastEntries) throws InterruptedException {
+    public void saveObjects(int numLastEntries) {
         saveObjects(numLastEntries, null, true);
     }
 
@@ -232,10 +238,8 @@ public class ObjectsCache {
      * @param numLastEntries number of keys of the entries
      * @param waitingHandler a waiting handler displaying progress to the user.
      * Can be null. Progress will be displayed as secondary.
-     *
-     * @throws InterruptedException if the thread is interrupted
      */
-    public void saveObjects(int numLastEntries, WaitingHandler waitingHandler) throws InterruptedException {
+    public void saveObjects(int numLastEntries, WaitingHandler waitingHandler) {
         saveObjects(numLastEntries, waitingHandler, true);
     }
 
@@ -250,59 +254,61 @@ public class ObjectsCache {
      */
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) {
 
-        synchronized (loadedObjectMutex) {
+        loadObjectMutex.acquire();
 
-            if (!readOnly) {
-                if (waitingHandler != null) {
+        if (!readOnly) {
+            if (waitingHandler != null) {
 
-                    waitingHandler.resetSecondaryProgressCounter();
-                    waitingHandler.setMaxSecondaryProgressCounter(numLastEntries);
-
-                }
-
-                ListIterator<Long> listIterator = objectQueue.listIterator();
-                PersistenceManager pm = objectsDB.getDB();
-
-                for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i) {
-
-                    if (waitingHandler != null) {
-
-                        waitingHandler.increaseSecondaryProgressCounter();
-
-                        if (waitingHandler.isRunCanceled()) {
-
-                            break;
-
-                        }
-                    }
-
-                    long key = clearEntries ? objectQueue.pollFirst() : listIterator.next();
-
-                    Object obj = loadedObjects.get(key);
-
-                    if (!((DbObject) obj).jdoZooIsPersistent()) {
-
-                        pm.makePersistent(obj);
-                        objectsDB.getIdMap().put(key, ((DbObject) obj).jdoZooGetOid());
-
-                    }
-
-                    if (clearEntries) {
-                        loadedObjects.remove(key);
-                    }
-
-                }
-                
-                if (waitingHandler != null) {
-
-                    waitingHandler.setSecondaryProgressCounterIndeterminate(true);
-
-                }
-
-                objectsDB.commit();
+                waitingHandler.resetSecondaryProgressCounter();
+                waitingHandler.setMaxSecondaryProgressCounter(numLastEntries);
 
             }
+
+            ListIterator<Long> listIterator = objectQueue.listIterator();
+            PersistenceManager pm = objectsDB.getDB();
+
+            for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i) {
+
+                if (waitingHandler != null) {
+
+                    waitingHandler.increaseSecondaryProgressCounter();
+
+                    if (waitingHandler.isRunCanceled()) {
+
+                        break;
+
+                    }
+                }
+
+                long key = clearEntries ? objectQueue.pollFirst() : listIterator.next();
+
+                Object obj = loadedObjects.get(key);
+
+                if (!((DbObject) obj).jdoZooIsPersistent()) {
+
+                    pm.makePersistent(obj);
+                    objectsDB.getIdMap().put(key, ((DbObject) obj).jdoZooGetOid());
+
+                }
+
+                if (clearEntries) {
+                    loadedObjects.remove(key);
+                }
+
+            }
+
+            if (waitingHandler != null) {
+
+                waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+
+            }
+
+            objectsDB.commit();
+
         }
+
+        loadObjectMutex.release();
+
     }
 
     /**
@@ -370,11 +376,14 @@ public class ObjectsCache {
      *
      * @param readOnly boolean indicating whether the cache should be in read
      * only
-     * @throws InterruptedException if the thread is interrupted
      */
-    public void setReadOnly(boolean readOnly) throws InterruptedException {
-        synchronized (loadedObjectMutex) {
-            this.readOnly = readOnly;
-        }
+    public void setReadOnly(boolean readOnly) {
+
+        loadObjectMutex.acquire();
+
+        this.readOnly = readOnly;
+
+        loadObjectMutex.release();
+
     }
 }

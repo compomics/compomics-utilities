@@ -40,7 +40,7 @@ public class Identification extends ExperimentObject {
     /**
      * The keys of the objects in the identification.
      */
-    private IdentificationKeys identificationKeys;
+    private IdentificationKeys identificationKeys = new IdentificationKeys();
     /**
      * The directory where the database stored.
      */
@@ -86,6 +86,18 @@ public class Identification extends ExperimentObject {
     public void setIdentificationKeys(IdentificationKeys identificationKeys) {
         this.identificationKeys = identificationKeys;
     }
+    
+    /**
+     * Fills the spectra per file map.
+     */
+    public synchronized void fillSpectrumIdentification() {
+
+            identificationKeys.spectrumIdentification = getClassObjects(SpectrumMatch.class).stream()
+                    .collect(Collectors.groupingBy(
+                            key -> Spectrum.getSpectrumFile(getSpectrumMatch(key).getSpectrumKey()),
+                            HashMap::new,
+                            Collectors.toCollection(HashSet::new)));
+}
 
     /**
      * Returns a map of the spectrum matches keys indexed by spectrum file name.
@@ -541,7 +553,7 @@ public class Identification extends ExperimentObject {
      *
      * @param fraction the fraction name
      */
-    public void addFraction(String fraction) {
+    public synchronized void addFraction(String fraction) {
 
         TreeSet orderedFractions = new TreeSet(identificationKeys.fractions);
         orderedFractions.add(fraction);
@@ -564,7 +576,7 @@ public class Identification extends ExperimentObject {
      *
      * @param fractions the fractions
      */
-    public void setFractions(ArrayList<String> fractions) {
+    public synchronized void setFractions(ArrayList<String> fractions) {
 
         identificationKeys.fractions = fractions;
 

@@ -27,7 +27,7 @@ public class IdentificationKeys extends ExperimentObject {
     /**
      * Map mapping spectra per file.
      */
-    public final HashMap<String, HashSet<Long>> spectrumIdentification = new HashMap();
+    public HashMap<String, HashSet<Long>> spectrumIdentification = null;
     /**
      * A map linking protein accessions to all their protein matches keys.
      */

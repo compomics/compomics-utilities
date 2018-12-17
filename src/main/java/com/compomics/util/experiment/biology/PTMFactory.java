@@ -3858,18 +3858,18 @@ public class PTMFactory implements Serializable {
      * @param ptmName the name of the PTM
      * @return the PSI-MOD accession number, null if not set
      */
-    public String getPsiModName(String ptmName) {
+    public String getPsiModAccession(String ptmName) {
 
         if (ptmName.equalsIgnoreCase("18O(1) of peptide C-term")) {
-
+            return "00581";
         } else if (ptmName.equalsIgnoreCase("18O(2) of peptide C-term")) {
-
+            return "00546";
         } else if (ptmName.equalsIgnoreCase("4-Hydroxyproline")) {
-
+            return "00678"; // @TODO: maps to parent term "hydroxylated proline"...
         } else if (ptmName.equalsIgnoreCase("Acetaldehyde +26")) {
-
+            return "00577"; // @TODO: not peptide n-term specific
         } else if (ptmName.equalsIgnoreCase("Acetylation of K")) {
-
+            return "00723";
         } else if (ptmName.equalsIgnoreCase("Acetylation of peptide N-term")) {
 
         } else if (ptmName.equalsIgnoreCase("Acetylation of protein N-term")) {

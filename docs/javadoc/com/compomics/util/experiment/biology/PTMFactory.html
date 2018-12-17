@@ -286,8 +286,8 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#getPsiModMapping-java.lang.String-">getPsiModMapping</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;ptmName)</code>
-<div class="block">Returns the PTM indexed by its name.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html#getPsiModName-java.lang.String-">getPsiModName</a></span>(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;ptmName)</code>
+<div class="block">Returns the PSI-MOD accession number.</div>
 </td>
 </tr>
 <tr id="i14" class="altColor">
@@ -491,14 +491,16 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <h4>loadFromFile</h4>
 <pre>public static&nbsp;<a href="../../../../../com/compomics/util/experiment/biology/PTMFactory.html" title="class in com.compomics.util.experiment.biology">PTMFactory</a>&nbsp;loadFromFile(<a href="http://docs.oracle.com/javase/6/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;file)
                                throws <a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<div class="block">Loads an enzyme factory from a file. The file must be an export of the factory in the json format.</div>
+<div class="block">Loads an enzyme factory from a file. The file must be an export of the
+ factory in the json format.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>file</code> - the file to load</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the enzyme factory saved in file</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while loading the file</dd>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
+ loading the file</dd>
 </dl>
 </li>
 </ul>
@@ -517,7 +519,8 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 <dd><code>ptmFactory</code> - the PTM factory to save</dd>
 <dd><code>file</code> - the file where to save</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while saving the file</dd>
+<dd><code><a href="http://docs.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code> - exception thrown whenever an error occurred while
+ saving the file</dd>
 </dl>
 </li>
 </ul>
@@ -1040,14 +1043,14 @@ implements <a href="http://docs.oracle.com/javase/6/docs/api/java/io/Serializabl
 </dl>
 </li>
 </ul>
-<a name="getPsiModMapping-java.lang.String-">
+<a name="getPsiModName-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>getPsiModMapping</h4>
-<pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getPsiModMapping(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;ptmName)</pre>
-<div class="block">Returns the PTM indexed by its name.</div>
+<h4>getPsiModName</h4>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getPsiModName(<a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;ptmName)</pre>
+<div class="block">Returns the PSI-MOD accession number. Null if not set.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ptmName</code> - the name of the PTM</dd>

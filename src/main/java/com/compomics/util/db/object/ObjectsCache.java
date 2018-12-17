@@ -283,7 +283,7 @@ public class ObjectsCache {
                 long key = clearEntries ? objectQueue.pollFirst() : listIterator.next();
 
                 Object obj = loadedObjects.get(key);
-
+                
                 if (!((DbObject) obj).jdoZooIsPersistent()) {
 
                     pm.makePersistent(obj);
@@ -332,7 +332,7 @@ public class ObjectsCache {
     }
 
     /**
-     * Check if key in cache
+     * Check if key in cache.
      *
      * @param longKey key of the entry
      * @return if key in cache

@@ -513,15 +513,15 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
      * Constructor. If modification settings are provided the index will contain
      * modification information, ignored if null.
      *
-     * @param fastaFile the fasta file to index
-     * @param fastaParameters the parameters for the fasta file parsing
+     * @param fastaFile the FASTA file to index
+     * @param fastaParameters the parameters for the FASTA file parsing
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
      * @param peptideVariantsPreferences contains all parameters for variants
      * @param searchParameters the search parameters
      *
      * @throws IOException exception thrown if an error occurs while iterating
-     * the fasta file.
+     * the FASTA file.
      */
     public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, PeptideVariantsParameters peptideVariantsPreferences, SearchParameters searchParameters) throws IOException {
         if (searchParameters != null) {
@@ -537,8 +537,8 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
      * Constructor. If modification settings are provided the index will contain
      * modification information, ignored if null.
      *
-     * @param fastaFile the fasta file to index
-     * @param fastaParameters the parameters for the fasta file parsing
+     * @param fastaFile the FASTA file to index
+     * @param fastaParameters the parameters for the FASTA file parsing
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
      * @param modificationSettings contains modification parameters for
@@ -546,7 +546,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
      * @param peptideVariantsPreferences contains all parameters for variants
      *
      * @throws IOException exception thrown if an error occurs while iterating
-     * the fasta file.
+     * the FASTA file
      */
     public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters modificationSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
         init(fastaFile, fastaParameters, waitingHandler, displayProgress, modificationSettings, peptideVariantsPreferences);
@@ -557,8 +557,8 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
      * are provided the index will contain modification information, ignored if
      * null.
      *
-     * @param fastaFile the fasta file to index
-     * @param fastaParameters the parameters for the fasta file parsing
+     * @param fastaFile the FASTA file to index
+     * @param fastaParameters the parameters for the FASTA file parsing
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
      * @param modificatoinSettings contains modification parameters for

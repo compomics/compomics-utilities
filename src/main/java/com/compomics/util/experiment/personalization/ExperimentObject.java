@@ -65,7 +65,7 @@ public abstract class ExperimentObject extends DbObject {
     /**
      * Adds a user refinement parameter.
      *
-     * @param parameter The parameter
+     * @param parameter the parameter
      */
     public void addUrParam(UrParameter parameter) {
         writeDBMode();

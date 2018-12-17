@@ -932,10 +932,6 @@ public class AminoAcidPattern extends ExperimentObject {
     public boolean isSameAs(AminoAcidPattern anotherPattern, SequenceMatchingParameters sequenceMatchingParameters) {
         readDBMode();
 
-        if (anotherPattern == null) {
-            return false;
-        }
-
         if (!matches(anotherPattern, sequenceMatchingParameters)) {
             return false;
         }

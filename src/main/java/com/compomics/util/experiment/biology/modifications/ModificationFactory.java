@@ -1027,7 +1027,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
-        AtomChain atomChainRemoved = null;
+        AtomChain atomChainRemoved = new AtomChain();
         AminoAcidPattern aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         String modificationName = "Acetylation of K";
         Modification modification = new Modification(ModificationType.modaa, modificationName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1042,8 +1042,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Acetylation of peptide N-term"; // note: if name changed also change in TandemProcessBuilder
         modification = new Modification(ModificationType.modn_peptide, modificationName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1", "Acetyl", null));
@@ -1055,8 +1055,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Acetylation of protein N-term"; // note: if name changed also change in TandemProcessBuilder of SearchGUI and PsmImporter of PeptideShaker
         modification = new Modification(ModificationType.modn_protein, modificationName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1", "Acetyl", null));
@@ -1069,7 +1069,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Carbamidomethylation of C";
         modification = new Modification(ModificationType.modaa, modificationName, "cmm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1083,7 +1083,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
         modificationName = "Carbamidomethylation of E";
         modification = new Modification(ModificationType.modaa, modificationName, "cmm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1097,7 +1097,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Carbamidomethylation of K";
         modification = new Modification(ModificationType.modaa, modificationName, "cmm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1108,7 +1108,7 @@ public class ModificationFactory {
         // Oxidation of M
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
         modificationName = "Oxidation of M";
         modification = new Modification(ModificationType.modaa, modificationName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1120,7 +1120,7 @@ public class ModificationFactory {
         // Oxidation of P
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
         modificationName = "Oxidation of P";
         modification = new Modification(ModificationType.modaa, modificationName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1131,7 +1131,7 @@ public class ModificationFactory {
         // Oxidation of K
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Oxidation of K";
         modification = new Modification(ModificationType.modaa, modificationName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1142,7 +1142,7 @@ public class ModificationFactory {
         // Oxidation of C
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Oxidation of C";
         modification = new Modification(ModificationType.modaa, modificationName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1153,7 +1153,7 @@ public class ModificationFactory {
         // Dioxydation of M
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
         modificationName = "Dioxidation of M";
         modification = new Modification(ModificationType.modaa, modificationName, "diox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1164,7 +1164,7 @@ public class ModificationFactory {
         // Dioxydation of M
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
         modificationName = "Dioxidation of W";
         modification = new Modification(ModificationType.modaa, modificationName, "diox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1175,7 +1175,7 @@ public class ModificationFactory {
         // Trioxidation of C
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Trioxidation of C";
         modification = new Modification(ModificationType.modaa, modificationName, "triox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1188,7 +1188,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0));
         atomChainAdded.append(new AtomImpl(Atom.P, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         modificationName = "Phosphorylation of S";
         modification = new Modification(ModificationType.modaa, modificationName, "p", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1202,7 +1202,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0));
         atomChainAdded.append(new AtomImpl(Atom.P, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         modificationName = "Phosphorylation of T";
         modification = new Modification(ModificationType.modaa, modificationName, "p", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1216,7 +1216,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0));
         atomChainAdded.append(new AtomImpl(Atom.P, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
         modificationName = "Phosphorylation of Y";
         modification = new Modification(ModificationType.modaa, modificationName, "p", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1307,7 +1307,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 9);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
         modificationName = "4-Hydroxyproline";
         modification = new Modification(ModificationType.modaa, modificationName, "hydroxy", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1359,7 +1359,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Dimethylation of K 2H(4)";
         modification = new Modification(ModificationType.modaa, modificationName, "dimeth4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1397,8 +1397,8 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Dimethylation of peptide N-term 2H(4)";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "dimeth4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:199 ", "Dimethyl:2H(4)", null));
@@ -1411,7 +1411,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
-        aminoAcidPattern = null;
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Dimethylation of peptide N-term 2H(6)";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "dimeth6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 1291", "Dimethyl:2H(6)", null));
@@ -1424,7 +1424,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 1), 6);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
-        aminoAcidPattern = null;
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Dimethylation of peptide N-term 2H(6) 13C(2)";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "dimeth8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:330", " Dimethyl:2H(6)13C(2)", null));
@@ -1436,7 +1436,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.O, 2), 2);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
-        aminoAcidPattern = null;
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "18O(2) of peptide C-term";
         modification = new Modification(ModificationType.modc_peptide, modificationName, "18O", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 193", "Label:18O(2)", null));
@@ -1448,7 +1448,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.O, 2), 1);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
-        aminoAcidPattern = null;
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "18O(1) of peptide C-term";
         modification = new Modification(ModificationType.modc_peptide, modificationName, "18O", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:258", "Label:18O(1)", null));
@@ -1461,7 +1461,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 17);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "ICAT-O";
         modification = new Modification(ModificationType.modaa, modificationName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1476,7 +1476,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 17);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "ICAT-9";
         modification = new Modification(ModificationType.modaa, modificationName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1490,7 +1490,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "ICPL0 of K";
         modification = new Modification(ModificationType.modaa, modificationName, "icpl0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1504,8 +1504,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "ICPL0 of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "icpl0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:365", "ICPL", null));
@@ -1535,7 +1535,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = null;
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "ICPL4 of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "icpl4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:687", "ICPL:2H(4)", null));
@@ -1548,7 +1548,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "ICPL6 of K";
         modification = new Modification(ModificationType.modaa, modificationName, "icpl6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1562,8 +1562,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "ICPL6 of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "icpl6", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:364", "ICPL:13C(6)", null));
@@ -1593,7 +1593,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = null;
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "ICPL10 of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "icpl10", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:866", "ICPL:13C(6)2H(4)", null)); // note: does not have a PSI name, using interim name
@@ -1606,7 +1606,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "mTRAQ of K light";
         modification = new Modification(ModificationType.modaa, modificationName, "mTRAQ0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1620,8 +1620,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "mTRAQ of peptide N-term light";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "mTRAQ0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:888", "mTRAQ", null)); // note: does not have a PSI name, using interim name
@@ -1636,7 +1636,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "mTRAQ of K 13C(3) 15N";
         modification = new Modification(ModificationType.modaa, modificationName, "mTRAQ4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1652,8 +1652,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "mTRAQ of peptide N-term 13C(3) 15N";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "mTRAQ4", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:889", "mTRAQ:13C(3)15N(1) ", null)); // note: does not have a PSI name, using interim name
@@ -1667,7 +1667,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "mTRAQ of 13C(6) 15N(2)";
         modification = new Modification(ModificationType.modaa, modificationName, "mTRAQ8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1682,8 +1682,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 12);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "mTRAQ of peptide N-term 13C(6) 15N(2)";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "mTRAQ8", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1302", "mTRAQ:13C(6)15N(2) ", null)); // note: does not have a PSI name, using interim name
@@ -1698,8 +1698,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "iTRAQ 4-plex of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:214", "iTRAQ4plex", null)); // @TODO: check cv term and mass!!!
@@ -1718,7 +1718,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "iTRAQ 4-plex of K";
         modification = new Modification(ModificationType.modaa, modificationName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1738,7 +1738,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
         modificationName = "iTRAQ 4-plex of Y";
         modification = new Modification(ModificationType.modaa, modificationName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1758,8 +1758,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "iTRAQ 8-plex of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:730", "iTRAQ8plex", null)); // note: does not have a PSI name, using interim name
@@ -1782,7 +1782,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "iTRAQ 8-plex of K";
         modification = new Modification(ModificationType.modaa, modificationName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1806,7 +1806,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
         modificationName = "iTRAQ 8-plex of Y";
         modification = new Modification(ModificationType.modaa, modificationName, "iTRAQ", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1829,8 +1829,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "TMT 2-plex of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:738", "TMT2plex", null)); // note: does not have a PSI name, using interim name
@@ -1847,7 +1847,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 2-plex of K";
         modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1866,8 +1866,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "TMT 6-plex of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: does not have a PSI name, using interim name
@@ -1906,7 +1906,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 6-plex of K";
         modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1946,8 +1946,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "TMT 10-plex of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: "PSI: Alt. Description: Also applies to TMT10plex", i.e., no term for 10-plex
@@ -1982,7 +1982,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 10-plex of K";
         modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2016,7 +2016,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Ubiquitination of K";
         modification = new Modification(ModificationType.modaa, modificationName, "ub", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2028,7 +2028,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0));
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Methylation of K";
         modification = new Modification(ModificationType.modaa, modificationName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2040,7 +2040,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0));
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
         modificationName = "Methylation of R";
         modification = new Modification(ModificationType.modaa, modificationName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2057,7 +2057,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
         modificationName = "Methylation of E";
         modification = new Modification(ModificationType.modaa, modificationName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2069,7 +2069,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Methylation of C";
         modification = new Modification(ModificationType.modaa, modificationName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2081,7 +2081,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
         modificationName = "Methylation of D";
         modification = new Modification(ModificationType.modaa, modificationName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2093,7 +2093,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         modificationName = "Methylation of S";
         modification = new Modification(ModificationType.modaa, modificationName, "meth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2105,7 +2105,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Dimethylation of K";
         modification = new Modification(ModificationType.modaa, modificationName, "dimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2117,8 +2117,8 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Dimethylation of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "dimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:36", "Dimethyl", null));
@@ -2129,7 +2129,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
         modificationName = "Dimethylation of R";
         modification = new Modification(ModificationType.modaa, modificationName, "dimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2144,7 +2144,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Trimethylation of K";
         modification = new Modification(ModificationType.modaa, modificationName, "trimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2157,7 +2157,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
         modificationName = "Trimethylation of R";
         modification = new Modification(ModificationType.modaa, modificationName, "trimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2169,7 +2169,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
         modificationName = "Trimethylation of protein N-term A";
         modification = new Modification(ModificationType.modn_protein, modificationName, "trimeth", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2178,7 +2178,7 @@ public class ModificationFactory {
         modificationMap.put(modificationName, modification);
 
         // Pyrolidone from E
-        atomChainAdded = null;
+        atomChainAdded = new AtomChain();
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
@@ -2190,7 +2190,7 @@ public class ModificationFactory {
         modificationMap.put(modificationName, modification);
 
         // Pyrolidone from Q
-        atomChainAdded = null;
+        atomChainAdded = new AtomChain();
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
@@ -2202,7 +2202,7 @@ public class ModificationFactory {
         modificationMap.put(modificationName, modification);
 
         // Pyrolidone from carbamidomethylated C
-        atomChainAdded = null;
+        atomChainAdded = new AtomChain();
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
@@ -2219,7 +2219,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 13);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 5);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         modificationName = "HexNAc of S";
         modification = new Modification(ModificationType.modaa, modificationName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2233,7 +2233,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 13);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 5);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         modificationName = "HexNAc of T";
         modification = new Modification(ModificationType.modaa, modificationName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2247,7 +2247,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 23);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 10);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         modificationName = "Hex(1)NAc(1) of S";
         modification = new Modification(ModificationType.modaa, modificationName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2261,7 +2261,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 23);
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 10);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         modificationName = "Hex(1)NAc(1) of T";
         modification = new Modification(ModificationType.modaa, modificationName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2274,7 +2274,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 10);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 5);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Hexose of K";
         modification = new Modification(ModificationType.modaa, modificationName, "hex", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2288,7 +2288,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 136);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 61);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 6);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
         modificationName = "Hex(5) HexNAc(4) NeuAc(2) of N";
         modification = new Modification(ModificationType.modaa, modificationName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2303,7 +2303,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 61);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.Na, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
         modificationName = "Hex(5) HexNAc(4) NeuAc(2) Na of N";
         modification = new Modification(ModificationType.modaa, modificationName, "glyco", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2317,7 +2317,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 29);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 7);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 8);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "SUMO-2/3 Q87R";
         modification = new Modification(ModificationType.modaa, modificationName, "sumo", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2378,8 +2378,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0));
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Carbamilation of protein N-term";
         modification = new Modification(ModificationType.modn_protein, modificationName, "cm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:5", "Carbamyl", null));
@@ -2392,7 +2392,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0));
         atomChainAdded.append(new AtomImpl(Atom.N, 0));
         atomChainAdded.append(new AtomImpl(Atom.O, 0));
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Carbamilation of K";
         modification = new Modification(ModificationType.modaa, modificationName, "cm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2404,8 +2404,8 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Acetaldehyde +26";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "ace", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:254", "Delta:H(2)C(2)", null));
@@ -2442,7 +2442,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
-        aminoAcidPattern = null;
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Amidation of the peptide C-term";
         modification = new Modification(ModificationType.modc_peptide, modificationName, "am", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:2", "Amidated", null));
@@ -2455,7 +2455,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
-        aminoAcidPattern = null;
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Amidation of the protein C-term";
         modification = new Modification(ModificationType.modc_protein, modificationName, "am", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:2", "Amidated", null));
@@ -2466,7 +2466,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         modificationName = "Sulfation of S";
         modification = new Modification(ModificationType.modaa, modificationName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2478,7 +2478,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         modificationName = "Sulfation of T";
         modification = new Modification(ModificationType.modaa, modificationName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2490,7 +2490,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
         modificationName = "Sulfation of Y";
         modification = new Modification(ModificationType.modaa, modificationName, "s", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2503,7 +2503,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 30);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 16);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Palmitoylation of C";
         modification = new Modification(ModificationType.modaa, modificationName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2516,7 +2516,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 30);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 16);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Palmitoylation of K";
         modification = new Modification(ModificationType.modaa, modificationName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2529,7 +2529,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 30);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 16);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         modificationName = "Palmitoylation of S";
         modification = new Modification(ModificationType.modaa, modificationName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2542,7 +2542,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 30);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 16);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         modificationName = "Palmitoylation of T";
         modification = new Modification(ModificationType.modaa, modificationName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2555,8 +2555,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 30);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 16);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Palmitoylation of protein N-term";
         modification = new Modification(ModificationType.modn_protein, modificationName, "palm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:47", "Palmitoylation", null));
@@ -2567,7 +2567,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Formylation of K";
         modification = new Modification(ModificationType.modaa, modificationName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2580,7 +2580,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
         modificationName = "Formylation of S";
         modification = new Modification(ModificationType.modaa, modificationName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2592,7 +2592,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
         modificationName = "Formylation of T";
         modification = new Modification(ModificationType.modaa, modificationName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2604,8 +2604,8 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Formylation of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
@@ -2616,8 +2616,8 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Formylation of protein N-term";
         modification = new Modification(ModificationType.modn_protein, modificationName, "form", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:122", "Formylation", null));
@@ -2629,7 +2629,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Propionyl of K light";
         modification = new Modification(ModificationType.modaa, modificationName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2642,8 +2642,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Propionyl of peptide N-term light";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:58", "Propionyl", null));
@@ -2655,7 +2655,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Propionyl of K heavy";
         modification = new Modification(ModificationType.modaa, modificationName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2668,8 +2668,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Propionyl of peptide N-term heavy";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "prop", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:59", "Propionyl:13C(3)", null));
@@ -2734,7 +2734,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 1);
-        aminoAcidPattern = null;
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Trideuterated Methyl Ester of peptide C-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "methyl(d3)", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:298", "Methyl:2H(3)", null));
@@ -2746,7 +2746,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Carboxymethylation of C";
         modification = new Modification(ModificationType.modaa, modificationName, "carbox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2758,7 +2758,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 24);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 15);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Farnesylation of C";
         modification = new Modification(ModificationType.modaa, modificationName, "far", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2770,7 +2770,7 @@ public class ModificationFactory {
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 32);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 20);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Geranyl-geranyl of C";
         modification = new Modification(ModificationType.modaa, modificationName, "geranyl", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2783,7 +2783,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Guanidination of K";
         modification = new Modification(ModificationType.modaa, modificationName, "guan", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2796,8 +2796,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Guanidination of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "guan", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:52", "Guanidinyl", null));
@@ -2819,7 +2819,7 @@ public class ModificationFactory {
         modificationMap.put(modificationName, modification);
 
         // Homoserine lactone of peptide C-term M
-        atomChainAdded = null;
+        atomChainAdded = new AtomChain();
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
         atomChainRemoved.append(new AtomImpl(Atom.C, 0), 1);
@@ -2837,7 +2837,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Lipoyl of K";
         modification = new Modification(ModificationType.modaa, modificationName, "lip", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2850,7 +2850,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
         modificationName = "Methylthio of D";
         modification = new Modification(ModificationType.modaa, modificationName, "mmts", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2863,7 +2863,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
         modificationName = "Methylthio of N";
         modification = new Modification(ModificationType.modaa, modificationName, "mmts", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2876,7 +2876,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Methylthio of C";
         modification = new Modification(ModificationType.modaa, modificationName, "mmts", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2890,7 +2890,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "NIPCAM of C";
         modification = new Modification(ModificationType.modaa, modificationName, "nipcam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2904,7 +2904,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Propionamide of C";
         modification = new Modification(ModificationType.modaa, modificationName, "propam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2918,7 +2918,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "Propionamide of K";
         modification = new Modification(ModificationType.modaa, modificationName, "propam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2932,8 +2932,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Propionamide of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "propam", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:24", "Propionamide", null));
@@ -2945,7 +2945,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 7);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 7);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Pyridylethyl of C";
         modification = new Modification(ModificationType.modaa, modificationName, "pyri", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2954,7 +2954,7 @@ public class ModificationFactory {
         modificationMap.put(modificationName, modification);
 
         // Dehydration of S
-        atomChainAdded = null;
+        atomChainAdded = new AtomChain();;
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
@@ -2966,7 +2966,7 @@ public class ModificationFactory {
         modificationMap.put(modificationName, modification);
 
         // Dehydration of T
-        atomChainAdded = null;
+        atomChainAdded = new AtomChain();;
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
@@ -2983,7 +2983,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Nethylmaleimide of C";
         modification = new Modification(ModificationType.modaa, modificationName, "nem", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2998,7 +2998,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 10);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Glutathione of C";
         modification = new Modification(ModificationType.modaa, modificationName, "glut", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -3013,8 +3013,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "FormylMet of protein N-term";
         modification = new Modification(ModificationType.modn_protein, modificationName, "nmet", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:107", "FormylMet", null));
@@ -3022,7 +3022,7 @@ public class ModificationFactory {
         modificationMap.put(modificationName, modification);
 
         // Didehydro of T
-        atomChainAdded = null;
+        atomChainAdded = new AtomChain();
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
@@ -3038,8 +3038,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.S, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = null;
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
         modificationName = "Thioacyl of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "thioacyl", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:126", "Thioacyl", null));

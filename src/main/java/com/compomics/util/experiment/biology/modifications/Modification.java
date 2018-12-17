@@ -108,7 +108,8 @@ public class Modification extends ExperimentObject {
      * @param atomChainAdded atomic composition of the molecule added
      * @param atomChainRemoved atomic composition of the molecule removed
      * @param aminoAcidPattern residue pattern affected by this modification
-     * @param cvTerm the CV term associated with this modification, null if not set
+     * @param cvTerm the CV term associated with this modification, null if not
+     * set
      */
     public Modification(ModificationType modificationType, String name, String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern, CvTerm cvTerm) {
         this.modificationType = modificationType;
@@ -121,8 +122,8 @@ public class Modification extends ExperimentObject {
     }
 
     /**
-     * Simple constructor for a modification. This constructor does not set the atomic
-     * composition or the cv term.
+     * Simple constructor for a modification. This constructor does not set the
+     * atomic composition or the cv term.
      *
      * @param modificationType type of modification
      * @param name name of the modification
@@ -140,7 +141,7 @@ public class Modification extends ExperimentObject {
 
     /**
      * Returns the modification type.
-     * 
+     *
      * @return the modification type
      */
     public ModificationType getModificationType() {
@@ -202,7 +203,8 @@ public class Modification extends ExperimentObject {
     }
 
     /**
-     * Estimates the mass of the modification and stores it in the mass attribute.
+     * Estimates the mass of the modification and stores it in the mass
+     * attribute.
      */
     private synchronized void estimateMass() {
         readDBMode();
@@ -220,16 +222,16 @@ public class Modification extends ExperimentObject {
 
     /**
      * Returns the ambiguity key.
-     * 
+     *
      * @return the ambiguity key
      */
     public String getAmbiguityKey() {
         readDBMode();
-        
+
         if (ambiguityKey == null) {
             setAmbiguityKey();
         }
-        
+
         return ambiguityKey;
     }
 
@@ -307,15 +309,15 @@ public class Modification extends ExperimentObject {
     }
 
     /**
-     * Returns true if the atomic composition of the modification is the same as another
-     * one.
+     * Returns true if the atomic composition of the modification is the same as
+     * another one.
      *
      * @param anotherModification the modification to compare to
      *
-     * @return true if the atomic composition of the modification is the same as the
-     * other one
+     * @return true if the atomic composition of the modification is the same as
+     * the other one
      */
-    public boolean isSameAtomicComposition(Modification anotherModification) {
+    public boolean isSameAtomicComposition(Modification anotherModification) { // @TODO: can probably be simplified now that the atom chains cannot be null?
         readDBMode();
         if (atomChainAdded != null && !atomChainAdded.isSameCompositionAs(anotherModification.getAtomChainAdded())
                 || atomChainRemoved != null && !atomChainRemoved.isSameCompositionAs(anotherModification.getAtomChainRemoved())) {
@@ -329,15 +331,16 @@ public class Modification extends ExperimentObject {
     }
 
     /**
-     * Returns true if the targeted pattern of the modification is the same as another
-     * one. An empty pattern is considered to be the same as a null pattern.
+     * Returns true if the targeted pattern of the modification is the same as
+     * another one. An empty pattern is considered to be the same as a null
+     * pattern.
      *
      * @param anotherModification the modification to compare to
      *
-     * @return true if the targeted pattern of the modification is the same as the other
-     * one
+     * @return true if the targeted pattern of the modification is the same as
+     * the other one
      */
-    public boolean isSamePattern(Modification anotherModification) {
+    public boolean isSamePattern(Modification anotherModification) { // @TODO: can probably be simplified now that the patterns cannot be null?
         readDBMode();
         if (pattern == null && anotherModification.getPattern() != null && anotherModification.getPattern().length() > 0) {
             return false;
@@ -356,9 +359,9 @@ public class Modification extends ExperimentObject {
      * @return true if the modification is the same as the other one
      */
     public boolean isSameAs(Modification anotherModification) {
-        
+
         readDBMode();
-        
+
         if (modificationType != anotherModification.getModificationType()) {
 //            System.out.println("type difference");
 //            System.out.println("local: " + type);
@@ -486,7 +489,7 @@ public class Modification extends ExperimentObject {
         if (modificationType == null) {
             return null;
         }
-        
+
         String tooltip = "<html>";
 
         tooltip += "Name: " + name + "<br>";

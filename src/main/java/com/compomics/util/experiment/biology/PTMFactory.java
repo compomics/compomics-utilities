@@ -3871,49 +3871,49 @@ public class PTMFactory implements Serializable {
         } else if (ptmName.equalsIgnoreCase("Acetylation of K")) {
             return "00723";
         } else if (ptmName.equalsIgnoreCase("Acetylation of peptide N-term")) {
-
+            return "01458";
         } else if (ptmName.equalsIgnoreCase("Acetylation of protein N-term")) {
-
+            return "01458";
         } else if (ptmName.equalsIgnoreCase("Amidation of the peptide C-term")) {
-
+            return "00883";
         } else if (ptmName.equalsIgnoreCase("Amidation of the protein C-term")) {
-
+            return "00883";
         } else if (ptmName.equalsIgnoreCase("Arginine 13C(6)")) {
-
+            return "01331";
         } else if (ptmName.equalsIgnoreCase("Arginine 13C(6) 15N(4)")) {
-
+            return "00587";
         } else if (ptmName.equalsIgnoreCase("Carbamidomethylation of C")) {
-
+            return "01060";
         } else if (ptmName.equalsIgnoreCase("Carbamidomethylation of E")) {
-
+            return "01216";
         } else if (ptmName.equalsIgnoreCase("Carbamidomethylation of K")) {
-
+            return "01212";
         } else if (ptmName.equalsIgnoreCase("Carbamilation of K")) {
-
+            return "01678";
         } else if (ptmName.equalsIgnoreCase("Carbamilation of protein N-term")) {
-
+            return "01679";
         } else if (ptmName.equalsIgnoreCase("Carboxymethylation of C")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Citrullination of R")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Deamidation of N")) {
-
+            return "00684";
         } else if (ptmName.equalsIgnoreCase("Deamidation of N 18O")) {
-
+            return "00791";
         } else if (ptmName.equalsIgnoreCase("Deamidation of Q")) {
-
+            return "00685";
         } else if (ptmName.equalsIgnoreCase("Dehydration of S")) {
-
+            return "00704"; // @TODO: not unique for S
         } else if (ptmName.equalsIgnoreCase("Dehydration of T")) {
-
+            return "00704"; // @TODO: not unique for T
         } else if (ptmName.equalsIgnoreCase("Didehydro of T")) {
-
+            return "01345";
         } else if (ptmName.equalsIgnoreCase("Diiodination of Y")) {
-
+            return "01140";
         } else if (ptmName.equalsIgnoreCase("Dimethylation of K")) {
-
+            return "00084";
         } else if (ptmName.equalsIgnoreCase("Dimethylation of K 2H(4)")) {
-
+            
         } else if (ptmName.equalsIgnoreCase("Dimethylation of K 2H(6)")) {
 
         } else if (ptmName.equalsIgnoreCase("Dimethylation of K 2H(6) 13C(2)")) {

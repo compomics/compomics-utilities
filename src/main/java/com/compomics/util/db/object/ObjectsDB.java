@@ -792,7 +792,7 @@ public class ObjectsDB {
 
         objectsCache.saveCache(waitingHandler, false);
         objectsCache.clearCache();
-
+        
         pm.currentTransaction().commit();
 
         dbMutex.release();
@@ -895,6 +895,7 @@ public class ObjectsDB {
         }
 
         pm = ZooJdoHelper.openOrCreateDB(dbFile.getAbsolutePath());
+        pm.currentTransaction().setRetainValues(true);
         pm.currentTransaction().begin();
         connectionActive = true;
 

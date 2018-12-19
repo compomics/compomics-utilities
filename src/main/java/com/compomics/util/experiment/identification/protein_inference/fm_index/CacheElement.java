@@ -9,7 +9,8 @@ import java.util.ArrayList;
 
 /**
  *
- * @author dominik.kopczynski
+ *
+ * @author Dominik Kopczynski
  */
 public class CacheElement {
     Double massFirst;

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology.genes;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.genes.ensembl.GeneMapping;
 import com.compomics.util.experiment.biology.genes.go.GoMapping;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.HashSet;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class GeneMaps {
+public class GeneMaps extends DbObject {
 
     /**
      * The Ensembl versions for each species.
@@ -56,6 +57,7 @@ public class GeneMaps {
      * @param geneMapping a gene mapping
      */
     public void importMaps(GeneMapping geneMapping) {
+        writeDBMode();
         geneNameToChromosomeMap.putAll(geneMapping.getGeneNameToChromosome());
         geneNameToEnsemblIdMap.putAll(geneMapping.getGeneNameToAccession());
     }
@@ -66,6 +68,7 @@ public class GeneMaps {
      * @param goMapping a go mapping
      */
     public void setMaps(GoMapping goMapping) {
+        writeDBMode();
         goNamesMap.putAll(goMapping.getGoNamesMap());
         HashMap<String, HashSet<String>> otherMap = goMapping.getProteinToGoMap();
         for (String accession : otherMap.keySet()) {
@@ -93,6 +96,7 @@ public class GeneMaps {
      * @return the Ensembl version map
      */
     public HashMap<String, String> getEnsemblVersionsMap() {
+        readDBMode();
         return ensemblVersionsMap;
     }
 
@@ -102,6 +106,7 @@ public class GeneMaps {
      * @param ensemblVersionsMap the Ensembl version map
      */
     public void setEnsemblVersionsMap(HashMap<String, String> ensemblVersionsMap) {
+        writeDBMode();
         this.ensemblVersionsMap = ensemblVersionsMap;
     }
 
@@ -111,6 +116,7 @@ public class GeneMaps {
      * @return the gene name to Ensembl ID map
      */
     public HashMap<String, String> getGeneNameToEnsemblIdMap() {
+        readDBMode();
         return geneNameToEnsemblIdMap;
     }
 
@@ -120,6 +126,7 @@ public class GeneMaps {
      * @param geneNameToEnsemblIdMap the gene name to Ensembl ID map
      */
     public void setGeneNameToEnsemblIdMap(HashMap<String, String> geneNameToEnsemblIdMap) {
+        writeDBMode();
         this.geneNameToEnsemblIdMap = geneNameToEnsemblIdMap;
     }
 
@@ -129,6 +136,7 @@ public class GeneMaps {
      * @return the gene name to chromosome map
      */
     public HashMap<String, String> getGeneNameToChromosomeMap() {
+        readDBMode();
         return geneNameToChromosomeMap;
     }
 
@@ -138,6 +146,7 @@ public class GeneMaps {
      * @param geneNameToChromosomeMap the gene name to chromosome map
      */
     public void setGeneNameToChromosomeMap(HashMap<String, String> geneNameToChromosomeMap) {
+        writeDBMode();
         this.geneNameToChromosomeMap = geneNameToChromosomeMap;
     }
 
@@ -147,6 +156,7 @@ public class GeneMaps {
      * @return the protein to GO terms accession map
      */
     public HashMap<String, HashSet<String>> getProteinToGoMap() {
+        readDBMode();
         return proteinToGoMap;
     }
 
@@ -156,6 +166,7 @@ public class GeneMaps {
      * @param proteinToGoMap the protein to GO terms accession map
      */
     public void setProteinToGoMap(HashMap<String, HashSet<String>> proteinToGoMap) {
+        writeDBMode();
         this.proteinToGoMap = proteinToGoMap;
     }
 
@@ -165,6 +176,7 @@ public class GeneMaps {
      * @return the GO to protein accession map
      */
     public HashMap<String, HashSet<String>> getGoAccessionToProteinMap() {
+        readDBMode();
         return goAccessionToProteinMap;
     }
 
@@ -174,6 +186,7 @@ public class GeneMaps {
      * @param goAccessionToProteinMap the GO to protein accession map
      */
     public void setGoAccessionToProteinMap(HashMap<String, HashSet<String>> goAccessionToProteinMap) {
+        writeDBMode();
         this.goAccessionToProteinMap = goAccessionToProteinMap;
     }
 
@@ -183,6 +196,7 @@ public class GeneMaps {
      * @return the GO accession to names map
      */
     public HashMap<String, String> getGoNamesMap() {
+        readDBMode();
         return goNamesMap;
     }
 
@@ -192,6 +206,7 @@ public class GeneMaps {
      * @param goNamesMap the GO accession to names map
      */
     public void setGoNamesMap(HashMap<String, String> goNamesMap) {
+        writeDBMode();
         this.goNamesMap = goNamesMap;
     }
 
@@ -204,6 +219,7 @@ public class GeneMaps {
      * @return the corresponding Ensembl ID
      */
     public String getEnsemblId(String geneName) {
+        readDBMode();
         return geneNameToEnsemblIdMap.get(geneName);
     }
 
@@ -215,6 +231,7 @@ public class GeneMaps {
      * @return the chromosome name
      */
     public String getChromosome(String geneName) {
+        readDBMode();
         return geneNameToChromosomeMap.get(geneName);
     }
 
@@ -227,6 +244,7 @@ public class GeneMaps {
      * @return the go terms names
      */
     public HashSet<String> getGoTermsForProtein(String proteinAccession) {
+        readDBMode();
         return proteinToGoMap.get(proteinAccession);
     }
 
@@ -238,6 +256,7 @@ public class GeneMaps {
      * @return the corresponding proteins
      */
     public HashSet<String> getProteinsForGoTerm(String goAccession) {
+        readDBMode();
         return goAccessionToProteinMap.get(goAccession);
     }
 
@@ -249,6 +268,7 @@ public class GeneMaps {
      * @return the name of a GO term
      */
     public String getNameForGoTerm(String goAccession) {
+        readDBMode();
         return goNamesMap.get(goAccession);
     }
 
@@ -261,6 +281,7 @@ public class GeneMaps {
      * @return the corresponding accession
      */
     public String getGoAccession(String goName) {
+        readDBMode();
         for (String goAccession : goNamesMap.keySet()) {
             if (goNamesMap.get(goAccession).equals(goName)) {
                 return goAccession;
@@ -277,6 +298,7 @@ public class GeneMaps {
      * @return the go terms names
      */
     public HashSet<String> getGoNamesForProtein(String proteinAccession) {
+        readDBMode();
     
         HashSet<String> goTerms = getGoTermsForProtein(proteinAccession);
         
@@ -309,6 +331,7 @@ public class GeneMaps {
      * @return a boolean indicating whether the GO maps are populated
      */
     public boolean hasGoMappings() {
+        readDBMode();
         return !goNamesMap.isEmpty() && !proteinToGoMap.isEmpty();
     }
 }

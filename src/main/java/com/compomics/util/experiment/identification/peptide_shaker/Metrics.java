@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.peptide_shaker;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,12 +15,8 @@ import java.util.stream.IntStream;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class Metrics {
+public class Metrics extends DbObject {
 
-    /**
-     * Serial number for versions compatibility.
-     */
-    static final long serialVersionUID = 5905881057533649517L;
     /**
      * The maximal peptide precursor error in Da in all PSMs (only the best
      * peptide hit per spectrum).
@@ -166,6 +163,7 @@ public class Metrics {
      * @return the maximal charge
      */
     public int getMaxCharge() {
+        readDBMode();
         
         return foundCharges[foundCharges.length-1];
         
@@ -177,6 +175,7 @@ public class Metrics {
      * @return the max peptide precursor mass error in Dalton
      */
     public double getMaxPeptidePrecursorErrorDa() {
+        readDBMode();
         return maxPrecursorErrorDa;
     }
 
@@ -195,6 +194,7 @@ public class Metrics {
      * @return the max peptide precursor mass error in ppm
      */
     public double getMaxPeptidePrecursorErrorPpm() {
+        readDBMode();
         return maxPrecursorErrorPpm;
     }
 
@@ -214,6 +214,7 @@ public class Metrics {
      * @return the max tag precursor mass error in Dalton
      */
     public double getMaxTagPrecursorErrorDa() {
+        readDBMode();
         return maxTagPrecursorErrorDa;
     }
 
@@ -232,6 +233,7 @@ public class Metrics {
      * @return the max tag precursor mass error in ppm
      */
     public double getMaxTagPrecursorErrorPpm() {
+        readDBMode();
         return maxTagPrecursorErrorPpm;
     }
 
@@ -250,6 +252,7 @@ public class Metrics {
      * @return the molecular weight of the fattest protein in the dataset
      */
     public Double getMaxMW() {
+        readDBMode();
         return maxMW;
     }
 
@@ -268,6 +271,7 @@ public class Metrics {
      * @return the maximal amount of peptides in the proteins of the dataset
      */
     public Integer getMaxNPeptides() {
+        readDBMode();
         return maxNPeptides;
     }
 
@@ -287,6 +291,7 @@ public class Metrics {
      * @return the the maximal amount of PSMs in the proteins of the dataset
      */
     public Integer getMaxNSpectra() {
+        readDBMode();
         return maxNSpectra;
     }
 
@@ -308,6 +313,7 @@ public class Metrics {
      * dataset
      */
     public Double getMaxSpectrumCounting() {
+        readDBMode();
         return maxSpectrumCounting;
     }
 
@@ -327,6 +333,7 @@ public class Metrics {
      * @return the list of ordered protein keys
      */
     public long[] getProteinKeys() {
+        readDBMode();
         return proteinKeys;
     }
 
@@ -354,6 +361,7 @@ public class Metrics {
      * @return the max protein key length
      */
     public Integer getMaxProteinKeyLength() {
+        readDBMode();
         if (maxProteinKeyLength != null) {
             return maxProteinKeyLength;
         } else {
@@ -367,6 +375,7 @@ public class Metrics {
      * @return the number of validated proteins
      */
     public Integer getnValidatedProteins() {
+        readDBMode();
         return nValidatedProteins;
     }
 
@@ -385,6 +394,7 @@ public class Metrics {
      * @return the number of confident proteins
      */
     public Integer getnConfidentProteins() {
+        readDBMode();
         return nConfidentProteins;
     }
 
@@ -403,7 +413,7 @@ public class Metrics {
      * @return the names of the variable modifications found in the dataset
      */
     public TreeSet<String> getFoundModifications() {
-        
+        readDBMode();
         return foundModifications;
         
     }
@@ -439,8 +449,8 @@ public class Metrics {
      * @return he list of fraction PSM matches
      */
     public HashMap<String, ArrayList<Long>> getFractionPsmMatches() {
-        
-            return fractionPsmMatches;
+        readDBMode();
+        return fractionPsmMatches;
             
     }
 

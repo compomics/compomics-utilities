@@ -2,6 +2,7 @@ package com.compomics.util.experiment.identification.filtering;
 
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.Util;
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
@@ -21,12 +22,8 @@ import java.util.TreeMap;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class PeptideAssumptionFilter {
+public class PeptideAssumptionFilter extends DbObject {
 
-    /**
-     * Serial number for backward compatibility.
-     */
-    static final long serialVersionUID = 8416219001106063781L;
     /**
      * The minimal peptide length allowed.
      */
@@ -126,6 +123,7 @@ public class PeptideAssumptionFilter {
      * information from
      */
     public void setFilterFromSearchParameters(SearchParameters searchParameters) {
+        writeDBMode();
 
         this.isPpm = searchParameters.isPrecursorAccuracyTypePpm();
         this.maxMassDeviation = searchParameters.getPrecursorAccuracy();
@@ -147,6 +145,7 @@ public class PeptideAssumptionFilter {
      * @return a boolean indicating whether the peptide passed the test
      */
     public boolean validatePeptide(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, DigestionParameters digestionPreferences) {
+        readDBMode();
 
         String peptideSequence = peptide.getSequence();
         int sequenceLength = peptideSequence.length();
@@ -197,6 +196,7 @@ public class PeptideAssumptionFilter {
      */
     public boolean validateProteins(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences, SequenceProvider sequenceProvider) {
 
+        readDBMode();
         TreeMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
         if (proteinMapping != null && proteinMapping.size() > 1) {
@@ -242,6 +242,7 @@ public class PeptideAssumptionFilter {
     public boolean validateModifications(Peptide peptide, SequenceMatchingParameters sequenceMatchingPreferences,
             SequenceMatchingParameters modificationSequenceMatchingPreferences, ModificationParameters modificationProfile) {
 
+        readDBMode();
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
         // check if a modification could not be parsed
@@ -275,6 +276,7 @@ public class PeptideAssumptionFilter {
      */
     public boolean validatePrecursor(PeptideAssumption assumption, String spectrumKey, SpectrumFactory spectrumFactory, SearchParameters searchParameters) {
 
+        readDBMode();
         double precursorMz = spectrumFactory.getPrecursorMz(spectrumKey);
         int isotopeNumber = assumption.getIsotopeNumber(precursorMz, searchParameters.getMinIsotopicCorrection(), searchParameters.getMaxIsotopicCorrection());
         if (minIsotopes != null && isotopeNumber < minIsotopes) {
@@ -295,6 +297,7 @@ public class PeptideAssumptionFilter {
      * removed
      */
     public boolean removeUnknownModifications() {
+        readDBMode();
 
         return unknownModification;
 
@@ -306,7 +309,7 @@ public class PeptideAssumptionFilter {
      * @param unknownModification whether unknown modifications shall be removed
      */
     public void setRemoveUnknownModifications(boolean unknownModification) {
-
+        writeDBMode();
         this.unknownModification = unknownModification;
 
     }
@@ -318,6 +321,7 @@ public class PeptideAssumptionFilter {
      * or Dalton (false)
      */
     public boolean isIsPpm() {
+        readDBMode();
         return isPpm;
     }
 
@@ -328,6 +332,7 @@ public class PeptideAssumptionFilter {
      * (true) or Dalton (false)
      */
     public void setIsPpm(boolean isPpm) {
+        writeDBMode();
         this.isPpm = isPpm;
     }
 
@@ -337,6 +342,7 @@ public class PeptideAssumptionFilter {
      * @return the maximal mass deviation allowed
      */
     public double getMaxMzDeviation() {
+        readDBMode();
         return maxMassDeviation;
     }
 
@@ -346,6 +352,7 @@ public class PeptideAssumptionFilter {
      * @param maxMzDeviation the maximal mass deviation allowed
      */
     public void setMaxMzDeviation(double maxMzDeviation) {
+        writeDBMode();
         this.maxMassDeviation = maxMzDeviation;
     }
 
@@ -355,6 +362,7 @@ public class PeptideAssumptionFilter {
      * @return the maximal peptide length allowed
      */
     public int getMaxPepLength() {
+        readDBMode();
         return maxPepLength;
     }
 
@@ -364,6 +372,7 @@ public class PeptideAssumptionFilter {
      * @param maxPepLength the maximal peptide length allowed
      */
     public void setMaxPepLength(int maxPepLength) {
+        writeDBMode();
         this.maxPepLength = maxPepLength;
     }
 
@@ -373,6 +382,7 @@ public class PeptideAssumptionFilter {
      * @return the maximal peptide length allowed
      */
     public int getMinPepLength() {
+        readDBMode();
         return minPepLength;
     }
 
@@ -382,6 +392,7 @@ public class PeptideAssumptionFilter {
      * @param minPepLength the maximal peptide length allowed
      */
     public void setMinPepLength(int minPepLength) {
+        writeDBMode();
         this.minPepLength = minPepLength;
     }
 
@@ -391,6 +402,7 @@ public class PeptideAssumptionFilter {
      * @return the minimal number of isotopes allowed
      */
     public Integer getMinIsotopes() {
+        readDBMode();
         return minIsotopes;
     }
 
@@ -400,6 +412,7 @@ public class PeptideAssumptionFilter {
      * @param minIsotopes the minimal number of isotopes allowed
      */
     public void setMinIsotopes(Integer minIsotopes) {
+        writeDBMode();
         this.minIsotopes = minIsotopes;
     }
 
@@ -409,6 +422,7 @@ public class PeptideAssumptionFilter {
      * @return the maximal number of isotopes allowed
      */
     public Integer getMaxIsotopes() {
+        readDBMode();
         return maxIsotopes;
     }
 
@@ -418,6 +432,7 @@ public class PeptideAssumptionFilter {
      * @param maxIsotopes the maximal number of isotopes allowed
      */
     public void setMaxIsotopes(Integer maxIsotopes) {
+        writeDBMode();
         this.maxIsotopes = maxIsotopes;
     }
 
@@ -428,6 +443,7 @@ public class PeptideAssumptionFilter {
      * @return a boolean indicating that the filters have the same parameters
      */
     public boolean isSameAs(PeptideAssumptionFilter anotherFilter) {
+        readDBMode();
 
         if (minMissedCleavages != null && anotherFilter.getMinMissedCleavages() != null) {
             if (!minMissedCleavages.equals(anotherFilter.getMinMissedCleavages())) {
@@ -488,6 +504,7 @@ public class PeptideAssumptionFilter {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
+        readDBMode();
 
         String newLine = System.getProperty("line.separator");
 
@@ -555,6 +572,7 @@ public class PeptideAssumptionFilter {
      * @return the minMissedCleavages
      */
     public Integer getMinMissedCleavages() {
+        readDBMode();
         return minMissedCleavages;
     }
 
@@ -564,6 +582,7 @@ public class PeptideAssumptionFilter {
      * @param minMissedCleavages the minMissedCleavages to set
      */
     public void setMinMissedCleavages(Integer minMissedCleavages) {
+        writeDBMode();
         this.minMissedCleavages = minMissedCleavages;
     }
 
@@ -573,6 +592,7 @@ public class PeptideAssumptionFilter {
      * @return the maxMissedCleavages
      */
     public Integer getMaxMissedCleavages() {
+        readDBMode();
         return maxMissedCleavages;
     }
 
@@ -582,6 +602,7 @@ public class PeptideAssumptionFilter {
      * @param maxMissedCleavages the maxMissedCleavages to set
      */
     public void setMaxMissedCleavages(Integer maxMissedCleavages) {
+        writeDBMode();
         this.maxMissedCleavages = maxMissedCleavages;
     }
 }

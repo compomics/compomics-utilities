@@ -1,5 +1,6 @@
 package com.compomics.util.math.statistics.distributions;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.Distribution;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
  *
  * @author Marc Vaudel
  */
-public class NonSymmetricalNormalDistribution implements Distribution {
+public class NonSymmetricalNormalDistribution extends DbObject implements Distribution {
 
     /**
      * Empty default constructor
@@ -69,6 +70,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
      * @return the standard deviation to the right of the distribution
      */
     public double getStdUp() {
+        readDBMode();
         return stdUp;
     }
 
@@ -78,6 +80,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
      * @return the standard deviation to the left of the distribution
      */
     public double getStdDown() {
+        readDBMode();
         return stdDown;
     }
 
@@ -87,6 +90,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
      * @return the mean of the distribution
      */
     public double getMean() {
+        readDBMode();
         return mean;
     }
 
@@ -126,6 +130,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
 
     @Override
     public double getProbabilityAt(double x) {
+        readDBMode();
         
         return x >= mean ?
             distributionUp.getProbabilityAt(x)
@@ -134,6 +139,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
 
     @Override
     public double getCumulativeProbabilityAt(double x) {
+        readDBMode();
         
         return x >= mean ?
                 distributionUp.getCumulativeProbabilityAt(x)
@@ -142,6 +148,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
 
     @Override
     public double getDescendingCumulativeProbabilityAt(double x) {
+        readDBMode();
         
         return x > mean ? 
                 distributionUp.getDescendingCumulativeProbabilityAt(x)
@@ -151,6 +158,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
 
     @Override
     public double getSmallestCumulativeProbabilityAt(double x) {
+        readDBMode();
         
         return x > mean ? 
                 getDescendingCumulativeProbabilityAt(x)
@@ -159,6 +167,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
 
     @Override
     public double getMaxValueForProbability(double p) {
+        readDBMode();
         
         return distributionUp.getMaxValueForProbability(p);
         
@@ -166,6 +175,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
 
     @Override
     public double getMinValueForProbability(double p) {
+        readDBMode();
         
         return distributionDown.getMinValueForProbability(p);
         
@@ -173,6 +183,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
 
     @Override
     public double getValueAtCumulativeProbability(double p) {
+        readDBMode();
         
         return p < 0.5 ?
                 distributionDown.getValueAtCumulativeProbability(p)
@@ -182,6 +193,7 @@ public class NonSymmetricalNormalDistribution implements Distribution {
 
     @Override
     public double getValueAtDescendingCumulativeProbability(double p) {
+        readDBMode();
         
         return p < 0.5 ? 
                 distributionUp.getValueAtDescendingCumulativeProbability(p)

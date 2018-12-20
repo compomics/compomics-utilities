@@ -1,5 +1,7 @@
 package com.compomics.util.parameters.identification.advanced;
 
+import com.compomics.util.db.object.DbObject;
+
 
 /**
  * Generic class grouping the protein inference preferences.
@@ -7,7 +9,7 @@ package com.compomics.util.parameters.identification.advanced;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ProteinInferenceParameters {
+public class ProteinInferenceParameters extends DbObject {
 
     /**
      * Empty default constructor
@@ -15,10 +17,6 @@ public class ProteinInferenceParameters {
     public ProteinInferenceParameters() {
     }
 
-    /**
-     * Serial version UID for backward compatibility.
-     */
-    static final long serialVersionUID = 447785006299636157L;
     /**
      * Refine based on terminal and pattern modifications.
      */
@@ -50,6 +48,7 @@ public class ProteinInferenceParameters {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
+        readDBMode();
 
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
@@ -72,6 +71,7 @@ public class ProteinInferenceParameters {
      * @return true if the objects have identical settings
      */
     public boolean equals(ProteinInferenceParameters otherProteinInferencePreferences) {
+        readDBMode();
 
         if (otherProteinInferencePreferences == null) {
             return false;
@@ -108,6 +108,7 @@ public class ProteinInferenceParameters {
      * simplified
      */
     public boolean getSimplifyGroups() {
+        readDBMode();
         return simplifyProteinGroups;
     }
 
@@ -119,6 +120,7 @@ public class ProteinInferenceParameters {
      * simplified
      */
     public void setSimplifyGroups(boolean simplifyProteinGroups) {
+        writeDBMode();
         this.simplifyProteinGroups = simplifyProteinGroups;
     }
 
@@ -130,6 +132,7 @@ public class ProteinInferenceParameters {
      * simplified based on the Uniprot evidence level
      */
     public boolean getSimplifyGroupsEvidence() {
+        readDBMode();
         return simplifyGroupsEvidence;
     }
 
@@ -141,6 +144,7 @@ public class ProteinInferenceParameters {
      * simplified based on the Uniprot evidence level
      */
     public void setSimplifyGroupsEvidence(boolean simplifyGroupsEvidence) {
+        writeDBMode();
         this.simplifyGroupsEvidence = simplifyGroupsEvidence;
     }
 
@@ -152,6 +156,7 @@ public class ProteinInferenceParameters {
      * uncharacterized proteins
      */
     public boolean getSimplifyGroupsUncharacterized() {
+        readDBMode();
         return simplifyGroupsUncharacterized;
     }
 
@@ -162,6 +167,7 @@ public class ProteinInferenceParameters {
      * consisting of uncharacterized proteins
      */
     public void setSimplifyGroupsUncharacterized(boolean simplifyGroupsUncharacterized) {
+        writeDBMode();
         this.simplifyGroupsUncharacterized = simplifyGroupsUncharacterized;
     }
 
@@ -173,6 +179,7 @@ public class ProteinInferenceParameters {
      * simplified based on the peptide enzymaticity
      */
     public boolean getSimplifyGroupsEnzymaticity() {
+        readDBMode();
         return simplifyGroupsEnzymaticity;
     }
 
@@ -184,6 +191,7 @@ public class ProteinInferenceParameters {
      * simplified based on the peptide enzymaticity
      */
     public void setSimplifyGroupsEnzymaticity(boolean simplifyGroupsEnzymaticity) {
+        writeDBMode();
         this.simplifyGroupsEnzymaticity = simplifyGroupsEnzymaticity;
     }
 
@@ -195,6 +203,7 @@ public class ProteinInferenceParameters {
      * simplified based on the peptide variant matching
      */
     public boolean getSimplifyGroupsVariants() {
+        readDBMode();
         return simplifyGroupsVariants;
     }
 
@@ -206,6 +215,7 @@ public class ProteinInferenceParameters {
      * simplified based on the peptide variant matching
      */
     public void setSimplifyGroupsVariants(boolean simplifyGroupsVariants) {
+        writeDBMode();
         this.simplifyGroupsVariants = simplifyGroupsVariants;
     }
 
@@ -215,6 +225,7 @@ public class ProteinInferenceParameters {
      * @return a boolean indicating whether the protein mapping should be refined based on terminal and pattern modifications
      */
     public boolean isModificationRefinement() {
+        readDBMode();
         return modificationRefinement;
     }
 
@@ -224,6 +235,7 @@ public class ProteinInferenceParameters {
      * @param modificationRefinement a boolean indicating whether the protein mapping should be refined based on terminal and pattern modifications
      */
     public void setModificationRefinement(boolean modificationRefinement) {
+        writeDBMode();
         this.modificationRefinement = modificationRefinement;
     }
     

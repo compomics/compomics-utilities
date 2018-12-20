@@ -12,6 +12,7 @@ import com.compomics.util.parameters.identification.advanced.IdMatchValidationPa
 import com.compomics.util.experiment.io.parameters.MarshallableParameter;
 import com.compomics.util.experiment.io.parameters.DummyParameters;
 import com.compomics.util.Util;
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
@@ -25,12 +26,8 @@ import java.io.IOException;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class IdentificationParameters implements MarshallableParameter {
+public class IdentificationParameters extends DbObject implements MarshallableParameter {
 
-    /**
-     * Serial number for backward compatibility.
-     */
-    static final long serialVersionUID = -5516259326385167746L;
     /**
      * Currently supported version number.
      */
@@ -166,6 +163,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @return the parameters used for the spectrum matching
      */
     public SearchParameters getSearchParameters() {
+        readDBMode();
 
         return searchParameters;
 
@@ -177,6 +175,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @param searchParameters the parameters used for the spectrum matching
      */
     public void setSearchParameters(SearchParameters searchParameters) {
+        writeDBMode();
 
         this.searchParameters = searchParameters;
 
@@ -223,6 +222,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @return the annotation parameters used for identification
      */
     public AnnotationParameters getAnnotationParameters() {
+        readDBMode();
 
         return annotationParameters;
 
@@ -235,6 +235,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * identification
      */
     public void setAnnotationParameters(AnnotationParameters annotationParameters) {
+        writeDBMode();
 
         this.annotationParameters = annotationParameters;
 
@@ -246,6 +247,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @return the filter used when importing PSMs
      */
     public PeptideAssumptionFilter getPeptideAssumptionFilter() {
+        readDBMode();
 
         return peptideAssumptionFilter;
 
@@ -257,6 +259,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @param peptideAssumptionFilter the filter used when importing PSMs
      */
     public void setPeptideAssumptionFilter(PeptideAssumptionFilter peptideAssumptionFilter) {
+        writeDBMode();
 
         this.peptideAssumptionFilter = peptideAssumptionFilter;
 
@@ -268,7 +271,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @return the scoring parameters used when scoring PSMs
      */
     public PsmScoringParameters getPsmScoringParameters() {
-
+        readDBMode();
         return psmScoringParameters;
 
     }
@@ -280,6 +283,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * PSMs
      */
     public void setPsmScoringParameters(PsmScoringParameters psmScoringParameters) {
+        writeDBMode();
 
         this.psmScoringParameters = psmScoringParameters;
 
@@ -291,6 +295,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @return the modification localization scoring parameters
      */
     public ModificationLocalizationParameters getModificationLocalizationParameters() {
+        readDBMode();
 
         return modificationLocalizationParameters;
 
@@ -304,6 +309,7 @@ public class IdentificationParameters implements MarshallableParameter {
      */
     public void setModificationLocalizationParameters(ModificationLocalizationParameters modificationLocalizationParameters) {
 
+        writeDBMode();
         this.modificationLocalizationParameters = modificationLocalizationParameters;
 
     }
@@ -314,6 +320,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @return the sequence matching parameters
      */
     public SequenceMatchingParameters getSequenceMatchingParameters() {
+        readDBMode();
 
         return sequenceMatchingParameters;
 
@@ -325,6 +332,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @param sequenceMatchingParameters the sequence matching preferences
      */
     public void setSequenceMatchingParameters(SequenceMatchingParameters sequenceMatchingParameters) {
+        writeDBMode();
 
         this.sequenceMatchingParameters = sequenceMatchingParameters;
 
@@ -336,6 +344,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @return the peptide variant parameters
      */
     public PeptideVariantsParameters getPeptideVariantsParameters() {
+        readDBMode();
 
         return peptideVariantsParameters;
 
@@ -347,6 +356,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @param peptideVariantsParameters the peptide variant parameters
      */
     public void setPeptideVariantsParameters(PeptideVariantsParameters peptideVariantsParameters) {
+        writeDBMode();
 
         this.peptideVariantsParameters = peptideVariantsParameters;
 
@@ -358,6 +368,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @return the identification matches validation parameters
      */
     public IdMatchValidationParameters getIdValidationParameters() {
+        readDBMode();
 
         return idValidationParameters;
 
@@ -370,6 +381,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * parameters
      */
     public void setIdValidationParameters(IdMatchValidationParameters idValidationParameters) {
+        writeDBMode();
 
         this.idValidationParameters = idValidationParameters;
 
@@ -381,6 +393,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @return the protein inference parameters
      */
     public ProteinInferenceParameters getProteinInferenceParameters() {
+        readDBMode();
 
         return proteinInferenceParameters;
 
@@ -392,6 +405,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @param proteinInferenceParameters the protein inference parameters
      */
     public void setProteinInferenceParameters(ProteinInferenceParameters proteinInferenceParameters) {
+        writeDBMode();
 
         this.proteinInferenceParameters = proteinInferenceParameters;
 
@@ -403,6 +417,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @return the gene parameters
      */
     public GeneParameters getGeneParameters() {
+        readDBMode();
 
         return geneParameters;
 
@@ -414,6 +429,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @param geneParameters the gene parameters
      */
     public void setGeneParameters(GeneParameters geneParameters) {
+        writeDBMode();
 
         this.geneParameters = geneParameters;
 
@@ -425,6 +441,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @return the fraction parameters
      */
     public FractionParameters getFractionParameters() {
+        readDBMode();
 
         return fractionParameters;
 
@@ -436,6 +453,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @param fractionParameters the fraction parameters
      */
     public void setFractionParameters(FractionParameters fractionParameters) {
+        writeDBMode();
 
         this.fractionParameters = fractionParameters;
 
@@ -552,6 +570,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @return the name of the parameters
      */
     public String getName() {
+        readDBMode();
 
         return name;
 
@@ -563,6 +582,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @param name the name of the parameters
      */
     public void setName(String name) {
+        writeDBMode();
 
         this.name = name;
 
@@ -574,6 +594,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @return the description of the parameters
      */
     public String getDescription() {
+        readDBMode();
 
         return description;
 
@@ -586,6 +607,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * generated
      */
     public boolean getDefaultDescription() {
+        readDBMode();
 
         if (defaultDescription == null) {
 
@@ -605,6 +627,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * is automatically generated
      */
     public void setDescription(String description, boolean automaticallyGenerated) {
+        writeDBMode();
 
         this.description = description;
         this.defaultDescription = automaticallyGenerated;
@@ -617,6 +640,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * @param searchParameters the parameters used for the search
      */
     public void setParametersFromSearch(SearchParameters searchParameters) {
+        writeDBMode();
 
         setSearchParameters(searchParameters);
         annotationParameters = new AnnotationParameters();
@@ -697,6 +721,7 @@ public class IdentificationParameters implements MarshallableParameter {
 
     @Override
     public void setType() {
+        writeDBMode();
 
         marshallableParameterType = Type.identification_parameters.name();
 
@@ -704,6 +729,7 @@ public class IdentificationParameters implements MarshallableParameter {
 
     @Override
     public Type getType() {
+        readDBMode();
 
         if (marshallableParameterType == null) {
 
@@ -725,6 +751,7 @@ public class IdentificationParameters implements MarshallableParameter {
      * settings
      */
     public boolean equals(IdentificationParameters otherIdentificationParameters) {
+        readDBMode();
 
         if (otherIdentificationParameters == null) {
             return false;

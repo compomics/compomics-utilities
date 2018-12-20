@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology.variants;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,7 +11,7 @@ import java.util.HashSet;
  *
  * @author Marc Vaudel
  */
-public class AaSubstitutionMatrix {
+public class AaSubstitutionMatrix extends DbObject {
 
     /**
      * Empty default constructor
@@ -18,10 +19,6 @@ public class AaSubstitutionMatrix {
     public AaSubstitutionMatrix() {
     }
 
-    /**
-     * Serial number for backward compatibility.
-     */
-    static final long serialVersionUID = -4257237524665484732L;
     /**
      * The name of this substitution matrix.
      */
@@ -94,6 +91,7 @@ public class AaSubstitutionMatrix {
      * single letter code
      */
     public void addSubstitution(Character originalAa, Character substitutionAa) {
+        writeDBMode();
         HashSet<Character> substitutedAas = substitutions.get(originalAa);
         if (substitutedAas == null) {
             substitutedAas = new HashSet<>();
@@ -117,6 +115,7 @@ public class AaSubstitutionMatrix {
      * @return the possible substituted amino acids
      */
     public HashSet<Character> getSubstitutionAminoAcids(Character originalAminoAcid) {
+        readDBMode();
         return substitutions.get(originalAminoAcid);
     }
 
@@ -130,6 +129,7 @@ public class AaSubstitutionMatrix {
      * acid
      */
     public HashSet<Character> getOriginalAminoAcids(Character substitutedAminoAcid) {
+        readDBMode();
         return reverseMap.get(substitutedAminoAcid);
     }
 
@@ -139,6 +139,7 @@ public class AaSubstitutionMatrix {
      * @return the amino acids where a substitution has been registered
      */
     public HashSet<Character> getOriginalAminoAcids() {
+        readDBMode();
         return new HashSet<>(substitutions.keySet());
     }
 
@@ -148,6 +149,7 @@ public class AaSubstitutionMatrix {
      * @return the possible substituted amino acids
      */
     public HashSet<Character> getSubstitutionAminoAcids() {
+        readDBMode();
         return new HashSet<>(substitutions.keySet());
     }
 
@@ -157,6 +159,7 @@ public class AaSubstitutionMatrix {
      * @param otherMatrix the other matrix to add
      */
     public void add(AaSubstitutionMatrix otherMatrix) {
+        writeDBMode();
         for (Character originalAa : otherMatrix.getOriginalAminoAcids()) {
             for (Character substitutionAa : otherMatrix.getSubstitutionAminoAcids(originalAa)) {
                 addSubstitution(originalAa, substitutionAa);
@@ -360,6 +363,7 @@ public class AaSubstitutionMatrix {
      * @return the name of this substitution matrix
      */
     public String getName() {
+        readDBMode();
         return name;
     }
 
@@ -369,6 +373,7 @@ public class AaSubstitutionMatrix {
      * @param name the name of this substitution matrix
      */
     public void setName(String name) {
+        writeDBMode();
         this.name = name;
     }
 
@@ -378,6 +383,7 @@ public class AaSubstitutionMatrix {
      * @return the description of this substitution matrix
      */
     public String getDescription() {
+        readDBMode();
         return description;
     }
 
@@ -387,6 +393,7 @@ public class AaSubstitutionMatrix {
      * @param description the description of this substitution matrix
      */
     public void setDescription(String description) {
+        writeDBMode();
         this.description = description;
     }
 
@@ -399,6 +406,7 @@ public class AaSubstitutionMatrix {
      * the same as this one
      */
     public boolean isSameAs(AaSubstitutionMatrix aaSubstitutionMatrix) {
+        readDBMode();
         if (this.equals(aaSubstitutionMatrix)) {
             return true;
         }
@@ -425,6 +433,7 @@ public class AaSubstitutionMatrix {
 
     @Override
     public String toString() {
+        readDBMode();
         return name;
     }
 }

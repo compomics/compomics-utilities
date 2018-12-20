@@ -53,7 +53,7 @@ public class ContactGroup extends DbObject implements PrideObject {
      * @param contacts the contacts
      */
     public void setContacts(ArrayList<Contact> contacts) {
-        readDBMode();
+        writeDBMode();
         this.contacts = contacts;
     }
 

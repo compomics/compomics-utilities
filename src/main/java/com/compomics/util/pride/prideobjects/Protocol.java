@@ -1,5 +1,6 @@
 package com.compomics.util.pride.prideobjects;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.pride.CvTerm;
 import com.compomics.util.pride.PrideObject;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.Arrays;
  *
  * @author Harald Barsnes
  */
-public class Protocol implements PrideObject {
+public class Protocol extends DbObject implements PrideObject {
 
     /**
      * Empty default constructor
@@ -18,10 +19,6 @@ public class Protocol implements PrideObject {
     public Protocol() {
     }
 
-    /**
-     * Serialization number for backward compatibility.
-     */
-    static final long serialVersionUID = -9045298216154032632L;
     /**
      * The protocol name.
      */
@@ -48,6 +45,7 @@ public class Protocol implements PrideObject {
      * @return the name
      */
     public String getName() {
+        readDBMode();
         return name;
     }
 
@@ -57,6 +55,7 @@ public class Protocol implements PrideObject {
      * @param name the name to set
      */
     public void setName(String name) {
+        writeDBMode();
         this.name = name;
     }
 
@@ -66,6 +65,7 @@ public class Protocol implements PrideObject {
      * @return the cvTerms
      */
     public ArrayList<CvTerm> getCvTerms() {
+        readDBMode();
         return cvTerms;
     }
 
@@ -75,6 +75,7 @@ public class Protocol implements PrideObject {
      * @param cvTerms the cvTerms to set
      */
     public void setCvTerms(ArrayList<CvTerm> cvTerms) {
+        writeDBMode();
         this.cvTerms = cvTerms;
     }
 
@@ -96,6 +97,7 @@ public class Protocol implements PrideObject {
     }
 
     public String getFileName() {
+        readDBMode();
         return name;
     }
 }

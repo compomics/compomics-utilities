@@ -1,5 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import com.compomics.util.parameters.identification.search.SearchParameters;
@@ -13,12 +14,8 @@ import java.util.TreeMap;
  * @author Harald Barsnes
  * @author Marc Vaudel
  */
-public class GeneParameters {
+public class GeneParameters extends DbObject {
 
-    /**
-     * The serial number for serialization compatibility.
-     */
-    static final long serialVersionUID = -1286840382594446279L;
     /**
      * If true the gene mappings will auto update.
      */
@@ -54,6 +51,7 @@ public class GeneParameters {
      * @return a boolean indicating whether gene mappings should be used
      */
     public Boolean getUseGeneMapping() {
+        readDBMode();
         if (useGeneMapping == null) {
             useGeneMapping = true;
         }
@@ -67,6 +65,7 @@ public class GeneParameters {
      * be used
      */
     public void setUseGeneMapping(Boolean useGeneMapping) {
+        writeDBMode();
         this.useGeneMapping = useGeneMapping;
     }
 
@@ -77,6 +76,7 @@ public class GeneParameters {
      * automatically updated
      */
     public Boolean getAutoUpdate() {
+        readDBMode();
         if (autoUpdate == null) {
             autoUpdate = true;
         }
@@ -90,6 +90,7 @@ public class GeneParameters {
      * be automatically updated
      */
     public void setAutoUpdate(Boolean autoUpdate) {
+        writeDBMode();
         this.autoUpdate = autoUpdate;
     }
 
@@ -102,6 +103,7 @@ public class GeneParameters {
      * as these ones.
      */
     public boolean equals(GeneParameters genePreferences) {
+        readDBMode();
         return getAutoUpdate().equals(genePreferences.getAutoUpdate());
     }
 
@@ -111,6 +113,7 @@ public class GeneParameters {
      * @return the taxon of the species selected as background species
      */
     public Integer getSelectedBackgroundSpecies() {
+        readDBMode();
         return selectedBackgroundSpecies;
     }
 
@@ -121,6 +124,7 @@ public class GeneParameters {
      * background species
      */
     public void setSelectedBackgroundSpecies(Integer selectedBackgroundSpecies) {
+        writeDBMode();
         this.selectedBackgroundSpecies = selectedBackgroundSpecies;
     }
 
@@ -130,6 +134,7 @@ public class GeneParameters {
      * @param searchParameters the search parameters
      */
     public void setPreferencesFromSearchParameters(SearchParameters searchParameters) {
+        writeDBMode();
 
         String fastaFilePath = searchParameters.getFastaFile();
 
@@ -187,6 +192,7 @@ public class GeneParameters {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
+        readDBMode();
 
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();

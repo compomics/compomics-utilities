@@ -1,5 +1,6 @@
 package com.compomics.util.pride.prideobjects;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.pride.PrideObject;
 import java.util.ArrayList;
 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
  *
  * @author Harald Barsnes
  */
-public class ContactGroup implements PrideObject {
+public class ContactGroup extends DbObject implements PrideObject {
 
     /**
      * Empty default constructor
@@ -16,10 +17,6 @@ public class ContactGroup implements PrideObject {
     public ContactGroup() {
     }
 
-    /**
-     * Serialization number for backward compatibility.
-     */
-    static final long serialVersionUID = -9182316910747747823L; // @TODO: has to be updated!!!
     /**
      * The contacts.
      */
@@ -46,6 +43,7 @@ public class ContactGroup implements PrideObject {
      * @return the name
      */
     public ArrayList<Contact> getContacts() {
+        readDBMode();
         return contacts;
     }
 
@@ -55,6 +53,7 @@ public class ContactGroup implements PrideObject {
      * @param contacts the contacts
      */
     public void setContacts(ArrayList<Contact> contacts) {
+        readDBMode();
         this.contacts = contacts;
     }
 
@@ -64,6 +63,7 @@ public class ContactGroup implements PrideObject {
      * @return the group name
      */
     public String getName() {
+        readDBMode();
         return groupName;
     }
 
@@ -73,10 +73,12 @@ public class ContactGroup implements PrideObject {
      * @param groupName the group name to set
      */
     public void setName(String groupName) {
+        writeDBMode();
         this.groupName = groupName;
     }
 
     public String getFileName() {
+        readDBMode();
         return groupName;
     }
 }

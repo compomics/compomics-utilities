@@ -1,5 +1,6 @@
 package com.compomics.util.pride.prideobjects;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.pride.CvTerm;
 import com.compomics.util.pride.PrideObject;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.Arrays;
  *
  * @author Harald Barsnes
  */
-public class Instrument implements PrideObject {
+public class Instrument extends DbObject implements PrideObject {
 
     /**
      * Empty default constructor
@@ -18,10 +19,6 @@ public class Instrument implements PrideObject {
     public Instrument() {
     }
 
-    /**
-     * Serialization number for backward compatibility.
-     */
-    static final long serialVersionUID = -8802861658166703745L;
     /**
      * The instrument name.
      */
@@ -60,6 +57,7 @@ public class Instrument implements PrideObject {
      * @return the name
      */
     public String getName() {
+        readDBMode();
         return name;
     }
 
@@ -69,6 +67,7 @@ public class Instrument implements PrideObject {
      * @param name the name to set
      */
     public void setName(String name) {
+        writeDBMode();
         this.name = name;
     }
 
@@ -78,6 +77,7 @@ public class Instrument implements PrideObject {
      * @return the cvTerms
      */
     public ArrayList<CvTerm> getCvTerms() {
+        readDBMode();
         return cvTerms;
     }
 
@@ -87,6 +87,7 @@ public class Instrument implements PrideObject {
      * @param cvTerms the cvTerms to set
      */
     public void setCvTerms(ArrayList<CvTerm> cvTerms) {
+        writeDBMode();
         this.cvTerms = cvTerms;
     }
 
@@ -96,6 +97,7 @@ public class Instrument implements PrideObject {
      * @return the source
      */
     public CvTerm getSource() {
+        readDBMode();
         return source;
     }
 
@@ -105,6 +107,7 @@ public class Instrument implements PrideObject {
      * @param source the source to set
      */
     public void setSource(CvTerm source) {
+        writeDBMode();
         this.source = source;
     }
 
@@ -114,6 +117,7 @@ public class Instrument implements PrideObject {
      * @return the detector
      */
     public CvTerm getDetector() {
+        readDBMode();
         return detector;
     }
 
@@ -123,6 +127,7 @@ public class Instrument implements PrideObject {
      * @param detector the detector to set
      */
     public void setDetector(CvTerm detector) {
+        writeDBMode();
         this.detector = detector;
     }
 
@@ -168,6 +173,7 @@ public class Instrument implements PrideObject {
     }
 
     public String getFileName() {
+        readDBMode();
         return name;
     }
 }

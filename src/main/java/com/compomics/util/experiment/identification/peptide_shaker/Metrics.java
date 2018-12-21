@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.peptide_shaker;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,12 +15,8 @@ import java.util.stream.IntStream;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class Metrics {
+public class Metrics extends DbObject {
 
-    /**
-     * Serial number for versions compatibility.
-     */
-    static final long serialVersionUID = 5905881057533649517L;
     /**
      * The maximal peptide precursor error in Da in all PSMs (only the best
      * peptide hit per spectrum).
@@ -138,6 +135,7 @@ public class Metrics {
      * @return the found charges.
      */
     public int[] getFoundCharges() {
+        readDBMode();
         return foundCharges;
     }
 
@@ -145,6 +143,7 @@ public class Metrics {
      * Clears the found charges.
      */
     public void clearFoundCharges() {
+        writeDBMode();
         foundCharges = new int[0];
     }
 
@@ -154,6 +153,7 @@ public class Metrics {
      * @param foundCharges the new charge to add
      */
     public void addFoundCharges(HashSet<Integer> foundCharges) {
+        writeDBMode();
         this.foundCharges = IntStream.concat(Arrays.stream(this.foundCharges), foundCharges.stream().mapToInt(a -> a))
                 .distinct()
                 .sorted()
@@ -166,6 +166,7 @@ public class Metrics {
      * @return the maximal charge
      */
     public int getMaxCharge() {
+        readDBMode();
         
         return foundCharges[foundCharges.length-1];
         
@@ -177,6 +178,7 @@ public class Metrics {
      * @return the max peptide precursor mass error in Dalton
      */
     public double getMaxPeptidePrecursorErrorDa() {
+        readDBMode();
         return maxPrecursorErrorDa;
     }
 
@@ -186,6 +188,7 @@ public class Metrics {
      * @param maxPeptidePrecursorErrorDa the mass error to set
      */
     public void setMaxPeptidePrecursorErrorDa(double maxPeptidePrecursorErrorDa) {
+        writeDBMode();
         this.maxPrecursorErrorDa = maxPeptidePrecursorErrorDa;
     }
 
@@ -195,6 +198,7 @@ public class Metrics {
      * @return the max peptide precursor mass error in ppm
      */
     public double getMaxPeptidePrecursorErrorPpm() {
+        readDBMode();
         return maxPrecursorErrorPpm;
     }
 
@@ -205,6 +209,7 @@ public class Metrics {
      * in ppm
      */
     public void setMaxPeptidePrecursorErrorPpm(double maxPeptidePrecursorErrorPpm) {
+        writeDBMode();
         this.maxPrecursorErrorPpm = maxPeptidePrecursorErrorPpm;
     }
 
@@ -214,6 +219,7 @@ public class Metrics {
      * @return the max tag precursor mass error in Dalton
      */
     public double getMaxTagPrecursorErrorDa() {
+        readDBMode();
         return maxTagPrecursorErrorDa;
     }
 
@@ -223,6 +229,7 @@ public class Metrics {
      * @param maxTagPrecursorErrorDa the mass error to set
      */
     public void setMaxTagPrecursorErrorDa(double maxTagPrecursorErrorDa) {
+        writeDBMode();
         this.maxTagPrecursorErrorDa = maxTagPrecursorErrorDa;
     }
 
@@ -232,6 +239,7 @@ public class Metrics {
      * @return the max tag precursor mass error in ppm
      */
     public double getMaxTagPrecursorErrorPpm() {
+        readDBMode();
         return maxTagPrecursorErrorPpm;
     }
 
@@ -241,6 +249,7 @@ public class Metrics {
      * @param maxTagPrecursorErrorPpm the max tag precursor mass error in ppm
      */
     public void setMaxTagPrecursorErrorPpm(double maxTagPrecursorErrorPpm) {
+        writeDBMode();
         this.maxTagPrecursorErrorPpm = maxTagPrecursorErrorPpm;
     }
 
@@ -250,6 +259,7 @@ public class Metrics {
      * @return the molecular weight of the fattest protein in the dataset
      */
     public Double getMaxMW() {
+        readDBMode();
         return maxMW;
     }
 
@@ -259,6 +269,7 @@ public class Metrics {
      * @param maxMW the molecular weight of the fattest protein in the dataset
      */
     public void setMaxMW(Double maxMW) {
+        writeDBMode();
         this.maxMW = maxMW;
     }
 
@@ -268,6 +279,7 @@ public class Metrics {
      * @return the maximal amount of peptides in the proteins of the dataset
      */
     public Integer getMaxNPeptides() {
+        readDBMode();
         return maxNPeptides;
     }
 
@@ -278,6 +290,7 @@ public class Metrics {
      * dataset
      */
     public void setMaxNPeptides(Integer maxNPeptides) {
+        writeDBMode();
         this.maxNPeptides = maxNPeptides;
     }
 
@@ -287,6 +300,7 @@ public class Metrics {
      * @return the the maximal amount of PSMs in the proteins of the dataset
      */
     public Integer getMaxNSpectra() {
+        readDBMode();
         return maxNSpectra;
     }
 
@@ -297,6 +311,7 @@ public class Metrics {
      * dataset
      */
     public void setMaxNSpectra(Integer maxNSpectra) {
+        writeDBMode();
         this.maxNSpectra = maxNSpectra;
     }
 
@@ -308,6 +323,7 @@ public class Metrics {
      * dataset
      */
     public Double getMaxSpectrumCounting() {
+        readDBMode();
         return maxSpectrumCounting;
     }
 
@@ -318,6 +334,7 @@ public class Metrics {
      * proteins of the dataset
      */
     public void setMaxSpectrumCounting(Double maxSpectrumCounting) {
+        writeDBMode();
         this.maxSpectrumCounting = maxSpectrumCounting;
     }
 
@@ -327,6 +344,7 @@ public class Metrics {
      * @return the list of ordered protein keys
      */
     public long[] getProteinKeys() {
+        readDBMode();
         return proteinKeys;
     }
 
@@ -336,6 +354,7 @@ public class Metrics {
      * @param proteinKeys the list of ordered protein keys
      */
     public void setProteinKeys(long[] proteinKeys) {
+        writeDBMode();
         this.proteinKeys = proteinKeys;
     }
 
@@ -345,6 +364,7 @@ public class Metrics {
      * @param maxProteinKeyLength the length to set
      */
     public void setMaxProteinKeyLength(Integer maxProteinKeyLength) {
+        writeDBMode();
         this.maxProteinKeyLength = maxProteinKeyLength;
     }
 
@@ -354,6 +374,7 @@ public class Metrics {
      * @return the max protein key length
      */
     public Integer getMaxProteinKeyLength() {
+        readDBMode();
         if (maxProteinKeyLength != null) {
             return maxProteinKeyLength;
         } else {
@@ -367,6 +388,7 @@ public class Metrics {
      * @return the number of validated proteins
      */
     public Integer getnValidatedProteins() {
+        readDBMode();
         return nValidatedProteins;
     }
 
@@ -376,6 +398,7 @@ public class Metrics {
      * @param nValidatedProteins the number of validated proteins
      */
     public void setnValidatedProteins(int nValidatedProteins) {
+        writeDBMode();
         this.nValidatedProteins = nValidatedProteins;
     }
 
@@ -385,6 +408,7 @@ public class Metrics {
      * @return the number of confident proteins
      */
     public Integer getnConfidentProteins() {
+        readDBMode();
         return nConfidentProteins;
     }
 
@@ -394,6 +418,7 @@ public class Metrics {
      * @param nConfidentProteins the number of confident proteins
      */
     public void setnConfidentProteins(int nConfidentProteins) {
+        writeDBMode();
         this.nConfidentProteins = nConfidentProteins;
     }
 
@@ -403,7 +428,7 @@ public class Metrics {
      * @return the names of the variable modifications found in the dataset
      */
     public TreeSet<String> getFoundModifications() {
-        
+        readDBMode();
         return foundModifications;
         
     }
@@ -415,7 +440,7 @@ public class Metrics {
      * dataset
      */
     public void setFoundModifications(TreeSet<String> foundModifications) {
-        
+        writeDBMode();
         this.foundModifications = foundModifications;
         
     }
@@ -427,7 +452,7 @@ public class Metrics {
      * @param fractionPsmMatches the fraction PSM matches
      */
     public void setFractionPsmMatches(HashMap<String, ArrayList<Long>> fractionPsmMatches) {
-        
+        writeDBMode();
         this.fractionPsmMatches = fractionPsmMatches;
     
     }
@@ -439,8 +464,8 @@ public class Metrics {
      * @return he list of fraction PSM matches
      */
     public HashMap<String, ArrayList<Long>> getFractionPsmMatches() {
-        
-            return fractionPsmMatches;
+        readDBMode();
+        return fractionPsmMatches;
             
     }
 
@@ -451,6 +476,7 @@ public class Metrics {
      * fraction map
      */
     public void setTotalPeptidesPerFraction(HashMap<String, Integer> totalPeptidesPerFractions) {
+        writeDBMode();
         this.totalPeptidesPerFractions = totalPeptidesPerFractions;
     }
 
@@ -462,6 +488,7 @@ public class Metrics {
      * have not been set
      */
     public HashMap<String, Integer> getTotalPeptidesPerFraction() {
+        readDBMode();
         return totalPeptidesPerFractions;
     }
 
@@ -472,6 +499,7 @@ public class Metrics {
      * @return the observed average molecular masses for each fraction
      */
     public HashMap<String, ArrayList<Double>> getObservedFractionalMassesAll() {
+        readDBMode();
         if (observedFractionalMassesAll != null) {
             return observedFractionalMassesAll;
         } else {
@@ -486,6 +514,7 @@ public class Metrics {
      * @param observedFractionalMassesAll the observedFractionalMasses to set
      */
     public void setObservedFractionalMassesAll(HashMap<String, ArrayList<Double>> observedFractionalMassesAll) {
+        writeDBMode();
         this.observedFractionalMassesAll = observedFractionalMassesAll;
     }
 
@@ -495,6 +524,7 @@ public class Metrics {
      * @return the maxValidatedPeptidesPerFraction
      */
     public Integer getMaxValidatedPeptidesPerFraction() {
+        readDBMode();
         return maxValidatedPeptidesPerFraction;
     }
 
@@ -505,6 +535,7 @@ public class Metrics {
      * maxValidatedPeptidesPerFraction to set
      */
     public void setMaxValidatedPeptidesPerFraction(Integer maxValidatedPeptidesPerFraction) {
+        writeDBMode();
         this.maxValidatedPeptidesPerFraction = maxValidatedPeptidesPerFraction;
     }
 
@@ -514,6 +545,7 @@ public class Metrics {
      * @return the maxValidatedSpectraPerFraction
      */
     public Integer getMaxValidatedSpectraPerFraction() {
+        readDBMode();
         return maxValidatedSpectraPerFraction;
     }
 
@@ -524,6 +556,7 @@ public class Metrics {
      * to set
      */
     public void setMaxValidatedSpectraPerFraction(Integer maxValidatedSpectraPerFraction) {
+        writeDBMode();
         this.maxValidatedSpectraPerFraction = maxValidatedSpectraPerFraction;
     }
 
@@ -533,6 +566,7 @@ public class Metrics {
      * @return the maxProteinAveragePrecursorIntensity
      */
     public Double getMaxProteinAveragePrecursorIntensity() {
+        readDBMode();
         return maxProteinAveragePrecursorIntensity;
     }
 
@@ -543,6 +577,7 @@ public class Metrics {
      * maxProteinAveragePrecursorIntensity to set
      */
     public void setMaxProteinAveragePrecursorIntensity(Double maxProteinAveragePrecursorIntensity) {
+        writeDBMode();
         this.maxProteinAveragePrecursorIntensity = maxProteinAveragePrecursorIntensity;
     }
 
@@ -552,6 +587,7 @@ public class Metrics {
      * @return the maxProteinSummedPrecursorIntensity
      */
     public Double getMaxProteinSummedPrecursorIntensity() {
+        readDBMode();
         return maxProteinSummedPrecursorIntensity;
     }
 
@@ -562,6 +598,7 @@ public class Metrics {
      * maxProteinSummedPrecursorIntensity to set
      */
     public void setMaxProteinSummedPrecursorIntensity(Double maxProteinSummedPrecursorIntensity) {
+        writeDBMode();
         this.maxProteinSummedPrecursorIntensity = maxProteinSummedPrecursorIntensity;
     }
 
@@ -571,6 +608,7 @@ public class Metrics {
      * @return the distribution of validated peptide lengths
      */
     public NonSymmetricalNormalDistribution getPeptideLengthDistribution() {
+        readDBMode();
         return peptideLengthDistribution;
     }
 
@@ -581,6 +619,7 @@ public class Metrics {
      * lengths
      */
     public void setPeptideLengthDistribution(NonSymmetricalNormalDistribution peptideLengthDistribution) {
+        writeDBMode();
         this.peptideLengthDistribution = peptideLengthDistribution;
     }
 
@@ -590,6 +629,7 @@ public class Metrics {
      * @return the total spectrum counting masses
      */
     public Double getTotalSpectrumCountingMass() {
+        readDBMode();
         return totalSpectrumCountingMass;
     }
 
@@ -599,6 +639,7 @@ public class Metrics {
      * @param totalSpectrumCountingMass the total spectrum counting masses
      */
     public void setTotalSpectrumCountingMass(double totalSpectrumCountingMass) {
+        writeDBMode();
         this.totalSpectrumCountingMass = totalSpectrumCountingMass;
     }
 
@@ -608,6 +649,7 @@ public class Metrics {
      * @return the total spectrum counting
      */
     public Double getTotalSpectrumCounting() {
+        readDBMode();
         return totalSpectrumCounting;
     }
 
@@ -617,6 +659,7 @@ public class Metrics {
      * @param totalSpectrumCountingIndexes the total spectrum counting
      */
     public void setTotalSpectrumCounting(Double totalSpectrumCountingIndexes) {
+        writeDBMode();
         this.totalSpectrumCounting = totalSpectrumCountingIndexes;
     }
 
@@ -626,6 +669,7 @@ public class Metrics {
      * @return the keys of the validated target protein matches
      */
     public long[] getValidatedTargetProteinKeys() {
+        readDBMode();
         return validatedTargetProteinKeys;
     }
 
@@ -635,6 +679,7 @@ public class Metrics {
      * @param validatedTargetProteinKeys the keys of the validated target protein matches
      */
     public void setValidatedTargetProteinKeys(long[] validatedTargetProteinKeys) {
+        writeDBMode();
         this.validatedTargetProteinKeys = validatedTargetProteinKeys;
     }
 

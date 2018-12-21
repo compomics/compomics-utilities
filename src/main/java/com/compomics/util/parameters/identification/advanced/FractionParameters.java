@@ -1,5 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
+import com.compomics.util.db.object.DbObject;
 import java.util.HashMap;
 import no.uib.jsparklines.data.XYDataPoint;
 
@@ -9,12 +10,8 @@ import no.uib.jsparklines.data.XYDataPoint;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class FractionParameters {
+public class FractionParameters extends DbObject {
 
-    /**
-     * Serial version UID for backward compatibility.
-     */
-    static final long serialVersionUID = 5193356878844799148L;
     /**
      * The minimum confidence required for a protein to be included in the
      * calculation of the average molecular weight plot in the Fractions tab of
@@ -40,6 +37,7 @@ public class FractionParameters {
      * @return the protein confidence for inclusion in MW plots
      */
     public Double getProteinConfidenceMwPlots() {
+        readDBMode();
         return proteinConfidenceMwPlots;
     }
 
@@ -50,6 +48,7 @@ public class FractionParameters {
      * MW plots
      */
     public void setProteinConfidenceMwPlots(Double proteinConfidenceMwPlots) {
+        writeDBMode();
         this.proteinConfidenceMwPlots = proteinConfidenceMwPlots;
     }
 
@@ -63,6 +62,7 @@ public class FractionParameters {
      * these
      */
     public boolean isSameAs(FractionParameters fractionSettings) {
+        readDBMode();
         if (!proteinConfidenceMwPlots.equals(fractionSettings.getProteinConfidenceMwPlots())) {
             return false;
         }
@@ -85,6 +85,7 @@ public class FractionParameters {
      * @return the user provided molecular weight ranges of the fractions
      */
     public HashMap<String, XYDataPoint> getFractionMolecularWeightRanges() {
+        readDBMode();
         return fractionMolecularWeightRanges;
     }
 
@@ -96,6 +97,8 @@ public class FractionParameters {
      * set
      */
     public void setFractionMolecularWeightRanges(HashMap<String, XYDataPoint> fractionMolecularWeightRanges) {
+        
+        writeDBMode();
         this.fractionMolecularWeightRanges = fractionMolecularWeightRanges;
     }
     
@@ -105,6 +108,7 @@ public class FractionParameters {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
+        readDBMode();
         
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();

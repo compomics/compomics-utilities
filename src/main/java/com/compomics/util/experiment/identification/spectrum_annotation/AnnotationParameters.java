@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.spectrum_annotation;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.biology.ions.IonFactory;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class AnnotationParameters {
+public class AnnotationParameters extends DbObject {
 
     /**
      * Enum of the types of intensity thresholds available.
@@ -146,6 +147,7 @@ public class AnnotationParameters {
             SpectrumIdentificationAssumption spectrumIdentificationAssumption, 
             ModificationParameters modificationParameters, SequenceProvider sequenceProvider, 
             SequenceMatchingParameters modificationSequenceMatchingParameters) {
+        readDBMode();
 
         SpecificAnnotationParameters specificAnnotationParameters = new SpecificAnnotationParameters(spectrumKey, spectrumIdentificationAssumption);
         specificAnnotationParameters.setNeutralLossesAuto(neutralLossesAuto);
@@ -208,6 +210,7 @@ public class AnnotationParameters {
      * information from
      */
     public void setParametersFromSearchParameters(SearchParameters searchParameters) {
+        writeDBMode();
         
         clearIonTypes();
         
@@ -262,6 +265,7 @@ public class AnnotationParameters {
      * for amino acids of interest or not
      */
     public boolean areNeutralLossesSequenceAuto() {
+        readDBMode();
         return neutralLossesAuto;
     }
 
@@ -273,6 +277,7 @@ public class AnnotationParameters {
      * considered only for amino acids of interest or not
      */
     public void setNeutralLossesSequenceAuto(boolean neutralLossesAuto) {
+        writeDBMode();
         this.neutralLossesAuto = neutralLossesAuto;
     }
 
@@ -283,6 +288,7 @@ public class AnnotationParameters {
      * default
      */
     public boolean getReporterIons() {
+        readDBMode();
         return reporterIons;
     }
 
@@ -293,6 +299,7 @@ public class AnnotationParameters {
      * annotated by default
      */
     public void setReporterIons(boolean reporterIons) {
+        writeDBMode();
         this.reporterIons = reporterIons;
     }
 
@@ -303,6 +310,7 @@ public class AnnotationParameters {
      * default
      */
     public boolean getRelatedIons() {
+        readDBMode();
         return relatedIons;
     }
 
@@ -313,6 +321,7 @@ public class AnnotationParameters {
      * annotated by default
      */
     public void setRelatedIons(boolean relatedIons) {
+        writeDBMode();
         this.relatedIons = relatedIons;
     }
 
@@ -320,6 +329,7 @@ public class AnnotationParameters {
      * Clears the considered neutral losses.
      */
     public void clearNeutralLosses() {
+        writeDBMode();
         neutralLossesList.clear();
     }
 
@@ -329,6 +339,7 @@ public class AnnotationParameters {
      * @return the considered neutral losses
      */
     public ArrayList<NeutralLoss> getNeutralLosses() {
+        readDBMode();
         return neutralLossesList;
     }
 
@@ -338,6 +349,7 @@ public class AnnotationParameters {
      * @param neutralLoss a new neutral loss
      */
     public void addNeutralLoss(NeutralLoss neutralLoss) {
+        writeDBMode();
         
         boolean alreadyInList = false;
         
@@ -364,6 +376,7 @@ public class AnnotationParameters {
      * @return the type of ions annotated
      */
     public HashMap<Ion.IonType, HashSet<Integer>> getIonTypes() {
+        readDBMode();
         return selectedIonsMap;
     }
 
@@ -373,6 +386,7 @@ public class AnnotationParameters {
      * @return the type of peptide fragment ions annotated
      */
     public HashSet<Integer> getFragmentIonTypes() {
+        readDBMode();
         
         if (selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION) == null) {
         
@@ -392,6 +406,7 @@ public class AnnotationParameters {
      * @param subType the ion sub type
      */
     public void addIonType(Ion.IonType ionType, int subType) {
+        writeDBMode();
         
         HashSet<Integer> selectedSubtypes = selectedIonsMap.get(ionType);
         
@@ -412,6 +427,7 @@ public class AnnotationParameters {
      * @param ionType a new ion type to annotate
      */
     public void addIonType(Ion.IonType ionType) {
+        writeDBMode();
 
         int[] possibleSubtypes = Ion.getPossibleSubtypes(ionType);
         HashSet<Integer> selectedSubtypes = selectedIonsMap.get(ionType);
@@ -437,6 +453,7 @@ public class AnnotationParameters {
      * Clears the ion types annotated.
      */
     public void clearIonTypes() {
+        writeDBMode();
         selectedIonsMap.clear();
     }
 
@@ -447,6 +464,7 @@ public class AnnotationParameters {
      * settings should be automatically inferred
      */
     public void setAutomaticAnnotation(boolean automaticAnnotation) {
+        writeDBMode();
         
         this.automaticAnnotation = automaticAnnotation;
 
@@ -464,6 +482,7 @@ public class AnnotationParameters {
      * automatically inferred
      */
     public boolean isAutomaticAnnotation() {
+        readDBMode();
         return automaticAnnotation;
     }
 
@@ -473,6 +492,7 @@ public class AnnotationParameters {
      * @return the fragment ion accuracy
      */
     public double getFragmentIonAccuracy() {
+        readDBMode();
         return fragmentIonAccuracy;
     }
 
@@ -485,6 +505,7 @@ public class AnnotationParameters {
      * @return the fragment ion accuracy
      */
     public double getFragmentIonAccuracyInDa(Double refMass) {
+        readDBMode();
        
         return fragmentIonPpm ? fragmentIonAccuracy * refMass / 1000000 : fragmentIonAccuracy;
         
@@ -496,6 +517,7 @@ public class AnnotationParameters {
      * @param fragmentIonAccuracy the fragment ion accuracy
      */
     public void setFragmentIonAccuracy(double fragmentIonAccuracy) {
+        writeDBMode();
        
         this.fragmentIonAccuracy = fragmentIonAccuracy;
     
@@ -507,6 +529,7 @@ public class AnnotationParameters {
      * @return a boolean indicating whether the fragment ion accuracy is in ppm
      */
     public boolean isFragmentIonPpm() {
+        readDBMode();
         
         return fragmentIonPpm;
         
@@ -519,6 +542,7 @@ public class AnnotationParameters {
      * accuracy is in ppm
      */
     public void setFragmentIonPpm(boolean fragmentIonPpm) {
+        writeDBMode();
         this.fragmentIonPpm = fragmentIonPpm;
     }
 
@@ -529,6 +553,7 @@ public class AnnotationParameters {
      * @return the intensityLimit
      */
     public double getAnnotationIntensityLimit() {
+        readDBMode();
         return intensityLimit;
     }
 
@@ -539,6 +564,7 @@ public class AnnotationParameters {
      * @param intensityLimit the intensityLimit to set
      */
     public void setIntensityLimit(double intensityLimit) {
+        writeDBMode();
         this.intensityLimit = intensityLimit;
     }
 
@@ -548,6 +574,7 @@ public class AnnotationParameters {
      * @return the intensity threshold type
      */
     public IntensityThresholdType getIntensityThresholdType() {
+        readDBMode();
 
         return intensityThresholdType;
     }
@@ -558,6 +585,7 @@ public class AnnotationParameters {
      * @param intensityThresholdType the intensity threshold type
      */
     public void setIntensityThresholdType(IntensityThresholdType intensityThresholdType) {
+        writeDBMode();
         this.intensityThresholdType = intensityThresholdType;
     }
 
@@ -568,6 +596,7 @@ public class AnnotationParameters {
      * @return true if all peaks are to be shown
      */
     public boolean showAllPeaks() {
+        readDBMode();
         return showAllPeaks;
     }
 
@@ -577,6 +606,7 @@ public class AnnotationParameters {
      * @param showAllPeaks if all peaks are to be shown
      */
     public void setShowAllPeaks(boolean showAllPeaks) {
+        writeDBMode();
         this.showAllPeaks = showAllPeaks;
     }
 
@@ -587,6 +617,7 @@ public class AnnotationParameters {
      * @return true if the automatic y-axis zoom excludes background peaks
      */
     public boolean yAxisZoomExcludesBackgroundPeaks() {
+        readDBMode();
         return yAxisZoomExcludesBackgroundPeaks;
     }
 
@@ -597,6 +628,7 @@ public class AnnotationParameters {
      * considers the annotated peaks
      */
     public void setYAxisZoomExcludesBackgroundPeaks(boolean yAxisZoomExcludesBackgroundPeaks) {
+        writeDBMode();
         this.yAxisZoomExcludesBackgroundPeaks = yAxisZoomExcludesBackgroundPeaks;
     }
 
@@ -606,6 +638,7 @@ public class AnnotationParameters {
      * @return the showForwardIonDeNovoTags
      */
     public boolean showForwardIonDeNovoTags() {
+        readDBMode();
         return showForwardIonDeNovoTags;
     }
 
@@ -615,6 +648,7 @@ public class AnnotationParameters {
      * @param showForwardIonDeNovoTags the showForwardIonDeNovoTags to set
      */
     public void setShowForwardIonDeNovoTags(boolean showForwardIonDeNovoTags) {
+        writeDBMode();
         this.showForwardIonDeNovoTags = showForwardIonDeNovoTags;
     }
 
@@ -624,6 +658,7 @@ public class AnnotationParameters {
      * @return the showRewindIonDeNovoTags
      */
     public boolean showRewindIonDeNovoTags() {
+        readDBMode();
         return showRewindIonDeNovoTags;
     }
 
@@ -633,6 +668,7 @@ public class AnnotationParameters {
      * @param showRewindIonDeNovoTags the showRewindIonDeNovoTags to set
      */
     public void setShowRewindIonDeNovoTags(boolean showRewindIonDeNovoTags) {
+        writeDBMode();
         this.showRewindIonDeNovoTags = showRewindIonDeNovoTags;
     }
 
@@ -643,6 +679,7 @@ public class AnnotationParameters {
      * @return the charge to use for the fragment ions in the de novo sequencing
      */
     public int getDeNovoCharge() {
+        readDBMode();
         return deNovoCharge;
     }
 
@@ -653,6 +690,7 @@ public class AnnotationParameters {
      * novo sequencing
      */
     public void setDeNovoCharge(int deNovoCharge) {
+        writeDBMode();
         this.deNovoCharge = deNovoCharge;
     }
 
@@ -663,6 +701,7 @@ public class AnnotationParameters {
      * @return the ties resolution method to use
      */
     public SpectrumAnnotator.TiesResolution getTiesResolution() {
+        readDBMode();
         return tiesResolution;
     }
 
@@ -673,6 +712,7 @@ public class AnnotationParameters {
      * @param tiesResolution the ties resolution method to use
      */
     public void setTiesResolution(SpectrumAnnotator.TiesResolution tiesResolution) {
+        writeDBMode();
         this.tiesResolution = tiesResolution;
     }
 
@@ -682,6 +722,7 @@ public class AnnotationParameters {
      * @return a clone of this object
      */
     public AnnotationParameters clone() {
+        readDBMode();
         AnnotationParameters annotationSettings = new AnnotationParameters();
         annotationSettings.setYAxisZoomExcludesBackgroundPeaks(yAxisZoomExcludesBackgroundPeaks);
         annotationSettings.setShowAllPeaks(showAllPeaks);
@@ -717,6 +758,7 @@ public class AnnotationParameters {
      * the same as these ones
      */
     public boolean isSameAs(AnnotationParameters annotationSettings) {
+        readDBMode();
         if (yAxisZoomExcludesBackgroundPeaks != annotationSettings.yAxisZoomExcludesBackgroundPeaks()) {
             return false;
         }
@@ -810,6 +852,7 @@ public class AnnotationParameters {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
+        readDBMode();
 
         String newLine = System.getProperty("line.separator");
 

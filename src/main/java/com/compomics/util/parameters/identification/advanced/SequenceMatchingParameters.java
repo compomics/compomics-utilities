@@ -1,5 +1,7 @@
 package com.compomics.util.parameters.identification.advanced;
 
+import com.compomics.util.db.object.DbObject;
+
 
 /**
  * The sequence matching options.
@@ -7,12 +9,8 @@ package com.compomics.util.parameters.identification.advanced;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class SequenceMatchingParameters {
+public class SequenceMatchingParameters extends DbObject {
 
-    /**
-     * Serialization number for backward compatibility.
-     */
-    static final long serialVersionUID = 228961121369106450L;
 
     /**
      * The different types of amino acid matching.
@@ -142,6 +140,7 @@ public class SequenceMatchingParameters {
      * @return the sequence matching type
      */
     public MatchingType getSequenceMatchingType() {
+        readDBMode();
         return sequenceMatchingType;
     }
 
@@ -151,6 +150,7 @@ public class SequenceMatchingParameters {
      * @param sequenceMatchingType the sequence matching type
      */
     public void setSequenceMatchingType(MatchingType sequenceMatchingType) {
+        writeDBMode();
         this.sequenceMatchingType = sequenceMatchingType;
     }
 
@@ -161,6 +161,7 @@ public class SequenceMatchingParameters {
      * @return the maximal share of X's a match can contain
      */
     public double getLimitX() {
+        readDBMode();
         return limitX;
     }
 
@@ -170,6 +171,7 @@ public class SequenceMatchingParameters {
      * @param limitX the maximal share of X's a match can contain
      */
     public void setLimitX(double limitX) {
+        writeDBMode();
         this.limitX = limitX;
     }
 
@@ -184,6 +186,7 @@ public class SequenceMatchingParameters {
      * one
      */
     public boolean isSameAs(SequenceMatchingParameters sequenceMatchingPreferences) {
+        readDBMode();
 
         if (sequenceMatchingType != sequenceMatchingPreferences.getSequenceMatchingType()) {
 
@@ -206,6 +209,7 @@ public class SequenceMatchingParameters {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
+        readDBMode();
 
         String newLine = System.getProperty("line.separator");
 

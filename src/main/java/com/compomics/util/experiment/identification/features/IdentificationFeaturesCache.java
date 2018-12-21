@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.features;
 
+import com.compomics.util.db.object.DbObject;
 import static com.compomics.util.experiment.identification.features.MutexMap.mutexMap;
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
@@ -10,12 +11,8 @@ import java.util.concurrent.Semaphore;
  *
  * @author Marc Vaudel
  */
-public class IdentificationFeaturesCache {
+public class IdentificationFeaturesCache extends DbObject {
 
-    /**
-     * Serial number for backward compatibility.
-     */
-    static final long serialVersionUID = -7291018247377919040L;
 
     /**
      * An enumerator of the supported object types.
@@ -205,6 +202,7 @@ public class IdentificationFeaturesCache {
      * @param type the object type
      */
     public void removeObjects(ObjectType type) {
+        writeDBMode();
 
         if (!type.large) {
 
@@ -230,6 +228,7 @@ public class IdentificationFeaturesCache {
      * @param object the object to store
      */
     public void addObject(ObjectType type, long objectKey, Object object) {
+        writeDBMode();
 
         if (!readOnly) {
 
@@ -329,7 +328,7 @@ public class IdentificationFeaturesCache {
      * @return the desired object
      */
     public Object getObject(ObjectType type, long objectKey) {
-        
+        readDBMode();
         return type.large ? largeObjectsCache.get(type).get(objectKey)
                 : smallObjectsCache.get(type).get(objectKey);
         
@@ -341,6 +340,7 @@ public class IdentificationFeaturesCache {
      * @return the current peptide key
      */
     public long getCurrentPeptideKey() {
+        readDBMode();
         return currentPeptideKey;
     }
 
@@ -350,6 +350,7 @@ public class IdentificationFeaturesCache {
      * @param currentPeptideKey the current peptide key
      */
     public void setCurrentPeptideKey(long currentPeptideKey) {
+        writeDBMode();
         this.currentPeptideKey = currentPeptideKey;
     }
 
@@ -359,6 +360,7 @@ public class IdentificationFeaturesCache {
      * @return the current protein key
      */
     public long getCurrentProteinKey() {
+        readDBMode();
         return currentProteinKey;
     }
 
@@ -368,6 +370,7 @@ public class IdentificationFeaturesCache {
      * @param currentProteinKey the current protein key
      */
     public void setCurrentProteinKey(long currentProteinKey) {
+        writeDBMode();
         this.currentProteinKey = currentProteinKey;
     }
 
@@ -377,6 +380,7 @@ public class IdentificationFeaturesCache {
      * @return a boolean indicating whether the protein list is filtered
      */
     public boolean isFiltered() {
+        readDBMode();
         return filtered;
     }
 
@@ -386,6 +390,7 @@ public class IdentificationFeaturesCache {
      * @param filtered a boolean indicating whether the protein list is filtered
      */
     public void setFiltered(boolean filtered) {
+        writeDBMode();
         this.filtered = filtered;
     }
 
@@ -397,6 +402,7 @@ public class IdentificationFeaturesCache {
      * peptide list
      */
     public int getMaxSpectrumCount() {
+        readDBMode();
         return maxSpectrumCount;
     }
 
@@ -408,6 +414,7 @@ public class IdentificationFeaturesCache {
      * the current peptide list
      */
     public void setMaxSpectrumCount(int maxSpectrumCount) {
+        writeDBMode();
         this.maxSpectrumCount = maxSpectrumCount;
     }
 
@@ -417,6 +424,7 @@ public class IdentificationFeaturesCache {
      * @return the number of validated PSMs
      */
     public int getnValidatedPsms() {
+        readDBMode();
         return nValidatedPsms;
     }
 
@@ -426,6 +434,7 @@ public class IdentificationFeaturesCache {
      * @param nValidatedPsms the number of validated PSMs
      */
     public void setnValidatedPsms(int nValidatedPsms) {
+        writeDBMode();
         this.nValidatedPsms = nValidatedPsms;
     }
 
@@ -435,6 +444,7 @@ public class IdentificationFeaturesCache {
      * @return the current peptide list
      */
     public long[] getPeptideList() {
+        readDBMode();
         return peptideList;
     }
 
@@ -444,6 +454,7 @@ public class IdentificationFeaturesCache {
      * @param peptideList the current peptide list
      */
     public void setPeptideList(long[] peptideList) {
+        writeDBMode();
         this.peptideList = peptideList;
     }
 
@@ -453,6 +464,7 @@ public class IdentificationFeaturesCache {
      * @return the protein list
      */
     public long[] getProteinList() {
+        readDBMode();
         return proteinList;
     }
 
@@ -462,6 +474,7 @@ public class IdentificationFeaturesCache {
      * @param proteinList the protein list
      */
     public void setProteinList(long[] proteinList) {
+        writeDBMode();
         this.proteinList = proteinList;
     }
 
@@ -471,6 +484,7 @@ public class IdentificationFeaturesCache {
      * @return the protein list after all hiding filters have been used
      */
     public long[] getProteinListAfterHiding() {
+        readDBMode();
         return proteinListAfterHiding;
     }
 
@@ -481,6 +495,7 @@ public class IdentificationFeaturesCache {
      * have been used
      */
     public void setProteinListAfterHiding(long[] proteinListAfterHiding) {
+        writeDBMode();
         this.proteinListAfterHiding = proteinListAfterHiding;
     }
 
@@ -490,6 +505,7 @@ public class IdentificationFeaturesCache {
      * @return the PSM list
      */
     public long[] getPsmList() {
+        readDBMode();
         return psmList;
     }
 
@@ -499,6 +515,7 @@ public class IdentificationFeaturesCache {
      * @param psmList the PSM list
      */
     public void setPsmList(long[] psmList) {
+        writeDBMode();
         this.psmList = psmList;
     }
 
@@ -508,6 +525,7 @@ public class IdentificationFeaturesCache {
      * @return a list of validated proteins
      */
     public long[] getValidatedProteinList() {
+        readDBMode();
         return validatedProteinList;
     }
 
@@ -517,6 +535,7 @@ public class IdentificationFeaturesCache {
      * @param validatedProteinList a list of validated proteins
      */
     public void setValidatedProteinList(long[] validatedProteinList) {
+        writeDBMode();
         this.validatedProteinList = validatedProteinList;
     }
 
@@ -527,6 +546,7 @@ public class IdentificationFeaturesCache {
      * only
      */
     public void setReadOnly(boolean readOnly) {
+        writeDBMode();
         this.readOnly = readOnly;
     }
 }

@@ -1,5 +1,6 @@
 package com.compomics.util.gui.filtering;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.identification.filtering.MatchFilter;
 import com.compomics.util.experiment.identification.filtering.MatchFilter.FilterType;
 import com.compomics.util.experiment.identification.filtering.PeptideFilter;
@@ -12,12 +13,8 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class FilterParameters {
+public class FilterParameters extends DbObject {
 
-    /**
-     * Serial number for serialization compatibility.
-     */
-    static final long serialVersionUID = -348520469065277089L;
     /**
      * The protein star filters.
      */
@@ -55,6 +52,7 @@ public class FilterParameters {
      * @return the protein hide filters
      */
     public HashMap<String, ProteinFilter> getProteinHideFilters() {
+        readDBMode();
         return proteinHideFilters;
     }
 
@@ -64,6 +62,7 @@ public class FilterParameters {
      * @param proteinHideFilters the protein hide filters
      */
     public void setProteinHideFilters(HashMap<String, ProteinFilter> proteinHideFilters) {
+        writeDBMode();
         this.proteinHideFilters = proteinHideFilters;
     }
 
@@ -73,6 +72,7 @@ public class FilterParameters {
      * @return the protein star filters
      */
     public HashMap<String, ProteinFilter> getProteinStarFilters() {
+        readDBMode();
         return proteinStarFilters;
     }
 
@@ -82,6 +82,7 @@ public class FilterParameters {
      * @param proteinStarFilters the protein star filters
      */
     public void setProteinStarFilters(HashMap<String, ProteinFilter> proteinStarFilters) {
+        writeDBMode();
         this.proteinStarFilters = proteinStarFilters;
     }
 
@@ -91,6 +92,7 @@ public class FilterParameters {
      * @return the peptide hide filters
      */
     public HashMap<String, PeptideFilter> getPeptideHideFilters() {
+        readDBMode();
         return peptideHideFilters;
     }
 
@@ -100,6 +102,7 @@ public class FilterParameters {
      * @param peptideHideFilters the peptide hide filters
      */
     public void setPeptideHideFilters(HashMap<String, PeptideFilter> peptideHideFilters) {
+        writeDBMode();
         this.peptideHideFilters = peptideHideFilters;
     }
 
@@ -109,6 +112,7 @@ public class FilterParameters {
      * @return the peptide star filters
      */
     public HashMap<String, PeptideFilter> getPeptideStarFilters() {
+        readDBMode();
         return peptideStarFilters;
     }
 
@@ -118,6 +122,7 @@ public class FilterParameters {
      * @param peptideStarFilters the peptide star filters
      */
     public void setPeptideStarFilters(HashMap<String, PeptideFilter> peptideStarFilters) {
+        writeDBMode();
         this.peptideStarFilters = peptideStarFilters;
     }
 
@@ -127,6 +132,7 @@ public class FilterParameters {
      * @return the psm hide filters
      */
     public HashMap<String, PsmFilter> getPsmHideFilters() {
+        readDBMode();
         return psmHideFilters;
     }
 
@@ -136,6 +142,7 @@ public class FilterParameters {
      * @param psmHideFilters the psm hide filters
      */
     public void setPsmHideFilters(HashMap<String, PsmFilter> psmHideFilters) {
+        writeDBMode();
         this.psmHideFilters = psmHideFilters;
     }
 
@@ -145,6 +152,7 @@ public class FilterParameters {
      * @return the psm star filters
      */
     public HashMap<String, PsmFilter> getPsmStarFilters() {
+        readDBMode();
         return psmStarFilters;
     }
 
@@ -154,6 +162,7 @@ public class FilterParameters {
      * @param psmStarFilters the psm star filters
      */
     public void setPsmStarFilters(HashMap<String, PsmFilter> psmStarFilters) {
+        writeDBMode();
         this.psmStarFilters = psmStarFilters;
     }
 
@@ -164,6 +173,7 @@ public class FilterParameters {
      * @param matchFilter the new filter
      */
     public void addStarringFilter(MatchFilter matchFilter) {
+        writeDBMode();
         if (matchFilter.getType().equals(FilterType.PROTEIN)) {
             proteinStarFilters.put(matchFilter.getName(), (ProteinFilter) matchFilter);
         } else if (matchFilter.getType().equals(FilterType.PEPTIDE)) {
@@ -180,6 +190,7 @@ public class FilterParameters {
      * @param matchFilter the new filter
      */
     public void addHidingFilter(MatchFilter matchFilter) {
+        writeDBMode();
         if (matchFilter.getType().equals(FilterType.PROTEIN)) {
             proteinHideFilters.put(matchFilter.getName(), (ProteinFilter) matchFilter);
         } else if (matchFilter.getType().equals(FilterType.PEPTIDE)) {
@@ -198,6 +209,7 @@ public class FilterParameters {
      * taken or not
      */
     public boolean filterExists(String filtername) {
+        readDBMode();
         return proteinHideFilters.containsKey(filtername) || proteinStarFilters.containsKey(filtername)
                 || peptideHideFilters.containsKey(filtername) || peptideStarFilters.containsKey(filtername)
                 || psmHideFilters.containsKey(filtername) || psmStarFilters.containsKey(filtername);

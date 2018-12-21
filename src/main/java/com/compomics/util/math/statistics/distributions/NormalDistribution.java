@@ -1,5 +1,6 @@
 package com.compomics.util.math.statistics.distributions;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.Distribution;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import org.apache.commons.math.distribution.NormalDistributionImpl;
  *
  * @author Marc Vaudel
  */
-public class NormalDistribution implements Distribution {
+public class NormalDistribution extends DbObject implements Distribution {
 
     /**
      * Empty default constructor
@@ -22,10 +23,6 @@ public class NormalDistribution implements Distribution {
         std = 0;
     }
 
-    /**
-     * Serial version number for backward compatibility.
-     */
-    static final long serialVersionUID = -4944773548279233917L;
     /**
      * The apache normal distribution implementation.
      */
@@ -90,6 +87,7 @@ public class NormalDistribution implements Distribution {
 
     @Override
     public double getProbabilityAt(double x) {
+        readDBMode();
 
         if (std > 0) {
 
@@ -115,6 +113,7 @@ public class NormalDistribution implements Distribution {
 
     @Override
     public double getMaxValueForProbability(double p) {
+        readDBMode();
 
         if (std > 0) {
 
@@ -142,6 +141,7 @@ public class NormalDistribution implements Distribution {
 
     @Override
     public double getMinValueForProbability(double p) {
+        readDBMode();
 
         if (std > 0) {
 
@@ -168,6 +168,7 @@ public class NormalDistribution implements Distribution {
 
     @Override
     public double getCumulativeProbabilityAt(double x) {
+        readDBMode();
 
         if (std > 0) {
 
@@ -197,6 +198,7 @@ public class NormalDistribution implements Distribution {
 
     @Override
     public double getValueAtCumulativeProbability(double p) {
+        readDBMode();
 
         if (std > 0) {
 
@@ -232,6 +234,7 @@ public class NormalDistribution implements Distribution {
 
     @Override
     public double getDescendingCumulativeProbabilityAt(double x) {
+        readDBMode();
 
         if (std > 0) {
 
@@ -259,6 +262,7 @@ public class NormalDistribution implements Distribution {
 
     @Override
     public double getSmallestCumulativeProbabilityAt(double x) {
+        readDBMode();
 
         return x > mean
                 ? getDescendingCumulativeProbabilityAt(x)
@@ -268,6 +272,7 @@ public class NormalDistribution implements Distribution {
 
     @Override
     public double getValueAtDescendingCumulativeProbability(double p) {
+        readDBMode();
 
         if (std > 0) {
 

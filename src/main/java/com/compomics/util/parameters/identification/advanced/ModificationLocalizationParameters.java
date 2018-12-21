@@ -1,5 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.identification.modification.ModificationLocalizationScore;
 
 /**
@@ -8,12 +9,8 @@ import com.compomics.util.experiment.identification.modification.ModificationLoc
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ModificationLocalizationParameters {
+public class ModificationLocalizationParameters extends DbObject {
 
-    /**
-     * Serial number for backward compatibility.
-     */
-    static final long serialVersionUID = -6656074270981104708L;
     /**
      * Boolean indicating whether a probabilistic score is to be calculated.
      */
@@ -58,6 +55,7 @@ public class ModificationLocalizationParameters {
      * required
      */
     public boolean isProbabilisticScoreCalculation() {
+        readDBMode();
         
         return probabilisticScoreCalculation;
     
@@ -70,7 +68,7 @@ public class ModificationLocalizationParameters {
      * probabilistic modification score is required
      */
     public void setProbabilisticScoreCalculation(boolean probabilisticScoreCalculation) {
-        
+        writeDBMode();
         this.probabilisticScoreCalculation = probabilisticScoreCalculation;
     
     }
@@ -81,6 +79,7 @@ public class ModificationLocalizationParameters {
      * @return the selected probabilistic score
      */
     public ModificationLocalizationScore getSelectedProbabilisticScore() {
+        readDBMode();
         
         return selectedProbabilisticScore;
     
@@ -93,6 +92,7 @@ public class ModificationLocalizationParameters {
      */
     public void setSelectedProbabilisticScore(ModificationLocalizationScore selectedProbabilisticScore) {
         
+        writeDBMode();
         this.selectedProbabilisticScore = selectedProbabilisticScore;
     
     }
@@ -103,6 +103,7 @@ public class ModificationLocalizationParameters {
      * @return the probabilistic score threshold
      */
     public double getProbabilisticScoreThreshold() {
+        readDBMode();
         
         return probabilisticScoreThreshold;
     
@@ -115,6 +116,7 @@ public class ModificationLocalizationParameters {
      */
     public void setProbabilisticScoreThreshold(double probabilisticScoreThreshold) {
     
+        writeDBMode();
         this.probabilisticScoreThreshold = probabilisticScoreThreshold;
     
     }
@@ -128,6 +130,7 @@ public class ModificationLocalizationParameters {
      * score
      */
     public boolean isProbabilisticScoreNeutralLosses() {
+        readDBMode();
 
         return probabilisticScoreNeutralLosses;
 
@@ -143,6 +146,7 @@ public class ModificationLocalizationParameters {
      */
     public void setProbabilisticScoreNeutralLosses(boolean probabilisticScoreNeutralLosses) {
 
+        writeDBMode();
         this.probabilisticScoreNeutralLosses = probabilisticScoreNeutralLosses;
 
     }
@@ -155,6 +159,7 @@ public class ModificationLocalizationParameters {
      * amino acid sequences
      */
     public SequenceMatchingParameters getSequenceMatchingParameters() {
+        readDBMode();
         
         return sequenceMatchingParameters;
         
@@ -169,6 +174,7 @@ public class ModificationLocalizationParameters {
      */
     public void setSequenceMatchingParameters(SequenceMatchingParameters sequenceMatchingParameters) {
 
+        writeDBMode();
         this.sequenceMatchingParameters = sequenceMatchingParameters;
 
     }
@@ -181,6 +187,7 @@ public class ModificationLocalizationParameters {
      * should be aligned on the confident sites
      */
     public boolean getAlignNonConfidentModifications() {
+        readDBMode();
 
         return alignNonConfidentModifications;
 
@@ -195,6 +202,7 @@ public class ModificationLocalizationParameters {
      */
     public void setAlignNonConfidentModifications(boolean alignNonConfidentModifications) {
 
+        writeDBMode();
         this.alignNonConfidentModifications = alignNonConfidentModifications;
 
     }
@@ -205,6 +213,7 @@ public class ModificationLocalizationParameters {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
+        readDBMode();
 
         String newLine = System.getProperty("line.separator");
 
@@ -227,6 +236,7 @@ public class ModificationLocalizationParameters {
      * @return true if the objects have identical settings
      */
     public boolean equals(ModificationLocalizationParameters otherParameters) {
+        readDBMode();
 
         if (otherParameters == null) {
             

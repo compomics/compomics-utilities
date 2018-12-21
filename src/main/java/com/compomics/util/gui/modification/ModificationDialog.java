@@ -218,11 +218,11 @@ public class ModificationDialog extends javax.swing.JDialog {
             nameShortTxt.setText(currentPtm.getShortName());
 
             String addition = "";
-            if (atomChainAdded != null) {
+            if (atomChainAdded != null && atomChainAdded.size() > 0) {
                 addition = atomChainAdded.toString();
             }
             String deletion = "";
-            if (atomChainRemoved != null) {
+            if (atomChainRemoved != null && atomChainRemoved.size() > 0) {
                 deletion = "-" + atomChainRemoved.toString();
             }
             String temp = addition + " " + deletion;

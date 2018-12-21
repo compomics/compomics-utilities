@@ -3913,89 +3913,89 @@ public class PTMFactory implements Serializable {
         } else if (ptmName.equalsIgnoreCase("Dimethylation of K")) {
             return "00084";
         } else if (ptmName.equalsIgnoreCase("Dimethylation of K 2H(4)")) {
-            
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Dimethylation of K 2H(6)")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Dimethylation of K 2H(6) 13C(2)")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Dimethylation of R")) {
-
+            return "00783";
         } else if (ptmName.equalsIgnoreCase("Dimethylation of peptide N-term")) {
-
+            return "01686";
         } else if (ptmName.equalsIgnoreCase("Dimethylation of peptide N-term 2H(4)")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Dimethylation of peptide N-term 2H(6)")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Dimethylation of peptide N-term 2H(6) 13C(2)")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Dioxidation of M")) {
-
+            return "00428"; // @TODO: maps to parent term "dihydroxylated residue"...
         } else if (ptmName.equalsIgnoreCase("Dioxidation of W")) {
-
+            return "00428"; // @TODO: maps to parent term "dihydroxylated residue"...
         } else if (ptmName.equalsIgnoreCase("Farnesylation of C")) {
-
+            return "00111";
         } else if (ptmName.equalsIgnoreCase("FormylMet of protein N-term")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Formylation of K")) {
-
+            return "00216";
         } else if (ptmName.equalsIgnoreCase("Formylation of S")) {
-
+            return "01222";
         } else if (ptmName.equalsIgnoreCase("Formylation of T")) {
-
+            return "01221";
         } else if (ptmName.equalsIgnoreCase("Formylation of peptide N-term")) {
-
+            return "00409"; // @TODO: maps to parent term "N-formylated residue"...
         } else if (ptmName.equalsIgnoreCase("Formylation of protein N-term")) {
-
+            return "00409"; // @TODO: maps to parent term "N-formylated residue"...
         } else if (ptmName.equalsIgnoreCase("Geranyl-geranyl of C")) {
-
+            return "00113";
         } else if (ptmName.equalsIgnoreCase("Glutathione of C")) {
-
+            return "00234";
         } else if (ptmName.equalsIgnoreCase("Guanidination of K")) {
-
+            return "00445";
         } else if (ptmName.equalsIgnoreCase("Guanidination of peptide N-term")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Heme B of C")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Heme B of H")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Hex(1)NAc(1) of S")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Hex(1)NAc(1) of T")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Hex(5) HexNAc(4) NeuAc(2) Na of N")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Hex(5) HexNAc(4) NeuAc(2) of N")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("HexNAc of S")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("HexNAc of T")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Hexose of K")) {
-
+            return "01347";
         } else if (ptmName.equalsIgnoreCase("Homoserine lactone of peptide C-term M")) {
-
+            return "00404";
         } else if (ptmName.equalsIgnoreCase("Homoserine of peptide C-term M")) {
-
+            return "00403";
         } else if (ptmName.equalsIgnoreCase("ICAT-9")) {
-
+            return "00481";
         } else if (ptmName.equalsIgnoreCase("ICAT-O")) {
-
+            return "00480";
         } else if (ptmName.equalsIgnoreCase("ICPL0 of K")) {
-
+            return "01230";
         } else if (ptmName.equalsIgnoreCase("ICPL0 of peptide N-term")) {
-
+            return "null"; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("ICPL10 of K")) {
-
+            return "01287"; // @TODO: the mass in Unimod and PSI-MOD is not the same...
         } else if (ptmName.equalsIgnoreCase("ICPL10 of peptide N-term")) {
-
+            return "null"; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("ICPL4 of K")) {
-
+            return "01359";
         } else if (ptmName.equalsIgnoreCase("ICPL4 of peptide N-term")) {
-
+            return "01358";
         } else if (ptmName.equalsIgnoreCase("ICPL6 of K")) {
-
+            return "null"; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("ICPL6 of peptide N-term")) {
-
+            return "null"; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Isoleucine 13C(6) 15N(1)")) {
 
         } else if (ptmName.equalsIgnoreCase("Label of K 2H(4)")) {

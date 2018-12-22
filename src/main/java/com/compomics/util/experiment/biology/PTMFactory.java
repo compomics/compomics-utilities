@@ -3893,9 +3893,9 @@ public class PTMFactory implements Serializable {
         } else if (ptmName.equalsIgnoreCase("Carbamilation of protein N-term")) {
             return "01679";
         } else if (ptmName.equalsIgnoreCase("Carboxymethylation of C")) {
-            return null; // @TODO: add mapping?
+            return "01061";
         } else if (ptmName.equalsIgnoreCase("Citrullination of R")) {
-            return null; // @TODO: add mapping?
+            return "00400";
         } else if (ptmName.equalsIgnoreCase("Deamidation of N")) {
             return "00684";
         } else if (ptmName.equalsIgnoreCase("Deamidation of N 18O")) {
@@ -3903,9 +3903,9 @@ public class PTMFactory implements Serializable {
         } else if (ptmName.equalsIgnoreCase("Deamidation of Q")) {
             return "00685";
         } else if (ptmName.equalsIgnoreCase("Dehydration of S")) {
-            return "00704"; // @TODO: not unique for S
+            return "00189";
         } else if (ptmName.equalsIgnoreCase("Dehydration of T")) {
-            return "00704"; // @TODO: not unique for T
+            return "00190"; // @TODO: maps to parent term "dehydrobutyrine (Thr)"...
         } else if (ptmName.equalsIgnoreCase("Didehydro of T")) {
             return "01345";
         } else if (ptmName.equalsIgnoreCase("Diiodination of Y")) {
@@ -3913,7 +3913,7 @@ public class PTMFactory implements Serializable {
         } else if (ptmName.equalsIgnoreCase("Dimethylation of K")) {
             return "00084";
         } else if (ptmName.equalsIgnoreCase("Dimethylation of K 2H(4)")) {
-            return null; // @TODO: add mapping?
+            return "01254";
         } else if (ptmName.equalsIgnoreCase("Dimethylation of K 2H(6)")) {
             return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Dimethylation of K 2H(6) 13C(2)")) {
@@ -3983,63 +3983,63 @@ public class PTMFactory implements Serializable {
         } else if (ptmName.equalsIgnoreCase("ICPL0 of K")) {
             return "01230";
         } else if (ptmName.equalsIgnoreCase("ICPL0 of peptide N-term")) {
-            return "null"; // @TODO: add mapping?
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("ICPL10 of K")) {
-            return "01287"; // @TODO: the mass in Unimod and PSI-MOD is not the same...
+            return "01287"; // @TODO: the mass in Unimod and PSI-MOD is not the same!
         } else if (ptmName.equalsIgnoreCase("ICPL10 of peptide N-term")) {
-            return "null"; // @TODO: add mapping?
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("ICPL4 of K")) {
             return "01359";
         } else if (ptmName.equalsIgnoreCase("ICPL4 of peptide N-term")) {
             return "01358";
         } else if (ptmName.equalsIgnoreCase("ICPL6 of K")) {
-            return "null"; // @TODO: add mapping?
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("ICPL6 of peptide N-term")) {
-            return "null"; // @TODO: add mapping?
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Isoleucine 13C(6) 15N(1)")) {
-
+            return "01286";
         } else if (ptmName.equalsIgnoreCase("Label of K 2H(4)")) {
-
+            return "00942";
         } else if (ptmName.equalsIgnoreCase("Leucine 13C(6) 15N(1)")) {
-
+            return "01285";
         } else if (ptmName.equalsIgnoreCase("Lipoyl of K")) {
-
+            return "00127";
         } else if (ptmName.equalsIgnoreCase("Lysine 13C(6)")) {
-
+            return "01334";
         } else if (ptmName.equalsIgnoreCase("Lysine 13C(6) 15N(2)")) {
-
+            return "00582";
         } else if (ptmName.equalsIgnoreCase("Lysine 2H(4)")) {
-
+            return "00942";
         } else if (ptmName.equalsIgnoreCase("Methylation of C")) {
-
+            return "00660"; // @TODO: maps to parent term "methylated cysteine"
         } else if (ptmName.equalsIgnoreCase("Methylation of D")) {
-
+            return "00079";
         } else if (ptmName.equalsIgnoreCase("Methylation of E")) {
-
+            return "00081";
         } else if (ptmName.equalsIgnoreCase("Methylation of K")) {
-
+            return "00085";
         } else if (ptmName.equalsIgnoreCase("Methylation of R")) {
-
+            return "00414"; // @TODO: maps to parent term "monomethylated L-arginine"...
         } else if (ptmName.equalsIgnoreCase("Methylation of S")) {
-
+            return "01782";
         } else if (ptmName.equalsIgnoreCase("Methylthio of C")) {
-
+            return "00110";
         } else if (ptmName.equalsIgnoreCase("Methylthio of D")) {
-
+            return "00237";
         } else if (ptmName.equalsIgnoreCase("Methylthio of N")) {
-
+            return "00325";
         } else if (ptmName.equalsIgnoreCase("NIPCAM of C")) {
-
+            return "00410";
         } else if (ptmName.equalsIgnoreCase("Nethylmaleimide of C")) {
-
+            return "00483";
         } else if (ptmName.equalsIgnoreCase("Oxidation of C")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Oxidation of K")) {
-
+            return "01047"; // @TODO: maps to parent term "monohydroxylated lysine"...
         } else if (ptmName.equalsIgnoreCase("Oxidation of M")) {
-
+            return "";
         } else if (ptmName.equalsIgnoreCase("Oxidation of P")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Palmitoylation of C")) {
 
         } else if (ptmName.equalsIgnoreCase("Palmitoylation of K")) {

@@ -4041,45 +4041,45 @@ public class PTMFactory implements Serializable {
         } else if (ptmName.equalsIgnoreCase("Oxidation of P")) {
             return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Palmitoylation of C")) {
-
+            return "00440";  // @TODO: maps to parent term "palmitoylated residue"...
         } else if (ptmName.equalsIgnoreCase("Palmitoylation of K")) {
-
+            return "00086";
         } else if (ptmName.equalsIgnoreCase("Palmitoylation of S")) {
-
+            return "00089";
         } else if (ptmName.equalsIgnoreCase("Palmitoylation of T")) {
-
+            return "00088";
         } else if (ptmName.equalsIgnoreCase("Palmitoylation of protein N-term")) {
-
+            return "01685";
         } else if (ptmName.equalsIgnoreCase("Phosphorylation of S")) {
-
+            return "00046";
         } else if (ptmName.equalsIgnoreCase("Phosphorylation of T")) {
-
+            return "00047";
         } else if (ptmName.equalsIgnoreCase("Phosphorylation of Y")) {
-
+            return "00048";
         } else if (ptmName.equalsIgnoreCase("Proline 13C(5)")) {
-
+            return "01297";
         } else if (ptmName.equalsIgnoreCase("Propionamide of C")) {
-
+            return "00417";
         } else if (ptmName.equalsIgnoreCase("Propionamide of K")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Propionamide of peptide N-term")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Propionyl of K heavy")) {
-
+            return "01231";
         } else if (ptmName.equalsIgnoreCase("Propionyl of K light")) {
-
+            return "01232";
         } else if (ptmName.equalsIgnoreCase("Propionyl of peptide N-term heavy")) {
-
+            return "00452";
         } else if (ptmName.equalsIgnoreCase("Propionyl of peptide N-term light")) {
-
+            return "01895";
         } else if (ptmName.equalsIgnoreCase("Pyridylethyl of C")) {
-
+            return "00424";
         } else if (ptmName.equalsIgnoreCase("Pyrolidone from E")) {
-
+            return "00420";
         } else if (ptmName.equalsIgnoreCase("Pyrolidone from Q")) {
-
+            return "00040";
         } else if (ptmName.equalsIgnoreCase("Pyrolidone from carbamidomethylated C")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("S-nitrosylation")) {
 
         } else if (ptmName.equalsIgnoreCase("SUMO-2/3 Q87R")) {

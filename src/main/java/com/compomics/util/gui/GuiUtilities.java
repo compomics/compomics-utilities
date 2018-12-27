@@ -25,12 +25,6 @@ import javax.swing.table.TableCellRenderer;
 public class GuiUtilities {
 
     /**
-     * Empty default constructor
-     */
-    public GuiUtilities() {
-    }
-
-    /**
      * Escape key stroke.
      */
     private static final KeyStroke escapeStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);

@@ -14,12 +14,6 @@ import javax.swing.JFrame;
 public class DummyFrame extends JFrame {
 
     /**
-     * Empty default constructor
-     */
-    public DummyFrame() {
-    }
-
-    /**
      * Constructor.
      *
      * @param title the frame title

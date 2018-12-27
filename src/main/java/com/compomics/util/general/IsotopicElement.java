@@ -17,15 +17,6 @@ import java.util.Vector;
  */
 public class IsotopicElement {
 
-    /**
-     * Empty default constructor
-     */
-    public IsotopicElement() {
-        iElement = null;
-        iDaltonDifference = 0;
-        iOccurrence = 0;
-    }
-
     // Class specific log4j logger for AASequenceImpl instances.
     Logger logger = Logger.getLogger(IsotopicElement.class);
 

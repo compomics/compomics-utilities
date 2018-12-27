@@ -15,12 +15,6 @@ import javax.swing.JFrame;
  */
 public class FileSelectionDialog extends javax.swing.JDialog {
 
-    /**
-     * Empty default constructor
-     */
-    public FileSelectionDialog() {
-    }
-
     // @TODO: make the list with strings and not files.
     // @TODO: allow editing of the list
     /**

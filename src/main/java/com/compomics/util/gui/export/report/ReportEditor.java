@@ -18,12 +18,6 @@ import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
 public class ReportEditor extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public ReportEditor() {
-    }
-
-    /**
      * The export factory.
      */
     private ExportFactory exportFactory;

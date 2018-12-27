@@ -33,12 +33,6 @@ import java.util.Date;
  */
 public class FileLoggerImplementation implements com.compomics.util.interfaces.Logger {
 
-    /**
-     * Empty default constructor
-     */
-    public FileLoggerImplementation() {
-    }
-
     // Class specific log4j logger for FileLoggerImplementation instances.
     org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(FileLoggerImplementation.class);
 

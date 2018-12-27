@@ -127,7 +127,6 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Tab Separated Text File"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="excelJRadioButton">
@@ -137,7 +136,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Excel Workbook"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>

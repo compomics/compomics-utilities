@@ -46,12 +46,6 @@ import java.util.Hashtable;
  */
 public class IsotopeDistributionGui extends JFrame {
 
-    /**
-     * Empty default constructor
-     */
-    public IsotopeDistributionGui() {
-    }
-
     // Class specific log4j logger for MolecularFormula instances.
     Logger logger = Logger.getLogger(MolecularFormula.class);
 

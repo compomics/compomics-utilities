@@ -19,12 +19,6 @@ import javax.swing.border.TitledBorder;
 public class BugReport extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public BugReport() {
-    }
-
-    /**
      * The folder to open in the file selection dialog.
      */
     private LastSelectedFolder lastSelectedFolder;

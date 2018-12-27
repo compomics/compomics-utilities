@@ -18,12 +18,6 @@ import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
 public class VisibleTableColumnsDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public VisibleTableColumnsDialog() {
-    }
-
-    /**
      * The VisibleTableColumnsDialogParent.
      */
     private VisibleTableColumnsDialogParent visibleTableColumnsDialogParent;

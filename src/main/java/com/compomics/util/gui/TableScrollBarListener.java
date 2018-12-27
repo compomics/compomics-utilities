@@ -14,13 +14,6 @@ import javax.swing.JTable;
 public class TableScrollBarListener implements AdjustmentListener {
 
     /**
-     * Empty default constructor
-     */
-    public TableScrollBarListener() {
-        table = null;
-    }
-
-    /**
      * The table to be monitored. Must have a SelfUpdatingTableModel as the
      * table model.
      */

@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
-
 /**
  * Rank as used in the FM index.
  *
@@ -9,7 +8,7 @@ package com.compomics.util.experiment.identification.protein_inference.fm_index;
 public class Rank {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public Rank() {
         length = 0;
@@ -80,7 +79,7 @@ public class Rank {
             }
         }
     }
-    
+
     /**
      * Constructor.
      *
@@ -172,12 +171,12 @@ public class Rank {
      * Returns true if the value is equal to one.
      *
      * @param index the value
-     * @return the bit 
+     * @return the bit
      */
     public int isOneInt(int index) {
         int cell = index >>> shift;
         int pos = index & mask;
-        return (int)((bitfield[cell] >>> pos) & 1L);
+        return (int) ((bitfield[cell] >>> pos) & 1L);
     }
 
     /**

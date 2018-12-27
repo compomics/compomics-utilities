@@ -5,16 +5,10 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * This class makes it possible to set the dimmensions of a JFrame of JPanel
+ * This class makes it possible to set the dimensions of a JFrame of JPanel
  * to a certain percentage of the screen size.
  */
 public class MonitorDimension {
-
-    /**
-     * Empty default constructor
-     */
-    public MonitorDimension() {
-    }
 
     // Class specific log4j logger for MonitorDimension instances.
     Logger logger = Logger.getLogger(MonitorDimension.class);

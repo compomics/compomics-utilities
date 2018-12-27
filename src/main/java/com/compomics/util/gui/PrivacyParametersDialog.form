@@ -151,7 +151,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Check for Updates at Tool Startup"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>

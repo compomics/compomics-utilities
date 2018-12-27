@@ -19,12 +19,6 @@ import javax.swing.SwingUtilities;
 public class HelpDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public HelpDialog() {
-    }
-
-    /**
      * The parent of the parent is a Frame.
      */
     private Frame frameParent = null;

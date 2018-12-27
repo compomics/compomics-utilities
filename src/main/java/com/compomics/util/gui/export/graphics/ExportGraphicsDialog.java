@@ -25,12 +25,6 @@ import org.jfree.chart.ChartPanel;
 public class ExportGraphicsDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public ExportGraphicsDialog() {
-    }
-
-    /**
      * The chart panel to export.
      */
     private ChartPanel chartPanel;

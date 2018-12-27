@@ -11,12 +11,6 @@ import java.util.ArrayList;
 public class NotesDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public NotesDialog() {
-    }
-
-    /**
      * Creates a new NotesDialog.
      *
      * @param parent the parent frame
@@ -71,7 +65,6 @@ public class NotesDialog extends javax.swing.JDialog {
         });
 
         notesScrollPane.setBorder(null);
-        notesScrollPane.setOpaque(false);
 
         notesEditorPane.setEditable(false);
         notesEditorPane.setBorder(null);

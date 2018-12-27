@@ -21,12 +21,6 @@ import java.util.Iterator;
 public class IsotopicDistributionSpectrum implements SpectrumFile {
 
     /**
-     * Empty default constructor
-     */
-    public IsotopicDistributionSpectrum() {
-    }
-
-    /**
      * The charge
      */
     private int iCharge;

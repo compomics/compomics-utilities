@@ -15,12 +15,6 @@ import javax.swing.event.HyperlinkListener;
 public class JOptionEditorPane {
 
     /**
-     * Empty default constructor
-     */
-    public JOptionEditorPane() {
-    }
-
-    /**
      * Returns a JEditorPane with HTML support to be used in a JOptionsPane.
      *
      * @param htmlMessage the message to show, can include HTML, e.g., links,

@@ -30,12 +30,6 @@ import com.compomics.util.protein.AASequenceImpl;
  */
 public class Translate {
 
-    /**
-     * Empty default constructor
-     */
-    public Translate() {
-    }
-
     // Class specific log4j logger for Translate instances.
     static Logger logger = Logger.getLogger(Translate.class);
 

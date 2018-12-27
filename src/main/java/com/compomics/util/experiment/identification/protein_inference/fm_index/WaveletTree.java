@@ -15,75 +15,65 @@ public class WaveletTree {
      * Instance of a rank.
      */
     private Rank rank;
-    
     /**
      * Stored alphabet in a 128 bitfield.
      */
     private long[] alphabetDirections = new long[2];  // 1 equals left child
-    
     /**
      * First character in alphabet.
      */
     private int firstChar;
-    
     /**
      * Last character in alphabet.
      */
     private int lastChar;
-    
     /**
      * Text length.
      */
     private int lenText;
-    
     /**
      * Continue range query for left child.
      */
     private boolean continueLeftRangeQuery = false;
-    
     /**
      * Continue range query for right child.
      */
     private boolean continueRightRangeQuery = false;
 
     /**
-     * Empty default constructor
-     */
-    public WaveletTree() {
-    }
-    
-    /**
      * Left child of the wavelet tree.
      */
     private WaveletTree leftChild;
-    
     /**
      * Right child of the wavelet tree.
      */
     private WaveletTree rightChild;
-    
     /**
      * Shift number for fast bitwise divisions.
      */
     private final int shift = 6;
-    
     /**
      * Mask for fast bitwise modulo operations.
      */
     private final int mask = 63;
-    
     /**
-     * number of masses
+     * Number of masses.
      */
     private int numMasses;
-    
     /**
-     * left right mask
+     * Left right mask.
      */
     private int leftRightMask;
-    
+    /**
+     * The less table.
+     */
     private int[] less;
-    
+
+    /**
+     * Empty default constructor.
+     */
+    public WaveletTree() {
+    }
 
     /**
      * Class for huffman nodes.
@@ -129,9 +119,6 @@ public class WaveletTree {
             return 0;
         }
     }
-    
-    
-    
 
     /**
      * Constructor.
@@ -139,7 +126,7 @@ public class WaveletTree {
      * @param text the text
      * @param aAlphabet the alphabet
      * @param waitingHandler the waiting handler
-     * @param numMasses  number of masses plus modifications
+     * @param numMasses number of masses plus modifications
      * @param hasPTMatTerminus indicates how to handle / sign
      */
     public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, int numMasses, boolean hasPTMatTerminus) {
@@ -152,7 +139,7 @@ public class WaveletTree {
      * @param text the text
      * @param aAlphabet the alphabet
      * @param waitingHandler the waiting handler
-     * @param numMasses  number of masses plus modifications
+     * @param numMasses number of masses plus modifications
      */
     public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, int numMasses) {
         prepareWaveletTree(text, aAlphabet, waitingHandler, numMasses, false);
@@ -164,7 +151,7 @@ public class WaveletTree {
      * @param text the text
      * @param aAlphabet the alphabet
      * @param waitingHandler the waiting handler
-     * @param numMasses  number of masses plus modifications
+     * @param numMasses number of masses plus modifications
      * @param hasPTMatTerminus indicates how to handle / sign
      */
     private void prepareWaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, int numMasses, boolean hasPTMatTerminus) {
@@ -187,10 +174,9 @@ public class WaveletTree {
             HuffmanNode second = huffmanNodes.remove(0);
             huffmanNodes.add(new HuffmanNode(first, second));
         }
-        
+
         createWaveletTreeHuffman(text, waitingHandler, huffmanNodes.get(0), numMasses, hasPTMatTerminus);
-        
-        
+
         less = new int[128];
         long[] alphabet = new long[2];
         alphabet[0] = huffmanNodes.get(0).alphabet[0];
@@ -210,15 +196,13 @@ public class WaveletTree {
      * @param text the text
      * @param waitingHandler the waiting handler
      * @param root the root
-     * @param numMasses  number of masses plus modifications
+     * @param numMasses number of masses plus modifications
      * @param hasPTMatTerminus if there is a PTM at the terminus
      */
     public WaveletTree(byte[] text, WaitingHandler waitingHandler, HuffmanNode root, int numMasses, boolean hasPTMatTerminus) {
         this.numMasses = numMasses;
         createWaveletTreeHuffman(text, waitingHandler, root, numMasses, hasPTMatTerminus);
     }
-    
-    
 
     /**
      * Create wavelet tree huffman.
@@ -226,7 +210,7 @@ public class WaveletTree {
      * @param text the text
      * @param waitingHandler the waiting handler
      * @param root the root
-     * @param numMasses  number of masses plus modifications
+     * @param numMasses number of masses plus modifications
      * @param hasPTMatTerminus if there is a PTM at the terminus
      */
     public void createWaveletTreeHuffman(byte[] text, WaitingHandler waitingHandler, HuffmanNode root, int numMasses, boolean hasPTMatTerminus) {
@@ -237,12 +221,14 @@ public class WaveletTree {
 
         long[] alphabetExcluded = new long[2];
         alphabetExcluded[0] = 1L << '$';
-        if (!hasPTMatTerminus) alphabetExcluded[0] |= 1L << '/';
+        if (!hasPTMatTerminus) {
+            alphabetExcluded[0] |= 1L << '/';
+        }
         /*
         alphabetExcluded[1] = 1L << ('B' & 63);
         alphabetExcluded[1] |= 1L << ('X' & 63);
         alphabetExcluded[1] |= 1L << ('Z' & 63);
-        */
+         */
 
         long[] alphabet_left = new long[2];
         long[] alphabet_right = new long[2];
@@ -318,8 +304,12 @@ public class WaveletTree {
                 rightChild = new WaveletTree(text_right, waitingHandler, root.rightChild, numMasses, hasPTMatTerminus);
             }
         }
-        if (leftChild != null) leftRightMask = 4;
-        if (rightChild != null) leftRightMask |= 2;
+        if (leftChild != null) {
+            leftRightMask = 4;
+        }
+        if (rightChild != null) {
+            leftRightMask |= 2;
+        }
     }
 
     /**
@@ -427,10 +417,13 @@ public class WaveletTree {
     public int[][] rangeQuery(int leftIndex, int rightIndex) {
         int[][] query = new int[numMasses + 1][];
         query[numMasses] = new int[]{0};
-        
-        if (leftIndex + 1 < rightIndex) rangeQuery(leftIndex, rightIndex, query);
-        else rangeQueryOneValue(rightIndex, query);
-        
+
+        if (leftIndex + 1 < rightIndex) {
+            rangeQuery(leftIndex, rightIndex, query);
+        } else {
+            rangeQueryOneValue(rightIndex, query);
+        }
+
         return query;
     }
 
@@ -444,7 +437,7 @@ public class WaveletTree {
     public void rangeQuery(int leftIndex, int rightIndex, int[][] setCharacter) {
         int newLeftIndex = (leftIndex >= 0) ? rank.getRankOne(leftIndex) : 0;
         int newRightIndex = (rightIndex >= 0) ? rank.getRankOne(rightIndex) : 0;
-        
+
         if (continueRightRangeQuery && newRightIndex - newLeftIndex > 0) {
             if (rightChild != null) {
                 rightChild.rangeQuery(newLeftIndex - 1, newRightIndex - 1, setCharacter);
@@ -463,7 +456,6 @@ public class WaveletTree {
             }
         }
     }
-    
 
     /**
      * Fills a list of character and new left/right index for a given index.
@@ -474,36 +466,32 @@ public class WaveletTree {
     public void rangeQueryOneValue(int index, int[][] setCharacter) {
         int switchOption = rank.isOneInt(index);
         switchOption += leftRightMask & (4 >> switchOption);
-        switch(switchOption){
-                
+        switch (switchOption) {
+
             case 3: // go right and right child avaliable
                 int newIndex3 = rank.getRankOne(index);
                 rightChild.rangeQueryOneValue(newIndex3 - 1, setCharacter);
                 break;
-                
+
             case 4: // go left and left child avaliable
                 int newIndex4 = rank.getRankZero(index);
                 leftChild.rangeQueryOneValue(newIndex4 - 1, setCharacter);
                 break;
-                
+
             case 0: // go left and no left child avaliable
                 int newIndex0 = rank.getRankZero(index);
                 setCharacter[setCharacter[numMasses][0]++] = new int[]{firstChar, newIndex0 - 1, newIndex0, firstChar, -1};
                 break;
-                
+
             case 1: // go right and no right child avaliable
                 int newIndex1 = rank.getRankOne(index);
                 setCharacter[setCharacter[numMasses][0]++] = new int[]{lastChar, newIndex1 - 1, newIndex1, lastChar, -1};
                 break;
         }
     }
-    
-    
-    
 
     /**
-     * Returns a new left/right index range for a given character
-     * recursively.
+     * Returns a new left/right index range for a given character recursively.
      *
      * @param leftIndex left index boundary
      * @param rightIndex right index boundary

@@ -25,12 +25,6 @@ import javax.swing.*;
  */
 public class RescalingEvent {
 
-    /**
-     * Empty default constructor
-     */
-    public RescalingEvent() {
-    }
-
     // Class specific log4j logger for RescalingEvent instances.
     Logger logger = Logger.getLogger(RescalingEvent.class);
 

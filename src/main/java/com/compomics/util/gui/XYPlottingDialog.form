@@ -197,7 +197,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Density"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="densityPlotRadioButtonActionPerformed"/>
@@ -210,7 +209,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Histogram"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="histogramRadioButtonActionPerformed"/>
@@ -224,7 +222,6 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="XY Plot"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="xyPlotRadioButtonActionPerformed"/>
@@ -450,7 +447,6 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Drag to Select"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="dragToZoomRadioButton">
@@ -460,7 +456,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Drag to Zoom"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -509,7 +504,6 @@
                 <Property name="text" type="java.lang.String" value="X Axis"/>
                 <Property name="toolTipText" type="java.lang.String" value="Use logarithmic axis"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="xAxisLogCheckBoxActionPerformed"/>
@@ -520,7 +514,6 @@
                 <Property name="text" type="java.lang.String" value="Y Axis"/>
                 <Property name="toolTipText" type="java.lang.String" value="Use logarithmic axis"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="yAxisLogCheckBoxActionPerformed"/>
@@ -531,7 +524,6 @@
                 <Property name="text" type="java.lang.String" value="Size"/>
                 <Property name="toolTipText" type="java.lang.String" value="Use logarithmic scaling for the size"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sizeLogCheckBoxActionPerformed"/>

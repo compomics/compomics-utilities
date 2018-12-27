@@ -21,12 +21,6 @@ import no.uib.jsparklines.renderers.util.Util;
 public class AtomChainDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public AtomChainDialog() {
-    }
-
-    /**
      * The added atom chain edited by the user.
      */
     private AtomChain atomChainAdded;

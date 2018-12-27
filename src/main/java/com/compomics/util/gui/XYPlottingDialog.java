@@ -206,20 +206,6 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
     }
 
     /**
-     * Empty default constructor
-     */
-    public XYPlottingDialog() {
-        tableModel = null;
-        dialogParent = null;
-        cellRenderers = null;
-        maxColumnWidths = null;
-        minColumnWidths = null;
-        tableToolTips = null;
-        normalIcon = null;
-        waitingIcon = null;
-    }
-
-    /**
      * Creates a new XYPlottingDialog.
      *
      * @param dialogParent the dialog parent

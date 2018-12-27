@@ -44,7 +44,7 @@ public class ModificationUtils {
      */
     public static final int[] zero = new int[]{0};
     /**
-     * map of arrays for c-term.
+     * Map of arrays for c-term.
      */
     public static final HashMap<Integer, int[]> arraysMap = new HashMap<>();
 

@@ -10,13 +10,6 @@ import no.uib.jsparklines.data.XYDataPoint;
 public class VennDiagramLegendLocationDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public VennDiagramLegendLocationDialog() {
-        vennDiagramDialog = null;
-    }
-
-    /**
      * The VennDiagramDialog parent.
      */
     private final VennDiagramDialog vennDiagramDialog;

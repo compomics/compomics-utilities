@@ -13,12 +13,6 @@ import java.util.ArrayList;
 public class TempFilesManager {
 
     /**
-     * Empty default constructor
-     */
-    public TempFilesManager() {
-    }
-
-    /**
      * List of the temp folders created during this instance.
      */
     private static final ArrayList<File> tempFolders = new ArrayList<File>();

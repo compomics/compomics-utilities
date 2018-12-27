@@ -34,12 +34,6 @@ import java.awt.*;
  */
 public class JLabelAndComponentPanel extends JPanel {
 
-    /**
-     * Empty default constructor
-     */
-    public JLabelAndComponentPanel() {
-    }
-
     // Class specific log4j logger for JLabelAndComponentPanel instances.
     Logger logger = Logger.getLogger(JLabelAndComponentPanel.class);
 

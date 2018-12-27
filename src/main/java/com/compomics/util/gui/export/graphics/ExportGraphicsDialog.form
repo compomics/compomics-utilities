@@ -133,7 +133,6 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="PNG (Portable Network Graphics)"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="tiffJRadioButton">
@@ -143,7 +142,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="TIFF (Tagged Image File Format)"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="pdfJRadioButton">
@@ -153,7 +151,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="PDF (Portable Document Format)"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="svgJRadioButton">
@@ -163,7 +160,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="SVG (Scalable Vector Graphics)"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>

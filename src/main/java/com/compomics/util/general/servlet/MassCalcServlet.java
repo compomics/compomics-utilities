@@ -32,12 +32,6 @@ import com.compomics.util.general.UnknownElementMassException;
  */
 public class MassCalcServlet extends HttpServlet {
 
-    /**
-     * Empty default constructor
-     */
-    public MassCalcServlet() {
-    }
-
     // Class specific log4j logger for MassCalcServlet instances.
     Logger logger = Logger.getLogger(MassCalcServlet.class);
 

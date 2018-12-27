@@ -39,12 +39,6 @@ import java.util.zip.*;
  */
 public class JFrameForBytes extends JFrame {
 
-    /**
-     * Empty default constructor
-     */
-    public JFrameForBytes() {
-    }
-
     // Class specific log4j logger for JFrameForBytes instances.
     Logger logger = Logger.getLogger(JFrameForBytes.class);
 

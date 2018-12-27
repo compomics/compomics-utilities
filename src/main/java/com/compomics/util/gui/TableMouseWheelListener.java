@@ -16,13 +16,6 @@ import javax.swing.JTable;
 public class TableMouseWheelListener implements MouseWheelListener {
 
     /**
-     * Empty default constructor
-     */
-    public TableMouseWheelListener() {
-        table = null;
-    }
-
-    /**
      * The table to be monitored. Must have a SelfUpdatingTableModel as the
      * table model.
      */

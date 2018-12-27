@@ -29,12 +29,6 @@ import javax.swing.SwingConstants;
 public class SpeciesDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public SpeciesDialog() {
-    }
-
-    /**
      * The frame parent, if any.
      */
     private java.awt.Frame parentFrame = null;

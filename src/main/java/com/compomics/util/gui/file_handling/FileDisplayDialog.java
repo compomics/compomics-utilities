@@ -14,12 +14,6 @@ import javax.swing.JFrame;
 public class FileDisplayDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public FileDisplayDialog() {
-    }
-
-    /**
      * The list of files.
      */
     private ArrayList<File> files;

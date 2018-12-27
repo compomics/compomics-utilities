@@ -272,7 +272,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Report Title"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maintTitleCheckBoxActionPerformed"/>
@@ -282,7 +281,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Section Titles"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JSpinner" name="separationLinesSpinner">
@@ -310,7 +308,6 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Line Numbers"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="headerCheckBox">
@@ -318,7 +315,6 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Table Headers"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="tabRadioButton">
@@ -329,7 +325,6 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Tab"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="semicolonRadioButton">
@@ -339,7 +334,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Semicolon"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="commaRadioButton">
@@ -349,7 +343,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Comma"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JRadioButton" name="spaceRadioButton">
@@ -359,7 +352,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Space"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="columnDelimiterLabel">
@@ -397,14 +389,12 @@
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Validated Only"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="decoysCheck">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Include Decoys"/>
                 <Property name="iconTextGap" type="int" value="15"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -559,7 +549,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Show Advanced Features"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="advancedFeaturesCheckActionPerformed"/>
@@ -569,7 +558,6 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Show Sub Features"/>
                 <Property name="iconTextGap" type="int" value="10"/>
-                <Property name="opaque" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="subFeaturesCheckActionPerformed"/>

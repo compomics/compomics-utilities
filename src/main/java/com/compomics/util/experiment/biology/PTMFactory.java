@@ -4081,105 +4081,105 @@ public class PTMFactory implements Serializable {
         } else if (ptmName.equalsIgnoreCase("Pyrolidone from carbamidomethylated C")) {
             return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("S-nitrosylation")) {
-
+            return "00235";
         } else if (ptmName.equalsIgnoreCase("SUMO-2/3 Q87R")) {
-
+            return "01149"; // @TODO: maps to parent term "sumoylated lysine"...
         } else if (ptmName.equalsIgnoreCase("Sodium adduct to D")) {
-
+            return "01295";
         } else if (ptmName.equalsIgnoreCase("Sodium adduct to E")) {
-
+            return "01296";
         } else if (ptmName.equalsIgnoreCase("Sulfation of S")) {
-
+            return "00366";
         } else if (ptmName.equalsIgnoreCase("Sulfation of T")) {
-
+            return "00367";
         } else if (ptmName.equalsIgnoreCase("Sulfation of Y")) {
-
+            return "00181";
         } else if (ptmName.equalsIgnoreCase("TMT 10-plex of K")) {
-
+            return "01715"; // @TODO: maps to parent term "TMT6plex reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("TMT 10-plex of K+4")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("TMT 10-plex of K+6")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("TMT 10-plex of K+8")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("TMT 10-plex of peptide N-term")) {
-
+            return "01715"; // @TODO: maps to parent term "TMT6plex reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("TMT 11-plex of K")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("TMT 11-plex of K+4")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("TMT 11-plex of K+6")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("TMT 11-plex of K+8")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("TMT 11-plex of peptide N-term")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("TMT 2-plex of K")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("TMT 2-plex of peptide N-term")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("TMT 6-plex of K")) {
-
+            return "01715"; // @TODO: maps to parent term "TMT6plex reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("TMT 6-plex of K+4")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("TMT 6-plex of K+6")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("TMT 6-plex of K+8")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("TMT 6-plex of peptide N-term")) {
-
+            return "01715"; // @TODO: maps to parent term "TMT6plex reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("Thioacyl of peptide N-term")) {
-
+            return "01223";
         } else if (ptmName.equalsIgnoreCase("Trideuterated Methyl Ester of D")) {
-
+            return "01241";
         } else if (ptmName.equalsIgnoreCase("Trideuterated Methyl Ester of E")) {
-
+            return "01242";
         } else if (ptmName.equalsIgnoreCase("Trideuterated Methyl Ester of K")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Trideuterated Methyl Ester of R")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("Trideuterated Methyl Ester of peptide C-term")) {
-
+            return "00617";
         } else if (ptmName.equalsIgnoreCase("Trimethylation of K")) {
-
+            return "00855";
         } else if (ptmName.equalsIgnoreCase("Trimethylation of R")) {
-
+            return "01669";
         } else if (ptmName.equalsIgnoreCase("Trimethylation of protein N-term A")) {
-
+            return "01687";
         } else if (ptmName.equalsIgnoreCase("Trioxidation of C")) {
-
+            return "00460";
         } else if (ptmName.equalsIgnoreCase("Ubiquitination of K")) {
-
+            return "00492";
         } else if (ptmName.equalsIgnoreCase("iTRAQ 4-plex of K")) {
-
+            return "01518"; // @TODO: maps to parent term "iTRAQ4plex reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("iTRAQ 4-plex of Y")) {
-
+            return "01518"; // @TODO: maps to parent term "iTRAQ4plex reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("iTRAQ 4-plex of peptide N-term")) {
-
+            return "01518"; // @TODO: maps to parent term "iTRAQ4plex reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("iTRAQ 8-plex of K")) {
-
+            return "01526";  // @TODO: maps to parent term "iTRAQ8plex reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("iTRAQ 8-plex of Y")) {
-
+            return "01526";  // @TODO: maps to parent term "iTRAQ8plex reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("iTRAQ 8-plex of peptide N-term")) {
-
+            return "01526";  // @TODO: maps to parent term "iTRAQ8plex reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("iodoTMT 6-plex of C")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("iodoTMT zero of C")) {
-
+            return null; // @TODO: add mapping?
         } else if (ptmName.equalsIgnoreCase("mTRAQ of 13C(6) 15N(2)")) {
-
+            return "01863"; // @TODO: maps to parent term "mTRAQ reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("mTRAQ of K 13C(3) 15N")) {
-
+            return "01863"; // @TODO: maps to parent term "mTRAQ reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("mTRAQ of K light")) {
-
+            return "01863"; // @TODO: maps to parent term "mTRAQ reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("mTRAQ of peptide N-term 13C(3) 15N")) {
-
+            return "01863"; // @TODO: maps to parent term "mTRAQ reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("mTRAQ of peptide N-term 13C(6) 15N(2)")) {
-
+            return "01863"; // @TODO: maps to parent term "mTRAQ reporter+balance reagent acylated residue"...
         } else if (ptmName.equalsIgnoreCase("mTRAQ of peptide N-term light")) {
-
+            return "01863"; // @TODO: maps to parent term "mTRAQ reporter+balance reagent acylated residue"...
+        } else {
+            return null;
         }
-
-        return null;
     }
 }

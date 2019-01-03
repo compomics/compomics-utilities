@@ -134,9 +134,19 @@ public class ModificationParameters {
      */
     public ArrayList<String> getAllModifications() {
 
-        return Stream.concat(fixedModifications.stream(), variableModifications.stream())
+        ArrayList<String> result = Stream.concat(fixedModifications.stream(), variableModifications.stream())
                 .distinct()
                 .collect(Collectors.toCollection(ArrayList::new));
+
+        refinementFixedModifications.stream().filter((ptmName) -> (!result.contains(ptmName))).forEachOrdered((ptmName) -> {
+            result.add(ptmName);
+        });
+
+        refinementVariableModifications.stream().filter((ptmName) -> (!result.contains(ptmName))).forEachOrdered((ptmName) -> {
+            result.add(ptmName);
+        });
+
+        return result;
 
     }
 
@@ -153,15 +163,13 @@ public class ModificationParameters {
                 .distinct()
                 .collect(Collectors.toCollection(ArrayList::new));
 
-        if (!refinementFixedModifications.isEmpty()) {
+        refinementVariableModifications.stream().filter((ptmName) -> (!result.contains(ptmName))).forEachOrdered((ptmName) -> {
+            result.add(ptmName);
+        });
 
-            HashSet<String> fixedAsSet = new HashSet<>(fixedModifications);
-            result = Stream.concat(result.stream(), refinementFixedModifications.stream()
-                    .filter(modName -> !fixedAsSet.contains(modName)))
-                    .distinct()
-                    .collect(Collectors.toCollection(ArrayList::new));
-
-        }
+        refinementFixedModifications.stream().filter((ptmName) -> (!fixedModifications.contains(ptmName) && !result.contains(ptmName))).forEachOrdered((ptmName) -> {
+            result.add(ptmName);
+        });
 
         return result;
     }
@@ -248,22 +256,22 @@ public class ModificationParameters {
      * Returns the color used to code the given modification.
      *
      * @param modification the name of the given expected modification
-     * 
+     *
      * @return the corresponding color
      */
     public int getColor(String modification) {
-        
+
         Integer color = colors.get(modification);
-        
+
         if (color == null) {
-        
+
             ModificationFactory modificationFactory = ModificationFactory.getInstance();
             color = modificationFactory.getColor(modification);
-            
+
             setColor(modification, color);
-        
+
         }
-        
+
         return color;
     }
 
@@ -365,13 +373,13 @@ public class ModificationParameters {
      * @return a list of all not fixed modifications with the same mass
      */
     public ArrayList<String> getSameMassNotFixedModifications(double modificationMass) {
-        
+
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
-        
+
         return getAllNotFixedModifications().stream()
                 .filter(modName -> modificationFactory.getModification(modName).getMass() == modificationMass)
                 .collect(Collectors.toCollection(ArrayList::new));
-        
+
     }
 
     /**

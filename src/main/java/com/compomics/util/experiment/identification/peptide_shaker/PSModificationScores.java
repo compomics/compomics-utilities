@@ -421,8 +421,8 @@ public class PSModificationScores extends DbObject implements UrParameter {
     /**
      * Returns the main potential modifications at the given amino acid index.
      *
-     * @param site the index in the sequence (0 is first amino acid) //@TODO:
-     * check that it is 0 and not 1
+     * @param site the index in the sequence (1 is first amino acid)
+     * 
      * @return a list containing all potential modifications as main match, an
      * empty list if none found
      */

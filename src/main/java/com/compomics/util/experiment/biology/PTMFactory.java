@@ -42,7 +42,7 @@ public class PTMFactory implements Serializable {
      * The name of the PTM factory back-up file. The version number follows the
      * one of utilities.
      */
-    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.12.13.json";
+    private static String SERIALIZATION_FILE_NAME = "ptmFactory-4.12.14.json";
     /**
      * A map linking indexes with modifications.
      */
@@ -1634,19 +1634,6 @@ public class PTMFactory implements Serializable {
         ptmName = "Proline 13C(5)";
         ptm = new PTM(PTM.MODAA, ptmName, "*", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:772", "Label:13C(5)", null));
-        defaultMods.add(ptmName);
-        ptmMap.put(ptmName, ptm);
-
-        // 4-Hydroxyloproline
-        atomChainAdded = new AtomChain();
-        atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
-        atomChainAdded.append(new AtomImpl(Atom.H, 0), 9);
-        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
-        atomChainRemoved = null;
-        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
-        ptmName = "4-Hydroxyproline";
-        ptm = new PTM(PTM.MODAA, ptmName, "hydroxy", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        //ptm.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:", "", null)); // @TODO: add cv term...
         defaultMods.add(ptmName);
         ptmMap.put(ptmName, ptm);
 
@@ -3864,8 +3851,6 @@ public class PTMFactory implements Serializable {
             return "00581";
         } else if (ptmName.equalsIgnoreCase("18O(2) of peptide C-term")) {
             return "00546";
-        } else if (ptmName.equalsIgnoreCase("4-Hydroxyproline")) {
-            return "00678"; // @TODO: maps to parent term "hydroxylated proline"...
         } else if (ptmName.equalsIgnoreCase("Acetaldehyde +26")) {
             return "00577"; // @TODO: not peptide n-term specific
         } else if (ptmName.equalsIgnoreCase("Acetylation of K")) {
@@ -4037,9 +4022,9 @@ public class PTMFactory implements Serializable {
         } else if (ptmName.equalsIgnoreCase("Oxidation of K")) {
             return "01047"; // @TODO: maps to parent term "monohydroxylated lysine"...
         } else if (ptmName.equalsIgnoreCase("Oxidation of M")) {
-            return "";
-        } else if (ptmName.equalsIgnoreCase("Oxidation of P")) {
             return null; // @TODO: add mapping?
+        } else if (ptmName.equalsIgnoreCase("Oxidation of P")) {
+            return "00039";
         } else if (ptmName.equalsIgnoreCase("Palmitoylation of C")) {
             return "00440";  // @TODO: maps to parent term "palmitoylated residue"...
         } else if (ptmName.equalsIgnoreCase("Palmitoylation of K")) {

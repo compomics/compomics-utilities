@@ -62,9 +62,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setPeptideAssumptionMap(HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> peptideAssumptionsMap) {
         
-        
         writeDBMode();
-        
         
         this.peptideAssumptionsMap = peptideAssumptionsMap;
     }
@@ -76,9 +74,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setTagAssumptionMap(HashMap<Integer, TreeMap<Double, ArrayList<TagAssumption>>> tagAssumptionsMap) {
         
-        
         writeDBMode();
-        
         
         this.tagAssumptionsMap = tagAssumptionsMap;
     }
@@ -93,7 +89,6 @@ public class SpectrumMatch extends IdentificationMatch {
         this.spectrumKey = spectrumKey;
         this.key = ExperimentObject.asLong(spectrumKey);
         
-        peptideAssumptionsMap = new HashMap<>(1);
     }
     
     /**
@@ -121,9 +116,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public PeptideAssumption getBestPeptideAssumption() {
         
-        
         readDBMode();
-        
         
         return bestPeptideAssumption;
     }
@@ -135,9 +128,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setBestPeptideAssumption(PeptideAssumption bestPeptideAssumption) {
         
-        
         writeDBMode();
-        
         
         this.bestPeptideAssumption = bestPeptideAssumption;
     }
@@ -149,9 +140,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public TagAssumption getBestTagAssumption() {
         
-        
         readDBMode();
-        
         
         return bestTagAssumption;
     }
@@ -163,9 +152,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setBestTagAssumption(TagAssumption bestTagAssumption) {
         
-        
         writeDBMode();
-        
         
         this.bestTagAssumption = bestTagAssumption;
     }
@@ -177,9 +164,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public String getSpectrumKey() {
         
-        
         readDBMode();
-        
         
         return spectrumKey;
     }
@@ -187,9 +172,7 @@ public class SpectrumMatch extends IdentificationMatch {
     @Override
     public long getKey() {
         
-        
         readDBMode();
-        
         
         return key;
     }
@@ -204,9 +187,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public TreeMap<Double, ArrayList<PeptideAssumption>> getAllPeptideAssumptions(int advocateId) {
         
-        
         readDBMode();
-        
         
         return peptideAssumptionsMap.get(advocateId);
     }
@@ -221,9 +202,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public TreeMap<Double, ArrayList<TagAssumption>> getAllTagAssumptions(int advocateId) {
         
-        
         readDBMode();
-        
         
         return tagAssumptionsMap.get(advocateId);
     }
@@ -235,9 +214,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public Stream<PeptideAssumption> getAllPeptideAssumptions() {
         
-        
         readDBMode();
-        
         
         return peptideAssumptionsMap.values().stream()
                 .flatMap(algorithmMap -> algorithmMap.values().stream())
@@ -251,9 +228,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public Stream<TagAssumption> getAllTagAssumptions() {
         
-        
         readDBMode();
-        
         
         return tagAssumptionsMap.values().stream()
                 .flatMap(algorithmMap -> algorithmMap.values().stream())
@@ -268,9 +243,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> getPeptideAssumptionsMap() {
         
-        
         readDBMode();
-        
         
         return peptideAssumptionsMap;
     }
@@ -283,9 +256,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public HashMap<Integer, TreeMap<Double, ArrayList<TagAssumption>>> getTagAssumptionsMap() {
         
-        
         readDBMode();
-        
         
         return tagAssumptionsMap;
     }
@@ -298,9 +269,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void addPeptideAssumption(int advocateId, PeptideAssumption peptideAssumption) {
         
-        
         writeDBMode();
-        
         
         TreeMap<Double, ArrayList<PeptideAssumption>> advocateMap = peptideAssumptionsMap.get(advocateId);
         
@@ -376,9 +345,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void setSpectrumKey(String spectrumKey) {
         
-        
         writeDBMode();
-        
         
         this.spectrumKey = spectrumKey;
         this.key = ExperimentObject.asLong(spectrumKey);
@@ -392,9 +359,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void removePeptideAssumption(PeptideAssumption peptideAssumption) {
         
-        
         writeDBMode();
-        
         
         int se = peptideAssumption.getAdvocate();
         TreeMap<Double, ArrayList<PeptideAssumption>> algorithmMap = peptideAssumptionsMap.get(se);
@@ -420,9 +385,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public void removeTagAssumption(TagAssumption tagAssumption) {
         
-        
         writeDBMode();
-        
         
         int se = tagAssumption.getAdvocate();
         TreeMap<Double, ArrayList<TagAssumption>> algorithmMap = tagAssumptionsMap.get(se);
@@ -450,11 +413,10 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public boolean hasPeptideAssumption() {
         
-        
         readDBMode();
         
-
-        return peptideAssumptionsMap.values().stream().flatMap(algorithmMap -> algorithmMap.values().stream())
+        return peptideAssumptionsMap.values().stream()
+                .flatMap(algorithmMap -> algorithmMap.values().stream())
                 .anyMatch(assumptionsList -> !assumptionsList.isEmpty());
     }
 
@@ -466,10 +428,8 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public boolean hasTagAssumption() {
         
-        
         readDBMode();
         
-
         return tagAssumptionsMap.values().stream().flatMap(algorithmMap -> algorithmMap.values().stream())
                 .anyMatch(assumptionsList -> !assumptionsList.isEmpty());
     }
@@ -485,10 +445,8 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public boolean hasPeptideAssumption(int advocateId) {
         
-        
         readDBMode();
         
-
         TreeMap<Double, ArrayList<PeptideAssumption>> algorithmIds = peptideAssumptionsMap.get(advocateId);
 
         return algorithmIds == null ? false : algorithmIds.values().stream().anyMatch(assumptions -> !assumptions.isEmpty());
@@ -505,10 +463,8 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     public boolean hasTagAssumption(int advocateId) {
         
-        
         readDBMode();
         
-
         TreeMap<Double, ArrayList<TagAssumption>> algorithmIds = tagAssumptionsMap.get(advocateId);
 
         return algorithmIds == null ? false : algorithmIds.values().stream().anyMatch(assumptions -> !assumptions.isEmpty());

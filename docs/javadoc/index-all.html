@@ -2266,6 +2266,8 @@
 <dd>
 <div class="block">Closes the buffered writer.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#close--">close()</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/SpectrumFactory.html#closeFiles--">closeFiles()</a></span> - Method in class com.compomics.util.experiment.mass_spectrometry.<a href="com/compomics/util/experiment/mass_spectrometry/SpectrumFactory.html" title="class in com.compomics.util.experiment.mass_spectrometry">SpectrumFactory</a></dt>
 <dd>
 <div class="block">Closes all opened files.</div>
@@ -2825,6 +2827,10 @@
 <dt><a href="com/compomics/util/io/file/filefilters/package-summary.html">com.compomics.util.io.file.filefilters</a> - package com.compomics.util.io.file.filefilters</dt>
 <dd>
 <div class="block">Classes related to file filters.</div>
+</dd>
+<dt><a href="com/compomics/util/io/flat/package-summary.html">com.compomics.util.io.flat</a> - package com.compomics.util.io.flat</dt>
+<dd>
+<div class="block">Export of flat files.</div>
 </dd>
 <dt><a href="com/compomics/util/io/ftp/package-summary.html">com.compomics.util.io.ftp</a> - package com.compomics.util.io.ftp</dt>
 <dd>
@@ -4439,6 +4445,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/writers/TextWriter.html#encoding">encoding</a></span> - Static variable in class com.compomics.util.io.export.writers.<a href="com/compomics/util/io/export/writers/TextWriter.html" title="class in com.compomics.util.io.export.writers">TextWriter</a></dt>
 <dd>
 <div class="block">Encoding for the file, cf the second rule.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/Utils.html#encoding">encoding</a></span> - Static variable in class com.compomics.util.io.<a href="com/compomics/util/io/Utils.html" title="class in com.compomics.util.io">Utils</a></dt>
+<dd>
+<div class="block">Default encoding, cf the second rule.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/waiting/Duration.html#end--">end()</a></span> - Method in class com.compomics.util.waiting.<a href="com/compomics/util/waiting/Duration.html" title="class in com.compomics.util.waiting">Duration</a></dt>
 <dd>
@@ -23680,6 +23690,10 @@
 <dd>
 <div class="block">The columns separator.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#separator">separator</a></span> - Static variable in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
+<dd>
+<div class="block">The separator for exported files.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/Util.html#separator">separator</a></span> - Static variable in class com.compomics.util.<a href="com/compomics/util/Util.html" title="class in com.compomics.util">Util</a></dt>
 <dd>
 <div class="block">Separator which can be used to separate things.</div>
@@ -27486,6 +27500,15 @@
 <dd>
 <div class="block">Convenience date format.</div>
 </dd>
+<dt><a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat"><span class="typeNameLink">SimpleFileWriter</span></a> - Class in <a href="com/compomics/util/io/flat/package-summary.html">com.compomics.util.io.flat</a></dt>
+<dd>
+<div class="block">Simple gz file writer that is thread safe and throws exceptions as runtime
+ exceptions.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#SimpleFileWriter-java.io.File-boolean-">SimpleFileWriter(File, boolean)</a></span> - Constructor for class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
+<dd>
+<div class="block">Constructor.</div>
+</dd>
 <dt><a href="com/compomics/util/math/statistics/linear_regression/regressions/SimpleLinearRegression.html" title="class in com.compomics.util.math.statistics.linear_regression.regressions"><span class="typeNameLink">SimpleLinearRegression</span></a> - Class in <a href="com/compomics/util/math/statistics/linear_regression/regressions/package-summary.html">com.compomics.util.math.statistics.linear_regression.regressions</a></dt>
 <dd>
 <div class="block">Performs a simple linear regression.</div>
@@ -29241,6 +29264,12 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
+<dt><a href="com/compomics/util/io/Utils.html" title="class in com.compomics.util.io"><span class="typeNameLink">Utils</span></a> - Class in <a href="com/compomics/util/io/package-summary.html">com.compomics.util.io</a></dt>
+<dd>
+<div class="block">Utils for IO.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/Utils.html#Utils--">Utils()</a></span> - Constructor for class com.compomics.util.io.<a href="com/compomics/util/io/Utils.html" title="class in com.compomics.util.io">Utils</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="I:V">
 <!--   -->
@@ -30258,6 +30287,10 @@ the order they are declared.</div>
 <dd>
 <div class="block">Writes the content to the file.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#write-java.lang.String-boolean-">write(String, boolean)</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
+<dd>
+<div class="block">Writes some text.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/json/adapter/FileAdapter.html#write-com.google.gson.stream.JsonWriter-java.lang.Object-">write(JsonWriter, Object)</a></span> - Method in class com.compomics.util.io.json.adapter.<a href="com/compomics/util/io/json/adapter/FileAdapter.html" title="class in com.compomics.util.io.json.adapter">FileAdapter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html#writeAplFile-java.io.File-java.io.File-java.lang.String-">writeAplFile(File, File, String)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfReader</a></dt>
@@ -30303,6 +30336,14 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/xml/SimpleXmlWriter.html#writeLine-java.lang.String-">writeLine(String)</a></span> - Method in class com.compomics.util.io.export.xml.<a href="com/compomics/util/io/export/xml/SimpleXmlWriter.html" title="class in com.compomics.util.io.export.xml">SimpleXmlWriter</a></dt>
 <dd>
 <div class="block">Writes the given line.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#writeLine-java.lang.String...-">writeLine(String...)</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
+<dd>
+<div class="block">Writes a new line using the give elements.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#writeLine-java.lang.String-">writeLine(String)</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
+<dd>
+<div class="block">Writes a new line.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/xml/SimpleXmlWriter.html#writeLineDecreasedIndent-java.lang.String-">writeLineDecreasedIndent(String)</a></span> - Method in class com.compomics.util.io.export.xml.<a href="com/compomics/util/io/export/xml/SimpleXmlWriter.html" title="class in com.compomics.util.io.export.xml">SimpleXmlWriter</a></dt>
 <dd>

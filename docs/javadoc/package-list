@@ -130,6 +130,7 @@ com.compomics.util.io.export.writers
 com.compomics.util.io.export.xml
 com.compomics.util.io.file
 com.compomics.util.io.file.filefilters
+com.compomics.util.io.flat
 com.compomics.util.io.ftp
 com.compomics.util.io.json
 com.compomics.util.io.json.adapter

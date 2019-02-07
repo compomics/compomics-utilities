@@ -398,12 +398,12 @@ public class IdentificationFeaturesGenerator {
                     coverage.put(validationLevel, validationLevelCoverage);
 
                 }
-
+                
                 for (int peptideStart : peptide.getProteinMapping().get(accession)) {
 
                     int peptideEnd = peptide.getPeptideEnd(accession, peptideStart);
 
-                    for (int j = peptideStart; j < peptideEnd; j++) {
+                    for (int j = peptideStart; j <= peptideEnd; j++) {
 
                         validationLevelCoverage.add(j);
 

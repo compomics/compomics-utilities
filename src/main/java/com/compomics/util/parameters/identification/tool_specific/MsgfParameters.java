@@ -58,6 +58,16 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
      * The maximum number of modifications per peptide.
      */
     private Integer numberOfModificationsPerPeptide = 2;
+    /**
+     * The number of tasks. Null if not set, meaning that it will be internally
+     * calculated based on the inputs. More tasks than threads will reduce the
+     * memory requirements of the search, but will be slower (how much depends
+     * on the inputs). If the spectrum file is particularly large, a larger
+     * number of tasks will decrease the possibility of out of memory errors. If
+     * the FASTA file being searched is larger than 10MB, more tasks will cause
+     * a noticeably longer search time.
+     */
+    private Integer numberOfTasks = null;
 
     /**
      * Constructor.
@@ -103,6 +113,11 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
                 return false;
             }
             if (!numberOfModificationsPerPeptide.equals(msgfParameters.getNumberOfModificationsPerPeptide())) {
+                return false;
+            }
+            if (numberOfTasks != null && msgfParameters.getNumberOfTasks() == null
+                    || numberOfTasks == null && msgfParameters.getNumberOfTasks() != null
+                    || (numberOfTasks != null && msgfParameters.getNumberOfTasks() != null && !numberOfTasks.equals(msgfParameters.getNumberOfTasks()))) {
                 return false;
             }
             return true;
@@ -158,6 +173,9 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append("MAX_NUMBER_MODIFICATIONS=");
         output.append(numberOfModificationsPerPeptide);
+        output.append(newLine);
+        output.append("NUMBER_TASKS=");
+        output.append(numberOfTasks);
         output.append(newLine);
 
         return output.toString();
@@ -342,5 +360,23 @@ public class MsgfParameters implements IdentificationAlgorithmParameter {
      */
     public void setNumberOfModificationsPerPeptide(Integer numberOfModificationsPerPeptide) {
         this.numberOfModificationsPerPeptide = numberOfModificationsPerPeptide;
+    }
+    
+    /**
+     * Returns the number of tasks, null if not set.
+     *
+     * @return the number of tasks
+     */
+    public Integer getNumberOfTasks() {
+        return numberOfTasks;
+    }
+
+    /**
+     * Set the number of tasks. Set to null to leave the choice to MS-GF+.
+     *
+     * @param numberOfTasks the number of tasks
+     */
+    public void setNumberOfTasks(Integer numberOfTasks) {
+        this.numberOfTasks = numberOfTasks;
     }
 }

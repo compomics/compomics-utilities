@@ -72,7 +72,7 @@ public class ModificationsCLIInputBean {
             try {
                 AtomChain.getAtomChain(arg);
             } catch (Exception e) {
-                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the added atomic composition of the PTM (see below)." + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the added atomic composition of the PTM." + System.getProperty("line.separator"));
                 e.printStackTrace();
                 return false;
             }
@@ -87,7 +87,7 @@ public class ModificationsCLIInputBean {
             try {
                 AtomChain.getAtomChain(arg);
             } catch (Exception e) {
-                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the removed atomic composition of the PTM (see below)." + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the removed atomic composition of the PTM." + System.getProperty("line.separator"));
                 e.printStackTrace();
                 return false;
             }
@@ -106,7 +106,7 @@ public class ModificationsCLIInputBean {
             try {
                 AminoAcidPattern.getAminoAcidPatternFromString(arg);
             } catch (Exception e) {
-                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the amino acid pattern of the PTM (see below)." + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing the amino acid pattern of the PTM." + System.getProperty("line.separator"));
                 e.printStackTrace();
                 return false;
             }

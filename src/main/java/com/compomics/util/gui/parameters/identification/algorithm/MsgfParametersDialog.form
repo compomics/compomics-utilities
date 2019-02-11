@@ -69,7 +69,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="advancedSearchSettingsPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="openDialogHelpJButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="advancedSettingsWarningLabel" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -146,6 +146,11 @@
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="maxPtmsTxt" max="32767" attributes="2"/>
                           </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="numberOfTasksLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="numberOfTasksTxt" max="32767" attributes="2"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -201,7 +206,12 @@
                           <Component id="additionalOutputLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="additionalOutputCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="numberOfTasksLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="numberOfTasksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -252,11 +262,12 @@
             <Component class="javax.swing.JComboBox" name="fragmentationMethodCmb">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
+                  <StringArray count="5">
                     <StringItem index="0" value="Automatic"/>
                     <StringItem index="1" value="CID"/>
                     <StringItem index="2" value="ETD"/>
                     <StringItem index="3" value="HCD"/>
+                    <StringItem index="4" value="UVPD"/>
                   </StringArray>
                 </Property>
                 <Property name="selectedIndex" type="int" value="3"/>
@@ -370,6 +381,20 @@
                 </Property>
                 <Property name="selectedIndex" type="int" value="2"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="numberOfTasksLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Number of Tasks"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="numberOfTasksTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="default"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="numberOfTasksTxtKeyReleased"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

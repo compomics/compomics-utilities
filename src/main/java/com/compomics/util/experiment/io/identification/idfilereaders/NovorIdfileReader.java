@@ -174,7 +174,7 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
         }
 
         // get the spectrum file name
-        String spectrumFileName = new File(inputFile).getName();
+        String spectrumFileName = Util.getFileName(inputFile);
 
         // get the variable modifications
         HashMap<Integer, String> variableModificationsMap = new HashMap<>();

@@ -205,7 +205,7 @@ public class SpectrumFactory {
             }
 
             if (mgfIndex == null) {
-                if (fileName.endsWith(".mgf")) {
+                if (fileName.toLowerCase().endsWith(".mgf")) {
                     mgfIndex = MgfReader.getIndexMap(spectrumFile, waitingHandler);
                 } else {
                     mgfIndex = MspReader.getIndexMap(spectrumFile, waitingHandler);
@@ -267,41 +267,41 @@ public class SpectrumFactory {
      * @return the corresponding precursor
      */
     public Precursor getPrecursor(String fileName, String spectrumTitle, boolean save) {
-        
+
         HashMap<String, Spectrum> fileSpectrumMap = currentSpectrumMap.get(fileName);
-        
+
         if (fileSpectrumMap != null) {
-            
+
             Spectrum spectrum = fileSpectrumMap.get(spectrumTitle);
-            
+
             if (spectrum != null) {
-                
+
                 return spectrum.getPrecursor();
-                
+
             }
         }
-        
+
         HashMap<String, Precursor> filePrecursorMap = loadedPrecursorsMap.get(fileName);
-        
+
         if (filePrecursorMap != null) {
-            
+
             Precursor currentPrecursor = filePrecursorMap.get(spectrumTitle);
-            
+
             if (currentPrecursor != null) {
-                
+
                 return currentPrecursor;
-                
+
             }
         }
-        
+
         try {
-        
-        return getPrecursor(fileName, spectrumTitle, save, 1);
-        
+
+            return getPrecursor(fileName, spectrumTitle, save, 1);
+
         } catch (Exception e) {
-            
+
             throw new RuntimeException(e);
-            
+
         }
     }
 
@@ -310,7 +310,7 @@ public class SpectrumFactory {
      * cache.
      *
      * @param spectrumKey the key of the spectrum
-     * 
+     *
      * @return the corresponding precursor
      */
     public Precursor getPrecursor(String spectrumKey) {
@@ -322,7 +322,7 @@ public class SpectrumFactory {
      * in cache.
      *
      * @param spectrumKey the key of the spectrum
-     * 
+     *
      * @return the corresponding precursor mz
      */
     public double getPrecursorMz(String spectrumKey) {
@@ -351,7 +351,7 @@ public class SpectrumFactory {
      * Returns the maximum m/z for the desired file.
      *
      * @param fileName the file of interest
-     * 
+     *
      * @return the max m/z
      */
     public Double getMaxMz(String fileName) {
@@ -380,7 +380,7 @@ public class SpectrumFactory {
      * Returns the max precursor charge encountered for the given mgf file.
      *
      * @param fileName the name of the mgf file
-     * 
+     *
      * @return the max precursor charge encountered
      */
     public Integer getMaxCharge(String fileName) {
@@ -547,7 +547,7 @@ public class SpectrumFactory {
      * @param spectrumKey the key of the spectrum
      * @param save boolean indicating whether the loaded precursor should be
      * stored in the factory. False by default
-     * 
+     *
      * @return the corresponding precursor
      */
     public Precursor getPrecursor(String spectrumKey, boolean save) {
@@ -739,28 +739,41 @@ public class SpectrumFactory {
      * @return the desired spectrum
      */
     public Spectrum getSpectrum(String spectrumFile, String spectrumTitle) {
-        
+        return getSpectrum(spectrumFile, spectrumTitle, true);
+    }
+
+    /**
+     * Returns the desired spectrum.
+     *
+     * @param spectrumFile name of the spectrum file
+     * @param spectrumTitle title of the spectrum
+     * @param toCacheSpectrum option to cache or not the spectrum
+     *
+     * @return the desired spectrum
+     */
+    public Spectrum getSpectrum(String spectrumFile, String spectrumTitle, boolean toCacheSpectrum) {
+
         HashMap<String, Spectrum> fileMap = currentSpectrumMap.get(spectrumFile);
-        
+
         if (fileMap != null) {
-            
+
             Spectrum currentSpectrum = fileMap.get(spectrumTitle);
-            
+
             if (currentSpectrum != null) {
-                
+
                 return currentSpectrum;
-                
+
             }
         }
-        
+
         try {
-        
-            return getSpectrum(spectrumFile, spectrumTitle, 1);
-        
+
+            return getSpectrum(spectrumFile, spectrumTitle, toCacheSpectrum, 1);
+
         } catch (Exception e) {
-            
+
             throw new RuntimeException(e);
-            
+
         }
     }
 
@@ -768,13 +781,25 @@ public class SpectrumFactory {
      * Returns the desired spectrum.
      *
      * @param spectrumKey key of the spectrum
-     * 
+     *
      * @return the desired spectrum
      */
     public Spectrum getSpectrum(String spectrumKey) {
+        return getSpectrum(spectrumKey, true);
+    }
+
+    /**
+     * Returns the desired spectrum.
+     *
+     * @param spectrumKey key of the spectrum
+     * @param toCacheSpectrum option to cache or not the spectrum
+     *
+     * @return the desired spectrum
+     */
+    public Spectrum getSpectrum(String spectrumKey, boolean toCacheSpectrum) {
         String fileName = Spectrum.getSpectrumFile(spectrumKey);
         String spectrumTitle = Spectrum.getSpectrumTitle(spectrumKey);
-        return getSpectrum(fileName, spectrumTitle);
+        return getSpectrum(fileName, spectrumTitle, toCacheSpectrum);
     }
 
     /**
@@ -794,6 +819,27 @@ public class SpectrumFactory {
      * reading the file
      */
     private synchronized Spectrum getSpectrum(String spectrumFile, String spectrumTitle, long waitingTime) throws IOException, MzMLUnmarshallerException {
+        return getSpectrum(spectrumFile, spectrumTitle, true, waitingTime);
+    }
+
+    /**
+     * Returns the desired spectrum. It can be that the IO is busy (especially
+     * when working on distant servers) thus returning an error. The method will
+     * then retry after waiting waitingTime milliseconds. The waitingTime is
+     * doubled for the next try. The method throws an exception after timeout
+     * (see timeOut attribute).
+     *
+     * @param spectrumFile the name of the file containing the spectrum
+     * @param spectrumTitle the title of the desired spectrum
+     * @param toCacheSpectrum option to cache or not the spectrum
+     * @param waitingTime the waiting time before retry
+     *
+     * @return the desired spectrum
+     *
+     * @throws IOException exception thrown whenever an error occurred while
+     * reading the file
+     */
+    private synchronized Spectrum getSpectrum(String spectrumFile, String spectrumTitle, boolean toCacheSpectrum, long waitingTime) throws IOException, MzMLUnmarshallerException {
 
         if (waitingTime <= 0) {
             throw new IllegalArgumentException("Waiting time should be a positive number.");
@@ -820,7 +866,7 @@ public class SpectrumFactory {
                         wait(waitingTime);
                     } catch (InterruptedException ie) {
                     }
-                    return getSpectrum(spectrumFile, spectrumTitle, 2 * waitingTime);
+                    return getSpectrum(spectrumFile, spectrumTitle, toCacheSpectrum, 2 * waitingTime);
                 } else {
                     e.printStackTrace();
                     throw new IllegalArgumentException("Error while loading spectrum " + spectrumTitle + " of file " + spectrumFile + ".");
@@ -845,7 +891,7 @@ public class SpectrumFactory {
                         wait(waitingTime);
                     } catch (InterruptedException ie) {
                     }
-                    return getSpectrum(spectrumFile, spectrumTitle, 2 * waitingTime);
+                    return getSpectrum(spectrumFile, spectrumTitle, toCacheSpectrum, 2 * waitingTime);
                 } else {
                     e.printStackTrace();
                     throw new IllegalArgumentException("Error while loading spectrum " + spectrumTitle + " of file " + spectrumFile + ".");
@@ -909,7 +955,7 @@ public class SpectrumFactory {
             charges.add(chargePrec);
             Precursor precursor = level == 1 ? null : new Precursor(scanTime, mzPrec, charges);
             currentSpectrum = new Spectrum(level, precursor, spectrumTitle, peakList, spectrumFile, scanTime);
-            
+
         } else {
             throw new IllegalArgumentException("Spectrum file format not supported.");
         }
@@ -922,12 +968,16 @@ public class SpectrumFactory {
                 fileMap.remove(tempTitle);
             }
         }
-        HashMap<String, Spectrum> fileMap = currentSpectrumMap.get(spectrumFile);
-        if (fileMap == null) {
-            fileMap = new HashMap<>();
-            currentSpectrumMap.put(spectrumFile, fileMap);
+
+        // @TODO: currentSpectrumMap is currently growing forever. Its growth should be limited in some way.
+        if (toCacheSpectrum) {
+            HashMap<String, Spectrum> fileMap = currentSpectrumMap.get(spectrumFile);
+            if (fileMap == null) {
+                fileMap = new HashMap<>();
+                currentSpectrumMap.put(spectrumFile, fileMap);
+            }
+            fileMap.put(spectrumTitle, currentSpectrum);
         }
-        fileMap.put(spectrumTitle, currentSpectrum);
         String spectrumKey = Spectrum.getSpectrumKey(spectrumFile, spectrumTitle);
         loadedSpectra.add(spectrumKey);
         return currentSpectrum;
@@ -938,7 +988,7 @@ public class SpectrumFactory {
      *
      * @param mgfIndex the mgf file index
      * @param directory the destination directory
-     * 
+     *
      * @throws IOException exception thrown whenever an error is encountered
      * while writing the file
      */
@@ -951,9 +1001,9 @@ public class SpectrumFactory {
      * Deserializes the index of an mgf file.
      *
      * @param mgfIndex the mgf index cui file
-     * 
+     *
      * @return the corresponding mgf index object
-     * 
+     *
      * @throws IOException exception thrown whenever an error was encountered
      * while reading the file
      * @throws ClassNotFoundException exception thrown whenever an error
@@ -1046,7 +1096,7 @@ public class SpectrumFactory {
      *
      * @param spectrumTitle the spectrum title
      * @param fileName the spectrum file name
-     * 
+     *
      * @return the fixed mgf title
      */
     private String fixMgfTitle(String spectrumTitle, String fileName) {
@@ -1092,7 +1142,7 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns the file associated to the given name.
+     * Returns the file associated with the given name.
      *
      * @param fileName the name of the file
      *
@@ -1103,12 +1153,12 @@ public class SpectrumFactory {
     }
 
     /**
-     * Returns a map containing all the precursors of a gven file indexed by
+     * Returns a map containing all the precursors of a given file indexed by
      * spectrum title.
      *
      * @param fileName the name of the file
      *
-     * @return a map containing all the precursors of a gven file
+     * @return a map containing all the precursors of a given file
      */
     public HashMap<String, Precursor> getPrecursorMap(String fileName) {
         HashMap<String, Precursor> precursorMap = new HashMap<>(getNSpectra(fileName));

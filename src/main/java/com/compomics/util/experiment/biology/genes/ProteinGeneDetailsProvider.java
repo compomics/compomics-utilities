@@ -15,6 +15,7 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.net.URLConnection;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Class used to map proteins to gene information.
@@ -98,11 +100,10 @@ public class ProteinGeneDetailsProvider {
             ensemblVersionsMap = new HashMap<>();
         }
 
-        createDefaultGeneMappingFiles(
+        createDefaultGeneMappingFilesGeneric(
+                jarFilePath,
                 new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + ENSEMBL_VERSIONS),
                 new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + GO_DOMAINS),
-                new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + "hsapiens_gene_ensembl_go_mappings"),
-                new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + "hsapiens_gene_ensembl_gene_mappings"),
                 true);
     }
 
@@ -112,8 +113,8 @@ public class ProteinGeneDetailsProvider {
      * UniProt Importing gene mappings file.
      *
      * @param genePreferences the gene preferences
-     * @param fastaSummary summary information on the Importing gene mappings file containing the
-     * proteins
+     * @param fastaSummary summary information on the Importing gene mappings
+     * file containing the proteins
      * @param sequenceProvider the protein sequence provider
      * @param proteinDetailsProvider the protein details provider
      * @param waitingHandler waiting handler displaying progress for the
@@ -662,16 +663,13 @@ public class ProteinGeneDetailsProvider {
      * versions of the mapping exists they will be overwritten according to
      * updateEqualVersion.
      *
-     * @param aEnsemblVersionsFile the Ensembl versions file
-     * @param aGoDomainsFile the GO domains file
-     * @param aDefaultSpeciesGoMappingsFile the default species GO mappings file
-     * @param aDefaultSpeciesGeneMappingFile the default species gene mappings
-     * file
+     * @param jarFilePath the Ensembl versions file
+     * @param sourceEnsemblVersionsFile the Ensembl versions file
+     * @param sourceGoDomainsFile the GO domains file
      * @param updateEqualVersion if true, the version is updated with equal
      * version numbers, false, only update if the new version is newer
      */
-    public void createDefaultGeneMappingFiles(File aEnsemblVersionsFile, File aGoDomainsFile,
-            File aDefaultSpeciesGoMappingsFile, File aDefaultSpeciesGeneMappingFile, boolean updateEqualVersion) {
+    public void createDefaultGeneMappingFilesGeneric(String jarFilePath, File sourceEnsemblVersionsFile, File sourceGoDomainsFile, boolean updateEqualVersion) {
 
         if (!getGeneMappingFolder().exists()) {
             boolean folderCreated = getGeneMappingFolder().mkdirs();
@@ -681,40 +679,53 @@ public class ProteinGeneDetailsProvider {
             }
         }
 
-        File ensemblVersionsFile = getEnsemblVersionsFile();
-        File goDomainsFile = getGoDomainsFile();
-        File defaultSpeciesGoMappingsFile = new File(getGeneMappingFolder(), aDefaultSpeciesGoMappingsFile.getName());
-        File defaultSpeciesGeneMappingFile = new File(getGeneMappingFolder(), aDefaultSpeciesGeneMappingFile.getName());
+        File targetEnsemblVersionsFile = getEnsemblVersionsFile();
+        File targetGoDomainsFile = getGoDomainsFile();
 
-        boolean updateHumanEnsembl = false;
+        HashMap<String, String> localEnsemblVersionsMap = new HashMap<String, String>();
+        HashMap<String, Boolean> localUpdateSpeciesEnsembl = new HashMap<String, Boolean>();
 
         try {
-            if (!ensemblVersionsFile.exists()) {
+            if (!targetEnsemblVersionsFile.exists()) {
 
-                updateHumanEnsembl = true;
-
-                boolean fileCreated = ensemblVersionsFile.createNewFile();
+                boolean fileCreated = targetEnsemblVersionsFile.createNewFile();
 
                 if (!fileCreated) {
                     throw new IllegalArgumentException("Could not create the Ensembl versions file.");
                 }
 
-                Util.copyFile(aEnsemblVersionsFile, ensemblVersionsFile);
+                Util.copyFile(sourceEnsemblVersionsFile, targetEnsemblVersionsFile);
 
+                localEnsemblVersionsMap = getEnsemblSpeciesVersions(targetEnsemblVersionsFile);
+                for (Map.Entry<String, String> entry : localEnsemblVersionsMap.entrySet()) {
+                    Integer speciesEnsemblVersionNew = getEnsemblVersionFromFile(sourceEnsemblVersionsFile, entry.getKey());
+                    updateEnsemblVersion(entry.getKey(), "Ensembl " + speciesEnsemblVersionNew); // we actually just need to update the map
+                    localUpdateSpeciesEnsembl.put(entry.getKey(), true);
+                }
             } else {
 
-                // file exists, just update the human ensembl version
-                // read the "new" human Ensembl versions number
-                Integer humanEnsemblVersionNew = getEnsemblVersionFromFile(aEnsemblVersionsFile, "hsapiens_gene_ensembl");
+                // file exists, just update every species ensembl version
+                // read the "new" species Ensembl versions number
+                localEnsemblVersionsMap = getEnsemblSpeciesVersions(targetEnsemblVersionsFile);
 
-                if (humanEnsemblVersionNew != null) {
+                for (Map.Entry<String, String> entry : localEnsemblVersionsMap.entrySet()) { // entry.getKey(): species ; entry.getValue() : version
 
-                    Integer humanEnsemblVersionOld = getEnsemblVersionFromFile(ensemblVersionsFile, "hsapiens_gene_ensembl");
-                    if (humanEnsemblVersionOld == null
-                            || humanEnsemblVersionOld.equals(humanEnsemblVersionNew) && updateEqualVersion
-                            || humanEnsemblVersionOld < humanEnsemblVersionNew) {
-                        updateHumanEnsembl = true;
-                        updateEnsemblVersion("hsapiens_gene_ensembl", "Ensembl " + humanEnsemblVersionNew);
+                    Integer speciesEnsemblVersionNew = getEnsemblVersionFromFile(sourceEnsemblVersionsFile, entry.getKey());
+
+                    if (speciesEnsemblVersionNew != null) {
+
+                        Integer speciesEnsemblVersionOld = getEnsemblVersionFromFile(targetEnsemblVersionsFile, entry.getKey());
+
+                        if (speciesEnsemblVersionOld == null
+                                || speciesEnsemblVersionOld.equals(speciesEnsemblVersionNew) && updateEqualVersion
+                                || speciesEnsemblVersionOld < speciesEnsemblVersionNew) {
+                            localUpdateSpeciesEnsembl.put(entry.getKey(), true);
+                            updateEnsemblVersion(entry.getKey(), "Ensembl " + speciesEnsemblVersionNew);
+                        } else {
+                            localUpdateSpeciesEnsembl.put(entry.getKey(), false);
+                        }
+                    } else {
+                        localUpdateSpeciesEnsembl.put(entry.getKey(), false);
                     }
                 }
             }
@@ -724,44 +735,56 @@ public class ProteinGeneDetailsProvider {
         }
 
         try {
-            if (!goDomainsFile.exists()) {
-                boolean fileCreated = goDomainsFile.createNewFile();
+            if (!targetGoDomainsFile.exists()) {
+                boolean fileCreated = targetGoDomainsFile.createNewFile();
                 if (!fileCreated) {
                     throw new IllegalArgumentException("Could not create the GO domains file.");
                 }
             }
-            Util.copyFile(aGoDomainsFile, goDomainsFile);
+            Util.copyFile(sourceGoDomainsFile, targetGoDomainsFile);
         } catch (IOException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Could not create the GO domains file.");
         }
 
-        if (updateHumanEnsembl) {
+        for (Map.Entry<String, Boolean> entry : localUpdateSpeciesEnsembl.entrySet()) {
+            if (entry.getValue()) {
 
-            try {
-                if (!defaultSpeciesGoMappingsFile.exists()) {
-                    boolean fileCreated = defaultSpeciesGoMappingsFile.createNewFile();
-                    if (!fileCreated) {
-                        throw new IllegalArgumentException("Could not create the default species GO mapping file.");
-                    }
-                }
-                Util.copyFile(aDefaultSpeciesGoMappingsFile, defaultSpeciesGoMappingsFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException("Could not create the default species GO mapping file.");
-            }
+                File sourceSpeciesGoMappingsFile = new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + entry.getKey() + GO_MAPPING_FILE_SUFFIX);
+                File sourceSpeciesGeneMappingFile = new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + entry.getKey() + GENE_MAPPING_FILE_SUFFIX);
+                File targetSpeciesGoMappingsFile = new File(getGeneMappingFolder(), sourceSpeciesGoMappingsFile.getName());
+                File targetSpeciesGeneMappingFile = new File(getGeneMappingFolder(), sourceSpeciesGeneMappingFile.getName());
 
-            try {
-                if (!defaultSpeciesGeneMappingFile.exists()) {
-                    boolean fileCreated = defaultSpeciesGeneMappingFile.createNewFile();
-                    if (!fileCreated) {
-                        throw new IllegalArgumentException("Could not create the default species gene mapping file.");
+                try {
+
+                    if (!targetSpeciesGoMappingsFile.exists()) {
+                        boolean fileCreated = targetSpeciesGoMappingsFile.createNewFile();
+                        if (!fileCreated) {
+                            throw new IllegalArgumentException("Could not create the default species GO mapping file.");
+                        }
                     }
+
+                    Util.copyFile(sourceSpeciesGoMappingsFile, targetSpeciesGoMappingsFile);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new IllegalArgumentException("Could not create the default species GO mapping file.");
                 }
-                Util.copyFile(aDefaultSpeciesGeneMappingFile, defaultSpeciesGeneMappingFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException("Could not create the default species gene mapping file.");
+
+                try {
+                    if (!targetSpeciesGeneMappingFile.exists()) {
+                        boolean fileCreated = targetSpeciesGeneMappingFile.createNewFile();
+                        if (!fileCreated) {
+                            throw new IllegalArgumentException("Could not create the default species gene mapping file.");
+                        }
+                    }
+
+                    Util.copyFile(sourceSpeciesGeneMappingFile, targetSpeciesGeneMappingFile);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new IllegalArgumentException("Could not create the default species gene mapping file.");
+                }
             }
         }
     }
@@ -835,10 +858,46 @@ public class ProteinGeneDetailsProvider {
     }
 
     /**
+     * Gets the information contained into the Ensembl species file.
+     * 
+     * @param ensemblVersionsFile the Ensembl species file to read
+     * @return The Ensembl versions for each species
+     * @throws FileNotFoundException if an FileNotFoundException occurs
+     * @throws IOException if an IOException occurs
+     */
+    public HashMap<String, String> getEnsemblSpeciesVersions(File ensemblVersionsFile) throws FileNotFoundException, IOException {
+
+        HashMap<String, String> localEnsemblVersionsMap = new HashMap<String, String>();
+
+        // load the existing ensembl version numbers
+        FileReader r = new FileReader(ensemblVersionsFile);
+
+        try {
+            BufferedReader br = new BufferedReader(r);
+
+            try {
+                String line = br.readLine();
+
+                while (line != null) {
+                    String[] elements = line.split("\\t");
+                    localEnsemblVersionsMap.put(elements[0], elements[1]);
+                    line = br.readLine();
+                }
+            } finally {
+                br.close();
+            }
+        } finally {
+            r.close();
+        }
+
+        return localEnsemblVersionsMap;
+    }
+
+    /**
      * Loads the given Ensembl species file.
      *
      * @param ensemblVersionsFile the Ensembl species file to load
-     * 
+     *
      * @throws IOException if an IOException occurs
      */
     public void loadEnsemblSpeciesVersions(File ensemblVersionsFile) throws IOException {

@@ -690,7 +690,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
         if (geneParameters == null) {
 
             geneParameters = new GeneParameters();
-            geneParameters.setPreferencesFromSearchParameters(searchParameters);
+            geneParameters.setParametersFromSearchParameters(searchParameters);
 
         }
 

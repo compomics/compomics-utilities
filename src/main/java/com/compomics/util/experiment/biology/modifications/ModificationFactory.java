@@ -18,8 +18,8 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * This factory will load Modification from an XML file and provide them on demand as
- * standard class.
+ * This factory will load Modification from an XML file and provide them on
+ * demand as standard class.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -39,8 +39,8 @@ public class ModificationFactory {
      */
     private static String SERIALIZATION_FILE_FOLDER = System.getProperty("user.home") + "/.compomics";
     /**
-     * The name of the Modification factory back-up file. The version number follows the
-     * one of utilities.
+     * The name of the Modification factory back-up file. The version number
+     * follows the one of utilities.
      */
     private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.1-SNAPSHOT.json";
     /**
@@ -184,13 +184,13 @@ public class ModificationFactory {
     }
 
     /**
-     * Returns a clone of the given Modification targeting a single amino acid instead of
-     * a pattern.
+     * Returns a clone of the given Modification targeting a single amino acid
+     * instead of a pattern.
      *
      * @param modification the modification of interest
      *
-     * @return a clone of the given Modification targeting a single amino acid instead of
-     * a pattern
+     * @return a clone of the given Modification targeting a single amino acid
+     * instead of a pattern
      */
     public static Modification getSingleAAModification(Modification modification) {
         if (!modification.isStandardSearch()) {
@@ -203,13 +203,13 @@ public class ModificationFactory {
     }
 
     /**
-     * Returns a clone of the given Modification targeting a single amino acid instead of
-     * a pattern.
+     * Returns a clone of the given Modification targeting a single amino acid
+     * instead of a pattern.
      *
      * @param modificationName the name of the modification of interest
      *
-     * @return a clone of the given Modification targeting a single amino acid instead of
-     * a pattern
+     * @return a clone of the given Modification targeting a single amino acid
+     * instead of a pattern
      */
     public Modification getSingleAAModification(String modificationName) {
         Modification modification = getModification(modificationName);
@@ -262,7 +262,7 @@ public class ModificationFactory {
      * Returns the Modification indexed by its name. Null if none found.
      *
      * @param name the name of the modification of interest
-     * 
+     *
      * @return the modification of interest
      */
     public Modification getModification(String name) {
@@ -270,10 +270,12 @@ public class ModificationFactory {
     }
 
     /**
-     * Returns a boolean indicating whether the Modification is loaded in the factory.
+     * Returns a boolean indicating whether the Modification is loaded in the
+     * factory.
      *
      * @param name the name of the Modification
-     * @return a boolean indicating whether the Modification is loaded in the factory
+     * @return a boolean indicating whether the Modification is loaded in the
+     * factory
      */
     public boolean containsModification(String name) {
         return modificationMap.containsKey(name);
@@ -335,8 +337,8 @@ public class ModificationFactory {
     }
 
     /**
-     * Convenience method returning a boolean indicating whether a Modification is user
-     * defined or default.
+     * Convenience method returning a boolean indicating whether a Modification
+     * is user defined or default.
      *
      * @param modificationName the name of the Modification
      * @return boolean indicating whether a Modification is user defined
@@ -438,14 +440,16 @@ public class ModificationFactory {
     }
 
     /**
-     * Tries to convert a PRIDE Modification to utilities Modification name, and add it to the
-     * modification profile. Unknown Modifications are added to the unknown Modifications
-     * arraylist.
+     * Tries to convert a PRIDE Modification to utilities Modification name, and
+     * add it to the modification profile. Unknown Modifications are added to
+     * the unknown Modifications arraylist.
      *
      * @param pridePtmName the PRIDE Modification name
      * @param modProfile the modification profile to add the Modifications to
-     * @param unknownPtms the list of unknown ModificationS, updated during this method
-     * @param isFixed if true, the Modification will be added as a fixed modification
+     * @param unknownPtms the list of unknown ModificationS, updated during this
+     * method
+     * @param isFixed if true, the Modification will be added as a fixed
+     * modification
      * @return a pride parameters report as a string (for use in PRIDE Reshake)
      */
     public String convertPridePtm(String pridePtmName, ModificationParameters modProfile, ArrayList<String> unknownPtms, boolean isFixed) {
@@ -822,7 +826,8 @@ public class ModificationFactory {
     }
 
     /**
-     * Tries to convert a PRIDE Modification name to utilities Modification name.
+     * Tries to convert a PRIDE Modification name to utilities Modification
+     * name.
      *
      * @param pridePtmName the PRIDE Modification name
      * @return the utilities Modification name, or null if there is no mapping
@@ -1610,7 +1615,7 @@ public class ModificationFactory {
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "mTRAQ of K light";
         modification = new Modification(ModificationType.modaa, modificationName, "mTRAQ0", atomChainAdded, atomChainRemoved, aminoAcidPattern);
-        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 888 ", "mTRAQ", null)); // note: does not have a PSI name, using interim name
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD: 888", "mTRAQ", null)); // note: does not have a PSI name, using interim name
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
 
@@ -1858,7 +1863,7 @@ public class ModificationFactory {
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
 
-        // TMT 6-plex of peptide N-term
+        /// TMT 6-plex of peptide N-term
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
         atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
@@ -1866,8 +1871,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = new AtomChain();
-        aminoAcidPattern = new AminoAcidPattern();
+        atomChainRemoved = null;
+        aminoAcidPattern = null;
         modificationName = "TMT 6-plex of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: does not have a PSI name, using interim name
@@ -1877,18 +1882,6 @@ public class ModificationFactory {
         modification.addReporterIon(ReporterIon.TMT_129N);
         modification.addReporterIon(ReporterIon.TMT_130C);
         modification.addReporterIon(ReporterIon.TMT_131);
-        modification.addReporterIon(ReporterIon.TMT_126);
-        modification.addReporterIon(ReporterIon.TMT_127N);
-        modification.addReporterIon(ReporterIon.TMT_128C);
-        modification.addReporterIon(ReporterIon.TMT_129N);
-        modification.addReporterIon(ReporterIon.TMT_130C);
-        modification.addReporterIon(ReporterIon.TMT_131);
-        modification.addReporterIon(ReporterIon.TMT_126_ETD);
-        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
-        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
-        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
-        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
-        modification.addReporterIon(ReporterIon.TMT_131_ETD);
         modification.addReporterIon(ReporterIon.TMT_126_ETD);
         modification.addReporterIon(ReporterIon.TMT_127N_ETD);
         modification.addReporterIon(ReporterIon.TMT_128C_ETD);
@@ -1906,7 +1899,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = new AtomChain();
+        atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 6-plex of K";
         modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -1917,6 +1910,29 @@ public class ModificationFactory {
         modification.addReporterIon(ReporterIon.TMT_129N);
         modification.addReporterIon(ReporterIon.TMT_130C);
         modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // TMT 6-plex + K+4
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 16);
+        atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "TMT 6-plex of K+4";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
         modification.addReporterIon(ReporterIon.TMT_126);
         modification.addReporterIon(ReporterIon.TMT_127N);
         modification.addReporterIon(ReporterIon.TMT_128C);
@@ -1929,6 +1945,28 @@ public class ModificationFactory {
         modification.addReporterIon(ReporterIon.TMT_129N_ETD);
         modification.addReporterIon(ReporterIon.TMT_130C_ETD);
         modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // TMT 6-plex of K+6
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 10);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "TMT 6-plex of K+6";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_131);
         modification.addReporterIon(ReporterIon.TMT_126_ETD);
         modification.addReporterIon(ReporterIon.TMT_127N_ETD);
         modification.addReporterIon(ReporterIon.TMT_128C_ETD);
@@ -1938,6 +1976,34 @@ public class ModificationFactory {
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
 
+        // TMT 6-plex of K+8
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 10);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 3);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "TMT 6-plex of K+8";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
         // TMT 10-plex of peptide N-term
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
@@ -1946,8 +2012,8 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = new AtomChain();
-        aminoAcidPattern = new AminoAcidPattern();
+        atomChainRemoved = null;
+        aminoAcidPattern = null;
         modificationName = "TMT 10-plex of peptide N-term";
         modification = new Modification(ModificationType.modn_peptide, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: "PSI: Alt. Description: Also applies to TMT10plex", i.e., no term for 10-plex
@@ -1982,7 +2048,7 @@ public class ModificationFactory {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = new AtomChain();
+        atomChainRemoved = null;
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 10-plex of K";
         modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
@@ -2007,6 +2073,347 @@ public class ModificationFactory {
         modification.addReporterIon(ReporterIon.TMT_130C_ETD);
         modification.addReporterIon(ReporterIon.TMT_130N_ETD);
         modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // TMT 10-plex + K+4
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 16);
+        atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "TMT 10-plex of K+4";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127C);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_128N);
+        modification.addReporterIon(ReporterIon.TMT_129C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_130N);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // TMT 10-plex of K+6
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 10);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "TMT 10-plex of K+6";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127C);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_128N);
+        modification.addReporterIon(ReporterIon.TMT_129C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_130N);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // TMT 10-plex of K+8
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 10);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 3);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "TMT 10-plex of K+8";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127C);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_128N);
+        modification.addReporterIon(ReporterIon.TMT_129C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_130N);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // TMT 11-plex of peptide N-term
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = null;
+        modificationName = "TMT 11-plex of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: "PSI: Alt. Description: Also applies to TMT10plex", i.e., no term for 10-plex (no mention of 11-plex though...)
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127C);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_128N);
+        modification.addReporterIon(ReporterIon.TMT_129C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_130N);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_131C);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131C_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // TMT 11-plex of K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "TMT 11-plex of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // note: "PSI: Alt. Description: Also applies to TMT10plex", i.e., no term for 10-plex (no mention of 11-plex though...)
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127C);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_128N);
+        modification.addReporterIon(ReporterIon.TMT_129C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_130N);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_131C);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131C_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // TMT 11-plex + K+4
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 16);
+        atomChainAdded.append(new AtomImpl(Atom.H, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "TMT 11-plex of K+4";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127C);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_128N);
+        modification.addReporterIon(ReporterIon.TMT_129C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_130N);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131C_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // TMT 11-plex of K+6
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 10);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "TMT 11-plex of K+6";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127C);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_128N);
+        modification.addReporterIon(ReporterIon.TMT_129C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_130N);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131C_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // TMT 11-plex of K+8
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 10);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 20);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 3);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "TMT 11-plex of K+8";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        //modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:737", "TMT6plex", null)); // @TODO: add cv term
+        modification.addReporterIon(ReporterIon.TMT_126);
+        modification.addReporterIon(ReporterIon.TMT_127C);
+        modification.addReporterIon(ReporterIon.TMT_127N);
+        modification.addReporterIon(ReporterIon.TMT_128C);
+        modification.addReporterIon(ReporterIon.TMT_128N);
+        modification.addReporterIon(ReporterIon.TMT_129C);
+        modification.addReporterIon(ReporterIon.TMT_129N);
+        modification.addReporterIon(ReporterIon.TMT_130C);
+        modification.addReporterIon(ReporterIon.TMT_130N);
+        modification.addReporterIon(ReporterIon.TMT_131);
+        modification.addReporterIon(ReporterIon.TMT_126_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_127N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_128N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_129N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130C_ETD);
+        modification.addReporterIon(ReporterIon.TMT_130N_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131_ETD);
+        modification.addReporterIon(ReporterIon.TMT_131C_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // iodoTMT zero of C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 28);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 16);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "iodoTMT zero of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "iodoTMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1341", "iodoTMT", null)); // note: does not have a PSI name, using interim name
+        modification.addReporterIon(ReporterIon.iodoTMT_zero);
+        modification.addReporterIon(ReporterIon.iodoTMT_zero_ETD);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // iodoTMT 6-plex of C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 28);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 12);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 4);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "iodoTMT 6-plex of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "iodoTMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:1342", "iodoTMT", null)); // note: does not have a PSI name, using interim name
+        modification.addReporterIon(ReporterIon.iodoTMT_126);
+        modification.addReporterIon(ReporterIon.iodoTMT_127);
+        modification.addReporterIon(ReporterIon.iodoTMT_128);
+        modification.addReporterIon(ReporterIon.iodoTMT_129);
+        modification.addReporterIon(ReporterIon.iodoTMT_130);
+        modification.addReporterIon(ReporterIon.iodoTMT_131);
+        modification.addReporterIon(ReporterIon.iodoTMT_126_ETD);
+        modification.addReporterIon(ReporterIon.iodoTMT_127_ETD);
+        modification.addReporterIon(ReporterIon.iodoTMT_128_ETD);
+        modification.addReporterIon(ReporterIon.iodoTMT_129_ETD);
+        modification.addReporterIon(ReporterIon.iodoTMT_130_ETD);
+        modification.addReporterIon(ReporterIon.iodoTMT_131_ETD);
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
 
@@ -3083,5 +3490,364 @@ public class ModificationFactory {
         modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:275", "Nitrosyl", null));
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
+        
+        // Heme B of C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 32);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 34);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.Fe, 0), 1);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "Heme B of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "heme", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:390", "Heme", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Heme B of H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 32);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 34);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.Fe, 0), 1);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "Heme B of H";
+        modification = new Modification(ModificationType.modaa, modificationName, "heme", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setCvTerm(new CvTerm("UNIMOD", "UNIMOD:390", "Heme", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+    }
+    
+    /**
+     * Returns the PSI-MOD accession number. Null if not set.
+     *
+     * @param modificationName the name of the modification
+     * @return the PSI-MOD accession number, null if not set
+     */
+    public String getPsiModAccession(String modificationName) {
+
+        if (modificationName.equalsIgnoreCase("18O(1) of peptide C-term")) {
+            return "00581";
+        } else if (modificationName.equalsIgnoreCase("18O(2) of peptide C-term")) {
+            return "00546";
+        } else if (modificationName.equalsIgnoreCase("Acetaldehyde +26")) {
+            return "00577"; // @TODO: not peptide n-term specific
+        } else if (modificationName.equalsIgnoreCase("Acetylation of K")) {
+            return "00723";
+        } else if (modificationName.equalsIgnoreCase("Acetylation of peptide N-term")) {
+            return "01458";
+        } else if (modificationName.equalsIgnoreCase("Acetylation of protein N-term")) {
+            return "01458";
+        } else if (modificationName.equalsIgnoreCase("Amidation of the peptide C-term")) {
+            return "00883";
+        } else if (modificationName.equalsIgnoreCase("Amidation of the protein C-term")) {
+            return "00883";
+        } else if (modificationName.equalsIgnoreCase("Arginine 13C(6)")) {
+            return "01331";
+        } else if (modificationName.equalsIgnoreCase("Arginine 13C(6) 15N(4)")) {
+            return "00587";
+        } else if (modificationName.equalsIgnoreCase("Carbamidomethylation of C")) {
+            return "01060";
+        } else if (modificationName.equalsIgnoreCase("Carbamidomethylation of E")) {
+            return "01216";
+        } else if (modificationName.equalsIgnoreCase("Carbamidomethylation of K")) {
+            return "01212";
+        } else if (modificationName.equalsIgnoreCase("Carbamilation of K")) {
+            return "01678";
+        } else if (modificationName.equalsIgnoreCase("Carbamilation of protein N-term")) {
+            return "01679";
+        } else if (modificationName.equalsIgnoreCase("Carboxymethylation of C")) {
+            return "01061";
+        } else if (modificationName.equalsIgnoreCase("Citrullination of R")) {
+            return "00400";
+        } else if (modificationName.equalsIgnoreCase("Deamidation of N")) {
+            return "00684";
+        } else if (modificationName.equalsIgnoreCase("Deamidation of N 18O")) {
+            return "00791";
+        } else if (modificationName.equalsIgnoreCase("Deamidation of Q")) {
+            return "00685";
+        } else if (modificationName.equalsIgnoreCase("Dehydration of S")) {
+            return "00189";
+        } else if (modificationName.equalsIgnoreCase("Dehydration of T")) {
+            return "00190"; // @TODO: maps to parent term "dehydrobutyrine (Thr)"...
+        } else if (modificationName.equalsIgnoreCase("Didehydro of T")) {
+            return "01345";
+        } else if (modificationName.equalsIgnoreCase("Diiodination of Y")) {
+            return "01140";
+        } else if (modificationName.equalsIgnoreCase("Dimethylation of K")) {
+            return "00084";
+        } else if (modificationName.equalsIgnoreCase("Dimethylation of K 2H(4)")) {
+            return "01254";
+        } else if (modificationName.equalsIgnoreCase("Dimethylation of K 2H(6)")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Dimethylation of K 2H(6) 13C(2)")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Dimethylation of R")) {
+            return "00783";
+        } else if (modificationName.equalsIgnoreCase("Dimethylation of peptide N-term")) {
+            return "01686";
+        } else if (modificationName.equalsIgnoreCase("Dimethylation of peptide N-term 2H(4)")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Dimethylation of peptide N-term 2H(6)")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Dimethylation of peptide N-term 2H(6) 13C(2)")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Dioxidation of M")) {
+            return "00428"; // @TODO: maps to parent term "dihydroxylated residue"...
+        } else if (modificationName.equalsIgnoreCase("Dioxidation of W")) {
+            return "00428"; // @TODO: maps to parent term "dihydroxylated residue"...
+        } else if (modificationName.equalsIgnoreCase("Farnesylation of C")) {
+            return "00111";
+        } else if (modificationName.equalsIgnoreCase("FormylMet of protein N-term")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Formylation of K")) {
+            return "00216";
+        } else if (modificationName.equalsIgnoreCase("Formylation of S")) {
+            return "01222";
+        } else if (modificationName.equalsIgnoreCase("Formylation of T")) {
+            return "01221";
+        } else if (modificationName.equalsIgnoreCase("Formylation of peptide N-term")) {
+            return "00409"; // @TODO: maps to parent term "N-formylated residue"...
+        } else if (modificationName.equalsIgnoreCase("Formylation of protein N-term")) {
+            return "00409"; // @TODO: maps to parent term "N-formylated residue"...
+        } else if (modificationName.equalsIgnoreCase("Geranyl-geranyl of C")) {
+            return "00113";
+        } else if (modificationName.equalsIgnoreCase("Glutathione of C")) {
+            return "00234";
+        } else if (modificationName.equalsIgnoreCase("Guanidination of K")) {
+            return "00445";
+        } else if (modificationName.equalsIgnoreCase("Guanidination of peptide N-term")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Heme B of C")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Heme B of H")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Hex(1)NAc(1) of S")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Hex(1)NAc(1) of T")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Hex(5) HexNAc(4) NeuAc(2) Na of N")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Hex(5) HexNAc(4) NeuAc(2) of N")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("HexNAc of S")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("HexNAc of T")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Hexose of K")) {
+            return "01347";
+        } else if (modificationName.equalsIgnoreCase("Homoserine lactone of peptide C-term M")) {
+            return "00404";
+        } else if (modificationName.equalsIgnoreCase("Homoserine of peptide C-term M")) {
+            return "00403";
+        } else if (modificationName.equalsIgnoreCase("ICAT-9")) {
+            return "00481";
+        } else if (modificationName.equalsIgnoreCase("ICAT-O")) {
+            return "00480";
+        } else if (modificationName.equalsIgnoreCase("ICPL0 of K")) {
+            return "01230";
+        } else if (modificationName.equalsIgnoreCase("ICPL0 of peptide N-term")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("ICPL10 of K")) {
+            return "01287"; // @TODO: the mass in Unimod and PSI-MOD is not the same!
+        } else if (modificationName.equalsIgnoreCase("ICPL10 of peptide N-term")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("ICPL4 of K")) {
+            return "01359";
+        } else if (modificationName.equalsIgnoreCase("ICPL4 of peptide N-term")) {
+            return "01358";
+        } else if (modificationName.equalsIgnoreCase("ICPL6 of K")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("ICPL6 of peptide N-term")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Isoleucine 13C(6) 15N(1)")) {
+            return "01286";
+        } else if (modificationName.equalsIgnoreCase("Label of K 2H(4)")) {
+            return "00942";
+        } else if (modificationName.equalsIgnoreCase("Leucine 13C(6) 15N(1)")) {
+            return "01285";
+        } else if (modificationName.equalsIgnoreCase("Lipoyl of K")) {
+            return "00127";
+        } else if (modificationName.equalsIgnoreCase("Lysine 13C(6)")) {
+            return "01334";
+        } else if (modificationName.equalsIgnoreCase("Lysine 13C(6) 15N(2)")) {
+            return "00582";
+        } else if (modificationName.equalsIgnoreCase("Lysine 2H(4)")) {
+            return "00942";
+        } else if (modificationName.equalsIgnoreCase("Methylation of C")) {
+            return "00660"; // @TODO: maps to parent term "methylated cysteine"
+        } else if (modificationName.equalsIgnoreCase("Methylation of D")) {
+            return "00079";
+        } else if (modificationName.equalsIgnoreCase("Methylation of E")) {
+            return "00081";
+        } else if (modificationName.equalsIgnoreCase("Methylation of K")) {
+            return "00085";
+        } else if (modificationName.equalsIgnoreCase("Methylation of R")) {
+            return "00414"; // @TODO: maps to parent term "monomethylated L-arginine"...
+        } else if (modificationName.equalsIgnoreCase("Methylation of S")) {
+            return "01782";
+        } else if (modificationName.equalsIgnoreCase("Methylthio of C")) {
+            return "00110";
+        } else if (modificationName.equalsIgnoreCase("Methylthio of D")) {
+            return "00237";
+        } else if (modificationName.equalsIgnoreCase("Methylthio of N")) {
+            return "00325";
+        } else if (modificationName.equalsIgnoreCase("NIPCAM of C")) {
+            return "00410";
+        } else if (modificationName.equalsIgnoreCase("Nethylmaleimide of C")) {
+            return "00483";
+        } else if (modificationName.equalsIgnoreCase("Oxidation of C")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Oxidation of K")) {
+            return "01047"; // @TODO: maps to parent term "monohydroxylated lysine"...
+        } else if (modificationName.equalsIgnoreCase("Oxidation of M")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Oxidation of P")) {
+            return "00039";
+        } else if (modificationName.equalsIgnoreCase("Palmitoylation of C")) {
+            return "00440";  // @TODO: maps to parent term "palmitoylated residue"...
+        } else if (modificationName.equalsIgnoreCase("Palmitoylation of K")) {
+            return "00086";
+        } else if (modificationName.equalsIgnoreCase("Palmitoylation of S")) {
+            return "00089";
+        } else if (modificationName.equalsIgnoreCase("Palmitoylation of T")) {
+            return "00088";
+        } else if (modificationName.equalsIgnoreCase("Palmitoylation of protein N-term")) {
+            return "01685";
+        } else if (modificationName.equalsIgnoreCase("Phosphorylation of S")) {
+            return "00046";
+        } else if (modificationName.equalsIgnoreCase("Phosphorylation of T")) {
+            return "00047";
+        } else if (modificationName.equalsIgnoreCase("Phosphorylation of Y")) {
+            return "00048";
+        } else if (modificationName.equalsIgnoreCase("Proline 13C(5)")) {
+            return "01297";
+        } else if (modificationName.equalsIgnoreCase("Propionamide of C")) {
+            return "00417";
+        } else if (modificationName.equalsIgnoreCase("Propionamide of K")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Propionamide of peptide N-term")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Propionyl of K heavy")) {
+            return "01231";
+        } else if (modificationName.equalsIgnoreCase("Propionyl of K light")) {
+            return "01232";
+        } else if (modificationName.equalsIgnoreCase("Propionyl of peptide N-term heavy")) {
+            return "00452";
+        } else if (modificationName.equalsIgnoreCase("Propionyl of peptide N-term light")) {
+            return "01895";
+        } else if (modificationName.equalsIgnoreCase("Pyridylethyl of C")) {
+            return "00424";
+        } else if (modificationName.equalsIgnoreCase("Pyrolidone from E")) {
+            return "00420";
+        } else if (modificationName.equalsIgnoreCase("Pyrolidone from Q")) {
+            return "00040";
+        } else if (modificationName.equalsIgnoreCase("Pyrolidone from carbamidomethylated C")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("S-nitrosylation")) {
+            return "00235";
+        } else if (modificationName.equalsIgnoreCase("SUMO-2/3 Q87R")) {
+            return "01149"; // @TODO: maps to parent term "sumoylated lysine"...
+        } else if (modificationName.equalsIgnoreCase("Sodium adduct to D")) {
+            return "01295";
+        } else if (modificationName.equalsIgnoreCase("Sodium adduct to E")) {
+            return "01296";
+        } else if (modificationName.equalsIgnoreCase("Sulfation of S")) {
+            return "00366";
+        } else if (modificationName.equalsIgnoreCase("Sulfation of T")) {
+            return "00367";
+        } else if (modificationName.equalsIgnoreCase("Sulfation of Y")) {
+            return "00181";
+        } else if (modificationName.equalsIgnoreCase("TMT 10-plex of K")) {
+            return "01715"; // @TODO: maps to parent term "TMT6plex reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("TMT 10-plex of K+4")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("TMT 10-plex of K+6")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("TMT 10-plex of K+8")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("TMT 10-plex of peptide N-term")) {
+            return "01715"; // @TODO: maps to parent term "TMT6plex reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("TMT 11-plex of K")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("TMT 11-plex of K+4")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("TMT 11-plex of K+6")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("TMT 11-plex of K+8")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("TMT 11-plex of peptide N-term")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("TMT 2-plex of K")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("TMT 2-plex of peptide N-term")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("TMT 6-plex of K")) {
+            return "01715"; // @TODO: maps to parent term "TMT6plex reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("TMT 6-plex of K+4")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("TMT 6-plex of K+6")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("TMT 6-plex of K+8")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("TMT 6-plex of peptide N-term")) {
+            return "01715"; // @TODO: maps to parent term "TMT6plex reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("Thioacyl of peptide N-term")) {
+            return "01223";
+        } else if (modificationName.equalsIgnoreCase("Trideuterated Methyl Ester of D")) {
+            return "01241";
+        } else if (modificationName.equalsIgnoreCase("Trideuterated Methyl Ester of E")) {
+            return "01242";
+        } else if (modificationName.equalsIgnoreCase("Trideuterated Methyl Ester of K")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Trideuterated Methyl Ester of R")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("Trideuterated Methyl Ester of peptide C-term")) {
+            return "00617";
+        } else if (modificationName.equalsIgnoreCase("Trimethylation of K")) {
+            return "00855";
+        } else if (modificationName.equalsIgnoreCase("Trimethylation of R")) {
+            return "01669";
+        } else if (modificationName.equalsIgnoreCase("Trimethylation of protein N-term A")) {
+            return "01687";
+        } else if (modificationName.equalsIgnoreCase("Trioxidation of C")) {
+            return "00460";
+        } else if (modificationName.equalsIgnoreCase("Ubiquitination of K")) {
+            return "00492";
+        } else if (modificationName.equalsIgnoreCase("iTRAQ 4-plex of K")) {
+            return "01518"; // @TODO: maps to parent term "iTRAQ4plex reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("iTRAQ 4-plex of Y")) {
+            return "01518"; // @TODO: maps to parent term "iTRAQ4plex reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("iTRAQ 4-plex of peptide N-term")) {
+            return "01518"; // @TODO: maps to parent term "iTRAQ4plex reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("iTRAQ 8-plex of K")) {
+            return "01526";  // @TODO: maps to parent term "iTRAQ8plex reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("iTRAQ 8-plex of Y")) {
+            return "01526";  // @TODO: maps to parent term "iTRAQ8plex reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("iTRAQ 8-plex of peptide N-term")) {
+            return "01526";  // @TODO: maps to parent term "iTRAQ8plex reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("iodoTMT 6-plex of C")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("iodoTMT zero of C")) {
+            return null; // @TODO: add mapping?
+        } else if (modificationName.equalsIgnoreCase("mTRAQ of 13C(6) 15N(2)")) {
+            return "01863"; // @TODO: maps to parent term "mTRAQ reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("mTRAQ of K 13C(3) 15N")) {
+            return "01863"; // @TODO: maps to parent term "mTRAQ reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("mTRAQ of K light")) {
+            return "01863"; // @TODO: maps to parent term "mTRAQ reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("mTRAQ of peptide N-term 13C(3) 15N")) {
+            return "01863"; // @TODO: maps to parent term "mTRAQ reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("mTRAQ of peptide N-term 13C(6) 15N(2)")) {
+            return "01863"; // @TODO: maps to parent term "mTRAQ reporter+balance reagent acylated residue"...
+        } else if (modificationName.equalsIgnoreCase("mTRAQ of peptide N-term light")) {
+            return "01863"; // @TODO: maps to parent term "mTRAQ reporter+balance reagent acylated residue"...
+        } else {
+            return null;
+        }
     }
 }

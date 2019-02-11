@@ -166,7 +166,7 @@ public class IdentificationParametersInputBean {
             try {
                 IdentificationParameters.getIdentificationParameters(fileIn);
             } catch (Exception e) {
-                System.out.println(System.getProperty("line.separator") + "An error occurred while importing the parameters file " + fileIn + " (see below)." + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator") + "An error occurred while importing the parameters file " + fileIn + "." + System.getProperty("line.separator"));
                 e.printStackTrace();
                 return false;
             }
@@ -629,6 +629,12 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_PTMS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_PTMS.id);
             if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.MSGF_PTMS.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_TASKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TASKS.id);
+            if (!CommandParameter.isInteger(IdentificationParametersCLIParams.MSGF_TASKS.id, arg)) {
                 return false;
             }
         }
@@ -2282,6 +2288,11 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             msgfParameters.setNumberOfModificationsPerPeptide(option);
         }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_TASKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TASKS.id);
+            Integer option = new Integer(arg);
+            msgfParameters.setNumberOfTasks(option);
+        }
 
         ///////////////////////////////////
         // MyriMatch parameters
@@ -2346,6 +2357,7 @@ public class IdentificationParametersInputBean {
                 case specificNTermOnly:
                 case specificCTermOnly:
                     myriMatchParameters.setMinTerminiCleavages(1);
+                    break;
                 default:
                     throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
             }
@@ -3112,25 +3124,15 @@ public class IdentificationParametersInputBean {
             novorParameters.setMassAnalyzer(arg);
         }
 
-        // Set the parameters in the identification parameters
-        if (identificationParameters != null) {
-            identificationParameters.setSearchParameters(searchParameters);
-        } else {
-            identificationParameters = new IdentificationParameters(searchParameters);
-        }
-
-        // set the parameter file name to the same as the name of the file
-        if (identificationParameters.getName() == null && destinationFile != null) {
-            identificationParameters.setName(destinationFile.getName().substring(0, destinationFile.getName().lastIndexOf(".")));
-        }
-
         //////////////////////////////////
         // Gene mapping preferences
         //////////////////////////////////
-        GeneParameters genePreferences = identificationParameters.getGeneParameters();
+        GeneParameters genePreferences = null;
+        if (identificationParameters != null) {
+            genePreferences = identificationParameters.getGeneParameters();
+        }
         if (genePreferences == null) {
             genePreferences = new GeneParameters();
-            identificationParameters.setGeneParameters(genePreferences);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.USE_GENE_MAPPING.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.USE_GENE_MAPPING.id);
@@ -3163,6 +3165,22 @@ public class IdentificationParametersInputBean {
                     throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.UPDATE_GENE_MAPPING.id + ": " + arg + ". 0 or 1 expected.");
             }
             genePreferences.setAutoUpdate(value);
+        }
+
+        // Set the parameters in the identification parameters
+        if (identificationParameters != null) {
+            identificationParameters.setSearchParameters(searchParameters);
+        } else {
+            identificationParameters = new IdentificationParameters();
+            // apply geneParameters before setParametersFromSearch to know the gene mapping options 
+            identificationParameters.setGeneParameters(genePreferences);
+            identificationParameters.setParametersFromSearch(searchParameters);
+            genePreferences.setParametersFromSearchParameters(searchParameters);
+        }
+
+        // set the parameter file name to the same as the name of the file
+        if (identificationParameters.getName() == null && destinationFile != null) {
+            identificationParameters.setName(destinationFile.getName().substring(0, destinationFile.getName().lastIndexOf(".")));
         }
 
         //////////////////////////////////

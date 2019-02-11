@@ -584,7 +584,7 @@ public class UtilitiesUserParameters {
             
         } catch (Exception e) {
             
-            System.err.println("An error occurred while saving " + USER_PARAMETERS_FILE + " (see below).");
+            System.err.println("An error occurred while saving " + USER_PARAMETERS_FILE + ".");
             e.printStackTrace();
             
         }
@@ -616,7 +616,7 @@ public class UtilitiesUserParameters {
                 
             } catch (Exception e) {
                 
-                System.err.println("An error occurred while loading " + UtilitiesUserParameters.USER_PARAMETERS_FILE + " (see below). Preferences set back to default.");
+                System.err.println("An error occurred while loading " + UtilitiesUserParameters.USER_PARAMETERS_FILE + ". Parameters set back to default.");
                 e.printStackTrace();
                 
                 userParameters = new UtilitiesUserParameters();

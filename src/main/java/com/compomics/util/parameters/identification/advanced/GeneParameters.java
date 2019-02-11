@@ -4,7 +4,6 @@ import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import com.compomics.util.parameters.identification.search.SearchParameters;
-import java.io.File;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -133,7 +132,7 @@ public class GeneParameters extends DbObject {
      *
      * @param searchParameters the search parameters
      */
-    public void setPreferencesFromSearchParameters(SearchParameters searchParameters) {
+    public void setParametersFromSearchParameters(SearchParameters searchParameters) {
         writeDBMode();
 
         String fastaFilePath = searchParameters.getFastaFile();
@@ -153,7 +152,7 @@ public class GeneParameters extends DbObject {
 
                     String uniprotTaxonomy = entry.getKey();
                     
-                    if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
+                    if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN) && getUseGeneMapping()) {
                         
                         Integer occurrence = entry.getValue();
 

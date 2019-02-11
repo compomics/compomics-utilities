@@ -7,6 +7,7 @@ import com.compomics.util.gui.GuiUtilities;
 import java.awt.Dialog;
 import javax.swing.SwingConstants;
 import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialog;
+import java.awt.Color;
 
 /**
  * Dialog for the MS-GF+ specific settings.
@@ -135,6 +136,11 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         if (msgfParameters.getNumberOfModificationsPerPeptide() != null) {
             maxPtmsTxt.setText(msgfParameters.getNumberOfModificationsPerPeptide() + "");
         }
+        if (msgfParameters.getNumberOfTasks() != null) {
+            numberOfTasksTxt.setText(msgfParameters.getNumberOfTasks() + "");
+        } else {
+            numberOfTasksTxt.setText("default");
+        }
     }
 
     @Override
@@ -181,6 +187,13 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         if (!input.equals("")) {
             result.setNumberOfModificationsPerPeptide(new Integer(input));
         }
+        
+        input = numberOfTasksTxt.getText().trim();
+        if (!input.equals("") && !numberOfTasksTxt.getText().trim().equalsIgnoreCase("default")) {
+            result.setNumberOfTasks(new Integer(input));
+        } else {
+            result.setNumberOfTasks(null);
+        }
 
         return result;
     }
@@ -216,6 +229,8 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         maxPtmsLabel = new javax.swing.JLabel();
         maxPtmsTxt = new javax.swing.JTextField();
         terminiCmb = new javax.swing.JComboBox();
+        numberOfTasksLabel = new javax.swing.JLabel();
+        numberOfTasksTxt = new javax.swing.JTextField();
         okButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
         openDialogHelpJButton = new javax.swing.JButton();
@@ -247,7 +262,7 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
 
         fragmentationMethodLabel.setText("Fragmentation Method");
 
-        fragmentationMethodCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Automatic", "CID", "ETD", "HCD" }));
+        fragmentationMethodCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Automatic", "CID", "ETD", "HCD", "UVPD" }));
         fragmentationMethodCmb.setSelectedIndex(3);
 
         protocolLabel.setText("Protocol");
@@ -305,6 +320,16 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         terminiCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None Required", "At Least One", "Both" }));
         terminiCmb.setSelectedIndex(2);
 
+        numberOfTasksLabel.setText("Number of Tasks");
+
+        numberOfTasksTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        numberOfTasksTxt.setText("default");
+        numberOfTasksTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                numberOfTasksTxtKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
         advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
         advancedSearchSettingsPanelLayout.setHorizontalGroup(
@@ -350,7 +375,11 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(maxPtmsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maxPtmsTxt)))
+                        .addComponent(maxPtmsTxt))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(numberOfTasksLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(numberOfTasksTxt)))
                 .addContainerGap())
         );
 
@@ -397,7 +426,11 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(additionalOutputLabel)
                     .addComponent(additionalOutputCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(numberOfTasksLabel)
+                    .addComponent(numberOfTasksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         okButton.setText("OK");
@@ -459,7 +492,7 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
                     .addComponent(advancedSettingsWarningLabel)
@@ -528,7 +561,7 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
      */
     private void openDialogHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDialogHelpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("https://bix-lab.ucsd.edu/pages/viewpage.action?pageId=13533355");
+        BareBonesBrowserLaunch.openURL("https://htmlpreview.github.io/?https://raw.githubusercontent.com/MSGFPlus/msgfplus/master/doc/MSGFPlus.html");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_openDialogHelpJButtonActionPerformed
 
@@ -579,6 +612,15 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
     }//GEN-LAST:event_instrumentCmbActionPerformed
 
     /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void numberOfTasksTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numberOfTasksTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_numberOfTasksTxtKeyReleased
+
+    /**
      * Inspects the parameters validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -592,6 +634,14 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, maxPepLengthTxt, "maximum peptide length", "Peptide Length Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number Spectrum Matches Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "max number of PTMs per peptide", "Peptide PTM Error", true, showMessage, valid);
+        
+        // validate the number of tasks per thread
+        if (!numberOfTasksTxt.getText().trim().equals("") && !numberOfTasksTxt.getText().trim().equalsIgnoreCase("default")) {
+            valid = GuiUtilities.validateIntegerInput(this, numberOfTasksLabel, numberOfTasksTxt, "number of tasks", "Number of Tasks Error", false, showMessage, valid);
+        } else {
+            numberOfTasksLabel.setForeground(Color.BLACK);
+            numberOfTasksLabel.setToolTipText(null);
+        }
         
         okButton.setEnabled(valid);
 
@@ -617,6 +667,8 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
     private javax.swing.JTextField minPepLengthTxt;
     private javax.swing.JLabel numberMatchesLabel;
     private javax.swing.JTextField numberMatchesTxt;
+    private javax.swing.JLabel numberOfTasksLabel;
+    private javax.swing.JTextField numberOfTasksTxt;
     private javax.swing.JLabel numberTerminiLabel;
     private javax.swing.JButton okButton;
     private javax.swing.JButton openDialogHelpJButton;

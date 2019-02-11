@@ -379,7 +379,7 @@ public class AminoAcidPattern extends ExperimentObject {
      *
      * @param index the index of the amino acid to remove
      */
-    public void removeAA(int index) {
+    public void removeAA(int index) { // @TODO: delete does not always work...
         writeDBMode();
 
         if (residueTargeted != null) {

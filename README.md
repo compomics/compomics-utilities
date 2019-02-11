@@ -21,6 +21,7 @@
 
 The [Computational Omics and Systems Biology Group](http://www.compomics.com) develops various bioinformatics tools for analyzing omics data.
 
+
 **compomics-utilities** is a library containing code shared by many of our research projects, amongst others containing panels for visualizing spectra and chromatograms and objects for representing peptides and proteins etc. We believe that this library can be of use to other research groups doing computational proteomics, and have therefore made it available as open source.
 
 [Go to top of page](#compomics-utilities)
@@ -37,7 +38,7 @@ The [Computational Omics and Systems Biology Group](http://www.compomics.com) de
 | [pride-asap](http://compomics.github.io/projects/pride-asa-pipeline.html) | _uniform annotation of identified spectra stored in PRIDE_|_[Hulstaert et al: J Proteomics. 2013 Apr 17](http://www.ncbi.nlm.nih.gov/pubmed/23603108)_|
 | [ProteoCloud](http://proteocloud.googlecode.com) | _proteomics cloud computing pipeline_|_[Muth et al: J Proteomics. 2013 Aug 2;88:104-8](http://www.ncbi.nlm.nih.gov/pubmed/23305951)_|
 | [thermo-msf-parser](http://compomics.github.io/projects/thermo-msf-parser.html) | _parser and viewer for thermo msf files_|_[Colaert et al: J Proteome Res. 2011;10(8):3840-3](http://www.ncbi.nlm.nih.gov/pubmed/21714566)_|
-| [SearchGUI](http://compomics.github.io/projects/searchgui.html) | _graphical user interface for proteomics identification search engines_|_[Vaudel et al: Proteomics 2011;11(5):996-9](http://www.ncbi.nlm.nih.gov/pubmed/21337703)_|
+| [SearchGUI](http://compomics.github.io/projects/searchgui.html) | _graphical user interface for proteomics identification search engines_|_[Barsnes et al: J Proteome Res. 2018 (in press)](https://www.ncbi.nlm.nih.gov/pubmed/29774740)_ _[Vaudel et al: Proteomics 2011;11(5):996-9](http://www.ncbi.nlm.nih.gov/pubmed/21337703)_|
 | [XTandem Parser](http://compomics.github.io/projects/xtandem-parser.html) |_java parser for X!Tandem output xml files_|_[Muth et al: Proteomics 2010;10(7):1522-4](http://www.ncbi.nlm.nih.gov/pubmed/20140905)_|
 | [jmzML](http://jmzML.googlecode.com) |_java implementation of the PSI-MS mzML specification_|_[Côté et al: Proteomics 2010;10(7):1332-5](http://www.ncbi.nlm.nih.gov/pubmed/20127693)_|
 | [Fragmentation Analyzer](http://compomics.github.io/projects/fragmentation-analyzer.html) | _analyzing MS/MS fragmentation data_|_[Barsnes et al: Proteomics 2010;10(5):1087-90](http://www.ncbi.nlm.nih.gov/pubmed/20049869)_|

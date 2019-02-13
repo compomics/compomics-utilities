@@ -292,9 +292,8 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the reference mass used to convert ppm to Da
      */
     public double getRefMass() {
-        
+
         readDBMode();
-        
 
         return refMass;
     }
@@ -315,9 +314,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the modification settings
      */
     public ModificationParameters getModificationParameters() {
-        
+
         readDBMode();
-        
+
         return modificationParameters;
     }
 
@@ -337,9 +336,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the MS2 ion m/z tolerance
      */
     public double getFragmentIonAccuracy() {
-        
+
         readDBMode();
-        
+
         return fragmentIonMZTolerance;
     }
 
@@ -350,9 +349,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the absolute fragment ion tolerance in Dalton
      */
     public double getFragmentIonAccuracyInDaltons() {
-        
+
         readDBMode();
-        
+
         return getFragmentIonAccuracyInDaltons(refMass);
     }
 
@@ -366,9 +365,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the absolute fragment ion tolerance in Dalton
      */
     public double getFragmentIonAccuracyInDaltons(double refMass) {
-        
+
         readDBMode();
-        
+
         switch (fragmentAccuracyType) {
             case DA:
                 return fragmentIonMZTolerance;
@@ -395,9 +394,8 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the digestion preferences
      */
     public DigestionParameters getDigestionParameters() {
-        
+
         readDBMode();
-        
 
         return digestionParameters;
     }
@@ -418,9 +416,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the path to the sequence database file used for identification
      */
     public String getFastaFile() {
-        
+
         readDBMode();
-        
+
         return fastaFile;
     }
 
@@ -440,9 +438,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the parameters to use to parse the FASTA file
      */
     public FastaParameters getFastaParameters() {
-        
+
         readDBMode();
-        
+
         return fastaParameters;
     }
 
@@ -463,9 +461,8 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the forward ions searched
      */
     public ArrayList<Integer> getForwardIons() {
-        
+
         readDBMode();
-        
 
         return forwardIons;
     }
@@ -488,9 +485,8 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the rewind ions searched
      */
     public ArrayList<Integer> getRewindIons() {
-        
+
         readDBMode();
-        
 
         return rewindIons;
     }
@@ -528,9 +524,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the precursor tolerance
      */
     public double getPrecursorAccuracy() {
-        
+
         readDBMode();
-        
+
         return precursorTolerance;
     }
 
@@ -550,9 +546,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the precursor accuracy type
      */
     public MassAccuracyType getPrecursorAccuracyType() {
-        
+
         readDBMode();
-        
+
         return precursorAccuracyType;
     }
 
@@ -572,9 +568,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the fragment accuracy type
      */
     public MassAccuracyType getFragmentAccuracyType() {
-        
+
         readDBMode();
-        
+
         return fragmentAccuracyType;
     }
 
@@ -594,9 +590,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return true if the current precursor accuracy type is ppm
      */
     public Boolean isPrecursorAccuracyTypePpm() {
-        
+
         readDBMode();
-        
+
         return getPrecursorAccuracyType() == MassAccuracyType.PPM;
     }
 
@@ -606,9 +602,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the maximal charge searched
      */
     public int getMaxChargeSearched() {
-        
+
         readDBMode();
-        
+
         return maxChargeSearched;
     }
 
@@ -628,9 +624,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the minimal charge searched
      */
     public int getMinChargeSearched() {
-        
+
         readDBMode();
-        
+
         return minChargeSearched;
     }
 
@@ -651,9 +647,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the algorithm specific parameters in a map
      */
     public HashMap<Integer, IdentificationAlgorithmParameter> getAlgorithmSpecificParameters() {
-        
+
         readDBMode();
-        
+
         return algorithmParameters;
     }
 
@@ -666,9 +662,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the algorithm specific parameters
      */
     public IdentificationAlgorithmParameter getIdentificationAlgorithmParameter(int algorithmID) {
-        
+
         readDBMode();
-        
+
         if (algorithmParameters == null) {
             return null;
         }
@@ -698,9 +694,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * of indexes as listed in the Advocate class
      */
     public Set<Integer> getAlgorithms() {
-        
+
         readDBMode();
-        
+
         if (algorithmParameters == null) {
             return new HashSet<>(0);
         }
@@ -713,9 +709,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the minimal isotopic correction
      */
     public int getMinIsotopicCorrection() {
-        
+
         readDBMode();
-        
+
         return minIsotopicCorrection;
     }
 
@@ -735,9 +731,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the maximal isotopic correction
      */
     public int getMaxIsotopicCorrection() {
-        
+
         readDBMode();
-        
+
         return maxIsotopicCorrection;
     }
 
@@ -855,9 +851,8 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        
+
         readDBMode();
-        
 
         SearchParameters defaultParameters = new SearchParameters();
         String newLine = System.getProperty("line.separator");
@@ -936,9 +931,8 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the search parameters as a string
      */
     public String toString(boolean html) {
-        
+
         readDBMode();
-        
 
         String newLine;
         if (html) {
@@ -1083,9 +1077,8 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return true if the search parameter objects have identical settings
      */
     public boolean equals(SearchParameters otherSearchParameters) {
-        
+
         readDBMode();
-        
 
         if (otherSearchParameters == null) {
             return false;
@@ -1154,15 +1147,15 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         }
 
         for (int se : getAlgorithms()) {
-            
+
             IdentificationAlgorithmParameter otherParameter = otherSearchParameters.getIdentificationAlgorithmParameter(se);
-            
+
             if (otherParameter == null) {
                 return false;
             }
-            
+
             IdentificationAlgorithmParameter thisParameter = getIdentificationAlgorithmParameter(se);
-            
+
             if (!otherParameter.equals(thisParameter)) {
                 return false;
             }
@@ -1179,9 +1172,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
 
     @Override
     public Type getType() {
-        
+
         readDBMode();
-        
+
         if (marshallableParameterType == null) {
             return null;
         }

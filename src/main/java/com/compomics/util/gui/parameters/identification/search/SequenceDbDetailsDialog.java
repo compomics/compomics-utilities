@@ -471,7 +471,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
                     if (!progressDialog.isRunCanceled()) {
 
-                        progressDialog.setWaitingText("Importing database. Please wait...");
+                        progressDialog.setWaitingText("Importing Database. Please wait...");
 
                         fastaSummary = FastaSummary.getSummary(selectedFastaFile, fastaParameters, progressDialog);
 

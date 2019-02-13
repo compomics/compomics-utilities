@@ -27,6 +27,7 @@ import com.compomics.util.parameters.identification.tool_specific.NovorParameter
 import com.compomics.util.experiment.identification.modification.ModificationLocalizationScore;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
+import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.search.DigestionParameters.Specificity;
@@ -1814,6 +1815,14 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.DB.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB.id);
             searchParameters.setFastaFile(arg);
+            if (searchParameters.getFastaParameters() == null) {
+                try {
+                    searchParameters.setFastaParameters(FastaParameters.inferParameters(arg));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    throw new UnsupportedOperationException("An error occurred while generating the FASTA parameters.");
+                }
+            }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.FI.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FI.id);

@@ -920,7 +920,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
 
         output.append("DB: ");
         if (fastaFile != null) {
-            output.append(fastaParameters.getName());
+            output.append(fastaFile);
         } else {
             output.append("not set");
         }

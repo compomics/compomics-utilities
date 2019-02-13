@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class DecoyConverter {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public DecoyConverter() {
     }
@@ -106,52 +106,55 @@ public class DecoyConverter {
     }
 
     /**
-     * Returns the FASTA parameters of the target-decoy database based on the parameters of the target database.
-     * 
+     * Returns the FASTA parameters of the target-decoy database based on the
+     * parameters of the target database.
+     *
      * @param targetParameters the parameters of the target database
-     * 
+     *
      * @return the FASTA parameters of the target-decoy database
      */
     public static FastaParameters getDecoyParameters(FastaParameters targetParameters) {
-        
+
         FastaParameters decoyParameters = new FastaParameters();
-        
+
         decoyParameters.setTargetDecoy(true);
         decoyParameters.setDecoyFlag(decoyFlag);
         decoyParameters.setDecoySuffix(true);
+        decoyParameters.setVersion(targetParameters.getVersion());
         decoyParameters.setName(targetParameters.getName() + " (target-decoy)");
         decoyParameters.setDescription(targetParameters.getDescription());
-                
+
         return decoyParameters;
     }
 
     /**
-     * Returns the FASTA summary of the target-decoy database based on the summary of the target database.
-     * 
+     * Returns the FASTA summary of the target-decoy database based on the
+     * summary of the target database.
+     *
      * @param newFastaFile the new FASTA file
      * @param targetSummary the summary of the target database
-     * 
+     *
      * @return the FASTA summary of the target-decoy database
      */
     public static FastaSummary getDecoySummary(File newFastaFile, FastaSummary targetSummary) {
-        
+
         TreeMap<String, Integer> speciesOccurrence = targetSummary.speciesOccurrence.entrySet().stream()
-                .collect(Collectors.toMap(Entry::getKey, 
-                        entry -> 2 * entry.getValue(), 
+                .collect(Collectors.toMap(Entry::getKey,
+                        entry -> 2 * entry.getValue(),
                         (oldValue, newValue) -> oldValue + newValue,
                         TreeMap::new));
-        
+
         HashMap<ProteinDatabase, Integer> dbOccurrence = targetSummary.databaseType.entrySet().stream()
-                .collect(Collectors.toMap(Entry::getKey, 
-                        entry -> 2 * entry.getValue(), 
+                .collect(Collectors.toMap(Entry::getKey,
+                        entry -> 2 * entry.getValue(),
                         (oldValue, newValue) -> oldValue + newValue,
                         HashMap::new));
-        
+
         int nSequences = 2 * targetSummary.nSequences;
-        
+
         int nTarget = targetSummary.nTarget;
-        
+
         return new FastaSummary(newFastaFile, speciesOccurrence, dbOccurrence, nSequences, nTarget, newFastaFile.lastModified());
-        
+
     }
 }

@@ -12,8 +12,14 @@ import org.apache.commons.cli.CommandLine;
  * This class gathers command line parameters for the parsing of FASTA files.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class FastaParametersInputBean {
+
+    /**
+     * The FASTA parsing parameters.
+     */
+    private FastaParameters fastaParameters;
 
     /**
      * Verifies the command line start parameters.
@@ -45,11 +51,6 @@ public class FastaParametersInputBean {
     }
 
     /**
-     * The FASTA parsing parameters.
-     */
-    private FastaParameters fastaParameters;
-
-    /**
      * Parses all the arguments from a command line.
      *
      * @param aLine the command line
@@ -60,68 +61,56 @@ public class FastaParametersInputBean {
      */
     public FastaParametersInputBean(CommandLine aLine, File fastaFile) throws IOException {
 
-        FastaParameters fastaParameters = new FastaParameters();
+        FastaParameters tempFastaParameters = new FastaParameters();
 
         if (aLine.hasOption(FastaParametersCLIParams.NAME.id)) {
 
             String arg = aLine.getOptionValue(FastaParametersCLIParams.NAME.id);
-            fastaParameters.setName(arg);
+            tempFastaParameters.setName(arg);
 
         } else {
 
             String fileName = Util.removeExtension(fastaFile.getName());
-            fastaParameters.setName(fileName);
+            tempFastaParameters.setName(fileName);
 
         }
 
         if (aLine.hasOption(FastaParametersCLIParams.DESCRIPTION.id)) {
 
             String arg = aLine.getOptionValue(FastaParametersCLIParams.DESCRIPTION.id);
-            fastaParameters.setDescription(arg);
+            tempFastaParameters.setDescription(arg);
 
         } else {
 
             String fileName = Util.removeExtension(fastaFile.getName());
-            fastaParameters.setDescription(fileName);
+            tempFastaParameters.setDescription(fileName);
 
         }
 
         if (aLine.hasOption(FastaParametersCLIParams.VERSION.id)) {
 
             String arg = aLine.getOptionValue(FastaParametersCLIParams.VERSION.id);
-            fastaParameters.setVersion(arg);
+            tempFastaParameters.setVersion(arg);
 
         } else {
 
             String fileVersion = new Date(fastaFile.lastModified()).toString();
-            fastaParameters.setName(fileVersion);
+            tempFastaParameters.setName(fileVersion);
 
         }
 
-        if (aLine.hasOption(FastaParametersCLIParams.VERSION.id)) {
+        if (aLine.hasOption(FastaParametersCLIParams.DECOY_FLAG.id)) {
 
-            String arg = aLine.getOptionValue(FastaParametersCLIParams.VERSION.id);
-            fastaParameters.setVersion(arg);
-
-        } else {
-
-            String fileVersion = new Date(fastaFile.lastModified()).toString();
-            fastaParameters.setName(fileVersion);
-
-        }
-
-        if (aLine.hasOption(FastaParametersCLIParams.DECOY.id)) {
-
-            String arg = aLine.getOptionValue(FastaParametersCLIParams.DECOY.id);
+            String arg = aLine.getOptionValue(FastaParametersCLIParams.DECOY_FLAG.id);
 
             if (arg.equals("")) {
 
-                fastaParameters.setTargetDecoy(false);
+                tempFastaParameters.setTargetDecoy(false);
 
             } else {
 
-                fastaParameters.setTargetDecoy(true);
-                fastaParameters.setDecoyFlag(arg);
+                tempFastaParameters.setTargetDecoy(true);
+                tempFastaParameters.setDecoyFlag(arg);
 
                 if (aLine.hasOption(FastaParametersCLIParams.SUFFIX.id)) {
 
@@ -129,16 +118,16 @@ public class FastaParametersInputBean {
 
                     if (arg.equals("1")) {
 
-                        fastaParameters.setDecoySuffix(false);
+                        tempFastaParameters.setDecoySuffix(false);
 
                     } else {
 
-                        fastaParameters.setDecoySuffix(true);
+                        tempFastaParameters.setDecoySuffix(true);
 
                     }
                 } else {
 
-                    fastaParameters.setDecoySuffix(true);
+                    tempFastaParameters.setDecoySuffix(true);
 
                 }
             }
@@ -147,16 +136,18 @@ public class FastaParametersInputBean {
 
             FastaParameters parsedParameters = FastaParameters.inferParameters(fastaFile.getAbsolutePath());
 
-            fastaParameters.setTargetDecoy(parsedParameters.isTargetDecoy());
-            fastaParameters.setDecoyFlag(parsedParameters.getDecoyFlag());
-            fastaParameters.setDecoySuffix(parsedParameters.isDecoySuffix());
+            tempFastaParameters.setTargetDecoy(parsedParameters.isTargetDecoy());
+            tempFastaParameters.setDecoyFlag(parsedParameters.getDecoyFlag());
+            tempFastaParameters.setDecoySuffix(parsedParameters.isDecoySuffix());
 
         }
+
+        this.fastaParameters = tempFastaParameters;
     }
 
     /**
      * Returns the FASTA parameters as parsed from the command line.
-     * 
+     *
      * @return the FASTA parameters as parsed from the command line
      */
     public FastaParameters getFastaParameters() {

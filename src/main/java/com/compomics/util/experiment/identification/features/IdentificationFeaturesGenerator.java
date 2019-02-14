@@ -91,7 +91,7 @@ public class IdentificationFeaturesGenerator {
     private HashMap<String, NonSymmetricalNormalDistribution> massErrorDistribution = null;
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public IdentificationFeaturesGenerator() {
         sequenceProvider = null;
@@ -1663,7 +1663,7 @@ public class IdentificationFeaturesGenerator {
      * @param identificationMatch the identification match
      * @param sequence the sequence
      *
-     * @return a modificatoin summary for the given match
+     * @return a modification summary for the given match
      */
     public String getConfidentModificationSites(IdentificationMatch identificationMatch, String sequence) {
 

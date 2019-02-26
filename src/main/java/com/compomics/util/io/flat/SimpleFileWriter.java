@@ -29,7 +29,7 @@ public class SimpleFileWriter implements AutoCloseable {
     /**
      * The separator for exported files.
      */
-    public static final String separator = " ";
+    public static final String SEPARATOR = " ";
 
     /**
      * Constructor.
@@ -69,7 +69,7 @@ public class SimpleFileWriter implements AutoCloseable {
      */
     public void writeLine(String... elements) {
 
-        String line = String.join(separator, elements);
+        String line = String.join(SEPARATOR, elements);
         writeLine(line);
 
     }

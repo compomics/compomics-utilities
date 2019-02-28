@@ -71,7 +71,7 @@ public class Identification extends ExperimentObject {
 
     /**
      * Returns the identification keys.
-     * 
+     *
      * @return the identification keys
      */
     public IdentificationKeys getIdentificationKeys() {
@@ -80,24 +80,24 @@ public class Identification extends ExperimentObject {
 
     /**
      * Sets the identification keys.
-     * 
+     *
      * @param identificationKeys the identification keys
      */
     public void setIdentificationKeys(IdentificationKeys identificationKeys) {
         this.identificationKeys = identificationKeys;
     }
-    
+
     /**
      * Fills the spectra per file map.
      */
     public synchronized void fillSpectrumIdentification() {
 
-            identificationKeys.spectrumIdentification = getClassObjects(SpectrumMatch.class).stream()
-                    .collect(Collectors.groupingBy(
-                            key -> Spectrum.getSpectrumFile(getSpectrumMatch(key).getSpectrumKey()),
-                            HashMap::new,
-                            Collectors.toCollection(HashSet::new)));
-}
+        identificationKeys.spectrumIdentification = getClassObjects(SpectrumMatch.class).stream()
+                .collect(Collectors.groupingBy(
+                        key -> Spectrum.getSpectrumFile(getSpectrumMatch(key).getSpectrumKey()),
+                        HashMap::new,
+                        Collectors.toCollection(HashSet::new)));
+    }
 
     /**
      * Returns a map of the spectrum matches keys indexed by spectrum file name.
@@ -137,8 +137,7 @@ public class Identification extends ExperimentObject {
      * @return the iterator
      */
     public Iterator<?> getIterator(Class className, String filters) {
-
-            return objectsDB.getObjectsIterator(className, filters);
+        return objectsDB.getObjectsIterator(className, filters);
     }
 
     /**
@@ -245,7 +244,7 @@ public class Identification extends ExperimentObject {
      */
     public ArrayList<Object> retrieveObjects(Collection<Long> keyList, WaitingHandler waitingHandler, boolean displayProgress) {
 
-            return objectsDB.retrieveObjects(keyList, waitingHandler, displayProgress);
+        return objectsDB.retrieveObjects(keyList, waitingHandler, displayProgress);
     }
 
     /**
@@ -261,7 +260,7 @@ public class Identification extends ExperimentObject {
      */
     public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
 
-            return objectsDB.retrieveObjects(className, waitingHandler, displayProgress);
+        return objectsDB.retrieveObjects(className, waitingHandler, displayProgress);
     }
 
     /**
@@ -272,8 +271,8 @@ public class Identification extends ExperimentObject {
      */
     public void addObject(long key, Object object) {
 
-            objectsDB.insertObject(key, object);
-            
+        objectsDB.insertObject(key, object);
+
     }
 
     /**
@@ -322,7 +321,7 @@ public class Identification extends ExperimentObject {
 
         }
 
-            objectsDB.removeObject(key);
+        objectsDB.removeObject(key);
     }
 
     /**
@@ -389,7 +388,7 @@ public class Identification extends ExperimentObject {
 
         identificationKeys.peptideIdentification.add(key);
 
-            objectsDB.insertObject(key, peptideMatch);
+        objectsDB.insertObject(key, peptideMatch);
     }
 
     /**
@@ -418,8 +417,8 @@ public class Identification extends ExperimentObject {
 
         identificationKeys.proteinIdentification.add(key);
 
-            objectsDB.insertObject(key, proteinMatch);
-            
+        objectsDB.insertObject(key, proteinMatch);
+
     }
 
     /**

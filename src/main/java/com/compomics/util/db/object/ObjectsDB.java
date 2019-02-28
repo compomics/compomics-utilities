@@ -315,8 +315,8 @@ public class ObjectsDB {
      */
     public Iterator<?> getObjectsIterator(Class className, String filters) {
         Query q;
-        dbMutex.acquire();
         dumpToDB();
+        dbMutex.acquire();
         q = pm.newQuery(className, filters);
         dbMutex.release();
         return ((SynchronizedROCollection<?>) q.execute()).iterator();

@@ -3528,14 +3528,14 @@ public class ModificationFactory {
      * @param modificationName the name of the modification
      * @return the PSI-MOD accession number, null if not set
      */
-    public String getPsiModAccession(String modificationName) {
+    public String getPsiModAccession(String modificationName) { // TODO: we also need a map from PSI-MOD to utilities...
 
         if (modificationName.equalsIgnoreCase("18O(1) of peptide C-term")) {
             return "00581";
         } else if (modificationName.equalsIgnoreCase("18O(2) of peptide C-term")) {
             return "00546";
         } else if (modificationName.equalsIgnoreCase("Acetaldehyde +26")) {
-            return "00577"; // @TODO: not peptide n-term specific
+            return "00577"; // @TODO: this PSI-MOD not peptide n-term specific
         } else if (modificationName.equalsIgnoreCase("Acetylation of K")) {
             return "00723";
         } else if (modificationName.equalsIgnoreCase("Acetylation of peptide N-term")) {
@@ -3701,11 +3701,11 @@ public class ModificationFactory {
         } else if (modificationName.equalsIgnoreCase("Nethylmaleimide of C")) {
             return "00483";
         } else if (modificationName.equalsIgnoreCase("Oxidation of C")) {
-            return null; // @TODO: add mapping?
+            return "00210";
         } else if (modificationName.equalsIgnoreCase("Oxidation of K")) {
             return "01047"; // @TODO: maps to parent term "monohydroxylated lysine"...
         } else if (modificationName.equalsIgnoreCase("Oxidation of M")) {
-            return null; // @TODO: add mapping?
+            return "00719"; // @TODO: could also map to MOD:00425?
         } else if (modificationName.equalsIgnoreCase("Oxidation of P")) {
             return "00039";
         } else if (modificationName.equalsIgnoreCase("Palmitoylation of C")) {
@@ -3747,7 +3747,7 @@ public class ModificationFactory {
         } else if (modificationName.equalsIgnoreCase("Pyrolidone from Q")) {
             return "00040";
         } else if (modificationName.equalsIgnoreCase("Pyrolidone from carbamidomethylated C")) {
-            return null; // @TODO: add mapping?
+            return "01871";
         } else if (modificationName.equalsIgnoreCase("S-nitrosylation")) {
             return "00235";
         } else if (modificationName.equalsIgnoreCase("SUMO-2/3 Q87R")) {

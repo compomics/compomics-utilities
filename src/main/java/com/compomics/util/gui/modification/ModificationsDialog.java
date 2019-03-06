@@ -140,10 +140,15 @@ public class ModificationsDialog extends javax.swing.JDialog {
         userModificationsTable.getColumn("Type").setMaxWidth(50);
         userModificationsTable.getColumn("Type").setMinWidth(50);
 
-        defaultModificationsTable.getColumn("CV").setMaxWidth(100);
-        defaultModificationsTable.getColumn("CV").setMinWidth(100);
-        userModificationsTable.getColumn("CV").setMaxWidth(100);
-        userModificationsTable.getColumn("CV").setMinWidth(100);
+        defaultModificationsTable.getColumn("Unimod").setMaxWidth(100);
+        defaultModificationsTable.getColumn("Unimod").setMinWidth(100);
+        userModificationsTable.getColumn("Unimod").setMaxWidth(100);
+        userModificationsTable.getColumn("Unimod").setMinWidth(100);
+        
+        defaultModificationsTable.getColumn("PSI-MOD").setMaxWidth(100);
+        defaultModificationsTable.getColumn("PSI-MOD").setMinWidth(100);
+        userModificationsTable.getColumn("PSI-MOD").setMaxWidth(100);
+        userModificationsTable.getColumn("PSI-MOD").setMinWidth(100);
 
         // set up the modification type color map
         HashMap<Integer, Color> modificationTypeColorMap = new HashMap<>();
@@ -172,8 +177,10 @@ public class ModificationsDialog extends javax.swing.JDialog {
         defaultModificationsTable.getColumn("Type").setCellRenderer(new JSparklinesIntegerColorTableCellRenderer(Color.lightGray, modificationTypeColorMap, modificationTypeTooltipMap));
         userModificationsTable.getColumn("Type").setCellRenderer(new JSparklinesIntegerColorTableCellRenderer(Color.lightGray, modificationTypeColorMap, modificationTypeTooltipMap));
 
-        defaultModificationsTable.getColumn("CV").setCellRenderer(new HtmlLinksRenderer(selectedRowHtmlTagFontColor, notSelectedRowHtmlTagFontColor));
-        userModificationsTable.getColumn("CV").setCellRenderer(new HtmlLinksRenderer(selectedRowHtmlTagFontColor, notSelectedRowHtmlTagFontColor));
+        defaultModificationsTable.getColumn("Unimod").setCellRenderer(new HtmlLinksRenderer(selectedRowHtmlTagFontColor, notSelectedRowHtmlTagFontColor));
+        userModificationsTable.getColumn("Unimod").setCellRenderer(new HtmlLinksRenderer(selectedRowHtmlTagFontColor, notSelectedRowHtmlTagFontColor));
+        defaultModificationsTable.getColumn("PSI-MOD").setCellRenderer(new HtmlLinksRenderer(selectedRowHtmlTagFontColor, notSelectedRowHtmlTagFontColor));
+        userModificationsTable.getColumn("PSI-MOD").setCellRenderer(new HtmlLinksRenderer(selectedRowHtmlTagFontColor, notSelectedRowHtmlTagFontColor));
 
         updateMassSparklines();
 
@@ -185,7 +192,8 @@ public class ModificationsDialog extends javax.swing.JDialog {
         defaultModsTableToolTips.add("Modification Mass Change");
         defaultModsTableToolTips.add("Modification Type");
         defaultModsTableToolTips.add("Affected Residues");
-        defaultModsTableToolTips.add("CV Term Mapping");
+        defaultModsTableToolTips.add("Unimod Mapping");
+        defaultModsTableToolTips.add("PSI-MOD Mapping");
 
         userModsTableToolTips = new ArrayList<>();
         userModsTableToolTips.add(null);
@@ -194,7 +202,8 @@ public class ModificationsDialog extends javax.swing.JDialog {
         userModsTableToolTips.add("Modification Mass Change");
         userModsTableToolTips.add("Modification Type");
         userModsTableToolTips.add("Affected Residues");
-        userModsTableToolTips.add("CV Term Mapping");
+        userModsTableToolTips.add("Unimod Mapping");
+        userModsTableToolTips.add("PSI-MOD Mapping");
 
         ((TitledBorder) defaultModsPanel.getBorder()).setTitle("Default Modifications (" + defaultModificationsTable.getRowCount() + ")");
         ((TitledBorder) userModsPanel.getBorder()).setTitle("User Modifications (" + userModificationsTable.getRowCount() + ")");
@@ -663,9 +672,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
         int column = defaultModificationsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
-            if (column == defaultModificationsTable.getColumn("CV").getModelIndex()) {
+            if (column == defaultModificationsTable.getColumn("Unimod").getModelIndex() || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) {
                 // open protein link in web browser
-                if (column == defaultModificationsTable.getColumn("CV").getModelIndex() && evt.getButton() == MouseEvent.BUTTON1
+                if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex() || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) && evt.getButton() == MouseEvent.BUTTON1
                         && defaultModificationsTable.getValueAt(row, column) != null
                         && ((String) defaultModificationsTable.getValueAt(row, column)).lastIndexOf("<html>") != -1) {
 
@@ -692,7 +701,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         if (row != -1) {
 
-            if (column == defaultModificationsTable.getColumn("CV").getModelIndex() && defaultModificationsTable.getValueAt(row, column) != null) {
+            if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex() || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) && defaultModificationsTable.getValueAt(row, column) != null) {
 
                 String tempValue = (String) defaultModificationsTable.getValueAt(row, column);
 
@@ -799,8 +808,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             searchNextButtonActionPerformed(null);
         } else if (evt.getKeyCode() == KeyEvent.VK_LEFT & searchPreviousButton.isEnabled()) {
             searchPreviousButtonActionPerformed(null);
-        } else 
-        if (searchPossibilities.size() > 1) {
+        } else if (searchPossibilities.size() > 1) {
             searchPreviousButton.setEnabled(true);
             searchNextButton.setEnabled(true);
             searchIndexLabel.setForeground(Color.BLACK);
@@ -861,9 +869,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
         int column = userModificationsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
-            if (column == userModificationsTable.getColumn("CV").getModelIndex()) {
+            if (column == defaultModificationsTable.getColumn("Unimod").getModelIndex() || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) {
                 // open protein link in web browser
-                if (column == userModificationsTable.getColumn("CV").getModelIndex() && evt.getButton() == MouseEvent.BUTTON1
+                if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex() || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) && evt.getButton() == MouseEvent.BUTTON1
                         && ((String) userModificationsTable.getValueAt(row, column)).lastIndexOf("<html>") != -1) {
 
                     String link = (String) userModificationsTable.getValueAt(row, column);
@@ -889,7 +897,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         if (row != -1) {
 
-            if (column == userModificationsTable.getColumn("CV").getModelIndex() && userModificationsTable.getValueAt(row, column) != null) {
+            if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex() || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) && userModificationsTable.getValueAt(row, column) != null) {
 
                 String tempValue = (String) userModificationsTable.getValueAt(row, column);
 
@@ -1163,7 +1171,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         @Override
         public int getColumnCount() {
-            return 7;
+            return 8;
         }
 
         @Override
@@ -1182,7 +1190,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 case 5:
                     return "Residues";
                 case 6:
-                    return "CV";
+                    return "Unimod";
+                case 7:
+                    return "PSI-MOD";
                 default:
                     return "";
             }
@@ -1220,13 +1230,16 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     }
                     return residues;
                 case 6:
-                    CvTerm cvTerm = modificationFactory.getModification(name).getCvTerm();
+                    CvTerm cvTerm = modificationFactory.getModification(name).getUnimodCvTerm();
                     if (cvTerm != null) {
-                        if (cvTerm.getOntology().equalsIgnoreCase("UNIMOD")) {
-                            return getUniModAccessionLink(cvTerm.getAccession());
-                        } else { // psi-ms assumed
-                            return getOlsAccessionLink(cvTerm.getAccession());
-                        }
+                        return getUniModAccessionLink(cvTerm.getAccession());
+                    } else {
+                        return null;
+                    }
+                case 7:
+                    cvTerm = modificationFactory.getModification(name).getPsiModCvTerm();
+                    if (cvTerm != null) {
+                        return getOlsAccessionLink(cvTerm.getAccession());
                     } else {
                         return null;
                     }
@@ -1263,7 +1276,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         @Override
         public int getColumnCount() {
-            return 7;
+            return 8;
         }
 
         @Override
@@ -1282,7 +1295,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 case 5:
                     return "Residues";
                 case 6:
-                    return "CV";
+                    return "Unimod";
+                case 7:
+                    return "PSI-MOD";
                 default:
                     return "";
             }
@@ -1320,13 +1335,16 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     }
                     return residues;
                 case 6:
-                    CvTerm cvTerm = modificationFactory.getModification(name).getCvTerm();
+                    CvTerm cvTerm = modificationFactory.getModification(name).getUnimodCvTerm();
                     if (cvTerm != null) {
-                        if (cvTerm.getOntology().equalsIgnoreCase("UNIMOD")) {
-                            return getUniModAccessionLink(cvTerm.getAccession());
-                        } else { // psi-ms assumed
-                            return getOlsAccessionLink(cvTerm.getAccession());
-                        }
+                        return getUniModAccessionLink(cvTerm.getAccession());
+                    } else {
+                        return null;
+                    }
+                case 7:
+                    cvTerm = modificationFactory.getModification(name).getPsiModCvTerm();
+                    if (cvTerm != null) {
+                        return getOlsAccessionLink(cvTerm.getAccession());
                     } else {
                         return null;
                     }
@@ -1353,21 +1371,27 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
     /**
      * Returns a web link to the given PSI-MOD CV term at
-     * https://www.ebi.ac.uk/ontology-lookup.
+     * https://www.ebi.ac.uk/ols/ontologies/mod.
      *
      * @param modAccession the PSI-MOD accession number
      * @return the OLS web link
      */
     public String getOlsAccessionLink(String modAccession) {
-        String accessionNumberWithLink = "<html><a href=\"https://www.ebi.ac.uk/ontology-lookup/?termId=" + modAccession + "\""
+        
+        String modAccessionInLink = modAccession.replaceAll(":", "_");
+        
+        String accessionNumberWithLink = "<html><a href=\"https://www.ebi.ac.uk/ols/ontologies/mod/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F" + modAccessionInLink + "\""
                 + "\"><font color=\"" + selectedRowHtmlTagFontColor + "\">"
                 + modAccession + "</font></a></html>";
         return accessionNumberWithLink;
+        
+        
+        
+        // https://www.ebi.ac.uk/ols/ontologies/mod/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FMOD_00394
     }
 
     /**
-     * Returns a web link to the given Unimod CV term at
-     * http://www.unimod.org.
+     * Returns a web link to the given Unimod CV term at http://www.unimod.org.
      *
      * @param unimodAccession the Unimod accession number
      * @return the Unimod web link

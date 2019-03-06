@@ -61,9 +61,13 @@ public class Modification extends ExperimentObject {
      */
     private AtomChain atomChainRemoved = new AtomChain();
     /**
-     * The CV term associated with this modification. Null if not set.
+     * The Unimod CV term associated with this modification. Null if not set.
      */
-    private CvTerm cvTerm = null;
+    private CvTerm unimodCvTerm = null;
+    /**
+     * The PSI-MOD CV term associated with this modification. Null if not set.
+     */
+    private CvTerm psiModCvTerm = null;
     /**
      * The ambiguity key for ambiguous modifications.
      */
@@ -96,7 +100,8 @@ public class Modification extends ExperimentObject {
         this.atomChainAdded = atomChainAdded;
         this.atomChainRemoved = atomChainRemoved;
         this.pattern = aminoAcidPattern;
-        this.cvTerm = null;
+        this.unimodCvTerm = null;
+        this.psiModCvTerm = null;
     }
 
     /**
@@ -108,22 +113,25 @@ public class Modification extends ExperimentObject {
      * @param atomChainAdded atomic composition of the molecule added
      * @param atomChainRemoved atomic composition of the molecule removed
      * @param aminoAcidPattern residue pattern affected by this modification
-     * @param cvTerm the CV term associated with this modification, null if not
-     * set
+     * @param unimodCvTerm the Unimod CV term associated with this modification,
+     * null if not set
+     * @param psiModCvTerm the PSI-MOD CV term associated with this
+     * modification, null if not set
      */
-    public Modification(ModificationType modificationType, String name, String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern, CvTerm cvTerm) {
+    public Modification(ModificationType modificationType, String name, String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern, CvTerm unimodCvTerm, CvTerm psiModCvTerm) {
         this.modificationType = modificationType;
         this.name = name;
         this.shortName = shortName;
         this.atomChainAdded = atomChainAdded;
         this.atomChainRemoved = atomChainRemoved;
         this.pattern = aminoAcidPattern;
-        this.cvTerm = cvTerm;
+        this.unimodCvTerm = unimodCvTerm;
+        this.psiModCvTerm = psiModCvTerm;
     }
 
     /**
      * Simple constructor for a modification. This constructor does not set the
-     * atomic composition or the cv term.
+     * atomic composition or the cv terms.
      *
      * @param modificationType type of modification
      * @param name name of the modification
@@ -534,23 +542,43 @@ public class Modification extends ExperimentObject {
     }
 
     /**
-     * Returns the CV term associated with this modification.
+     * Returns the Unimod CV term associated with this modification.
      *
-     * @return the cvTerm
+     * @return the Unimod cvTerm
      */
-    public CvTerm getCvTerm() {
+    public CvTerm getUnimodCvTerm() {
         readDBMode();
-        return cvTerm;
+        return unimodCvTerm;
     }
 
     /**
-     * Set the CV term associated with this modification.
+     * Set the Unimod CV term associated with this modification.
      *
      * @param cvTerm the cvTerm to set
      */
-    public void setCvTerm(CvTerm cvTerm) {
+    public void setUnimodCvTerm(CvTerm cvTerm) {
         writeDBMode();
-        this.cvTerm = cvTerm;
+        this.unimodCvTerm = cvTerm;
+    }
+
+    /**
+     * Returns the PSI-MOD CV term associated with this modification.
+     *
+     * @return the PSI-MOD cvTerm
+     */
+    public CvTerm getPsiModCvTerm() {
+        readDBMode();
+        return psiModCvTerm;
+    }
+
+    /**
+     * Set the PSI-MOD CV term associated with this modification.
+     *
+     * @param cvTerm the cvTerm to set
+     */
+    public void setPsiModCvTerm(CvTerm cvTerm) {
+        writeDBMode();
+        this.psiModCvTerm = cvTerm;
     }
 
     @Override

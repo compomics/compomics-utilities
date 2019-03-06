@@ -37,12 +37,6 @@ import no.uib.jsparklines.extra.TrueFalseIconRenderer;
 public class ModificationDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public ModificationDialog() {
-    }
-
-    /**
      * The post translational modifications factory.
      */
     private ModificationFactory modificationFactory = ModificationFactory.getInstance();
@@ -211,6 +205,8 @@ public class ModificationDialog extends javax.swing.JDialog {
         patternTxt.setEditable(editable);
         unimodAccessionJTextField.setEditable(editable);
         unimodNameJTextField.setEditable(editable);
+        psiModAccessionJTextField.setEditable(editable);
+        psiModNameJTextField.setEditable(editable);
 
         if (currentPtm != null) {
             typeCmb.setSelectedIndex(currentPtm.getModificationType().index);
@@ -246,15 +242,18 @@ public class ModificationDialog extends javax.swing.JDialog {
 
             updateTables();
 
-            CvTerm cvTerm = currentPtm.getCvTerm();
-            if (cvTerm != null) {
-                updateModMappingText(cvTerm);
-            }
+            CvTerm unimodCvTerm = currentPtm.getUnimodCvTerm();
+            CvTerm psiModcvTerm = currentPtm.getPsiModCvTerm();
+            updateModMappingText(unimodCvTerm, psiModcvTerm);
 
             // special case for the default modifications without cv terms
-            if (cvTerm == null) {
+            if (unimodCvTerm == null) {
                 unimodAccessionJTextField.setEditable(true);
                 unimodNameJTextField.setEditable(true);
+            }
+            if (psiModcvTerm == null) {
+                psiModAccessionJTextField.setEditable(true);
+                psiModNameJTextField.setEditable(true);
             }
 
             setTitle("Edit Modification");
@@ -507,6 +506,20 @@ public class ModificationDialog extends javax.swing.JDialog {
                 unimodAccessionJTextField.setToolTipText("Please provide the Unimod accession number as an integer");
             }
         }
+        
+        if (!psiModAccessionJTextField.getText().trim().isEmpty()) {
+            try {
+                new Integer(psiModAccessionJTextField.getText().trim());
+            } catch (NumberFormatException e) {
+                if (showMessage && !error) {
+                    JOptionPane.showMessageDialog(this, "Please provide the PSI-MOD accession number as an integer.", "PSI-MOD Accession", JOptionPane.WARNING_MESSAGE);
+                }
+                error = true;
+                psiModAccessionLabel.setForeground(Color.RED);
+                psiModAccessionLabel.setToolTipText("Please provide the PSI-MOD accession number as an integer");
+                psiModAccessionJTextField.setToolTipText("Please provide the PSI-MOD accession number as an integer");
+            }
+        }
 
         // check that the neutral losses and reporter ions are not already in use
         if (!neutralLosses.isEmpty()) {
@@ -567,6 +580,14 @@ public class ModificationDialog extends javax.swing.JDialog {
         unimodNameJTextField = new javax.swing.JTextField();
         unimodLinkLabel = new javax.swing.JLabel();
         cvExampleLabel = new javax.swing.JLabel();
+        psiModAccessionLabel = new javax.swing.JLabel();
+        psiModNameLabel = new javax.swing.JLabel();
+        psiModNameJTextField = new javax.swing.JTextField();
+        psiModAccessionJTextField = new javax.swing.JTextField();
+        cvExampleLabel1 = new javax.swing.JLabel();
+        unimodLinkLabel1 = new javax.swing.JLabel();
+        unimodLabel = new javax.swing.JLabel();
+        psiModLabel = new javax.swing.JLabel();
         reporterIonsPanel = new javax.swing.JPanel();
         reporterIonsJScrollPane = new javax.swing.JScrollPane();
         reporterIonsTable = new JTable() {
@@ -615,7 +636,7 @@ public class ModificationDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("New Modification");
-        setMinimumSize(new java.awt.Dimension(500, 500));
+        setMinimumSize(new java.awt.Dimension(400, 500));
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -657,7 +678,7 @@ public class ModificationDialog extends javax.swing.JDialog {
 
         scrollPanePanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        unimodMappingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Unimod Mapping"));
+        unimodMappingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Unimod and PSI-MOD Mapping"));
         unimodMappingPanel.setOpaque(false);
 
         unimodAccessionJTextField.setEditable(false);
@@ -696,6 +717,48 @@ public class ModificationDialog extends javax.swing.JDialog {
         cvExampleLabel.setFont(cvExampleLabel.getFont().deriveFont((cvExampleLabel.getFont().getStyle() | java.awt.Font.ITALIC)));
         cvExampleLabel.setText("Ex.: Accession:1, PSI-MS Name: Acetyl");
 
+        psiModAccessionLabel.setText("Accession");
+
+        psiModNameLabel.setText("Name");
+
+        psiModNameJTextField.setEditable(false);
+        psiModNameJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        psiModNameJTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                psiModNameJTextFieldKeyReleased(evt);
+            }
+        });
+
+        psiModAccessionJTextField.setEditable(false);
+        psiModAccessionJTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        psiModAccessionJTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                psiModAccessionJTextFieldKeyReleased(evt);
+            }
+        });
+
+        cvExampleLabel1.setFont(cvExampleLabel1.getFont().deriveFont((cvExampleLabel1.getFont().getStyle() | java.awt.Font.ITALIC)));
+        cvExampleLabel1.setText("Ex.: Accession:00394, PSI-MS Name: acetylated residue");
+
+        unimodLinkLabel1.setText("<html><a href>See: ebi.ac.uk/ols/ontologies/mod</a></html>");
+        unimodLinkLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                unimodLinkLabel1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                unimodLinkLabel1MouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                unimodLinkLabel1MouseReleased(evt);
+            }
+        });
+
+        unimodLabel.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
+        unimodLabel.setText("Unimod");
+
+        psiModLabel.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
+        psiModLabel.setText("PSI-MOD");
+
         javax.swing.GroupLayout unimodMappingPanelLayout = new javax.swing.GroupLayout(unimodMappingPanel);
         unimodMappingPanel.setLayout(unimodMappingPanelLayout);
         unimodMappingPanelLayout.setHorizontalGroup(
@@ -703,22 +766,45 @@ public class ModificationDialog extends javax.swing.JDialog {
             .addGroup(unimodMappingPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(unimodNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(unimodAccessionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(unimodMappingPanelLayout.createSequentialGroup()
-                        .addComponent(cvExampleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(unimodAccessionJTextField)
-                    .addComponent(unimodNameJTextField, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(unimodLabel)
+                            .addComponent(psiModLabel))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(unimodMappingPanelLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(unimodMappingPanelLayout.createSequentialGroup()
+                                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(unimodAccessionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(unimodNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(unimodMappingPanelLayout.createSequentialGroup()
+                                        .addComponent(cvExampleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(unimodAccessionJTextField)
+                                    .addComponent(unimodNameJTextField, javax.swing.GroupLayout.Alignment.LEADING)))
+                            .addGroup(unimodMappingPanelLayout.createSequentialGroup()
+                                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(psiModAccessionLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                                    .addComponent(psiModNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(unimodMappingPanelLayout.createSequentialGroup()
+                                        .addComponent(cvExampleLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(unimodLinkLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(psiModAccessionJTextField)
+                                    .addComponent(psiModNameJTextField, javax.swing.GroupLayout.Alignment.LEADING))))))
                 .addContainerGap())
         );
         unimodMappingPanelLayout.setVerticalGroup(
             unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(unimodMappingPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(unimodLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(unimodAccessionJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(unimodAccessionLabel))
@@ -730,7 +816,21 @@ public class ModificationDialog extends javax.swing.JDialog {
                 .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cvExampleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(psiModLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(psiModAccessionJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(psiModAccessionLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(psiModNameJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(psiModNameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(unimodMappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(unimodLinkLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cvExampleLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         reporterIonsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Reporter Ions"));
@@ -782,10 +882,10 @@ public class ModificationDialog extends javax.swing.JDialog {
                 .addGroup(reporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(reporterIonsPanelLayout.createSequentialGroup()
-                        .addGap(0, 33, Short.MAX_VALUE)
                         .addComponent(addReporterIon)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removerReporterIon)))
+                        .addComponent(removerReporterIon)
+                        .addGap(0, 55, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -889,7 +989,7 @@ public class ModificationDialog extends javax.swing.JDialog {
                                 .addComponent(massLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(massTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(nameShortTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE))))
+                            .addComponent(nameShortTxt))))
                 .addContainerGap())
         );
 
@@ -972,10 +1072,10 @@ public class ModificationDialog extends javax.swing.JDialog {
                 .addGroup(neutralLossesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(neutralLossesJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(neutralLossesPanelLayout.createSequentialGroup()
-                        .addGap(0, 33, Short.MAX_VALUE)
                         .addComponent(addNeutralLoss)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(removeNeutralLoss)))
+                        .addComponent(removeNeutralLoss)
+                        .addGap(0, 55, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -997,7 +1097,8 @@ public class ModificationDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(reporterIonsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(unimodMappingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(unimodMappingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         scrollPane.setViewportView(scrollPanePanel);
@@ -1084,9 +1185,9 @@ public class ModificationDialog extends javax.swing.JDialog {
                     cvTermOk = false;
 
                     int option = JOptionPane.showConfirmDialog(this,
-                            "Adding a controlled vocabulary mapping is strongly recommended. This\n"
-                            + "is for example mandatory when exporting the data to mzIdentML.\n\n"
-                            + "Continue without such a mapping?", "Modification Controlled Vocabulary",
+                            "Adding a mapping to Unimod is strongly recommended. This\n"
+                            + "is for example mandatory when exporting data to mzIdentML.\n\n"
+                            + "Continue without such a mapping?", "Unimod Mapping",
                             JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 
                     if (option != JOptionPane.YES_OPTION) {
@@ -1095,17 +1196,50 @@ public class ModificationDialog extends javax.swing.JDialog {
                 }
 
                 // create the unimod cv term
-                CvTerm cvTerm = null;
+                CvTerm unimodCvTerm = null;
                 if (cvTermOk) {
                     int unimodAccession = new Integer(unimodAccessionJTextField.getText().trim());
-                    cvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
+                    unimodCvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
+                }
+                
+                // check if the psi-mod cv term mapping is provided
+                cvTermOk = true;
+                if (!psiModNameJTextField.getText().trim().isEmpty()) {
+                    try {
+                        new Integer(psiModAccessionJTextField.getText().trim());
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(this, "Please provide the PSI-MOD accession number as an integer.", "PSI-MOD Accession", JOptionPane.WARNING_MESSAGE);
+                        cvTermOk = false;
+                        psiModAccessionLabel.setForeground(Color.RED);
+                        psiModAccessionLabel.setToolTipText("Please provide the PSI-MOD accession number as an integer");
+                        psiModAccessionJTextField.setToolTipText("Please provide the PSI-MOD accession number as an integer");
+                    }
+                } else {
+                    cvTermOk = false;
+//
+//                    int option = JOptionPane.showConfirmDialog(this,
+//                            "Adding a controlled vocabulary mapping is strongly recommended. This\n"
+//                            + "is for example mandatory when exporting the data to mzIdentML.\n\n"
+//                            + "Continue without such a mapping?", "Modification Controlled Vocabulary",
+//                            JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+//
+//                    if (option != JOptionPane.YES_OPTION) {
+//                        return;
+//                    }
+                }
+
+                // create the psi-mod cv term
+                CvTerm psiModCvTerm = null;
+                if (cvTermOk) {
+                    int psiModAccession = new Integer(psiModAccessionJTextField.getText().trim());
+                    psiModCvTerm = new CvTerm("MOD", "MOD:" + psiModAccession, psiModNameJTextField.getText().trim(), null);
                 }
 
                 ModificationType modificationType = ModificationType.values()[typeCmb.getSelectedIndex()];
                 Modification newModification = new Modification(modificationType,
                         nameTxt.getText().trim(),
                         nameShortTxt.getText().trim().toLowerCase(),
-                        atomChainAdded, atomChainRemoved, pattern, cvTerm);
+                        atomChainAdded, atomChainRemoved, pattern, unimodCvTerm, psiModCvTerm);
                 newModification.setNeutralLosses(neutralLosses);
                 newModification.setReporterIons(reporterIons);
 
@@ -1401,6 +1535,53 @@ public class ModificationDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_compositionTxtMouseReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void psiModNameJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_psiModNameJTextFieldKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_psiModNameJTextFieldKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void psiModAccessionJTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_psiModAccessionJTextFieldKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_psiModAccessionJTextFieldKeyReleased
+
+    /**
+     * Change the cursor to a hand cursor.
+     *
+     * @param evt
+     */
+    private void unimodLinkLabel1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unimodLinkLabel1MouseEntered
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+    }//GEN-LAST:event_unimodLinkLabel1MouseEntered
+
+    /**
+     * Change the cursor back to the default cursor.
+     *
+     * @param evt
+     */
+    private void unimodLinkLabel1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unimodLinkLabel1MouseExited
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_unimodLinkLabel1MouseExited
+
+    /**
+     * Open the OLS PSI-MOD web page.
+     *
+     * @param evt
+     */
+    private void unimodLinkLabel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unimodLinkLabel1MouseReleased
+        setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BareBonesBrowserLaunch.openURL("https://www.ebi.ac.uk/ols/ontologies/mod");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_unimodLinkLabel1MouseReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNeutralLoss;
     private javax.swing.JButton addReporterIon;
@@ -1409,6 +1590,7 @@ public class ModificationDialog extends javax.swing.JDialog {
     private javax.swing.JLabel compositionLabel;
     private javax.swing.JTextField compositionTxt;
     private javax.swing.JLabel cvExampleLabel;
+    private javax.swing.JLabel cvExampleLabel1;
     private javax.swing.JPanel detailsPanel;
     private javax.swing.JButton helpJButton;
     private javax.swing.JLabel jLabel1;
@@ -1424,6 +1606,11 @@ public class ModificationDialog extends javax.swing.JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JLabel patternLabel;
     private javax.swing.JTextField patternTxt;
+    private javax.swing.JTextField psiModAccessionJTextField;
+    private javax.swing.JLabel psiModAccessionLabel;
+    private javax.swing.JLabel psiModLabel;
+    private javax.swing.JTextField psiModNameJTextField;
+    private javax.swing.JLabel psiModNameLabel;
     private javax.swing.JButton removeNeutralLoss;
     private javax.swing.JButton removerReporterIon;
     private javax.swing.JScrollPane reporterIonsJScrollPane;
@@ -1434,19 +1621,28 @@ public class ModificationDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox typeCmb;
     private javax.swing.JTextField unimodAccessionJTextField;
     private javax.swing.JLabel unimodAccessionLabel;
+    private javax.swing.JLabel unimodLabel;
     private javax.swing.JLabel unimodLinkLabel;
+    private javax.swing.JLabel unimodLinkLabel1;
     private javax.swing.JPanel unimodMappingPanel;
     private javax.swing.JTextField unimodNameJTextField;
     private javax.swing.JLabel unimodNameLabel;
     // End of variables declaration//GEN-END:variables
 
     /**
-     * Displays the Unimod mapping information.
+     * Displays the CV mapping information.
      */
-    private void updateModMappingText(CvTerm cvTerm) {
-        unimodAccessionJTextField.setText(cvTerm.getAccession().substring("Unimod:".length()));
-        unimodNameJTextField.setText(cvTerm.getName());
-        unimodNameJTextField.setCaretPosition(0);
+    private void updateModMappingText(CvTerm uniModCvTerm, CvTerm psiModCvTerm) {
+        if (uniModCvTerm != null) {
+            unimodAccessionJTextField.setText(uniModCvTerm.getAccession().substring("Unimod:".length()));
+            unimodNameJTextField.setText(uniModCvTerm.getName());
+            unimodNameJTextField.setCaretPosition(0);
+        }
+        if (psiModCvTerm != null) {
+            psiModAccessionJTextField.setText(psiModCvTerm.getAccession().substring("MOD:".length()));
+            psiModNameJTextField.setText(psiModCvTerm.getName());
+            psiModNameJTextField.setCaretPosition(0);
+        }
     }
 
     /**

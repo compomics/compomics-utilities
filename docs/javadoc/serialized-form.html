@@ -1652,7 +1652,7 @@
 <li class="blockListLast">
 <h4>letter</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> letter</pre>
-<div class="block">The single letter code of the atom.</div>
+<div class="block">The symbol for the atom.</div>
 </li>
 </ul>
 </li>
@@ -1708,6 +1708,11 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/compomics/util/experiment/biology/atoms/impl/Iodine.html" title="class in com.compomics.util.experiment.biology.atoms.impl">com.compomics.util.experiment.biology.atoms.impl.Iodine</a> extends <a href="com/compomics/util/experiment/biology/atoms/Atom.html" title="class in com.compomics.util.experiment.biology.atoms">Atom</a> implements Serializable</h3>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.biology.atoms.impl.Iron">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/experiment/biology/atoms/impl/Iron.html" title="class in com.compomics.util.experiment.biology.atoms.impl">com.compomics.util.experiment.biology.atoms.impl.Iron</a> extends <a href="com/compomics/util/experiment/biology/atoms/Atom.html" title="class in com.compomics.util.experiment.biology.atoms">Atom</a> implements Serializable</h3>
 </li>
 <li class="blockList"><a name="com.compomics.util.experiment.biology.atoms.impl.Lithium">
 <!--   -->
@@ -2249,9 +2254,14 @@
 <div class="block">The composition of the molecule removed.</div>
 </li>
 <li class="blockList">
-<h4>cvTerm</h4>
-<pre><a href="com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a> cvTerm</pre>
-<div class="block">The CV term associated with this modification. Null if not set.</div>
+<h4>unimodCvTerm</h4>
+<pre><a href="com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a> unimodCvTerm</pre>
+<div class="block">The Unimod CV term associated with this modification. Null if not set.</div>
+</li>
+<li class="blockList">
+<h4>psiModCvTerm</h4>
+<pre><a href="com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a> psiModCvTerm</pre>
+<div class="block">The PSI-MOD CV term associated with this modification. Null if not set.</div>
 </li>
 <li class="blockListLast">
 <h4>ambiguityKey</h4>
@@ -7628,6 +7638,10 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> cvExampleLabel</pre>
 </li>
 <li class="blockList">
+<h4>cvExampleLabel1</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> cvExampleLabel1</pre>
+</li>
+<li class="blockList">
 <h4>detailsPanel</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> detailsPanel</pre>
 </li>
@@ -7688,6 +7702,26 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> patternTxt</pre>
 </li>
 <li class="blockList">
+<h4>psiModAccessionJTextField</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> psiModAccessionJTextField</pre>
+</li>
+<li class="blockList">
+<h4>psiModAccessionLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> psiModAccessionLabel</pre>
+</li>
+<li class="blockList">
+<h4>psiModLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> psiModLabel</pre>
+</li>
+<li class="blockList">
+<h4>psiModNameJTextField</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> psiModNameJTextField</pre>
+</li>
+<li class="blockList">
+<h4>psiModNameLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> psiModNameLabel</pre>
+</li>
+<li class="blockList">
 <h4>removeNeutralLoss</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> removeNeutralLoss</pre>
 </li>
@@ -7728,8 +7762,16 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> unimodAccessionLabel</pre>
 </li>
 <li class="blockList">
+<h4>unimodLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> unimodLabel</pre>
+</li>
+<li class="blockList">
 <h4>unimodLinkLabel</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> unimodLinkLabel</pre>
+</li>
+<li class="blockList">
+<h4>unimodLinkLabel1</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> unimodLinkLabel1</pre>
 </li>
 <li class="blockList">
 <h4>unimodMappingPanel</h4>
@@ -10270,6 +10312,14 @@
 <li class="blockList">
 <h4>numberMatchesTxt</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> numberMatchesTxt</pre>
+</li>
+<li class="blockList">
+<h4>numberOfTasksLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> numberOfTasksLabel</pre>
+</li>
+<li class="blockList">
+<h4>numberOfTasksTxt</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> numberOfTasksTxt</pre>
 </li>
 <li class="blockList">
 <h4>numberTerminiLabel</h4>

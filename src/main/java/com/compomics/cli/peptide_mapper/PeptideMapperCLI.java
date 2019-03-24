@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
+import com.compomics.util.experiment.identification.protein_inference.fm_index.StoringWrapper;
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
 import org.zoodb.ZooSession;
@@ -44,15 +45,10 @@ public class PeptideMapperCLI {
             System.out.println("PeptideMapping: a tool to map peptides or sequence tags against a given proteome.");
             System.out.println("usage: PeptideMapping -[p|t] input-fasta input-peptide/tag-csv output-csv [additonal options]");
             System.out.println();
-            System.out.println("input-fasta can be loaded with the following formats:");
-            System.out.println("\t.fasta");
-            System.out.println("\t.fmDB");
-            System.out.println();
             System.out.println("Options are:");
             System.out.println("\t-p\tpeptide mapping");
             System.out.println("\t-t\tsequence tag mapping");
             System.out.println("\t-h\tprint this info");
-            System.out.println("\t-s [index-file-name]\tstore the index (in fmDB format) for reloading on subsequent analyses (existent files will be overwritten)");
             System.out.println();
             System.out.println("Additional options are:");
             System.out.println("\t-u [utilities-parameter-file]\tpeptide mapping");
@@ -84,15 +80,6 @@ public class PeptideMapperCLI {
                         ++argPos;
                         break;
                         
-                    case "-s":  // storing index
-                        if (argPos == args.length - 1) {
-                            System.err.println("Error: file name not defined for storing index");
-                            System.exit(-1);
-                        }
-                        storeIndex = args[argPos + 1];
-                        argPos += 2;
-                        break;
-                        
                     case "-u":  // use utilities parameter file
                         
                         IdentificationParameters identificationParameters = null;
@@ -118,15 +105,7 @@ public class PeptideMapperCLI {
             }
 
         } 
-               
-        File dbFile = null;
-        
-        if (storeIndex.length() > 0){
-            if (!storeIndex.toLowerCase().endsWith(".fmdb")){
-                storeIndex += ".fmDB";
-            }
-            dbFile = new File(storeIndex);
-        }
+          
         
         if (!customParameters) {
             searchParameters = new SearchParameters();
@@ -140,46 +119,20 @@ public class PeptideMapperCLI {
         
         FastaMapper peptideMapper = null;
         
-        if (fastaFile.getName().toLowerCase().endsWith(".fmdb")){
-            
-            System.out.println("Loading index file");
-            try {
-                PersistenceManager pm = ZooJdoHelper.openOrCreateDB(fastaFile.getAbsolutePath());
-                pm.currentTransaction().setRetainValues(true);
-                pm.currentTransaction().begin();
 
-                Extent<FMIndex> ext = pm.getExtent(FMIndex.class);
-                for (FMIndex fm : ext) peptideMapper = fm;
-
-                pm.currentTransaction().commit();
-                if (pm.currentTransaction().isActive()) {
-                    pm.currentTransaction().rollback();
-                }
-
-                pm.close();
-                pm.getPersistenceManagerFactory().close();
-            } catch (Exception e) {
-                System.err.println("Error: cound not load index file");
-                e.printStackTrace();
-                System.exit(-1);
-            }
+        System.out.println("Start indexing fasta file");
+        long startTimeIndex = System.nanoTime();
+        try {
+            peptideMapper = new FMIndex(fastaFile, null, waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
+        } catch (IOException e) {
+            System.err.println("Error: cound not index the fasta file");
+            e.printStackTrace();
+            System.exit(-1);
         }
-        else {
+        double diffTimeIndex = System.nanoTime() - startTimeIndex;
+        System.out.println();
+        System.out.println("Indexing took " + (diffTimeIndex / 1e9) + " seconds and consumes " + (((float) ((FMIndex) peptideMapper).getAllocatedBytes()) / 1e6) + " MB");
 
-            System.out.println("Start indexing fasta file");
-            long startTimeIndex = System.nanoTime();
-            try {
-                peptideMapper = new FMIndex(fastaFile, null, waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
-            } catch (IOException e) {
-                System.err.println("Error: cound not index the fasta file");
-                e.printStackTrace();
-                System.exit(-1);
-            }
-            double diffTimeIndex = System.nanoTime() - startTimeIndex;
-            System.out.println();
-            System.out.println("Indexing took " + (diffTimeIndex / 1e9) + " seconds and consumes " + (((float) ((FMIndex) peptideMapper).getAllocatedBytes()) / 1e6) + " MB");
-
-        }
         
         System.out.println();
         System.out.println("Start mapping");
@@ -353,34 +306,6 @@ public class PeptideMapperCLI {
                 System.exit(-1);
             }
         }
-        
-        // storing the db if specified
-        if (storeIndex.length() > 0){
-            if (fastaFile.getName().toLowerCase().endsWith(".fmdb")){
-                System.out.println("Skipping storing index because index is already stored in '" + fastaFile.getName() + "'.");
-            }
-            else {
-            
-                if (ZooHelper.dbExists(dbFile.getAbsolutePath())) {
-                        ZooHelper.removeDb(dbFile.getAbsolutePath());
-                }
-
-
-                PersistenceManager pm = ZooJdoHelper.openOrCreateDB(dbFile.getAbsolutePath());
-                pm.currentTransaction().setRetainValues(true);
-                pm.currentTransaction().begin();
-
-                pm.makePersistent(peptideMapper);
-
-                pm.currentTransaction().commit();
-                if (pm.currentTransaction().isActive()) {
-                    pm.currentTransaction().rollback();
-                }
-
-                pm.close();
-                pm.getPersistenceManagerFactory().close();
-                System.out.println("Index stored in file '" + storeIndex + "'.");
-            }
-        }
+        ((FMIndex)peptideMapper).close();
     }
 }

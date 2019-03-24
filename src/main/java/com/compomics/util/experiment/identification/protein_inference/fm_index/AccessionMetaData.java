@@ -13,7 +13,7 @@ public class AccessionMetaData extends ExperimentObject {
     /**
      * The header as string.
      */
-    String headerAsString;
+    private String headerAsString;
     /**
      * The header
      */
@@ -61,6 +61,7 @@ public class AccessionMetaData extends ExperimentObject {
      * @return the parsed header
      */
     public Header getHeader() {
+        readDBMode();
 
         if (header == null) {
 
@@ -69,5 +70,15 @@ public class AccessionMetaData extends ExperimentObject {
         }
 
         return header;
+    }
+
+    /**
+     * Returns the header string representation.
+     *
+     * @return the parsed header
+     */
+    public String getHeaderAsString() {
+        readDBMode();
+        return headerAsString;
     }
 }

@@ -44,11 +44,13 @@ import java.util.TreeSet;
 import org.jsuffixarrays.*;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.stream.Collectors;
-import javax.jdo.Extent;
-import javax.jdo.PersistenceManager;
-import org.zoodb.jdo.ZooJdoHelper;
-import org.zoodb.tools.ZooHelper;
 
 /**
  * The FM index.
@@ -56,7 +58,7 @@ import org.zoodb.tools.ZooHelper;
  * @author Dominik Kopczynski
  * @author Marc Vaudel
  */
-public class FMIndex extends ExperimentObject implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
+public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
 
     /**
      * Empty default constructor
@@ -223,8 +225,6 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
     private boolean hasFixedModification_NatTerminus = false;
 
     private double negativeModificationMass = 0;
-    
-    private PersistenceManager pm = null;
 
     /**
      * Either search with one maximal number of variants or use an upper limit
@@ -522,17 +522,6 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
     
     
     
-    public void close(){
-        if (pm != null){
-            pm.currentTransaction().commit();
-            if (pm.currentTransaction().isActive()) {
-                pm.currentTransaction().rollback();
-            }
-
-            pm.close();
-            pm.getPersistenceManagerFactory().close();
-        }
-    }
 
     /**
      * Constructor. If modification settings are provided the index will contain
@@ -1045,25 +1034,48 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
         String fastaExtension = StoringWrapper.getFileExtension(fastaFile);
         File FMFile = new File(fastaFile.getAbsolutePath().replace(fastaExtension, ".fmdb"));
         if (FMFile.exists()){
-            pm = ZooJdoHelper.openOrCreateDB(FMFile.getAbsolutePath());
-            pm.currentTransaction().setRetainValues(true);
-            pm.currentTransaction().begin();
-
-            Extent<StoringWrapper> ext = pm.getExtent(StoringWrapper.class);
-            StoringWrapper wrapper = null;
-            for (StoringWrapper extWrapper : ext) wrapper = extWrapper;
             
-            indexParts = wrapper.getIndexParts();
-            suffixArraysPrimary = wrapper.getSuffixArraysPrimary();
-            occurrenceTablesPrimary = wrapper.getOccurrenceTablesPrimary();
-            occurrenceTablesReversed = wrapper.getOccurrenceTablesReversed();
-            lessTablesPrimary = wrapper.getLessTablesPrimary();
-            lessTablesReversed = wrapper.getLessTablesReversed();
-            indexStringLengths = wrapper.getIndexStringLengths();
-            boundaries = wrapper.getBoundaries();
-            accessions = wrapper.getAccessions();
-            decoyAccessions = wrapper.getDecoyAccessions();
-            accessionMetaData = wrapper.getAccessionMetaData();
+            DataInputStream is = new DataInputStream(new BufferedInputStream(new FileInputStream(FMFile.getAbsolutePath())));
+            
+            indexParts = is.readInt();
+            for (int i = 0; i < indexParts; ++i){
+                indexStringLengths.add(is.readInt());
+                
+                int[] saPrim = new int[is.readInt()];
+                for (int j = 0; j < saPrim.length; ++j) saPrim[j] = is.readInt();
+                suffixArraysPrimary.add(saPrim);
+                
+                occurrenceTablesPrimary.add(new WaveletTree(is));
+                occurrenceTablesReversed.add(new WaveletTree(is));
+                
+                
+                int[] lessPrim = new int[is.readInt()];
+                for (int j = 0; j < lessPrim.length; ++j) lessPrim[j] = is.readInt();
+                lessTablesPrimary.add(lessPrim);
+                
+                int[] lessRev = new int[is.readInt()];
+                for (int j = 0; j < lessRev.length; ++j) lessRev[j] = is.readInt();
+                lessTablesReversed.add(lessRev);
+                
+                int[] bound = new int[is.readInt()];
+                for (int j = 0; j < bound.length; ++j) bound[j] = is.readInt();
+                boundaries.add(bound);
+                
+                String[] acc = new String[is.readInt()];
+                for (int j = 0; j < acc.length; ++j) acc[j] = is.readUTF();
+                accessions.add(acc);
+            }
+            
+            int numDecoys =is.readInt();
+            for (int i = 0; i < numDecoys; ++i) decoyAccessions.add(is.readUTF());
+            
+            int numAMD = is.readInt();
+            for (int i = 0; i < numAMD; ++i){
+                String key = is.readUTF();
+                AccessionMetaData amd = new AccessionMetaData(is);
+                accessionMetaData.put(key, amd);
+            }
+            is.close();
         }
         else {
 
@@ -1134,26 +1146,55 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
             cache[indexPart] = new HashMap<>();
         }
         
+        
         if (!FMFile.exists()){
-            pm = ZooJdoHelper.openOrCreateDB(FMFile.getAbsolutePath());
-            pm.currentTransaction().setRetainValues(true);
-            pm.currentTransaction().begin();
-            
-            StoringWrapper wrapper = new StoringWrapper();
-            
-            wrapper.setIndexParts(indexParts);
-            wrapper.setSuffixArraysPrimary(suffixArraysPrimary);
-            wrapper.setOccurrenceTablesPrimary(occurrenceTablesPrimary);
-            wrapper.setOccurrenceTablesReversed(occurrenceTablesReversed);
-            wrapper.setLessTablesPrimary(lessTablesPrimary);
-            wrapper.setLessTablesReversed(lessTablesReversed);
-            wrapper.setIndexStringLengths(indexStringLengths);
-            wrapper.setBoundaries(boundaries);
-            wrapper.setAccessions(accessions);
-            wrapper.setDecoyAccessions(decoyAccessions);
-            wrapper.setAccessionMetaData(accessionMetaData);
+            try {
+                DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(FMFile.getAbsolutePath())));
 
-            pm.makePersistent(wrapper);
+                os.writeInt(indexParts);
+                for (int i = 0; i < indexParts; ++i){
+                    os.writeInt(indexStringLengths.get(i));
+
+                    int[] saPrim = suffixArraysPrimary.get(i);
+                    os.writeInt(saPrim.length);
+                    for (int saVal : saPrim) os.writeInt(saVal);
+
+                    occurrenceTablesPrimary.get(i).write(os);
+                    occurrenceTablesReversed.get(i).write(os);
+
+                    int[] lessPrim = lessTablesPrimary.get(i);
+                    os.writeInt(lessPrim.length);
+                    for (int lessVal : lessPrim) os.writeInt(lessVal);
+
+                    int[] lessRev = lessTablesReversed.get(i);
+                    os.writeInt(lessRev.length);
+                    for (int lessVal : lessRev) os.writeInt(lessVal);
+
+                    int[] bound = boundaries.get(i);
+                    os.writeInt(bound.length);
+                    for (int boundVal : bound) os.writeInt(boundVal);
+
+                    String[] acc = accessions.get(i);
+                    os.writeInt(acc.length);
+                    for (String accVal : acc) os.writeUTF(accVal);
+
+                }
+
+
+                os.writeInt(decoyAccessions.size());
+                for (String decoyVal : decoyAccessions) os.writeUTF(decoyVal);
+
+
+                os.writeInt(accessionMetaData.size());
+                for (String key : accessionMetaData.keySet()){
+                    os.writeUTF(key);
+                    accessionMetaData.get(key).write(os);
+                }
+                os.close();
+            }
+            catch (IOException e){
+                throw e;
+            }
         }
     }
 

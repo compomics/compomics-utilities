@@ -1,6 +1,9 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.waiting.WaitingHandler;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -51,11 +54,11 @@ public class WaveletTree {
     /**
      * Shift number for fast bitwise divisions.
      */
-    private final int shift = 6;
+    private static final int shift = 6;
     /**
      * Mask for fast bitwise modulo operations.
      */
-    private final int mask = 63;
+    private static final int mask = 63;
     /**
      * Number of masses.
      */
@@ -67,13 +70,34 @@ public class WaveletTree {
     /**
      * The less table.
      */
-    private int[] less;
+    private int[] less = new int[128];
 
     /**
      * Empty default constructor.
      */
     public WaveletTree() {
     }
+    
+    
+    
+    public WaveletTree(DataInputStream is) throws IOException {
+        rank = new Rank(is);
+        alphabetDirections[0] = is.readLong();
+        alphabetDirections[1] = is.readLong();
+        firstChar = is.readChar();
+        lastChar = is.readChar();
+        lenText = is.readInt();
+        continueLeftRangeQuery = is.readBoolean();
+        continueRightRangeQuery = is.readBoolean();
+        numMasses = is.readInt();
+        leftRightMask = is.readInt();
+        
+        for (int i = 0; i < 128; ++i) less[i] = is.readInt();
+        
+        if (is.readBoolean()) leftChild = new WaveletTree(is);
+        if (is.readBoolean()) rightChild = new WaveletTree(is);
+    }
+    
 
     /**
      * Class for huffman nodes.
@@ -519,6 +543,32 @@ public class WaveletTree {
             } else {
                 return new int[]{newLeftIndex, newRightIndex};
             }
+        }
+    }
+    
+    
+    public void write(DataOutputStream os) throws IOException {
+        try {
+            rank.write(os);
+            os.writeLong(alphabetDirections[0]);
+            os.writeLong(alphabetDirections[1]);
+            os.writeChar(firstChar);
+            os.writeChar(lastChar);
+            os.writeInt(lenText);
+            os.writeBoolean(continueLeftRangeQuery);
+            os.writeBoolean(continueRightRangeQuery);
+            os.writeInt(numMasses);
+            os.writeInt(leftRightMask);
+
+            for (int i = 0; i < 128; ++i) os.writeInt(less[i]);
+
+            os.writeBoolean(leftChild != null);
+            if (leftChild != null) leftChild.write(os);
+            os.writeBoolean(rightChild != null);
+            if (rightChild != null) rightChild.write(os);
+        }
+        catch(IOException e){
+            throw e;
         }
     }
 }

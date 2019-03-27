@@ -5,7 +5,6 @@
  */
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.io.File;
 import java.util.*;
 
@@ -13,7 +12,7 @@ import java.util.*;
  *
  * @author dominik.kopczynski
  */
-public class StoringWrapper extends ExperimentObject {
+public class StoringWrapper {
     
     /**
      * Number of chunks of complete index.
@@ -70,60 +69,150 @@ public class StoringWrapper extends ExperimentObject {
     
     public ArrayList<int[]> getSuffixArraysPrimary(){
         readDBMode();
+        
         return suffixArraysPrimary;
+        /*
+        ArrayList<int[]> sc = new ArrayList<>();
+        for (int[] sa : suffixArraysPrimary){
+            int[] suffixArray = new int[sa.length];
+            for (int i = 0; i < sa.length; ++i) suffixArray[i] = sa[i];
+            sc.add(suffixArray);
+        }
+        return sc;
+        */
     }
     
     
     public ArrayList<WaveletTree> getOccurrenceTablesPrimary(){
         readDBMode();
+        
         return occurrenceTablesPrimary;
+        /*
+        ArrayList<WaveletTree> oc = new ArrayList<WaveletTree>();
+        for (WaveletTree wt : occurrenceTablesPrimary){
+            oc.add(new WaveletTree(wt));
+        }
+        return oc;
+        */
     }
     
     
     public ArrayList<WaveletTree> getOccurrenceTablesReversed(){
         readDBMode();
+        
         return occurrenceTablesReversed;
+        /*
+        ArrayList<WaveletTree> oc = new ArrayList<>();
+        for (WaveletTree wt : occurrenceTablesReversed){
+            oc.add(new WaveletTree(wt));
+        }
+        return oc;
+        */
     }
     
     
     public ArrayList<int[]> getLessTablesPrimary(){
         readDBMode();
+        
         return lessTablesPrimary;
+        /*
+        ArrayList<int[]> lt = new ArrayList<>();
+        for (int[] ltp : lessTablesPrimary){
+            int[] less = new int[ltp.length];
+            for (int i = 0; i < ltp.length; ++i) less[i] = ltp[i];
+            lt.add(less);
+        }
+        return lt;
+        */
     }
     
     
     public ArrayList<int[]> getLessTablesReversed(){
         readDBMode();
+        
         return lessTablesReversed;
+        /*
+        ArrayList<int[]> lt = new ArrayList<>();
+        for (int[] ltr : lessTablesReversed){
+            int[] less = new int[ltr.length];
+            for (int i = 0; i < ltr.length; ++i) less[i] = ltr[i];
+            lt.add(less);
+        }
+        return lt;
+        */
     }
     
     public ArrayList<Integer> getIndexStringLengths(){
         readDBMode();
+        
         return indexStringLengths;
+        /*
+        ArrayList<Integer> isl = new ArrayList<>();
+        for (int i : indexStringLengths){
+            isl.add(i);
+        }
+        return isl;
+        */
     }
     
     
     public ArrayList<int[]> getBoundaries(){
         readDBMode();
+        
         return boundaries;
+        /*
+        ArrayList<int[]> gb = new ArrayList<>();
+        for (int[] bd : boundaries){
+            int[] bound = new int[bd.length];
+            for (int i = 0; i < bd.length; ++i) bound[i] = bd[i];
+            gb.add(bound);
+        }
+        return gb;
+        */
     }
     
     
     public ArrayList<String[]> getAccessions(){
         readDBMode();
+        
         return accessions;
+        /*
+        ArrayList<String[]> a = new ArrayList<>();
+        for (String[] accs : accessions){
+            String[] accessions = new String[accs.length];
+            for (int i = 0; i < accs.length; ++i) accessions[i] = accs[i];
+            a.add(accessions);
+        }
+        return accessions;
+        */
     }
     
     
     public HashSet<String> getDecoyAccessions(){
         readDBMode();
+        
         return decoyAccessions;
+        /*
+        HashSet<String> da = new HashSet<>();
+        for (String s : decoyAccessions){
+            da.add(s);
+        }
+        return da;
+        */
     }
     
     
     public HashMap<String, AccessionMetaData> getAccessionMetaData(){
         readDBMode();
+        
         return accessionMetaData;
+        /*
+        HashMap<String, AccessionMetaData> amd = new HashMap<>();
+        for (String key : accessionMetaData.keySet()){
+            amd.put(key, new AccessionMetaData(accessionMetaData.get(key)));
+        }
+        return amd;
+        */
     }
     
     

@@ -1,14 +1,16 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.experiment.io.biology.protein.Header;
-import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * Accession meta data.
  *
  * @author Dominik Kopczynski
  */
-public class AccessionMetaData extends ExperimentObject {
+public class AccessionMetaData {
 
     /**
      * The header as string.
@@ -31,6 +33,24 @@ public class AccessionMetaData extends ExperimentObject {
      * Empty default constructor.
      */
     public AccessionMetaData() {
+    }
+    
+    public AccessionMetaData(DataInputStream is) throws IOException {
+        headerAsString = is.readUTF();
+        index = is.readInt();
+        indexPart = is.readInt();
+    }
+    
+    /**
+     * Copy constructor
+     * 
+     * @param accessionMetaData the item to copy
+     */
+    public AccessionMetaData(AccessionMetaData accessionMetaData){
+        headerAsString = new String(accessionMetaData.getHeaderAsString());
+        index = accessionMetaData.index;
+        indexPart = accessionMetaData.indexPart;
+        header = null;
     }
 
     /**
@@ -61,10 +81,8 @@ public class AccessionMetaData extends ExperimentObject {
      * @return the parsed header
      */
     public Header getHeader() {
-        readDBMode();
 
         if (header == null) {
-
             header = Header.parseFromFASTA(headerAsString);
 
         }
@@ -78,7 +96,12 @@ public class AccessionMetaData extends ExperimentObject {
      * @return the parsed header
      */
     public String getHeaderAsString() {
-        readDBMode();
         return headerAsString;
+    }
+    
+    public void write(DataOutputStream os) throws IOException {
+        os.writeUTF(headerAsString);
+        os.writeInt(index);
+        os.writeInt(indexPart);
     }
 }

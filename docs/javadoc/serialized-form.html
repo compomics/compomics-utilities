@@ -3618,6 +3618,10 @@
 <pre>double negativeModificationMass</pre>
 </li>
 <li class="blockList">
+<h4>pm</h4>
+<pre>javax.jdo.PersistenceManager pm</pre>
+</li>
+<li class="blockList">
 <h4>genericVariantMatching</h4>
 <pre>boolean genericVariantMatching</pre>
 <div class="block">Either search with one maximal number of variants or use an upper limit
@@ -3733,6 +3737,74 @@
 <li class="blockListLast">
 <h4>indexes</h4>
 <pre>int[] indexes</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.protein_inference.fm_index.StoringWrapper">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/experiment/identification/protein_inference/fm_index/StoringWrapper.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">com.compomics.util.experiment.identification.protein_inference.fm_index.StoringWrapper</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>indexParts</h4>
+<pre>int indexParts</pre>
+<div class="block">Number of chunks of complete index.</div>
+</li>
+<li class="blockList">
+<h4>suffixArraysPrimary</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; suffixArraysPrimary</pre>
+<div class="block">Sampled suffix array.</div>
+</li>
+<li class="blockList">
+<h4>occurrenceTablesPrimary</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; occurrenceTablesPrimary</pre>
+<div class="block">Wavelet tree for storing the burrows wheeler transform.</div>
+</li>
+<li class="blockList">
+<h4>occurrenceTablesReversed</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; occurrenceTablesReversed</pre>
+<div class="block">Wavelet tree for storing the burrows wheeler transform reversed.</div>
+</li>
+<li class="blockList">
+<h4>lessTablesPrimary</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; lessTablesPrimary</pre>
+<div class="block">Less table for doing an update step according to the LF step.</div>
+</li>
+<li class="blockList">
+<h4>lessTablesReversed</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; lessTablesReversed</pre>
+<div class="block">Less table for doing an update step according to the LF step reversed.</div>
+</li>
+<li class="blockList">
+<h4>indexStringLengths</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; indexStringLengths</pre>
+<div class="block">Length of the indexed string (all concatenated protein sequences).</div>
+</li>
+<li class="blockList">
+<h4>boundaries</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; boundaries</pre>
+<div class="block">Storing the starting positions of the protein sequences.</div>
+</li>
+<li class="blockList">
+<h4>accessions</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; accessions</pre>
+<div class="block">List of all accession IDs in the FASTA file.</div>
+</li>
+<li class="blockList">
+<h4>decoyAccessions</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; decoyAccessions</pre>
+<div class="block">The decoy accessions contained in this index.</div>
+</li>
+<li class="blockListLast">
+<h4>accessionMetaData</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; accessionMetaData</pre>
+<div class="block">The accessions ending positions in the index, important for getSequences
+ function</div>
 </li>
 </ul>
 </li>

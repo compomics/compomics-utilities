@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.proteins.Protein;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
@@ -1028,56 +1029,59 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             alphabet[sortedAas[i] >> 6] |= 1L << (sortedAas[i] & 63);
         }
         
-        
-        
         // check if fasta file has an FMIndex
         String fastaExtension = getFileExtension(fastaFile);
         File FMFile = new File(fastaFile.getAbsolutePath().replace(fastaExtension, ".fmi"));
+        boolean loadFasta = true;
         if (FMFile.exists()){
             
             DataInputStream is = new DataInputStream(new BufferedInputStream(new FileInputStream(FMFile.getAbsolutePath()), 1024 * 1024));
             
-            indexParts = is.readInt();
-            for (int i = 0; i < indexParts; ++i){
-                indexStringLengths.add(is.readInt());
-                
-                int[] saPrim = new int[is.readInt()];
-                for (int j = 0; j < saPrim.length; ++j) saPrim[j] = is.readInt();
-                suffixArraysPrimary.add(saPrim);
-                
-                occurrenceTablesPrimary.add(new WaveletTree(is));
-                occurrenceTablesReversed.add(new WaveletTree(is));
-                
-                
-                int[] lessPrim = new int[is.readInt()];
-                for (int j = 0; j < lessPrim.length; ++j) lessPrim[j] = is.readInt();
-                lessTablesPrimary.add(lessPrim);
-                
-                int[] lessRev = new int[is.readInt()];
-                for (int j = 0; j < lessRev.length; ++j) lessRev[j] = is.readInt();
-                lessTablesReversed.add(lessRev);
-                
-                int[] bound = new int[is.readInt()];
-                for (int j = 0; j < bound.length; ++j) bound[j] = is.readInt();
-                boundaries.add(bound);
-                
-                String[] acc = new String[is.readInt()];
-                for (int j = 0; j < acc.length; ++j) acc[j] = is.readUTF();
-                accessions.add(acc);
-            }
-            
-            int numDecoys =is.readInt();
-            for (int i = 0; i < numDecoys; ++i) decoyAccessions.add(is.readUTF());
-            
-            int numAMD = is.readInt();
-            for (int i = 0; i < numAMD; ++i){
-                String key = is.readUTF();
-                AccessionMetaData amd = new AccessionMetaData(is);
-                accessionMetaData.put(key, amd);
+            String indexVersion = is.readUTF();
+            if (indexVersion.equals(Util.getVersion())){
+                indexParts = is.readInt();
+                for (int i = 0; i < indexParts; ++i){
+                    indexStringLengths.add(is.readInt());
+
+                    int[] saPrim = new int[is.readInt()];
+                    for (int j = 0; j < saPrim.length; ++j) saPrim[j] = is.readInt();
+                    suffixArraysPrimary.add(saPrim);
+
+                    occurrenceTablesPrimary.add(new WaveletTree(is));
+                    occurrenceTablesReversed.add(new WaveletTree(is));
+
+
+                    int[] lessPrim = new int[is.readInt()];
+                    for (int j = 0; j < lessPrim.length; ++j) lessPrim[j] = is.readInt();
+                    lessTablesPrimary.add(lessPrim);
+
+                    int[] lessRev = new int[is.readInt()];
+                    for (int j = 0; j < lessRev.length; ++j) lessRev[j] = is.readInt();
+                    lessTablesReversed.add(lessRev);
+
+                    int[] bound = new int[is.readInt()];
+                    for (int j = 0; j < bound.length; ++j) bound[j] = is.readInt();
+                    boundaries.add(bound);
+
+                    String[] acc = new String[is.readInt()];
+                    for (int j = 0; j < acc.length; ++j) acc[j] = is.readUTF();
+                    accessions.add(acc);
+                }
+
+                int numDecoys =is.readInt();
+                for (int i = 0; i < numDecoys; ++i) decoyAccessions.add(is.readUTF());
+
+                int numAMD = is.readInt();
+                for (int i = 0; i < numAMD; ++i){
+                    String key = is.readUTF();
+                    AccessionMetaData amd = new AccessionMetaData(is);
+                    accessionMetaData.put(key, amd);
+                }
+                loadFasta = false;
             }
             is.close();
         }
-        else {
+        if (loadFasta) {
 
             // reading all proteins in a first pass to get information about number and total length
             ArrayList<Integer> tmpLengths = new ArrayList<>();
@@ -1147,10 +1151,11 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
         
         
-        if (!FMFile.exists()){
+        if (loadFasta){
             try {
                 DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(FMFile.getAbsolutePath())));
 
+                os.writeUTF(Util.getVersion());
                 os.writeInt(indexParts);
                 for (int i = 0; i < indexParts; ++i){
                     os.writeInt(indexStringLengths.get(i));

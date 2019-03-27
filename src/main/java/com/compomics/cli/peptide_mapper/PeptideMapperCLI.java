@@ -20,12 +20,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
-import com.compomics.util.experiment.identification.protein_inference.fm_index.StoringWrapper;
-import javax.jdo.Extent;
-import javax.jdo.PersistenceManager;
-import org.zoodb.ZooSession;
-import org.zoodb.jdo.ZooJdoHelper;
-import org.zoodb.tools.ZooHelper;
 
 /**
  * Command line peptide mapping.
@@ -306,6 +300,5 @@ public class PeptideMapperCLI {
                 System.exit(-1);
             }
         }
-        ((FMIndex)peptideMapper).close();
     }
 }

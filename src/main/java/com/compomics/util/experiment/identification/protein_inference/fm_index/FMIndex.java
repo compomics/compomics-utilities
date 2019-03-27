@@ -1031,11 +1031,11 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         
         
         // check if fasta file has an FMIndex
-        String fastaExtension = StoringWrapper.getFileExtension(fastaFile);
-        File FMFile = new File(fastaFile.getAbsolutePath().replace(fastaExtension, ".fmdb"));
+        String fastaExtension = getFileExtension(fastaFile);
+        File FMFile = new File(fastaFile.getAbsolutePath().replace(fastaExtension, ".fmi"));
         if (FMFile.exists()){
             
-            DataInputStream is = new DataInputStream(new BufferedInputStream(new FileInputStream(FMFile.getAbsolutePath())));
+            DataInputStream is = new DataInputStream(new BufferedInputStream(new FileInputStream(FMFile.getAbsolutePath()), 1024 * 1024));
             
             indexParts = is.readInt();
             for (int i = 0; i < indexParts; ++i){
@@ -5144,6 +5144,23 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
          */
         return allMatches;
+
+    }
+    
+    
+    public static String getFileExtension(File file) {
+        String extension = "";
+
+        try {
+            if (file != null && file.exists()) {
+                String name = file.getName();
+                extension = name.substring(name.lastIndexOf("."));
+            }
+        } catch (Exception e) {
+            extension = "";
+        }
+
+        return extension;
 
     }
 

@@ -6,6 +6,7 @@ import com.compomics.util.experiment.biology.ions.IonFactory;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
+import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.gui.parameters.identification.advanced.AnnotationParametersDialog;
 import com.compomics.util.gui.parameters.identification.advanced.FractionParametersDialog;
 import com.compomics.util.gui.parameters.identification.advanced.GeneParametersDialog;
@@ -18,6 +19,7 @@ import com.compomics.util.gui.parameters.identification.search.SearchParametersD
 import com.compomics.util.gui.parameters.identification.advanced.SequenceMatchingParametersDialog;
 import com.compomics.util.gui.parameters.identification.advanced.ValidationQCParametersDialog;
 import com.compomics.util.gui.parameters.identification.advanced.ValidationParametersDialog;
+import com.compomics.util.gui.protein.FastaParametersDialog;
 import com.compomics.util.parameters.identification.advanced.FractionParameters;
 import com.compomics.util.parameters.identification.advanced.GeneParameters;
 import com.compomics.util.parameters.identification.advanced.IdMatchValidationParameters;
@@ -109,6 +111,10 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * The identification validation preferences.
      */
     private IdMatchValidationParameters idValidationPreferences = new IdMatchValidationParameters();
+    /**
+     * The FASTA processing preferences.
+     */
+    private FastaParameters fastaPreferences = new FastaParameters();
     /**
      * The fraction settings.
      */
@@ -237,6 +243,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         proteinInferencePreferences = identificationParameters.getProteinInferenceParameters();
         idValidationPreferences = identificationParameters.getIdValidationParameters();
         fractionSettings = identificationParameters.getFractionParameters();
+        fastaPreferences = identificationParameters.getFastaParameters();
     }
 
     /**
@@ -283,6 +290,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         qualityControlButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Quality Control</b></td>"
                 + "<td><font size=2>" + formatDescription(idValidationPreferences.getValidationQCParameters().getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
+        
+        databaseProcessingButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Database Processing</b></td>"
+                + "<td><font size=2>" + formatDescription(fastaPreferences.getShortDescription(), maxDescriptionLength) + "</font></td></tr></table></html>");
 
         geneMappingButton.setEnabled(true);
         spectrumAnnotationButton.setEnabled(true);
@@ -296,6 +306,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         qualityControlButton.setEnabled(true);
 //        peptideVariantsButton.setEnabled(sequenceMatchingPreferences.getPeptideMapperType() == PeptideMapperType.fm_index);
         peptideVariantsButton.setEnabled(false);
+        databaseProcessingButton.setEnabled(true);
 
         validateInput();
     }
@@ -344,6 +355,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
 
         qualityControlButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Quality Control</b></td>"
                 + "<td><font size=2></font></td></tr></table></html>");
+        
+        databaseProcessingButton.setText("<html><table><tr><td width=\"" + columnWidth + "\"><b>Database Processing</b></td>"
+                + "<td><font size=2></font></td></tr></table></html>");
 
         geneMappingButton.setEnabled(false);
         spectrumAnnotationButton.setEnabled(false);
@@ -356,6 +370,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         validationButton.setEnabled(false);
         fractionsButton.setEnabled(false);
         qualityControlButton.setEnabled(false);
+        databaseProcessingButton.setEnabled(false);
 
         validateInput();
     }
@@ -403,6 +418,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         identificationParameters.setProteinInferenceParameters(proteinInferencePreferences);
         identificationParameters.setIdValidationParameters(idValidationPreferences);
         identificationParameters.setFractionParameters(fractionSettings);
+        identificationParameters.setFastaParameters(fastaPreferences);
         return identificationParameters;
     }
 
@@ -494,6 +510,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         fractionsButton = new javax.swing.JButton();
         advancedSettingsLabel = new javax.swing.JLabel();
         peptideVariantsButton = new javax.swing.JButton();
+        databaseProcessingButton = new javax.swing.JButton();
         exportLabel = new javax.swing.JLabel();
         importLabel = new javax.swing.JLabel();
 
@@ -706,6 +723,17 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
             }
         });
 
+        databaseProcessingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit_gray.png"))); // NOI18N
+        databaseProcessingButton.setText("Database Processing");
+        databaseProcessingButton.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        databaseProcessingButton.setIconTextGap(15);
+        databaseProcessingButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/edit.png"))); // NOI18N
+        databaseProcessingButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                databaseProcessingButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
         settingsPanel.setLayout(settingsPanelLayout);
         settingsPanelLayout.setHorizontalGroup(
@@ -728,39 +756,42 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                         .addComponent(fractionsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(qualityControlButton, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(geneMappingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(peptideVariantsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(peptideVariantsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(databaseProcessingButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         settingsPanelLayout.setVerticalGroup(
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addComponent(spectrumMatchingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(spectrumMatchingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(advancedSettingsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(spectrumAnnotationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(spectrumAnnotationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(sequenceMatchingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(sequenceMatchingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(peptideVariantsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(peptideVariantsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(matchesFiltersButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(matchesFiltersButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(psmScoringButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(psmScoringButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(ptmLocalizationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ptmLocalizationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(geneMappingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(geneMappingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(proteinInferenceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(proteinInferenceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(validationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(validationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(fractionsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(fractionsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(qualityControlButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(qualityControlButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(databaseProcessingButton, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout settingsOuterPanelLayout = new javax.swing.GroupLayout(settingsOuterPanel);
@@ -1247,6 +1278,14 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_peptideVariantsButtonActionPerformed
 
+    private void databaseProcessingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_databaseProcessingButtonActionPerformed
+        FastaParametersDialog fastaSettingsDialog = new FastaParametersDialog(this, parentFrame, fastaPreferences, editable);
+        if (!fastaSettingsDialog.isCanceled()) {
+            fastaPreferences = fastaSettingsDialog.getFastaSettings();
+            updateGUI();
+        }
+    }//GEN-LAST:event_databaseProcessingButtonActionPerformed
+
     /**
      * Show/hide the advanced settings.
      */
@@ -1262,6 +1301,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         validationButton.setVisible(showAdvancedSettings);
         fractionsButton.setVisible(showAdvancedSettings);
         qualityControlButton.setVisible(showAdvancedSettings);
+        databaseProcessingButton.setVisible(showAdvancedSettings);
 
         repaint();
 
@@ -1277,6 +1317,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
     private javax.swing.JPanel attributesPanel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JButton databaseProcessingButton;
     private javax.swing.JLabel exportLabel;
     private javax.swing.JButton fractionsButton;
     private javax.swing.JButton geneMappingButton;

@@ -14,12 +14,6 @@ import java.awt.Toolkit;
 public class FractionParametersDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public FractionParametersDialog() {
-    }
-
-    /**
      * The parent frame.
      */
     private java.awt.Frame parentFrame;

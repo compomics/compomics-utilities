@@ -221,6 +221,7 @@
                                   </Group>
                                   <Component id="geneMappingButton" alignment="0" min="-2" pref="661" max="-2" attributes="0"/>
                                   <Component id="peptideVariantsButton" alignment="0" min="-2" pref="661" max="-2" attributes="0"/>
+                                  <Component id="databaseProcessingButton" alignment="1" min="-2" pref="661" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -230,32 +231,34 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                              <Component id="spectrumMatchingButton" min="-2" pref="45" max="-2" attributes="0"/>
+                              <Component id="spectrumMatchingButton" min="-2" pref="43" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="advancedSettingsLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="spectrumAnnotationButton" min="-2" pref="45" max="-2" attributes="0"/>
+                              <Component id="spectrumAnnotationButton" min="-2" pref="43" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="sequenceMatchingButton" min="-2" pref="45" max="-2" attributes="0"/>
+                              <Component id="sequenceMatchingButton" min="-2" pref="43" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="peptideVariantsButton" min="-2" pref="45" max="-2" attributes="0"/>
+                              <Component id="peptideVariantsButton" min="-2" pref="43" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="matchesFiltersButton" min="-2" pref="45" max="-2" attributes="0"/>
+                              <Component id="matchesFiltersButton" min="-2" pref="43" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="psmScoringButton" min="-2" pref="45" max="-2" attributes="0"/>
+                              <Component id="psmScoringButton" min="-2" pref="43" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="ptmLocalizationButton" min="-2" pref="45" max="-2" attributes="0"/>
+                              <Component id="ptmLocalizationButton" min="-2" pref="43" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="geneMappingButton" min="-2" pref="45" max="-2" attributes="0"/>
+                              <Component id="geneMappingButton" min="-2" pref="43" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="proteinInferenceButton" min="-2" pref="45" max="-2" attributes="0"/>
+                              <Component id="proteinInferenceButton" min="-2" pref="43" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="validationButton" min="-2" pref="45" max="-2" attributes="0"/>
+                              <Component id="validationButton" min="-2" pref="43" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="fractionsButton" min="-2" pref="45" max="-2" attributes="0"/>
+                              <Component id="fractionsButton" min="-2" pref="43" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="qualityControlButton" min="-2" pref="45" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="qualityControlButton" min="-2" pref="43" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                              <Component id="databaseProcessingButton" min="-2" pref="43" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -461,6 +464,22 @@
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="peptideVariantsButtonActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="databaseProcessingButton">
+                      <Properties>
+                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                          <Image iconType="3" name="/icons/edit_gray.png"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Database Processing"/>
+                        <Property name="horizontalAlignment" type="int" value="2"/>
+                        <Property name="iconTextGap" type="int" value="15"/>
+                        <Property name="rolloverIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                          <Image iconType="3" name="/icons/edit.png"/>
+                        </Property>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="databaseProcessingButtonActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>

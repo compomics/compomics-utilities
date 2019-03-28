@@ -45,6 +45,10 @@ public class ToolFactory {
      */
     public static final String searchGuiSpectrumFileOption = "-mgf";
     /**
+     * The command line argument for FASTA file for SearchGUI.
+     */
+    public static final String searchGuiFastaFileOption = "-fasta";
+    /**
      * The command line argument for raw files for SearchGUI.
      */
     public static final String searchGuiRawFileOption = "-raw";
@@ -254,7 +258,7 @@ public class ToolFactory {
      * @throws InterruptedException if a threading issue occurs
      */
     public static void startSearchGUI(JFrame parent) throws IOException, ClassNotFoundException, InterruptedException {
-        startSearchGUI(parent, null, null, null, null, null, null, null);
+        startSearchGUI(parent, null, null, null, null, null, null, null, null);
     }
 
     /**
@@ -263,6 +267,7 @@ public class ToolFactory {
      * @param parent a frame to display the path setting dialog.
      * @param mgfFiles the mgf files to search (can be null)
      * @param rawFiles the raw files to search (can be null)
+     * @param fastaFile the FASTA file
      * @param searchParameters the search parameters as a file (can be null)
      * @param outputFolder outputFolder the output folder (can be null)
      * @param species the species (can be null)
@@ -275,7 +280,7 @@ public class ToolFactory {
      * user preferences
      * @throws InterruptedException if a threading issue occurs
      */
-    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, ArrayList<File> rawFiles, File searchParameters, File outputFolder, String species, String speciesType, String projectName)
+    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, ArrayList<File> rawFiles, File fastaFile, File searchParameters, File outputFolder, String species, String speciesType, String projectName)
             throws IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
@@ -300,6 +305,10 @@ public class ToolFactory {
                     if (rawFiles != null && !rawFiles.isEmpty()) {
                         args.add(searchGuiRawFileOption);
                         args.add(CommandLineUtils.getCommandLineArgument(rawFiles));
+                    }
+                    if (fastaFile != null) {
+                        args.add(searchGuiFastaFileOption);
+                        args.add(CommandLineUtils.getCommandLineArgument(fastaFile));
                     }
                     if (searchParameters != null) {
                         args.add(searchGuiParametersFileOption);

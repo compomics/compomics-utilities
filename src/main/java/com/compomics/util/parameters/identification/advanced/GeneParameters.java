@@ -3,7 +3,6 @@ package com.compomics.util.parameters.identification.advanced;
 import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.io.biology.protein.FastaSummary;
-import com.compomics.util.parameters.identification.search.SearchParameters;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
@@ -26,7 +25,7 @@ public class GeneParameters extends DbObject {
     /**
      * The taxon of the species selected as background for the GO analysis.
      */
-    private Integer selectedBackgroundSpecies;
+    private Integer backgroundSpecies;
 
     /**
      * Create a new GenePreferences object.
@@ -111,9 +110,9 @@ public class GeneParameters extends DbObject {
      *
      * @return the taxon of the species selected as background species
      */
-    public Integer getSelectedBackgroundSpecies() {
+    public Integer getBackgroundSpecies() {
         readDBMode();
-        return selectedBackgroundSpecies;
+        return backgroundSpecies;
     }
 
     /**
@@ -122,66 +121,61 @@ public class GeneParameters extends DbObject {
      * @param selectedBackgroundSpecies the taxon of the species selected as
      * background species
      */
-    public void setSelectedBackgroundSpecies(Integer selectedBackgroundSpecies) {
+    public void setBackgroundSpecies(Integer selectedBackgroundSpecies) {
         writeDBMode();
-        this.selectedBackgroundSpecies = selectedBackgroundSpecies;
+        this.backgroundSpecies = selectedBackgroundSpecies;
     }
 
     /**
-     * Sets the preferences from the given search parameters.
+     * Set the background species to the most common species in the FASTA file.
      *
-     * @param searchParameters the search parameters
+     * @param fastaSummary the FASTA summary
      */
-    public void setParametersFromSearchParameters(SearchParameters searchParameters) {
+    public void setBackgroundSpeciesFromFastaSummary(FastaSummary fastaSummary) {
+
         writeDBMode();
 
-        String fastaFilePath = searchParameters.getFastaFile();
+        SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
 
-        if (fastaFilePath != null) {
-            
-            SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
-            
-            try {
+        try {
 
-                FastaSummary fastaSummary = FastaSummary.getSummary(fastaFilePath, searchParameters.getFastaParameters(), null);
-                TreeMap<String, Integer> speciesOccurrence = fastaSummary.speciesOccurrence;
-                Integer occurrenceMax = null;
+            TreeMap<String, Integer> speciesOccurrence = fastaSummary.speciesOccurrence;
+            Integer occurrenceMax = null;
 
-                // Select the background species based on occurrence in the factory
-                for (Entry<String, Integer> entry : speciesOccurrence.entrySet()) {
+            // Select the background species based on occurrence in the factory
+            for (Entry<String, Integer> entry : speciesOccurrence.entrySet()) {
 
-                    String uniprotTaxonomy = entry.getKey();
-                    
-                    if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN) && getUseGeneMapping()) {
-                        
-                        Integer occurrence = entry.getValue();
+                String uniprotTaxonomy = entry.getKey();
 
-                        if (occurrenceMax == null || occurrence > occurrenceMax) {
-                            
-                            occurrenceMax = occurrence;
-                            
-                            try {
-                            
-                                Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
-                                
-                                if (taxon != null) {
-                                
-                                    setSelectedBackgroundSpecies(taxon);
-                                    
-                                }
-                            } catch (Exception e) {
-                                
-                                // Taxon not available, ignore
-                                e.printStackTrace();
-                                
+                if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN) && getUseGeneMapping()) {
+
+                    Integer occurrence = entry.getValue();
+
+                    if (occurrenceMax == null || occurrence > occurrenceMax) {
+
+                        occurrenceMax = occurrence;
+
+                        try {
+
+                            Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
+
+                            if (taxon != null) {
+
+                                setBackgroundSpecies(taxon);
+
                             }
+                        } catch (Exception e) {
+
+                            // Taxon not available, ignore
+                            e.printStackTrace();
+
                         }
                     }
                 }
-            } catch (Exception e) {
-                // Not able to read the species, ignore
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            // Not able to read the species, ignore
+            e.printStackTrace();
         }
     }
 
@@ -197,17 +191,17 @@ public class GeneParameters extends DbObject {
         StringBuilder output = new StringBuilder();
         output.append("Use Gene Mappings: ").append(getUseGeneMapping()).append(".").append(newLine);
         output.append("Update Gene Mappings: ").append(getAutoUpdate()).append(".").append(newLine);
-        
-        if (selectedBackgroundSpecies != null) {
-            
+
+        if (backgroundSpecies != null) {
+
             SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
-            String speciesName = speciesFactory.getName(selectedBackgroundSpecies);
+            String speciesName = speciesFactory.getName(backgroundSpecies);
             output.append("Species: ").append(speciesName).append(".").append(newLine);
-            
+
         } else {
-            
+
             output.append("Species: ").append("(not selected)").append(newLine);
-            
+
         }
 
         return output.toString();

@@ -16,7 +16,6 @@ import com.compomics.util.parameters.identification.tool_specific.PNovoParameter
 import com.compomics.util.parameters.identification.tool_specific.PepnovoParameters;
 import com.compomics.util.parameters.identification.tool_specific.TideParameters;
 import com.compomics.util.parameters.identification.tool_specific.XtandemParameters;
-import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.io.file.SerializationUtils;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import com.compomics.util.experiment.io.parameters.DummyParameters;
@@ -102,14 +101,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      */
     private DigestionParameters digestionParameters;
     /**
-     * Path to the sequence database file used for identification.
-     */
-    private String fastaFile;
-    /**
-     * The parameters to use to parse the FASTA file.
-     */
-    private FastaParameters fastaParameters;
-    /**
      * The forward ions to consider (a, b or c).
      */
     private ArrayList<Integer> forwardIons;
@@ -181,8 +172,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         this.fragmentIonMZTolerance = searchParameters.getFragmentIonAccuracy();
         this.modificationParameters = new ModificationParameters(searchParameters.getModificationParameters());
         this.digestionParameters = searchParameters.getDigestionParameters();
-        this.fastaFile = searchParameters.getFastaFile();
-        this.fastaParameters = searchParameters.getFastaParameters();
         this.forwardIons = new ArrayList<>(searchParameters.getForwardIons());
         this.rewindIons = new ArrayList<>(searchParameters.getRewindIons());
         this.minChargeSearched = searchParameters.getMinChargeSearched();
@@ -408,50 +397,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
     public void setDigestionParameters(DigestionParameters digestionParameters) {
         writeDBMode();
         this.digestionParameters = digestionParameters;
-    }
-
-    /**
-     * Returns the path to the sequence database file used for identification.
-     *
-     * @return the path to the sequence database file used for identification
-     */
-    public String getFastaFile() {
-
-        readDBMode();
-
-        return fastaFile;
-    }
-
-    /**
-     * Sets the path to the sequence database file used for identification.
-     *
-     * @param fastaFile the sequence database file used for identification
-     */
-    public void setFastaFile(String fastaFile) {
-        writeDBMode();
-        this.fastaFile = fastaFile;
-    }
-
-    /**
-     * Returns the parameters to use to parse the FASTA file.
-     *
-     * @return the parameters to use to parse the FASTA file
-     */
-    public FastaParameters getFastaParameters() {
-
-        readDBMode();
-
-        return fastaParameters;
-    }
-
-    /**
-     * Sets the parameters to use to parse the FASTA file.
-     *
-     * @param fastaParameters the parameters to use to parse the FASTA file
-     */
-    public void setFastaParameters(FastaParameters fastaParameters) {
-        writeDBMode();
-        this.fastaParameters = fastaParameters;
     }
 
     /**
@@ -913,12 +858,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
             output.append("Isotopic Correction: ").append(minIsotopicCorrection).append("-").append(maxIsotopicCorrection).append(".").append(newLine);
         }
 
-        output.append("DB: ");
-        if (fastaFile != null) {
-            output.append(fastaFile);
-        } else {
-            output.append("not set");
-        }
         output.append(".").append(newLine);
 
         return output.toString();
@@ -949,12 +888,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         output.append(newLine);
         output.append("# ------------------------------------------------------------------");
         output.append(newLine);
-        output.append(newLine);
-
-        output.append("DATABASE_FILE=");
-        if (fastaFile != null) {
-            output.append(fastaFile);
-        }
         output.append(newLine);
 
         if (digestionParameters.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
@@ -1093,23 +1026,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
             return false;
         }
         if (this.getFragmentIonAccuracy() != otherSearchParameters.getFragmentIonAccuracy()) {
-            return false;
-        }
-        if ((this.getFastaFile() == null && otherSearchParameters.getFastaFile() != null)
-                || (this.getFastaFile() != null && otherSearchParameters.getFastaFile() == null)) {
-            return false;
-        }
-        if (this.getFastaFile() != null && otherSearchParameters.getFastaFile() != null) {
-            if (!this.getFastaFile().equals(otherSearchParameters.getFastaFile())) {
-                return false;
-            }
-        }
-        if (getFastaParameters() != null && otherSearchParameters.getFastaParameters() == null
-                || getFastaParameters() == null && otherSearchParameters.getFastaParameters() != null) {
-            return false;
-        }
-        if (getFastaParameters() != null && otherSearchParameters.getFastaParameters() != null
-                && !this.getFastaParameters().equals(otherSearchParameters.getFastaParameters())) {
             return false;
         }
         if (this.getDigestionParameters() != null && otherSearchParameters.getDigestionParameters() == null

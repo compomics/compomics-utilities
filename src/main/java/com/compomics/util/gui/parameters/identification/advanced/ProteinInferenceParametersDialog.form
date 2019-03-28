@@ -120,9 +120,9 @@
                                   <Component id="simplifyEvidenceLbl" min="-2" max="-2" attributes="0"/>
                                   <Component id="simplifyCharacterizationLbl" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="78" pref="78" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="simplifyEvidenceCmb" max="32767" attributes="0"/>
+                                  <Component id="simplifyEvidenceCmb" pref="279" max="32767" attributes="0"/>
                                   <Component id="simplifyCharacterizationCmb" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -139,9 +139,9 @@
                               </Group>
                               <EmptySpace min="-2" pref="117" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="simplifyVariantsCmb" max="32767" attributes="0"/>
-                                  <Component id="simplifyEnzymaticityCmb" alignment="1" pref="279" max="32767" attributes="0"/>
-                                  <Component id="simplifyGroupsCmb" max="32767" attributes="0"/>
+                                  <Component id="simplifyEnzymaticityCmb" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="simplifyVariantsCmb" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="simplifyGroupsCmb" alignment="1" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -157,7 +157,7 @@
                           <Component id="simplifyGroupsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="simplifyGroupsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="simplifyEvidenceLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="simplifyEvidenceCmb" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -177,7 +177,7 @@
                           <Component id="simplifyVariantsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="simplifyVariantsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

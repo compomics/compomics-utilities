@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class UtilitiesPathParameters {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public UtilitiesPathParameters() {
     }
@@ -67,7 +67,7 @@ public class UtilitiesPathParameters {
          */
         prideAnnotationKey("pride_annotation", "Folder containing the PRIDE annotation preferences.", "pride", true),
         /**
-         * Folder containing the identification parameters
+         * Folder containing the identification parameters.
          */
         identificationParametersKey("identification_parameters", "Folder containing the identification parameters.", IdentificationParametersFactory.PARAMETERS_FOLDER, true);
         /**

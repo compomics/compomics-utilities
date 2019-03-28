@@ -27,7 +27,6 @@ import com.compomics.util.parameters.identification.tool_specific.NovorParameter
 import com.compomics.util.experiment.identification.modification.ModificationLocalizationScore;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
-import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.search.DigestionParameters.Specificity;
@@ -180,14 +179,6 @@ public class IdentificationParametersInputBean {
         } else if (checkMandatoryParameters) {
             System.out.println(System.getProperty("line.separator") + "No output file specified!" + System.getProperty("line.separator"));
             return false;
-        }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DB.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DB.id);
-            File fastaFile = new File(arg);
-            if (!fastaFile.exists()) {
-                System.out.println(System.getProperty("line.separator") + "Database not found." + System.getProperty("line.separator"));
-                return false;
-            }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.MIN_CHARGE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MIN_CHARGE.id);
@@ -1812,18 +1803,6 @@ public class IdentificationParametersInputBean {
             digestionPreferences.setnMissedCleavages(enzymeName, 2);
             digestionPreferences.setSpecificity(enzymeName, Specificity.specific);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.DB.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DB.id);
-            searchParameters.setFastaFile(arg);
-            if (searchParameters.getFastaParameters() == null) {
-                try {
-                    searchParameters.setFastaParameters(FastaParameters.inferParameters(arg));
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    throw new UnsupportedOperationException("An error occurred while generating the FASTA parameters.");
-                }
-            }
-        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.FI.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FI.id);
             ArrayList<String> args = CommandLineUtils.splitInput(arg);
@@ -3184,7 +3163,7 @@ public class IdentificationParametersInputBean {
             // apply geneParameters before setParametersFromSearch to know the gene mapping options 
             identificationParameters.setGeneParameters(genePreferences);
             identificationParameters.setParametersFromSearch(searchParameters);
-            genePreferences.setParametersFromSearchParameters(searchParameters);
+            //genePreferences.setParametersFromSearchParameters(searchParameters); // @TODO: FASTA file requried, but not available here...
         }
 
         // set the parameter file name to the same as the name of the file

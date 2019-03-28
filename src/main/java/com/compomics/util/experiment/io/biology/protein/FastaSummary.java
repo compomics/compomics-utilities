@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.io.biology.protein;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.utils.ProteinUtils;
 import com.compomics.util.experiment.io.biology.protein.iterators.HeaderIterator;
 import com.compomics.util.io.json.JsonMarshaller;
@@ -8,20 +9,21 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import no.uib.jsparklines.renderers.util.Util;
 
 /**
  * This class parses a FASTA file and gathers summary statistics.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class FastaSummary {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public FastaSummary() {
         fastaFile = null;
@@ -56,10 +58,25 @@ public class FastaSummary {
      * The last time the file was modified.
      */
     public final long lastModified;
+    /**
+     * The name of the database.
+     */
+    private String name;
+    /**
+     * Description of the database.
+     */
+    private String description;
+    /**
+     * The version of the database.
+     */
+    private String version;
 
     /**
      * Constructor.
      *
+     * @param name the database name
+     * @param description the database description
+     * @param version the database version
      * @param fastaFile the FASTA file
      * @param speciesOccurrence the occurrence of every species
      * @param databaseType the occurrence of every database type
@@ -67,8 +84,11 @@ public class FastaSummary {
      * @param nTarget the number of target sequences
      * @param lastModified the last time the file was modified
      */
-    public FastaSummary(File fastaFile, TreeMap<String, Integer> speciesOccurrence, HashMap<ProteinDatabase, Integer> databaseType, int nSequences, int nTarget, long lastModified) {
+    public FastaSummary(String name, String description, String version, File fastaFile, TreeMap<String, Integer> speciesOccurrence, HashMap<ProteinDatabase, Integer> databaseType, int nSequences, int nTarget, long lastModified) {
 
+        this.name = name;
+        this.description = description;
+        this.version = version;
         this.fastaFile = fastaFile;
         this.speciesOccurrence = speciesOccurrence;
         this.databaseType = databaseType;
@@ -162,7 +182,7 @@ public class FastaSummary {
      * @throws IOException exception thrown if an error occurred while writing
      * the file
      */
-    private static void saveSummary(String fastaFile, FastaSummary fastaSummary) throws IOException {
+    public static void saveSummary(String fastaFile, FastaSummary fastaSummary) throws IOException {
 
         File destinationFile = getSummaryFile(fastaFile);
         File destinationFolder = destinationFile.getParentFile();
@@ -291,7 +311,7 @@ public class FastaSummary {
             }
         }
 
-        return new FastaSummary(fastaFile, speciesOccurrence, databaseType, nSequences, nTarget, lastModified);
+        return new FastaSummary(Util.removeExtension(fastaFile.getName()), fastaFile.getAbsolutePath(), new Date(fastaFile.lastModified()).toString(), fastaFile, speciesOccurrence, databaseType, nSequences, nTarget, lastModified);
 
     }
     
@@ -321,4 +341,57 @@ public class FastaSummary {
         
     }
 
+    /**
+     * Returns the name of the database.
+     *
+     * @return the name for the database
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets a new name for the database.
+     *
+     * @param name a new name for the database
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Returns the database version.
+     *
+     * @return the database version
+     */
+    public String getVersion() {
+        return version;
+    }
+
+    /**
+     * Sets the database version.
+     *
+     * @param version the database version
+     */
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    /**
+     * Returns the description for this database.
+     *
+     * @return the description for this database
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Sets the description for this database.
+     *
+     * @param description the description for this database
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

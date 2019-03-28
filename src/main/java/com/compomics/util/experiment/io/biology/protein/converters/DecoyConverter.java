@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  * This class appends decoy sequences to the given FASTA file.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class DecoyConverter {
 
@@ -30,22 +31,18 @@ public class DecoyConverter {
     }
 
     /**
-     * The flag to append to the accessions of decoy proteins.
-     */
-    public static final String decoyFlag = "-REVERSED";
-
-    /**
      * Appends decoy sequences to the provided FASTA file.
      *
      * @param fastaIn the FASTA file to read
      * @param fastaOut the FASTA file to write
+     * @param fastaParameters the FASTA parameters
      * @param waitingHandler a handler to allow canceling the import and
      * displaying progress
      *
      * @throws IOException exception thrown whenever an error happened while
      * reading or writing a FASTA file
      */
-    public static void appendDecoySequences(File fastaIn, File fastaOut, WaitingHandler waitingHandler) throws IOException {
+    public static void appendDecoySequences(File fastaIn, File fastaOut, FastaParameters fastaParameters, WaitingHandler waitingHandler) throws IOException {
 
         FastaIterator fastaIterator = new FastaIterator(fastaIn);
 
@@ -72,8 +69,9 @@ public class DecoyConverter {
                 String part2 = rawHeader.substring(accessionEndIndex);
 
                 bw.write(part1);
-                bw.write(decoyFlag);
+                bw.write(fastaParameters.getDecoyFlag());
                 bw.write(part2);
+                bw.write(fastaParameters.getDecoyFlag());
                 bw.newLine();
 
                 char[] sequenceAsArray = protein.getSequence().toCharArray();
@@ -116,13 +114,9 @@ public class DecoyConverter {
     public static FastaParameters getDecoyParameters(FastaParameters targetParameters) {
 
         FastaParameters decoyParameters = new FastaParameters();
-
         decoyParameters.setTargetDecoy(true);
-        decoyParameters.setDecoyFlag(decoyFlag);
+        decoyParameters.setDecoyFlag(targetParameters.getDecoyFlag());
         decoyParameters.setDecoySuffix(true);
-        decoyParameters.setVersion(targetParameters.getVersion());
-        decoyParameters.setName(targetParameters.getName() + " (target-decoy)");
-        decoyParameters.setDescription(targetParameters.getDescription());
 
         return decoyParameters;
     }
@@ -154,7 +148,10 @@ public class DecoyConverter {
 
         int nTarget = targetSummary.nTarget;
 
-        return new FastaSummary(newFastaFile, speciesOccurrence, dbOccurrence, nSequences, nTarget, newFastaFile.lastModified());
-
+        return new FastaSummary(targetSummary.getName() + " (target-decoy)", 
+                targetSummary.getDescription(), targetSummary.getVersion(), 
+                newFastaFile, speciesOccurrence, dbOccurrence, nSequences, 
+                nTarget, newFastaFile.lastModified());
+        
     }
 }

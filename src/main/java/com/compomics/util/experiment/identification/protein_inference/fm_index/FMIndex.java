@@ -1251,6 +1251,58 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                 throw e;
             }
         }
+        
+        
+        if (loadFasta){
+            try {
+                DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(FMFile.getAbsolutePath())));
+
+                os.writeUTF(Util.getVersion());
+                os.writeInt(indexParts);
+                for (int i = 0; i < indexParts; ++i){
+                    os.writeInt(indexStringLengths.get(i));
+
+                    int[] saPrim = suffixArraysPrimary.get(i);
+                    os.writeInt(saPrim.length);
+                    for (int saVal : saPrim) os.writeInt(saVal);
+
+                    occurrenceTablesPrimary.get(i).write(os);
+                    occurrenceTablesReversed.get(i).write(os);
+
+                    int[] lessPrim = lessTablesPrimary.get(i);
+                    os.writeInt(lessPrim.length);
+                    for (int lessVal : lessPrim) os.writeInt(lessVal);
+
+                    int[] lessRev = lessTablesReversed.get(i);
+                    os.writeInt(lessRev.length);
+                    for (int lessVal : lessRev) os.writeInt(lessVal);
+
+                    int[] bound = boundaries.get(i);
+                    os.writeInt(bound.length);
+                    for (int boundVal : bound) os.writeInt(boundVal);
+
+                    String[] acc = accessions.get(i);
+                    os.writeInt(acc.length);
+                    for (String accVal : acc) os.writeUTF(accVal);
+
+                }
+
+
+                os.writeInt(decoyAccessions.size());
+                for (String decoyVal : decoyAccessions) os.writeUTF(decoyVal);
+
+
+                os.writeInt(accessionMetaData.size());
+                for (String key : accessionMetaData.keySet()){
+                    os.writeUTF(key);
+                    accessionMetaData.get(key).write(os);
+                }
+                os.close();
+            }
+            catch (IOException e){
+                throw e;
+            }
+        }
     }
 
     /**

@@ -1,5 +1,9 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 /**
  * Rank as used in the FM index.
  *
@@ -36,11 +40,11 @@ public class Rank {
     /**
      * The shift.
      */
-    private final int shift = 6;
+    private static final int shift = 6;
     /**
      * The mask.
      */
-    private final int mask = 63;
+    private static final int mask = 63;
 
     /**
      * Constructor.
@@ -79,6 +83,22 @@ public class Rank {
             }
         }
     }
+    
+    
+    
+    public Rank(DataInputStream is) throws IOException {
+        length = is.readInt();
+        
+        bitfield = new long[is.readInt()];
+        for (int i = 0; i < bitfield.length; ++i) bitfield[i] = is.readLong();
+        
+        sums = new int[is.readInt()];
+        for (int i = 0; i < sums.length; ++i) sums[i] = is.readInt();
+        
+        sumsSecondLevel = new byte[is.readInt()];
+        for (int i = 0; i < sumsSecondLevel.length; ++i) sumsSecondLevel[i] = is.readByte();
+    }
+    
 
     /**
      * Constructor.
@@ -186,5 +206,20 @@ public class Rank {
      */
     public int getAllocatedBytes() {
         return (bitfield.length << 3) + (sums.length << 2) + sumsSecondLevel.length;
+    }
+    
+    
+    
+    public void write(DataOutputStream os) throws IOException {
+        os.writeInt(length);
+        
+        os.writeInt(bitfield.length);
+        for (long b : bitfield) os.writeLong(b);
+        
+        os.writeInt(sums.length);
+        for (int s : sums) os.writeInt(s);
+        
+        os.writeInt(sumsSecondLevel.length);
+        for (byte b : sumsSecondLevel) os.writeByte(b);
     }
 }

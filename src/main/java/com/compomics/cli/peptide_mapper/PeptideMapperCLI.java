@@ -43,7 +43,7 @@ public class PeptideMapperCLI {
             System.out.println("\t-p\tpeptide mapping");
             System.out.println("\t-t\tsequence tag mapping");
             System.out.println("\t-h\tprint this info");
-            
+            System.out.println();
             System.out.println("Additional options are:");
             System.out.println("\t-u [utilities-parameter-file]\tpeptide mapping");
             System.out.println("\t-f\tadd flanking amino acids to peptide in output");
@@ -56,10 +56,10 @@ public class PeptideMapperCLI {
             System.exit(-1);
         }
 
-        System.out.println("Start reading FASTA file");
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         File fastaFile = new File(args[1]);
         boolean flanking = false;
+        String storeIndex = "";
 
         SearchParameters searchParameters = null;
         PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
@@ -99,6 +99,7 @@ public class PeptideMapperCLI {
             }
 
         } 
+          
         
         if (!customParameters) {
             searchParameters = new SearchParameters();
@@ -109,10 +110,12 @@ public class PeptideMapperCLI {
             sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
             sequenceMatchingPreferences.setLimitX(0.25);
         }
+        
+        FastaMapper peptideMapper = null;
+        
 
         System.out.println("Start indexing fasta file");
         long startTimeIndex = System.nanoTime();
-        FastaMapper peptideMapper = null;
         try {
             peptideMapper = new FMIndex(fastaFile, null, waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
         } catch (IOException e) {
@@ -124,6 +127,10 @@ public class PeptideMapperCLI {
         System.out.println();
         System.out.println("Indexing took " + (diffTimeIndex / 1e9) + " seconds and consumes " + (((float) ((FMIndex) peptideMapper).getAllocatedBytes()) / 1e6) + " MB");
 
+        
+        System.out.println();
+        System.out.println("Start mapping");
+        
         if (args[0].equals("-p")) {
             ArrayList<String> peptides = new ArrayList<>();
             try {

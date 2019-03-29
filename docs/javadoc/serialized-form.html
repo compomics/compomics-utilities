@@ -3620,6 +3620,44 @@
 </ul>
 </li>
 <li class="blockList">
+<h2 title="Package">Package&nbsp;com.compomics.util.experiment.io.biology.protein</h2>
+<ul class="blockList">
+<li class="blockList"><a name="com.compomics.util.experiment.io.biology.protein.FastaParameters">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/experiment/io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">com.compomics.util.experiment.io.biology.protein.FastaParameters</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>targetDecoy</h4>
+<pre>boolean targetDecoy</pre>
+<div class="block">Boolean indicating whether the FASTA file should be processed as
+ target-decoy or only target.</div>
+</li>
+<li class="blockList">
+<h4>decoyFlag</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> decoyFlag</pre>
+<div class="block">The flag for decoy proteins in the accession.</div>
+</li>
+<li class="blockList">
+<h4>decoySuffix</h4>
+<pre>boolean decoySuffix</pre>
+<div class="block">Boolean indicating whether the decoy flag is a suffix or a prefix.</div>
+</li>
+<li class="blockListLast">
+<h4>targetDecoyFileNameTag</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> targetDecoyFileNameTag</pre>
+<div class="block">The tag added after adding decoy sequences to a FASTA file.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList">
 <h2 title="Package">Package&nbsp;com.compomics.util.experiment.io.identification</h2>
 <ul class="blockList">
 <li class="blockList"><a name="com.compomics.util.experiment.io.identification.MzIdentMLIdfileSearchParametersConverter">
@@ -7844,6 +7882,11 @@
 <div class="block">The identification validation preferences.</div>
 </li>
 <li class="blockList">
+<h4>fastaPreferences</h4>
+<pre><a href="com/compomics/util/experiment/io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a> fastaPreferences</pre>
+<div class="block">The FASTA processing preferences.</div>
+</li>
+<li class="blockList">
 <h4>fractionSettings</h4>
 <pre><a href="com/compomics/util/parameters/identification/advanced/FractionParameters.html" title="class in com.compomics.util.parameters.identification.advanced">FractionParameters</a> fractionSettings</pre>
 <div class="block">The fraction settings.</div>
@@ -7873,6 +7916,10 @@
 <li class="blockList">
 <h4>cancelButton</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> cancelButton</pre>
+</li>
+<li class="blockList">
+<h4>databaseProcessingButton</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> databaseProcessingButton</pre>
 </li>
 <li class="blockList">
 <h4>exportLabel</h4>
@@ -8230,6 +8277,76 @@
 </li>
 </ul>
 </li>
+<li class="blockList"><a name="com.compomics.util.gui.parameters.identification.advanced.BackgroundSpeciesDialog">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/gui/parameters/identification/advanced/BackgroundSpeciesDialog.html" title="class in com.compomics.util.gui.parameters.identification.advanced">com.compomics.util.gui.parameters.identification.advanced.BackgroundSpeciesDialog</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JDialog.html?is-external=true" title="class or interface in javax.swing">JDialog</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>parentFrame</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Frame.html?is-external=true" title="class or interface in java.awt">Frame</a> parentFrame</pre>
+<div class="block">The parent frame.</div>
+</li>
+<li class="blockList">
+<h4>canceled</h4>
+<pre>boolean canceled</pre>
+<div class="block">True of the dialog was canceled by the user.</div>
+</li>
+<li class="blockList">
+<h4>genePreferences</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/GeneParameters.html" title="class in com.compomics.util.parameters.identification.advanced">GeneParameters</a> genePreferences</pre>
+<div class="block">The gene preferences.</div>
+</li>
+<li class="blockList">
+<h4>fastaSummary</h4>
+<pre><a href="com/compomics/util/experiment/io/biology/protein/FastaSummary.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaSummary</a> fastaSummary</pre>
+<div class="block">The search parameters.</div>
+</li>
+<li class="blockList">
+<h4>speciesFactory</h4>
+<pre><a href="com/compomics/util/experiment/biology/taxonomy/SpeciesFactory.html" title="class in com.compomics.util.experiment.biology.taxonomy">SpeciesFactory</a> speciesFactory</pre>
+<div class="block">The species factory.</div>
+</li>
+<li class="blockList">
+<h4>speciesMap</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; speciesMap</pre>
+<div class="block">A map from the species names used in the drop down menu to the taxon.</div>
+</li>
+<li class="blockList">
+<h4>backgroundPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> backgroundPanel</pre>
+</li>
+<li class="blockList">
+<h4>cancelButton</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> cancelButton</pre>
+</li>
+<li class="blockList">
+<h4>helpJButton</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> helpJButton</pre>
+</li>
+<li class="blockList">
+<h4>mappingPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> mappingPanel</pre>
+</li>
+<li class="blockList">
+<h4>okButton</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> okButton</pre>
+</li>
+<li class="blockList">
+<h4>speciesCmb</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; speciesCmb</pre>
+</li>
+<li class="blockListLast">
+<h4>speciesLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> speciesLabel</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="blockList"><a name="com.compomics.util.gui.parameters.identification.advanced.FractionParametersDialog">
 <!--   -->
 </a>
@@ -8314,21 +8431,6 @@
 <div class="block">The gene preferences.</div>
 </li>
 <li class="blockList">
-<h4>searchParameters</h4>
-<pre><a href="com/compomics/util/parameters/identification/search/SearchParameters.html" title="class in com.compomics.util.parameters.identification.search">SearchParameters</a> searchParameters</pre>
-<div class="block">The search parameters.</div>
-</li>
-<li class="blockList">
-<h4>speciesFactory</h4>
-<pre><a href="com/compomics/util/experiment/biology/taxonomy/SpeciesFactory.html" title="class in com.compomics.util.experiment.biology.taxonomy">SpeciesFactory</a> speciesFactory</pre>
-<div class="block">The species factory.</div>
-</li>
-<li class="blockList">
-<h4>speciesMap</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; speciesMap</pre>
-<div class="block">A map from the species names used in the drop down menu to the taxon.</div>
-</li>
-<li class="blockList">
 <h4>autoUpdateCmb</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; autoUpdateCmb</pre>
 </li>
@@ -8355,14 +8457,6 @@
 <li class="blockList">
 <h4>okButton</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> okButton</pre>
-</li>
-<li class="blockList">
-<h4>speciesCmb</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; speciesCmb</pre>
-</li>
-<li class="blockList">
-<h4>speciesLabel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> speciesLabel</pre>
 </li>
 <li class="blockList">
 <h4>useMappingCmb</h4>
@@ -11609,16 +11703,6 @@
 <div class="block">The utilities user parameters.</div>
 </li>
 <li class="blockList">
-<h4>selectedFastaFile</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> selectedFastaFile</pre>
-<div class="block">The selected FASTA file.</div>
-</li>
-<li class="blockList">
-<h4>fastaParameters</h4>
-<pre><a href="com/compomics/util/experiment/io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a> fastaParameters</pre>
-<div class="block">The parameters used to parse the FASTA file.</div>
-</li>
-<li class="blockList">
 <h4>addFixedModification</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> addFixedModification</pre>
 </li>
@@ -11639,28 +11723,12 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> cancelButton</pre>
 </li>
 <li class="blockList">
-<h4>dataBasePanelSettings</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> dataBasePanelSettings</pre>
-</li>
-<li class="blockList">
-<h4>databaseSettingsLbl</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> databaseSettingsLbl</pre>
-</li>
-<li class="blockList">
-<h4>databaseSettingsTxt</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> databaseSettingsTxt</pre>
-</li>
-<li class="blockList">
 <h4>digestionCmb</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; digestionCmb</pre>
 </li>
 <li class="blockList">
 <h4>digestionLabel</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> digestionLabel</pre>
-</li>
-<li class="blockList">
-<h4>editDatabaseDetailsButton</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> editDatabaseDetailsButton</pre>
 </li>
 <li class="blockList">
 <h4>enzymeLabel</h4>
@@ -11879,17 +11947,17 @@
 <li class="blockList">
 <h4>selectedFastaFile</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> selectedFastaFile</pre>
-<div class="block">The selected fasta file.</div>
+<div class="block">The selected FASTA file.</div>
 </li>
 <li class="blockList">
 <h4>fastaParameters</h4>
 <pre><a href="com/compomics/util/experiment/io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a> fastaParameters</pre>
-<div class="block">The parameters used to parse the fasta file.</div>
+<div class="block">The parameters used to parse the FASTA file.</div>
 </li>
 <li class="blockList">
 <h4>fastaSummary</h4>
 <pre><a href="com/compomics/util/experiment/io/biology/protein/FastaSummary.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaSummary</a> fastaSummary</pre>
-<div class="block">Summary information on the fasta file content.</div>
+<div class="block">Summary information on the FASTA file content.</div>
 </li>
 <li class="blockList">
 <h4>accessionsSample</h4>
@@ -11922,10 +11990,6 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JSpinner.html?is-external=true" title="class or interface in javax.swing">JSpinner</a> accessionsSpinner</pre>
 </li>
 <li class="blockList">
-<h4>advancedButton</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> advancedButton</pre>
-</li>
-<li class="blockList">
 <h4>backgroundPanel</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> backgroundPanel</pre>
 </li>
@@ -11952,14 +12016,6 @@
 <li class="blockList">
 <h4>decoyButton</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> decoyButton</pre>
-</li>
-<li class="blockList">
-<h4>decoyFlagTxt</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> decoyFlagTxt</pre>
-</li>
-<li class="blockList">
-<h4>decoyTagLabel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> decoyTagLabel</pre>
 </li>
 <li class="blockList">
 <h4>fileLabel</h4>
@@ -12110,43 +12166,56 @@
 <li class="blockList">
 <h2 title="Package">Package&nbsp;com.compomics.util.gui.protein</h2>
 <ul class="blockList">
-<li class="blockList"><a name="com.compomics.util.gui.protein.AdvancedProteinDatabaseDialog">
+<li class="blockList"><a name="com.compomics.util.gui.protein.FastaParametersDialog">
 <!--   -->
 </a>
-<h3>Class <a href="com/compomics/util/gui/protein/AdvancedProteinDatabaseDialog.html" title="class in com.compomics.util.gui.protein">com.compomics.util.gui.protein.AdvancedProteinDatabaseDialog</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JDialog.html?is-external=true" title="class or interface in javax.swing">JDialog</a> implements Serializable</h3>
+<h3>Class <a href="com/compomics/util/gui/protein/FastaParametersDialog.html" title="class in com.compomics.util.gui.protein">com.compomics.util.gui.protein.FastaParametersDialog</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JDialog.html?is-external=true" title="class or interface in javax.swing">JDialog</a> implements Serializable</h3>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
 <ul class="blockList">
 <li class="blockList">
-<h4>dbFolder</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a> dbFolder</pre>
-<div class="block">The database folder.</div>
+<h4>parentFrame</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Frame.html?is-external=true" title="class or interface in java.awt">Frame</a> parentFrame</pre>
+<div class="block">The parent frame.</div>
 </li>
 <li class="blockList">
-<h4>userPreferences</h4>
-<pre><a href="com/compomics/util/parameters/UtilitiesUserParameters.html" title="class in com.compomics.util.parameters">UtilitiesUserParameters</a> userPreferences</pre>
-<div class="block">The user preferences.</div>
+<h4>canceled</h4>
+<pre>boolean canceled</pre>
+<div class="block">Boolean indicating whether the user canceled the editing.</div>
+</li>
+<li class="blockList">
+<h4>editable</h4>
+<pre>boolean editable</pre>
+<div class="block">Boolean indicating whether the settings can be edited by the user.</div>
 </li>
 <li class="blockList">
 <h4>backgroundPanel</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> backgroundPanel</pre>
 </li>
 <li class="blockList">
-<h4>browseDatabaseFolderButton</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> browseDatabaseFolderButton</pre>
-</li>
-<li class="blockList">
 <h4>cancelButton</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> cancelButton</pre>
 </li>
 <li class="blockList">
-<h4>clearDatabaseFolderButton</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> clearDatabaseFolderButton</pre>
+<h4>decoyFlagTxt</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> decoyFlagTxt</pre>
 </li>
 <li class="blockList">
-<h4>databasesFolderTxt</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> databasesFolderTxt</pre>
+<h4>decoySuffixLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> decoySuffixLabel</pre>
+</li>
+<li class="blockList">
+<h4>decoyTagLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> decoyTagLabel</pre>
+</li>
+<li class="blockList">
+<h4>decoyTypeComboBox</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; decoyTypeComboBox</pre>
+</li>
+<li class="blockList">
+<h4>decoyTypeLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> decoyTypeLabel</pre>
 </li>
 <li class="blockList">
 <h4>fastaSuffixTxt</h4>
@@ -12157,12 +12226,20 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> fileProcessingPanel</pre>
 </li>
 <li class="blockList">
-<h4>folderPanel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> folderPanel</pre>
+<h4>helpJButton</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> helpJButton</pre>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>okButton</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> okButton</pre>
+</li>
+<li class="blockList">
+<h4>targetDecoyComboBox</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; targetDecoyComboBox</pre>
+</li>
+<li class="blockListLast">
+<h4>targetDecoyLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> targetDecoyLabel</pre>
 </li>
 </ul>
 </li>
@@ -14181,10 +14258,15 @@
 <pre><a href="com/compomics/util/parameters/identification/advanced/IdMatchValidationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">IdMatchValidationParameters</a> idValidationParameters</pre>
 <div class="block">The identification validation parameters.</div>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>fractionParameters</h4>
 <pre><a href="com/compomics/util/parameters/identification/advanced/FractionParameters.html" title="class in com.compomics.util.parameters.identification.advanced">FractionParameters</a> fractionParameters</pre>
 <div class="block">The fraction settings.</div>
+</li>
+<li class="blockListLast">
+<h4>fastaParameters</h4>
+<pre><a href="com/compomics/util/experiment/io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a> fastaParameters</pre>
+<div class="block">The FASTA processing parameters.</div>
 </li>
 </ul>
 </li>
@@ -14239,8 +14321,8 @@
 <div class="block">If true the gene mappings will be used.</div>
 </li>
 <li class="blockListLast">
-<h4>selectedBackgroundSpecies</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> selectedBackgroundSpecies</pre>
+<h4>backgroundSpecies</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> backgroundSpecies</pre>
 <div class="block">The taxon of the species selected as background for the GO analysis.</div>
 </li>
 </ul>
@@ -14591,16 +14673,6 @@
 <h4>digestionParameters</h4>
 <pre><a href="com/compomics/util/parameters/identification/search/DigestionParameters.html" title="class in com.compomics.util.parameters.identification.search">DigestionParameters</a> digestionParameters</pre>
 <div class="block">The digestion preferences.</div>
-</li>
-<li class="blockList">
-<h4>fastaFile</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> fastaFile</pre>
-<div class="block">Path to the sequence database file used for identification.</div>
-</li>
-<li class="blockList">
-<h4>fastaParameters</h4>
-<pre><a href="com/compomics/util/experiment/io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a> fastaParameters</pre>
-<div class="block">The parameters to use to parse the FASTA file.</div>
 </li>
 <li class="blockList">
 <h4>forwardIons</h4>

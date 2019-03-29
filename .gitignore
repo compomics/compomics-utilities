@@ -1,23 +1,5 @@
 /target/
 derby.log
 /.idea/
-*.html
-/src/main/java/com/compomics/scripts_marc/
-<<<<<<< HEAD
 /src/test/resources/*
-/docs
 /docs/
-=======
-/target/
-derby.log
-/.idea/
-*.iml
-/src/main/java/com/compomics/scripts_marc/
-
-/src/test/resources/*
-/docs
-=======
-!/src/test/resources/
->>>>>>> f0e412886bb79fbfd3e6e8345212244b23492fd0
-!/src/main/java/com/compomics/util/experiment/io/mass_spectrometry/mgf/package.html
-!/src/main/java/com/compomics/util/experiment/io/mass_spectrometry/msp/package.html

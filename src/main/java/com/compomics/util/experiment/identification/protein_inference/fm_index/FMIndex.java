@@ -44,7 +44,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import org.jsuffixarrays.*;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -64,12 +63,6 @@ import java.util.stream.Collectors;
  * @author Marc Vaudel
  */
 public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
-
-    /**
-     * Empty default constructor
-     */
-    public FMIndex() {
-    }
 
     /**
      * Semaphore for caching.
@@ -133,7 +126,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     private HashSet<String> decoyAccessions = new HashSet<>();
     /**
      * The accessions ending positions in the index, important for getSequences
-     * function
+     * function.
      */
     private HashMap<String, AccessionMetaData> accessionMetaData = new HashMap<>();
     /**
@@ -141,11 +134,11 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      */
     private double[] aaMasses = null;
     /**
-     * List of all indexes for valid amino acid masses
+     * List of all indexes for valid amino acid masses.
      */
     private int[] aaMassIndexes = null;
     /**
-     * List of all indexes for valid amino acid masses
+     * List of all indexes for valid amino acid masses.
      */
     private int numMasses = 0;
     /**
@@ -161,15 +154,15 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      */
     private boolean withVariableModifications = false;
     /**
-     * Characters that can be substituted by B
+     * Characters that can be substituted by B.
      */
     private int[] BSubstitutions = new int[]{'D', 'N'};
     /**
-     * Characters that can be substituted by J
+     * Characters that can be substituted by J.
      */
     private int[] JSubstitutions = new int[]{'I', 'L'};
     /**
-     * Characters that can be substituted by Z
+     * Characters that can be substituted by Z.
      */
     private int[] ZSubstitutions = new int[]{'E', 'Q'};
 
@@ -311,11 +304,16 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         {2, 1, 3, 0}, {2, 3, 0, 1}, {2, 3, 1, 0}, {3, 0, 1, 2}, {3, 0, 2, 1},
         {3, 1, 0, 2}, {3, 1, 2, 0}, {3, 2, 0, 1}, {3, 2, 1, 0}}};
 
-
     /**
      * Arraylist for sorted masses to index mappings.
      */
     ArrayList<MassIndexMap> massIndexMaps = null;
+
+    /**
+     * Empty default constructor.
+     */
+    public FMIndex() {
+    }
 
     /**
      * Returns the position of a value in the array or if not found the position
@@ -1156,18 +1154,18 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     }
 
     /**
-     * Add data to index
+     * Add data to index.
      *
      * @param pi the protein iterator
      * @param indexStringLength the index string length
      * @param numProteins the number of proteins
      * @param alphabet the alphabet
-     * @param fastaParameters the parameters for the fasta file parsing
+     * @param fastaParameters the parameters for the FASTA file parsing
      * @param waitingHandler the waiting handler
      * @param displayProgress if progress is to be displayed
      *
      * @throws IOException exception thrown if an error occurs while iterating
-     * the fasta file.
+     * the FASTA file.
      */
     void addDataToIndex(ProteinIterator pi, int indexStringLength, int numProteins, long[] alphabet, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress) throws IOException {
 
@@ -2717,7 +2715,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             }
 
                             if (aminoAcid != '/') {
-                                
+
                                 final int aminoAcidSearch = (borders[4] == -1) ? aminoAcid : borders[4];
                                 final double newMass = oldMass + (aminoAcid != 'X' ? aaMasses[borders[3]] : 0);
                                 double massDiff = combinationMass - newMass;
@@ -2918,7 +2916,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                 }
 
                             } else if (length > 1) {
-                                
+
                                 int lastAcid = cell.character;
                                 double massDiff = combinationMass - oldMass;
                                 ModificationMatch modificationMatchEnd = null;
@@ -3561,7 +3559,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     hasFixed = true;
 
                                     for (int i = 0; i < fmodp.size(); ++i) {
-                                        
+
                                         double massDiffDiff = massDiff - fmodpMass.get(i);
                                         double massDiffDiffAbs = Math.abs(massDiffDiff);
                                         boolean wmt = withinMassTolerance(massDiffDiffAbs, newNumX);
@@ -5173,7 +5171,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
         ArrayList<MatrixContent> cached = null;
 
-        synchronized(cacheMutex){
+        synchronized (cacheMutex) {
             String key = tagComponents[1].sequence + String.format("%.5f", tagComponents[2].mass);
             CacheElement cacheElement = cache[indexPart].get(key);
             if (cacheElement != null) {
@@ -5193,7 +5191,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         if (tagComponents.length != 3 || !tagComponents[0].isMass || tagComponents[1].isMass || !tagComponents[2].isMass) {
             return;
         }
-        synchronized(cacheMutex){
+        synchronized (cacheMutex) {
 
             ArrayList<MatrixContent> cacheContentPrimary = new ArrayList<>();
             for (MatrixContent matrixContent : cachedPrimary) {

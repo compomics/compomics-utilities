@@ -85,7 +85,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Settings"/>
+                <TitledBorder title="Background Species"/>
               </Border>
             </Property>
             <Property name="opaque" type="boolean" value="false"/>
@@ -96,15 +96,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="useMappingLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="autoUpdateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="speciesLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="useMappingCmb" pref="364" max="32767" attributes="2"/>
-                          <Component id="autoUpdateCmb" alignment="1" max="32767" attributes="2"/>
-                      </Group>
+                      <Component id="speciesCmb" min="-2" pref="358" max="-2" attributes="2"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -114,49 +108,21 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="useMappingLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="useMappingCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="speciesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="speciesCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="autoUpdateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="autoUpdateCmb" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="useMappingLabel">
+            <Component class="javax.swing.JLabel" name="speciesLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Use Mapping"/>
+                <Property name="text" type="java.lang.String" value="Species"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="useMappingCmb">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
-                    <StringItem index="0" value="Yes"/>
-                    <StringItem index="1" value="No"/>
-                  </StringArray>
-                </Property>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="autoUpdateLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Auto Update"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JComboBox" name="autoUpdateCmb">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
-                    <StringItem index="0" value="Yes"/>
-                    <StringItem index="1" value="No"/>
-                  </StringArray>
-                </Property>
-              </Properties>
+            <Component class="javax.swing.JComboBox" name="speciesCmb">
             </Component>
           </SubComponents>
         </Container>

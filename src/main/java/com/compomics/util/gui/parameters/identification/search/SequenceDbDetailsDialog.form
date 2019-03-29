@@ -121,14 +121,12 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="fileLabel" linkSize="2" min="-2" pref="75" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="fileTxt" pref="336" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="fileTxt" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="browseButton" linkSize="3" min="-2" pref="75" max="-2" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="decoyButton" linkSize="3" min="-2" pref="75" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="advancedButton" linkSize="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="sizeLabel" linkSize="2" min="-2" pref="75" max="-2" attributes="0"/>
@@ -139,11 +137,6 @@
                               <Component id="typeLabel" linkSize="2" min="-2" pref="75" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="typeJTextField" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="decoyTagLabel" linkSize="2" min="-2" pref="75" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="decoyFlagTxt" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="versionLabel" linkSize="2" min="-2" pref="75" max="-2" attributes="0"/>
@@ -179,7 +172,6 @@
                           <Component id="decoyButton" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="browseButton" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="fileLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="advancedButton" linkSize="4" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -200,11 +192,6 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="versionTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="versionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="decoyTagLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="decoyFlagTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -242,17 +229,6 @@
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="horizontalAlignment" type="int" value="2"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="decoyFlagTxt">
-              <Properties>
-                <Property name="editable" type="boolean" value="false"/>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="decoyTagLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Decoy Tag"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="versionLabel">
@@ -312,17 +288,6 @@
                 <Property name="text" type="java.lang.String" value="File"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="advancedButton">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Advanced"/>
-                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[90, 25]"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="advancedButtonActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JTextField" name="typeJTextField">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
@@ -366,7 +331,7 @@
                               <Component id="accessionsSpinner" min="-2" pref="192" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="targetDecoyTxt" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="354" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>

@@ -7,7 +7,6 @@ import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.parameters.identification.tool_specific.CometParameters;
 import com.compomics.util.parameters.identification.tool_specific.XtandemParameters;
@@ -29,7 +28,6 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
-import java.io.*;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -132,14 +130,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * The utilities user parameters.
      */
     private UtilitiesUserParameters utilitiesUserParameters = null;
-    /**
-     * The selected FASTA file.
-     */
-    private String selectedFastaFile = null;
-    /**
-     * The parameters used to parse the FASTA file.
-     */
-    private FastaParameters fastaParameters = null;
 
     /**
      * Empty default constructor
@@ -177,8 +167,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             this.searchParameters.setDigestionParameters(DigestionParameters.getDefaultParameters());
         } else {
             this.searchParameters = searchParameters;
-            this.selectedFastaFile = searchParameters.getFastaFile();
-            this.fastaParameters = searchParameters.getFastaParameters();
         }
 
         loadUserPreferences();
@@ -231,8 +219,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             this.searchParameters.setDigestionParameters(DigestionParameters.getDefaultParameters());
         } else {
             this.searchParameters = searchParameters;
-            this.selectedFastaFile = searchParameters.getFastaFile();
-            this.fastaParameters = searchParameters.getFastaParameters();
         }
 
         loadUserPreferences();
@@ -302,12 +288,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         addVariableModification.setEnabled(editable);
         removeVariableModification.setEnabled(editable);
 
-        if (!editable) {
-
-            editDatabaseDetailsButton.setText("View");
-
-        }
-
         modificationTypesSplitPane.setDividerLocation(0.5);
 
         fixedModsTable.getTableHeader().setReorderingAllowed(false);
@@ -324,7 +304,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         fragmentIonUnit.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         specificityComboBox.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
-        ((TitledBorder) dataBasePanelSettings.getBorder()).setTitle(TITLED_BORDER_HORIZONTAL_PADDING + "Database" + TITLED_BORDER_HORIZONTAL_PADDING);
         ((TitledBorder) modificationsPanel.getBorder()).setTitle(TITLED_BORDER_HORIZONTAL_PADDING + "Modifications" + TITLED_BORDER_HORIZONTAL_PADDING);
         ((TitledBorder) proteaseAndFragmentationPanel.getBorder()).setTitle(TITLED_BORDER_HORIZONTAL_PADDING + "Protease & Fragmentation" + TITLED_BORDER_HORIZONTAL_PADDING);
 
@@ -416,10 +395,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         digestionCmb = new javax.swing.JComboBox();
         specificityLabel = new javax.swing.JLabel();
         specificityComboBox = new javax.swing.JComboBox();
-        dataBasePanelSettings = new javax.swing.JPanel();
-        databaseSettingsLbl = new javax.swing.JLabel();
-        databaseSettingsTxt = new javax.swing.JTextField();
-        editDatabaseDetailsButton = new javax.swing.JButton();
         modificationsLayeredPane = new javax.swing.JLayeredPane();
         modificationsPanel = new javax.swing.JPanel();
         modificationTypesSplitPane = new javax.swing.JSplitPane();
@@ -687,44 +662,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                             .addComponent(fragmentIon1Cmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(fragmentIon2Cmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(fragmentIonType1Lbl))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        dataBasePanelSettings.setBorder(javax.swing.BorderFactory.createTitledBorder("Database"));
-        dataBasePanelSettings.setOpaque(false);
-
-        databaseSettingsLbl.setText("Database (FASTA)");
-
-        databaseSettingsTxt.setEditable(false);
-
-        editDatabaseDetailsButton.setText("Edit");
-        editDatabaseDetailsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editDatabaseDetailsButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout dataBasePanelSettingsLayout = new javax.swing.GroupLayout(dataBasePanelSettings);
-        dataBasePanelSettings.setLayout(dataBasePanelSettingsLayout);
-        dataBasePanelSettingsLayout.setHorizontalGroup(
-            dataBasePanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(dataBasePanelSettingsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(databaseSettingsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(databaseSettingsTxt)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editDatabaseDetailsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        dataBasePanelSettingsLayout.setVerticalGroup(
-            dataBasePanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(dataBasePanelSettingsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(dataBasePanelSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(databaseSettingsLbl)
-                    .addComponent(editDatabaseDetailsButton)
-                    .addComponent(databaseSettingsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1088,7 +1025,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(modificationsLayeredPane)
-                    .addComponent(dataBasePanelSettings, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(proteaseAndFragmentationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
@@ -1106,9 +1042,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(dataBasePanelSettings, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(modificationsLayeredPane, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
+                .addComponent(modificationsLayeredPane, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(proteaseAndFragmentationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1132,37 +1066,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Opens a file chooser where the user can select the database file.
-     *
-     * @param evt
-     */
-    private void editDatabaseDetailsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDatabaseDetailsButtonActionPerformed
-
-        SequenceDbDetailsDialog sequenceDbDetailsDialog = new SequenceDbDetailsDialog(this, parentFrame, selectedFastaFile, fastaParameters, lastSelectedFolder, editable, normalIcon, waitingIcon);
-
-        loadUserPreferences();
-
-        boolean success = sequenceDbDetailsDialog.selectDB(true);
-
-        if (success) {
-
-            sequenceDbDetailsDialog.setVisible(true);
-
-            if (!sequenceDbDetailsDialog.isCanceled()) {
-
-                selectedFastaFile = sequenceDbDetailsDialog.getSelectedFastaFile();
-                fastaParameters = sequenceDbDetailsDialog.getFastaParameters();
-
-                databaseSettingsTxt.setText(selectedFastaFile);
-
-            }
-
-        }
-
-        validateParametersInput(false);
-    }//GEN-LAST:event_editDatabaseDetailsButtonActionPerformed
 
     /**
      * Add fixed modifications.
@@ -1961,12 +1864,8 @@ public class SearchParametersDialog extends javax.swing.JDialog {
     private javax.swing.JPanel availableModsPanel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
-    private javax.swing.JPanel dataBasePanelSettings;
-    private javax.swing.JLabel databaseSettingsLbl;
-    private javax.swing.JTextField databaseSettingsTxt;
     private javax.swing.JComboBox digestionCmb;
     private javax.swing.JLabel digestionLabel;
-    private javax.swing.JButton editDatabaseDetailsButton;
     private javax.swing.JLabel enzymeLabel;
     private javax.swing.JComboBox enzymesCmb;
     private javax.swing.JLabel fixedModificationsLabel;
@@ -2043,12 +1942,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * values for (some of) the GUI components from it.
      */
     private void setScreenProps() {
-
-        if (selectedFastaFile != null) {
-
-            databaseSettingsTxt.setText(selectedFastaFile);
-
-        }
 
         ArrayList<String> missingPtms = new ArrayList<>();
         ModificationParameters modificationProfile = searchParameters.getModificationParameters();
@@ -2312,43 +2205,11 @@ public class SearchParametersDialog extends javax.swing.JDialog {
     public boolean validateParametersInput(boolean showMessage) {
 
         boolean valid = true;
-        databaseSettingsLbl.setForeground(Color.BLACK);
         enzymeLabel.setForeground(Color.BLACK);
         maxMissedCleavagesLabel.setForeground(Color.BLACK);
 
-        databaseSettingsLbl.setToolTipText(null);
         enzymeLabel.setToolTipText(null);
         maxMissedCleavagesLabel.setToolTipText(null);
-
-        if (databaseSettingsTxt.getText() == null || databaseSettingsTxt.getText().trim().equals("")) {
-
-            if (showMessage && valid) {
-
-                JOptionPane.showMessageDialog(this, "You need to specify a search database.", "Search Database Not Found", JOptionPane.WARNING_MESSAGE);
-            }
-
-            databaseSettingsLbl.setForeground(Color.RED);
-            databaseSettingsLbl.setToolTipText("Please select a valid '.fasta' or '.fas' database file");
-            valid = false;
-
-        } else {
-
-            File test = new File(databaseSettingsTxt.getText().trim());
-
-            if (!test.exists()) {
-
-                if (showMessage && valid) {
-
-                    JOptionPane.showMessageDialog(this, "The database file could not be found.", "Search Database Not Found", JOptionPane.WARNING_MESSAGE);
-
-                }
-
-                databaseSettingsLbl.setForeground(Color.RED);
-                databaseSettingsLbl.setToolTipText("Database file could not be found!");
-                valid = false;
-
-            }
-        }
 
         // validateprecursor mass tolerances, fragment mass tolerances and precursor charges
         valid = GuiUtilities.validateDoubleInput(this, precursorIonLbl, precursorIonAccuracyTxt, "precursor mass tolerance", "Precursor Mass Tolerance Error", true, showMessage, valid);
@@ -2457,13 +2318,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
     public SearchParameters getSearchParameters() {
 
         SearchParameters tempSearchParameters = new SearchParameters(searchParameters);
-
-        String dbPath = databaseSettingsTxt.getText().trim();
-        if (!dbPath.equals("")) {
-            String fastaFile = databaseSettingsTxt.getText().trim();
-            tempSearchParameters.setFastaFile(fastaFile);
-        }
-        tempSearchParameters.setFastaParameters(fastaParameters);
 
         DigestionParameters digestionPreferences = new DigestionParameters();
 

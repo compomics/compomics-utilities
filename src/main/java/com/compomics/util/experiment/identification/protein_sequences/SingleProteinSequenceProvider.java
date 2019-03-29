@@ -14,16 +14,16 @@ import java.util.HashSet;
 public class SingleProteinSequenceProvider implements SequenceProvider {
 
     /**
-     * Empty default constructor
+     * The protein.
+     */
+    private final Protein protein;
+    
+    /**
+     * Empty default constructor.
      */
     public SingleProteinSequenceProvider() {
         protein = null;
     }
-    
-    /**
-     * The protein.
-     */
-    private final Protein protein;
     
     /**
      * Constructor.
@@ -58,8 +58,5 @@ public class SingleProteinSequenceProvider implements SequenceProvider {
     public String getHeader(String proteinAccession) {
         throw new UnsupportedOperationException("Not available for this sequence provider.");
     }
-
-    
-    
-    
+ 
 }

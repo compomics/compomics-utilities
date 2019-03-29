@@ -16,6 +16,7 @@ import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
+import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import java.io.File;
 import java.io.IOException;
@@ -96,6 +97,10 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * The fraction settings.
      */
     private FractionParameters fractionParameters;
+    /**
+     * The FASTA processing parameters.
+     */
+    private FastaParameters fastaParameters;
 
     /**
      * Creates empty identification parameters.
@@ -133,6 +138,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @param proteinInferenceParameters the protein inference parameters
      * @param idValidationParameters the matches validation parameters
      * @param fractionParameters the fraction parameters
+     * @param fastaParameters the FASTA parameters
      */
     public IdentificationParameters(String name, String description,
             SearchParameters searchParameters, AnnotationParameters annotationParameters,
@@ -140,7 +146,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
             GeneParameters geneParameters, PsmScoringParameters psmScoringParameters,
             PeptideAssumptionFilter peptideAssumptionFilter, ModificationLocalizationParameters ModificationLocalizationParameters,
             ProteinInferenceParameters proteinInferenceParameters, IdMatchValidationParameters idValidationParameters,
-            FractionParameters fractionParameters) {
+            FractionParameters fractionParameters, FastaParameters fastaParameters) {
 
         this.name = name;
         this.description = description;
@@ -155,6 +161,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
         this.proteinInferenceParameters = proteinInferenceParameters;
         this.idValidationParameters = idValidationParameters;
         this.fractionParameters = fractionParameters;
+        this.fastaParameters = fastaParameters;
     }
 
     /**
@@ -460,6 +467,30 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     }
 
     /**
+     * Returns the FASTA processing parameters.
+     *
+     * @return the FASTA processing parameters
+     */
+    public FastaParameters getFastaParameters() {
+        readDBMode();
+
+        return fastaParameters;
+
+    }
+
+    /**
+     * Sets the ASTA processing parameters.
+     *
+     * @param fastaParameters the FASTA processing parameters
+     */
+    public void setFastaParameters(FastaParameters fastaParameters) {
+        writeDBMode();
+
+        this.fastaParameters = fastaParameters;
+
+    }
+
+    /**
      * Loads the identification parameters from a file. If the given file is a
      * search parameters file, default identification parameters are inferred.
      *
@@ -544,7 +575,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
         DummyParameters dummyParameters = (DummyParameters) object;
 
         return dummyParameters.version != null && dummyParameters.version.equals(IdentificationParameters.CURRENT_VERSION);
-        
+
     }
 
     /**
@@ -690,7 +721,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
         if (geneParameters == null) {
 
             geneParameters = new GeneParameters();
-            geneParameters.setParametersFromSearchParameters(searchParameters);
+            //geneParameters.setParametersFromSearchParameters(searchParameters);
 
         }
 
@@ -712,6 +743,12 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
 
         }
 
+        if (fastaParameters == null) {
+
+            fastaParameters = new FastaParameters();
+
+        }
+
         if (searchParameters != null) {
 
             setDescription(searchParameters.getShortDescription(), true);
@@ -729,6 +766,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
 
     @Override
     public Type getType() {
+
         readDBMode();
 
         if (marshallableParameterType == null) {
@@ -751,6 +789,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * settings
      */
     public boolean equals(IdentificationParameters otherIdentificationParameters) {
+
         readDBMode();
 
         if (otherIdentificationParameters == null) {
@@ -760,7 +799,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
         if (!searchParameters.equals(otherIdentificationParameters.getSearchParameters())) {
             return false;
         }
-        
+
         if (!annotationParameters.isSameAs(otherIdentificationParameters.getAnnotationParameters())) {
             return false;
         }
@@ -796,8 +835,12 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
         if (!fractionParameters.isSameAs(otherIdentificationParameters.getFractionParameters())) {
             return false;
         }
-        
+
         if (!idValidationParameters.equals(otherIdentificationParameters.getIdValidationParameters())) {
+            return false;
+        }
+
+        if (!fastaParameters.isSameAs(otherIdentificationParameters.getFastaParameters())) {
             return false;
         }
 

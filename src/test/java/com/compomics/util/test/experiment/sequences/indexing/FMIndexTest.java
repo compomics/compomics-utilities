@@ -85,10 +85,8 @@ public class FMIndexTest extends TestCase {
         
         File fastaFile = new File("src/test/resources/experiment/terminiSequence.fasta");
         FastaParameters fastaParameters = new FastaParameters();
-        fastaParameters.setDefaultAttributes(fastaFile);
         fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
         
-        PeptideProteinMapping peptideProteinMapping;
         AminoAcidSequence aminoAcidPattern;
         double nTermGap;
         double cTermGap;
@@ -101,14 +99,10 @@ public class FMIndexTest extends TestCase {
         //ModificationMatch modificationMatch;
         
         SearchParameters searchParameters = new SearchParameters();
-        
-        
-        
-        
+
         searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
         searchParameters.setFragmentIonAccuracy(0.02);
-        
-        
+
         aminoAcidPattern = new AminoAcidSequence("AIIG");
         nTermGap = 2626.29;
         cTermGap = 470.224;
@@ -144,7 +138,6 @@ public class FMIndexTest extends TestCase {
         
         File fastaFile = new File("src/test/resources/experiment/testSequences.fasta");
         FastaParameters fastaParameters = new FastaParameters();
-        fastaParameters.setDefaultAttributes(fastaFile);
         fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
         
         PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
@@ -173,7 +166,6 @@ public class FMIndexTest extends TestCase {
         
         File fastaFile = new File("src/test/resources/experiment/testSequences.fasta");
         FastaParameters fastaParameters = new FastaParameters();
-        fastaParameters.setDefaultAttributes(fastaFile);
         fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
         
         PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
@@ -260,7 +252,6 @@ public class FMIndexTest extends TestCase {
         
         File fastaFile = new File("src/test/resources/experiment/testSequences.fasta");
         FastaParameters fastaParameters = new FastaParameters();
-        fastaParameters.setDefaultAttributes(fastaFile);
         fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
         
         PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
@@ -471,7 +462,6 @@ public class FMIndexTest extends TestCase {
         
         File fastaFile = new File("src/test/resources/experiment/testSequences.fasta");
         FastaParameters fastaParameters = new FastaParameters();
-        fastaParameters.setDefaultAttributes(fastaFile);
         fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
         
         PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
@@ -698,7 +688,6 @@ public class FMIndexTest extends TestCase {
         
         File fastaFile = new File("src/test/resources/experiment/testSequences_1.fasta");
         FastaParameters fastaParameters = new FastaParameters();
-        fastaParameters.setDefaultAttributes(fastaFile);
         fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
         
         PeptideProteinMapping peptideProteinMapping;
@@ -2029,7 +2018,6 @@ public class FMIndexTest extends TestCase {
         
         File fastaFile = new File("src/test/resources/experiment/testSequences_1.fasta");
         FastaParameters fastaParameters = new FastaParameters();
-        fastaParameters.setDefaultAttributes(fastaFile);
         fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
 
         AminoAcidSequence aminoAcidPattern;
@@ -2638,7 +2626,6 @@ public class FMIndexTest extends TestCase {
         
         File fastaFile = new File("src/test/resources/experiment/testSequences_1.fasta");
         FastaParameters fastaParameters = new FastaParameters();
-        fastaParameters.setDefaultAttributes(fastaFile);
         fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
 
         AminoAcidSequence aminoAcidPattern;
@@ -2826,7 +2813,6 @@ public class FMIndexTest extends TestCase {
         
         File fastaFile = new File("src/test/resources/experiment/testSequences_1.fasta");
         FastaParameters fastaParameters = new FastaParameters();
-        fastaParameters.setDefaultAttributes(fastaFile);
         fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
 
         AminoAcidSequence aminoAcidPattern;

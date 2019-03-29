@@ -141,10 +141,6 @@ public class UtilitiesUserParameters {
      */
     private boolean sortPsmsOnRt = false;
     /**
-     * The tag added after adding decoy sequences to a FASTA file.
-     */
-    private String targetDecoyFileNameTag = "_concatenated_target_decoy";
-    /**
      * If true, the selected spectra will be checked for peak picking.
      */
     private boolean checkPeakPicking = true;
@@ -788,24 +784,6 @@ public class UtilitiesUserParameters {
      */
     public void setSortPsmsOnRt(Boolean sortPsmsOnRt) {
         this.sortPsmsOnRt = sortPsmsOnRt;
-    }
-
-    /**
-     * Returns the target-decoy file name suffix.
-     *
-     * @return the targetDecoyFileNameSuffix
-     */
-    public String getTargetDecoyFileNameSuffix() {
-        return targetDecoyFileNameTag;
-    }
-
-    /**
-     * Set the target-decoy file name suffix.
-     *
-     * @param targetDecoyFileNameSuffix the targetDecoyFileNameSuffix to set
-     */
-    public void setTargetDecoyFileNameSuffix(String targetDecoyFileNameSuffix) {
-        this.targetDecoyFileNameTag = targetDecoyFileNameSuffix;
     }
 
     /**

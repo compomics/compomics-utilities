@@ -1,61 +1,78 @@
 package com.compomics.util.experiment.io.biology.protein;
 
-import com.compomics.util.Util;
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.io.biology.protein.iterators.HeaderIterator;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * The parameters used to parse a FASTA file.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
-public class FastaParameters {
+public class FastaParameters extends DbObject {
 
     /**
-     * Empty default constructor
+     * The version UID for serialization/deserialization compatibility.
+     */
+    //static final long serialVersionUID = -7453836034514062470L;
+    /**
+     * The decoy flags used to infer the FASTA parameters.
+     */
+    public static final String[] DECOY_FLAGS = {"decoy", "random", "reversed", "rev"};
+    /**
+     * The decoy separators used to infer the FASTA parameters.
+     */
+    public static final char[] DECOY_SEPARATORS = {'-', '.', '_'};
+    /**
+     * Boolean indicating whether the FASTA file should be processed as
+     * target-decoy or only target.
+     */
+    private boolean targetDecoy = true;
+    /**
+     * The flag for decoy proteins in the accession.
+     */
+    private String decoyFlag = "-REVERSED";
+    /**
+     * Boolean indicating whether the decoy flag is a suffix or a prefix.
+     */
+    private boolean decoySuffix = true;
+    /**
+     * The tag added after adding decoy sequences to a FASTA file.
+     */
+    private String targetDecoyFileNameTag = "_concatenated_target_decoy";
+
+    /**
+     * Empty default constructor.
      */
     public FastaParameters() {
     }
 
     /**
-     * The version UID for serialization/deserialization compatibility.
+     * Returns a boolean indicating whether the FASTA file should be processed
+     * as target-decoy or only target.
+     *
+     * @return a boolean indicating whether the FASTA file should be processed
+     * as target-decoy or only target
      */
-    static final long serialVersionUID = -7453836034514062470L;
+    public boolean isTargetDecoy() {
+        readDBMode();
+        return targetDecoy;
+    }
+
     /**
-     * The decoy flags used to infer the FASTA parameters.
+     * Sets whether the FASTA file should be processed as target-decoy or only
+     * target.
+     *
+     * @param targetDecoy whether the FASTA file should be processed as
+     * target-decoy or only target
      */
-    public static final String[] decoyFlags = {"decoy", "random", "reversed", "rev"};
-    /**
-     * The decoy separators used to infer the FASTA parameters.
-     */
-    public static final char[] separators = {'-', '.', '_'};
-    /**
-     * The name of the database.
-     */
-    private String name;
-    /**
-     * Description of the database.
-     */
-    private String description;
-    /**
-     * The version of the database.
-     */
-    private String version;
-    /**
-     * Indicates whether the database is a concatenated target/decoy.
-     */
-    private boolean targetDecoy;
-    /**
-     * The flag for decoy proteins in the accession.
-     */
-    private String decoyFlag;
-    /**
-     * Boolean indicating whether the decoy flag is a suffix or a prefix.
-     */
-    private boolean decoySuffix;
+    public void setTargetDecoy(boolean targetDecoy) {
+        writeDBMode();
+        this.targetDecoy = targetDecoy;
+    }
 
     /**
      * Returns the decoy flag.
@@ -63,6 +80,7 @@ public class FastaParameters {
      * @return the decoy flag
      */
     public String getDecoyFlag() {
+        readDBMode();
         return decoyFlag;
     }
 
@@ -72,6 +90,7 @@ public class FastaParameters {
      * @param decoyFlag the decoy flag
      */
     public void setDecoyFlag(String decoyFlag) {
+        writeDBMode();
         this.decoyFlag = decoyFlag;
     }
 
@@ -83,6 +102,7 @@ public class FastaParameters {
      * prefix
      */
     public boolean isDecoySuffix() {
+        readDBMode();
         return decoySuffix;
     }
 
@@ -92,82 +112,28 @@ public class FastaParameters {
      * @param decoySuffix whether the decoy flag is a suffix or a prefix
      */
     public void setDecoySuffix(boolean decoySuffix) {
+        writeDBMode();
         this.decoySuffix = decoySuffix;
     }
 
     /**
-     * Returns the name of the database.
+     * Returns the target-decoy file name suffix.
      *
-     * @return the name for the database
+     * @return the targetDecoyFileNameSuffix
      */
-    public String getName() {
-        return name;
+    public String getTargetDecoyFileNameSuffix() {
+        readDBMode();
+        return targetDecoyFileNameTag;
     }
 
     /**
-     * Sets a new name for the database.
+     * Set the target-decoy file name suffix.
      *
-     * @param name a new name for the database
+     * @param targetDecoyFileNameSuffix the targetDecoyFileNameSuffix to set
      */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Returns the database version.
-     *
-     * @return the database version
-     */
-    public String getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets the database version.
-     *
-     * @param version the database version
-     */
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    /**
-     * Returns the description for this database.
-     *
-     * @return the description for this database
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets the description for this database.
-     *
-     * @param description the description for this database
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Returns a boolean indicating whether the database is concatenated target
-     * decoy.
-     *
-     * @return a boolean indicating whether the database is concatenated target
-     * decoy
-     */
-    public boolean isTargetDecoy() {
-        return targetDecoy;
-    }
-
-    /**
-     * Sets whether the database is concatenated target decoy.
-     *
-     * @param targetDecoy a boolean indicating whether the database is
-     * concatenated target decoy
-     */
-    public void setTargetDecoy(boolean targetDecoy) {
-        this.targetDecoy = targetDecoy;
+    public void setTargetDecoyFileNameSuffix(String targetDecoyFileNameSuffix) {
+        writeDBMode();
+        this.targetDecoyFileNameTag = targetDecoyFileNameSuffix;
     }
 
     /**
@@ -181,32 +147,14 @@ public class FastaParameters {
      */
     public boolean isSameAs(FastaParameters fastaParameters) {
 
-        if (name != null && fastaParameters.getName() == null
-                || name == null && fastaParameters.getName() != null
-                || name != null && fastaParameters.getName() != null && !name.equals(fastaParameters.getName())) {
+        readDBMode();
 
-            return false;
-
-        }
-        if (description != null && fastaParameters.getDescription() == null
-                || description == null && fastaParameters.getDescription() != null
-                || description != null && fastaParameters.getDescription() != null && !description.equals(fastaParameters.getDescription())) {
-
-            return false;
-
-        }
-        if (version != null && fastaParameters.getVersion() == null
-                || version == null && fastaParameters.getVersion() != null
-                || version != null && fastaParameters.getVersion() != null && !version.equals(fastaParameters.getVersion())) {
-
-            return false;
-
-        }
         if (targetDecoy != fastaParameters.isTargetDecoy()) {
 
             return false;
 
         }
+
         if (decoyFlag != null && fastaParameters.getDecoyFlag() == null
                 || decoyFlag == null && fastaParameters.getDecoyFlag() != null
                 || decoyFlag != null && fastaParameters.getDecoyFlag() != null && !decoyFlag.equals(fastaParameters.getDecoyFlag())) {
@@ -214,26 +162,22 @@ public class FastaParameters {
             return false;
 
         }
+
         if (decoySuffix != fastaParameters.isDecoySuffix()) {
 
             return false;
 
         }
 
+        if (targetDecoyFileNameTag != null && fastaParameters.getTargetDecoyFileNameSuffix() == null
+                || targetDecoyFileNameTag == null && fastaParameters.getTargetDecoyFileNameSuffix() != null
+                || targetDecoyFileNameTag != null && fastaParameters.getTargetDecoyFileNameSuffix() != null && !targetDecoyFileNameTag.equals(fastaParameters.getTargetDecoyFileNameSuffix())) {
+
+            return false;
+
+        }
+
         return true;
-    }
-
-    /**
-     * Sets default name and version from the given FASTA file.
-     *
-     * @param fastaFile the FASTA file
-     */
-    public void setDefaultAttributes(File fastaFile) {
-
-        setName(Util.removeExtension(fastaFile.getName()));
-        setDescription(fastaFile.getAbsolutePath());
-        setVersion((new Date(fastaFile.lastModified())).toString());
-
     }
 
     /**
@@ -268,8 +212,6 @@ public class FastaParameters {
         FastaParameters fastaParameters = new FastaParameters();
         File fastaFile = new File(fastaFilePath);
 
-        fastaParameters.setDefaultAttributes(fastaFile);
-
         HeaderIterator headerIterator = new HeaderIterator(fastaFile);
         String fastaHeader;
         int i = 0, offset = 0, offSetIncrease = 100;
@@ -282,7 +224,7 @@ public class FastaParameters {
                 String accession = header.getAccessionOrRest();
                 String accessionLowerCase = accession.toLowerCase();
 
-                for (String decoyFlagLowerCase : decoyFlags) {
+                for (String decoyFlagLowerCase : DECOY_FLAGS) {
 
                     if (accession.length() > decoyFlagLowerCase.length()) {
 
@@ -292,13 +234,12 @@ public class FastaParameters {
 
                             String decoyFlag = accession.substring(0, decoyFlagLowerCase.length());
 
-                            for (char sep : separators) {
+                            for (char sep : DECOY_SEPARATORS) {
 
                                 if (accession.charAt(decoyFlagLowerCase.length()) == sep) {
 
                                     decoyFlag += sep;
 
-                                    fastaParameters.setTargetDecoy(true);
                                     fastaParameters.setDecoySuffix(false);
                                     fastaParameters.setDecoyFlag(decoyFlag);
 
@@ -310,7 +251,6 @@ public class FastaParameters {
 
                             }
 
-                            fastaParameters.setTargetDecoy(true);
                             fastaParameters.setDecoySuffix(false);
                             fastaParameters.setDecoyFlag(decoyFlag);
 
@@ -327,13 +267,12 @@ public class FastaParameters {
 
                             String decoyFlag = accession.substring(startIndex);
 
-                            for (char sep : separators) {
+                            for (char sep : DECOY_SEPARATORS) {
 
                                 if (accession.charAt(startIndex - 1) == sep) {
 
                                     decoyFlag = sep + decoyFlag;
 
-                                    fastaParameters.setTargetDecoy(true);
                                     fastaParameters.setDecoySuffix(true);
                                     fastaParameters.setDecoyFlag(decoyFlag);
 
@@ -345,7 +284,6 @@ public class FastaParameters {
 
                             }
 
-                            fastaParameters.setTargetDecoy(true);
                             fastaParameters.setDecoySuffix(true);
                             fastaParameters.setDecoyFlag(decoyFlag);
 
@@ -378,28 +316,10 @@ public class FastaParameters {
             }
         }
 
-        fastaParameters.setTargetDecoy(false);
-
         return fastaParameters;
     }
 
     public boolean equals(FastaParameters fastaParameters) {
-
-        if (!name.equals(fastaParameters.getName())) {
-            return false;
-        }
-
-        if (!description.equals(fastaParameters.getDescription())) {
-            return false;
-        }
-
-        if (!version.equals(fastaParameters.getVersion())) {
-            return false;
-        }
-
-        if (targetDecoy != fastaParameters.isTargetDecoy()) {
-            return false;
-        }
 
         if (!decoyFlag.equals(fastaParameters.getDecoyFlag())) {
             return false;
@@ -409,7 +329,26 @@ public class FastaParameters {
             return false;
         }
 
+        if (!targetDecoyFileNameTag.equals(fastaParameters.getTargetDecoyFileNameSuffix())) {
+            return false;
+        }
+
         return true;
 
+    }
+
+    /**
+     * Returns a short description of the parameters.
+     *
+     * @return a short description of the parameters
+     */
+    public String getShortDescription() {
+        readDBMode();
+
+        String newLine = System.getProperty("line.separator");
+        StringBuilder output = new StringBuilder();
+        output.append("Decoy File Tag: ").append(decoySuffix).append(", ").append("Decoy Tag: ").append(decoyFlag).append(".").append(newLine);
+
+        return output.toString();
     }
 }

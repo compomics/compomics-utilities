@@ -34,7 +34,6 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // Search Parameters
     //////////////////////////////////
-    DB("db", "The sequence database to use for searching spectra in FASTA format.", false, true),
     PREC_PPM("prec_ppm", "Precursor ion tolerance unit: ppm (1) or Da (0), default is '1'.", false, true),
     FRAG_PPM("frag_ppm", "Fragment ion tolerance unit: ppm (1) or Da (0), default is '0'.", false, true),
     PREC_TOL("prec_tol", "Precursor ion mass tolerance, default is '10'.", false, true),
@@ -420,7 +419,6 @@ public enum IdentificationParametersCLIParams {
         String output = "";
 
         output += "\n\nSearch Parameters:\n\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DB.id) + " " + IdentificationParametersCLIParams.DB.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PREC_TOL.id) + " " + IdentificationParametersCLIParams.PREC_TOL.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PREC_PPM.id) + " " + IdentificationParametersCLIParams.PREC_PPM.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.FRAG_TOL.id) + " " + IdentificationParametersCLIParams.FRAG_TOL.description + "\n";

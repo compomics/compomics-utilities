@@ -1,24 +1,30 @@
 package com.compomics.util.gui.parameters.identification.advanced;
 
-import com.compomics.util.parameters.identification.search.SearchParameters;
+import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
+import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.parameters.identification.advanced.GeneParameters;
 import java.awt.Toolkit;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.Vector;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 
 /**
- * Dialog for editing the Gene Mapping Preferences.
+ * Dialog for editing the background species.
  *
  * @author Harald Barsnes
  */
-public class GeneParametersDialog extends javax.swing.JDialog {
+public class BackgroundSpeciesDialog extends javax.swing.JDialog {
 
     /**
      * Empty default constructor
      */
-    public GeneParametersDialog() {
+    public BackgroundSpeciesDialog() {
     }
 
     /**
@@ -30,28 +36,34 @@ public class GeneParametersDialog extends javax.swing.JDialog {
      */
     private boolean canceled = false;
     /**
-     * Boolean indicating whether the settings can be edited by the user.
-     */
-    private boolean editable;
-    /**
      * The gene preferences.
      */
     private GeneParameters genePreferences;
+    /**
+     * The search parameters.
+     */
+    private FastaSummary fastaSummary;
+    /**
+     * The species factory.
+     */
+    private SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
+    /**
+     * A map from the species names used in the drop down menu to the taxon.
+     */
+    private HashMap<String, Integer> speciesMap;
 
     /**
      * Creates a new GenePreferencesDialog with a frame as owner.
      *
      * @param parentFrame the parent frame
      * @param genePreferences the gene preferences
-     * @param searchParameters the search parameters
-     * @param editable boolean indicating whether the settings can be edited by
-     * the user
+     * @param fastaSummary the FASTA summary
      */
-    public GeneParametersDialog(JFrame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, boolean editable) {
+    public BackgroundSpeciesDialog(JFrame parentFrame, GeneParameters genePreferences, FastaSummary fastaSummary) {
         super(parentFrame, true);
         this.parentFrame = parentFrame;
-        this.editable = editable;
         this.genePreferences = genePreferences;
+        this.fastaSummary = fastaSummary;
         initComponents();
         setUpGui();
         setLocationRelativeTo(parentFrame);
@@ -64,15 +76,13 @@ public class GeneParametersDialog extends javax.swing.JDialog {
      * @param owner the dialog owner
      * @param parentFrame a parent frame
      * @param genePreferences the gene preferences
-     * @param searchParameters the search parameters
-     * @param editable boolean indicating whether the settings can be edited by
-     * the user
+     * @param fastaSummary the FASTA summary
      */
-    public GeneParametersDialog(JDialog owner, java.awt.Frame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, boolean editable) {
+    public BackgroundSpeciesDialog(JDialog owner, java.awt.Frame parentFrame, GeneParameters genePreferences, FastaSummary fastaSummary) {
         super(owner, true);
         this.parentFrame = parentFrame;
-        this.editable = editable;
         this.genePreferences = genePreferences;
+        this.fastaSummary = fastaSummary;
         initComponents();
         setUpGui();
         setLocationRelativeTo(owner);
@@ -84,24 +94,66 @@ public class GeneParametersDialog extends javax.swing.JDialog {
      */
     private void setUpGui() {
 
-        useMappingCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        autoUpdateCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        useMappingCmb.setEnabled(editable);
-        autoUpdateCmb.setEnabled(editable);
+        speciesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
-        // set if the gene mappings are to be used
-        if (genePreferences.getUseGeneMapping()) {
-            useMappingCmb.setSelectedIndex(0);
-        } else {
-            useMappingCmb.setSelectedIndex(1);
+        // set the species
+        Vector availableSpecies = new Vector();
+        speciesMap = new HashMap<>();
+
+        int selectedIndex = 0;
+
+        try {
+
+            TreeMap<String, Integer> speciesOccurrence = fastaSummary.speciesOccurrence;
+
+            // Select the background species based on occurrence in the factory
+            for (Entry<String, Integer> entry : speciesOccurrence.entrySet()) {
+
+                String uniprotTaxonomy = entry.getKey();
+
+                if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
+
+                    Integer occurrence = entry.getValue();
+
+                    if (occurrence != null) {
+
+                        try {
+
+                            Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
+
+                            if (taxon != null) {
+
+                                if (genePreferences.getBackgroundSpecies() != null
+                                        && genePreferences.getBackgroundSpecies().intValue() == taxon) {
+
+                                    selectedIndex = availableSpecies.size();
+
+                                }
+
+                                String tempSpecies = speciesFactory.getName(taxon) + " (" + occurrence + ")";
+                                availableSpecies.add(tempSpecies);
+                                speciesMap.put(tempSpecies, taxon);
+
+                            }
+
+                        } catch (Exception e) {
+                            // taxon not available, ignore
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Not able to read the species, ignore
+            e.printStackTrace();
         }
 
-        // set if the gene mappings are to be auto updated
-        if (genePreferences.getAutoUpdate()) {
-            autoUpdateCmb.setSelectedIndex(0);
-        } else {
-            autoUpdateCmb.setSelectedIndex(1);
+        speciesCmb.setModel(new DefaultComboBoxModel(availableSpecies));
+        
+        if (!availableSpecies.isEmpty()) {
+            speciesCmb.setSelectedIndex(selectedIndex);
         }
+
     }
 
     /**
@@ -110,10 +162,6 @@ public class GeneParametersDialog extends javax.swing.JDialog {
      * @return the gene preferences
      */
     public GeneParameters getGeneParameters() {
-
-        genePreferences.setUseGeneMapping(useMappingCmb.getSelectedIndex() == 0);
-        genePreferences.setAutoUpdate(autoUpdateCmb.getSelectedIndex() == 0);
-
         return genePreferences;
     }
 
@@ -137,10 +185,8 @@ public class GeneParametersDialog extends javax.swing.JDialog {
 
         backgroundPanel = new javax.swing.JPanel();
         mappingPanel = new javax.swing.JPanel();
-        useMappingLabel = new javax.swing.JLabel();
-        useMappingCmb = new javax.swing.JComboBox();
-        autoUpdateLabel = new javax.swing.JLabel();
-        autoUpdateCmb = new javax.swing.JComboBox();
+        speciesLabel = new javax.swing.JLabel();
+        speciesCmb = new javax.swing.JComboBox();
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         helpJButton = new javax.swing.JButton();
@@ -155,16 +201,10 @@ public class GeneParametersDialog extends javax.swing.JDialog {
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        mappingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings"));
+        mappingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Background Species"));
         mappingPanel.setOpaque(false);
 
-        useMappingLabel.setText("Use Mapping");
-
-        useMappingCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-
-        autoUpdateLabel.setText("Auto Update");
-
-        autoUpdateCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        speciesLabel.setText("Species");
 
         javax.swing.GroupLayout mappingPanelLayout = new javax.swing.GroupLayout(mappingPanel);
         mappingPanel.setLayout(mappingPanelLayout);
@@ -172,13 +212,9 @@ public class GeneParametersDialog extends javax.swing.JDialog {
             mappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mappingPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(useMappingLabel)
-                    .addComponent(autoUpdateLabel))
+                .addComponent(speciesLabel)
                 .addGap(18, 18, 18)
-                .addGroup(mappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(useMappingCmb, 0, 364, Short.MAX_VALUE)
-                    .addComponent(autoUpdateCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(speciesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         mappingPanelLayout.setVerticalGroup(
@@ -186,13 +222,9 @@ public class GeneParametersDialog extends javax.swing.JDialog {
             .addGroup(mappingPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(mappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(useMappingLabel)
-                    .addComponent(useMappingCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(autoUpdateLabel)
-                    .addComponent(autoUpdateCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(speciesLabel)
+                    .addComponent(speciesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         okButton.setText("OK");
@@ -284,6 +316,9 @@ public class GeneParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        if (speciesCmb.getSelectedIndex() != -1) {
+            genePreferences.setBackgroundSpecies(speciesMap.get((String) speciesCmb.getSelectedItem()));
+        }    
         dispose();
         setVisible(false);
     }//GEN-LAST:event_okButtonActionPerformed
@@ -340,14 +375,12 @@ public class GeneParametersDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_helpJButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox autoUpdateCmb;
-    private javax.swing.JLabel autoUpdateLabel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton helpJButton;
     private javax.swing.JPanel mappingPanel;
     private javax.swing.JButton okButton;
-    private javax.swing.JComboBox useMappingCmb;
-    private javax.swing.JLabel useMappingLabel;
+    private javax.swing.JComboBox speciesCmb;
+    private javax.swing.JLabel speciesLabel;
     // End of variables declaration//GEN-END:variables
 }

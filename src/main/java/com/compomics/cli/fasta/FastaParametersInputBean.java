@@ -3,6 +3,7 @@ package com.compomics.cli.fasta;
 import com.compomics.software.cli.CommandParameter;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.io.biology.protein.FastaParameters;
+import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -63,53 +64,12 @@ public class FastaParametersInputBean {
 
         FastaParameters tempFastaParameters = new FastaParameters();
 
-        if (aLine.hasOption(FastaParametersCLIParams.NAME.id)) {
-
-            String arg = aLine.getOptionValue(FastaParametersCLIParams.NAME.id);
-            tempFastaParameters.setName(arg);
-
-        } else {
-
-            String fileName = Util.removeExtension(fastaFile.getName());
-            tempFastaParameters.setName(fileName);
-
-        }
-
-        if (aLine.hasOption(FastaParametersCLIParams.DESCRIPTION.id)) {
-
-            String arg = aLine.getOptionValue(FastaParametersCLIParams.DESCRIPTION.id);
-            tempFastaParameters.setDescription(arg);
-
-        } else {
-
-            String fileName = Util.removeExtension(fastaFile.getName());
-            tempFastaParameters.setDescription(fileName);
-
-        }
-
-        if (aLine.hasOption(FastaParametersCLIParams.VERSION.id)) {
-
-            String arg = aLine.getOptionValue(FastaParametersCLIParams.VERSION.id);
-            tempFastaParameters.setVersion(arg);
-
-        } else {
-
-            String fileVersion = new Date(fastaFile.lastModified()).toString();
-            tempFastaParameters.setName(fileVersion);
-
-        }
-
         if (aLine.hasOption(FastaParametersCLIParams.DECOY_FLAG.id)) {
 
             String arg = aLine.getOptionValue(FastaParametersCLIParams.DECOY_FLAG.id);
 
-            if (arg.equals("")) {
+            if (!arg.equals("")) {
 
-                tempFastaParameters.setTargetDecoy(false);
-
-            } else {
-
-                tempFastaParameters.setTargetDecoy(true);
                 tempFastaParameters.setDecoyFlag(arg);
 
                 if (aLine.hasOption(FastaParametersCLIParams.SUFFIX.id)) {
@@ -136,11 +96,50 @@ public class FastaParametersInputBean {
 
             FastaParameters parsedParameters = FastaParameters.inferParameters(fastaFile.getAbsolutePath());
 
-            tempFastaParameters.setTargetDecoy(parsedParameters.isTargetDecoy());
             tempFastaParameters.setDecoyFlag(parsedParameters.getDecoyFlag());
             tempFastaParameters.setDecoySuffix(parsedParameters.isDecoySuffix());
 
         }
+
+        FastaSummary fastaSummary = FastaSummary.getSummary(fastaFile.getAbsolutePath(), fastaParameters, null);
+
+        if (aLine.hasOption(FastaParametersCLIParams.NAME.id)) {
+
+            String arg = aLine.getOptionValue(FastaParametersCLIParams.NAME.id);
+            fastaSummary.setName(arg);
+
+        } else {
+
+            String fileName = Util.removeExtension(fastaFile.getName());
+            fastaSummary.setName(fileName);
+
+        }
+
+        if (aLine.hasOption(FastaParametersCLIParams.DESCRIPTION.id)) {
+
+            String arg = aLine.getOptionValue(FastaParametersCLIParams.DESCRIPTION.id);
+            fastaSummary.setDescription(arg);
+
+        } else {
+
+            String fileName = Util.removeExtension(fastaFile.getName());
+            fastaSummary.setDescription(fileName);
+
+        }
+
+        if (aLine.hasOption(FastaParametersCLIParams.VERSION.id)) {
+
+            String arg = aLine.getOptionValue(FastaParametersCLIParams.VERSION.id);
+            fastaSummary.setVersion(arg);
+
+        } else {
+
+            String fileVersion = new Date(fastaFile.lastModified()).toString();
+            fastaSummary.setName(fileVersion);
+
+        }
+
+        FastaSummary.saveSummary(fastaFile.getAbsolutePath(), fastaSummary);
 
         this.fastaParameters = tempFastaParameters;
     }

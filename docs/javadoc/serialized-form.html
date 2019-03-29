@@ -3304,6 +3304,42 @@
 <li class="blockList">
 <h2 title="Package">Package&nbsp;com.compomics.util.experiment.identification.protein_inference.fm_index</h2>
 <ul class="blockList">
+<li class="blockList"><a name="com.compomics.util.experiment.identification.protein_inference.fm_index.AccessionMetaData">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/experiment/identification/protein_inference/fm_index/AccessionMetaData.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">com.compomics.util.experiment.identification.protein_inference.fm_index.AccessionMetaData</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>8320902054239025L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>headerAsString</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> headerAsString</pre>
+<div class="block">The header as string.</div>
+</li>
+<li class="blockList">
+<h4>header</h4>
+<pre><a href="com/compomics/util/experiment/io/biology/protein/Header.html" title="class in com.compomics.util.experiment.io.biology.protein">Header</a> header</pre>
+<div class="block">The header</div>
+</li>
+<li class="blockList">
+<h4>index</h4>
+<pre>int index</pre>
+<div class="block">The index.</div>
+</li>
+<li class="blockListLast">
+<h4>indexPart</h4>
+<pre>int indexPart</pre>
+<div class="block">The index part.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="blockList"><a name="com.compomics.util.experiment.identification.protein_inference.fm_index.MassIndexMap">
 <!--   -->
 </a>
@@ -3319,6 +3355,118 @@
 <li class="blockListLast">
 <h4>indexes</h4>
 <pre>int[] indexes</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.protein_inference.fm_index.Rank">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">com.compomics.util.experiment.identification.protein_inference.fm_index.Rank</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>832090205423902L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>length</h4>
+<pre>int length</pre>
+<div class="block">The length.</div>
+</li>
+<li class="blockList">
+<h4>bitfield</h4>
+<pre>long[] bitfield</pre>
+<div class="block">The bit field.</div>
+</li>
+<li class="blockList">
+<h4>sums</h4>
+<pre>int[] sums</pre>
+<div class="block">The sums.</div>
+</li>
+<li class="blockListLast">
+<h4>sumsSecondLevel</h4>
+<pre>byte[] sumsSecondLevel</pre>
+<div class="block">The sums.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList"><a name="com.compomics.util.experiment.identification.protein_inference.fm_index.WaveletTree">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">com.compomics.util.experiment.identification.protein_inference.fm_index.WaveletTree</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a> implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>83209020542390250L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>rank</h4>
+<pre><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">Rank</a> rank</pre>
+<div class="block">Instance of a rank.</div>
+</li>
+<li class="blockList">
+<h4>alphabetDirections</h4>
+<pre>long[] alphabetDirections</pre>
+<div class="block">Stored alphabet in a 128 bitfield.</div>
+</li>
+<li class="blockList">
+<h4>firstChar</h4>
+<pre>int firstChar</pre>
+<div class="block">First character in alphabet.</div>
+</li>
+<li class="blockList">
+<h4>lastChar</h4>
+<pre>int lastChar</pre>
+<div class="block">Last character in alphabet.</div>
+</li>
+<li class="blockList">
+<h4>lenText</h4>
+<pre>int lenText</pre>
+<div class="block">Text length.</div>
+</li>
+<li class="blockList">
+<h4>continueLeftRangeQuery</h4>
+<pre>boolean continueLeftRangeQuery</pre>
+<div class="block">Continue range query for left child.</div>
+</li>
+<li class="blockList">
+<h4>continueRightRangeQuery</h4>
+<pre>boolean continueRightRangeQuery</pre>
+<div class="block">Continue range query for right child.</div>
+</li>
+<li class="blockList">
+<h4>leftChild</h4>
+<pre><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a> leftChild</pre>
+<div class="block">Left child of the wavelet tree.</div>
+</li>
+<li class="blockList">
+<h4>rightChild</h4>
+<pre><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a> rightChild</pre>
+<div class="block">Right child of the wavelet tree.</div>
+</li>
+<li class="blockList">
+<h4>numMasses</h4>
+<pre>int numMasses</pre>
+<div class="block">Number of masses.</div>
+</li>
+<li class="blockList">
+<h4>leftRightMask</h4>
+<pre>int leftRightMask</pre>
+<div class="block">Left right mask.</div>
+</li>
+<li class="blockListLast">
+<h4>less</h4>
+<pre>int[] less</pre>
+<div class="block">The less table.</div>
 </li>
 </ul>
 </li>

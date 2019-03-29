@@ -1,9 +1,7 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.waiting.WaitingHandler;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -12,8 +10,9 @@ import java.util.Collections;
  *
  * @author Dominik Kopczynski
  */
-public class WaveletTree {
+public class WaveletTree implements Serializable {
 
+    private static final long serialVersionUID = 83209020542390250L;
     /**
      * Instance of a rank.
      */
@@ -54,11 +53,11 @@ public class WaveletTree {
     /**
      * Shift number for fast bitwise divisions.
      */
-    private static final int shift = 6;
+    private static final int BIT_SHIFT = 6;
     /**
      * Mask for fast bitwise modulo operations.
      */
-    private static final int mask = 63;
+    private static final int BIT_MASK = 63;
     /**
      * Number of masses.
      */
@@ -80,23 +79,6 @@ public class WaveletTree {
     
     
     
-    public WaveletTree(DataInputStream is) throws IOException {
-        rank = new Rank(is);
-        alphabetDirections[0] = is.readLong();
-        alphabetDirections[1] = is.readLong();
-        firstChar = is.readChar();
-        lastChar = is.readChar();
-        lenText = is.readInt();
-        continueLeftRangeQuery = is.readBoolean();
-        continueRightRangeQuery = is.readBoolean();
-        numMasses = is.readInt();
-        leftRightMask = is.readInt();
-        
-        for (int i = 0; i < 128; ++i) less[i] = is.readInt();
-        
-        if (is.readBoolean()) leftChild = new WaveletTree(is);
-        if (is.readBoolean()) rightChild = new WaveletTree(is);
-    }
     
 
     /**
@@ -114,7 +96,7 @@ public class WaveletTree {
 
         public HuffmanNode(int counts, int character) {
             this.counts = counts;
-            alphabet[character >>> shift] |= 1L << (character & mask);
+            alphabet[character >>> BIT_SHIFT] |= 1L << (character & BIT_MASK);
             charAlphabet.add((byte) character);
         }
 
@@ -187,7 +169,7 @@ public class WaveletTree {
 
         ArrayList<HuffmanNode> huffmanNodes = new ArrayList<>();
         for (int i = 0; i < 128; ++i) {
-            if (((aAlphabet[i >>> shift] >>> (i & mask)) & 1L) == 1) {
+            if (((aAlphabet[i >>> BIT_SHIFT] >>> (i & BIT_MASK)) & 1L) == 1) {
                 huffmanNodes.add(new HuffmanNode(counts[i], i));
             }
         }
@@ -208,7 +190,7 @@ public class WaveletTree {
         int cumulativeSum = 0;
         for (int i = 0; i < 128; ++i) {
             less[i] = cumulativeSum;
-            if (((alphabet[i >>> shift] >>> (i & mask)) & 1L) != 0) {
+            if (((alphabet[i >>> BIT_SHIFT] >>> (i & BIT_MASK)) & 1L) != 0) {
                 cumulativeSum += getRank(lenText - 1, i);
             }
         }
@@ -285,16 +267,16 @@ public class WaveletTree {
         if (len_alphabet_left > 1) {
             int len_text_left = 0;
             for (int i = 0; i < text.length; ++i) {
-                int cell = text[i] >>> shift;
-                int pos = text[i] & mask;
+                int cell = text[i] >>> BIT_SHIFT;
+                int pos = text[i] & BIT_MASK;
                 len_text_left += (int) ((alphabet_left[cell] >>> pos) & 1L);
             }
             if (len_text_left > 0) {
                 byte[] text_left = new byte[len_text_left];
                 int j = 0;
                 for (int i = 0; i < text.length; ++i) {
-                    int cell = text[i] >>> shift;
-                    int pos = text[i] & mask;
+                    int cell = text[i] >>> BIT_SHIFT;
+                    int pos = text[i] & BIT_MASK;
                     long bit = (alphabet_left[cell] >>> pos) & 1L;
                     if (bit > 0) {
                         text_left[j++] = text[i];
@@ -310,16 +292,16 @@ public class WaveletTree {
         if (len_alphabet_right > 1) {
             int len_text_right = 0;
             for (int i = 0; i < text.length; ++i) {
-                int cell = text[i] >>> shift;
-                int pos = text[i] & mask;
+                int cell = text[i] >>> BIT_SHIFT;
+                int pos = text[i] & BIT_MASK;
                 len_text_right += (int) ((alphabet_right[cell] >>> pos) & 1L);
             }
             if (len_text_right > 0) {
                 byte[] text_right = new byte[len_text_right];
                 int j = 0;
                 for (int i = 0; i < text.length; ++i) {
-                    int cell = text[i] >>> shift;
-                    int pos = text[i] & mask;
+                    int cell = text[i] >>> BIT_SHIFT;
+                    int pos = text[i] & BIT_MASK;
                     long bit = (alphabet_right[cell] >>> pos) & 1L;
                     if (bit > 0) {
                         text_right[j++] = text[i];
@@ -370,8 +352,8 @@ public class WaveletTree {
      */
     public int getRankRecursive(int index, int character) {
         if (index >= 0) {
-            int cell = character >>> shift;
-            int pos = character & mask;
+            int cell = character >>> BIT_SHIFT;
+            int pos = character & BIT_MASK;
             boolean left = ((alphabetDirections[cell] >>> pos) & 1) == 1;
             int result = rank.getRank(index, left);
 
@@ -524,7 +506,7 @@ public class WaveletTree {
      * recursively
      */
     public int[] singleRangeQuery(int leftIndex, int rightIndex, int character) {
-        boolean left = ((alphabetDirections[character >>> shift] >>> (character & mask)) & 1) == 1;
+        boolean left = ((alphabetDirections[character >>> BIT_SHIFT] >>> (character & BIT_MASK)) & 1) == 1;
 
         if (left) {
             int newLeftIndex = (leftIndex >= 0) ? rank.getRankZero(leftIndex) : 0;
@@ -543,32 +525,6 @@ public class WaveletTree {
             } else {
                 return new int[]{newLeftIndex, newRightIndex};
             }
-        }
-    }
-    
-    
-    public void write(DataOutputStream os) throws IOException {
-        try {
-            rank.write(os);
-            os.writeLong(alphabetDirections[0]);
-            os.writeLong(alphabetDirections[1]);
-            os.writeChar(firstChar);
-            os.writeChar(lastChar);
-            os.writeInt(lenText);
-            os.writeBoolean(continueLeftRangeQuery);
-            os.writeBoolean(continueRightRangeQuery);
-            os.writeInt(numMasses);
-            os.writeInt(leftRightMask);
-
-            for (int i = 0; i < 128; ++i) os.writeInt(less[i]);
-
-            os.writeBoolean(leftChild != null);
-            if (leftChild != null) leftChild.write(os);
-            os.writeBoolean(rightChild != null);
-            if (rightChild != null) rightChild.write(os);
-        }
-        catch(IOException e){
-            throw e;
         }
     }
 }

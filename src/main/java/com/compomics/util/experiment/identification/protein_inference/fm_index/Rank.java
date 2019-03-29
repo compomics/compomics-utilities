@@ -1,16 +1,15 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Rank as used in the FM index.
  *
  * @author Dominik Kopczynski
  */
-public class Rank {
+public class Rank implements Serializable {
 
+    private static final long serialVersionUID = 832090205423902L;
     /**
      * Empty default constructor.
      */
@@ -40,11 +39,11 @@ public class Rank {
     /**
      * The shift.
      */
-    private static final int shift = 6;
+    private static final int BIT_SHIFT = 6;
     /**
      * The mask.
      */
-    private static final int mask = 63;
+    private static final int BIT_MASK = 63;
 
     /**
      * Constructor.
@@ -63,12 +62,12 @@ public class Rank {
         sumsSecondLevel[0] = 0;
 
         for (int i = 0; i < length; ++i) {
-            int cell = i >>> shift;
-            int pos = i & mask;
+            int cell = i >>> BIT_SHIFT;
+            int pos = i & BIT_MASK;
             if (pos == 0) {
                 bitfield[cell] = 0;
             }
-            long bit = (aAlphabet[text[i] >>> shift] >>> (text[i] & mask)) & 1L;
+            long bit = (aAlphabet[text[i] >>> BIT_SHIFT] >>> (text[i] & BIT_MASK)) & 1L;
             bitfield[cell] |= (bit << pos);
 
             if (pos == 0 && i != 0) {
@@ -82,21 +81,6 @@ public class Rank {
                 sums[i >>> 8] = sums[(i >>> 8) - 1] + (sumsSecondLevel[cell - 1] & 0xFF) + Long.bitCount(bitfield[cell - 1]);
             }
         }
-    }
-    
-    
-    
-    public Rank(DataInputStream is) throws IOException {
-        length = is.readInt();
-        
-        bitfield = new long[is.readInt()];
-        for (int i = 0; i < bitfield.length; ++i) bitfield[i] = is.readLong();
-        
-        sums = new int[is.readInt()];
-        for (int i = 0; i < sums.length; ++i) sums[i] = is.readInt();
-        
-        sumsSecondLevel = new byte[is.readInt()];
-        for (int i = 0; i < sumsSecondLevel.length; ++i) sumsSecondLevel[i] = is.readByte();
     }
     
 
@@ -117,8 +101,8 @@ public class Rank {
         sumsSecondLevel[0] = 0;
 
         for (int i = 0; i < length; ++i) {
-            int cell = i >>> shift;
-            int pos = i & mask;
+            int cell = i >>> BIT_SHIFT;
+            int pos = i & BIT_MASK;
             if (pos == 0 && i != 0) {
                 if ((i & 255) == 0) {
                     sumsSecondLevel[cell] = 0;
@@ -140,9 +124,9 @@ public class Rank {
      * @return the rank
      */
     public int getRank(int index, boolean zeros) {
-        int cell = index >>> shift;
-        int pos = index & mask;
-        long active_ones = bitfield[cell] << (mask - pos);
+        int cell = index >>> BIT_SHIFT;
+        int pos = index & BIT_MASK;
+        long active_ones = bitfield[cell] << (BIT_MASK - pos);
         int count_ones = (sumsSecondLevel[cell] & 0xFF) + sums[index >>> 8] + Long.bitCount(active_ones);
         return zeros ? index + 1 - count_ones : count_ones;
     }
@@ -154,9 +138,9 @@ public class Rank {
      * @return the rank
      */
     public final int getRankOne(int index) {
-        final int cell = index >>> shift;
-        final int pos = index & mask;
-        final long active_ones = bitfield[cell] << (mask - pos);
+        final int cell = index >>> BIT_SHIFT;
+        final int pos = index & BIT_MASK;
+        final long active_ones = bitfield[cell] << (BIT_MASK - pos);
         final int count_ones = (sumsSecondLevel[cell] & 0xFF) + sums[index >>> 8] + Long.bitCount(active_ones);
         return count_ones;
     }
@@ -168,9 +152,9 @@ public class Rank {
      * @return the rank
      */
     public int getRankZero(int index) {
-        int cell = index >>> shift;
-        int pos = index & mask;
-        long active_ones = bitfield[cell] << (mask - pos);
+        int cell = index >>> BIT_SHIFT;
+        int pos = index & BIT_MASK;
+        long active_ones = bitfield[cell] << (BIT_MASK - pos);
         int count_ones = (sumsSecondLevel[cell] & 0xFF) + sums[index >>> 8] + Long.bitCount(active_ones);
         return index + 1 - count_ones;
     }
@@ -182,8 +166,8 @@ public class Rank {
      * @return true if the value is equal to one
      */
     public boolean isOne(int index) {
-        int cell = index >>> shift;
-        int pos = index & mask;
+        int cell = index >>> BIT_SHIFT;
+        int pos = index & BIT_MASK;
         return (((bitfield[cell] >>> pos) & 1L) == 1);
     }
 
@@ -194,8 +178,8 @@ public class Rank {
      * @return the bit
      */
     public int isOneInt(int index) {
-        int cell = index >>> shift;
-        int pos = index & mask;
+        int cell = index >>> BIT_SHIFT;
+        int pos = index & BIT_MASK;
         return (int) ((bitfield[cell] >>> pos) & 1L);
     }
 
@@ -206,20 +190,5 @@ public class Rank {
      */
     public int getAllocatedBytes() {
         return (bitfield.length << 3) + (sums.length << 2) + sumsSecondLevel.length;
-    }
-    
-    
-    
-    public void write(DataOutputStream os) throws IOException {
-        os.writeInt(length);
-        
-        os.writeInt(bitfield.length);
-        for (long b : bitfield) os.writeLong(b);
-        
-        os.writeInt(sums.length);
-        for (int s : sums) os.writeInt(s);
-        
-        os.writeInt(sumsSecondLevel.length);
-        for (byte b : sumsSecondLevel) os.writeByte(b);
     }
 }

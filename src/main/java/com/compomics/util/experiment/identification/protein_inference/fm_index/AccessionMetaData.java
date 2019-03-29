@@ -1,17 +1,16 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.experiment.io.biology.protein.Header;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Accession meta data.
  *
  * @author Dominik Kopczynski
  */
-public class AccessionMetaData {
+public class AccessionMetaData implements Serializable {
 
+    private static final long serialVersionUID = 8320902054239025L;
     /**
      * The header as string.
      */
@@ -33,12 +32,6 @@ public class AccessionMetaData {
      * Empty default constructor.
      */
     public AccessionMetaData() {
-    }
-    
-    public AccessionMetaData(DataInputStream is) throws IOException {
-        headerAsString = is.readUTF();
-        index = is.readInt();
-        indexPart = is.readInt();
     }
     
     /**
@@ -97,11 +90,5 @@ public class AccessionMetaData {
      */
     public String getHeaderAsString() {
         return headerAsString;
-    }
-    
-    public void write(DataOutputStream os) throws IOException {
-        os.writeUTF(headerAsString);
-        os.writeInt(index);
-        os.writeInt(indexPart);
     }
 }

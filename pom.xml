@@ -285,7 +285,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin> 
+            </plugin>
 
             <!-- Pack sources on build -->
             <plugin>

@@ -47,10 +47,14 @@ import com.compomics.util.experiment.identification.protein_inference.FastaMappe
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.stream.Collectors;
 
 /**
@@ -255,7 +259,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     /**
      * Precision for the masses in lookup table.
      */
-    double lookupMultiplier = 10000;
+    double lookupMultiplier = 1000;
     /**
      * The mass accuracy type.
      */
@@ -267,7 +271,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     /**
      * Maximum mass for lookup table [Da].
      */
-    double lookupMaxMass = 800;
+    private static final double lookupMaxMass = 800;
     /**
      * Mass lookup table.
      */
@@ -1036,50 +1040,31 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         if (FMFile.exists()){
             
             DataInputStream is = new DataInputStream(new BufferedInputStream(new FileInputStream(FMFile.getAbsolutePath()), 1024 * 1024));
+            ObjectInputStream ois = null;
             
-            String indexVersion = is.readUTF();
-            if (indexVersion.equals(Util.getVersion())){
-                indexParts = is.readInt();
-                for (int i = 0; i < indexParts; ++i){
-                    indexStringLengths.add(is.readInt());
-
-                    int[] saPrim = new int[is.readInt()];
-                    for (int j = 0; j < saPrim.length; ++j) saPrim[j] = is.readInt();
-                    suffixArraysPrimary.add(saPrim);
-
-                    occurrenceTablesPrimary.add(new WaveletTree(is));
-                    occurrenceTablesReversed.add(new WaveletTree(is));
-
-
-                    int[] lessPrim = new int[is.readInt()];
-                    for (int j = 0; j < lessPrim.length; ++j) lessPrim[j] = is.readInt();
-                    lessTablesPrimary.add(lessPrim);
-
-                    int[] lessRev = new int[is.readInt()];
-                    for (int j = 0; j < lessRev.length; ++j) lessRev[j] = is.readInt();
-                    lessTablesReversed.add(lessRev);
-
-                    int[] bound = new int[is.readInt()];
-                    for (int j = 0; j < bound.length; ++j) bound[j] = is.readInt();
-                    boundaries.add(bound);
-
-                    String[] acc = new String[is.readInt()];
-                    for (int j = 0; j < acc.length; ++j) acc[j] = is.readUTF();
-                    accessions.add(acc);
+            try{
+                ois = new ObjectInputStream(is);
+                String indexVersion = ois.readUTF();
+                if (indexVersion.equals(Util.getVersion())){
+                    indexParts = ois.readInt();
+                    indexStringLengths = (ArrayList<Integer>)ois.readObject();
+                    suffixArraysPrimary = (ArrayList<int[]>)ois.readObject();
+                    occurrenceTablesPrimary = (ArrayList<WaveletTree>)ois.readObject();
+                    occurrenceTablesReversed = (ArrayList<WaveletTree>)ois.readObject();
+                    lessTablesPrimary = (ArrayList<int[]>)ois.readObject();
+                    lessTablesReversed = (ArrayList<int[]>)ois.readObject();
+                    boundaries = (ArrayList<int[]>)ois.readObject();
+                    accessions = (ArrayList<String[]>)ois.readObject();
+                    decoyAccessions = (HashSet<String>)ois.readObject();
+                    accessionMetaData = (HashMap<String, AccessionMetaData>)ois.readObject();
+                    loadFasta = false;
                 }
-
-                int numDecoys =is.readInt();
-                for (int i = 0; i < numDecoys; ++i) decoyAccessions.add(is.readUTF());
-
-                int numAMD = is.readInt();
-                for (int i = 0; i < numAMD; ++i){
-                    String key = is.readUTF();
-                    AccessionMetaData amd = new AccessionMetaData(is);
-                    accessionMetaData.put(key, amd);
-                }
-                loadFasta = false;
             }
-            is.close();
+            catch(Exception e){
+            }
+            finally {
+                if (ois != null) ois.close();
+            }
         }
         if (loadFasta) {
 
@@ -1137,9 +1122,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             }
         }
         massIndexMaps = new ArrayList<>(1000000);
-
+        
         recursiveMassFilling(0., 0, 0, null);
-
+        
         Collections.sort(massIndexMaps, new Comparator<MassIndexMap>() {
             public int compare(MassIndexMap m1, MassIndexMap m2) {
                 return (int) ((m1.mass - m2.mass) * 1000000.);
@@ -1152,54 +1137,21 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         
         
         if (loadFasta){
-            try {
-                DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(FMFile.getAbsolutePath())));
-
-                os.writeUTF(Util.getVersion());
-                os.writeInt(indexParts);
-                for (int i = 0; i < indexParts; ++i){
-                    os.writeInt(indexStringLengths.get(i));
-
-                    int[] saPrim = suffixArraysPrimary.get(i);
-                    os.writeInt(saPrim.length);
-                    for (int saVal : saPrim) os.writeInt(saVal);
-
-                    occurrenceTablesPrimary.get(i).write(os);
-                    occurrenceTablesReversed.get(i).write(os);
-
-                    int[] lessPrim = lessTablesPrimary.get(i);
-                    os.writeInt(lessPrim.length);
-                    for (int lessVal : lessPrim) os.writeInt(lessVal);
-
-                    int[] lessRev = lessTablesReversed.get(i);
-                    os.writeInt(lessRev.length);
-                    for (int lessVal : lessRev) os.writeInt(lessVal);
-
-                    int[] bound = boundaries.get(i);
-                    os.writeInt(bound.length);
-                    for (int boundVal : bound) os.writeInt(boundVal);
-
-                    String[] acc = accessions.get(i);
-                    os.writeInt(acc.length);
-                    for (String accVal : acc) os.writeUTF(accVal);
-
-                }
-
-
-                os.writeInt(decoyAccessions.size());
-                for (String decoyVal : decoyAccessions) os.writeUTF(decoyVal);
-
-
-                os.writeInt(accessionMetaData.size());
-                for (String key : accessionMetaData.keySet()){
-                    os.writeUTF(key);
-                    accessionMetaData.get(key).write(os);
-                }
-                os.close();
-            }
-            catch (IOException e){
-                throw e;
-            }
+            DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(FMFile.getAbsolutePath())));
+            ObjectOutputStream oos = new ObjectOutputStream(os);
+            oos.writeUTF(Util.getVersion());
+            oos.writeInt(indexParts);
+            oos.writeObject(indexStringLengths);
+            oos.writeObject(suffixArraysPrimary);
+            oos.writeObject(occurrenceTablesPrimary);
+            oos.writeObject(occurrenceTablesReversed);
+            oos.writeObject(lessTablesPrimary);
+            oos.writeObject(lessTablesReversed);
+            oos.writeObject(boundaries);
+            oos.writeObject(accessions);
+            oos.writeObject(decoyAccessions);
+            oos.writeObject(accessionMetaData);
+            oos.close();
         }
     }
 
@@ -2129,7 +2081,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                 }
             }
         }
-        //System.out.println("out");
     }
 
     private boolean massNotValid(double mass) {
@@ -2194,8 +2145,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             final int leftIndex = lessValue + borders[1];
                             final int rightIndex = lessValue + borders[2] - 1;
                             final double massDiff = Math.abs(combinationMass - newMass);
-                            //System.out.println(j + " " + length + " " + (char)borders[0] + " " +  leftIndex + " " + rightIndex + " " + offset + " " + newNumX + " " + massDiff + " / " + combination.xNumLimit);
-
+                            
+                            
                             // make a lookup when mass difference is below 800Da if it is still possible to reach by a AA combination
                             if (massNotValid(massDiff)) {
                                 continue;
@@ -2290,7 +2241,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         }
                         final double newMass = oldMass + (aminoAcid != 'X' ? aaMasses[borders[3]] : 0);
 
-                        //System.out.println(j + " " + length + " " + (char)borders[0] + " " + newMass + " " + computeInverseMassValue(massTolerance, combinationMass) + " " + combinationMass);
                         // check if not exceeding tag mass
                         if (newMass - computeInverseMassValue(massTolerance, combinationMass) <= combinationMass) {
                             final int aminoAcidSearch = (borders[4] == -1) ? aminoAcid : borders[4];
@@ -2975,8 +2925,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                 ModificationMatch modificationMatchEndEnd = null;
                                 boolean withinMass = false;
                                 double xMassDiff = -1;
-                                //System.out.println(k + " " + length + " " + (char)lastAcid + " " + massDiff + " / " + combination.xNumLimit);
-
+                                
+                                
                                 // ptm at terminus handling
                                 ArrayList<String> fmod;
                                 ArrayList<Double> fmodMass;
@@ -5168,6 +5118,41 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         return extension;
 
     }
+    
+    
+    
+    /**
+     * Reconstructs the fasta file stored in the index
+     * @param file the output fasta file object
+     */
+    public void reconstructFasta(File file){
+        BufferedWriter writer = null;
+        try
+        {
+            writer = new BufferedWriter( new FileWriter(file), 1024 * 1024);
+            for (String accession : getAccessions()){
+                writer.write(">" + getHeader(accession) + "\n");
+                writer.write(getSequence(accession) + "\n");
+            }
+
+        }
+        catch ( IOException e)
+        {
+        }
+        finally
+        {
+            try
+            {
+                if ( writer != null)
+                writer.close( );
+            }
+            catch ( IOException e)
+            {
+            }
+        }
+    }
+    
+    
 
     /**
      * List of cached intermediate tag to proteome mapping results.

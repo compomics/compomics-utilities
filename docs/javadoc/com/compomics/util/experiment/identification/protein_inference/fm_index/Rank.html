@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -107,14 +107,21 @@ var activeTableTab = "activeTableTab";
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd><a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></dd>
+</dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">Rank</span>
-extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
+extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>
+implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a></pre>
 <div class="block">Rank as used in the FM index.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>Dominik Kopczynski</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../../../../serialized-form.html#com.compomics.util.experiment.identification.protein_inference.fm_index.Rank">Serialized Form</a></dd>
 </dl>
 </li>
 </ul>
@@ -166,9 +173,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 </td>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html#Rank-java.io.DataInputStream-">Rank</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/DataInputStream.html?is-external=true" title="class or interface in java.io">DataInputStream</a>&nbsp;is)</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html#Rank-long:A-int-">Rank</a></span>(long[]&nbsp;originalBitfield,
     int&nbsp;length)</code>
 <div class="block">Constructor.</div>
@@ -225,10 +229,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html#isOneInt-int-">isOneInt</a></span>(int&nbsp;index)</code>
 <div class="block">Returns true if the value is equal to one.</div>
 </td>
-</tr>
-<tr id="i6" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html#write-java.io.DataOutputStream-">write</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/DataOutputStream.html?is-external=true" title="class or interface in java.io">DataOutputStream</a>&nbsp;os)</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -293,20 +293,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>text</code> - the text</dd>
 <dd><code>aAlphabet</code> - the alphabet</dd>
-</dl>
-</li>
-</ul>
-<a name="Rank-java.io.DataInputStream-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>Rank</h4>
-<pre>public&nbsp;Rank(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/DataInputStream.html?is-external=true" title="class or interface in java.io">DataInputStream</a>&nbsp;is)
-     throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -419,7 +405,7 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <a name="getAllocatedBytes--">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>getAllocatedBytes</h4>
 <pre>public&nbsp;int&nbsp;getAllocatedBytes()</pre>
@@ -427,20 +413,6 @@ extends <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the number of bytes for the allocated arrays</dd>
-</dl>
-</li>
-</ul>
-<a name="write-java.io.DataOutputStream-">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>write</h4>
-<pre>public&nbsp;void&nbsp;write(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/DataOutputStream.html?is-external=true" title="class or interface in java.io">DataOutputStream</a>&nbsp;os)
-           throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
-<dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></code></dd>
 </dl>
 </li>
 </ul>

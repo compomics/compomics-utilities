@@ -170,6 +170,34 @@ public class Rank implements Serializable {
         int pos = index & BIT_MASK;
         return (((bitfield[cell] >>> pos) & 1L) == 1);
     }
+    
+    
+    
+    /**
+     * Returns the position of the i-th one
+     * @param rank of the i-th one
+     * @return position of the i-th one
+     */
+    public int getSelect(int index){
+        // implementation is currently solved in O(log(length))
+        // can be optimized to O(1)
+        
+        if (index < 1 || getRankOne(length - 1) < index) return -1;
+        int l = 0, r = length - 1;
+
+        while (l <= r){
+            int m = (l + r) >> 1;
+            if (getRankOne(m) < index) l = m + 1;
+            else r = m - 1;
+        }
+
+        if (0 < l && getRankOne(l - 1) == index) return l - 1;
+        else if (getRankOne(l) == index) return l;
+        else if (l < length - 1 && getRankOne(l + 1) == index) return l + 1;
+        
+        return -1;
+    }
+    
 
     /**
      * Returns true if the value is equal to one.

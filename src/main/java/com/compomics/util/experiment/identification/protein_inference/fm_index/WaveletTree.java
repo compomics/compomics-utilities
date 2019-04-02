@@ -523,7 +523,7 @@ public class WaveletTree implements Serializable {
             if (rightChild != null) {
                 return rightChild.singleRangeQuery(newLeftIndex - 1, newRightIndex - 1, character);
             } else {
-                return new int[]{newLeftIndex, newRightIndex};
+                return new int[]{ newLeftIndex, newRightIndex};
             }
         }
     }

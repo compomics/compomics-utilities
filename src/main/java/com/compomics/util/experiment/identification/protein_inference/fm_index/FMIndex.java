@@ -223,12 +223,22 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     private boolean hasFixedModification_NatTerminus = false;
 
     private double negativeModificationMass = 0;
+    
+    
+    
+    private ArrayList<Rank> variantBitsPrimary = new ArrayList<>();
+    private ArrayList<Rank> variantBitsReversed = new ArrayList<>();
+    
+    private ArrayList<HashSet<int[]>[]> variantsPrimary = new ArrayList<>();
+    private ArrayList<HashSet<int[]>[]> variantsReversed = new ArrayList<>();
+    
+    HashMap<String, ArrayList<SNPElement>> SNPs = new HashMap<>();
 
     /**
      * Either search with one maximal number of variants or use an upper limit
      * for every variant (insertion / deletion / substitution)
      */
-    boolean genericVariantMatching = true;
+    int variantMatchingType = 0;
     /**
      * Number of allowed variant operations.
      */
@@ -590,10 +600,21 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
         // load all variant preferences
         maxNumberVariants = peptideVariantsPreferences.getnVariants();
-        genericVariantMatching = !peptideVariantsPreferences.getUseSpecificCount();
+        variantMatchingType = peptideVariantsPreferences.getUseSpecificCount() ? 1 : 0;
         maxNumberInsertions = peptideVariantsPreferences.getnAaInsertions();
         maxNumberDeletions = peptideVariantsPreferences.getnAaDeletions();
         maxNumberSubstitutions = peptideVariantsPreferences.getnAaSubstitutions();
+        
+        
+        // TODO: remove
+        variantMatchingType = 2;
+        SNPs.put("P47187", new ArrayList<>());
+        SNPs.get("P47187").add(new SNPElement(213, 'T', 'D'));
+        SNPs.get("P47187").add(new SNPElement(228, 'A', 'F'));
+        SNPs.get("P47187").add(new SNPElement(229, 'F', 'L'));
+        SNPs.get("P47187").add(new SNPElement(218, 'W', 'K'));
+        
+        
 
         TreeSet<Character> aaGroups = new TreeSet<>();
         aaGroups.add('B');
@@ -1035,7 +1056,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         String fastaExtension = getFileExtension(fastaFile);
         File FMFile = new File(fastaFile.getAbsolutePath().replace(fastaExtension, ".fmi"));
         boolean loadFasta = true;
-        if (FMFile.exists()){
+        if (FMFile.exists() && variantMatchingType != 2){
             
             DataInputStream is = new DataInputStream(new BufferedInputStream(new FileInputStream(FMFile.getAbsolutePath()), 1024 * 1024));
             ObjectInputStream ois = null;
@@ -1134,6 +1155,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
         
         
+        
+        
         if (loadFasta){
             DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(FMFile.getAbsolutePath())));
             ObjectOutputStream oos = new ObjectOutputStream(os);
@@ -1180,6 +1203,21 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         T[0] = '/';                     // adding delimiter at beginning
         T[indexStringLength - 2] = '/'; // adding delimiter at ending
         T[indexStringLength - 1] = '$'; // adding the sentinal
+        
+        
+        long[] variantPrimBits = null;
+        long[] variantRevBits = null;
+        HashSet<int[]>[] variantsPrimTmp = null;
+        HashSet<int[]>[] variantsPrim = null;
+        HashSet<int[]>[] variantsRevTmp = null;
+        HashSet<int[]>[] variantsRev = null;
+        int numVariants = 0;
+        if (variantMatchingType == 2){
+            variantPrimBits = new long[(indexStringLength >>> 6) + 1];
+            variantRevBits = new long[(indexStringLength >>> 6) + 1];
+            variantsPrimTmp = (HashSet<int[]>[]) new HashSet[indexStringLength];
+            variantsRevTmp = (HashSet<int[]>[]) new HashSet[indexStringLength];
+        }
 
         int[] bndaries = new int[numProteins + 1];
         boundaries.add(bndaries);
@@ -1191,6 +1229,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         // reading proteins in a second pass to store their amino acid sequences and their accession numbers
         int tmpN = 0;
         int tmpNumProtein = 0;
+        HashMap<String, Integer> accessionBeginnings = new HashMap<>();
         HashMap<String, Integer> accessionEndings = new HashMap<>();
 
         for (int i = 0; i < numProteins; ++i) {
@@ -1223,6 +1262,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             int proteinLen = currentProtein.getLength();
 
             T[tmpN++] = '/'; // adding the delimiters
+            if (variantMatchingType == 2) accessionBeginnings.put(accession, tmpN);
             accessionEndings.put(accession, tmpN + proteinLen);
             System.arraycopy(currentProtein.getSequence().toUpperCase().getBytes(), 0, T, tmpN, proteinLen);
             tmpN += proteinLen;
@@ -1256,11 +1296,35 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             AccessionMetaData accessionMeta = accessionMetaData.get(accession);
             accessionMeta.index = inversedSampledSuffixArray[truePos];
             accessionMeta.indexPart = indexPart;
+            
+            // adding variants
+            if (variantMatchingType == 2 && SNPs.containsKey(accession)){
+                for (SNPElement SNP : SNPs.get(accession)){
+                    int posSNP = inversedSampledSuffixArray[accessionBeginnings.get(accession) + SNP.position];
+                    variantPrimBits[posSNP >>> 6] |= 1L << (posSNP & 63);
+                    if (variantsPrimTmp[posSNP] == null) variantsPrimTmp[posSNP] = new HashSet<>();
+                    variantsPrimTmp[posSNP].add(new int[]{SNP.sourceAA, SNP.targetAA});
+                    numVariants += 1;
+                }
+            }
         }
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
         }
         inversedSampledSuffixArray = null;
+        
+        
+        
+        if (variantMatchingType == 2){
+            variantsPrim = (HashSet<int[]>[]) new HashSet[numVariants];
+            for (int i = 0, j = 0; i < indexStringLength; ++i){
+                if (variantsPrimTmp[i] != null){
+                    variantsPrim[j++] = variantsPrimTmp[i];
+                }
+            }
+        }
+        
+        
 
         // create Burrows-Wheeler-Transform
         byte[] bwt = new byte[indexStringLength];
@@ -1313,6 +1377,44 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
         }
+        
+        
+        
+        
+        
+        
+        if (variantMatchingType == 2){
+        
+            // compute reversed variant positions
+            inversedSampledSuffixArray = new int[indexStringLength];
+            for (int i = 0; i < indexStringLength; ++i) {
+                inversedSampledSuffixArray[suffixArrayReversed[i]] = i;
+            }
+            for (String accession : accessionEndings.keySet()) {
+
+                // adding variants
+                if (SNPs.containsKey(accession)){
+                    for (SNPElement SNP : SNPs.get(accession)){
+                        int posSNP = inversedSampledSuffixArray[indexStringLength - 2 - (accessionBeginnings.get(accession) + SNP.position)];
+                        variantRevBits[posSNP >>> 6] |= 1L << (posSNP & 63);
+                        if (variantsRevTmp[posSNP] == null) variantsRevTmp[posSNP] = new HashSet<>();
+                        variantsRevTmp[posSNP].add(new int[]{SNP.sourceAA, SNP.targetAA});
+                    }
+                }
+            }
+
+            variantsRev = (HashSet<int[]>[]) new HashSet[numVariants];
+            for (int i = 0, j = 0; i < indexStringLength; ++i){
+                if (variantsRevTmp[i] != null){
+                    variantsRev[j++] = variantsRevTmp[i];
+                }
+            }
+        }
+        
+        
+        
+        
+        
 
         // create inversed Burrows-Wheeler-Transform
         bwt = new byte[indexStringLength];
@@ -1334,6 +1436,13 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         occurrenceTablesReversed.add(occurrenceTableReversed);
         lessTablesPrimary.add(lessTablePrimary);
         lessTablesReversed.add(lessTableReversed);
+        
+        if (variantMatchingType == 2){
+            variantBitsPrimary.add(new Rank(variantPrimBits, indexStringLength));
+            variantsPrimary.add(variantsPrim);
+            variantBitsReversed.add(new Rank(variantRevBits, indexStringLength));
+            variantsReversed.add(variantsRev);
+        }
     }
 
     /**
@@ -1529,7 +1638,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     public ArrayList<PeptideProteinMapping> getProteinMapping(String peptide, SequenceMatchingParameters sequenceMatchingParameters) {
         ArrayList<PeptideProteinMapping> peptideProteinMapping = new ArrayList<>();
         if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0) {
-            if (genericVariantMatching) {
+            if (variantMatchingType == 0) {
                 for (int i = 0; i < indexParts; ++i) {
                     peptideProteinMapping.addAll(getProteinMappingWithVariantsGeneric(peptide, sequenceMatchingParameters, i));
                 }
@@ -2456,6 +2565,170 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
     }
 
+    /**
+     * Variant tolerant mapping the tag elements to the reference text with a
+     * generic upper limit of variants.
+     *
+     * @param combinations the combinations
+     * @param matrix the matrix
+     * @param matrixFinished the finished matrix
+     * @param less the less array
+     * @param occurrence the wavelet tree
+     * @param massTolerance the mass tolerance
+     * @param numberEdits number of allowed edit operations
+     */
+    private void mappingSequenceAndMassesWithFixedVariants(TagElement[] combinations, LinkedList<MatrixContent>[][] matrix, int[] less, WaveletTree occurrence, Rank variantPositions, HashSet<int[]>[] variants) {
+        final int lenCombinations = combinations.length;
+
+        for (int k = 0; k <= maxNumberVariants; ++k) {
+            LinkedList<MatrixContent>[] row = matrix[k];
+
+            for (int j = 0; j < lenCombinations; ++j) {
+                TagElement combination = combinations[j];
+                LinkedList<MatrixContent> cell = row[j];
+
+                while (!cell.isEmpty()) {
+                    MatrixContent content = cell.removeFirst();
+                    final int leftIndexOld = content.left;
+                    final int length = content.length;
+                    final int rightIndexOld = content.right;
+                    final int numVariants = content.numVariants;
+                    final int numX = content.numX;
+
+                    if (combination.isMass) {
+                        final double combinationMass = combination.mass;
+                        final double oldMass = content.mass;
+
+                        int[][] setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                        if (withVariableModifications) {
+                            addModifications(setCharacter);
+                        }
+
+                        for (int b = 0; b < setCharacter[numMasses][0]; ++b) {
+                            int[] borders = setCharacter[b];
+                            final int aminoAcid = borders[0];
+                            if (aminoAcid == '/') {
+                                continue;
+                            }
+                            final double newMass = oldMass + aaMasses[borders[3]];
+                            final int lessValue = less[aminoAcid];
+                            final int leftIndex = lessValue + borders[1];
+                            final int rightIndex = lessValue + borders[2] - 1;
+                            int offset = (Math.abs(combinationMass - newMass) <= massTolerance) ? 1 : 0;
+
+                            if (newMass - massTolerance <= combinationMass) {
+                                boolean add = true;
+                                double massDiff = combinationMass - newMass;
+                                int intMass = (int) (massDiff * lookupMultiplier);
+                                if (massDiff > massTolerance && massDiff < lookupMaxMass && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0)) {
+                                    add = false;
+                                }
+                                if (add) {
+                                    row[j + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newMass, length + 1, numX, borders[3], numVariants, '-', null));
+                                }
+                            }
+                            
+                            
+                            // check for SNP variants
+                            int numLeftSNPs = variantPositions.getRankOne(leftIndex - 1);
+                            int numRightSNPs = variantPositions.getRankOne(rightIndex);
+                            
+                            if (numLeftSNPs < numRightSNPs){
+                                
+                                // search for all SNPs positions
+                                for (int SNPnum = numLeftSNPs + 1; SNPnum <= numRightSNPs; ++SNPnum){
+                                    
+                                    int selectSNP = variantPositions.getSelect(SNPnum);
+                                    
+                                    // go through all SNPs at certain position
+                                    for (int[] variant : variants[SNPnum - 1]){
+                                        if (variant[0] != aminoAcid) continue;
+                                        
+                                        final int aminoAcidSNP = variant[1];
+                                        
+                                        final double newMassSNP = oldMass + aaMasses[aminoAcidSNP];
+                                        final int leftIndexSNP = selectSNP;
+                                        final int rightIndexSNP = selectSNP;
+                                        if (leftIndexSNP <= rightIndexSNP){
+                                            int offsetSNP = (Math.abs(combinationMass - newMassSNP) <= massTolerance) ? 1 : 0;
+
+                                            if (newMassSNP - massTolerance <= combinationMass) {
+                                                boolean add = true;
+                                                double massDiff = combinationMass - newMassSNP;
+                                                int intMass = (int) (massDiff * lookupMultiplier);
+                                                if (massDiff > massTolerance && massDiff < lookupMaxMass && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0)) {
+                                                    add = false;
+                                                }
+                                                if (add) {
+                                                    row[j + offsetSNP].add(new MatrixContent(leftIndexSNP, rightIndexSNP, aminoAcidSNP, content, newMassSNP, length + 1, numX, aminoAcidSNP, numVariants + 1, (char)aminoAcid, null));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    } else { // sequence mapping 
+                        final String combinationSequence = combination.sequence;
+                        final int xNumLimit = combination.xNumLimit;
+
+                        for (int c = 0; c < combinationSequence.length(); ++c) {
+                            final int aminoAcidCheck = combinationSequence.charAt(c);
+                            final int newNumX = numX + ((aminoAcidCheck == 'X') ? 1 : 0);
+                            if (newNumX > xNumLimit) {
+                                continue;
+                            }
+
+                            int[][] setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+
+                            for (int b = 0; b < setCharacter[numMasses][0]; ++b) {
+                                int[] borders = setCharacter[b];
+                                final int aminoAcid = borders[0];
+                                if (aminoAcid == '/')  continue;
+                                
+                                final int lessValue = less[aminoAcid];
+                                final int leftIndex = lessValue + borders[1];
+                                final int rightIndex = lessValue + borders[2] - 1;
+
+                                // match
+                                if (aminoAcid == aminoAcidCheck){
+                                    if (leftIndex <= rightIndex) {
+                                        row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-'));
+                                    }
+                                }
+
+                                // check for SNPs
+                                else {
+                                    int numLeftSNPs = variantPositions.getRankOne(leftIndex - 1);
+                                    int numRightSNPs = variantPositions.getRankOne(rightIndex);
+                                    // search for all SNPs positions
+                                    if (numLeftSNPs < numRightSNPs){
+                                        for (int SNPnum = numLeftSNPs + 1; SNPnum <= numRightSNPs; ++SNPnum){
+
+                                            int selectSNP = variantPositions.getSelect(SNPnum);
+
+                                            // go through all SNPs at certain position
+                                            for (int[] variant : variants[SNPnum - 1]){
+                                                if (variant[0] != aminoAcid || variant[1] != aminoAcidCheck) continue;
+
+                                                final int leftIndexSNP = selectSNP;
+                                                final int rightIndexSNP = selectSNP;
+                                                row[j + 1].add(new MatrixContent(leftIndexSNP, rightIndexSNP, aminoAcidCheck, content, numX, length + 1, numVariants + 1, (char)aminoAcid));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    
+    
     /**
      * Variant tolerant mapping the tag elements to the reference text with a
      * generic upper limit of variants.
@@ -4140,7 +4413,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     @Override
     public ArrayList<PeptideProteinMapping> getProteinMapping(Tag tag, SequenceMatchingParameters sequenceMatchingPreferences) {
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>(1);
-        if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0) {
+        if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0 || variantMatchingType == 2) {
             for (int i = 0; i < indexParts; ++i) {
                 allMatches.addAll(getProteinMappingWithVariants(tag, sequenceMatchingPreferences, i));
             }
@@ -4646,6 +4919,19 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
         int[] lessTableReversed = lessTablesReversed.get(indexPart);
         WaveletTree occurrenceTableReversed = occurrenceTablesReversed.get(indexPart);
+        
+        Rank variantPositionsListPrimary = null;
+        Rank variantPositionsListReversed = null;
+        HashSet<int[]>[] variantsListPrimary = null;
+        HashSet<int[]>[] variantsListReversed = null;
+        
+        if (variantMatchingType == 2){
+            variantPositionsListPrimary = variantBitsPrimary.get(indexPart);
+            variantPositionsListReversed = variantBitsReversed.get(indexPart);
+            variantsListPrimary = variantsPrimary.get(indexPart);
+            variantsListReversed = variantsReversed.get(indexPart);
+        }
+        
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
 
         double xLimit = sequenceMatchingPreferences.getLimitX();
@@ -4689,6 +4975,10 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         int[] lessReversed;
         WaveletTree occurrencePrimary;
         WaveletTree occurrenceReversed;
+        Rank variantPositionsPrimary;
+        Rank variantPositionsReversed;
+        HashSet<int[]>[] variantsPrimary;
+        HashSet<int[]>[] variantsReversed;
         //boolean hasCTermDirection = hasCTermDirectionModification;
         //boolean hasNTermDirection = hasNTermDirectionModification;
         //boolean towardsC = true;
@@ -4709,6 +4999,12 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             lessPrimary = lessTableReversed;
             occurrenceReversed = occurrenceTablePrimary;
             occurrencePrimary = occurrenceTableReversed;
+            
+            
+            variantPositionsReversed = variantPositionsListPrimary;
+            variantPositionsPrimary = variantPositionsListReversed;
+            variantsReversed = variantsListPrimary;
+            variantsPrimary = variantsListReversed;
             //hasCTermDirection = hasNTermDirectionModification;
             //hasNTermDirection = hasCTermDirectionModification;
             //towardsC = false;
@@ -4720,6 +5016,12 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             lessReversed = lessTableReversed;
             occurrencePrimary = occurrenceTablePrimary;
             occurrenceReversed = occurrenceTableReversed;
+            
+            
+            variantPositionsPrimary = variantPositionsListPrimary;
+            variantPositionsReversed = variantPositionsListReversed;
+            variantsPrimary = variantsListPrimary;
+            variantsReversed = variantsListReversed;
 
         }
 
@@ -4751,7 +5053,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         TagElement[] combinations = createPeptideCombinations(tagComponents, sequenceMatchingPreferences);
         TagElement[] combinationsReversed = createPeptideCombinations(tagComponentsReverse, sequenceMatchingPreferences);
 
-        int numErrors = 1 + (genericVariantMatching ? maxNumberVariants : maxNumberDeletions + maxNumberInsertions + maxNumberSubstitutions);
+        int numErrors = 1;
+        if (variantMatchingType == 0) numErrors += maxNumberVariants;
+        else if (variantMatchingType == 1) numErrors += maxNumberDeletions + maxNumberInsertions + maxNumberSubstitutions;
 
         LinkedList<MatrixContent>[][] matrixReversed = (LinkedList<MatrixContent>[][]) new LinkedList[numErrors][combinationsReversed.length + 1];
         LinkedList<MatrixContent>[][] matrix = (LinkedList<MatrixContent>[][]) new LinkedList[numErrors][combinations.length + 1];
@@ -4778,7 +5082,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
             for (MatrixContent matrixContent : cached) {
 
-                int error = genericVariantMatching ? matrixContent.numVariants : matrixContent.numSpecificVariants[0] + matrixContent.numSpecificVariants[1] + matrixContent.numSpecificVariants[2];
+                int error = 0;
+                if (variantMatchingType == 0) error = matrixContent.numVariants;
+                else if(variantMatchingType == 1) error = matrixContent.numSpecificVariants[0] + matrixContent.numSpecificVariants[1] + matrixContent.numSpecificVariants[2];
                 matrix[error][0].add(matrixContent);
 
             }
@@ -4792,13 +5098,17 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         if (cached == null) {
 
             // Map Reverse
-            if (genericVariantMatching) {
+            if (variantMatchingType == 0) {
 
                 mappingSequenceAndMassesWithVariantsGeneric(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed);
 
-            } else {
+            } else if (variantMatchingType == 1) {
 
                 mappingSequenceAndMassesWithVariantsSpecific(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed);
+
+            } else if (variantMatchingType == 2) {
+                
+                mappingSequenceAndMassesWithFixedVariants(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed, variantPositionsReversed, variantsReversed);
 
             }
 
@@ -4877,7 +5187,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                     String reversePeptide = (new StringBuilder(currentPeptide).reverse()).toString();
                     allVariants = (new StringBuilder(allVariants).reverse()).toString();
 
-                    if (genericVariantMatching) {
+                    if (variantMatchingType == 0) {
 
                         cachePrimary.add(new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, content.length, 0, null, modifications, -1, k, '\0', allVariants));
 
@@ -4891,22 +5201,26 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
             for (MatrixContent matrixContent : cachePrimary) {
 
-                int error = genericVariantMatching ? matrixContent.numVariants : matrixContent.numSpecificVariants[0] + matrixContent.numSpecificVariants[1] + matrixContent.numSpecificVariants[2];
+                int error = 0;
+                if (variantMatchingType == 0) error = matrixContent.numVariants;
+                else if (variantMatchingType == 1) error = matrixContent.numSpecificVariants[0] + matrixContent.numSpecificVariants[1] + matrixContent.numSpecificVariants[2];
                 matrix[error][0].add(matrixContent);
-
             }
 
             cacheIt(refTagContent, cachePrimary, indexPart);
 
         }
 
-        if (genericVariantMatching) {
+        if (variantMatchingType == 0) {
 
             mappingSequenceAndMassesWithVariantsGeneric(combinations, matrix, lessPrimary, occurrencePrimary);
 
-        } else {
+        } else if (variantMatchingType == 1) {
 
             mappingSequenceAndMassesWithVariantsSpecific(combinations, matrix, lessPrimary, occurrencePrimary);
+
+        } else if (variantMatchingType == 2) {
+            mappingSequenceAndMassesWithFixedVariants(combinations, matrix, lessPrimary, occurrencePrimary, variantPositionsPrimary, variantsPrimary);
 
         }
 

@@ -606,14 +606,16 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         maxNumberSubstitutions = peptideVariantsPreferences.getnAaSubstitutions();
         
         
-        // TODO: remove
+        /* 
+        // example for adding proteomic SNPs into the index, here for a 
+        // yeast proteome
         variantMatchingType = 2;
         SNPs.put("P47187", new ArrayList<>());
         SNPs.get("P47187").add(new SNPElement(213, 'T', 'D'));
         SNPs.get("P47187").add(new SNPElement(228, 'A', 'F'));
         SNPs.get("P47187").add(new SNPElement(229, 'F', 'L'));
         SNPs.get("P47187").add(new SNPElement(218, 'W', 'K'));
-        
+        */
         
 
         TreeSet<Character> aaGroups = new TreeSet<>();

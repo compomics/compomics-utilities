@@ -27,6 +27,10 @@ public class AccessionMetaData implements Serializable {
      * The index part.
      */
     int indexPart;
+    /**
+     * Beginning of protein sequence in the proteome.
+     */
+    int trueBeginning;
 
     /**
      * Empty default constructor.
@@ -43,6 +47,7 @@ public class AccessionMetaData implements Serializable {
         headerAsString = new String(accessionMetaData.getHeaderAsString());
         index = accessionMetaData.index;
         indexPart = accessionMetaData.indexPart;
+        trueBeginning = accessionMetaData.trueBeginning;
         header = null;
     }
 
@@ -61,11 +66,13 @@ public class AccessionMetaData implements Serializable {
      * @param header the header as parsed from the FASTA file
      * @param index the index
      * @param indexPart the index part
+     * @param beginning beginning of the protein in the proteome sequence
      */
-    public AccessionMetaData(String header, int index, int indexPart) {
+    public AccessionMetaData(String header, int index, int indexPart, int beginning) {
         this.headerAsString = header;
         this.index = index;
         this.indexPart = indexPart;
+        this.trueBeginning = beginning;
     }
 
     /**

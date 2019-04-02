@@ -79,6 +79,9 @@ public class WaveletTree implements Serializable {
     
     
     
+    public int getLength(){
+        return lenText;
+    }
     
 
     /**

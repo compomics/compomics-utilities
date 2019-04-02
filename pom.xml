@@ -267,7 +267,7 @@
                 </executions>
             </plugin>
 
-            <!-- Create javadoc on build
+            <!-- Create javadoc on build -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -285,7 +285,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin> -->
+            </plugin>
 
             <!-- Pack sources on build -->
             <plugin>

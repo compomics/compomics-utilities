@@ -606,7 +606,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         maxNumberSubstitutions = peptideVariantsPreferences.getnAaSubstitutions();
         
         
-        /* 
+        /*
         // example for adding proteomic SNPs into the index, here for a 
         // yeast proteome
         variantMatchingType = 2;
@@ -1058,7 +1058,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         String fastaExtension = getFileExtension(fastaFile);
         File FMFile = new File(fastaFile.getAbsolutePath().replace(fastaExtension, ".fmi"));
         boolean loadFasta = true;
-        if (FMFile.exists() && variantMatchingType != 2){
+        if (FMFile.exists()){
             
             DataInputStream is = new DataInputStream(new BufferedInputStream(new FileInputStream(FMFile.getAbsolutePath()), 1024 * 1024));
             ObjectInputStream ois = null;
@@ -1158,6 +1158,120 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         
         
         
+        // create SNP variants
+        if (variantMatchingType == 2){
+            for (int prt = 0; prt < indexParts; ++prt){
+            
+                // create forward variants
+                int[] lessTablePrimary = lessTablesPrimary.get(prt);
+                WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(prt);
+            
+                int indexStringLength = occurrenceTablePrimary.getLength();
+                
+                long[] variantPrimBits = new long[(indexStringLength >>> 6) + 1];
+                long[] variantRevBits = new long[(indexStringLength >>> 6) + 1];
+                HashSet<int[]>[] variantsPrimTmp = (HashSet<int[]>[]) new HashSet[indexStringLength];
+                HashSet<int[]>[] variantsPrim = null;
+                HashSet<int[]>[] variantsRevTmp = (HashSet<int[]>[]) new HashSet[indexStringLength];
+                HashSet<int[]>[] variantsRev = null;
+                int numVariants = 0;
+                
+                // reconstruct the suffix array
+                int[] SA = new int[indexStringLength];
+                SA[0] = indexStringLength - 1;
+                int idx = 0;
+                int sa = SA[0];
+                while (true) {
+                    int[] aminoInfo = occurrenceTablePrimary.getCharacterInfo(idx);
+                    idx = lessTablePrimary[aminoInfo[0]] + aminoInfo[1];
+                    if (idx == 0) break;
+                    SA[idx] = --sa;
+                }
+                lessTablePrimary = null;
+                occurrenceTablePrimary = null;
+                
+                // create inverse suffix array
+                int[] inversedSampledSuffixArray = new int[indexStringLength];
+                for (int i = 0; i < indexStringLength; ++i) {
+                    inversedSampledSuffixArray[SA[i]] = i;
+                }
+                SA = null;
+                for (String accession : accessions.get(prt)) {
+                    
+                    // adding variants
+                    if (variantMatchingType == 2 && SNPs.containsKey(accession)){
+                        for (SNPElement SNP : SNPs.get(accession)){
+                            int posSNP = inversedSampledSuffixArray[accessionMetaData.get(accession).trueBeginning + SNP.position];
+                            variantPrimBits[posSNP >>> 6] |= 1L << (posSNP & 63);
+                            if (variantsPrimTmp[posSNP] == null) variantsPrimTmp[posSNP] = new HashSet<>();
+                            variantsPrimTmp[posSNP].add(new int[]{SNP.sourceAA, SNP.targetAA});
+                            numVariants += 1;
+                        }
+                    }
+                }
+                inversedSampledSuffixArray = null;
+                variantsPrim = (HashSet<int[]>[]) new HashSet[numVariants];
+                for (int i = 0, j = 0; i < indexStringLength; ++i){
+                    if (variantsPrimTmp[i] != null){
+                        variantsPrim[j++] = variantsPrimTmp[i];
+                    }
+                }
+                variantBitsPrimary.add(new Rank(variantPrimBits, indexStringLength));
+                variantsPrimary.add(variantsPrim);
+                
+                
+                
+                
+                
+                // create backward variants
+                
+                
+                int[] lessTableReversed = lessTablesReversed.get(prt);
+                WaveletTree occurrenceTableReversed = occurrenceTablesReversed.get(prt);
+                idx = 0;
+                SA = new int[indexStringLength];
+                SA[0] = indexStringLength - 1;
+                sa = SA[0];
+                while (true) {
+                    int[] aminoInfo = occurrenceTableReversed.getCharacterInfo(idx);
+                    idx = lessTableReversed[aminoInfo[0]] + aminoInfo[1];
+                    if (idx == 0) break;
+                    SA[idx] = --sa;
+                }
+                lessTableReversed = null;
+                occurrenceTableReversed = null;
+                
+                // compute reversed variant positions
+                inversedSampledSuffixArray = new int[indexStringLength];
+                for (int i = 0; i < indexStringLength; ++i) {
+                    inversedSampledSuffixArray[SA[i]] = i;
+                }
+                for (String accession : accessions.get(prt)) {
+                
+                    // adding variants
+                    if (SNPs.containsKey(accession)){
+                        for (SNPElement SNP : SNPs.get(accession)){
+                            int posSNP = inversedSampledSuffixArray[indexStringLength - 2 - (accessionMetaData.get(accession).trueBeginning + SNP.position)];
+                            variantRevBits[posSNP >>> 6] |= 1L << (posSNP & 63);
+                            if (variantsRevTmp[posSNP] == null) variantsRevTmp[posSNP] = new HashSet<>();
+                            variantsRevTmp[posSNP].add(new int[]{SNP.sourceAA, SNP.targetAA});
+                        }
+                    }
+                }
+
+                variantsRev = (HashSet<int[]>[]) new HashSet[numVariants];
+                for (int i = 0, j = 0; i < indexStringLength; ++i){
+                    if (variantsRevTmp[i] != null){
+                        variantsRev[j++] = variantsRevTmp[i];
+                    }
+                }
+                
+                variantBitsReversed.add(new Rank(variantRevBits, indexStringLength));
+                variantsReversed.add(variantsRev);
+            }
+        }
+        
+        
         
         if (loadFasta){
             DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(FMFile.getAbsolutePath())));
@@ -1206,20 +1320,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         T[indexStringLength - 2] = '/'; // adding delimiter at ending
         T[indexStringLength - 1] = '$'; // adding the sentinal
         
-        
-        long[] variantPrimBits = null;
-        long[] variantRevBits = null;
-        HashSet<int[]>[] variantsPrimTmp = null;
-        HashSet<int[]>[] variantsPrim = null;
-        HashSet<int[]>[] variantsRevTmp = null;
-        HashSet<int[]>[] variantsRev = null;
-        int numVariants = 0;
-        if (variantMatchingType == 2){
-            variantPrimBits = new long[(indexStringLength >>> 6) + 1];
-            variantRevBits = new long[(indexStringLength >>> 6) + 1];
-            variantsPrimTmp = (HashSet<int[]>[]) new HashSet[indexStringLength];
-            variantsRevTmp = (HashSet<int[]>[]) new HashSet[indexStringLength];
-        }
+
 
         int[] bndaries = new int[numProteins + 1];
         boundaries.add(bndaries);
@@ -1231,7 +1332,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         // reading proteins in a second pass to store their amino acid sequences and their accession numbers
         int tmpN = 0;
         int tmpNumProtein = 0;
-        HashMap<String, Integer> accessionBeginnings = new HashMap<>();
         HashMap<String, Integer> accessionEndings = new HashMap<>();
 
         for (int i = 0; i < numProteins; ++i) {
@@ -1249,7 +1349,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             String accession = currentProtein.getAccession();
             Header headerObject = ((FastaIterator) pi).getLastHeader();
             String header = (headerObject.getRawHeader().charAt(0) == '>' ? headerObject.getRawHeader().substring(1) : headerObject.getRawHeader());
-            accessionMetaData.put(accession, new AccessionMetaData(header));
+            AccessionMetaData accMD = new AccessionMetaData(header);
+            accessionMetaData.put(accession, accMD);
 
             if (accession == null || accession.equals("")) {
                 accession = header;
@@ -1264,7 +1365,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             int proteinLen = currentProtein.getLength();
 
             T[tmpN++] = '/'; // adding the delimiters
-            if (variantMatchingType == 2) accessionBeginnings.put(accession, tmpN);
+            accMD.trueBeginning = tmpN;
             accessionEndings.put(accession, tmpN + proteinLen);
             System.arraycopy(currentProtein.getSequence().toUpperCase().getBytes(), 0, T, tmpN, proteinLen);
             tmpN += proteinLen;
@@ -1298,34 +1399,11 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             AccessionMetaData accessionMeta = accessionMetaData.get(accession);
             accessionMeta.index = inversedSampledSuffixArray[truePos];
             accessionMeta.indexPart = indexPart;
-            
-            // adding variants
-            if (variantMatchingType == 2 && SNPs.containsKey(accession)){
-                for (SNPElement SNP : SNPs.get(accession)){
-                    int posSNP = inversedSampledSuffixArray[accessionBeginnings.get(accession) + SNP.position];
-                    variantPrimBits[posSNP >>> 6] |= 1L << (posSNP & 63);
-                    if (variantsPrimTmp[posSNP] == null) variantsPrimTmp[posSNP] = new HashSet<>();
-                    variantsPrimTmp[posSNP].add(new int[]{SNP.sourceAA, SNP.targetAA});
-                    numVariants += 1;
-                }
-            }
         }
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
         }
         inversedSampledSuffixArray = null;
-        
-        
-        
-        if (variantMatchingType == 2){
-            variantsPrim = (HashSet<int[]>[]) new HashSet[numVariants];
-            for (int i = 0, j = 0; i < indexStringLength; ++i){
-                if (variantsPrimTmp[i] != null){
-                    variantsPrim[j++] = variantsPrimTmp[i];
-                }
-            }
-        }
-        
         
 
         // create Burrows-Wheeler-Transform
@@ -1381,43 +1459,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
         
         
-        
-        
-        
-        
-        if (variantMatchingType == 2){
-        
-            // compute reversed variant positions
-            inversedSampledSuffixArray = new int[indexStringLength];
-            for (int i = 0; i < indexStringLength; ++i) {
-                inversedSampledSuffixArray[suffixArrayReversed[i]] = i;
-            }
-            for (String accession : accessionEndings.keySet()) {
-
-                // adding variants
-                if (SNPs.containsKey(accession)){
-                    for (SNPElement SNP : SNPs.get(accession)){
-                        int posSNP = inversedSampledSuffixArray[indexStringLength - 2 - (accessionBeginnings.get(accession) + SNP.position)];
-                        variantRevBits[posSNP >>> 6] |= 1L << (posSNP & 63);
-                        if (variantsRevTmp[posSNP] == null) variantsRevTmp[posSNP] = new HashSet<>();
-                        variantsRevTmp[posSNP].add(new int[]{SNP.sourceAA, SNP.targetAA});
-                    }
-                }
-            }
-
-            variantsRev = (HashSet<int[]>[]) new HashSet[numVariants];
-            for (int i = 0, j = 0; i < indexStringLength; ++i){
-                if (variantsRevTmp[i] != null){
-                    variantsRev[j++] = variantsRevTmp[i];
-                }
-            }
-        }
-        
-        
-        
-        
-        
-
         // create inversed Burrows-Wheeler-Transform
         bwt = new byte[indexStringLength];
         for (int i = 0; i < indexStringLength; ++i) {
@@ -1438,13 +1479,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         occurrenceTablesReversed.add(occurrenceTableReversed);
         lessTablesPrimary.add(lessTablePrimary);
         lessTablesReversed.add(lessTableReversed);
-        
-        if (variantMatchingType == 2){
-            variantBitsPrimary.add(new Rank(variantPrimBits, indexStringLength));
-            variantsPrimary.add(variantsPrim);
-            variantBitsReversed.add(new Rank(variantRevBits, indexStringLength));
-            variantsReversed.add(variantsRev);
-        }
     }
 
     /**

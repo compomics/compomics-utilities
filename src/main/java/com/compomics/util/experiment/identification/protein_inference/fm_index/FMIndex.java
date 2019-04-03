@@ -1688,15 +1688,20 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     @Override
     public ArrayList<PeptideProteinMapping> getProteinMapping(String peptide, SequenceMatchingParameters sequenceMatchingParameters) {
         ArrayList<PeptideProteinMapping> peptideProteinMapping = new ArrayList<>();
-        if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0) {
+        if (maxNumberVariants > 0 || maxNumberDeletions > 0 || maxNumberInsertions > 0 || maxNumberSubstitutions > 0 || variantMatchingType == 2) {
             if (variantMatchingType == 0) {
                 for (int i = 0; i < indexParts; ++i) {
                     peptideProteinMapping.addAll(getProteinMappingWithVariantsGeneric(peptide, sequenceMatchingParameters, i));
                 }
                 return peptideProteinMapping;
-            } else {
+            } else if (variantMatchingType == 1) {
                 for (int i = 0; i < indexParts; ++i) {
                     peptideProteinMapping.addAll(getProteinMappingWithVariantsSpecific(peptide, sequenceMatchingParameters, i));
+                }
+                return peptideProteinMapping;
+            } else {
+                for (int i = 0; i < indexParts; ++i) {
+                    peptideProteinMapping.addAll(getProteinMappingWithFixedVariants(peptide, sequenceMatchingParameters, i));
                 }
                 return peptideProteinMapping;
             }
@@ -1794,6 +1799,179 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         for (PeptideProteinMapping ppm : allMatches){
             System.out.println(ppm.getPeptideSequence() + " " + ppm.getProteinAccession() + " " + ppm.getIndex());
         }*/
+        return allMatches;
+    }
+
+    /**
+     * Variant tolerant mapping peptides against the proteome.
+     *
+     * @param peptide the peptide
+     * @param seqMatchPref the sequence match preferences
+     * @param indexPart the index part
+     * @return the mapping
+     */
+    public ArrayList<PeptideProteinMapping> getProteinMappingWithFixedVariants(String peptide, SequenceMatchingParameters seqMatchPref, int indexPart) {
+        int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
+        WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
+        Rank variantPositionsPrimary = variantBitsPrimary.get(indexPart);
+        HashSet<int[]>[] variantsListPrimary = variantsPrimary.get(indexPart);
+        ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>();
+        String pep_rev = new StringBuilder(peptide).reverse().toString();
+        int lenPeptide = peptide.length();
+        ArrayList<String> combinations = createPeptideCombinations(pep_rev, seqMatchPref);
+        int xNumLimit = (int) (seqMatchPref.getLimitX() * lenPeptide);
+
+        ArrayList<MatrixContent>[][] backwardMatrix = (ArrayList<MatrixContent>[][]) new ArrayList[maxNumberVariants + 1][lenPeptide + 1];
+
+        for (int k = 0; k <= maxNumberVariants; ++k) {
+            for (int j = 0; j <= lenPeptide; ++j) {
+                backwardMatrix[k][j] = new ArrayList<>(10);
+            }
+        }
+        int countX = 0;
+        for (int j = 0; j <= lenPeptide; ++j) {
+            if (j < lenPeptide && pep_rev.charAt(j) == 'X') {
+                ++countX;
+            }
+        }
+
+        if (countX <= xNumLimit) {
+
+            backwardMatrix[0][0].add(new MatrixContent(indexStringLengths.get(indexPart) - 1));
+
+            for (int k = 0; k <= maxNumberVariants; ++k) {
+                ArrayList<MatrixContent>[] backwardList = backwardMatrix[k];
+                for (int j = 0; j < lenPeptide; ++j) {
+                    String combinationSequence = combinations.get(j);
+                    ArrayList<MatrixContent> cell = backwardList[j];
+
+                    for (int i = 0; i < cell.size(); ++i) {
+                        MatrixContent content = cell.get(i);
+                        int leftIndexOld = content.left;
+                        int rightIndexOld = content.right;
+                        int numX = content.numX;
+                        int numVariants = content.numVariants;
+                        int length = content.length;
+
+                        for (int c = 0; c < combinationSequence.length(); ++c) {
+                            final int aminoAcidCheck = combinationSequence.charAt(c);
+                            final int newNumX = numX + ((aminoAcidCheck == 'X') ? 1 : 0);
+                            if (newNumX > xNumLimit) continue;
+
+                            ArrayList<int[]> setCharacter = occurrenceTablePrimary.rangeQuery(leftIndexOld - 1, rightIndexOld);
+
+                            for (int[] borders : setCharacter) {
+                                final int aminoAcid = borders[0];
+                                if (aminoAcid == '/')  continue;
+                                
+                                final int lessValue = lessTablePrimary[aminoAcid];
+                                final int leftIndex = lessValue + borders[1];
+                                final int rightIndex = lessValue + borders[2] - 1;
+
+                                // match
+                                if (aminoAcid == aminoAcidCheck){
+                                    if (leftIndex <= rightIndex) {
+                                        backwardList[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-'));
+                                    }
+                                }
+
+                                // check for SNPs
+                                else {
+                                    int numLeftSNPs = variantPositionsPrimary.getRankOne(leftIndex - 1);
+                                    int numRightSNPs = variantPositionsPrimary.getRankOne(rightIndex);
+                                    // search for all SNPs positions
+                                    if (numLeftSNPs < numRightSNPs){
+                                        for (int SNPnum = numLeftSNPs + 1; SNPnum <= numRightSNPs; ++SNPnum){
+
+                                            int selectSNP = variantPositionsPrimary.getSelect(SNPnum);
+
+                                            // go through all SNPs at certain position
+                                            for (int[] variant : variantsListPrimary[SNPnum - 1]){
+                                                if (variant[0] != aminoAcid || variant[1] != aminoAcidCheck) continue;
+
+                                                final int leftIndexSNP = selectSNP;
+                                                final int rightIndexSNP = selectSNP;
+                                                backwardList[j + 1].add(new MatrixContent(leftIndexSNP, rightIndexSNP, aminoAcidCheck, content, numX, length + 1, numVariants + 1, (char)aminoAcid));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // traceback
+            for (ArrayList<MatrixContent>[] backwardList : backwardMatrix) {
+                for (MatrixContent content : backwardList[lenPeptide]) {
+                    MatrixContent currentContent = content;
+                    String currentPeptide = "";
+                    String allVariants = "";
+
+                    while (currentContent.previousContent != null) {
+                        //if (currentContent.character != '*')
+                        currentPeptide += (char) currentContent.character;
+                        allVariants += currentContent.variant;
+                        currentContent = currentContent.previousContent;
+                    }
+
+                    int leftIndex = content.left;
+                    int rightIndex = content.right;
+                    String cleanPeptide = currentPeptide.replace("*", "");
+
+                    for (int j = leftIndex; j <= rightIndex; ++j) {
+                        int pos = getTextPosition(j, indexPart);
+                        int index = binarySearch(boundaries.get(indexPart), pos);
+                        String accession = accessions.get(indexPart)[index];
+
+                        int startPosition = pos - boundaries.get(indexPart)[index];
+                        boolean newPeptide = true;
+
+                        for (PeptideProteinMapping ppm : allMatches) {
+                            if (ppm.getProteinAccession().equals(accession) && ppm.getPeptideSequence().equals(cleanPeptide) && Math.abs(ppm.getIndex() - startPosition) <= maxNumberVariants) {
+                                newPeptide = false;
+                                break;
+                            }
+                        }
+
+                        if (newPeptide) {
+
+                            HashMap<Integer, Variant> variants = new HashMap<>(0);
+                            int lengthDifference = 0;
+
+                            // adding variants and adjusting modification sites
+                            for (int l = 0, length = 0; l < allVariants.length(); ++l) {
+                                int edit = allVariants.charAt(l);
+                                ++length;
+                                if (edit != '-') {
+                                    if (edit == '*') { // insertion
+                                        Variant variant = new Insertion(peptide.charAt(length - 1));
+                                        variants.put(length, variant);
+                                        lengthDifference--;
+                                    } else if ('A' <= edit && edit <= 'Z') { // substitution
+                                        Variant variant = new Substitution((char) edit, peptide.charAt(length - 1));
+                                        variants.put(length, variant);
+                                    } else if ('a' <= edit && edit <= 'z') { // deletion
+                                        Variant variant = new Deletion((char) (edit - 32));
+                                        variants.put(length, variant);
+                                        lengthDifference++;
+                                        --length;
+                                    }
+                                }
+                            }
+
+                            PeptideVariantMatches peptideVariantMatches = variants.isEmpty() ? null : new PeptideVariantMatches(variants, lengthDifference);
+
+                            PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition, null, peptideVariantMatches);
+                            allMatches.add(peptideProteinMapping);
+
+                        }
+                    }
+                }
+            }
+        }
+
         return allMatches;
     }
 

@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -237,13 +237,17 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#getLength--">getLength</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#getRank-int-int-">getRank</a></span>(int&nbsp;index,
        int&nbsp;character)</code>
 <div class="block">Returns the number of occurrences of a given character until position
  index.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#getRankRecursive-int-int-">getRankRecursive</a></span>(int&nbsp;index,
                 int&nbsp;character)</code>
@@ -251,29 +255,35 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
  index.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
-<td class="colFirst"><code>int[][]</code></td>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;int[]&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#rangeQuery-int-int-">rangeQuery</a></span>(int&nbsp;leftIndex,
           int&nbsp;rightIndex)</code>
 <div class="block">Returns a list of character and new left/right index for a given range.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#rangeQuery-int-int-int:A:A-">rangeQuery</a></span>(int&nbsp;leftIndex,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#rangeQuery-int-int-java.util.ArrayList-">rangeQuery</a></span>(int&nbsp;leftIndex,
           int&nbsp;rightIndex,
-          int[][]&nbsp;setCharacter)</code>
+          <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;int[]&gt;&nbsp;setCharacter)</code>
 <div class="block">Fills a list of character and new left/right index for a given range.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#rangeQueryOneValue-int-int:A:A-">rangeQueryOneValue</a></span>(int&nbsp;index,
-                  int[][]&nbsp;setCharacter)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#rangeQueryOneValue-int-java.util.ArrayList-">rangeQueryOneValue</a></span>(int&nbsp;index,
+                  <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;int[]&gt;&nbsp;setCharacter)</code>
 <div class="block">Fills a list of character and new left/right index for a given index.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#setNumMasses-int-">setNumMasses</a></span>(int&nbsp;numMasses)</code>
+<div class="block">Setter for numMasses</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>int[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#singleRangeQuery-int-int-int-">singleRangeQuery</a></span>(int&nbsp;leftIndex,
                 int&nbsp;rightIndex,
@@ -385,6 +395,15 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="getLength--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getLength</h4>
+<pre>public&nbsp;int&nbsp;getLength()</pre>
+</li>
+</ul>
 <a name="createWaveletTreeHuffman-byte:A-com.compomics.util.waiting.WaitingHandler-com.compomics.util.experiment.identification.protein_inference.fm_index.WaveletTree.HuffmanNode-int-boolean-">
 <!--   -->
 </a>
@@ -459,6 +478,20 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </dl>
 </li>
 </ul>
+<a name="setNumMasses-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setNumMasses</h4>
+<pre>public&nbsp;void&nbsp;setNumMasses(int&nbsp;numMasses)</pre>
+<div class="block">Setter for numMasses</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>numMasses</code> - number of masses</dd>
+</dl>
+</li>
+</ul>
 <a name="getCharacterInfo-int-">
 <!--   -->
 </a>
@@ -495,8 +528,8 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <ul class="blockList">
 <li class="blockList">
 <h4>rangeQuery</h4>
-<pre>public&nbsp;int[][]&nbsp;rangeQuery(int&nbsp;leftIndex,
-                          int&nbsp;rightIndex)</pre>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;int[]&gt;&nbsp;rangeQuery(int&nbsp;leftIndex,
+                                   int&nbsp;rightIndex)</pre>
 <div class="block">Returns a list of character and new left/right index for a given range.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -507,7 +540,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </dl>
 </li>
 </ul>
-<a name="rangeQuery-int-int-int:A:A-">
+<a name="rangeQuery-int-int-java.util.ArrayList-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -515,7 +548,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <h4>rangeQuery</h4>
 <pre>public&nbsp;void&nbsp;rangeQuery(int&nbsp;leftIndex,
                        int&nbsp;rightIndex,
-                       int[][]&nbsp;setCharacter)</pre>
+                       <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;int[]&gt;&nbsp;setCharacter)</pre>
 <div class="block">Fills a list of character and new left/right index for a given range.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -525,14 +558,14 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </dl>
 </li>
 </ul>
-<a name="rangeQueryOneValue-int-int:A:A-">
+<a name="rangeQueryOneValue-int-java.util.ArrayList-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>rangeQueryOneValue</h4>
 <pre>public&nbsp;void&nbsp;rangeQueryOneValue(int&nbsp;index,
-                               int[][]&nbsp;setCharacter)</pre>
+                               <a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;int[]&gt;&nbsp;setCharacter)</pre>
 <div class="block">Fills a list of character and new left/right index for a given index.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

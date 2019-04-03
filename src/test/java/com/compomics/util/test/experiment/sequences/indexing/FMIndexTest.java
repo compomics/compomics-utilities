@@ -262,7 +262,7 @@ public class FMIndexTest extends TestCase {
         ArrayList<PeptideProteinMapping> peptideProteinMappings;
         int correctVariants = 0;
         boolean isPresent;
-
+        
         // ECTQDRGKTAFTEAVLLP
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);

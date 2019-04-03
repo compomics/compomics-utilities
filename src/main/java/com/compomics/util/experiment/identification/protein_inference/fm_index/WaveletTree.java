@@ -369,6 +369,14 @@ public class WaveletTree implements Serializable {
         }
         return 0;
     }
+    
+    /** 
+     * Setter for numMasses
+     * @param numMasses number of masses
+     */
+    public void setNumMasses(int numMasses){
+        this.numMasses = numMasses;
+    }
 
     /**
      * Returns the character and rank at a given index.
@@ -423,9 +431,8 @@ public class WaveletTree implements Serializable {
      * @param rightIndex right index boundary
      * @return list of counted characters
      */
-    public int[][] rangeQuery(int leftIndex, int rightIndex) {
-        int[][] query = new int[numMasses + 1][];
-        query[numMasses] = new int[]{0};
+    public ArrayList<int[]> rangeQuery(int leftIndex, int rightIndex) {
+        ArrayList<int[]> query = new ArrayList<>(numMasses);
 
         if (leftIndex + 1 < rightIndex) {
             rangeQuery(leftIndex, rightIndex, query);
@@ -443,7 +450,7 @@ public class WaveletTree implements Serializable {
      * @param rightIndex right index boundary
      * @param setCharacter list of counted characters
      */
-    public void rangeQuery(int leftIndex, int rightIndex, int[][] setCharacter) {
+    public void rangeQuery(int leftIndex, int rightIndex, ArrayList<int[]> setCharacter) {
         int newLeftIndex = (leftIndex >= 0) ? rank.getRankOne(leftIndex) : 0;
         int newRightIndex = (rightIndex >= 0) ? rank.getRankOne(rightIndex) : 0;
 
@@ -451,7 +458,7 @@ public class WaveletTree implements Serializable {
             if (rightChild != null) {
                 rightChild.rangeQuery(newLeftIndex - 1, newRightIndex - 1, setCharacter);
             } else {
-                setCharacter[setCharacter[numMasses][0]++] = new int[]{lastChar, newLeftIndex, newRightIndex, lastChar, -1};
+                setCharacter.add(new int[]{lastChar, newLeftIndex, newRightIndex, lastChar, -1});
             }
         }
 
@@ -461,7 +468,7 @@ public class WaveletTree implements Serializable {
             if (leftChild != null) {
                 leftChild.rangeQuery(newLeftIndex, newRightIndex, setCharacter);
             } else {
-                setCharacter[setCharacter[numMasses][0]++] = new int[]{firstChar, newLeftIndex + 1, newRightIndex + 1, firstChar, -1};
+                setCharacter.add(new int[]{firstChar, newLeftIndex + 1, newRightIndex + 1, firstChar, -1});
             }
         }
     }
@@ -472,7 +479,7 @@ public class WaveletTree implements Serializable {
      * @param index index boundary
      * @param setCharacter list of counted characters
      */
-    public void rangeQueryOneValue(int index, int[][] setCharacter) {
+    public void rangeQueryOneValue(int index, ArrayList<int[]> setCharacter) {
         int switchOption = rank.isOneInt(index);
         switchOption += leftRightMask & (4 >> switchOption);
         switch (switchOption) {
@@ -489,12 +496,12 @@ public class WaveletTree implements Serializable {
 
             case 0: // go left and no left child avaliable
                 int newIndex0 = rank.getRankZero(index);
-                setCharacter[setCharacter[numMasses][0]++] = new int[]{firstChar, newIndex0 - 1, newIndex0, firstChar, -1};
+                setCharacter.add(new int[]{firstChar, newIndex0 - 1, newIndex0, firstChar, -1});
                 break;
 
             case 1: // go right and no right child avaliable
                 int newIndex1 = rank.getRankOne(index);
-                setCharacter[setCharacter[numMasses][0]++] = new int[]{lastChar, newIndex1 - 1, newIndex1, lastChar, -1};
+                setCharacter.add(new int[]{lastChar, newIndex1 - 1, newIndex1, lastChar, -1});
                 break;
         }
     }

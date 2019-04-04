@@ -368,13 +368,13 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     /**
      * Compute the inverse mass value.
      *
-     * @param currentMass the current mass
+     * @param currentTollerance the current mass
      * @param refMass the reference mass
      * @return the inverse mass value
      */
-    public double computeMassTolerance(double currentMass, double refMass) {
-        if (massAccuracyType == SearchParameters.MassAccuracyType.DA) return currentMass;
-        return currentMass / 1e6 * refMass;
+    public double computeMassTolerance(double currentTollerance, double refMass) {
+        if (massAccuracyType == SearchParameters.MassAccuracyType.DA) return currentTollerance;
+        return currentTollerance / 1e6 * refMass;
     }
 
     /**
@@ -2144,7 +2144,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     }
 
     /**
-     * Variant tolerant mapping peptides against the proteome.
+     * Variant tolerant mapping peptides against the proteome
      *
      * @param peptide the peptide
      * @param seqMatchPref the sequence matching preferences
@@ -2411,9 +2411,10 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
     
     
-    private boolean massNotValid(double mass) {
-        int intMass = (int) (mass * lookupMultiplier);
-        return (mass > massTolerance && mass < LOOKUP_MAX_MASS && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0));
+    private boolean massNotValid(double currMass, double refMass) {
+        double diffMass = Math.abs(currMass - refMass);
+        int intMass = (int) (diffMass * lookupMultiplier);
+        return (diffMass > computeMassTolerance(massTolerance, refMass) && diffMass < LOOKUP_MAX_MASS && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0));
     }
     
     
@@ -2470,13 +2471,10 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             final double massDiff = Math.abs(combinationMass - newMass);
 
                             // make a lookup when mass difference is below 800Da if it is still possible to reach by a AA combination
-                            if (massNotValid(massDiff)) {
-                                continue;
-                            }
+                            if (massNotValid(newMass, combinationMass)) continue;
                             boolean withinMass = withinMassTolerance(massDiff, newNumX);
                             int offset = ((computeMassValue(newMass, combinationMass) <= massTolerance) ? 1 : 0) | (withinMass ? 1 : 0);
-                            //System.out.println(j + " " + length + " " + (char)borders[0] + " " +  leftIndex + " " + rightIndex + " " + offset + " " + newNumX + " " + massDiff + " / " + combination.xNumLimit);
-
+                           
                             if (offset > 0) {
                                 newNumX = 0;
                             }
@@ -2557,16 +2555,12 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             final int lessValue = less[aminoAcid];
                             final int leftIndex = lessValue + borders[1];
                             final int rightIndex = lessValue + borders[2] - 1;
-                            int offset = (Math.abs(combinationMass - newMass) <= massTolerance) ? 1 : 0;
 
-                            if (newMass - massTolerance <= combinationMass) {
-                                boolean add = true;
+                            if (newMass - computeMassTolerance(massTolerance, combinationMass) <= combinationMass) {
                                 double massDiff = combinationMass - newMass;
-                                int intMass = (int) (massDiff * lookupMultiplier);
-                                if (massDiff > massTolerance && massDiff < LOOKUP_MAX_MASS && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0)) {
-                                    add = false;
-                                }
-                                if (add) {
+                                boolean withinMass = withinMassTolerance(massDiff, numX);
+                                if (!massNotValid(newMass, combinationMass)) {
+                                    int offset = ((computeMassValue(newMass, combinationMass) <= massTolerance) ? 1 : 0) | (withinMass ? 1 : 0);
                                     row[j + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newMass, length + 1, numX, borders[3], numVariants, '-', null));
                                 }
                             }

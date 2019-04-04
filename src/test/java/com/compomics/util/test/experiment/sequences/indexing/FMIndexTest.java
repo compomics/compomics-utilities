@@ -758,7 +758,7 @@ public class FMIndexTest extends TestCase {
         aminoAcidSequence = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
-        nTermGap += 4.9 / 1000000.0 *  nTermGap;
+        nTermGap += 4.9 / 1000000.0 * nTermGap;
         tag = new Tag(nTermGap, aminoAcidSequence, cTermGap);
         modificationParameters = new ModificationParameters();
         searchParameters.setModificationParameters(modificationParameters);

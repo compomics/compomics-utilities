@@ -2573,17 +2573,11 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                 // substitution
                                 for (int index : aaMassIndexes) {
                                     double aminoMass = oldMass + aaMasses[index];
-                                    int offsetSub = (Math.abs(combinationMass - aminoMass) <= massTolerance) ? 1 : 0;
                                     int amino = index & 127;
 
                                     if (amino != aminoAcid && aminoMass < combinationMass + massTolerance) {
-                                        boolean add = true;
-                                        double massDiff = combinationMass - aminoMass;
-                                        int intMass = (int) (massDiff * lookupMultiplier);
-                                        if (massDiff > massTolerance && massDiff < LOOKUP_MAX_MASS && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0)) {
-                                            add = false;
-                                        }
-                                        if (add) {
+                                        if (!massNotValid(aminoMass, combinationMass)) {
+                                            int offsetSub = ((computeMassValue(aminoMass, combinationMass) <= massTolerance) ? 1 : 0);
                                             matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, (char) aminoAcid, null));
                                         }
                                     }
@@ -2595,17 +2589,11 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         if (numVariants < maxNumberVariants) {
                             for (int index : aaMassIndexes) {
                                 double aminoMass = oldMass + aaMasses[index];
-                                int offsetDel = (Math.abs(combinationMass - aminoMass) <= massTolerance) ? 1 : 0;
                                 int amino = index & 127;
 
                                 if (aminoMass < combinationMass + massTolerance) {
-                                    boolean add = true;
-                                    double massDiff = combinationMass - aminoMass;
-                                    int intMass = (int) (massDiff * lookupMultiplier);
-                                    if (massDiff > massTolerance && massDiff < LOOKUP_MAX_MASS && (((lookupMasses[intMass >>> 6] >>> (intMass & 63)) & 1L) == 0)) {
-                                        add = false;
-                                    }
-                                    if (add) {
+                                    if (!massNotValid(aminoMass, combinationMass)) {
+                                        int offsetDel = ((computeMassValue(aminoMass, combinationMass) <= massTolerance) ? 1 : 0);
                                         matrix[k + 1][j + offsetDel].add(new MatrixContent(leftIndexOld, rightIndexOld, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, '*', null));
                                     }
                                 }

@@ -14,6 +14,8 @@ public class SNPElement {
     public char sourceAA;
     public char targetAA;
     
+
+    
     public SNPElement(int _position, char source, char target){
         position = _position;
         sourceAA = source;

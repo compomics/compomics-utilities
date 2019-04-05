@@ -605,28 +605,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         SNPs = peptideVariantsPreferences.getFixedVariants();
         
         
-        // example for adding proteomic SNPs into the index, here for a 
-        // mouse proteome
-        /*
-        variantMatchingType = 2;
-        SNPs.put("Q925J9", new ArrayList<>());
-        SNPs.get("Q925J9").add(new SNPElement(587, 'V', 'S'));
         
-        SNPs.put("Q91YI4", new ArrayList<>());
-        SNPs.get("Q91YI4").add(new SNPElement(35, 'A', 'D'));
-        
-        SNPs.put("Q91VD9", new ArrayList<>());
-        SNPs.get("Q91VD9").add(new SNPElement(518, 'G', 'I'));
-        
-        SNPs.put("Q9WUA5", new ArrayList<>());
-        SNPs.get("Q9WUA5").add(new SNPElement(14, 'Y', 'G'));
-        
-        SNPs.put("Q7TN99", new ArrayList<>());
-        SNPs.get("Q7TN99").add(new SNPElement(292, 'E', 'L'));
-        
-        SNPs.put("Q99LC3", new ArrayList<>());
-        SNPs.get("Q99LC3").add(new SNPElement(145, 'C', 'A'));
-        */
 
         TreeSet<Character> aaGroups = new TreeSet<>();
         aaGroups.add('B');
@@ -1140,7 +1119,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             }
         }
 
-        int lookupLength = ((int) ((LOOKUP_MAX_MASS + computeMassTolerance(massTolerance, LOOKUP_MAX_MASS)) * lookupMultiplier));
+        //int lookupLength = ((int) ((LOOKUP_MAX_MASS + computeMassTolerance(massTolerance, LOOKUP_MAX_MASS)) * lookupMultiplier));
+        int lookupLength = ((int) ((LOOKUP_MAX_MASS + 2) * lookupMultiplier));
         lookupMasses = new long[(lookupLength >>> 6) + 3];
         for (int i = 0; i < lookupMasses.length; ++i) {
             lookupMasses[i] = 0L;
@@ -1214,7 +1194,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             int posSNP = inversedSampledSuffixArray[accessionMetaData.get(accession).trueBeginning + SNP.position];
                             variantPrimBits[posSNP >>> 6] |= 1L << (posSNP & 63);
                             if (variantsPrimTmp[posSNP] == null) variantsPrimTmp[posSNP] = new HashSet<>();
-                            variantsPrimTmp[posSNP].add(new int[]{SNP.sourceAA, SNP.targetAA});
+                            variantsPrimTmp[posSNP].add(new int[]{SNP.sourceAA, SNP.targetAA, posSNP});
                             numVariants += 1;
                         }
                     }
@@ -1264,7 +1244,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             int posSNP = inversedSampledSuffixArray[indexStringLength - 2 - (accessionMetaData.get(accession).trueBeginning + SNP.position)];
                             variantRevBits[posSNP >>> 6] |= 1L << (posSNP & 63);
                             if (variantsRevTmp[posSNP] == null) variantsRevTmp[posSNP] = new HashSet<>();
-                            variantsRevTmp[posSNP].add(new int[]{SNP.sourceAA, SNP.targetAA});
+                            variantsRevTmp[posSNP].add(new int[]{SNP.sourceAA, SNP.targetAA, posSNP});
                         }
                     }
                 }
@@ -1512,6 +1492,10 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                 lookupMasses[p] = ~0L;
             }
             lookupMasses[endMass >>> 6] |= (~(0L)) >>> (64 - (endMass & 63));
+            
+            
+            startMass = (int) ((mass + 1 - transformedMass) * lookupMultiplier);
+            endMass = (int) ((mass + 1 + transformedMass) * lookupMultiplier + 1);
 
             if (loop <= maxXPerTag) {
                 Xlookup[loop][startMass >>> 6] |= (~(0L)) << (startMass & 63);
@@ -2724,14 +2708,14 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                 // search for all SNPs positions
                                 for (int SNPnum = numLeftSNPs + 1; SNPnum <= numRightSNPs; ++SNPnum){
                                     
-                                    int selectSNP = variantPositions.getSelect(SNPnum);
+                                    //int selectSNP = variantPositions.getSelect(SNPnum);
                                     
                                     // go through all SNPs at certain position
                                     for (int[] variant : variants[SNPnum - 1]){
                                         if (variant[0] != aminoAcid) continue;
                                         
                                         ArrayList<int[]> setCharacterSNP = new ArrayList<>(numMasses);
-                                        setCharacterSNP.add(new int[]{variant[1], selectSNP, selectSNP, variant[1], -1});
+                                        setCharacterSNP.add(new int[]{variant[1], 0, 0, variant[1], -1});
                                         
                                         if (withVariableModifications)  addModifications(setCharacterSNP);
                                         
@@ -2739,8 +2723,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                         
                                             final int aminoAcidSNP = variant[1];
                                             final double newMassSNP = oldMass + aaMasses[bordersSNP[3]];
-                                            final int leftIndexSNP = selectSNP;
-                                            final int rightIndexSNP = selectSNP;
+                                            final int leftIndexSNP = variant[2];
+                                            final int rightIndexSNP = variant[2];
                                             if (leftIndexSNP <= rightIndexSNP){
 
                                                 if (newMassSNP - computeMassTolerance(massTolerance, combinationMass) <= combinationMass) {
@@ -2792,14 +2776,12 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     if (numLeftSNPs < numRightSNPs){
                                         for (int SNPnum = numLeftSNPs + 1; SNPnum <= numRightSNPs; ++SNPnum){
 
-                                            int selectSNP = variantPositions.getSelect(SNPnum);
-
                                             // go through all SNPs at certain position
                                             for (int[] variant : variants[SNPnum - 1]){
                                                 if (variant[0] != aminoAcid || variant[1] != aminoAcidCheck) continue;
 
-                                                final int leftIndexSNP = selectSNP;
-                                                final int rightIndexSNP = selectSNP;
+                                                final int leftIndexSNP = variant[2];
+                                                final int rightIndexSNP = variant[2];
                                                 row[j + 1].add(new MatrixContent(leftIndexSNP, rightIndexSNP, aminoAcidCheck, content, numX, length + 1, numVariants + 1, (char)aminoAcid));
                                             }
                                         }
@@ -3003,7 +2985,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         if (mass + computeMassTolerance(massTolerance, mass) < negativeModificationMass) {
             return false;
         }
-        int intMass = (int) (mass * lookupMultiplier);
+        int intMass = (int) ((mass + 1) * lookupMultiplier);
+        //System.out.println(mass + " " + LOOKUP_MAX_MASS + " " + intMass + " " + numX +" " + Xlookup[numX]);
         return (0 < numX && numX <= maxXPerTag && mass < LOOKUP_MAX_MASS && (((Xlookup[numX][intMass >>> 6] >>> (intMass & 63)) & 1L) == 1));
     }
     

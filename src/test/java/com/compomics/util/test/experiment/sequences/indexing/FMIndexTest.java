@@ -3575,13 +3575,13 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TESTMRITESTCKT(A=>E)STKMELTSESTES
+        // TESTMRIT{A=>E}S{K=>T}CKTESTKMELTSESTES
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
-        fixedVariants.get("test").add(new SNPElement(8, 'E', 'U'));
+        fixedVariants.get("test").add(new SNPElement(8, 'E', 'A'));
         fixedVariants.get("test").add(new SNPElement(10, 'T', 'K'));
         peptideVariantsPreferences.setFixedVariants(fixedVariants);
-        aminoAcidPattern = new AminoAcidSequence("TUSK");
+        aminoAcidPattern = new AminoAcidSequence("TASK");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
@@ -3592,7 +3592,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
-            if (peptideProteinMapping.getPeptideSequence().equals("STMRITUSKCKTE")) {
+            if (peptideProteinMapping.getPeptideSequence().equals("STMRITASKCKTE")) {
                 Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 break;

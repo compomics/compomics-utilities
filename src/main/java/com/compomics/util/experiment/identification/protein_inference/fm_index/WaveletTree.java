@@ -61,7 +61,7 @@ public class WaveletTree implements Serializable {
     /**
      * Number of masses.
      */
-    private int numMasses;
+    private static final int INITIAL_QUERY_CAPACITY = 32;
     /**
      * Left right mask.
      */
@@ -135,11 +135,10 @@ public class WaveletTree implements Serializable {
      * @param text the text
      * @param aAlphabet the alphabet
      * @param waitingHandler the waiting handler
-     * @param numMasses number of masses plus modifications
      * @param hasPTMatTerminus indicates how to handle / sign
      */
-    public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, int numMasses, boolean hasPTMatTerminus) {
-        prepareWaveletTree(text, aAlphabet, waitingHandler, numMasses, hasPTMatTerminus);
+    public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, boolean hasPTMatTerminus) {
+        prepareWaveletTree(text, aAlphabet, waitingHandler, hasPTMatTerminus);
     }
 
     /**
@@ -148,10 +147,9 @@ public class WaveletTree implements Serializable {
      * @param text the text
      * @param aAlphabet the alphabet
      * @param waitingHandler the waiting handler
-     * @param numMasses number of masses plus modifications
      */
-    public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, int numMasses) {
-        prepareWaveletTree(text, aAlphabet, waitingHandler, numMasses, false);
+    public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler) {
+        prepareWaveletTree(text, aAlphabet, waitingHandler, false);
     }
 
     /**
@@ -160,10 +158,9 @@ public class WaveletTree implements Serializable {
      * @param text the text
      * @param aAlphabet the alphabet
      * @param waitingHandler the waiting handler
-     * @param numMasses number of masses plus modifications
      * @param hasPTMatTerminus indicates how to handle / sign
      */
-    private void prepareWaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, int numMasses, boolean hasPTMatTerminus) {
+    private void prepareWaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, boolean hasPTMatTerminus) {
 
         int[] counts = new int[128];
         for (byte c : text) {
@@ -184,7 +181,7 @@ public class WaveletTree implements Serializable {
             huffmanNodes.add(new HuffmanNode(first, second));
         }
 
-        createWaveletTreeHuffman(text, waitingHandler, huffmanNodes.get(0), numMasses, hasPTMatTerminus);
+        createWaveletTreeHuffman(text, waitingHandler, huffmanNodes.get(0), hasPTMatTerminus);
 
         less = new int[128];
         long[] alphabet = new long[2];
@@ -205,12 +202,10 @@ public class WaveletTree implements Serializable {
      * @param text the text
      * @param waitingHandler the waiting handler
      * @param root the root
-     * @param numMasses number of masses plus modifications
      * @param hasPTMatTerminus if there is a PTM at the terminus
      */
-    public WaveletTree(byte[] text, WaitingHandler waitingHandler, HuffmanNode root, int numMasses, boolean hasPTMatTerminus) {
-        this.numMasses = numMasses;
-        createWaveletTreeHuffman(text, waitingHandler, root, numMasses, hasPTMatTerminus);
+    public WaveletTree(byte[] text, WaitingHandler waitingHandler, HuffmanNode root, boolean hasPTMatTerminus) {
+        createWaveletTreeHuffman(text, waitingHandler, root, hasPTMatTerminus);
     }
 
     /**
@@ -219,11 +214,9 @@ public class WaveletTree implements Serializable {
      * @param text the text
      * @param waitingHandler the waiting handler
      * @param root the root
-     * @param numMasses number of masses plus modifications
      * @param hasPTMatTerminus if there is a PTM at the terminus
      */
-    public void createWaveletTreeHuffman(byte[] text, WaitingHandler waitingHandler, HuffmanNode root, int numMasses, boolean hasPTMatTerminus) {
-        this.numMasses = numMasses;
+    public void createWaveletTreeHuffman(byte[] text, WaitingHandler waitingHandler, HuffmanNode root, boolean hasPTMatTerminus) {
         long[] alphabet = new long[2];
         alphabet[0] = root.alphabet[0];
         alphabet[1] = root.alphabet[1];
@@ -285,7 +278,7 @@ public class WaveletTree implements Serializable {
                         text_left[j++] = text[i];
                     }
                 }
-                leftChild = new WaveletTree(text_left, waitingHandler, root.leftChild, numMasses, hasPTMatTerminus);
+                leftChild = new WaveletTree(text_left, waitingHandler, root.leftChild, hasPTMatTerminus);
             }
         }
         if (waitingHandler != null && waitingHandler.isRunCanceled()) {
@@ -310,7 +303,7 @@ public class WaveletTree implements Serializable {
                         text_right[j++] = text[i];
                     }
                 }
-                rightChild = new WaveletTree(text_right, waitingHandler, root.rightChild, numMasses, hasPTMatTerminus);
+                rightChild = new WaveletTree(text_right, waitingHandler, root.rightChild, hasPTMatTerminus);
             }
         }
         if (leftChild != null) {
@@ -370,13 +363,8 @@ public class WaveletTree implements Serializable {
         return 0;
     }
     
-    /** 
-     * Setter for numMasses
-     * @param numMasses number of masses
-     */
-    public void setNumMasses(int numMasses){
-        this.numMasses = numMasses;
-    }
+    
+    
 
     /**
      * Returns the character and rank at a given index.
@@ -432,7 +420,7 @@ public class WaveletTree implements Serializable {
      * @return list of counted characters
      */
     public ArrayList<int[]> rangeQuery(int leftIndex, int rightIndex) {
-        ArrayList<int[]> query = new ArrayList<>(numMasses);
+        ArrayList<int[]> query = new ArrayList<>(INITIAL_QUERY_CAPACITY);
 
         if (leftIndex + 1 < rightIndex) {
             rangeQuery(leftIndex, rightIndex, query);

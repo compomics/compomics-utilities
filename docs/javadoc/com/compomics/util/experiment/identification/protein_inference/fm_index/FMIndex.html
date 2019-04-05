@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":9,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":9,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -237,16 +237,16 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#computeInverseMassValue-double-double-">computeInverseMassValue</a></span>(double&nbsp;currentMass,
-                       double&nbsp;refMass)</code>
-<div class="block">Compute the inverse mass value.</div>
-</td>
-</tr>
-<tr id="i3" class="rowColor">
 <td class="colFirst"><code>int[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#computeMappingRanges-double-">computeMappingRanges</a></span>(double&nbsp;mass)</code>
 <div class="block">Compute mapping ranges.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>double</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#computeMassTolerance-double-double-">computeMassTolerance</a></span>(double&nbsp;currentTollerance,
+                    double&nbsp;refMass)</code>
+<div class="block">Compute the inverse mass value.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
@@ -351,33 +351,41 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithVariantsFixed-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">getProteinMappingWithVariantsFixed</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
+                                  <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;seqMatchPref,
+                                  int&nbsp;indexPart)</code>
+<div class="block">Variant tolerant mapping peptides against the proteome.</div>
+</td>
+</tr>
+<tr id="i20" class="altColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithVariantsGeneric-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">getProteinMappingWithVariantsGeneric</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
                                     <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;seqMatchPref,
                                     int&nbsp;indexPart)</code>
 <div class="block">Variant tolerant mapping peptides against the proteome.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithVariantsSpecific-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">getProteinMappingWithVariantsSpecific</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
                                      <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;seqMatchPref,
                                      int&nbsp;indexPart)</code>
-<div class="block">Variant tolerant mapping peptides against the proteome.</div>
+<div class="block">Variant tolerant mapping peptides against the proteome</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getSequence-java.lang.String-">getSequence</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;proteinAccession)</code>
 <div class="block">Returns the protein sequence for the given accession.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getSimpleDescription-java.lang.String-">getSimpleDescription</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;accession)</code>
 <div class="block">Returns the simple description of the protein with the given accession.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getSubsequence-java.lang.String-int-int-">getSubsequence</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;accession,
               int&nbsp;start,
@@ -385,25 +393,25 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <div class="block">Returns the subsequence of the sequence of a given protein.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getTaxonomy-java.lang.String-">getTaxonomy</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;accession)</code>
 <div class="block">Returns the taxonomy for the given protein.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#pepMass-java.lang.String-">pepMass</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide)</code>
 <div class="block">Computing the mass of a peptide.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#reconstructFasta-java.io.File-">reconstructFasta</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;file)</code>
 <div class="block">Reconstructs the fasta file stored in the index</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#withinMassTolerance-double-int-">withinMassTolerance</a></span>(double&nbsp;mass,
                    int&nbsp;numX)</code>
@@ -586,18 +594,18 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </dl>
 </li>
 </ul>
-<a name="computeInverseMassValue-double-double-">
+<a name="computeMassTolerance-double-double-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>computeInverseMassValue</h4>
-<pre>public&nbsp;double&nbsp;computeInverseMassValue(double&nbsp;currentMass,
-                                      double&nbsp;refMass)</pre>
+<h4>computeMassTolerance</h4>
+<pre>public&nbsp;double&nbsp;computeMassTolerance(double&nbsp;currentTollerance,
+                                   double&nbsp;refMass)</pre>
 <div class="block">Compute the inverse mass value.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>currentMass</code> - the current mass</dd>
+<dd><code>currentTollerance</code> - the current mass</dd>
 <dd><code>refMass</code> - the reference mass</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the inverse mass value</dd>
@@ -710,6 +718,26 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </dl>
 </li>
 </ul>
+<a name="getProteinMappingWithVariantsFixed-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getProteinMappingWithVariantsFixed</h4>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;&nbsp;getProteinMappingWithVariantsFixed(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
+                                                                           <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;seqMatchPref,
+                                                                           int&nbsp;indexPart)</pre>
+<div class="block">Variant tolerant mapping peptides against the proteome.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>peptide</code> - the peptide</dd>
+<dd><code>seqMatchPref</code> - the sequence match preferences</dd>
+<dd><code>indexPart</code> - the index part</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the mapping</dd>
+</dl>
+</li>
+</ul>
 <a name="getProteinMappingWithVariantsGeneric-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">
 <!--   -->
 </a>
@@ -739,7 +767,7 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/PeptideProteinMapping.html" title="class in com.compomics.util.experiment.identification.protein_inference">PeptideProteinMapping</a>&gt;&nbsp;getProteinMappingWithVariantsSpecific(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide,
                                                                               <a href="../../../../../../../com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a>&nbsp;seqMatchPref,
                                                                               int&nbsp;indexPart)</pre>
-<div class="block">Variant tolerant mapping peptides against the proteome.</div>
+<div class="block">Variant tolerant mapping peptides against the proteome</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>peptide</code> - the peptide</dd>

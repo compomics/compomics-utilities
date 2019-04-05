@@ -2,6 +2,9 @@ package com.compomics.util.parameters.identification.advanced;
 
 import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
+import com.compomics.util.experiment.identification.protein_inference.fm_index.SNPElement;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Preferences for the allowed variants in peptide sequences.
@@ -10,10 +13,15 @@ import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
  */
 public class PeptideVariantsParameters extends DbObject {
 
+    /** 
+     * Enum indicating all three variant types
+     */
+    public static enum VariantType {NO_VARIANT, GENERIC, SPECIFIC, FIXED};
+    
     /**
      * Boolean indicating whether specific variant counts should be used.
      */
-    private boolean useSpecificCount = false;
+    private VariantType variantType = VariantType.NO_VARIANT;
     /**
      * Total number of variants allowed per peptide.
      */
@@ -38,6 +46,10 @@ public class PeptideVariantsParameters extends DbObject {
      * The amino acid substitution matrix selected.
      */
     private AaSubstitutionMatrix aaSubstitutionMatrix = AaSubstitutionMatrix.noSubstitution;
+    /**
+     * SNP positions for fixed variants
+     */
+    private HashMap<String, ArrayList<SNPElement>> fixedVariants = new HashMap<>();
 
     /**
      * Constructor.
@@ -152,20 +164,20 @@ public class PeptideVariantsParameters extends DbObject {
      * @return a boolean indicating whether the specific variant count
      * limitations should be used
      */
-    public boolean getUseSpecificCount() {
+    public VariantType getVariantType() {
         readDBMode();
-        return useSpecificCount;
+        return variantType;
     }
 
     /**
      * Sets whether the specific variant count limitations should be used.
      *
-     * @param useSpecificCount a boolean indicating whether the specific variant
+     * @param variantType a boolean indicating whether the specific variant
      * count limitations should be used
      */
-    public void setUseSpecificCount(boolean useSpecificCount) {
+    public void setVatiantType(VariantType variantType) {
         writeDBMode();
-        this.useSpecificCount = useSpecificCount;
+        this.variantType = variantType;
     }
 
     /**
@@ -211,7 +223,7 @@ public class PeptideVariantsParameters extends DbObject {
         if (nAaSwap != peptideVariantsPreferences.getnAaSwap()) {
             return false;
         }
-        if (useSpecificCount != peptideVariantsPreferences.getUseSpecificCount()) {
+        if (variantType != peptideVariantsPreferences.getVariantType()) {
             return false;
         }
         if (nVariants != peptideVariantsPreferences.getnVariants()) {
@@ -233,7 +245,7 @@ public class PeptideVariantsParameters extends DbObject {
         StringBuilder output = new StringBuilder();
         output.append("#Variants: ").append(nVariants).append(".").append(newLine);
 
-        if (useSpecificCount) {
+        if (variantType == VariantType.SPECIFIC) {
             output.append("AA Deletions: ").append(nAaDeletions).append(".").append(newLine);
             output.append("AA Insertions: ").append(nAaInsertions).append(".").append(newLine);
             output.append("AA Substitutions: ").append(nAaSubstitutions).append(".").append(newLine);
@@ -252,8 +264,26 @@ public class PeptideVariantsParameters extends DbObject {
     public static PeptideVariantsParameters getNoVariantPreferences() {
         PeptideVariantsParameters peptideVariantsPreferences = new PeptideVariantsParameters();
         peptideVariantsPreferences.setnVariants(0);
-        peptideVariantsPreferences.setUseSpecificCount(false);
+        peptideVariantsPreferences.setVatiantType(VariantType.NO_VARIANT);
         peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.noSubstitution);
         return peptideVariantsPreferences;
+    }
+    
+    
+    
+    /**
+     * returns the fixed variants
+     * @return fixed variants dictionary
+     */
+    public HashMap<String, ArrayList<SNPElement>> getFixedVariants(){
+        return fixedVariants;
+    }
+    
+    /**
+     * sets the fixed variants
+     * @param fixedVariants fixed variants dictionary
+     */
+    public void setFixedVariants(HashMap<String, ArrayList<SNPElement>> fixedVariants){
+        this.fixedVariants = fixedVariants;
     }
 }

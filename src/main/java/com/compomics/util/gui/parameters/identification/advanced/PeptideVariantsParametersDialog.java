@@ -6,6 +6,7 @@ import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.gui.variants.aa_substitutions.AaSubstitutionMatrixTableModel;
 import com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters;
+import com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters.VariantType;
 import java.awt.Dialog;
 import java.awt.Toolkit;
 import javax.swing.DefaultComboBoxModel;
@@ -120,17 +121,15 @@ public class PeptideVariantsParametersDialog extends javax.swing.JDialog {
     private void populateGUI(PeptideVariantsParameters peptideVariantPreferences) {
 
         totalVariantsSpinner.setValue(peptideVariantPreferences.getnVariants());
-        boolean useSpecific = peptideVariantPreferences.getUseSpecificCount();
-        if (useSpecific) {
-            specificVariantsComboBox.setSelectedIndex(0);
-        } else {
-            specificVariantsComboBox.setSelectedIndex(1);
-        }
+        VariantType variantType = peptideVariantPreferences.getVariantType();
+        specificVariantsComboBox.setSelectedIndex(variantType.ordinal());
+       
+        
         if (editable) {
-            deletionsSpinner.setEnabled(useSpecific);
-            insertionsSpinner.setEnabled(useSpecific);
-            subsitutionsSpinner.setEnabled(useSpecific);
-            swapSpinner.setEnabled(useSpecific);
+            deletionsSpinner.setEnabled(variantType == VariantType.SPECIFIC);
+            insertionsSpinner.setEnabled(variantType == VariantType.SPECIFIC);
+            subsitutionsSpinner.setEnabled(variantType == VariantType.SPECIFIC);
+            swapSpinner.setEnabled(variantType == VariantType.SPECIFIC);
         }
 
         deletionsSpinner.setValue(peptideVariantPreferences.getnAaDeletions());
@@ -161,7 +160,7 @@ public class PeptideVariantsParametersDialog extends javax.swing.JDialog {
     public PeptideVariantsParameters getPeptideVariantsPreferences() {
         PeptideVariantsParameters peptideVariantsPreferences = new PeptideVariantsParameters();
         peptideVariantsPreferences.setnVariants((Integer) totalVariantsSpinner.getValue());
-        peptideVariantsPreferences.setUseSpecificCount(specificVariantsComboBox.getSelectedIndex() == 0);
+        peptideVariantsPreferences.setVatiantType(VariantType.values()[specificVariantsComboBox.getSelectedIndex()]);
         peptideVariantsPreferences.setnAaDeletions((Integer) deletionsSpinner.getValue());
         peptideVariantsPreferences.setnAaInsertions((Integer) insertionsSpinner.getValue());
         peptideVariantsPreferences.setnAaSubstitutions((Integer) subsitutionsSpinner.getValue());
@@ -252,10 +251,9 @@ public class PeptideVariantsParametersDialog extends javax.swing.JDialog {
 
         totalVariantsSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
 
-        specificVariantsLbl.setText("Use specific variants");
+        specificVariantsLbl.setText("Variant Type");
 
-        specificVariantsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-        specificVariantsComboBox.setSelectedIndex(1);
+        specificVariantsComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Generic", "Specific", "Fixed" }));
         specificVariantsComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 specificVariantsComboBoxActionPerformed(evt);

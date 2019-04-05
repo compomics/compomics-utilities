@@ -3331,10 +3331,15 @@
 <pre>int index</pre>
 <div class="block">The index.</div>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>indexPart</h4>
 <pre>int indexPart</pre>
 <div class="block">The index part.</div>
+</li>
+<li class="blockListLast">
+<h4>trueBeginning</h4>
+<pre>int trueBeginning</pre>
+<div class="block">Beginning of protein sequence in the proteome.</div>
 </li>
 </ul>
 </li>
@@ -3452,11 +3457,6 @@
 <h4>rightChild</h4>
 <pre><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a> rightChild</pre>
 <div class="block">Right child of the wavelet tree.</div>
-</li>
-<li class="blockList">
-<h4>numMasses</h4>
-<pre>int numMasses</pre>
-<div class="block">Number of masses.</div>
 </li>
 <li class="blockList">
 <h4>leftRightMask</h4>
@@ -14414,8 +14414,8 @@
 <h3>Serialized Fields</h3>
 <ul class="blockList">
 <li class="blockList">
-<h4>useSpecificCount</h4>
-<pre>boolean useSpecificCount</pre>
+<h4>variantType</h4>
+<pre><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.VariantType.html" title="enum in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters.VariantType</a> variantType</pre>
 <div class="block">Boolean indicating whether specific variant counts should be used.</div>
 </li>
 <li class="blockList">
@@ -14443,10 +14443,15 @@
 <pre>int nAaSwap</pre>
 <div class="block">The number of amino acid swap allowed.</div>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>aaSubstitutionMatrix</h4>
 <pre><a href="com/compomics/util/experiment/biology/variants/AaSubstitutionMatrix.html" title="class in com.compomics.util.experiment.biology.variants">AaSubstitutionMatrix</a> aaSubstitutionMatrix</pre>
 <div class="block">The amino acid substitution matrix selected.</div>
+</li>
+<li class="blockListLast">
+<h4>fixedVariants</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; fixedVariants</pre>
+<div class="block">SNP positions for fixed variants</div>
 </li>
 </ul>
 </li>

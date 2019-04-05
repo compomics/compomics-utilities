@@ -397,7 +397,7 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/AccessionMetaData.html#AccessionMetaData-java.lang.String-int-int-">AccessionMetaData(String, int, int)</a></span> - Constructor for class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/AccessionMetaData.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">AccessionMetaData</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/AccessionMetaData.html#AccessionMetaData-java.lang.String-int-int-int-">AccessionMetaData(String, int, int, int)</a></span> - Constructor for class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/AccessionMetaData.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">AccessionMetaData</a></dt>
 <dd>
 <div class="block">Constructor.</div>
 </dd>
@@ -3146,13 +3146,13 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#computeInverseMassValue-double-double-">computeInverseMassValue(double, double)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
-<dd>
-<div class="block">Compute the inverse mass value.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#computeMappingRanges-double-">computeMappingRanges(double)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
 <dd>
 <div class="block">Compute mapping ranges.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#computeMassTolerance-double-double-">computeMassTolerance(double, double)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
+<dd>
+<div class="block">Compute the inverse mass value.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#computeMassValue-double-double-">computeMassValue(double, double)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
 <dd>
@@ -3409,7 +3409,7 @@
 <dd>
 <div class="block">Creates a new PSM filter.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#createWaveletTreeHuffman-byte:A-com.compomics.util.waiting.WaitingHandler-com.compomics.util.experiment.identification.protein_inference.fm_index.WaveletTree.HuffmanNode-int-boolean-">createWaveletTreeHuffman(byte[], WaitingHandler, WaveletTree.HuffmanNode, int, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#createWaveletTreeHuffman-byte:A-com.compomics.util.waiting.WaitingHandler-com.compomics.util.experiment.identification.protein_inference.fm_index.WaveletTree.HuffmanNode-boolean-">createWaveletTreeHuffman(byte[], WaitingHandler, WaveletTree.HuffmanNode, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
 <dd>
 <div class="block">Create wavelet tree huffman.</div>
 </dd>
@@ -8329,6 +8329,10 @@
 <dd>
 <div class="block">Returns the peptide modifications as a string.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html#getFixedVariants--">getFixedVariants()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a></dt>
+<dd>
+<div class="block">returns the fixed variants</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/general/CommandLineParser.html#getFlags--">getFlags()</a></span> - Method in class com.compomics.util.general.<a href="com/compomics/util/general/CommandLineParser.html" title="class in com.compomics.util.general">CommandLineParser</a></dt>
 <dd>
 <div class="block">This method will report on all flags that have been found, or return an
@@ -9638,6 +9642,8 @@
 <dd>
 <div class="block">Returns the number of amino acids in the sequence.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#getLength--">getLength()</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/interfaces/Sequence.html#getLength--">getLength()</a></span> - Method in interface com.compomics.util.interfaces.<a href="com/compomics/util/interfaces/Sequence.html" title="interface in com.compomics.util.interfaces">Sequence</a></dt>
 <dd>
 <div class="block">This method reports on the length of the current sequence.</div>
@@ -12955,13 +12961,17 @@
 <dd>
 <div class="block">Mapping tags against proteome with variants.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithVariantsFixed-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">getProteinMappingWithVariantsFixed(String, SequenceMatchingParameters, int)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
+<dd>
+<div class="block">Variant tolerant mapping peptides against the proteome.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithVariantsGeneric-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">getProteinMappingWithVariantsGeneric(String, SequenceMatchingParameters, int)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
 <dd>
 <div class="block">Variant tolerant mapping peptides against the proteome.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#getProteinMappingWithVariantsSpecific-java.lang.String-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-int-">getProteinMappingWithVariantsSpecific(String, SequenceMatchingParameters, int)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
 <dd>
-<div class="block">Variant tolerant mapping peptides against the proteome.</div>
+<div class="block">Variant tolerant mapping peptides against the proteome</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#getProteinMatch-long-">getProteinMatch(long)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
@@ -13695,6 +13705,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/ExportScheme.html#getSections--">getSections()</a></span> - Method in class com.compomics.util.io.export.<a href="com/compomics/util/io/export/ExportScheme.html" title="class in com.compomics.util.io.export">ExportScheme</a></dt>
 <dd>
 <div class="block">returns the list of sections to be included in the scheme.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html#getSelect-int-">getSelect(int)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">Rank</a></dt>
+<dd>
+<div class="block">Returns the position of the i-th one</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html#getSelectedCharges--">getSelectedCharges()</a></span> - Method in class com.compomics.util.experiment.identification.spectrum_annotation.<a href="com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationParameters</a></dt>
 <dd>
@@ -15057,10 +15071,6 @@
  data representation by default</span></div>
 </div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html#getUseSpecificCount--">getUseSpecificCount()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a></dt>
-<dd>
-<div class="block">Returns whether the specific variant count limitations should be used.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html#getUtilitiesEnzyme-java.lang.String-">getUtilitiesEnzyme(String)</a></span> - Method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes">EnzymeFactory</a></dt>
 <dd>
 <div class="block">Returns the enzyme associated to the given cvTerm.</div>
@@ -15302,6 +15312,10 @@
 <dd>
 <div class="block">Returns the variant matches summarized in a map indexed by protein
  accession and peptide index on the protein sequence.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html#getVariantType--">getVariantType()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a></dt>
+<dd>
+<div class="block">Returns whether the specific variant count limitations should be used.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/VennDiagramDialog.html#getVennDiagramPanel--">getVennDiagramPanel()</a></span> - Method in class com.compomics.util.gui.<a href="com/compomics/util/gui/VennDiagramDialog.html" title="class in com.compomics.util.gui">VennDiagramDialog</a></dt>
 <dd>
@@ -21601,6 +21615,10 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
+<dt><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.VariantType.html" title="enum in com.compomics.util.parameters.identification.advanced"><span class="typeNameLink">PeptideVariantsParameters.VariantType</span></a> - Enum in <a href="com/compomics/util/parameters/identification/advanced/package-summary.html">com.compomics.util.parameters.identification.advanced</a></dt>
+<dd>
+<div class="block">Enum indicating all three variant types</div>
+</dd>
 <dt><a href="com/compomics/util/gui/parameters/identification/advanced/PeptideVariantsParametersDialog.html" title="class in com.compomics.util.gui.parameters.identification.advanced"><span class="typeNameLink">PeptideVariantsParametersDialog</span></a> - Class in <a href="com/compomics/util/gui/parameters/identification/advanced/package-summary.html">com.compomics.util.gui.parameters.identification.advanced</a></dt>
 <dd>
 <div class="block">FractionSettingsDialog.</div>
@@ -21843,6 +21861,8 @@
 <dd>
 <div class="block">Creates a new PNovoSettingsDialog with a dialog as owner.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/SNPElement.html#position">position</a></span> - Variable in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/SNPElement.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">SNPElement</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_sequences/digestion/ExtendedPeptide.html#position">position</a></span> - Variable in class com.compomics.util.experiment.identification.protein_sequences.digestion.<a href="com/compomics/util/experiment/identification/protein_sequences/digestion/ExtendedPeptide.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">ExtendedPeptide</a></dt>
 <dd>
 <div class="block">The position of the peptide on the protein.</div>
@@ -22672,11 +22692,11 @@
 <dd>
 <div class="block">Returns a list of character and new left/right index for a given range.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#rangeQuery-int-int-int:A:A-">rangeQuery(int, int, int[][])</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#rangeQuery-int-int-java.util.ArrayList-">rangeQuery(int, int, ArrayList&lt;int[]&gt;)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
 <dd>
 <div class="block">Fills a list of character and new left/right index for a given range.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#rangeQueryOneValue-int-int:A:A-">rangeQueryOneValue(int, int[][])</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#rangeQueryOneValue-int-java.util.ArrayList-">rangeQueryOneValue(int, ArrayList&lt;int[]&gt;)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
 <dd>
 <div class="block">Fills a list of character and new left/right index for a given index.</div>
 </dd>
@@ -24751,6 +24771,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_sequences/digestion/PeptideDraft.html#setFixedAaModifications-java.util.HashMap-">setFixedAaModifications(HashMap&lt;Integer, String&gt;)</a></span> - Method in class com.compomics.util.experiment.identification.protein_sequences.digestion.<a href="com/compomics/util/experiment/identification/protein_sequences/digestion/PeptideDraft.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">PeptideDraft</a></dt>
 <dd>
 <div class="block">Sets the modifications at specific amino acids.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html#setFixedVariants-java.util.HashMap-">setFixedVariants(HashMap&lt;String, ArrayList&lt;SNPElement&gt;&gt;)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a></dt>
+<dd>
+<div class="block">sets the fixed variants</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/VennDiagramPanel.html#setFontSize-int-">setFontSize(int)</a></span> - Method in class com.compomics.util.gui.<a href="com/compomics/util/gui/VennDiagramPanel.html" title="class in com.compomics.util.gui">VennDiagramPanel</a></dt>
 <dd>
@@ -27436,10 +27460,6 @@
  data representation by default</span></div>
 </div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html#setUseSpecificCount-boolean-">setUseSpecificCount(boolean)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a></dt>
-<dd>
-<div class="block">Sets whether the specific variant count limitations should be used.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/ExportScheme.html#setValidatedOnly-java.lang.Boolean-">setValidatedOnly(Boolean)</a></span> - Method in class com.compomics.util.io.export.<a href="com/compomics/util/io/export/ExportScheme.html" title="class in com.compomics.util.io.export">ExportScheme</a></dt>
 <dd>
 <div class="block">Sets whether only validated results should be exported.</div>
@@ -27493,6 +27513,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#setVariantMatches-java.util.HashMap-">setVariantMatches(HashMap&lt;String, HashMap&lt;Integer, PeptideVariantMatches&gt;&gt;)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
 <dd>
 <div class="block">Sets the sequence variant matches of this peptide.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html#setVatiantType-com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters.VariantType-">setVatiantType(PeptideVariantsParameters.VariantType)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a></dt>
+<dd>
+<div class="block">Sets whether the specific variant count limitations should be used.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/TideParameters.html#setVerbosity-java.lang.Integer-">setVerbosity(Integer)</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/TideParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">TideParameters</a></dt>
 <dd>
@@ -27738,6 +27762,10 @@
 <div class="block">Skips over and discards <code>n</code> bytes of data from the
  input stream.</div>
 </dd>
+<dt><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/SNPElement.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index"><span class="typeNameLink">SNPElement</span></a> - Class in <a href="com/compomics/util/experiment/identification/protein_inference/fm_index/package-summary.html">com.compomics.util.experiment.identification.protein_inference.fm_index</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/SNPElement.html#SNPElement-int-char-char-">SNPElement(int, char, char)</a></span> - Constructor for class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/SNPElement.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">SNPElement</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/experiment/identification/psm_scoring/psm_scores/SnrScore.html" title="class in com.compomics.util.experiment.identification.psm_scoring.psm_scores"><span class="typeNameLink">SnrScore</span></a> - Class in <a href="com/compomics/util/experiment/identification/psm_scoring/psm_scores/package-summary.html">com.compomics.util.experiment.identification.psm_scoring.psm_scores</a></dt>
 <dd>
 <div class="block">This score uses the intensity distribution of the peaks to evaluate an SNR
@@ -27768,6 +27796,8 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/sun/TableSorter.html#sortByColumn-int-">sortByColumn(int)</a></span> - Method in class com.compomics.util.sun.<a href="com/compomics/util/sun/TableSorter.html" title="class in com.compomics.util.sun">TableSorter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/sun/TableSorter.html#sortByColumn-int-boolean-">sortByColumn(int, boolean)</a></span> - Method in class com.compomics.util.sun.<a href="com/compomics/util/sun/TableSorter.html" title="class in com.compomics.util.sun">TableSorter</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/SNPElement.html#sourceAA">sourceAA</a></span> - Variable in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/SNPElement.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">SNPElement</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/gui/genes/SpeciesDialog.html" title="class in com.compomics.util.gui.genes"><span class="typeNameLink">SpeciesDialog</span></a> - Class in <a href="com/compomics/util/gui/genes/package-summary.html">com.compomics.util.gui.genes</a></dt>
 <dd>
@@ -28525,6 +28555,8 @@
 <dd>
 <div class="block">Tar the content of a given folder to a file.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/SNPElement.html#targetAA">targetAA</a></span> - Variable in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/SNPElement.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">SNPElement</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/io/compression/TarUtils.html" title="class in com.compomics.util.io.compression"><span class="typeNameLink">TarUtils</span></a> - Class in <a href="com/compomics/util/io/compression/package-summary.html">com.compomics.util.io.compression</a></dt>
 <dd>
 <div class="block">This class contains convenience methods for taring files.</div>
@@ -29790,6 +29822,10 @@
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.VariantType.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.VariantType.html" title="enum in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters.VariantType</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this type with the specified name.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.MatchingType.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.MatchingType.html" title="enum in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters.MatchingType</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
@@ -30112,6 +30148,11 @@ the order they are declared.</div>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.VariantType.html#values--">values()</a></span> - Static method in enum com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/PeptideVariantsParameters.VariantType.html" title="enum in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters.VariantType</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum type, in
+the order they are declared.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.MatchingType.html#values--">values()</a></span> - Static method in enum com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.MatchingType.html" title="enum in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters.MatchingType</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum type, in
@@ -30352,15 +30393,15 @@ the order they are declared.</div>
 <dd>
 <div class="block">Empty default constructor.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#WaveletTree-byte:A-long:A-com.compomics.util.waiting.WaitingHandler-int-boolean-">WaveletTree(byte[], long[], WaitingHandler, int, boolean)</a></span> - Constructor for class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#WaveletTree-byte:A-long:A-com.compomics.util.waiting.WaitingHandler-boolean-">WaveletTree(byte[], long[], WaitingHandler, boolean)</a></span> - Constructor for class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
 <dd>
 <div class="block">Constructor.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#WaveletTree-byte:A-long:A-com.compomics.util.waiting.WaitingHandler-int-">WaveletTree(byte[], long[], WaitingHandler, int)</a></span> - Constructor for class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#WaveletTree-byte:A-long:A-com.compomics.util.waiting.WaitingHandler-">WaveletTree(byte[], long[], WaitingHandler)</a></span> - Constructor for class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
 <dd>
 <div class="block">Constructor.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#WaveletTree-byte:A-com.compomics.util.waiting.WaitingHandler-com.compomics.util.experiment.identification.protein_inference.fm_index.WaveletTree.HuffmanNode-int-boolean-">WaveletTree(byte[], WaitingHandler, WaveletTree.HuffmanNode, int, boolean)</a></span> - Constructor for class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#WaveletTree-byte:A-com.compomics.util.waiting.WaitingHandler-com.compomics.util.experiment.identification.protein_inference.fm_index.WaveletTree.HuffmanNode-boolean-">WaveletTree(byte[], WaitingHandler, WaveletTree.HuffmanNode, boolean)</a></span> - Constructor for class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
 <dd>
 <div class="block">Constructor.</div>
 </dd>

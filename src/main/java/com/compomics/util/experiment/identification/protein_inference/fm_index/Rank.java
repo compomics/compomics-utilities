@@ -175,7 +175,7 @@ public class Rank implements Serializable {
     
     /**
      * Returns the position of the i-th one
-     * @param rank of the i-th one
+     * @param index of the i-th one
      * @return position of the i-th one
      */
     public int getSelect(int index){

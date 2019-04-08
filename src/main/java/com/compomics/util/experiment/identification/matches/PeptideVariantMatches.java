@@ -73,5 +73,4 @@ public class PeptideVariantMatches extends DbObject {
         return variantMatches;
 
     }
-
 }

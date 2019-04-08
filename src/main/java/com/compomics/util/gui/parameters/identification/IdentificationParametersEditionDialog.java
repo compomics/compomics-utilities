@@ -305,7 +305,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
         fractionsButton.setEnabled(true);
         qualityControlButton.setEnabled(true);
 //        peptideVariantsButton.setEnabled(sequenceMatchingPreferences.getPeptideMapperType() == PeptideMapperType.fm_index);
-        peptideVariantsButton.setEnabled(false);
+        peptideVariantsButton.setEnabled(true);
         databaseProcessingButton.setEnabled(true);
 
         validateInput();

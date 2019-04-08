@@ -54,6 +54,7 @@ public class FMIndexTest extends TestCase {
     
     public void testWhatHasToBeTested(){
         try {
+            /*
             terminiPTMTagMapping();
             getSequences();
             peptideToProteinMapping();
@@ -63,6 +64,7 @@ public class FMIndexTest extends TestCase {
             tagToProteinMappingWithPTMsAndVariants();
             tagToProteinMappingWithVariantsGeneric();
             tagToProteinMappingWithVariantsSpecific();
+            */
             tagToProteinMappingWithVariantsFixed();
         }
         catch(Exception e){
@@ -3237,7 +3239,7 @@ public class FMIndexTest extends TestCase {
 
         
         
-        
+        /*
         // TESTMRITESTCKTESTKMELTSESTES with no variants
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = 0.01 + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
@@ -3260,7 +3262,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TEST(Y=>M)RITESTCKTESTKMELTSESTES with no variants
+        // TEST(M=>Y)RITESTCKTESTKMELTSESTES with no variants
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = 0.01 + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.Y.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
@@ -3274,7 +3276,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TEST(Y=>M)RITESTCKTESTKMELTSESTES
+        // TEST(M=>Y)RITESTCKTESTKMELTSESTES
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(4, 'M', 'Y'));
@@ -3301,7 +3303,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TEST(Y=>M)RITESTCKTESTKMELTSESTES 
+        // TEST(M=>Y)RITESTCKTESTKMELTSESTES 
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(4, 'M', 'Y'));
@@ -3321,7 +3323,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TESTMRITESTCKT(A=>E)STKMELTSESTES
+        // TESTMRITESTCKT(E=>A)STKMELTSESTES
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(4, 'M', 'Y'));
@@ -3341,7 +3343,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TESTMRITESTCKT(A=>E)STKMELTSESTES
+        // TESTMRITESTCKT(E=>A)STKMELTSESTES
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(14, 'E', 'A'));
@@ -3367,7 +3369,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TESTMRITESTCKT(A=>E)STKMELTSESTES
+        // TESTMRITESTCKT(E=>A)STKMELTSESTES
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(14, 'E', 'A'));
@@ -3387,7 +3389,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TESTMRITESTCKT(A=>E)STKMELTSESTES
+        // TESTMRITESTCKT(E=>A)STKMELTSESTES
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(8, 'E', 'U'));
@@ -3444,7 +3446,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TEST(Y=>M)RITESTCKTESTKMELTSESTES with no variants
+        // TEST(M=>Y)RITESTCKTESTKMELTSESTES with no variants
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.Y.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
@@ -3459,7 +3461,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TEST(Y=>M)RITESTCKTESTKMELTSESTES
+        // TEST(M=>Y)RITESTCKTESTKMELTSESTES
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(4, 'M', 'Y'));
@@ -3486,7 +3488,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TEST(Y=>M)RITESTCKTESTKMELTSESTES 
+        // TEST(M=>Y)RITESTCKTESTKMELTSESTES 
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(4, 'M', 'Y'));
@@ -3507,7 +3509,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TESTMRITESTCKT(A=>E)STKMELTSESTES
+        // TESTMRITESTCKT(E=>A)STKMELTSESTES
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(4, 'M', 'Y'));
@@ -3528,7 +3530,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TESTMRITESTCKT(A=>E)STKMELTSESTES
+        // TESTMRITESTCKT(E=>A)STKMELTSESTES
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(14, 'E', 'A'));
@@ -3554,7 +3556,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TESTMRITESTCKT(A=>E)STKMELTSESTES
+        // TESTMRITESTCKT(E=>A)STKMELTSESTES
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(14, 'E', 'A'));
@@ -3575,7 +3577,7 @@ public class FMIndexTest extends TestCase {
         
         
         
-        // TESTMRIT{A=>E}S{K=>T}CKTESTKMELTSESTES
+        // TESTMRIT{E=>A}S{T=>K}CKTESTKMELTSESTES
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(8, 'E', 'A'));
@@ -3593,6 +3595,85 @@ public class FMIndexTest extends TestCase {
         isPresent = false;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("STMRITASKCKTE")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        */
+        
+        
+        
+        // TESTMRITESTCKT(E=>*)STKMELTSESTES
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(14, 'E', '*'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTCKTS")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRITESTCKT{*=>P}ESTKMELTSESTES
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(13, '*', 'P'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("STMRITESTCKTPES")) {
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRI{*=>P}TESTCKTESTKMELTSESTES
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(6, '*', 'P'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("STMRPITESTCKTES")) {
                 Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 break;

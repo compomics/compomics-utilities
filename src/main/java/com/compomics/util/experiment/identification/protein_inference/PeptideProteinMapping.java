@@ -5,6 +5,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -313,6 +314,7 @@ public class PeptideProteinMapping {
             Peptide peptide = peptidesMap.get(peptideKey);
 
             HashMap<String, HashSet<Integer>> proteinMapping = proteinsMap.get(peptideKey);
+            /*  // TODO: code provides error, changed it back
             TreeMap<String, int[]> proteinMappingArray = proteinMapping.entrySet().stream()
                     .collect(Collectors.toMap(Entry::getKey,
                             entry -> entry.getValue().stream()
@@ -320,7 +322,15 @@ public class PeptideProteinMapping {
                                     .sorted()
                                     .toArray(),
                             null,
-                            TreeMap::new));
+                            TreeMap::new));*/
+            TreeMap<String, int[]> proteinMappingArray = new TreeMap<>();
+            for (Entry<String, HashSet<Integer>> e : proteinMapping.entrySet()){
+                int[] i = e.getValue().stream() 
+                            .mapToInt(Integer::intValue) 
+                            .sorted()
+                            .toArray();
+                proteinMappingArray.put(e.getKey(), i);
+            }
 
             peptide.setProteinMapping(proteinMappingArray);
 

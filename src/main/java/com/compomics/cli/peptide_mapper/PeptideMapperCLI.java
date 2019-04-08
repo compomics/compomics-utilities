@@ -88,6 +88,7 @@ public class PeptideMapperCLI {
 
                         sequenceMatchingPreferences = identificationParameters.getSequenceMatchingParameters();
                         searchParameters = identificationParameters.getSearchParameters();
+                        peptideVariantsPreferences = identificationParameters.getPeptideVariantsParameters();
                         customParameters = true;
                         argPos += 2;
                         break;

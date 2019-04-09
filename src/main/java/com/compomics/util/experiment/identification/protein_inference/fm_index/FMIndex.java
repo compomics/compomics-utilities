@@ -2706,10 +2706,10 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             int numRightIns = variantPositions.getRankOne(rightIndexOld);
                             
                             if (numLeftIns < numRightIns){
-                                for (int SNPnum = numLeftIns + 1; SNPnum <= numRightIns; ++SNPnum){
+                                for (int SNPnum = numLeftIns; SNPnum < numRightIns; ++SNPnum){
                                     
                                     // go through all Insertions at certain position
-                                    for (int[] variant : variants[SNPnum - 1]){
+                                    for (int[] variant : variants[SNPnum]){
                                         if (variant[0] == '*'){
                                             final int leftIndexVar = variant[2];
                                             final int rightIndexVar = variant[2];
@@ -2744,16 +2744,17 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             if (numLeftSNPs < numRightSNPs){
                                 
                                 // search for all SNPs positions
-                                for (int SNPnum = numLeftSNPs + 1; SNPnum <= numRightSNPs; ++SNPnum){
-                                    
+                                for (int SNPnum = numLeftSNPs; SNPnum < numRightSNPs; ++SNPnum){
                                     //int selectSNP = variantPositions.getSelect(SNPnum);
                                     
+                                    
                                     // go through all SNPs at certain position
-                                    for (int[] variant : variants[SNPnum - 1]){
+                                    for (int[] variant : variants[SNPnum]){
                                         if (variant[0] != aminoAcid) continue;
                                         
                                         final int leftIndexVar = variant[2];
                                         final int rightIndexVar = variant[2];
+                                        
                                         
                                         // deletion
                                         if (variant[1] == '*'){
@@ -2794,9 +2795,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         for (int c = 0; c < combinationSequence.length(); ++c) {
                             final int aminoAcidCheck = combinationSequence.charAt(c);
                             final int newNumX = numX + ((aminoAcidCheck == 'X') ? 1 : 0);
-                            if (newNumX > xNumLimit) {
-                                continue;
-                            }
+                            if (newNumX > xNumLimit) continue;
 
                             ArrayList<int[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
 
@@ -2821,16 +2820,39 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     int numRightSNPs = variantPositions.getRankOne(rightIndex);
                                     // search for all SNPs positions
                                     if (numLeftSNPs < numRightSNPs){
-                                        for (int SNPnum = numLeftSNPs + 1; SNPnum <= numRightSNPs; ++SNPnum){
+                                        for (int SNPnum = numLeftSNPs; SNPnum < numRightSNPs; ++SNPnum){
 
                                             // go through all SNPs at certain position
-                                            for (int[] variant : variants[SNPnum - 1]){
-                                                if (variant[0] != aminoAcid || variant[1] != aminoAcidCheck) continue;
-
+                                            for (int[] variant : variants[SNPnum]){
                                                 final int leftIndexSNP = variant[2];
                                                 final int rightIndexSNP = variant[2];
-                                                row[j + 1].add(new MatrixContent(leftIndexSNP, rightIndexSNP, aminoAcidCheck, content, numX, length + 1, numVariants + 1, (char)aminoAcid));
+                                                if (variant[0] == aminoAcid){
+                                                    if (variant[1] == '*'){
+                                                        row[j].add(new MatrixContent(leftIndexSNP, rightIndexSNP, '*', content, numX, length, numVariants + 1, Character.toChars((char)aminoAcid + 32)[0]));
+                                                    }
+                                                    else if (variant[1] == aminoAcidCheck){
+                                                        row[j + 1].add(new MatrixContent(leftIndexSNP, rightIndexSNP, variant[1], content, numX, length + 1, numVariants + 1, (char)aminoAcid));
+                                                    }
+                                                }
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // insertion
+                            int numLeftIns = variantPositions.getRankOne(leftIndexOld - 1);
+                            int numRightIns = variantPositions.getRankOne(rightIndexOld);
+                            // search for all SNPs positions
+                            if (numLeftIns < numRightIns){
+                                for (int numIns = numLeftIns; numIns < numRightIns; ++numIns){
+
+                                    // go through all insertions at certain position
+                                    for (int[] variant : variants[numIns]){
+                                        final int leftIndexIns = variant[2];
+                                        final int rightIndexIns = variant[2];
+                                        if (variant[0] == '*' && variant[1] == aminoAcidCheck){
+                                            row[j + 1].add(new MatrixContent(leftIndexIns, rightIndexIns, variant[1], content, numX, length + 1, numVariants + 1, '*'));
                                         }
                                     }
                                 }

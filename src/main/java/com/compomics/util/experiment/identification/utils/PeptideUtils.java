@@ -172,12 +172,17 @@ public class PeptideUtils {
         String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
 
         TreeMap<String, HashSet<Integer>> modMap = IntStream.range(0, fixedModifications.length)
-                .mapToObj(i -> fixedModifications[i])
-                .filter(modName -> modName != null)
-                .collect(Collectors.groupingBy(Function.identity(),
-                        TreeMap::new,
-                        Collectors.mapping(i -> new Integer(i),
-                                Collectors.toCollection(HashSet::new))));
+                .mapToObj( i -> 
+                    new Object() {
+                        Integer position = i;
+                        String modification = fixedModifications[i];
+                    }
+                )   
+                .filter(obj -> obj.modification != null) 
+                .collect(Collectors.groupingBy(  obj -> obj.modification,  
+                        TreeMap::new,                                
+                        Collectors.mapping(obj -> obj.position,      
+                                Collectors.toCollection(HashSet::new))));  
 
         return modMap.entrySet().stream()
                 .map(entry -> getModificationString(entry.getKey(), entry.getValue()))

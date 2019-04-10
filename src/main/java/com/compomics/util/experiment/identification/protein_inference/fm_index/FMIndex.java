@@ -1840,12 +1840,14 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             if (newNumX > xNumLimit) continue;
 
                             ArrayList<int[]> setCharacter = occurrenceTablePrimary.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                            addAmbiguous(setCharacter);
 
                             for (int[] borders : setCharacter) {
                                 final int aminoAcid = borders[0];
                                 if (aminoAcid == '/')  continue;
                                 
-                                final int lessValue = lessTablePrimary[aminoAcid];
+                                final int aminoAcidSearch = (borders[4] == -1) ? aminoAcid : borders[4];
+                                final int lessValue = lessTablePrimary[aminoAcidSearch];
                                 final int leftIndex = lessValue + borders[1];
                                 final int rightIndex = lessValue + borders[2] - 1;
 
@@ -2031,10 +2033,12 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                                 // deletion and substitution
                                 ArrayList<int[]> setCharacter = occurrenceTablePrimary.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                                addAmbiguous(setCharacter);
                                 for (int[] borders : setCharacter) {
                                     final int errorAminoAcid = borders[0];
                                     final int errorNewNumX = newNumX + ((errorAminoAcid == 'X') ? 1 : 0);
-                                    final int errorLessValue = lessTablePrimary[errorAminoAcid];
+                                    final int errorAminoAcidSearch = (borders[4] == -1) ? errorAminoAcid : borders[4];
+                                    final int errorLessValue = lessTablePrimary[errorAminoAcidSearch];
                                     final int errorLeftIndex = errorLessValue + borders[1];
                                     final int errorRightIndex = errorLessValue + borders[2] - 1;
 
@@ -2205,10 +2209,12 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                                 // deletion and substitution
                                 ArrayList<int[]> setCharacter = occurrenceTablePrimary.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                                addAmbiguous(setCharacter);
                                 for (int[] borders : setCharacter) {
                                     final int errorAminoAcid = borders[0];
                                     final int errorNewNumX = newNumX + ((errorAminoAcid == 'X') ? 1 : 0);
-                                    final int errorLessValue = lessTablePrimary[errorAminoAcid];
+                                    final int errorAminoAcidSearch = (borders[4] == -1) ? errorAminoAcid : borders[4];
+                                    final int errorLessValue = lessTablePrimary[errorAminoAcidSearch];
                                     final int errorLeftIndex = errorLessValue + borders[1];
                                     final int errorRightIndex = errorLessValue + borders[2] - 1;
 
@@ -2437,13 +2443,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                     for (int[] borders : setCharacter) {
                         final int aminoAcid = borders[0];
-                        if (aminoAcid == '/') {
-                            continue;
-                        }
+                        if (aminoAcid == '/') continue;
                         int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
-                        if (newNumX > combination.xNumLimit) {
-                            continue;
-                        }
+                        if (newNumX > combination.xNumLimit)  continue;
                         final double newMass = oldMass + (aminoAcid != 'X' ? aaMasses[borders[3]] : 0);
 
                         // check if not exceeding tag mass
@@ -2459,10 +2461,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             boolean withinMass = withinMassTolerance(massDiff, newNumX);
                             int offset = ((computeMassValue(newMass, combinationMass) <= massTolerance) ? 1 : 0) | (withinMass ? 1 : 0);
                            
-                            if (offset > 0) {
-                                newNumX = 0;
-                            }
-                            matrix[j + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, newNumX, borders[3], borders[4], j));
+                            if (offset > 0)  newNumX = 0;
+                            matrix[j + offset].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, newNumX, borders[3], aminoAcidSearch, j));
                             if (withinMass) {
                                 matrix[j + offset].getLast().XMassDiff = massDiff;
                             }
@@ -2530,13 +2530,15 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         final double oldMass = content.mass;
 
                         ArrayList<int[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                        addAmbiguous(setCharacter);
                         if (withVariableModifications) addModifications(setCharacter);
 
                         for (int[] borders : setCharacter) {
                             final int aminoAcid = borders[0];
                             if (aminoAcid == '/')  continue;
                             final double newMass = oldMass + aaMasses[borders[3]];
-                            final int lessValue = less[aminoAcid];
+                            final int aminoAcidSearch = (borders[4] == -1) ? aminoAcid : borders[4];
+                            final int lessValue = less[aminoAcidSearch];
                             final int leftIndex = lessValue + borders[1];
                             final int rightIndex = lessValue + borders[2] - 1;
 
@@ -2590,9 +2592,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         for (int c = 0; c < combinationSequence.length(); ++c) {
                             final int aminoAcid = combinationSequence.charAt(c);
                             final int newNumX = numX + ((aminoAcid == 'X') ? 1 : 0);
-                            if (newNumX > xNumLimit) {
-                                continue;
-                            }
+                            if (newNumX > xNumLimit)  continue;
 
                             final int lessValue = less[aminoAcid];
                             final int[] range = occurrence.singleRangeQuery(leftIndexOld - 1, rightIndexOld, aminoAcid);
@@ -2613,14 +2613,14 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                                 // deletion and substitution
                                 ArrayList<int[]> setCharacterSeq = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                                addAmbiguous(setCharacterSeq);
                                 for (int[] borders : setCharacterSeq) {
                                     final int errorAminoAcid = borders[0];
                                     final int errorNewNumX = newNumX + ((errorAminoAcid != 'X') ? 0 : 1);
-                                    if (errorNewNumX > xNumLimit) {
-                                        continue;
-                                    }
+                                    if (errorNewNumX > xNumLimit)  continue;
 
-                                    final int errorLessValue = less[errorAminoAcid];
+                                    final int aminoAcidErrorSearch = (borders[4] == -1) ? errorAminoAcid : borders[4];
+                                    final int errorLessValue = less[aminoAcidErrorSearch];
                                     final int errorLeftIndex = errorLessValue + borders[1];
                                     final int errorRightIndex = errorLessValue + borders[2] - 1;
 
@@ -2680,6 +2680,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         final double oldMass = content.mass;
 
                         ArrayList<int[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                        addAmbiguous(setCharacter);
                         if (withVariableModifications)  addModifications(setCharacter);
 
                         for (int[] borders : setCharacter) {
@@ -2687,7 +2688,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             if (aminoAcid == '/') continue;
                             
                             final double newMass = oldMass + aaMasses[borders[3]];
-                            final int lessValue = less[aminoAcid];
+                            final int aminoAcidSearch = (borders[4] == -1) ? aminoAcid : borders[4];
+                            final int lessValue = less[aminoAcidSearch];
                             final int leftIndex = lessValue + borders[1];
                             final int rightIndex = lessValue + borders[2] - 1;
 
@@ -2715,15 +2717,13 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                             final int rightIndexVar = variant[2];
                                             ArrayList<int[]> setCharacterSNP = new ArrayList<>(numMasses);
                                             setCharacterSNP.add(new int[]{variant[1], 0, 0, variant[1], -1});
-
+                                            addAmbiguous(setCharacterSNP);
                                             if (withVariableModifications)  addModifications(setCharacterSNP);
 
                                             for (int[] bordersSNP : setCharacterSNP) {
 
                                                 final int aminoAcidIns = variant[1];
                                                 final double newMassIns = oldMass + aaMasses[bordersSNP[3]];
-                                                final int leftIndexSNP = variant[2];
-                                                final int rightIndexSNP = variant[2];
                                                 if (newMassIns - computeMassTolerance(massTolerance, combinationMass) <= combinationMass) {
                                                     if (!massNotValid(newMassIns, combinationMass)) {
                                                         int offsetIns = ((computeMassValue(newMassIns, combinationMass) <= massTolerance) ? 1 : 0);
@@ -2768,7 +2768,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                         else {
                                             ArrayList<int[]> setCharacterSNP = new ArrayList<>(numMasses);
                                             setCharacterSNP.add(new int[]{variant[1], 0, 0, variant[1], -1});
-
+                                            addAmbiguous(setCharacterSNP);
                                             if (withVariableModifications)  addModifications(setCharacterSNP);
 
                                             for (int[] bordersSNP : setCharacterSNP) {
@@ -2798,12 +2798,15 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             if (newNumX > xNumLimit) continue;
 
                             ArrayList<int[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
-
+                            addAmbiguous(setCharacter);
+                            
+                            
                             for (int[] borders : setCharacter) {
                                 final int aminoAcid = borders[0];
                                 if (aminoAcid == '/')  continue;
                                 
-                                final int lessValue = less[aminoAcid];
+                                final int aminoAcidSearch = (borders[4] == -1) ? aminoAcid : borders[4];
+                                final int lessValue = less[aminoAcidSearch];
                                 final int leftIndex = lessValue + borders[1];
                                 final int rightIndex = lessValue + borders[2] - 1;
 
@@ -2904,6 +2907,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         final double oldMass = content.mass;
 
                         ArrayList<int[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                        addAmbiguous(setCharacter);
                         if (withVariableModifications) addModifications(setCharacter);
 
                         for (int[] borders : setCharacter) {
@@ -2911,7 +2915,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             if (aminoAcid == '/') continue;
                             
                             final double newMass = oldMass + aaMasses[borders[3]];
-                            final int lessValue = less[aminoAcid];
+                            final int aminoAcidSearch = (borders[4] == -1) ? aminoAcid : borders[4];
+                            final int lessValue = less[aminoAcidSearch];
                             final int leftIndex = lessValue + borders[1];
                             final int rightIndex = lessValue + borders[2] - 1;
 
@@ -2993,6 +2998,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                 // deletion and substitution
                                 if (numDeletions < maxNumberDeletions || numSubstitutions < maxNumberSubstitutions) {
                                     ArrayList<int[]> setCharacterSeq = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
+                                    addAmbiguous(setCharacterSeq);
                                     for (int[] borders : setCharacterSeq) {
                                         final int errorAminoAcid = borders[0];
                                         final int errorNewNumX = newNumX + ((errorAminoAcid != 'X') ? 0 : 1);
@@ -3000,7 +3006,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                             continue;
                                         }
 
-                                        final int errorLessValue = less[errorAminoAcid];
+                                        final int errorAminoAcidSearch = (borders[4] == -1) ? errorAminoAcid : borders[4];
+                                        final int errorLessValue = less[errorAminoAcidSearch];
                                         final int errorLeftIndex = errorLessValue + borders[1];
                                         final int errorRightIndex = errorLessValue + borders[2] - 1;
 
@@ -3104,9 +3111,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         for (int[] borders : setCharacter) {
                             final int aminoAcid = borders[0];
                             int newNumX = cell.numX + (aminoAcid == 'X' ? 1 : 0);
-                            if (newNumX > combination.xNumLimit) {
-                                continue;
-                            }
+                            if (newNumX > combination.xNumLimit)  continue;
 
                             if (aminoAcid != '/') {
 

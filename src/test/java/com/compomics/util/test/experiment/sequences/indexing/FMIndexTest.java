@@ -54,12 +54,14 @@ public class FMIndexTest extends TestCase {
     
     public void testWhatHasToBeTested(){
         try {
+            /*
             terminiPTMTagMapping();
             getSequences();
             peptideToProteinMapping();
             peptideToProteinMappingWithVariants();
             peptideToProteinMappingWithVariantsSpecific();
             tagToProteinMapping();
+            */
             tagToProteinMappingWithPTMsAndVariants();
             tagToProteinMappingWithVariantsGeneric();
             tagToProteinMappingWithVariantsSpecific();

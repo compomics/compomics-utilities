@@ -12,7 +12,7 @@ import java.util.Collections;
  */
 public class WaveletTree implements Serializable {
 
-    private static final long serialVersionUID = 83209020542390250L;
+    private static final long serialVersionUID = 83209020542390251L;
     /**
      * Instance of a rank.
      */
@@ -135,21 +135,9 @@ public class WaveletTree implements Serializable {
      * @param text the text
      * @param aAlphabet the alphabet
      * @param waitingHandler the waiting handler
-     * @param hasPTMatTerminus indicates how to handle / sign
-     */
-    public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, boolean hasPTMatTerminus) {
-        prepareWaveletTree(text, aAlphabet, waitingHandler, hasPTMatTerminus);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param text the text
-     * @param aAlphabet the alphabet
-     * @param waitingHandler the waiting handler
      */
     public WaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler) {
-        prepareWaveletTree(text, aAlphabet, waitingHandler, false);
+        prepareWaveletTree(text, aAlphabet, waitingHandler);
     }
 
     /**
@@ -158,9 +146,8 @@ public class WaveletTree implements Serializable {
      * @param text the text
      * @param aAlphabet the alphabet
      * @param waitingHandler the waiting handler
-     * @param hasPTMatTerminus indicates how to handle / sign
      */
-    private void prepareWaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler, boolean hasPTMatTerminus) {
+    private void prepareWaveletTree(byte[] text, long[] aAlphabet, WaitingHandler waitingHandler) {
 
         int[] counts = new int[128];
         for (byte c : text) {
@@ -181,7 +168,7 @@ public class WaveletTree implements Serializable {
             huffmanNodes.add(new HuffmanNode(first, second));
         }
 
-        createWaveletTreeHuffman(text, waitingHandler, huffmanNodes.get(0), hasPTMatTerminus);
+        createWaveletTreeHuffman(text, waitingHandler, huffmanNodes.get(0));
 
         less = new int[128];
         long[] alphabet = new long[2];
@@ -202,10 +189,9 @@ public class WaveletTree implements Serializable {
      * @param text the text
      * @param waitingHandler the waiting handler
      * @param root the root
-     * @param hasPTMatTerminus if there is a PTM at the terminus
      */
-    public WaveletTree(byte[] text, WaitingHandler waitingHandler, HuffmanNode root, boolean hasPTMatTerminus) {
-        createWaveletTreeHuffman(text, waitingHandler, root, hasPTMatTerminus);
+    public WaveletTree(byte[] text, WaitingHandler waitingHandler, HuffmanNode root) {
+        createWaveletTreeHuffman(text, waitingHandler, root);
     }
 
     /**
@@ -216,17 +202,17 @@ public class WaveletTree implements Serializable {
      * @param root the root
      * @param hasPTMatTerminus if there is a PTM at the terminus
      */
-    public void createWaveletTreeHuffman(byte[] text, WaitingHandler waitingHandler, HuffmanNode root, boolean hasPTMatTerminus) {
+    public void createWaveletTreeHuffman(byte[] text, WaitingHandler waitingHandler, HuffmanNode root) {
         long[] alphabet = new long[2];
         alphabet[0] = root.alphabet[0];
         alphabet[1] = root.alphabet[1];
 
         long[] alphabetExcluded = new long[2];
         alphabetExcluded[0] = 1L << '$';
+        /*
         if (!hasPTMatTerminus) {
             alphabetExcluded[0] |= 1L << '/';
         }
-        /*
         alphabetExcluded[1] = 1L << ('B' & 63);
         alphabetExcluded[1] |= 1L << ('X' & 63);
         alphabetExcluded[1] |= 1L << ('Z' & 63);
@@ -278,7 +264,7 @@ public class WaveletTree implements Serializable {
                         text_left[j++] = text[i];
                     }
                 }
-                leftChild = new WaveletTree(text_left, waitingHandler, root.leftChild, hasPTMatTerminus);
+                leftChild = new WaveletTree(text_left, waitingHandler, root.leftChild);
             }
         }
         if (waitingHandler != null && waitingHandler.isRunCanceled()) {
@@ -303,7 +289,7 @@ public class WaveletTree implements Serializable {
                         text_right[j++] = text[i];
                     }
                 }
-                rightChild = new WaveletTree(text_right, waitingHandler, root.rightChild, hasPTMatTerminus);
+                rightChild = new WaveletTree(text_right, waitingHandler, root.rightChild);
             }
         }
         if (leftChild != null) {

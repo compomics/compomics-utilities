@@ -54,7 +54,6 @@ public class FMIndexTest extends TestCase {
     
     public void testWhatHasToBeTested(){
         try {
-            /*
             terminiPTMTagMapping();
             getSequences();
             peptideToProteinMapping();
@@ -62,9 +61,8 @@ public class FMIndexTest extends TestCase {
             peptideToProteinMappingWithVariantsSpecific();
             tagToProteinMapping();
             tagToProteinMappingWithPTMsAndVariants();
-            */
-            //tagToProteinMappingWithVariantsGeneric();
-            //tagToProteinMappingWithVariantsSpecific();
+            tagToProteinMappingWithVariantsGeneric();
+            tagToProteinMappingWithVariantsSpecific();
             tagToProteinMappingWithVariantsFixed();
         }
         catch(Exception e){
@@ -3686,7 +3684,7 @@ public class FMIndexTest extends TestCase {
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(9, 'S', '*'));
         peptideVariantsPreferences.setFixedVariants(fixedVariants);
-        aminoAcidPattern = new AminoAcidSequence("TEST");
+        aminoAcidPattern = new AminoAcidSequence("TET");
         nTermGap = AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.L.getMonoisotopicMass();
         cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);

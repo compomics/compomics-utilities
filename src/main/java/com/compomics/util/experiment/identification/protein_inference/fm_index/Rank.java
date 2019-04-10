@@ -124,6 +124,7 @@ public class Rank implements Serializable {
      * @return the rank
      */
     public int getRank(int index, boolean zeros) {
+        if (index < 0) return 0;
         int cell = index >>> BIT_SHIFT;
         int pos = index & BIT_MASK;
         long active_ones = bitfield[cell] << (BIT_MASK - pos);
@@ -138,6 +139,7 @@ public class Rank implements Serializable {
      * @return the rank
      */
     public final int getRankOne(int index) {
+        if (index < 0) return 0;
         final int cell = index >>> BIT_SHIFT;
         final int pos = index & BIT_MASK;
         final long active_ones = bitfield[cell] << (BIT_MASK - pos);
@@ -152,6 +154,7 @@ public class Rank implements Serializable {
      * @return the rank
      */
     public int getRankZero(int index) {
+        if (index < 0) return 0;
         int cell = index >>> BIT_SHIFT;
         int pos = index & BIT_MASK;
         long active_ones = bitfield[cell] << (BIT_MASK - pos);
@@ -166,6 +169,7 @@ public class Rank implements Serializable {
      * @return true if the value is equal to one
      */
     public boolean isOne(int index) {
+        if (index < 0 || length <= index) return false;
         int cell = index >>> BIT_SHIFT;
         int pos = index & BIT_MASK;
         return (((bitfield[cell] >>> pos) & 1L) == 1);

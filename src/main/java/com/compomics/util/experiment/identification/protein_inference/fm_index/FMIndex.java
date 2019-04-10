@@ -1419,7 +1419,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
 
         // creating the occurrence table and less table for backward search over forward text
-        WaveletTree occurrenceTablePrimary = new WaveletTree(bwt, alphabet, waitingHandler, hasModificationatTerminus);
+        WaveletTree occurrenceTablePrimary = new WaveletTree(bwt, alphabet, waitingHandler);
         int[] lessTablePrimary = occurrenceTablePrimary.createLessTable();
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
@@ -1457,7 +1457,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
 
         // create inversed less and occurrence table
-        WaveletTree occurrenceTableReversed = new WaveletTree(bwt, alphabet, waitingHandler, hasModificationatTerminus);
+        WaveletTree occurrenceTableReversed = new WaveletTree(bwt, alphabet, waitingHandler);
         int[] lessTableReversed = occurrenceTableReversed.createLessTable();
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();

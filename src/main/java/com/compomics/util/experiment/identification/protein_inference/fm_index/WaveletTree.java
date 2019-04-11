@@ -200,7 +200,6 @@ public class WaveletTree implements Serializable {
      * @param text the text
      * @param waitingHandler the waiting handler
      * @param root the root
-     * @param hasPTMatTerminus if there is a PTM at the terminus
      */
     public void createWaveletTreeHuffman(byte[] text, WaitingHandler waitingHandler, HuffmanNode root) {
         long[] alphabet = new long[2];

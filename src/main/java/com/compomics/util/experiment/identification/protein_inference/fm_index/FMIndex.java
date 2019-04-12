@@ -1189,7 +1189,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                     // adding variants
                     if (SNPs.containsKey(accession)){
                         for (SNPElement SNP : SNPs.get(accession)){
-                            int posSNP = inversedSampledSuffixArray[accessionMetaData.get(accession).trueBeginning + SNP.position];
+                            int offset = SNP.sourceAA == '*' ? 1 : 0;
+                            int posSNP = inversedSampledSuffixArray[accessionMetaData.get(accession).trueBeginning + SNP.position + offset];
                             variantPrimBits[posSNP >>> 6] |= 1L << (posSNP & 63);
                             if (variantsPrimTmp[posSNP] == null) variantsPrimTmp[posSNP] = new HashSet<>();
                             variantsPrimTmp[posSNP].add(new int[]{SNP.sourceAA, SNP.targetAA, posSNP});

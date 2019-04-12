@@ -54,16 +54,13 @@ public class FMIndexTest extends TestCase {
     
     public void testWhatHasToBeTested(){
         try {
-            
             terminiPTMTagMapping();
             getSequences();
             peptideToProteinMapping();
             peptideToProteinMappingWithVariants();
             peptideToProteinMappingWithVariantsSpecific();
             tagToProteinMapping();
-            
             tagToProteinMappingWithPTMsAndVariants();
-            
             tagToProteinMappingWithVariantsGeneric();
             tagToProteinMappingWithVariantsSpecific();
             tagToProteinMappingWithVariantsFixed();
@@ -2684,6 +2681,7 @@ public class FMIndexTest extends TestCase {
         
         
         
+        
         // TESTMRITESTCKTESTK with one fixed modification and one variant
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + 0 * AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -3721,7 +3719,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(isPresent);
         
                 
-        /*
+        
         peptideVariantsPreferences.setVatiantType(VariantType.FIXED);
                 
         
@@ -3729,6 +3727,7 @@ public class FMIndexTest extends TestCase {
         fixedVariants = new HashMap<>();
         fixedVariants.put("test", new ArrayList<>());
         fixedVariants.get("test").add(new SNPElement(9, 'S', 'D'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("STMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.D.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -3751,6 +3750,10 @@ public class FMIndexTest extends TestCase {
         
         
         // TESTMRITE{S=>D}TCKTESTK with one variable modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(9, 'S', 'D'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("STMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.D.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -3773,6 +3776,10 @@ public class FMIndexTest extends TestCase {
         
         
         // TESTMRITE{S=>*}TCKTESTK with one fixed modification and one deletion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(9, 'S', '*'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("STMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -3795,6 +3802,10 @@ public class FMIndexTest extends TestCase {
         
         
         // TESTMRITE{S=>*}TCKTESTK with one fixed modification and one variant
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(9, 'S', '*'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("STMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -3817,6 +3828,10 @@ public class FMIndexTest extends TestCase {
         
         
         // TESTMRITES{*=>P}TCKTESTK with one fixed modification and one insertion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(9, '*', 'P'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("STMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -3839,6 +3854,10 @@ public class FMIndexTest extends TestCase {
         
         
         // TESTMRITES{*=>P}TCKTESTK with one fixed modification and one insertion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(9, '*', 'P'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("STMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -3863,6 +3882,10 @@ public class FMIndexTest extends TestCase {
         
         
         // T{E=>A}STMRITESTCKTESTK with one fixed modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, 'E', 'A'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -3885,6 +3908,10 @@ public class FMIndexTest extends TestCase {
         
         
         // T{E=>A}STMRITESTCKTESTK with one variable modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, 'E', 'A'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -3909,6 +3936,10 @@ public class FMIndexTest extends TestCase {
         
         
         // T{E=>*}STMRITESTCKTESTK with one fixed modification and one deletion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, 'E', '*'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -3931,6 +3962,10 @@ public class FMIndexTest extends TestCase {
         
         
         // T{E=>*}STMRITESTCKTESTK with one variable modification and one deletion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, 'E', '*'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -3956,6 +3991,10 @@ public class FMIndexTest extends TestCase {
         
         
         // TE{*=>P}STMRITESTCKTESTK with one fixed modification and one insertion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, '*', 'P'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -3978,6 +4017,10 @@ public class FMIndexTest extends TestCase {
         
         
         // TE{*=>P}STMRITESTCKTESTK with one variable modification and one insertion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, '*', 'P'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -4003,6 +4046,10 @@ public class FMIndexTest extends TestCase {
         
         
         // TESTM{R=>K}ITESTCKTESTK with one fixed modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(5, 'R', 'K'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMKI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -4025,6 +4072,10 @@ public class FMIndexTest extends TestCase {
         
         
         // TESTM{R=>K}ITESTCKTESTK with one variable modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(5, 'R', 'K'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMKI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -4050,6 +4101,10 @@ public class FMIndexTest extends TestCase {
         
         
         // TESTM{R=>*}ITESTCKTESTK with one fixed modification and one deletion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(5, 'R', '*'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -4072,6 +4127,10 @@ public class FMIndexTest extends TestCase {
         
         
         // TESTM{R=>*}ITESTCKTESTK with one variable modification and one deletion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(5, 'R', '*'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -4098,6 +4157,10 @@ public class FMIndexTest extends TestCase {
         
         
         // TESTM{*=>E}RITESTCKTESTK with one fixed modification and one insertion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(4, '*', 'E'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMERI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -4120,6 +4183,10 @@ public class FMIndexTest extends TestCase {
         
         
         // TESTM{*=>E}RITESTCKTESTK with one variable modification and one insertion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(4, '*', 'E'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMERI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -4152,6 +4219,10 @@ public class FMIndexTest extends TestCase {
         
         
         // T{E=>A}STMRITESTCKTESTK with one variable modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, 'E', 'A'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -4174,6 +4245,10 @@ public class FMIndexTest extends TestCase {
         
         
         // T{E=>A}STMRITESTCKTESTK with one variable modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, 'E', 'A'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
         aminoAcidPattern = new AminoAcidSequence("TMRI");
         nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
         cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
@@ -4186,7 +4261,7 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
         Assert.assertTrue(peptideProteinMappings.isEmpty());
         
-        */
+        
         
         
         
@@ -5051,7 +5126,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
-            if (peptideProteinMapping.getPeptideSequence().equals("STMRPITESTCKTES")) {
+            if (peptideProteinMapping.getPeptideSequence().equals("STMRIPTESTCKTES")) {
                 Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 break;

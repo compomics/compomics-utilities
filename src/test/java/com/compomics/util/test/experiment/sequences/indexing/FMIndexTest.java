@@ -3286,6 +3286,10 @@ public class FMIndexTest extends TestCase {
         
         
         
+        
+        searchParameters.setFragmentIonAccuracy(0.02);
+        searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
+        
     }
 
     /**

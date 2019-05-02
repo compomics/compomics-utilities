@@ -64,6 +64,7 @@ public class FMIndexTest extends TestCase {
             tagToProteinMappingWithVariantsGeneric();
             tagToProteinMappingWithVariantsSpecific();
             tagToProteinMappingWithVariantsFixed();
+            
         }
         catch(Exception e){
             e.printStackTrace();
@@ -2649,7 +2650,8 @@ public class FMIndexTest extends TestCase {
         peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.singleBaseSubstitution);
         peptideVariantsPreferences.setnVariants(1);
         peptideVariantsPreferences.setVatiantType(VariantType.GENERIC);
-
+        ArrayList<PeptideProteinMapping> peptideProteinMappings;
+        
         ModificationFactory ptmFactory = ModificationFactory.getInstance();
         ptmFactory.clearFactory();
         ptmFactory = ModificationFactory.getInstance();
@@ -2660,6 +2662,7 @@ public class FMIndexTest extends TestCase {
         File fastaFile = new File("src/test/resources/experiment/testSequences_1.fasta");
         FastaParameters fastaParameters = new FastaParameters();
         fastaParameters = DecoyConverter.getDecoyParameters(fastaParameters);
+        HashMap<String, ArrayList<SNPElement>> fixedVariants;
 
         AminoAcidSequence aminoAcidPattern;
         double nTermGap;
@@ -2672,7 +2675,13 @@ public class FMIndexTest extends TestCase {
         SearchParameters searchParameters = new SearchParameters();
         searchParameters.setFragmentIonAccuracy(0.02);
         searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
-
+        
+        
+        
+        
+        
+        
+        
         // TESTMRITESTCKTESTK with one fixed modification and one variant
         aminoAcidPattern = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + 0 * AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -2682,7 +2691,7 @@ public class FMIndexTest extends TestCase {
         ptmSettings.addFixedModification(ptmFactory.getModification("Carbamidomethylation of C"));
         searchParameters.setModificationParameters(ptmSettings);
         fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
-        ArrayList<PeptideProteinMapping> peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
@@ -2692,6 +2701,8 @@ public class FMIndexTest extends TestCase {
             }
         }
         Assert.assertTrue(isPresent);
+        
+        
 
         // TESTMRITESTCKTESTKMELTSESTES with substitution in left mass with higher right mass
         aminoAcidPattern = new AminoAcidSequence("TEST");
@@ -2808,6 +2819,1452 @@ public class FMIndexTest extends TestCase {
         }
         Assert.assertTrue(isPresent);
         Assert.assertTrue(numPTMs == 2);
+        
+        
+        
+        // TESTMRITE{S=>D}TCKTESTK with one fixed modification and one substitution
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.D.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITEDTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRITE{S=>D}TCKTESTK with one variable modification and one substitution
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.D.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITEDTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRITE{S=>*}TCKTESTK with one fixed modification and one deletion
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITETCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRITE{S=>*}TCKTESTK with one fixed modification and one variant
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITETCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRITES{*=>P}TCKTESTK with one fixed modification and one insertion
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITESPTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRITES{*=>P}TCKTESTK with one fixed modification and one insertion
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITESPTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        // T{E=>A}STMRITESTCKTESTK with one fixed modification and one substitution
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TASTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // T{E=>A}STMRITESTCKTESTK with one variable modification and one substitution
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TASTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        // T{E=>*}STMRITESTCKTESTK with one fixed modification and one deletion
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TSTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // T{E=>*}STMRITESTCKTESTK with one variable modification and one deletion
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TSTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        // TE{*=>P}STMRITESTCKTESTK with one fixed modification and one insertion
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TEPSTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TE{*=>P}STMRITESTCKTESTK with one variable modification and one insertion
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TEPSTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        // TESTM{R=>K}ITESTCKTESTK with one fixed modification and one substitution
+        aminoAcidPattern = new AminoAcidSequence("TMKI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMKITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTM{R=>K}ITESTCKTESTK with one variable modification and one substitution
+        aminoAcidPattern = new AminoAcidSequence("TMKI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMKITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        // TESTM{R=>*}ITESTCKTESTK with one fixed modification and one deletion
+        aminoAcidPattern = new AminoAcidSequence("TMI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTM{R=>*}ITESTCKTESTK with one variable modification and one deletion
+        aminoAcidPattern = new AminoAcidSequence("TMI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        
+        // TESTM{*=>E}RITESTCKTESTK with one fixed modification and one insertion
+        aminoAcidPattern = new AminoAcidSequence("TMERI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMERITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTM{*=>E}RITESTCKTESTK with one variable modification and one insertion
+        aminoAcidPattern = new AminoAcidSequence("TMERI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMERITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        
+        searchParameters.setFragmentIonAccuracy(5);
+        searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.PPM);
+        
+        
+        
+        
+        // T{E=>A}STMRITESTCKTESTK with one variable modification and one substitution
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        nTermGap += 4.9 / 1000000.0 * nTermGap;
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TASTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        // T{E=>A}STMRITESTCKTESTK with one variable modification and one substitution
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        nTermGap += 5.1 / 1000000.0 * nTermGap;
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(peptideProteinMappings.isEmpty());
+        
+        
+        
+        
+        
+        searchParameters.setFragmentIonAccuracy(0.02);
+        searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
+        
+        
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        peptideVariantsPreferences.setVatiantType(VariantType.SPECIFIC);
+        
+        
+        // T{E=>A}STMRITESTCKTESTK with one variable modification and one substitution
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        nTermGap += 4.9 / 1000000.0 * nTermGap;
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(peptideProteinMappings.isEmpty());
+        
+        
+        
+        
+        // T{E=>A}STMRITESTCKTESTK with one variable modification and one substitution
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(1);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TASTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRITES{*=>P}TCKTESTK with one fixed modification and one insertion
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(1);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITESPTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRITES{*=>P}TCKTESTK with one fixed modification and one insertion
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(peptideProteinMappings.isEmpty());
+        
+        
+        
+        
+        // TESTMRITE{S=>*}TCKTESTK with one fixed modification and one variant
+        peptideVariantsPreferences.setnAaDeletions(1);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITETCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        // T{E=>A}STMRITESTCKTESTK with one fixed modification and one substitution
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(1);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TASTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // T{E=>A}STMRITESTCKTESTK with one variable modification and one substitution
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(1);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TASTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        // T{E=>*}STMRITESTCKTESTK with one fixed modification and one deletion
+        peptideVariantsPreferences.setnAaDeletions(1);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TSTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // T{E=>*}STMRITESTCKTESTK with one variable modification and one deletion
+        peptideVariantsPreferences.setnAaDeletions(1);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TSTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        // TE{*=>P}STMRITESTCKTESTK with one fixed modification and one insertion
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(1);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TEPSTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TE{*=>P}STMRITESTCKTESTK with one variable modification and one insertion
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(1);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TEPSTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        // TESTM{R=>K}ITESTCKTESTK with one fixed modification and one substitution
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(1);
+        aminoAcidPattern = new AminoAcidSequence("TMKI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMKITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTM{R=>K}ITESTCKTESTK with one variable modification and one substitution
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(1);
+        aminoAcidPattern = new AminoAcidSequence("TMKI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMKITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        // TESTM{R=>*}ITESTCKTESTK with one fixed modification and one deletion
+        peptideVariantsPreferences.setnAaDeletions(1);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        aminoAcidPattern = new AminoAcidSequence("TMI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTM{R=>*}ITESTCKTESTK with one variable modification and one deletion
+        peptideVariantsPreferences.setnAaDeletions(1);
+        peptideVariantsPreferences.setnAaInsertions(0);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        aminoAcidPattern = new AminoAcidSequence("TMI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        
+        // TESTM{*=>E}RITESTCKTESTK with one fixed modification and one insertion
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(1);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        aminoAcidPattern = new AminoAcidSequence("TMERI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMERITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTM{*=>E}RITESTCKTESTK with one variable modification and one insertion
+        peptideVariantsPreferences.setnAaDeletions(0);
+        peptideVariantsPreferences.setnAaInsertions(1);
+        peptideVariantsPreferences.setnAaSubstitutions(0);
+        aminoAcidPattern = new AminoAcidSequence("TMERI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMERITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+                
+        
+        peptideVariantsPreferences.setVatiantType(VariantType.FIXED);
+                
+        
+        // TESTMRITE{S=>D}TCKTESTK with one fixed modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(9, 'S', 'D'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.D.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITEDTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRITE{S=>D}TCKTESTK with one variable modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(9, 'S', 'D'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.D.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITEDTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRITE{S=>*}TCKTESTK with one fixed modification and one deletion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(9, 'S', '*'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITETCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRITE{S=>*}TCKTESTK with one fixed modification and one variant
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(9, 'S', '*'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITETCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRITES{*=>P}TCKTESTK with one fixed modification and one insertion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(9, '*', 'P'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITESPTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTMRITES{*=>P}TCKTESTK with one fixed modification and one insertion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(9, '*', 'P'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("STMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMRITESPTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        // T{E=>A}STMRITESTCKTESTK with one fixed modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, 'E', 'A'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TASTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // T{E=>A}STMRITESTCKTESTK with one variable modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, 'E', 'A'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TASTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        // T{E=>*}STMRITESTCKTESTK with one fixed modification and one deletion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, 'E', '*'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TSTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // T{E=>*}STMRITESTCKTESTK with one variable modification and one deletion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, 'E', '*'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TSTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        // TE{*=>P}STMRITESTCKTESTK with one fixed modification and one insertion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, '*', 'P'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TEPSTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TE{*=>P}STMRITESTCKTESTK with one variable modification and one insertion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, '*', 'P'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.P.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TEPSTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        // TESTM{R=>K}ITESTCKTESTK with one fixed modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(5, 'R', 'K'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMKI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMKITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTM{R=>K}ITESTCKTESTK with one variable modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(5, 'R', 'K'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMKI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMKITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        // TESTM{R=>*}ITESTCKTESTK with one fixed modification and one deletion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(5, 'R', '*'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTM{R=>*}ITESTCKTESTK with one variable modification and one deletion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(5, 'R', '*'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        
+        // TESTM{*=>E}RITESTCKTESTK with one fixed modification and one insertion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(4, '*', 'E'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMERI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addFixedModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMERITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        // TESTM{*=>E}RITESTCKTESTK with one variable modification and one insertion
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(4, '*', 'E'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMERI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TESTMERITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        
+        
+        
+        
+        
+        searchParameters.setFragmentIonAccuracy(5);
+        searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.PPM);
+        
+        
+        
+        
+        // T{E=>A}STMRITESTCKTESTK with one variable modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, 'E', 'A'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        nTermGap += 4.9 / 1000000.0 * nTermGap;
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(!peptideProteinMappings.isEmpty());
+        isPresent = false;
+        for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
+            if (peptideProteinMapping.getPeptideSequence().equals("TASTMRITESTCK")) {
+                isPresent = true;
+                break;
+            }
+        }
+        Assert.assertTrue(isPresent);
+        
+        
+        // T{E=>A}STMRITESTCKTESTK with one variable modification and one substitution
+        fixedVariants = new HashMap<>();
+        fixedVariants.put("test", new ArrayList<>());
+        fixedVariants.get("test").add(new SNPElement(1, 'E', 'A'));
+        peptideVariantsPreferences.setFixedVariants(fixedVariants);
+        aminoAcidPattern = new AminoAcidSequence("TMRI");
+        nTermGap = ptmFactory.getModification("Palmitoylation of protein N-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass();
+        cTermGap = AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        nTermGap += 5.1 / 1000000.0 * nTermGap;
+        tag = new Tag(nTermGap, aminoAcidPattern, cTermGap);
+        ptmSettings = new ModificationParameters();
+        ptmSettings.addVariableModification(ptmFactory.getModification("Palmitoylation of protein N-term"));
+        searchParameters.setModificationParameters(ptmSettings);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(peptideProteinMappings.isEmpty());
+        
+        
+        
+        
+        
     }
 
     /**
@@ -3669,7 +5126,7 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
         isPresent = false;
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
-            if (peptideProteinMapping.getPeptideSequence().equals("STMRPITESTCKTES")) {
+            if (peptideProteinMapping.getPeptideSequence().equals("STMRIPTESTCKTES")) {
                 Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
                 isPresent = true;
                 break;

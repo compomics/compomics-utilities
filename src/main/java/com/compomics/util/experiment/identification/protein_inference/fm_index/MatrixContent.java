@@ -270,6 +270,7 @@ public class MatrixContent {
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
+        this.ambiguousChar = -1;
     }
 
     /**
@@ -305,6 +306,7 @@ public class MatrixContent {
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
+        this.ambiguousChar = -1;
     }
 
     /**
@@ -466,6 +468,7 @@ public class MatrixContent {
         this.allVariants = allVariants;
         this.tagComponent = -1;
         this.allXcomponents = null;
+        this.ambiguousChar = -1;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
     }
@@ -503,6 +506,7 @@ public class MatrixContent {
         this.numSpecificVariants = numSpecificVariants;
         this.variant = variant;
         this.allVariants = allVariants;
+        this.ambiguousChar = -1;
         this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
@@ -548,6 +552,7 @@ public class MatrixContent {
         this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
+        this.ambiguousChar = -1;
         this.allXMassDiffs = null;
     }
 
@@ -590,6 +595,7 @@ public class MatrixContent {
         this.tagComponent = -1;
         this.allXcomponents = null;
         this.XMassDiff = -1;
+        this.ambiguousChar = -1;
         this.allXMassDiffs = null;
     }
 
@@ -618,6 +624,7 @@ public class MatrixContent {
         this.tagComponent = foreign.tagComponent;
         this.allXcomponents = foreign.allXcomponents;
         this.XMassDiff = foreign.XMassDiff;
+        this.ambiguousChar = foreign.ambiguousChar;
         this.allXMassDiffs = foreign.allXMassDiffs;
     }
 }

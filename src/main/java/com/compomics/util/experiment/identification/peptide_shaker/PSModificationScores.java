@@ -5,6 +5,7 @@ import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.gui.utils.EmptyCollections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -60,9 +61,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public void addModificationScoring(String modName, ModificationScoring modificationScoring) {
 
-        
         writeDBMode();
-        
 
         modificationMap.put(modName, modificationScoring);
 
@@ -78,9 +77,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public ModificationScoring getModificationScoring(String modName) {
 
-        
         readDBMode();
-        
 
         return modificationMap.get(modName);
 
@@ -95,9 +92,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public boolean containsModification(String modName) {
 
-        
         readDBMode();
-        
 
         return modificationMap.containsKey(modName);
 
@@ -110,9 +105,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public Set<String> getScoredModifications() {
 
-        
         readDBMode();
-        
 
         return modificationMap.keySet();
 
@@ -124,11 +117,12 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * @param modName the modification name
      * @param modificationSite the modification site
      */
-    public void addConfidentModificationSite(String modName, int modificationSite) {
+    public void addConfidentModificationSite(
+            String modName,
+            int modificationSite
+    ) {
 
-        
         writeDBMode();
-        
 
         // add the modification to the site map
         if (mainModificationSites == null) {
@@ -169,65 +163,6 @@ public class PSModificationScores extends DbObject implements UrParameter {
     }
 
     /**
-     * Removes a site from the ambiguous sites maps if found.
-     *
-     * @param modName the name of the modification of interest
-     * @param modificationSite the site of interest
-     */
-    private void removeFromAmbiguousSitesMaps(String modName, int modificationSite) {
-
-        
-        writeDBMode();
-        
-
-        if (ambiguousModificationsByModName != null) {
-
-            HashMap<Integer, HashSet<Integer>> modificationSites = ambiguousModificationsByModName.get(modName);
-
-            if (modificationSites != null) {
-
-                HashSet<Integer> representativeSites = new HashSet<>(modificationSites.keySet());
-
-                for (int representativeSite : representativeSites) {
-
-                    HashSet<Integer> secondarySites = modificationSites.get(representativeSite);
-
-                    if (representativeSite == modificationSite || secondarySites.contains(modificationSite)) {
-
-                        modificationSites.remove(representativeSite);
-                        HashMap<Integer, HashSet<String>> secondarySitesAtAa = ambiguousModificationsByRepresentativeSite.get(representativeSite);
-                        HashSet<Integer> secondarySiteList = new HashSet<>(secondarySitesAtAa.keySet());
-
-                        for (int site : secondarySiteList) {
-
-                            HashSet<String> modifications = secondarySitesAtAa.get(site);
-                            modifications.remove(modName);
-
-                            if (modifications.isEmpty()) {
-
-                                secondarySitesAtAa.remove(site);
-
-                            }
-                        }
-
-                        if (secondarySitesAtAa.isEmpty()) {
-
-                            ambiguousModificationsByRepresentativeSite.remove(representativeSite);
-
-                        }
-                    }
-                }
-
-                if (modificationSites.isEmpty()) {
-
-                    ambiguousModificationsByModName.remove(modName);
-
-                }
-            }
-        }
-    }
-
-    /**
      * Adds a group of modifications to the mapping of ambiguous sites.
      *
      * @param representativeSite the representative site of this modification
@@ -235,11 +170,12 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * @param possibleModifications the possible modifications in a map: site
      * &gt; modification name
      */
-    public void addAmbiguousModificationSites(int representativeSite, HashMap<Integer, HashSet<String>> possibleModifications) {
+    public void addAmbiguousModificationSites(
+            int representativeSite,
+            HashMap<Integer, HashSet<String>> possibleModifications
+    ) {
 
-        
         writeDBMode();
-        
 
         if (ambiguousModificationsByRepresentativeSite == null) {
 
@@ -316,22 +252,25 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * @param originalRepresentativeSite the original representative site
      * @param newRepresentativeSite the new representative site
      */
-    public void changeRepresentativeSite(String modName, int originalRepresentativeSite, int newRepresentativeSite) {
+    public void changeRepresentativeSite(
+            String modName,
+            int originalRepresentativeSite,
+            int newRepresentativeSite
+    ) {
 
-        
         writeDBMode();
-        
 
         HashMap<Integer, HashSet<String>> ambiguousSites = ambiguousModificationsByRepresentativeSite.get(originalRepresentativeSite);
 
         if (ambiguousSites != null) {
 
             HashMap<Integer, HashSet<String>> newSites = new HashMap<>(1);
-            HashSet<Integer> sites = new HashSet<>(ambiguousSites.keySet());
+            HashSet<Integer> sitesToRemove = new HashSet<>(0);
 
-            for (Integer site : sites) {
+            for (Entry<Integer, HashSet<String>> entry : ambiguousSites.entrySet()) {
 
-                HashSet<String> modifications = ambiguousSites.get(site);
+                int site = entry.getKey();
+                HashSet<String> modifications = entry.getValue();
 
                 if (modifications.contains(modName)) {
 
@@ -342,10 +281,16 @@ public class PSModificationScores extends DbObject implements UrParameter {
 
                     if (modifications.isEmpty()) {
 
-                        ambiguousSites.remove(site);
+                        sitesToRemove.add(site);
 
                     }
                 }
+            }
+
+            for (int site : sitesToRemove) {
+
+                ambiguousSites.remove(site);
+
             }
 
             if (ambiguousSites.isEmpty()) {
@@ -362,37 +307,32 @@ public class PSModificationScores extends DbObject implements UrParameter {
 
             } else {
 
-                for (int site : newSites.keySet()) {
+                for (Entry<Integer, HashSet<String>> entry : newSites.entrySet()) {
 
-                    HashSet<String> modifications = ambiguousSites.get(site);
+                    int site = entry.getKey();
+                    HashSet<String> modifications = entry.getValue();
 
                     if (modifications == null) {
 
-                        modifications = new HashSet<>(2);
+                        modifications = new HashSet<>(1);
                         ambiguousSites.put(site, modifications);
 
                     }
 
-                    if (!modifications.contains(modName)) {
+                    modifications.add(modName);
 
-                        modifications.add(modName);
-
-                    }
                 }
             }
         }
 
-        for (String originalModificationName : ambiguousModificationsByModName.keySet()) {
+        HashMap<Integer, HashSet<Integer>> modificationSiteMap = ambiguousModificationsByModName.get(modName);
+        HashSet<Integer> secondarySites = modificationSiteMap.get(originalRepresentativeSite);
 
-            HashMap<Integer, HashSet<Integer>> modificationSiteMap = ambiguousModificationsByModName.get(originalModificationName);
-            HashSet<Integer> secondarySites = modificationSiteMap.get(originalRepresentativeSite);
+        if (secondarySites != null) {
 
-            if (secondarySites != null) {
+            modificationSiteMap.remove(originalRepresentativeSite);
+            modificationSiteMap.put(newRepresentativeSite, secondarySites);
 
-                modificationSiteMap.remove(originalRepresentativeSite);
-                modificationSiteMap.put(newRepresentativeSite, secondarySites);
-
-            }
         }
     }
 
@@ -406,11 +346,12 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * @return a boolean indicating whether a site is already registered as
      * confident modification site
      */
-    public boolean isConfidentModificationSite(int site, String modificationName) {
+    public boolean isConfidentModificationSite(
+            int site, 
+            String modificationName
+    ) {
 
-        
         readDBMode();
-        
 
         return mainModificationSites != null
                 && mainModificationSites.containsKey(site)
@@ -422,15 +363,13 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * Returns the main potential modifications at the given amino acid index.
      *
      * @param site the index in the sequence (1 is first amino acid)
-     * 
+     *
      * @return a list containing all potential modifications as main match, an
      * empty list if none found
      */
     public HashSet<String> getConfidentModificationsAt(int site) {
 
-        
         readDBMode();
-        
 
         return mainModificationSites == null || !mainModificationSites.containsKey(site) ? EmptyCollections.emptyStringSet
                 : mainModificationSites.get(site);
@@ -448,12 +387,10 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public HashSet<String> getModificationsAtRepresentativeSite(int site) {
 
-        
         readDBMode();
-        
 
         HashMap<Integer, HashSet<String>> modificationsAtSite = getAmbiguousModificationsAtRepresentativeSite(site);
-        
+
         HashSet<String> modifications = modificationsAtSite.get(site);
 
         return modifications == null ? EmptyCollections.emptyStringSet
@@ -471,9 +408,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public HashSet<Integer> getConfidentSitesForModification(String modName) {
 
-        
         readDBMode();
-        
 
         return confidentModificationsByModName == null || !confidentModificationsByModName.containsKey(modName) ? EmptyCollections.emptyIntSet
                 : confidentModificationsByModName.get(modName);
@@ -491,32 +426,30 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public HashMap<Integer, HashSet<String>> getAmbiguousModificationsAtRepresentativeSite(int representativeSite) {
 
-        
         readDBMode();
-        
 
-        return ambiguousModificationsByRepresentativeSite == null || !ambiguousModificationsByRepresentativeSite.containsKey(representativeSite) 
+        return ambiguousModificationsByRepresentativeSite == null || !ambiguousModificationsByRepresentativeSite.containsKey(representativeSite)
                 ? new HashMap<>(0)
                 : ambiguousModificationsByRepresentativeSite.get(representativeSite);
 
     }
 
     /**
-     * Returns the ambiguous modification sites registered for the given modification.
+     * Returns the ambiguous modification sites registered for the given
+     * modification.
      *
      * @param modName the name of the modification of interest
      *
-     * @return the ambiguous modification sites registered for the given modification
+     * @return the ambiguous modification sites registered for the given
+     * modification
      */
     public HashMap<Integer, HashSet<Integer>> getAmbiguousModificationsSites(String modName) {
-        
-        
+
         readDBMode();
-        
-        
+
         return ambiguousModificationsByModName == null ? new HashMap<>(0)
                 : ambiguousModificationsByModName.get(modName);
-        
+
     }
 
     /**
@@ -525,30 +458,28 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * @return a list of all confident modification sites
      */
     public TreeSet<Integer> getConfidentSites() {
-        
-        
+
         readDBMode();
-        
-        
-        return mainModificationSites == null ? new TreeSet<>() :
-                new TreeSet<>(mainModificationSites.keySet());
-        
+
+        return mainModificationSites == null ? new TreeSet<>()
+                : new TreeSet<>(mainModificationSites.keySet());
+
     }
 
     /**
-     * Returns a list of all representative sites of ambiguously localized modifications.
+     * Returns a list of all representative sites of ambiguously localized
+     * modifications.
      *
-     * @return a list of all representative sites of ambiguously localized modifications
+     * @return a list of all representative sites of ambiguously localized
+     * modifications
      */
     public TreeSet<Integer> getRepresentativeSites() {
-        
-        
+
         readDBMode();
-        
-        
+
         return ambiguousModificationsByRepresentativeSite == null ? EmptyCollections.emptyIntTreeSet
                 : new TreeSet<>(ambiguousModificationsByRepresentativeSite.keySet());
-        
+
     }
 
     /**
@@ -557,14 +488,12 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * @return a list of modifications presenting at least a confident site
      */
     public TreeSet<String> getConfidentlyLocalizedModifications() {
-        
-        
+
         readDBMode();
-        
-        
+
         return confidentModificationsByModName == null ? EmptyCollections.emptyStringTreeSet
                 : new TreeSet<>(confidentModificationsByModName.keySet());
-        
+
     }
 
     /**
@@ -573,14 +502,12 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * @return a list of modifications presenting at least an ambiguous site
      */
     public TreeSet<String> getAmbiguouslyLocalizedModifications() {
-        
-        
+
         readDBMode();
-        
-        
+
         return ambiguousModificationsByModName == null ? EmptyCollections.emptyStringTreeSet
                 : new TreeSet<>(ambiguousModificationsByModName.keySet());
-        
+
     }
 
     @Override

@@ -194,9 +194,7 @@ public class ModificationUtils {
 
         } else if (modificationType == ModificationType.modn_protein) {
 
-            return peptide.getProteinMapping().values().stream()
-                    .flatMapToInt(indexes -> Arrays.stream(indexes))
-                    .anyMatch(index -> index == 0) ? zero : empty;
+            return PeptideUtils.isNterm(peptide, sequenceProvider) ? zero : empty;
 
         } else if (modificationType == ModificationType.modn_peptide) {
 
@@ -236,6 +234,15 @@ public class ModificationUtils {
                             if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
                                 return zero;
                             }
+                            
+                            if (sequence.charAt(0) == 'M' && maxIndex + 1 < sequence.length()) {
+
+                            subSequence = sequence.substring(1, maxIndex + 2);
+
+                            if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
+                                return zero;
+                            }
+                        }
                         }
                     }
                 } else {
@@ -253,8 +260,7 @@ public class ModificationUtils {
 
         } else if (modificationType == ModificationType.modc_protein) {
 
-            return peptide.getProteinMapping().entrySet().stream()
-                    .anyMatch(entry -> sequenceProvider.getSequence(entry.getKey()).length() == entry.getValue()[entry.getValue().length - 1] + peptideSequence.length()) ? getArray(peptideSequence.length() + 1) : empty;
+            return PeptideUtils.isCterm(peptide, sequenceProvider) ? getArray(peptideSequence.length() + 1) : empty;
 
         } else if (modificationType == ModificationType.modcaa_peptide) {
 

@@ -314,12 +314,15 @@ public class ObjectsDB {
      * @return the iterator
      */
     public Iterator<?> getObjectsIterator(Class className, String filters) {
+        
         Query q;
         dumpToDB();
         dbMutex.acquire();
         q = pm.newQuery(className, filters);
         dbMutex.release();
+        
         return ((SynchronizedROCollection<?>) q.execute()).iterator();
+    
     }
 
     /**

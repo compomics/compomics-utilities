@@ -31,7 +31,10 @@ public class ProteinUtils {
      * @return a boolean indicating whether the given accession corresponds to a
      * decoy sequence
      */
-    public static boolean isDecoy(String accession, FastaParameters fastaParameters) {
+    public static boolean isDecoy(
+            String accession, 
+            FastaParameters fastaParameters
+    ) {
 
         if (!fastaParameters.isTargetDecoy()) {
 
@@ -65,7 +68,10 @@ public class ProteinUtils {
      * @return a boolean indicating whether the given accession corresponds to a
      * decoy sequence
      */
-    public static boolean isDecoy(String accession, SequenceProvider sequenceProvider) {
+    public static boolean isDecoy(
+            String accession, 
+            SequenceProvider sequenceProvider
+    ) {
 
         return sequenceProvider.getDecoyAccessions().contains(accession);
 
@@ -81,7 +87,10 @@ public class ProteinUtils {
      *
      * @return the number of observable amino acids of the sequence
      */
-    public static int[] getObservableAminoAcids(String sequence, ArrayList<Enzyme> enzymes, double pepMaxLength) {
+    public static int[] getObservableAminoAcids(
+            String sequence, ArrayList<Enzyme> enzymes, 
+            double pepMaxLength
+    ) {
 
         int lastCleavage = -1;
 
@@ -129,7 +138,11 @@ public class ProteinUtils {
      *
      * @return the number of observable amino acids of the sequence
      */
-    public static int getObservableLength(String sequence, ArrayList<Enzyme> enzymes, double pepMaxLength) {
+    public static int getObservableLength(
+            String sequence, 
+            ArrayList<Enzyme> enzymes, 
+            double pepMaxLength
+    ) {
 
         int[] observalbeAas = getObservableAminoAcids(sequence, enzymes, pepMaxLength);
 
@@ -144,7 +157,10 @@ public class ProteinUtils {
      *
      * @return the number of possible peptides
      */
-    public static int getNCleavageSites(String sequence, ArrayList<Enzyme> enzymes) {
+    public static int getNCleavageSites(
+            String sequence, 
+            ArrayList<Enzyme> enzymes
+    ) {
 
         int nCleavageSites = 0;
 

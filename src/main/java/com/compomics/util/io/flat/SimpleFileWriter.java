@@ -15,6 +15,7 @@ import java.util.zip.GZIPOutputStream;
  * exceptions.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class SimpleFileWriter implements AutoCloseable {
 
@@ -94,6 +95,21 @@ public class SimpleFileWriter implements AutoCloseable {
      */
     public void write(String text, boolean newLine) {
 
+        write(text, newLine, false);
+
+    }
+
+    /**
+     * Writes some text.
+     *
+     * @param text the text to write
+     * @param newLine boolean indicating whether an end of line should be
+     * appended
+     * @param secondNewLine boolean indicating whether a second new line should
+     * be appended
+     */
+    public void write(String text, boolean newLine, boolean secondNewLine) {
+
         try {
 
             mutex.acquire();
@@ -101,6 +117,10 @@ public class SimpleFileWriter implements AutoCloseable {
             bw.write(text);
 
             if (newLine) {
+                bw.newLine();
+            }
+
+            if (secondNewLine) {
                 bw.newLine();
             }
 

@@ -10,13 +10,6 @@ import com.compomics.util.db.object.DbObject;
 public class ElementaryElement extends DbObject {
 
     /**
-     * Empty default constructor
-     */
-    public ElementaryElement() {
-        name = "";
-    }
-
-    /**
      * The name of the element.
      */
     private final String name;
@@ -31,27 +24,36 @@ public class ElementaryElement extends DbObject {
     /**
      * Cache for the multiples of the neutron mass.
      */
-    public static double[] neutronMassMultiples = {0.0, 
+    public static double[] neutronMassMultiples = {0.0,
         neutron.theoreticMass,
-        2* neutron.theoreticMass,
-        3* neutron.theoreticMass,
-        4* neutron.theoreticMass,
-        5* neutron.theoreticMass,
-        6* neutron.theoreticMass,
-        7* neutron.theoreticMass,
-        8* neutron.theoreticMass,
-        9* neutron.theoreticMass,
-        10* neutron.theoreticMass};
-    
+        2 * neutron.theoreticMass,
+        3 * neutron.theoreticMass,
+        4 * neutron.theoreticMass,
+        5 * neutron.theoreticMass,
+        6 * neutron.theoreticMass,
+        7 * neutron.theoreticMass,
+        8 * neutron.theoreticMass,
+        9 * neutron.theoreticMass,
+        10 * neutron.theoreticMass};
+
     /**
-     * Returns the mass of the neutron multiplied by i. If i is smaller or equal to ten a value in cache is used. It is calculated otherwise. Throws an exception for negative i without sanity check.
-     * 
+     * Returns the mass of the neutron multiplied by i. If i is smaller or equal
+     * to ten a value in cache is used. It is calculated otherwise. Throws an
+     * exception for negative i without sanity check.
+     *
      * @param i i
-     * 
-     * @return the mass of the proton multiplied by i
+     *
+     * @return the mass of the neutron multiplied by i
      */
     public static double getNeutronMassMultiple(int i) {
         return i <= 10 ? neutronMassMultiples[i] : i * neutron.theoreticMass;
+    }
+
+    /**
+     * Empty default constructor.
+     */
+    public ElementaryElement() {
+        name = "";
     }
 
     /**

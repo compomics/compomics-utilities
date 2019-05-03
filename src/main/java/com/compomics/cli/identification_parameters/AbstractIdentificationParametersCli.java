@@ -36,6 +36,8 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
      */
     public void initiate(String[] args) {
 
+        // @TODO: have to update the paths?
+        
         try {
 
             try {
@@ -140,7 +142,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
             System.out.println("-------------------");
             for (String ptmName : ptmFactory.getUserModificationsOrdered()) {
                 Modification ptm = ptmFactory.getModification(ptmName);
-            System.out.println(ptm);
+                System.out.println(ptm);
             }
         }
         System.out.println();

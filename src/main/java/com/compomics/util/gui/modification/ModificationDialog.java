@@ -166,7 +166,7 @@ public class ModificationDialog extends javax.swing.JDialog {
 
         // set the fixed clumn cell renderer
         neutralLossesTable.getColumn("Fixed").setCellRenderer(new TrueFalseIconRenderer(
-                new ImageIcon(this.getClass().getResource("/icons/selected_green.png")),
+                new ImageIcon(this.getClass().getResource("/icons/selected_green-new.png")),
                 null,
                 "Fixed", null));
 

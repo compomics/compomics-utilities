@@ -116,8 +116,8 @@ public class PathParametersDialog extends javax.swing.JDialog {
         pathTable.getColumn("  ").setMaxWidth(30);
         pathTable.getColumn("  ").setMinWidth(30);
         pathTable.getColumn("  ").setCellRenderer(new TrueFalseIconRenderer(
-                new ImageIcon(parent.getClass().getResource("/icons/accept.png")),
-                new ImageIcon(parent.getClass().getResource("/icons/warning.png")),
+                new ImageIcon(parent.getClass().getResource("/icons/accept-new.png")),
+                new ImageIcon(parent.getClass().getResource("/icons/warning-new.png")),
                 "OK", "Warning"));
 
         // make sure that the scroll panes are see-through

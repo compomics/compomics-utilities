@@ -18,7 +18,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":9,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":9,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -400,18 +400,26 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </td>
 </tr>
 <tr id="i26" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#mapTagToProteinTermini-com.compomics.util.experiment.identification.protein_inference.fm_index.MatrixContent-double-boolean-java.util.LinkedList:A-int-">mapTagToProteinTermini</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MatrixContent</a>&nbsp;cell,
+                      double&nbsp;combinationMass,
+                      boolean&nbsp;CTermDirection,
+                      <a href="http://docs.oracle.com/javase/7/docs/api/java/util/LinkedList.html?is-external=true" title="class or interface in java.util">LinkedList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MatrixContent</a>&gt;[]&nbsp;matrix,
+                      int&nbsp;k)</code>&nbsp;</td>
+</tr>
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#pepMass-java.lang.String-">pepMass</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;peptide)</code>
 <div class="block">Computing the mass of a peptide.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#reconstructFasta-java.io.File-">reconstructFasta</a></span>(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a>&nbsp;file)</code>
 <div class="block">Reconstructs the fasta file stored in the index</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#withinMassTolerance-double-int-">withinMassTolerance</a></span>(double&nbsp;mass,
                    int&nbsp;numX)</code>
@@ -811,6 +819,19 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>decision</dd>
 </dl>
+</li>
+</ul>
+<a name="mapTagToProteinTermini-com.compomics.util.experiment.identification.protein_inference.fm_index.MatrixContent-double-boolean-java.util.LinkedList:A-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>mapTagToProteinTermini</h4>
+<pre>public&nbsp;void&nbsp;mapTagToProteinTermini(<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MatrixContent</a>&nbsp;cell,
+                                   double&nbsp;combinationMass,
+                                   boolean&nbsp;CTermDirection,
+                                   <a href="http://docs.oracle.com/javase/7/docs/api/java/util/LinkedList.html?is-external=true" title="class or interface in java.util">LinkedList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MatrixContent</a>&gt;[]&nbsp;matrix,
+                                   int&nbsp;k)</pre>
 </li>
 </ul>
 <a name="getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">

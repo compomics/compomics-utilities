@@ -132,7 +132,7 @@ public class AnnotationParametersDialog extends javax.swing.JDialog {
 
         neutralLossesTable.getColumn("  ").setCellRenderer(new NimbusCheckBoxRenderer());
         neutralLossesTable.getColumn("  ").setCellRenderer(new TrueFalseIconRenderer(
-                new ImageIcon(this.getClass().getResource("/icons/selected_green.png")),
+                new ImageIcon(this.getClass().getResource("/icons/selected_green-new.png")),
                 null,
                 "Selected", null));
         

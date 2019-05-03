@@ -93,7 +93,13 @@ public class Peptide extends ExperimentObject {
      * @param sanityCheck boolean indicating whether the input should be checked
      * @param mass the mass of the peptide
      */
-    public Peptide(String aSequence, ModificationMatch[] variableModifications, HashMap<String, HashMap<Integer, PeptideVariantMatches>> variantMatches, boolean sanityCheck, double mass) {
+    public Peptide(
+            String aSequence,
+            ModificationMatch[] variableModifications, 
+            HashMap<String, HashMap<Integer, PeptideVariantMatches>> variantMatches, 
+            boolean sanityCheck, 
+            double mass
+    ) {
 
         this.sequence = aSequence;
         this.variableModifications = variableModifications != null && variableModifications.length > 0 ? variableModifications : null;
@@ -105,7 +111,6 @@ public class Peptide extends ExperimentObject {
             sanityCheck();
 
         }
-
     }
 
     /**
@@ -116,8 +121,15 @@ public class Peptide extends ExperimentObject {
      * @param sanityCheck boolean indicating whether the input should be checked
      * @param mass the mass of the peptide
      */
-    public Peptide(String aSequence, ModificationMatch[] variableModifications, boolean sanityCheck, double mass) {
+    public Peptide(
+            String aSequence, 
+            ModificationMatch[] variableModifications, 
+            boolean sanityCheck, 
+            double mass
+    ) {
+        
         this(aSequence, variableModifications, null, sanityCheck, mass);
+    
     }
 
     /**
@@ -127,8 +139,14 @@ public class Peptide extends ExperimentObject {
      * @param variableModifications the variable modification of this peptide
      * @param sanityCheck boolean indicating whether the input should be checked
      */
-    public Peptide(String aSequence, ModificationMatch[] variableModifications, boolean sanityCheck) {
+    public Peptide(
+            String aSequence, 
+            ModificationMatch[] variableModifications, 
+            boolean sanityCheck
+    ) {
+        
         this(aSequence, variableModifications, sanityCheck, -1.0);
+    
     }
 
     /**
@@ -146,8 +164,13 @@ public class Peptide extends ExperimentObject {
      * @param aSequence the peptide sequence, assumed to be in upper case only
      * @param variableModifications the variable modification of this peptide
      */
-    public Peptide(String aSequence, ModificationMatch[] variableModifications) {
+    public Peptide(
+            String aSequence, 
+            ModificationMatch[] variableModifications
+    ) {
+    
         this(aSequence, variableModifications, false);
+    
     }
 
     /**
@@ -158,8 +181,15 @@ public class Peptide extends ExperimentObject {
      * @param variantMatches the variants compared to the database
      * @param sanityCheck boolean indicating whether the input should be checked
      */
-    public Peptide(String aSequence, ModificationMatch[] variableModifications, HashMap<String, HashMap<Integer, PeptideVariantMatches>> variantMatches, boolean sanityCheck) {
+    public Peptide(
+            String aSequence, 
+            ModificationMatch[] variableModifications, 
+            HashMap<String, HashMap<Integer, PeptideVariantMatches>> variantMatches, 
+            boolean sanityCheck
+    ) {
+    
         this(aSequence, variableModifications, variantMatches, sanityCheck, -1.0);
+    
     }
 
     /**
@@ -175,14 +205,20 @@ public class Peptide extends ExperimentObject {
         if (variableModifications != null) {
 
             String[] conflictingPtms = Arrays.stream(variableModifications)
-                    .map(modificationMatch -> modificationMatch.getModification())
-                    .filter((modificationName) -> (modificationName.contains(MODIFICATION_SEPARATOR) || modificationName.contains(MODIFICATION_LOCALIZATION_SEPARATOR)))
+                    .map(
+                            modificationMatch -> modificationMatch.getModification()
+                    )
+                    .filter(
+                            modificationName -> modificationName.contains(MODIFICATION_SEPARATOR) 
+                                    || modificationName.contains(MODIFICATION_LOCALIZATION_SEPARATOR)
+                    )
                     .toArray(String[]::new);
 
             if (conflictingPtms.length > 0) {
 
                 String conflictingPtmsString = Arrays.stream(conflictingPtms)
                         .collect(Collectors.joining(", "));
+                
                 throw new IllegalArgumentException("Modification names containing '" + MODIFICATION_SEPARATOR + "' or '" + MODIFICATION_LOCALIZATION_SEPARATOR + "' are not supported. Conflicting name(s): " + conflictingPtmsString);
 
             }
@@ -363,7 +399,11 @@ public class Peptide extends ExperimentObject {
      *
      * @return the fixed modifications for this peptide
      */
-    public String[] getFixedModifications(ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+    public String[] getFixedModifications(
+            ModificationParameters modificationParameters, 
+            SequenceProvider sequenceProvider, 
+            SequenceMatchingParameters modificationsSequenceMatchingParameters
+    ) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
@@ -463,7 +503,10 @@ public class Peptide extends ExperimentObject {
      *
      * @return the 0 based end index of the peptide on the protein sequence
      */
-    public int getPeptideEnd(String proteinAccession, int peptideStart) {
+    public int getPeptideEnd(
+            String proteinAccession, 
+            int peptideStart
+    ) {
 
         readDBMode();
 
@@ -622,7 +665,10 @@ public class Peptide extends ExperimentObject {
      *
      * @return the key of the peptide
      */
-    public static long getKey(String sequence, ModificationMatch[] variableModifications) {
+    public static long getKey(
+            String sequence, 
+            ModificationMatch[] variableModifications
+    ) {
 
         if (variableModifications == null || variableModifications.length == 0) {
 
@@ -689,7 +735,11 @@ public class Peptide extends ExperimentObject {
      *
      * @return a list of potential modification sites
      */
-    public ArrayList<Integer> getPotentialModificationSitesNoCombination(Modification modification, String proteinSequence, int peptideStart) {
+    public ArrayList<Integer> getPotentialModificationSitesNoCombination(
+            Modification modification, 
+            String proteinSequence, 
+            int peptideStart
+    ) {
 
         readDBMode();
 
@@ -858,39 +908,6 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns a boolean indicating whether the peptide is at the N-terminus of
-     * the given protein sequence. Initial methionine is cleaved.
-     *
-     * @param proteinSequence the sequence of the protein
-     * @param peptideStart the 0 based peptide start index on the protein
-     *
-     * @return a boolean indicating whether the peptide is at the N-terminus of
-     * the given protein
-     */
-    public boolean isNterm(String proteinSequence, int peptideStart) {
-
-        return peptideStart == 0 || peptideStart == 1 && proteinSequence.charAt(0) == 'M';
-
-    }
-
-    /**
-     * Returns a boolean indicating whether the peptide is at the C-terminus of
-     * the given protein sequence.
-     *
-     * @param proteinSequence the sequence of the protein
-     * @param peptideStart the 0 based peptide start index on the protein
-     *
-     * @return a boolean indicating whether the peptide is at the C-terminus of
-     * the given protein
-     */
-    public boolean isCterm(String proteinSequence, int peptideStart) {
-
-        int peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
-        return peptideEnd == proteinSequence.length() - 1;
-
-    }
-
-    /**
      * Indicates whether another peptide has the same sequence and modification
      * status without accounting for modification localization.
      *
@@ -900,7 +917,10 @@ public class Peptide extends ExperimentObject {
      * @return a boolean indicating whether the other peptide has the same
      * sequence and modification status.
      */
-    public boolean isSameSequenceAndModificationStatus(Peptide anotherPeptide, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public boolean isSameSequenceAndModificationStatus(
+            Peptide anotherPeptide, 
+            SequenceMatchingParameters sequenceMatchingPreferences
+    ) {
 
         readDBMode();
 
@@ -917,7 +937,10 @@ public class Peptide extends ExperimentObject {
      * @return a boolean indicating whether the other peptide has the same
      * sequence
      */
-    public boolean isSameSequence(Peptide anotherPeptide, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public boolean isSameSequence(
+            Peptide anotherPeptide, 
+            SequenceMatchingParameters sequenceMatchingPreferences
+    ) {
 
         readDBMode();
 
@@ -979,7 +1002,10 @@ public class Peptide extends ExperimentObject {
      * @return true if the other peptide has the same positions at the same
      * location as the considered peptide
      */
-    public boolean sameModificationsAs(Peptide anotherPeptide, ArrayList<String> modifications) {
+    public boolean sameModificationsAs(
+            Peptide anotherPeptide, 
+            ArrayList<String> modifications
+    ) {
 
         readDBMode();
 
@@ -1090,9 +1116,15 @@ public class Peptide extends ExperimentObject {
      *
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationParameters modificationProfile, SequenceProvider sequenceProvider,
-            SequenceMatchingParameters modificationsSequenceMatchingParameters, boolean useHtmlColorCoding,
-            boolean includeHtmlStartEndTags, boolean useShortName, HashSet<String> displayedModifications) {
+    public String getTaggedModifiedSequence(
+            ModificationParameters modificationProfile, 
+            SequenceProvider sequenceProvider,
+            SequenceMatchingParameters modificationsSequenceMatchingParameters, 
+            boolean useHtmlColorCoding,
+            boolean includeHtmlStartEndTags, 
+            boolean useShortName, 
+            HashSet<String> displayedModifications
+    ) {
 
         String[] confidentModificationSites = new String[sequence.length() + 2];
         String[] representativeModificationSites = new String[sequence.length() + 2];
@@ -1151,8 +1183,17 @@ public class Peptide extends ExperimentObject {
             }
         }
 
-        return PeptideUtils.getTaggedModifiedSequence(this, modificationProfile, confidentModificationSites, representativeModificationSites, secondaryModificationSites,
-                fixedModificationSites, useHtmlColorCoding, includeHtmlStartEndTags, useShortName);
+        return PeptideUtils.getTaggedModifiedSequence(
+                this, 
+                modificationProfile, 
+                confidentModificationSites, 
+                representativeModificationSites, 
+                secondaryModificationSites,
+                fixedModificationSites, 
+                useHtmlColorCoding, 
+                includeHtmlStartEndTags, 
+                useShortName
+        );
     }
 
     /**
@@ -1164,7 +1205,11 @@ public class Peptide extends ExperimentObject {
      * @param modificationSequenceMatchingParameters the modifications sequence
      * matching parameters
      */
-    public void estimateTheoreticMass(ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
+    public void estimateTheoreticMass(
+            ModificationParameters modificationParameters, 
+            SequenceProvider sequenceProvider, 
+            SequenceMatchingParameters modificationSequenceMatchingParameters
+    ) {
 
         readDBMode();
 

@@ -21,6 +21,7 @@ import org.apache.commons.cli.UnrecognizedOptionException;
  * constructor of your class.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public abstract class AbstractIdentificationParametersCli implements Callable {
 
@@ -35,8 +36,6 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
      * @param args the command line arguments
      */
     public void initiate(String[] args) {
-
-        // @TODO: have to update the paths?
         
         try {
 
@@ -46,6 +45,7 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
             } catch (Exception e) {
                 System.out.println("An error occurred while loading the species.");
                 e.printStackTrace();
+                System.exit(1);
             }
 
             Options lOptions = new Options();

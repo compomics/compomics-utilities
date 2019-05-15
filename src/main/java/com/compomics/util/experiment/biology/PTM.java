@@ -91,15 +91,15 @@ public class PTM extends ExperimentObject {
      * The amino acid pattern targeted by this modification (can be set using
      * the AminoAcidPatternDialog).
      */
-    private AminoAcidPattern pattern = new AminoAcidPattern();
+    private AminoAcidPattern pattern = null;
     /**
      * The composition of the molecule added.
      */
-    private AtomChain atomChainAdded = new AtomChain();
+    private AtomChain atomChainAdded = null;
     /**
      * The composition of the molecule removed.
      */
-    private AtomChain atomChainRemoved = new AtomChain();
+    private AtomChain atomChainRemoved = null;
     /**
      * The CV term associated with this PTM. Null if not set.
      */

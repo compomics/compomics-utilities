@@ -412,9 +412,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
 
         return confidentModificationsByModName == null || !confidentModificationsByModName.containsKey(modName) ? EmptyCollections.emptyIntSet
                 : confidentModificationsByModName.get(modName);
-
-    }
-
+        
+        }
+        
     /**
      * Returns the ambiguous modification assignments registered at the given
      * representative site in a map: secondary site &gt; modifications.

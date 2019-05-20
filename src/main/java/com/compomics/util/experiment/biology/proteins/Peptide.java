@@ -49,7 +49,7 @@ public class Peptide extends ExperimentObject {
     /**
      * The peptide mass.
      */
-    private double mass = -1.0;
+    private double mass = Double.NaN;
     /**
      * The mapping of this peptide on proteins as a map, accession to position.
      * Position on protein sequences is 0 based.
@@ -309,7 +309,7 @@ public class Peptide extends ExperimentObject {
      */
     public double getMass() {
 
-        if (mass == -1.0) {
+        if (Double.isNaN(mass)) {
             throw new IllegalArgumentException("Mass not estimated.");
         }
 
@@ -331,7 +331,7 @@ public class Peptide extends ExperimentObject {
 
         readDBMode();
 
-        if (mass == -1.0) {
+        if (Double.isNaN(mass)) {
 
             estimateTheoreticMass(modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
 
@@ -444,7 +444,7 @@ public class Peptide extends ExperimentObject {
 
         this.variableModifications = variableModifications;
 
-        setMass(-1.0);
+        setMass(Double.NaN);
         setKey(NO_KEY);
     }
 
@@ -457,7 +457,7 @@ public class Peptide extends ExperimentObject {
 
         variableModifications = null;
 
-        setMass(-1.0);
+        setMass(Double.NaN);
         setKey(NO_KEY);
     }
 
@@ -476,7 +476,7 @@ public class Peptide extends ExperimentObject {
 
         variableModifications[variableModifications.length - 1] = modificationMatch;
 
-        setMass(-1.0);
+        setMass(Double.NaN);
         setKey(NO_KEY);
 
     }

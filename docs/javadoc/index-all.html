@@ -6272,7 +6272,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSModificationScores.html#getAmbiguousModificationsSites-java.lang.String-">getAmbiguousModificationsSites(String)</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSModificationScores.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSModificationScores</a></dt>
 <dd>
-<div class="block">Returns the ambiguous modification sites registered for the given modification.</div>
+<div class="block">Returns the ambiguous modification sites registered for the given
+ modification.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html#getAminoAcid-java.lang.String-">getAminoAcid(String)</a></span> - Static method in class com.compomics.util.experiment.biology.aminoacids.<a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html" title="class in com.compomics.util.experiment.biology.aminoacids">AminoAcid</a></dt>
 <dd>
@@ -10843,6 +10844,10 @@
 <dd>
 <div class="block">Returns the modification type.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getModifiedAaIndex-int-int-">getModifiedAaIndex(int, int)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
+<dd>
+<div class="block">Returns the index of a modification on the amino acid sequence.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/features/IdentificationFeaturesGenerator.html#getModifiedSequence-com.compomics.util.experiment.identification.IdentificationMatch-java.lang.String-">getModifiedSequence(IdentificationMatch, String)</a></span> - Method in class com.compomics.util.experiment.identification.features.<a href="com/compomics/util/experiment/identification/features/IdentificationFeaturesGenerator.html" title="class in com.compomics.util.experiment.identification.features">IdentificationFeaturesGenerator</a></dt>
 <dd>
 <div class="block">Returns the match sequence annotated with modifications.</div>
@@ -13451,7 +13456,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSModificationScores.html#getRepresentativeSites--">getRepresentativeSites()</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSModificationScores.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSModificationScores</a></dt>
 <dd>
-<div class="block">Returns a list of all representative sites of ambiguously localized modifications.</div>
+<div class="block">Returns a list of all representative sites of ambiguously localized
+ modifications.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/CometParameters.html#getRequireVariableMods--">getRequireVariableMods()</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/CometParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">CometParameters</a></dt>
 <dd>
@@ -17253,10 +17259,13 @@
 <dd>
 <div class="block">Returns a boolean indicating whether the modification type targets the C-terminus of a protein or of a peptide.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#isCterm-java.lang.String-int-">isCterm(String, int)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#isCterm-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">isCterm(Peptide, SequenceProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
 <dd>
-<div class="block">Returns a boolean indicating whether the peptide is at the C-terminus of
- the given protein sequence.</div>
+<div class="block">Indicates whether a peptide is at the C-terminus of a protein.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#isCterm-com.compomics.util.experiment.biology.proteins.Peptide-java.lang.String-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">isCterm(Peptide, String, SequenceProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
+<dd>
+<div class="block">Indicates whether a peptide is at the C-terminus of a given protein.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ValidationQcParameters.html#isDbSize--">isDbSize()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ValidationQcParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ValidationQcParameters</a></dt>
 <dd>
@@ -17540,10 +17549,13 @@
 <dd>
 <div class="block">Returns a boolean indicating whether the modification type targets the N-terminus of a protein or of a peptide.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#isNterm-java.lang.String-int-">isNterm(String, int)</a></span> - Method in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#isNterm-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">isNterm(Peptide, SequenceProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
 <dd>
-<div class="block">Returns a boolean indicating whether the peptide is at the N-terminus of
- the given protein sequence.</div>
+<div class="block">Indicates whether a peptide is at the N-terminus of a protein.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#isNterm-com.compomics.util.experiment.biology.proteins.Peptide-java.lang.String-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">isNterm(Peptide, String, SequenceProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
+<dd>
+<div class="block">Indicates whether a peptide is at the N-terminus of a given protein.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/filtering/FilterItem.html#isNumber--">isNumber()</a></span> - Method in interface com.compomics.util.experiment.filtering.<a href="com/compomics/util/experiment/filtering/FilterItem.html" title="interface in com.compomics.util.experiment.filtering">FilterItem</a></dt>
 <dd>
@@ -24091,7 +24103,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html#setAdvocate-int-">setAdvocate(int)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/SpectrumIdentificationAssumption.html" title="class in com.compomics.util.experiment.identification">SpectrumIdentificationAssumption</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html#setAlgorithmDeltaPEP-java.lang.Double-">setAlgorithmDeltaPEP(Double)</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSParameter</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html#setAlgorithmDeltaPEP-double-">setAlgorithmDeltaPEP(double)</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSParameter</a></dt>
 <dd>
 <div class="block">Sets the difference in identification algorithm level PEP with the next
  best peptide assumption with sequence difference for the given search
@@ -24545,7 +24557,7 @@
  masses list when the user hovers over a second data point after clicking
  a previous data point.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html#setDeltaPEP-java.lang.Double-">setDeltaPEP(Double)</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSParameter</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html#setDeltaPEP-double-">setDeltaPEP(double)</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSParameter</a></dt>
 <dd>
 <div class="block">Sets the difference in identification algorithm level PEP with the next
  best peptide assumption with sequence difference across all search
@@ -24877,7 +24889,7 @@
 <dd>
 <div class="block">Sets the fractions.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html#setFractionScore-java.lang.String-java.lang.Double-">setFractionScore(String, Double)</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSParameter</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html#setFractionScore-java.lang.String-double-">setFractionScore(String, double)</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSParameter</a></dt>
 <dd>
 <div class="block">Sets the fraction confidence.</div>
 </dd>
@@ -30495,6 +30507,10 @@ the order they are declared.</div>
 <div class="block">Writes the content to the file.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#write-java.lang.String-boolean-">write(String, boolean)</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
+<dd>
+<div class="block">Writes some text.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#write-java.lang.String-boolean-boolean-">write(String, boolean, boolean)</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
 <dd>
 <div class="block">Writes some text.</div>
 </dd>

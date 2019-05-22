@@ -318,8 +318,11 @@ public class ModificationtableContent {
         forbiddenMod.add(modification.getName());
         Peptide noModPeptide = peptide.getNoModPeptide(forbiddenMod);
         
-        SpecificAnnotationParameters specificAnnotationParameters = annotationParameters.getSpecificAnnotationParameters(spectrum.getSpectrumKey(), peptideAssumption, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
-
+        PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
+        SpecificAnnotationParameters specificAnnotationParameters = annotationParameters.getSpecificAnnotationParameters(spectrum.getSpectrumKey(), peptideAssumption, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, spectrumAnnotator);
+        spectrumAnnotator.setPeptide(noModPeptide, specificAnnotationParameters.getPrecursorCharge(), 
+                    modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, specificAnnotationParameters);
+        
         NeutralLossesMap lossesMap = new NeutralLossesMap();
         
         for (String neutralLossName : specificAnnotationParameters.getNeutralLossesMap().getAccountedNeutralLosses()) {
@@ -332,10 +335,6 @@ public class ModificationtableContent {
             
             }
         }
-
-        PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
-        spectrumAnnotator.setPeptide(noModPeptide, specificAnnotationParameters.getPrecursorCharge(), 
-                    modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, specificAnnotationParameters);
 
         for (int i = 0; i <= nMod; i++) {
 

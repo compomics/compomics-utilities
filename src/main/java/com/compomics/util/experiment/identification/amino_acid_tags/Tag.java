@@ -11,7 +11,6 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -392,12 +391,27 @@ public class Tag extends ExperimentObject {
             if (tagComponent instanceof AminoAcidSequence) {
 
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
-                String[] variableModifications = Arrays.stream(aminoAcidSequence.getIndexedVariableModifications())
-                        .filter(modName -> displayedModifications.contains(modName))
-                        .toArray(String[]::new);
-                String[] fixedModifications = Arrays.stream(aminoAcidSequence.getFixedModifications(i == 0, i == tag.getContent().size() - 1, modificationParameters, modificationsSequenceMatchingParameters))
-                        .filter(modName -> displayedModifications.contains(modName))
-                        .toArray(String[]::new);
+                
+                String[] variableModifications = aminoAcidSequence.getIndexedVariableModifications();
+                
+                // remove the hidden modifications
+                for (int j = 0; j < variableModifications.length; j++) { // @TODO: possible to do this with streams?
+                    String tempMod = variableModifications[j];
+                    if (tempMod != null && !displayedModifications.contains(tempMod)) {
+                        variableModifications[j] = null;
+                    }
+                }
+                
+                String[] fixedModifications = aminoAcidSequence.getFixedModifications(i == 0, i == tag.getContent().size() - 1, modificationParameters, modificationsSequenceMatchingParameters);
+                
+                // remove the hidden modifications
+                for (int j = 0; j < fixedModifications.length; j++) { // @TODO: possible to do this with streams?
+                    String tempMod = fixedModifications[j];
+                    if (tempMod != null && !displayedModifications.contains(tempMod)) {
+                        fixedModifications[j] = null;
+                    }
+                }
+                
                 modifiedSequence.append(ModificationUtils.getTaggedModifiedSequence(modificationParameters, aminoAcidSequence.getSequence(), variableModifications, null, null, fixedModifications, useHtmlColorCoding, useShortName));
 
             } else if (tagComponent instanceof MassGap) {

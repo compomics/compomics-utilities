@@ -139,6 +139,7 @@ public class AnnotationParameters extends DbObject {
      * @param sequenceProvider a provider for the protein sequences
      * @param modificationSequenceMatchingParameters the sequence matching
      * preferences for modification to peptide mapping
+     * @param spectrumAnnotator the spectrum annotator
      *
      * @return the annotation preferences specific to a spectrum and an
      * identification assumption
@@ -146,7 +147,8 @@ public class AnnotationParameters extends DbObject {
     public SpecificAnnotationParameters getSpecificAnnotationParameters(String spectrumKey, 
             SpectrumIdentificationAssumption spectrumIdentificationAssumption, 
             ModificationParameters modificationParameters, SequenceProvider sequenceProvider, 
-            SequenceMatchingParameters modificationSequenceMatchingParameters) {
+            SequenceMatchingParameters modificationSequenceMatchingParameters,
+            SpectrumAnnotator spectrumAnnotator) {
         readDBMode();
 
         SpecificAnnotationParameters specificAnnotationParameters = new SpecificAnnotationParameters(spectrumKey, spectrumIdentificationAssumption);
@@ -154,7 +156,7 @@ public class AnnotationParameters extends DbObject {
         
         if (neutralLossesAuto) {
             
-            specificAnnotationParameters.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters));
+            specificAnnotationParameters.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, spectrumAnnotator));
         
         } else {
         

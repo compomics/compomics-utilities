@@ -477,19 +477,19 @@ public class ModificationUtils {
             boolean useShortName) {
 
         if (confidentModificationSites == null) {
-            confidentModificationSites = new String[sequence.length()];
+            confidentModificationSites = new String[sequence.length() + 2];
         }
 
         if (representativeAmbiguousModificationSites == null) {
-            representativeAmbiguousModificationSites = new String[sequence.length()];
+            representativeAmbiguousModificationSites = new String[sequence.length() + 2];
         }
 
         if (secondaryAmbiguousModificationSites == null) {
-            secondaryAmbiguousModificationSites = new String[sequence.length()];
+            secondaryAmbiguousModificationSites = new String[sequence.length() + 2];
         }
 
         if (fixedModificationSites == null) {
-            fixedModificationSites = new String[sequence.length()];
+            fixedModificationSites = new String[sequence.length() + 2];
         }
 
         StringBuilder modifiedSequence = new StringBuilder(sequence.length());

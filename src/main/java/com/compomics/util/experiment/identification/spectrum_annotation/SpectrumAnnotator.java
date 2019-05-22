@@ -615,22 +615,23 @@ public abstract class SpectrumAnnotator {
      * @param sequenceProvider a protein sequence provider
      * @param modificationsSequenceMatchingParameters the sequence matching
      * parameters to use for modifications
+     * @param spectrumAnnotator the spectrum annotator
      *
      * @return the expected possible neutral losses
      */
     public static NeutralLossesMap getDefaultLosses(SpectrumIdentificationAssumption spectrumIdentificationAssumption,
             ModificationParameters modificationParameters, SequenceProvider sequenceProvider,
-            SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+            SequenceMatchingParameters modificationsSequenceMatchingParameters, SpectrumAnnotator spectrumAnnotator) {
 
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
 
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
-            return PeptideSpectrumAnnotator.getDefaultLosses(peptideAssumption.getPeptide(), modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
+            return ((PeptideSpectrumAnnotator) spectrumAnnotator).getDefaultLosses(peptideAssumption.getPeptide(), modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
 
         } else if (spectrumIdentificationAssumption instanceof TagAssumption) {
 
             TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
-            return TagSpectrumAnnotator.getDefaultLosses(tagAssumption.getTag(), modificationParameters, modificationsSequenceMatchingParameters);
+            return ((TagSpectrumAnnotator) spectrumAnnotator).getDefaultLosses(tagAssumption.getTag(), modificationParameters, modificationsSequenceMatchingParameters);
 
         } else {
 

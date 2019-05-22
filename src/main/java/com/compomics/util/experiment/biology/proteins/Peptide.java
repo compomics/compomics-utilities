@@ -49,7 +49,7 @@ public class Peptide extends ExperimentObject {
     /**
      * The peptide mass.
      */
-    private double mass = Double.NaN;
+    private double mass = -1.0;
     /**
      * The mapping of this peptide on proteins as a map, accession to position.
      * Position on protein sequences is 0 based.
@@ -309,7 +309,7 @@ public class Peptide extends ExperimentObject {
      */
     public double getMass() {
 
-        if (Double.isNaN(mass)) {
+        if (mass < 0) {
             throw new IllegalArgumentException("Mass not estimated.");
         }
 
@@ -331,7 +331,7 @@ public class Peptide extends ExperimentObject {
 
         readDBMode();
 
-        if (Double.isNaN(mass)) {
+        if (mass < 0) {
 
             estimateTheoreticMass(modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
 
@@ -444,7 +444,7 @@ public class Peptide extends ExperimentObject {
 
         this.variableModifications = variableModifications;
 
-        setMass(Double.NaN);
+        setMass(-1.0);
         setKey(NO_KEY);
     }
 
@@ -457,7 +457,7 @@ public class Peptide extends ExperimentObject {
 
         variableModifications = null;
 
-        setMass(Double.NaN);
+        setMass(-1.0);
         setKey(NO_KEY);
     }
 
@@ -476,7 +476,7 @@ public class Peptide extends ExperimentObject {
 
         variableModifications[variableModifications.length - 1] = modificationMatch;
 
-        setMass(Double.NaN);
+        setMass(-1.0);
         setKey(NO_KEY);
 
     }
@@ -1042,7 +1042,7 @@ public class Peptide extends ExperimentObject {
                 sites.add(position);
             }
         }
-        for (Double tempMass : modificationToPositionsMap1.keySet()) {
+        for (double tempMass : modificationToPositionsMap1.keySet()) {
             ArrayList<Integer> sites1 = modificationToPositionsMap1.get(tempMass);
             ArrayList<Integer> sites2 = modificationToPositionsMap2.get(tempMass);
             if (sites2 == null || sites1.size() != sites2.size()) {

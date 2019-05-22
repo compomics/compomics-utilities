@@ -49,17 +49,17 @@ public class Modification extends ExperimentObject {
     private ArrayList<ReporterIon> reporterIons = new ArrayList<>(0);
     /**
      * The amino acid pattern targeted by this modification (can be set using
-     * the AminoAcidPatternDialog).
+     * the AminoAcidPatternDialog). Null if not set.
      */
-    private AminoAcidPattern pattern = new AminoAcidPattern();
+    private AminoAcidPattern pattern = null;
     /**
-     * The composition of the molecule added.
+     * The composition of the molecule added. Null if not set.
      */
-    private AtomChain atomChainAdded = new AtomChain();
+    private AtomChain atomChainAdded = null;
     /**
-     * The composition of the molecule removed.
+     * The composition of the molecule removed. Null if not set.
      */
-    private AtomChain atomChainRemoved = new AtomChain();
+    private AtomChain atomChainRemoved = null;
     /**
      * The Unimod CV term associated with this modification. Null if not set.
      */

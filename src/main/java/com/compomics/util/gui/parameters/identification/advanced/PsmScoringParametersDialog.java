@@ -121,7 +121,7 @@ public class PsmScoringParametersDialog extends javax.swing.JDialog {
         psmScoresJScrollPane.getViewport().setOpaque(false);
         for (int i = 0; i < PsmScore.values().length; i++) {
             tableColumnModel.getColumn(i + 2).setCellRenderer(new TrueFalseIconRenderer(
-                    new ImageIcon(this.getClass().getResource("/icons/selected_green.png")),
+                    new ImageIcon(this.getClass().getResource("/icons/selected_green-new.png")),
                     null,
                     "On", "Off"));
         }

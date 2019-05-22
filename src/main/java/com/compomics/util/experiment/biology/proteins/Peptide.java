@@ -309,7 +309,7 @@ public class Peptide extends ExperimentObject {
      */
     public double getMass() {
 
-        if (mass == -1.0) {
+        if (mass < 0) {
             throw new IllegalArgumentException("Mass not estimated.");
         }
 
@@ -331,7 +331,7 @@ public class Peptide extends ExperimentObject {
 
         readDBMode();
 
-        if (mass == -1.0) {
+        if (mass < 0) {
 
             estimateTheoreticMass(modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
 
@@ -1042,7 +1042,7 @@ public class Peptide extends ExperimentObject {
                 sites.add(position);
             }
         }
-        for (Double tempMass : modificationToPositionsMap1.keySet()) {
+        for (double tempMass : modificationToPositionsMap1.keySet()) {
             ArrayList<Integer> sites1 = modificationToPositionsMap1.get(tempMass);
             ArrayList<Integer> sites2 = modificationToPositionsMap2.get(tempMass);
             if (sites2 == null || sites1.size() != sites2.size()) {

@@ -636,4 +636,36 @@ public class PeptideUtils {
                 .anyMatch(aa -> sequenceProvider.getSequence(proteinAccession).length() == aa + peptide.getSequence().length());
         
     }
+    
+    /**
+     * Returns the index of a modification on the amino acid sequence. 0 is the first amino acid. The modification site is expected to be the zero-based index on the sequence. -1 and sequenceLength for N-term and C-term modifications, respectively.
+     * 
+     * @param modSite the modification site
+     * @param sequenceLength the length of the peptide sequence
+     * 
+     * @return 
+     */
+    public static int getModifiedAaIndex(
+            int modSite,
+            int sequenceLength
+    ) {
+        
+        if (modSite >= 0 & modSite < sequenceLength) {
+            
+            return modSite;
+            
+        } else if (modSite == -1) {
+            
+            return 0;
+            
+        } else if (modSite == sequenceLength) {
+            
+            return sequenceLength - 1;
+            
+        }
+        
+        throw new IllegalArgumentException(
+                "Modification site " + modSite + " not supported."
+        );
+    }
 }

@@ -398,7 +398,7 @@ public class IdentificationFeaturesGenerator {
                     coverage.put(validationLevel, validationLevelCoverage);
 
                 }
-                
+
                 for (int peptideStart : peptide.getProteinMapping().get(accession)) {
 
                     int peptideEnd = peptide.getPeptideEnd(accession, peptideStart);
@@ -1673,7 +1673,8 @@ public class IdentificationFeaturesGenerator {
                 : modificationsScores.getConfidentlyLocalizedModifications().stream()
                         .map(modName -> String.join("", modName, modificationsScores.getConfidentSitesForModification(modName).stream()
                         .sorted()
-                        .map(site -> String.join("", sequence.substring(site - 1, site), site.toString()))
+                        .map(modSite -> PeptideUtils.getModifiedAaIndex(modSite, sequence.length()))
+                        .map(site -> String.join("", sequence.substring(site, site + 1), site.toString()))
                         .collect(Collectors.joining(", ", "(", ")"))))
                         .collect(Collectors.joining(";"));
 
@@ -1782,7 +1783,8 @@ public class IdentificationFeaturesGenerator {
                         .flatMap(modName -> modificationScores.getConfidentSitesForModification(modName).stream())
                         .distinct()
                         .sorted()
-                        .map(site -> String.join("", sequence.substring(site - 1, site), site.toString()))
+                        .map(modSite -> PeptideUtils.getModifiedAaIndex(modSite, sequence.length()))
+                        .map(site -> String.join("", sequence.substring(site, site + 1), site.toString()))
                         .collect(Collectors.joining(","));
 
     }
@@ -2265,10 +2267,10 @@ public class IdentificationFeaturesGenerator {
                     .boxed()
                     .collect(Collectors.groupingBy(peptideKey -> ((PSParameter) identification.getPeptideMatch(peptideKey).getUrParam(PSParameter.dummy)).getScore(),
                             TreeMap::new,
-                            Collectors.groupingBy(peptideKey -> identification.getPeptideMatch(peptideKey).getSpectrumCount(), 
-                                    TreeMap::new, 
+                            Collectors.groupingBy(peptideKey -> identification.getPeptideMatch(peptideKey).getSpectrumCount(),
+                                    TreeMap::new,
                                     Collectors.toCollection(TreeSet::new))));
-            
+
             int maxSpectrumCount = peptideMap.values().stream()
                     .mapToInt(map -> map.lastKey())
                     .max()

@@ -55,7 +55,10 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.stream.Collectors;
+import java.util.zip.CRC32;
 
 /**
  * The FM index.
@@ -1041,12 +1044,33 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             alphabet[sortedAas[i] >> 6] |= 1L << (sortedAas[i] & 63);
         }
         
+        // compute a checksum of the fasta file
+        final int Buffer_size = 16 * 1024;
+        long fastaCRC = 0;
+        try (FileInputStream in = new FileInputStream(fastaFile);) {
+            FileChannel channel = in .getChannel();
+            CRC32 crc = new CRC32();
+            int length = (int) channel.size();
+            MappedByteBuffer mb = channel.map(FileChannel.MapMode.READ_ONLY, 0, length);
+            byte[] bytes = new byte[Buffer_size];
+            int nGet;
+            while (mb.hasRemaining()) {
+                nGet = Math.min(mb.remaining(), Buffer_size);
+                mb.get(bytes, 0, nGet);
+                crc.update(bytes, 0, nGet);
+            }
+            fastaCRC = crc.getValue();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        
+        
         // check if fasta file has an FMIndex
         String fastaExtension = getFileExtension(fastaFile);
         File FMFile = new File(fastaFile.getAbsolutePath().replace(fastaExtension, ".fmi"));
         boolean loadFasta = true;
         if (FMFile.exists()){
-            
             DataInputStream is = new DataInputStream(new BufferedInputStream(new FileInputStream(FMFile.getAbsolutePath()), 1024 * 1024));
             ObjectInputStream ois = null;
             
@@ -1054,6 +1078,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                 ois = new ObjectInputStream(is);
                 String indexVersion = ois.readUTF();
                 if (indexVersion.equals(Util.getVersion())){
+                    long crc = ois.readLong();
+                    if (crc != fastaCRC) throw new Exception();
                     indexParts = ois.readInt();
                     indexStringLengths = (ArrayList<Integer>)ois.readObject();
                     suffixArraysPrimary = (ArrayList<int[]>)ois.readObject();
@@ -1266,6 +1292,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(FMFile.getAbsolutePath())));
             ObjectOutputStream oos = new ObjectOutputStream(os);
             oos.writeUTF(Util.getVersion());
+            oos.writeLong(fastaCRC);
             oos.writeInt(indexParts);
             oos.writeObject(indexStringLengths);
             oos.writeObject(suffixArraysPrimary);

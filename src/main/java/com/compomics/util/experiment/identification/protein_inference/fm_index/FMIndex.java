@@ -44,6 +44,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import org.jsuffixarrays.*;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters.VariantType;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -1060,6 +1061,12 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                 crc.update(bytes, 0, nGet);
             }
             fastaCRC = crc.getValue();
+            if (fastaParameters != null) {
+                fastaCRC += ExperimentObject.asLong(fastaParameters.getShortDescription());
+                fastaCRC += ExperimentObject.asLong(fastaParameters.getTargetDecoyFileNameSuffix());
+                fastaCRC += ExperimentObject.asLong(fastaParameters.getDecoyFlag());
+                if (fastaParameters.isTargetDecoy()) fastaCRC += 1;
+            }
         }catch (Exception e) {
             e.printStackTrace();
         }

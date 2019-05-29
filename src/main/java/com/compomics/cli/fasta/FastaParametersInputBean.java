@@ -65,7 +65,7 @@ public class FastaParametersInputBean {
         FastaParameters tempFastaParameters = new FastaParameters();
 
         if (aLine.hasOption(FastaParametersCLIParams.DECOY_FLAG.id)) {
-
+            
             String arg = aLine.getOptionValue(FastaParametersCLIParams.DECOY_FLAG.id);
 
             if (!arg.equals("")) {
@@ -101,7 +101,7 @@ public class FastaParametersInputBean {
 
         }
 
-        FastaSummary fastaSummary = FastaSummary.getSummary(fastaFile.getAbsolutePath(), fastaParameters, null);
+        FastaSummary fastaSummary = FastaSummary.getSummary(fastaFile.getAbsolutePath(), tempFastaParameters, null);
 
         if (aLine.hasOption(FastaParametersCLIParams.NAME.id)) {
 

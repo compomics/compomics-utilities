@@ -688,12 +688,9 @@ public class FragmentIonTable extends JTable {
 
         HashMap<String, ArrayList<Double>> values = new HashMap<>();
 
-        double maxIntensity = allAnnotations.stream()
-                .flatMap(annotations -> Arrays.stream(annotations))
-                .filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
-                .mapToDouble(ionMatch -> ionMatch.peak.intensity)
-                .max()
-                .orElse(0.0);
+        // @TODO: figure out how to reuse the new code commented out below instead?
+        
+        double maxIntensity = 0.0;
 
         for (int i = 0; i < allAnnotations.size(); i++) {
 
@@ -703,100 +700,217 @@ public class FragmentIonTable extends JTable {
 
                 double totalIntensity = allSpectra.get(i).getTotalIntensity();
 
-                Arrays.stream(currentAnnotations)
-                        .filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
-                        .forEach(ionMatch -> {
+                for (IonMatch ionMatch : currentAnnotations) {
 
-                            int currentCharge = ionMatch.charge;
-                            double peakIntensity = ionMatch.peak.intensity;
+                    if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
 
-                            if (allAnnotations.size() > 1) {
-                                peakIntensity /= totalIntensity;
-                            }
+                        int currentCharge = ionMatch.charge;
+                        double peakIntensity = ionMatch.peak.intensity;
 
-                            PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
+                        if (allAnnotations.size() > 1) {
+                            peakIntensity /= totalIntensity;
+                        }
 
-                            int fragmentNumber = fragmentIon.getNumber();
+                        if (maxIntensity < peakIntensity) {
+                            maxIntensity = peakIntensity;
+                        }
 
-                            if (currentFragmentIonTypes.contains(fragmentIon.getSubType())) {
+                        PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
 
-                                if (fragmentIon.getSubType() == PeptideFragmentIon.A_ION) {
+                        int fragmentNumber = fragmentIon.getNumber();
+
+                        if (currentFragmentIonTypes.contains(fragmentIon.getSubType())) {
+
+                            if (fragmentIon.getSubType() == PeptideFragmentIon.A_ION) {
+                                if (currentCharge == 1 && singleCharge) {
+                                    String key = "a" + "_" + (fragmentNumber - 1);
+                                    addValue(values, key, peakIntensity);
+                                }
+                            } else if (fragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+                                if (!fragmentIon.hasNeutralLosses()) {
                                     if (currentCharge == 1 && singleCharge) {
-                                        String key = "a" + "_" + (fragmentNumber - 1);
+                                        String key = "b" + "_" + (fragmentNumber - 1);
+                                        addValue(values, key, peakIntensity);
+                                    } else if (twoCharges) {
+                                        String key = "b++" + "_" + (fragmentNumber - 1);
                                         addValue(values, key, peakIntensity);
                                     }
-                                } else if (fragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
-                                    if (!fragmentIon.hasNeutralLosses()) {
-                                        if (currentCharge == 1 && singleCharge) {
-                                            String key = "b" + "_" + (fragmentNumber - 1);
-                                            addValue(values, key, peakIntensity);
-                                        } else if (twoCharges) {
-                                            String key = "b++" + "_" + (fragmentNumber - 1);
-                                            addValue(values, key, peakIntensity);
-                                        }
-                                    } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H2O") && neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
-                                        if (currentCharge == 1 && singleCharge) {
-                                            String key = "b-H2O" + "_" + (fragmentNumber - 1);
-                                            addValue(values, key, peakIntensity);
-                                        } else if (twoCharges) {
-                                            String key = "b++-H2O" + "_" + (fragmentNumber - 1);
-                                            addValue(values, key, peakIntensity);
-                                        }
-                                    } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
-                                        if (currentCharge == 1 && singleCharge) {
-                                            String key = "b-NH3" + "_" + (fragmentNumber - 1);
-                                            addValue(values, key, peakIntensity);
-                                        } else if (twoCharges) {
-                                            String key = "b++-NH3" + "_" + (fragmentNumber - 1);
-                                            addValue(values, key, peakIntensity);
-                                        }
-                                    }
-                                } else if (fragmentIon.getSubType() == PeptideFragmentIon.C_ION) {
+                                } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H2O") && neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
                                     if (currentCharge == 1 && singleCharge) {
-                                        String key = "c" + "_" + (fragmentNumber - 1);
+                                        String key = "b-H2O" + "_" + (fragmentNumber - 1);
+                                        addValue(values, key, peakIntensity);
+                                    } else if (twoCharges) {
+                                        String key = "b++-H2O" + "_" + (fragmentNumber - 1);
                                         addValue(values, key, peakIntensity);
                                     }
-                                } else if (fragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
-                                    if (!fragmentIon.hasNeutralLosses()) {
-                                        if (currentCharge == 1 && singleCharge) {
-                                            String key = "y" + "_" + (peptideSequence.length() - fragmentNumber);
-                                            addValue(values, key, peakIntensity);
-                                        } else if (twoCharges) {
-                                            String key = "y++" + "_" + (peptideSequence.length() - fragmentNumber);
-                                            addValue(values, key, peakIntensity);
-                                        }
-                                    } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H2O") && neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
-                                        if (currentCharge == 1 && singleCharge) {
-                                            String key = "y-H2O" + "_" + (peptideSequence.length() - fragmentNumber);
-                                            addValue(values, key, peakIntensity);
-                                        } else if (twoCharges) {
-                                            String key = "y++-H2O" + "_" + (peptideSequence.length() - fragmentNumber);
-                                            addValue(values, key, peakIntensity);
-                                        }
-                                    } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
-                                        if (currentCharge == 1 && singleCharge) {
-                                            String key = "y-NH3" + "_" + (peptideSequence.length() - fragmentNumber);
-                                            addValue(values, key, peakIntensity);
-                                        } else if (twoCharges) {
-                                            String key = "y++-NH3" + "_" + (peptideSequence.length() - fragmentNumber);
-                                            addValue(values, key, peakIntensity);
-                                        }
-                                    }
-                                } else if (fragmentIon.getSubType() == PeptideFragmentIon.X_ION) {
+                                } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
                                     if (currentCharge == 1 && singleCharge) {
-                                        String key = "x" + "_" + (peptideSequence.length() - fragmentNumber);
+                                        String key = "b-NH3" + "_" + (fragmentNumber - 1);
                                         addValue(values, key, peakIntensity);
-                                    }
-                                } else if (fragmentIon.getSubType() == PeptideFragmentIon.Z_ION) {
-                                    if (currentCharge == 1 && singleCharge) {
-                                        String key = "z" + "_" + (peptideSequence.length() - fragmentNumber);
+                                    } else if (twoCharges) {
+                                        String key = "b++-NH3" + "_" + (fragmentNumber - 1);
                                         addValue(values, key, peakIntensity);
                                     }
                                 }
+                            } else if (fragmentIon.getSubType() == PeptideFragmentIon.C_ION) {
+                                if (currentCharge == 1 && singleCharge) {
+                                    String key = "c" + "_" + (fragmentNumber - 1);
+                                    addValue(values, key, peakIntensity);
+                                }
+                            } else if (fragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+                                if (!fragmentIon.hasNeutralLosses()) {
+                                    if (currentCharge == 1 && singleCharge) {
+                                        String key = "y" + "_" + (peptideSequence.length() - fragmentNumber);
+                                        addValue(values, key, peakIntensity);
+                                    } else if (twoCharges) {
+                                        String key = "y++" + "_" + (peptideSequence.length() - fragmentNumber);
+                                        addValue(values, key, peakIntensity);
+                                    }
+                                } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H2O") && neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
+                                    if (currentCharge == 1 && singleCharge) {
+                                        String key = "y-H2O" + "_" + (peptideSequence.length() - fragmentNumber);
+                                        addValue(values, key, peakIntensity);
+                                    } else if (twoCharges) {
+                                        String key = "y++-H2O" + "_" + (peptideSequence.length() - fragmentNumber);
+                                        addValue(values, key, peakIntensity);
+                                    }
+                                } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
+                                    if (currentCharge == 1 && singleCharge) {
+                                        String key = "y-NH3" + "_" + (peptideSequence.length() - fragmentNumber);
+                                        addValue(values, key, peakIntensity);
+                                    } else if (twoCharges) {
+                                        String key = "y++-NH3" + "_" + (peptideSequence.length() - fragmentNumber);
+                                        addValue(values, key, peakIntensity);
+                                    }
+                                }
+                            } else if (fragmentIon.getSubType() == PeptideFragmentIon.X_ION) {
+                                if (currentCharge == 1 && singleCharge) {
+                                    String key = "x" + "_" + (peptideSequence.length() - fragmentNumber);
+                                    addValue(values, key, peakIntensity);
+                                }
+                            } else if (fragmentIon.getSubType() == PeptideFragmentIon.Z_ION) {
+                                if (currentCharge == 1 && singleCharge) {
+                                    String key = "z" + "_" + (peptideSequence.length() - fragmentNumber);
+                                    addValue(values, key, peakIntensity);
+                                }
                             }
-                        });
+                        }
+                    }
+                }
             }
         }
+
+        // @TODO: the below code does not work as the maximum intensity is not normalized by the total intensity of each spectrum, i.e.  ionMatch.peak.intensity /= allSpectra.get(i).getTotalIntensity()
+//        
+//        double maxIntensity = allAnnotations.stream()
+//                .flatMap(annotations -> Arrays.stream(annotations))
+//                .filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
+//                .mapToDouble(ionMatch -> ionMatch.peak.intensity)
+//                .max()
+//                .orElse(0.0);
+//
+//        for (int i = 0; i < allAnnotations.size(); i++) {
+//
+//            IonMatch[] currentAnnotations = allAnnotations.get(i);
+//
+//            if (i < allSpectra.size()) { // escape possible null pointer
+//
+//                double totalIntensity = allSpectra.get(i).getTotalIntensity();
+//
+//                Arrays.stream(currentAnnotations)
+//                        .filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
+//                        .forEach(ionMatch -> {
+//
+//                            int currentCharge = ionMatch.charge;
+//                            double peakIntensity = ionMatch.peak.intensity;
+//
+//                            if (allAnnotations.size() > 1) {
+//                                peakIntensity /= totalIntensity;
+//                            }
+//
+//                            PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ionMatch.ion);
+//
+//                            int fragmentNumber = fragmentIon.getNumber();
+//
+//                            if (currentFragmentIonTypes.contains(fragmentIon.getSubType())) {
+//
+//                                if (fragmentIon.getSubType() == PeptideFragmentIon.A_ION) {
+//                                    if (currentCharge == 1 && singleCharge) {
+//                                        String key = "a" + "_" + (fragmentNumber - 1);
+//                                        addValue(values, key, peakIntensity);
+//                                    }
+//                                } else if (fragmentIon.getSubType() == PeptideFragmentIon.B_ION) {
+//                                    if (!fragmentIon.hasNeutralLosses()) {
+//                                        if (currentCharge == 1 && singleCharge) {
+//                                            String key = "b" + "_" + (fragmentNumber - 1);
+//                                            addValue(values, key, peakIntensity);
+//                                        } else if (twoCharges) {
+//                                            String key = "b++" + "_" + (fragmentNumber - 1);
+//                                            addValue(values, key, peakIntensity);
+//                                        }
+//                                    } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H2O") && neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
+//                                        if (currentCharge == 1 && singleCharge) {
+//                                            String key = "b-H2O" + "_" + (fragmentNumber - 1);
+//                                            addValue(values, key, peakIntensity);
+//                                        } else if (twoCharges) {
+//                                            String key = "b++-H2O" + "_" + (fragmentNumber - 1);
+//                                            addValue(values, key, peakIntensity);
+//                                        }
+//                                    } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
+//                                        if (currentCharge == 1 && singleCharge) {
+//                                            String key = "b-NH3" + "_" + (fragmentNumber - 1);
+//                                            addValue(values, key, peakIntensity);
+//                                        } else if (twoCharges) {
+//                                            String key = "b++-NH3" + "_" + (fragmentNumber - 1);
+//                                            addValue(values, key, peakIntensity);
+//                                        }
+//                                    }
+//                                } else if (fragmentIon.getSubType() == PeptideFragmentIon.C_ION) {
+//                                    if (currentCharge == 1 && singleCharge) {
+//                                        String key = "c" + "_" + (fragmentNumber - 1);
+//                                        addValue(values, key, peakIntensity);
+//                                    }
+//                                } else if (fragmentIon.getSubType() == PeptideFragmentIon.Y_ION) {
+//                                    if (!fragmentIon.hasNeutralLosses()) {
+//                                        if (currentCharge == 1 && singleCharge) {
+//                                            String key = "y" + "_" + (peptideSequence.length() - fragmentNumber);
+//                                            addValue(values, key, peakIntensity);
+//                                        } else if (twoCharges) {
+//                                            String key = "y++" + "_" + (peptideSequence.length() - fragmentNumber);
+//                                            addValue(values, key, peakIntensity);
+//                                        }
+//                                    } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-H2O") && neutralLosses.containsLoss(NeutralLoss.H2O.name)) {
+//                                        if (currentCharge == 1 && singleCharge) {
+//                                            String key = "y-H2O" + "_" + (peptideSequence.length() - fragmentNumber);
+//                                            addValue(values, key, peakIntensity);
+//                                        } else if (twoCharges) {
+//                                            String key = "y++-H2O" + "_" + (peptideSequence.length() - fragmentNumber);
+//                                            addValue(values, key, peakIntensity);
+//                                        }
+//                                    } else if (fragmentIon.getNeutralLossesAsString().equalsIgnoreCase("-NH3") && neutralLosses.containsLoss(NeutralLoss.NH3.name)) {
+//                                        if (currentCharge == 1 && singleCharge) {
+//                                            String key = "y-NH3" + "_" + (peptideSequence.length() - fragmentNumber);
+//                                            addValue(values, key, peakIntensity);
+//                                        } else if (twoCharges) {
+//                                            String key = "y++-NH3" + "_" + (peptideSequence.length() - fragmentNumber);
+//                                            addValue(values, key, peakIntensity);
+//                                        }
+//                                    }
+//                                } else if (fragmentIon.getSubType() == PeptideFragmentIon.X_ION) {
+//                                    if (currentCharge == 1 && singleCharge) {
+//                                        String key = "x" + "_" + (peptideSequence.length() - fragmentNumber);
+//                                        addValue(values, key, peakIntensity);
+//                                    }
+//                                } else if (fragmentIon.getSubType() == PeptideFragmentIon.Z_ION) {
+//                                    if (currentCharge == 1 && singleCharge) {
+//                                        String key = "z" + "_" + (peptideSequence.length() - fragmentNumber);
+//                                        addValue(values, key, peakIntensity);
+//                                    }
+//                                }
+//                            }
+//                        });
+//            }
+//        }
 
         Iterator<String> valuesIterator = values.keySet().iterator();
 

@@ -63,45 +63,44 @@ public class FastaParametersInputBean {
     public FastaParametersInputBean(CommandLine aLine, File fastaFile) throws IOException {
 
         FastaParameters tempFastaParameters = new FastaParameters();
-
+        FastaParameters inferredParameters = null;
+        
         if (aLine.hasOption(FastaParametersCLIParams.DECOY_FLAG.id)) {
 
             String arg = aLine.getOptionValue(FastaParametersCLIParams.DECOY_FLAG.id);
 
             if (!arg.equals("")) {
-
-                tempFastaParameters.setDecoyFlag(arg);
-
-                if (aLine.hasOption(FastaParametersCLIParams.SUFFIX.id)) {
-
-                    arg = aLine.getOptionValue(FastaParametersCLIParams.SUFFIX.id);
-
-                    if (arg.equals("1")) {
-
-                        tempFastaParameters.setDecoySuffix(false);
-
-                    } else {
-
-                        tempFastaParameters.setDecoySuffix(true);
-
-                    }
-                } else {
-
-                    tempFastaParameters.setDecoySuffix(true);
-
-                }
+                tempFastaParameters.setDecoyFlag(arg);            
             }
 
         } else {
 
-            FastaParameters parsedParameters = FastaParameters.inferParameters(fastaFile.getAbsolutePath());
+            inferredParameters = FastaParameters.inferParameters(fastaFile.getAbsolutePath());
+            tempFastaParameters.setDecoyFlag(inferredParameters.getDecoyFlag());
+            
+        }
+        
+        if (aLine.hasOption(FastaParametersCLIParams.SUFFIX.id)) {
 
-            tempFastaParameters.setDecoyFlag(parsedParameters.getDecoyFlag());
-            tempFastaParameters.setDecoySuffix(parsedParameters.isDecoySuffix());
+            String arg = aLine.getOptionValue(FastaParametersCLIParams.SUFFIX.id);
 
+            if (arg.equals("1")) {
+
+                tempFastaParameters.setDecoySuffix(false);
+
+            } else {
+
+                tempFastaParameters.setDecoySuffix(true);
+            }
+        } else {
+
+            if (inferredParameters==null)
+                inferredParameters = FastaParameters.inferParameters(fastaFile.getAbsolutePath());
+            
+            tempFastaParameters.setDecoySuffix(inferredParameters.isDecoySuffix());
         }
 
-        FastaSummary fastaSummary = FastaSummary.getSummary(fastaFile.getAbsolutePath(), fastaParameters, null);
+        FastaSummary fastaSummary = FastaSummary.getSummary(fastaFile.getAbsolutePath(), tempFastaParameters, null);
 
         if (aLine.hasOption(FastaParametersCLIParams.NAME.id)) {
 

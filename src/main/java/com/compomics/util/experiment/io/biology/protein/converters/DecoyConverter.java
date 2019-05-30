@@ -65,11 +65,17 @@ public class DecoyConverter {
                 bw.newLine();
 
                 int accessionEndIndex = rawHeader.indexOf(accession) + accession.length();
-                String part1 = rawHeader.substring(0, accessionEndIndex);
+                
+                String part0 = rawHeader.substring(0, rawHeader.indexOf(accession));
+                String part1 = rawHeader.substring(rawHeader.indexOf(accession), accessionEndIndex);
                 String part2 = rawHeader.substring(accessionEndIndex);
 
+                bw.write(part0);
+                if (!fastaParameters.isDecoySuffix())
+                    bw.write(fastaParameters.getDecoyFlag());
                 bw.write(part1);
-                bw.write(fastaParameters.getDecoyFlag());
+                if (fastaParameters.isDecoySuffix())
+                    bw.write(fastaParameters.getDecoyFlag());
                 bw.write(part2);
                 bw.write(fastaParameters.getDecoyFlag());
                 bw.newLine();

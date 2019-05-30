@@ -20,8 +20,8 @@ public enum FastaParametersCLIParams {
     NAME("name", "The name of the database, FASTA file name by default.", false, true),
     DESCRIPTION("description", "The description of the database, FASTA file name by default.", false, true),
     VERSION("version", "The version of the database, date of creation of the file by default.", false, true),
-    DECOY_FLAG("decoy_flag", "The decoy flag, default: -REVERSED.", false, true), // @TODO: not yet implemented?
-    SUFFIX("suffix", "The location of the decoy flag: (1) prefix, (2) suffix. 1 by default.", false, true); // @TODO: not yet implemented?
+    DECOY_FLAG("decoy_flag", "The decoy flag, default: -REVERSED.", false, true),
+    SUFFIX("suffix", "The location of the decoy flag: (1) prefix, (2) suffix. Inferred if not specified.", false, true);
 
     /**
      * Short id for the CLI parameter.

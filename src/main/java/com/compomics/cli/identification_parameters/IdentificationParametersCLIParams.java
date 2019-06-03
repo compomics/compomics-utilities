@@ -346,7 +346,14 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // Fraction parameters
     //////////////////////////////////
-    PROTEIN_FRACTION_MW_CONFIDENCE("protein_fraction_mw_confidence", "Minimum confidence required for a protein in the fraction MW plot (default 95%: '95.0').", false, true);
+    PROTEIN_FRACTION_MW_CONFIDENCE("protein_fraction_mw_confidence", "Minimum confidence required for a protein in the fraction MW plot (default 95%: '95.0').", false, true),
+    //////////////////////////////////
+    // FASTA parameters
+    //////////////////////////////////
+    FASTA_TARGET_DECOY("fasta_target_decoy", "FASTA file should be processed as target-decoy. 1: true, 0: false, default is '1'.", false, true),
+    FASTA_DECOY_TAG("fasta_decoy_tag", "The flag for decoy proteins in the accession. Default is '-REVERSED'.", false, true),
+    FASTA_DECOY_SUFFIX("fasta_decoy_type", "Decoy type. 0: prefix, 1: suffix, default is '1'.", false, true),
+    FASTA_DECOY_FILE_TAG("fasta_decoy_file_tag", "The tag added after adding decoy sequences to a FASTA file. Default is '_concatenated_target_decoy'.", false, true);
 
     /**
      * Short Id for the CLI parameter.
@@ -664,6 +671,12 @@ public enum IdentificationParametersCLIParams {
 
         output += "\n\nFraction Analysis:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.id) + " " + IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.description + "\n";
+        
+        output += "\n\nDatabase Processing:\n\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.FASTA_TARGET_DECOY.id) + " " + IdentificationParametersCLIParams.FASTA_TARGET_DECOY.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.FASTA_DECOY_TAG.id) + " " + IdentificationParametersCLIParams.FASTA_DECOY_TAG.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.FASTA_DECOY_SUFFIX.id) + " " + IdentificationParametersCLIParams.FASTA_DECOY_SUFFIX.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.FASTA_DECOY_FILE_TAG.id) + " " + IdentificationParametersCLIParams.FASTA_DECOY_FILE_TAG.description + "\n";
 
         output += "\n\nHelp:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MODS.id) + " " + IdentificationParametersCLIParams.MODS.description + "\n";

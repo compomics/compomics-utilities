@@ -1617,6 +1617,32 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.FASTA_TARGET_DECOY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.FASTA_TARGET_DECOY.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.FASTA_TARGET_DECOY.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.FASTA_DECOY_TAG.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.FASTA_DECOY_TAG.id);
+            if (arg.equals("")) {
+                System.out.println(System.getProperty("line.separator") + "FASTA decoy tag cannot be empty!" + System.getProperty("line.separator"));
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.FASTA_DECOY_SUFFIX.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.FASTA_DECOY_SUFFIX.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.FASTA_DECOY_SUFFIX.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.FASTA_DECOY_FILE_TAG.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.FASTA_DECOY_FILE_TAG.id);
+            if (arg.equals("")) {
+                System.out.println(System.getProperty("line.separator") + "FASTA decoy file tag cannot be empty!" + System.getProperty("line.separator"));
+                return false;
+            }
+        }
         return true;
     }
 

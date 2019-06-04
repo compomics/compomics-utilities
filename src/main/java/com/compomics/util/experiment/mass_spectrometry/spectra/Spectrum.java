@@ -657,16 +657,24 @@ public class Spectrum extends ExperimentObject {
             case percentile:
 
                 // Skip the low mass region of the spectrum @TODO: skip precursor as well
-                ArrayList<Double> intensities = peakMap.keySet().stream()
-                        .filter(mz -> mz > 200)
-                        .collect(Collectors.toCollection(ArrayList::new));
+//                ArrayList<Double> intensities = peakMap.keySet().stream()
+//                        .filter(mz -> mz > 200)
+//                        .collect(Collectors.toCollection(ArrayList::new));
+
+                ArrayList<Double> intensities = new ArrayList<Double>(); // @TODO: figue out how to get the above stream-based code to work when using intensities and not mz values
+                
+                for (double tempIntensity : getIntensityValuesAsArray()) {
+                    if (tempIntensity > 200) {
+                        intensities.add(tempIntensity);
+                    }
+                }    
 
                 if (intensities.isEmpty()) {
                     return 0;
                 }
-
+                
                 return BasicMathFunctions.percentile(intensities, intensityThreshold);
-
+                
             default:
                 throw new UnsupportedOperationException("Threshold of type " + intensityThresholdType + " not supported.");
         }

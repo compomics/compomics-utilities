@@ -539,8 +539,8 @@ public class PeptideUtils {
      * of the given enzymes
      */
     public static boolean isEnzymatic(
-            Peptide peptide, 
-            SequenceProvider sequenceProvider, 
+            Peptide peptide,
+            SequenceProvider sequenceProvider,
             ArrayList<Enzyme> enzymes
     ) {
 
@@ -564,7 +564,7 @@ public class PeptideUtils {
      * mapped to the given protein
      */
     public static boolean isVariant(
-            Peptide peptide, 
+            Peptide peptide,
             String accession
     ) {
 
@@ -577,93 +577,100 @@ public class PeptideUtils {
 
     /**
      * Indicates whether a peptide is at the N-terminus of a protein.
-     * 
+     *
      * @param peptide the peptide
      * @param sequenceProvider a sequence provider
-     * 
-     * @return a boolean indicating whether a peptide is at the N-terminus of a protein
+     *
+     * @return a boolean indicating whether a peptide is at the N-terminus of a
+     * protein
      */
     public static boolean isNterm(Peptide peptide, SequenceProvider sequenceProvider) {
-        
+
         return peptide.getProteinMapping().keySet().stream()
                 .anyMatch(accession -> isNterm(peptide, accession, sequenceProvider));
-        
+
     }
 
     /**
      * Indicates whether a peptide is at the N-terminus of a given protein.
-     * 
+     *
      * @param peptide the peptide
      * @param proteinAccession the accession of the protein
      * @param sequenceProvider a sequence provider
-     * 
-     * @return a boolean indicating whether a peptide is at the N-terminus of a given protein
+     *
+     * @return a boolean indicating whether a peptide is at the N-terminus of a
+     * given protein
      */
     public static boolean isNterm(Peptide peptide, String proteinAccession, SequenceProvider sequenceProvider) {
-        
+
         return Arrays.stream(peptide.getProteinMapping().get(proteinAccession))
                 .anyMatch(aa -> aa == 0 || aa == 1 && sequenceProvider.getSequence(proteinAccession).charAt(0) == 'M');
-        
+
     }
 
     /**
      * Indicates whether a peptide is at the C-terminus of a protein.
-     * 
+     *
      * @param peptide the peptide
      * @param sequenceProvider a sequence provider
-     * 
-     * @return a boolean indicating whether a peptide is at the C-terminus of a protein
+     *
+     * @return a boolean indicating whether a peptide is at the C-terminus of a
+     * protein
      */
     public static boolean isCterm(Peptide peptide, SequenceProvider sequenceProvider) {
-        
+
         return peptide.getProteinMapping().keySet().stream()
                 .anyMatch(accession -> isCterm(peptide, accession, sequenceProvider));
-        
+
     }
 
     /**
      * Indicates whether a peptide is at the C-terminus of a given protein.
-     * 
+     *
      * @param peptide the peptide
      * @param proteinAccession the accession of the protein
      * @param sequenceProvider a sequence provider
-     * 
-     * @return a boolean indicating whether a peptide is at the N-terminus of a given protein
+     *
+     * @return a boolean indicating whether a peptide is at the N-terminus of a
+     * given protein
      */
     public static boolean isCterm(Peptide peptide, String proteinAccession, SequenceProvider sequenceProvider) {
-        
+
         return Arrays.stream(peptide.getProteinMapping().get(proteinAccession))
                 .anyMatch(aa -> sequenceProvider.getSequence(proteinAccession).length() == aa + peptide.getSequence().length());
-        
+
     }
-    
+
     /**
-     * Returns the index of a modification on the amino acid sequence. 0 is the first amino acid. The modification site is expected to be the zero-based index on the sequence. -1 and sequenceLength for N-term and C-term modifications, respectively.
-     * 
+     * Returns the index of a modification on the amino acid sequence. 0 is the
+     * first amino acid. The modification site is expected to be the zero-based
+     * index on the sequence. -1 and sequenceLength for N-term and C-term
+     * modifications, respectively.
+     *
      * @param modSite the modification site
      * @param sequenceLength the length of the peptide sequence
-     * 
-     * @return 
+     *
+     * @return the index of a modification on the amino acid sequence
      */
     public static int getModifiedAaIndex(
             int modSite,
             int sequenceLength
     ) {
-        
+
         if (modSite >= 0 & modSite < sequenceLength) {
-            
+
             return modSite;
-            
+
         } else if (modSite == -1) {
-            
+
             return 0;
-            
+
         } else if (modSite == sequenceLength) {
-            
+
             return sequenceLength - 1;
-            
+
         }
-        
+
         throw new IllegalArgumentException(
                 "Modification site " + modSite + " not supported."
         );

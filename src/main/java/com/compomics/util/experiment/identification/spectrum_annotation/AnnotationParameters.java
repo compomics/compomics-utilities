@@ -41,7 +41,7 @@ public class AnnotationParameters extends DbObject {
         /**
          * Constructor.
          *
-         * @param description the description of the thresold
+         * @param description the description of the threshold
          */
         private IntensityThresholdType(String description) {
             this.description = description;

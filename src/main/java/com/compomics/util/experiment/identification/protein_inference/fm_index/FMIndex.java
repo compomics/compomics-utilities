@@ -1065,7 +1065,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                 fastaCRC += ExperimentObject.asLong(fastaParameters.getShortDescription());
                 fastaCRC += ExperimentObject.asLong(fastaParameters.getTargetDecoyFileNameSuffix());
                 fastaCRC += ExperimentObject.asLong(fastaParameters.getDecoyFlag());
-                if (fastaParameters.isTargetDecoy()) fastaCRC += 1;
+                fastaCRC += fastaParameters.isDecoySuffix() ? 1 : 0;
+                fastaCRC += fastaParameters.isTargetDecoy() ? 8 : 0;
             }
         }catch (Exception e) {
             e.printStackTrace();

@@ -140,13 +140,22 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @param fractionParameters the fraction parameters
      * @param fastaParameters the FASTA parameters
      */
-    public IdentificationParameters(String name, String description,
-            SearchParameters searchParameters, AnnotationParameters annotationParameters,
-            SequenceMatchingParameters sequenceMatchingParameters, PeptideVariantsParameters peptideVariantsParameters,
-            GeneParameters geneParameters, PsmScoringParameters psmScoringParameters,
-            PeptideAssumptionFilter peptideAssumptionFilter, ModificationLocalizationParameters ModificationLocalizationParameters,
-            ProteinInferenceParameters proteinInferenceParameters, IdMatchValidationParameters idValidationParameters,
-            FractionParameters fractionParameters, FastaParameters fastaParameters) {
+    public IdentificationParameters(
+            String name, 
+            String description,
+            SearchParameters searchParameters, 
+            AnnotationParameters annotationParameters,
+            SequenceMatchingParameters sequenceMatchingParameters, 
+            PeptideVariantsParameters peptideVariantsParameters,
+            GeneParameters geneParameters, 
+            PsmScoringParameters psmScoringParameters,
+            PeptideAssumptionFilter peptideAssumptionFilter, 
+            ModificationLocalizationParameters ModificationLocalizationParameters,
+            ProteinInferenceParameters proteinInferenceParameters, 
+            IdMatchValidationParameters idValidationParameters,
+            FractionParameters fractionParameters, 
+            FastaParameters fastaParameters
+    ) {
 
         this.name = name;
         this.description = description;
@@ -181,7 +190,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      *
      * @param searchParameters the parameters used for the spectrum matching
      */
-    public void setSearchParameters(SearchParameters searchParameters) {
+    public void setSearchParameters(
+            SearchParameters searchParameters
+    ) {
         writeDBMode();
 
         this.searchParameters = searchParameters;
@@ -202,7 +213,10 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      *
      * @return the relative tolerance in ppm
      */
-    public static double getPpmTolerance(double daltonTolerance, double refMass) {
+    public static double getPpmTolerance(
+            double daltonTolerance, 
+            double refMass
+    ) {
 
         return daltonTolerance / refMass * 1000000.0;
 
@@ -217,7 +231,10 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      *
      * @return the relative tolerance in ppm
      */
-    public static double getDaTolerance(double ppmTolerance, double refMass) {
+    public static double getDaTolerance(
+            double ppmTolerance, 
+            double refMass
+    ) {
 
         return ppmTolerance / 1000000.0 * refMass;
 

@@ -3,6 +3,7 @@ package com.compomics.util.parameters.identification.advanced;
 import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.filtering.Filter;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * This class lists the criteria used for quality control of the validated
@@ -52,26 +53,44 @@ public class ValidationQcParameters extends DbObject {
      *
      * @param validationQCPreferences an other ValidationQCPreferences
      */
-    public ValidationQcParameters(ValidationQcParameters validationQCPreferences) {
+    public ValidationQcParameters(
+            ValidationQcParameters validationQCPreferences
+    ) {
+
         this.dbSize = validationQCPreferences.isDbSize();
         this.firstDecoy = validationQCPreferences.isFirstDecoy();
         this.confidenceMargin = validationQCPreferences.getConfidenceMargin();
+
         if (validationQCPreferences.getPsmFilters() != null) {
+
             psmFilters = new ArrayList<>(validationQCPreferences.getPsmFilters().size());
+
             for (Filter filter : validationQCPreferences.getPsmFilters()) {
+
                 psmFilters.add(filter.clone());
+
             }
         }
+
         if (validationQCPreferences.getPeptideFilters() != null) {
+
             peptideFilters = new ArrayList<>(validationQCPreferences.getPeptideFilters().size());
+
             for (Filter filter : validationQCPreferences.getPeptideFilters()) {
+
                 peptideFilters.add(filter.clone());
+
             }
         }
+
         if (validationQCPreferences.getProteinFilters() != null) {
+
             proteinFilters = new ArrayList<>(validationQCPreferences.getProteinFilters().size());
+
             for (Filter filter : validationQCPreferences.getProteinFilters()) {
+
                 proteinFilters.add(filter.clone());
+
             }
         }
     }
@@ -212,80 +231,121 @@ public class ValidationQcParameters extends DbObject {
      * @param validationQCPreferences the ValidationQCPreferences to compare to
      * @return true if the two ValidationQCPreferences are the same
      */
-    public boolean isSameAs(ValidationQcParameters validationQCPreferences) {
+    public boolean isSameAs(
+            ValidationQcParameters validationQCPreferences
+    ) {
         readDBMode();
+
         if (dbSize != validationQCPreferences.isDbSize()) {
             return false;
         }
+
         if (firstDecoy != validationQCPreferences.isFirstDecoy()) {
             return false;
         }
+
         if (!getConfidenceMargin().equals(validationQCPreferences.getConfidenceMargin())) {
             return false;
         }
+
         if ((psmFilters != null && validationQCPreferences.getPsmFilters() == null)
                 || (psmFilters == null && validationQCPreferences.getPsmFilters() != null)) {
             return false;
         }
+
         if (psmFilters != null && validationQCPreferences.getPsmFilters() != null
                 && psmFilters.size() != validationQCPreferences.getPsmFilters().size()) {
             return false;
         }
+
         if ((peptideFilters != null && validationQCPreferences.getPeptideFilters() == null)
                 || (peptideFilters == null && validationQCPreferences.getPeptideFilters() != null)) {
             return false;
         }
+
         if (peptideFilters != null && validationQCPreferences.getPeptideFilters() != null
                 && peptideFilters.size() != validationQCPreferences.getPeptideFilters().size()) {
             return false;
         }
+
         if ((proteinFilters != null && validationQCPreferences.getProteinFilters() == null)
                 || (proteinFilters == null && validationQCPreferences.getProteinFilters() != null)) {
             return false;
         }
+
         if (proteinFilters != null && validationQCPreferences.getProteinFilters() != null
                 && proteinFilters.size() != validationQCPreferences.getProteinFilters().size()) {
             return false;
         }
+
         if (psmFilters != null) {
+
             for (Filter psmFilter : psmFilters) {
+
                 boolean found = false;
+
                 for (Filter newFilter : validationQCPreferences.getPsmFilters()) {
+
                     if (newFilter.isSameAs(psmFilter)) {
+
                         found = true;
                         break;
+
                     }
                 }
+
                 if (!found) {
+
                     return false;
+
                 }
             }
         }
+
         if (peptideFilters != null) {
+
             for (Filter psmFilter : peptideFilters) {
+
                 boolean found = false;
+
                 for (Filter newFilter : validationQCPreferences.getPeptideFilters()) {
+
                     if (newFilter.isSameAs(psmFilter)) {
+
                         found = true;
                         break;
+
                     }
                 }
+
                 if (!found) {
+
                     return false;
+
                 }
             }
         }
+
         if (proteinFilters != null) {
+
             for (Filter psmFilter : proteinFilters) {
+
                 boolean found = false;
+
                 for (Filter newFilter : validationQCPreferences.getProteinFilters()) {
+
                     if (newFilter.isSameAs(psmFilter)) {
+
                         found = true;
                         break;
+
                     }
                 }
+
                 if (!found) {
+
                     return false;
+
                 }
             }
         }
@@ -299,6 +359,7 @@ public class ValidationQcParameters extends DbObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
+
         readDBMode();
 
         String newLine = System.getProperty("line.separator");
@@ -310,42 +371,36 @@ public class ValidationQcParameters extends DbObject {
         output.append("Confidence Check: ").append(confidenceMargin != 0.0).append(".").append(newLine); // @TODO: double value hidden as a boolean..?
 
         if (proteinFilters != null && !proteinFilters.isEmpty()) {
-            output.append("Protein Filters: ").append(newLine);
-            String tempProteinFilters = "";
-            for (Filter tempFilter : proteinFilters) {
-                if (!tempProteinFilters.isEmpty()) {
-                    tempProteinFilters += ", ";
-                }
-                tempProteinFilters += tempFilter.getName();
-            }
 
-            output.append(tempProteinFilters).append(".").append(newLine);
+            output.append("Protein Filters: ").append(newLine);
+            String filtersList = proteinFilters.stream()
+                    .map(Filter::getName)
+                    .sorted()
+                    .collect(Collectors.joining(", "));
+
+            output.append(filtersList).append(".").append(newLine);
         }
 
         if (peptideFilters != null && !peptideFilters.isEmpty()) {
-            output.append("Peptide Filters: ").append(newLine);
-            String tempProteinFilters = "";
-            for (Filter tempFilter : peptideFilters) {
-                if (!tempProteinFilters.isEmpty()) {
-                    tempProteinFilters += ", ";
-                }
-                tempProteinFilters += tempFilter.getName();
-            }
 
-            output.append(tempProteinFilters).append(".").append(newLine);
+            output.append("Peptide Filters: ").append(newLine);
+            String filtersList = peptideFilters.stream()
+                    .map(Filter::getName)
+                    .sorted()
+                    .collect(Collectors.joining(", "));
+
+            output.append(filtersList).append(".").append(newLine);
         }
 
         if (psmFilters != null && !psmFilters.isEmpty()) {
-            output.append("PSM Filters: ").append(newLine);
-            String tempProteinFilters = "";
-            for (Filter tempFilter : psmFilters) {
-                if (!tempProteinFilters.isEmpty()) {
-                    tempProteinFilters += ", ";
-                }
-                tempProteinFilters += tempFilter.getName();
-            }
 
-            output.append(tempProteinFilters).append(".").append(newLine);
+            output.append("PSM Filters: ").append(newLine);
+            String filtersList = psmFilters.stream()
+                    .map(Filter::getName)
+                    .sorted()
+                    .collect(Collectors.joining(", "));
+
+            output.append(filtersList).append(".").append(newLine);
         }
 
         return output.toString();

@@ -27,6 +27,7 @@ import com.compomics.util.parameters.identification.tool_specific.NovorParameter
 import com.compomics.util.experiment.identification.modification.ModificationLocalizationScore;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
+import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.search.DigestionParameters.Specificity;
@@ -3501,6 +3502,57 @@ public class IdentificationParametersInputBean {
             Double value = new Double(arg);
             fractionSettings.setProteinConfidenceMwPlots(value);
         }
+        
+        //////////////////////////////////
+        // Fasta parameters
+        //////////////////////////////////
+        FastaParameters fastaPreferences = identificationParameters.getFastaParameters();
+        if (fastaPreferences == null) {
+            fastaPreferences = new FastaParameters();
+            identificationParameters.setFastaParameters(fastaPreferences);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.FASTA_TARGET_DECOY.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FASTA_TARGET_DECOY.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.FASTA_TARGET_DECOY.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            fastaPreferences.setTargetDecoy(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.FASTA_DECOY_TAG.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FASTA_DECOY_TAG.id);
+            fastaPreferences.setDecoyFlag(arg);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.FASTA_DECOY_SUFFIX.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FASTA_DECOY_SUFFIX.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.FASTA_DECOY_SUFFIX.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            
+            fastaPreferences.setDecoySuffix(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.FASTA_DECOY_FILE_TAG.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FASTA_DECOY_FILE_TAG.id);
+            fastaPreferences.setTargetDecoyFileNameSuffix(arg);
+        }
+        
     }
 
     /**

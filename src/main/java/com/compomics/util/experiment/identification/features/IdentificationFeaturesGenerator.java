@@ -2287,6 +2287,7 @@ public class IdentificationFeaturesGenerator {
             identificationFeaturesCache.setPeptideList(sortedKeys);
             identificationFeaturesCache.setCurrentProteinKey(proteinKey);
         }
+
         return identificationFeaturesCache.getPeptideList();
     }
 

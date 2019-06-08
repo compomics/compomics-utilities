@@ -1454,7 +1454,7 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id);
-            if (CommandParameter.isBooleanInput(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id, arg)) {
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id, arg)) {
                 return false;
             }
         }

@@ -317,7 +317,7 @@ public enum IdentificationParametersCLIParams {
     IMPORT_PEPTIDE_LENGTH_MAX("import_peptide_length_max", "The maximal peptide length to consider when importing identification files, default is 30.", false, true),
     IMPORT_MC_MIN("import_missed_cleavages_min", "The minimal number if missed cleavages to consider when importing identification files, default is no filter.", false, true),
     IMPORT_MC_MAX("import_missed_cleavages_max", "The maximal number if missed cleavages to consider when importing identification files, default is no filter.", false, true),
-    IMPORT_PRECURSOR_MZ("import_precursor_mz", "The maximal precursor precursor deviation to allow when importing identification files, the precursor tolerance by default.", false, true),
+    IMPORT_PRECURSOR_MZ("import_precursor_mz", "The maximal precursor deviation to allow when importing identification files, the precursor tolerance by default.", false, true),
     IMPORT_PRECURSOR_MZ_PPM("import_precursor_mz_ppm", "Maximal precursor ion deviation unit: ppm (1) or Da (0), default is '1'.", false, true),
     EXCLUDE_UNKNOWN_PTMs("exclude_unknown_ptms", "If true peptides presenting unrecognized PTMs will be excluded. (1: true, 0: false, default is '1')", false, true),
     //////////////////////////////////

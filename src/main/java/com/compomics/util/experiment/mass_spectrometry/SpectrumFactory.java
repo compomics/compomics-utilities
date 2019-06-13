@@ -6,6 +6,7 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfIndex;
 import com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfReader;
 import com.compomics.util.experiment.io.mass_spectrometry.msp.MspReader;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.io.file.SerializationUtils;
 import java.io.*;
@@ -1167,5 +1168,34 @@ public class SpectrumFactory {
             precursorMap.put(spectrumtitle, precursor);
         }
         return precursorMap;
+    }
+
+    /**
+     * Returns the spectrum key as String corresponding to the given key as
+     * long.
+     *
+     * @param longKey the key as long
+     *
+     * @return the key as String
+     */
+    public String getSpectrumKeyAsString(long longKey) {
+        //@TODO: is there a more efficient way of finding the spectrum of a key?
+
+        for (String spectrumFile : getMgfFileNames()) {
+            for (String spectrumTitle : getSpectrumTitles(spectrumFile)) {
+
+                String tempKey = Spectrum.getSpectrumKey(spectrumFile, spectrumTitle);
+                long spectrumKey = ExperimentObject.asLong(tempKey);
+
+                if (spectrumKey == longKey) {
+
+                    return tempKey;
+
+                }
+
+            }
+        }
+
+        throw new IllegalArgumentException("Key " + longKey + " not found");
     }
 }

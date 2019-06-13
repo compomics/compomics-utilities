@@ -46,4 +46,32 @@ public enum ProjectType {
         name = "";
         description = "";
     }
+    
+    /**
+     * Returns the different options as they should be displayed on the GUI.
+     * 
+     * @return the different options as they should be displayed on the GUI
+     */
+    public static String[] getGuiOptions() {
+        return new String[]{"Protein", "Peptide", "PSM"};
+    }
+    
+    /**
+     * Returns the project type corresponding to the given GUI option.
+     * 
+     * @param guiOption the GUI option
+     * 
+     * @return the project type
+     */
+    public static ProjectType getProjectType(String guiOption) {
+        
+        switch (guiOption) {
+            case "Protein": return protein;
+            case "Peptide": return peptide;
+            case "PSM": return psm;
+        }
+        
+        throw new IllegalArgumentException("Option " + guiOption + "not found.");
+        
+    }
 }

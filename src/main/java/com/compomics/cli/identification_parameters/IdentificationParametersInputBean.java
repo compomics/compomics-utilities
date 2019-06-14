@@ -2211,7 +2211,8 @@ public class IdentificationParametersInputBean {
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_PROTEINS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_PROTEINS.id);
-            xtandemParameters.setOutputResults(arg);
+            Integer option = new Integer(arg);
+            xtandemParameters.setOutputProteins(option == 1);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SEQUENCES.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SEQUENCES.id);

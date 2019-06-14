@@ -482,6 +482,12 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_PTM_COMPLEXITY.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_PTM_COMPLEXITY.id);
+            if (!CommandParameter.inDoubleRange(IdentificationParametersCLIParams.XTANDEM_PTM_COMPLEXITY.id, arg, 0.0, 12.0)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE.id);
             if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.XTANDEM_REFINE.id, arg)) {
@@ -2148,6 +2154,11 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_STP_BIAS.id);
             Integer option = new Integer(arg);
             xtandemParameters.setStpBias(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_PTM_COMPLEXITY.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_PTM_COMPLEXITY.id);
+            Double option = new Double(arg);
+            xtandemParameters.setProteinPtmComplexity(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_REFINE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_REFINE.id);

@@ -567,6 +567,12 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_HISTOGRAMS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_HISTOGRAMS.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.XTANDEM_OUTPUT_HISTOGRAMS.id, arg)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_DECOY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_DECOY.id);
             if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MSGF_DECOY.id, arg)) {
@@ -2223,6 +2229,11 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_SPECTRA.id);
             Integer option = new Integer(arg);
             xtandemParameters.setOutputSpectra(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_OUTPUT_HISTOGRAMS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_OUTPUT_HISTOGRAMS.id);
+            Integer option = new Integer(arg);
+            xtandemParameters.setOutputHistograms(option == 1);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.XTANDEM_SKYLINE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_SKYLINE.id);

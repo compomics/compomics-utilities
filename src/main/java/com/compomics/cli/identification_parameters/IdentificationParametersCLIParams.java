@@ -110,7 +110,7 @@ public enum IdentificationParametersCLIParams {
     XTANDEM_REFINE_SEMI("xtandem_refine_semi", "X!Tandem 'refine, cleavage semi' option. 1: true, 0: false, default is '0'.", false, true),
     XTANDEM_REFINE_POTENTIAL_MOD_FULL_REFINEMENT("xtandem_refine_pot", "X!Tandem 'refine, use potential modifications for full refinement' option. 1: true, 0: false, default is '0'.", false, true),
     XTANDEM_REFINE_POINT_MUTATIONS("xtandem_refine_p_mut", "X!Tandem 'refine, point mutations' option. 1: true, 0: false, default is '0'.", false, true),
-    XTANDEM_REFINE_SNAPS("xtandem_refine_snaps", "X!Tandem 'refine, saps' option. 1: true, 0: false, default is '1'.", false, true),
+    XTANDEM_REFINE_SNAPS("xtandem_refine_snaps", "X!Tandem 'refine, sNAps' option. 1: true, 0: false, default is '1'.", false, true),
     XTANDEM_REFINE_SPECTRUM_SYNTHESIS("xtandem_refine_spec_synt", "X!Tandem 'refine, spectrum synthesis' option. 1: true, 0: false, default is '1'.", false, true),
     XTANDEM_EVALUE("xtandem_evalue", "X!Tandem 'output, maximum valid expectation value' option, default is '0.01'.", false, true),
     XTANDEM_OUTPUT_RESULTS("xtandem_output_results", "X!Tandem 'output, results' option (all|valid|stochastic), default is 'all'.", false, true),

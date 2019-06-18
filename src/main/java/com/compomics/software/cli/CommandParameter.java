@@ -73,20 +73,6 @@ public class CommandParameter {
         return valid;
     }
 
-    /**
-     * Returns true of the input is in the provided list.
-     *
-     * @param argType the name of the argument
-     * @param arg the content of the argument
-     * @param supportedInput the list of supported input
-     * 
-     * @return true of the input is in the list
-     */
-    public static boolean isInList(String argType, String arg, List<String> supportedInput) {
-        
-        return isInList(argType, arg, supportedInput.stream());
-        
-    }
 
     /**
      * Returns true of the input is in the provided list.
@@ -98,33 +84,31 @@ public class CommandParameter {
      * @return true of the input is in the list
      */
     public static boolean isInList(String argType, String arg, String[] supportedInput) {
-        
-        return isInList(argType, arg, Arrays.stream(supportedInput));
-        
+        return isInList(argType, arg, Arrays.asList(supportedInput));    
     }
-
+    
     /**
-     * Returns true of the input is in the provided stream.
+     * Returns true of the input is in the provided list.
      *
      * @param argType the name of the argument
      * @param arg the content of the argument
      * @param supportedInput the list of supported input
-     * 
      * @return true of the input is in the list
      */
-    public static boolean isInList(String argType, String arg, Stream<String> supportedInput) {
-        
+    public static boolean isInList(String argType, String arg, List<String> supportedInput) {
         boolean valid = true;
-        
-        if (!supportedInput.anyMatch(value -> value.equals(arg))) {
-            
+        if (!supportedInput.contains(arg)) {
             valid = false;
-            String errorMessage = System.getProperty("line.separator") + "Error parsing the " + argType + " option: Found " + arg + ". Supported input: ["
-                    + supportedInput.collect(Collectors.joining(",")) + "]." + System.getProperty("line.separator");
+            String errorMessage = System.getProperty("line.separator") + "Error parsing the " + argType + " option: Found " + arg + ". Supported input: [";
+            for (int i = 0; i < supportedInput.size(); i++) {
+                if (i > 0) {
+                    errorMessage += ", ";
+                }
+                errorMessage += supportedInput.get(i);
+            }
+            errorMessage += "]." + System.getProperty("line.separator");
             System.out.println(errorMessage);
-        
         }
-        
         return valid;
     }
 

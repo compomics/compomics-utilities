@@ -103,8 +103,11 @@ public class IdentificationParametersInputBean {
             possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.A_ION));
             possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.B_ION));
             possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.C_ION));
-            if (!CommandParameter.isInList(IdentificationParametersCLIParams.FI.id, arg, possibleValues)) {
-                return false;
+            ArrayList<String> args = CommandLineUtils.splitInput(arg);
+            for (String fiAsString : args) {
+                if (!CommandParameter.isInList(IdentificationParametersCLIParams.FI.id, fiAsString, possibleValues)) {
+                    return false;
+                }
             }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.RI.id)) {
@@ -113,10 +116,13 @@ public class IdentificationParametersInputBean {
             possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.X_ION));
             possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.Y_ION));
             possibleValues.add(PeptideFragmentIon.getSubTypeAsString(PeptideFragmentIon.Z_ION));
-            if (!CommandParameter.isInList(IdentificationParametersCLIParams.RI.id, arg, possibleValues)) {
-                return false;
+            ArrayList<String> args = CommandLineUtils.splitInput(arg);
+            for (String riAsString : args) {
+                if (!CommandParameter.isInList(IdentificationParametersCLIParams.RI.id, riAsString, possibleValues)) {
+                    return false;
+                }
             }
-        }
+        }    
         if (aLine.hasOption(IdentificationParametersCLIParams.DIGESTION.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIGESTION.id);
             ArrayList<String> possibleValues = new ArrayList<>(Specificity.values().length);
@@ -153,8 +159,11 @@ public class IdentificationParametersInputBean {
             for (Specificity specificity : Specificity.values()) {
                 possibleValues.add(specificity.index + "");
             }
-            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SPECIFICITY.id, arg, possibleValues)) {
-                return false;
+            ArrayList<String> args = CommandLineUtils.splitInput(arg);
+            for (String specificityAsString : args) {
+                if (!CommandParameter.isInList(IdentificationParametersCLIParams.SPECIFICITY.id, specificityAsString, possibleValues)) {
+                    return false;
+                }
             }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.IDENTIFICATION_PARAMETERS.id)) {

@@ -259,6 +259,15 @@ public class UtilitiesUserParameters {
         }
         return sparklineColorNotFound;
     }
+    
+    /**
+     * Setter for the not found sparkline color.
+     *
+     * @param sparklineColorNotFound the not found sparkline color
+     */
+    public void setSparklineColorNotFound(Color sparklineColorNotFound) {
+        this.sparklineColorNotFound = sparklineColorNotFound;
+    }
 
     /**
      * Setter for the non-validated sparkline color.

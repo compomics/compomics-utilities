@@ -304,7 +304,8 @@ public class MassErrorBubblePlot extends JPanel {
         plot.getDomainAxis().setLowerMargin(0);
 
         plot.setRangeGridlinePaint(Color.black);
-
+        plot.setDomainGridlinePaint(Color.black);
+        
         // make semi see through
         plot.setForegroundAlpha(0.5f);
 

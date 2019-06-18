@@ -55,9 +55,9 @@ public class SequenceFragmentationPanel extends JPanel {
      */
     private double[] yIons;
     /**
-     * The font to use.
+     * The font to use for the peptide sequence..
      */
-    private Font iBaseFont = new Font("Monospaced", Font.PLAIN, 14);
+    private Font iPeptideSequenceFont = new Font("Monospaced", Font.PLAIN, 14);
     /**
      * The maximum bar height.
      */
@@ -107,6 +107,10 @@ public class SequenceFragmentationPanel extends JPanel {
      * Color for the rewind ion
      */
     private Color rewindColor;
+    /**
+     * Color for the peptide sequence.
+     */
+    private Color fontColor = Color.BLACK;
 
     /**
      * Empty default constructor
@@ -208,6 +212,24 @@ public class SequenceFragmentationPanel extends JPanel {
             }
         });
     }
+    
+    /**
+     * Set the font to use for the peptide sequence.
+     * 
+     * @param peptideSequenceFont the font to use 
+     */
+    public void setPeptideSequenceFont(Font peptideSequenceFont) {
+        this.iPeptideSequenceFont = peptideSequenceFont;
+    }
+    
+    /**
+     * Set the color for the font of the peptide sequence.
+     * 
+     * @param fontColor 
+     */
+    public void setFontColor(Color fontColor) {
+        this.fontColor = fontColor;
+    }
 
     /**
      * Paints the SequenceFragmentationPanel.
@@ -225,8 +247,8 @@ public class SequenceFragmentationPanel extends JPanel {
 
         Graphics2D g2 = (Graphics2D) g;
 
-        // Set the base font, monospaced!
-        g2.setFont(iBaseFont);
+        // Set the base font
+        g2.setFont(iPeptideSequenceFont);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Drawing offsets.
@@ -237,8 +259,8 @@ public class SequenceFragmentationPanel extends JPanel {
         Double lMidStringHeight = yLocation - lFontHeight * 0.2;
 
         for (int i = 0; i < iSequenceComponents.length; i++) {
-            // reset base color to black.
-            g2.setColor(Color.black);
+            // reset base color
+            g2.setColor(fontColor);
 
             /**
              * A. Draw the component. --------------------
@@ -272,11 +294,11 @@ public class SequenceFragmentationPanel extends JPanel {
                             g2.getFontMetrics().stringWidth(residue.substring(residue.length() - 1)) + 2, (g2.getFontMetrics().getHeight() / 2) + 4);
                     g2.fill(tempRectangle);
                     tooltipRectangles.put("<html>" + ptmName + " (" + (i + 1) + ")</html>", tempRectangle);
-                    g2.setColor(Color.BLACK);
+                    g2.setColor(fontColor);
                     g2.drawString(nTerminal, xLocation, yLocation);
                     g2.setColor(Color.WHITE);
                     g2.drawString(residue.substring(residue.length() - 1), xLocation + g2.getFontMetrics().stringWidth(nTerminal), yLocation);
-                    g2.setColor(Color.BLACK);
+                    g2.setColor(fontColor);
                 } else if (i == iSequenceComponents.length - 1) {
                     Rectangle tempRectangle = new Rectangle(xLocation - 1, yLocation - (g2.getFontMetrics().getHeight() / 2) - 1,
                             g2.getFontMetrics().stringWidth(residue.substring(0, 1)) + 2, (g2.getFontMetrics().getHeight() / 2) + 4);
@@ -284,7 +306,7 @@ public class SequenceFragmentationPanel extends JPanel {
                     tooltipRectangles.put("<html>" + ptmName + " (" + (i + 1) + ")</html>", tempRectangle);
                     g2.setColor(Color.WHITE);
                     g2.drawString(residue.substring(0, 1), xLocation, yLocation);
-                    g2.setColor(Color.BLACK);
+                    g2.setColor(fontColor);
                     g2.drawString(residue.substring(1), xLocation + g2.getFontMetrics().stringWidth(residue.substring(0, 1)), yLocation);
                 } else {
                     Rectangle tempRectangle = new Rectangle(xLocation - 1, yLocation - (g2.getFontMetrics().getHeight() / 2) - 1,
@@ -293,7 +315,7 @@ public class SequenceFragmentationPanel extends JPanel {
                     tooltipRectangles.put("<html>" + ptmName + " (" + (i + 1) + ")</html>", tempRectangle);
                     g2.setColor(Color.WHITE);
                     g2.drawString(residue, xLocation, yLocation);
-                    g2.setColor(Color.BLACK);
+                    g2.setColor(fontColor);
                 }
             } else {
                 // Draw this component.
@@ -450,7 +472,7 @@ public class SequenceFragmentationPanel extends JPanel {
 
         for (String temp : unmodifiedString) {
             // Move X for a text component.
-            lEstimateX += this.getFontMetrics(iBaseFont).stringWidth(temp) + iHorizontalSpace;
+            lEstimateX += this.getFontMetrics(iPeptideSequenceFont).stringWidth(temp) + iHorizontalSpace;
             // Move the XLocation forwards with the component's length and the horizontal spacer.
             lEstimateX += iBarWidth + iHorizontalSpace;
         }

@@ -42,13 +42,13 @@ public class Metrics extends DbObject {
      */
     private int[] foundCharges = new int[0];
     /**
-     * The maximal amount of peptides in the proteins of the dataset.
+     * The maximal number of peptides among the proteins of the dataset.
      */
     private Integer maxNPeptides = null;
     /**
-     * The maximal amount of spectra in the proteins of the dataset.
+     * The maximal number of PSMs among the proteins of the dataset.
      */
-    private Integer maxNSpectra = null;
+    private Integer maxNPsms = null;
     /**
      * The maximal spectrum counting in the proteins of the dataset.
      */
@@ -64,7 +64,7 @@ public class Metrics extends DbObject {
     /**
      * The max protein key length.
      */
-    private Integer maxProteinKeyLength = null;
+    private Integer maxProteinAccessionLength = null;
     /**
      * Number of validated proteins.
      */
@@ -274,9 +274,9 @@ public class Metrics extends DbObject {
     }
 
     /**
-     * Returns the maximal amount of peptides in the proteins of the dataset.
+     * Returns the maximal number of peptides among the proteins of the dataset.
      *
-     * @return the maximal amount of peptides in the proteins of the dataset
+     * @return the maximal number of peptides among the proteins of the dataset
      */
     public Integer getMaxNPeptides() {
         readDBMode();
@@ -284,9 +284,9 @@ public class Metrics extends DbObject {
     }
 
     /**
-     * Sets the maximal amount of peptides in the proteins of the dataset.
+     * Sets the maximal number of peptides among the proteins of the dataset.
      *
-     * @param maxNPeptides the maximal amount of peptides in the proteins of the
+     * @param maxNPeptides the maximal number of peptides among the proteins of the
      * dataset
      */
     public void setMaxNPeptides(Integer maxNPeptides) {
@@ -295,13 +295,13 @@ public class Metrics extends DbObject {
     }
 
     /**
-     * Returns the the maximal amount of PSMs in the proteins of the dataset.
+     * Returns the the maximal number of PSMs among the proteins of the dataset.
      *
-     * @return the the maximal amount of PSMs in the proteins of the dataset
+     * @return the the maximal number of PSMs among the proteins of the dataset
      */
-    public Integer getMaxNSpectra() {
+    public Integer getMaxNPsms() {
         readDBMode();
-        return maxNSpectra;
+        return maxNPsms;
     }
 
     /**
@@ -310,9 +310,9 @@ public class Metrics extends DbObject {
      * @param maxNSpectra the the maximal amount of PSMs in the proteins of the
      * dataset
      */
-    public void setMaxNSpectra(Integer maxNSpectra) {
+    public void setMaxNPsms(Integer maxNSpectra) {
         writeDBMode();
-        this.maxNSpectra = maxNSpectra;
+        this.maxNPsms = maxNSpectra;
     }
 
     /**
@@ -359,27 +359,23 @@ public class Metrics extends DbObject {
     }
 
     /**
-     * Sets the max protein key length.
+     * Sets the max protein accession length.
      *
-     * @param maxProteinKeyLength the length to set
+     * @param maxProteinAccessionLength the length to set
      */
-    public void setMaxProteinKeyLength(Integer maxProteinKeyLength) {
+    public void setMaxProteinAccessionLength(int maxProteinAccessionLength) {
         writeDBMode();
-        this.maxProteinKeyLength = maxProteinKeyLength;
+        this.maxProteinAccessionLength = maxProteinAccessionLength;
     }
 
     /**
-     * Returns the max protein key length.
+     * Returns the max protein accession length.
      *
-     * @return the max protein key length
+     * @return the max protein accession length
      */
-    public Integer getMaxProteinKeyLength() {
+    public Integer getMaxProteinAccessionLength() {
         readDBMode();
-        if (maxProteinKeyLength != null) {
-            return maxProteinKeyLength;
-        } else {
-            return Integer.MAX_VALUE;
-        }
+            return maxProteinAccessionLength;
     }
 
     /**

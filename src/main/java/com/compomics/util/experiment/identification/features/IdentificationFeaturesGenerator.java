@@ -1995,8 +1995,8 @@ public class IdentificationFeaturesGenerator {
             }
             boolean needMaxValues = (metrics.getMaxNPeptides() == null)
                     || metrics.getMaxNPeptides() <= 0
-                    || metrics.getMaxNSpectra() == null
-                    || metrics.getMaxNSpectra() <= 0
+                    || metrics.getMaxNPsms() == null
+                    || metrics.getMaxNPsms() <= 0
                     || metrics.getMaxSpectrumCounting() == null
                     || metrics.getMaxSpectrumCounting() <= 0
                     || metrics.getMaxMW() == null
@@ -2100,7 +2100,7 @@ public class IdentificationFeaturesGenerator {
             if (needMaxValues) {
 
                 metrics.setMaxNPeptides(maxPeptides);
-                metrics.setMaxNSpectra(maxSpectra);
+                metrics.setMaxNPsms(maxSpectra);
                 metrics.setMaxSpectrumCounting(maxSpectrumCounting);
                 metrics.setMaxMW(maxMW);
                 metrics.setnValidatedProteins(nValidatedProteins);

@@ -3041,12 +3041,12 @@
 <li class="blockList">
 <h4>maxNPeptides</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> maxNPeptides</pre>
-<div class="block">The maximal amount of peptides in the proteins of the dataset.</div>
+<div class="block">The maximal number of peptides among the proteins of the dataset.</div>
 </li>
 <li class="blockList">
-<h4>maxNSpectra</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> maxNSpectra</pre>
-<div class="block">The maximal amount of spectra in the proteins of the dataset.</div>
+<h4>maxNPsms</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> maxNPsms</pre>
+<div class="block">The maximal number of PSMs among the proteins of the dataset.</div>
 </li>
 <li class="blockList">
 <h4>maxSpectrumCounting</h4>
@@ -3064,8 +3064,8 @@
 <div class="block">The ordered list of protein keys as estimated during the import process.</div>
 </li>
 <li class="blockList">
-<h4>maxProteinKeyLength</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> maxProteinKeyLength</pre>
+<h4>maxProteinAccessionLength</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> maxProteinAccessionLength</pre>
 <div class="block">The max protein key length.</div>
 </li>
 <li class="blockList">
@@ -7783,6 +7783,96 @@
 <h4>peptideMatch</h4>
 <pre><a href="com/compomics/util/experiment/identification/matches/PeptideMatch.html" title="class in com.compomics.util.experiment.identification.matches">PeptideMatch</a> peptideMatch</pre>
 <div class="block">The peptide match.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList">
+<h2 title="Package">Package&nbsp;com.compomics.util.gui.parameters</h2>
+<ul class="blockList">
+<li class="blockList"><a name="com.compomics.util.gui.parameters.SparklineColorsDialog">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/gui/parameters/SparklineColorsDialog.html" title="class in com.compomics.util.gui.parameters">com.compomics.util.gui.parameters.SparklineColorsDialog</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JDialog.html?is-external=true" title="class or interface in javax.swing">JDialog</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>utilitiesUserParameters</h4>
+<pre><a href="com/compomics/util/parameters/UtilitiesUserParameters.html" title="class in com.compomics.util.parameters">UtilitiesUserParameters</a> utilitiesUserParameters</pre>
+<div class="block">The utilities user parameters object.</div>
+</li>
+<li class="blockList">
+<h4>backgroundPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> backgroundPanel</pre>
+</li>
+<li class="blockList">
+<h4>doubtfulColorLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> doubtfulColorLabel</pre>
+</li>
+<li class="blockList">
+<h4>doubtfulColorPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> doubtfulColorPanel</pre>
+</li>
+<li class="blockList">
+<h4>falsePositiveColorLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> falsePositiveColorLabel</pre>
+</li>
+<li class="blockList">
+<h4>falsePositiveColorPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> falsePositiveColorPanel</pre>
+</li>
+<li class="blockList">
+<h4>mirroredPeakColorLabel3</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> mirroredPeakColorLabel3</pre>
+</li>
+<li class="blockList">
+<h4>mirroredPeakColorPanel2</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> mirroredPeakColorPanel2</pre>
+</li>
+<li class="blockList">
+<h4>notFoundColorLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> notFoundColorLabel</pre>
+</li>
+<li class="blockList">
+<h4>notFoundColorPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> notFoundColorPanel</pre>
+</li>
+<li class="blockList">
+<h4>notValidatedColorLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> notValidatedColorLabel</pre>
+</li>
+<li class="blockList">
+<h4>notValidatedColorPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> notValidatedColorPanel</pre>
+</li>
+<li class="blockList">
+<h4>okButton</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> okButton</pre>
+</li>
+<li class="blockList">
+<h4>possibleColorLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> possibleColorLabel</pre>
+</li>
+<li class="blockList">
+<h4>possibleColorPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> possibleColorPanel</pre>
+</li>
+<li class="blockList">
+<h4>sparklineColorsPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> sparklineColorsPanel</pre>
+</li>
+<li class="blockList">
+<h4>validatedColorLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> validatedColorLabel</pre>
+</li>
+<li class="blockListLast">
+<h4>validatedColorPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> validatedColorPanel</pre>
 </li>
 </ul>
 </li>
@@ -13310,9 +13400,9 @@
  of the most intense fragment ion.</div>
 </li>
 <li class="blockList">
-<h4>iBaseFont</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Font.html?is-external=true" title="class or interface in java.awt">Font</a> iBaseFont</pre>
-<div class="block">The font to use.</div>
+<h4>iPeptideSequenceFont</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Font.html?is-external=true" title="class or interface in java.awt">Font</a> iPeptideSequenceFont</pre>
+<div class="block">The font to use for the peptide sequence..</div>
 </li>
 <li class="blockList">
 <h4>iMaxBarHeight</h4>
@@ -13369,10 +13459,15 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Color.html?is-external=true" title="class or interface in java.awt">Color</a> forwardColor</pre>
 <div class="block">Color for the forward ion</div>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>rewindColor</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Color.html?is-external=true" title="class or interface in java.awt">Color</a> rewindColor</pre>
 <div class="block">Color for the rewind ion</div>
+</li>
+<li class="blockListLast">
+<h4>fontColor</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/awt/Color.html?is-external=true" title="class or interface in java.awt">Color</a> fontColor</pre>
+<div class="block">Color for the peptide sequence.</div>
 </li>
 </ul>
 </li>

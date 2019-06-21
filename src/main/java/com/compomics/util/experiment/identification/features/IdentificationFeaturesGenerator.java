@@ -990,7 +990,7 @@ public class IdentificationFeaturesGenerator {
      * @param proteinMatchKey the key of the protein match of interest
      *
      * @return the best protein coverage possible according to the given
-     * cleavage settingswhile estimating the probability to observe an amino
+     * cleavage settings while estimating the probability to observe an amino
      * acid
      */
     public double getObservableCoverage(long proteinMatchKey) {

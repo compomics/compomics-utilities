@@ -225,7 +225,7 @@ public class SequenceFragmentationPanel extends JPanel {
     /**
      * Set the color for the font of the peptide sequence.
      * 
-     * @param fontColor 
+     * @param fontColor the font color
      */
     public void setFontColor(Color fontColor) {
         this.fontColor = fontColor;

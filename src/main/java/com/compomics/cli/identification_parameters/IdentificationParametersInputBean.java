@@ -1609,9 +1609,21 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id);
-            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id, arg)) {
+        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE_THRESHOLD.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE_THRESHOLD.id);
+            if (!CommandParameter.inDoubleRange(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE_THRESHOLD.id, arg, 0.0, 1.0)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.PROTEIN_INFERENCE_MODIFICATIONS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PROTEIN_INFERENCE_MODIFICATIONS.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.PROTEIN_INFERENCE_MODIFICATIONS.id, arg)) {
                 return false;
             }
         }
@@ -3497,8 +3509,8 @@ public class IdentificationParametersInputBean {
             }
             proteinInferencePreferences.setSimplifyGroupsEvidence(value);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE.id);
             Integer intValue = new Integer(arg);
             boolean value;
             switch (intValue) {
@@ -3509,9 +3521,30 @@ public class IdentificationParametersInputBean {
                     value = false;
                     break;
                 default:
-                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id + ": " + arg + ". 0 or 1 expected.");
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE.id + ": " + arg + ". 0 or 1 expected.");
             }
-            proteinInferencePreferences.setSimplifyGroupsUncharacterized(value);
+            proteinInferencePreferences.setSimplifyGroupsConfidence(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE_THRESHOLD.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE_THRESHOLD.id);
+            double value = Double.parseDouble(arg);
+            proteinInferencePreferences.setConfidenceThreshold(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PROTEIN_INFERENCE_MODIFICATIONS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PROTEIN_INFERENCE_MODIFICATIONS.id);
+            Integer intValue = new Integer(arg);
+            boolean value;
+            switch (intValue) {
+                case 1:
+                    value = true;
+                    break;
+                case 0:
+                    value = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.PROTEIN_INFERENCE_MODIFICATIONS.id + ": " + arg + ". 0 or 1 expected.");
+            }
+            proteinInferencePreferences.setModificationRefinement(value);
         }
 
         //////////////////////////////////

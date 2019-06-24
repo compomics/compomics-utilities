@@ -30,9 +30,9 @@ public class ProteinInferenceParameters extends DbObject {
      */
     private boolean simplifyGroupsEvidence = true;
     /**
-     * Simplify groups of uncharacterized proteins.
+     * Simplify groups based on peptide confidenc level.
      */
-    private boolean simplifyGroupsUncharacterized = true;
+    private boolean simplifyGroupsConfidence = true;
     /**
      * Simplify groups based on enzymaticity.
      */
@@ -41,6 +41,10 @@ public class ProteinInferenceParameters extends DbObject {
      * Simplify groups based on variant matching.
      */
     private boolean simplifyGroupsVariants = true;
+    /**
+     * Confidence below which a peptide is considered absent.
+     */
+    private double confidenceThreshold = 0.05;
 
     /**
      * Returns a short description of the parameters.
@@ -52,12 +56,12 @@ public class ProteinInferenceParameters extends DbObject {
 
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
-        output.append("DB: ");
         output.append("Simplify Groups: ").append(getSimplifyGroups()).append(newLine);
-        output.append("Simplify on evidence: ").append(getSimplifyGroupsEvidence()).append(newLine);
-        output.append("Simplify uncharacterized: ").append(getSimplifyGroupsUncharacterized()).append(newLine);
-        output.append("Simplify on enzymaticity: ").append(getSimplifyGroupsEnzymaticity()).append(newLine);
-        output.append("Simplify on variants: ").append(getSimplifyGroupsEnzymaticity()).append(newLine);
+        output.append("Simplify on protein evidence: ").append(getSimplifyGroupsEvidence()).append(newLine);
+        output.append("Simplify on peptide confidence: ").append(getSimplifyGroupsEvidence()).append(newLine);
+        output.append("Peptide confidence threshold: ").append(getConfidenceThreshold()).append(newLine);
+        output.append("Simplify on peptide enzymaticity: ").append(getSimplifyGroupsEnzymaticity()).append(newLine);
+        output.append("Simplify on peptide variants: ").append(getSimplifyGroupsEnzymaticity()).append(newLine);
 
         return output.toString();
     }
@@ -85,7 +89,7 @@ public class ProteinInferenceParameters extends DbObject {
             return false;
         }
 
-        if (getSimplifyGroupsUncharacterized() != otherProteinInferencePreferences.getSimplifyGroupsUncharacterized()) {
+        if (getSimplifyGroupsConfidence() != otherProteinInferencePreferences.getSimplifyGroupsConfidence()) {
             return false;
         }
 
@@ -94,6 +98,10 @@ public class ProteinInferenceParameters extends DbObject {
         }
 
         if (getSimplifyGroupsVariants()!= otherProteinInferencePreferences.getSimplifyGroupsVariants()) {
+            return false;
+        }
+
+        if (getConfidenceThreshold() != otherProteinInferencePreferences.getConfidenceThreshold()) {
             return false;
         }
 
@@ -149,28 +157,49 @@ public class ProteinInferenceParameters extends DbObject {
     }
 
     /**
-     * Returns a boolean indicating whether the protein groups consisting of
-     * uncharacterized proteins.
+     * Returns a boolean indicating whether the protein groups should be
+     * simplified based on the peptide confidence.
      *
-     * @return a boolean indicating whether the protein groups consisting of
-     * uncharacterized proteins
+     * @return a boolean indicating whether the protein groups should be
+     * simplified based on the peptide confidence
      */
-    public boolean getSimplifyGroupsUncharacterized() {
+    public boolean getSimplifyGroupsConfidence() {
         readDBMode();
-        return simplifyGroupsUncharacterized;
+        return simplifyGroupsConfidence;
     }
 
     /**
-     * Sets whether the protein groups consisting of uncharacterized proteins.
+     * Sets whether the protein groups should be simplified based on the peptide
+     * confidence level.
      *
-     * @param simplifyGroupsUncharacterized whether the protein groups
-     * consisting of uncharacterized proteins
+     * @param simplifyGroupsConfidence whether the protein groups should be
+     * simplified based on the peptide confidence level
      */
-    public void setSimplifyGroupsUncharacterized(boolean simplifyGroupsUncharacterized) {
+    public void setSimplifyGroupsConfidence(boolean simplifyGroupsConfidence) {
         writeDBMode();
-        this.simplifyGroupsUncharacterized = simplifyGroupsUncharacterized;
+        this.simplifyGroupsConfidence = simplifyGroupsConfidence;
     }
 
+    /**
+     * Returns the confidence below which a peptide is considered absent.
+     * 
+     * @return the confidence below which a peptide is considered absent
+     */
+    public double getConfidenceThreshold() {
+        readDBMode();
+        return confidenceThreshold;
+    }
+
+    /**
+     * Sets the confidence below which a peptide is considered absent.
+     * 
+     * @param confidenceThreshold the confidence below which a peptide is considered absent
+     */
+    public void setConfidenceThreshold(double confidenceThreshold) {
+        writeDBMode();
+        this.confidenceThreshold = confidenceThreshold;
+    }
+    
     /**
      * Returns a boolean indicating whether the protein groups should be
      * simplified based on the peptide enzymaticity.

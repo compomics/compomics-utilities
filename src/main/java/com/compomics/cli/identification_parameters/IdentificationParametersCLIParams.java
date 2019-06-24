@@ -336,9 +336,11 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     SIMPLIFY_GOUPS("simplify_groups", "Simplify protein groups, 1: yes, 0: no, default is 1.", false, true),
     SIMPLIFY_GOUPS_EVIDENCE("simplify_evidence", "Simplify protein groups based on the Uniprot protein evidence, 1: yes, 0: no, default is 1.", false, true),
-    SIMPLIFY_GOUPS_UNCHARACTERIZED("simplify_uncharacterized", "Simplify protein groups based on the protein characterization, 1: yes, 0: no, default is 1.", false, true),
+    SIMPLIFY_GOUPS_CONFIDENCE("simplify_confidence", "Simplify protein groups based on the peptide confidence, 1: yes, 0: no, default is 1.", false, true),
+    SIMPLIFY_GOUPS_CONFIDENCE_THRESHOLD("simplify_confidence_threshold", "Peptide confidence threshold below which a peptide is considered absent, default is 0.05.", false, true),
     SIMPLIFY_GOUPS_ENZYMATICITY("simplify_enzymaticity", "Simplify protein groups based on the peptide enzymaticity, 1: yes, 0: no, default is 1.", false, true),
     SIMPLIFY_GOUPS_VARIANT("simplify_variant", "Simplify protein groups based on the variant matching, 1: yes, 0: no, default is 1.", false, true),
+    PROTEIN_INFERENCE_MODIFICATIONS("pi_modifications", "Account for modifications when mapping peptides to proteins, 1: yes, 0: no, default is 1.", false, true),
     //////////////////////////////////
     // Validation parameters
     //////////////////////////////////
@@ -666,8 +668,10 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SIMPLIFY_GOUPS.id) + " " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.id) + " " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_ENZYMATICITY.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.id) + " " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_EVIDENCE.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.id) + " " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_UNCHARACTERIZED.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE.id) + " " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE_THRESHOLD.id) + " " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_CONFIDENCE_THRESHOLD.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.SIMPLIFY_GOUPS_VARIANT.id) + " " + IdentificationParametersCLIParams.SIMPLIFY_GOUPS_VARIANT.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PROTEIN_INFERENCE_MODIFICATIONS.id) + " " + IdentificationParametersCLIParams.PROTEIN_INFERENCE_MODIFICATIONS.description + "\n";
 
         output += "\n\nValidation Levels:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PSM_FDR.id) + " " + IdentificationParametersCLIParams.PSM_FDR.description + "\n";

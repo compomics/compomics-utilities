@@ -8968,6 +8968,14 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> cancelButton</pre>
 </li>
 <li class="blockList">
+<h4>confidenceLbl</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> confidenceLbl</pre>
+</li>
+<li class="blockList">
+<h4>confidenceTxt</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> confidenceTxt</pre>
+</li>
+<li class="blockList">
 <h4>helpJButton</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> helpJButton</pre>
 </li>
@@ -8980,12 +8988,16 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> proteinGroupPanel</pre>
 </li>
 <li class="blockList">
-<h4>simplifyCharacterizationCmb</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; simplifyCharacterizationCmb</pre>
+<h4>simplifyConfidenceCmb</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; simplifyConfidenceCmb</pre>
 </li>
 <li class="blockList">
-<h4>simplifyCharacterizationLbl</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> simplifyCharacterizationLbl</pre>
+<h4>simplifyConfidenceLbl</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> simplifyConfidenceLbl</pre>
+</li>
+<li class="blockList">
+<h4>simplifyConfidenceLbl1</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> simplifyConfidenceLbl1</pre>
 </li>
 <li class="blockList">
 <h4>simplifyEnzymaticityCmb</h4>
@@ -14638,19 +14650,24 @@
 <div class="block">Simplify groups based on UniProt evidence level.</div>
 </li>
 <li class="blockList">
-<h4>simplifyGroupsUncharacterized</h4>
-<pre>boolean simplifyGroupsUncharacterized</pre>
-<div class="block">Simplify groups of uncharacterized proteins.</div>
+<h4>simplifyGroupsConfidence</h4>
+<pre>boolean simplifyGroupsConfidence</pre>
+<div class="block">Simplify groups based on peptide confidenc level.</div>
 </li>
 <li class="blockList">
 <h4>simplifyGroupsEnzymaticity</h4>
 <pre>boolean simplifyGroupsEnzymaticity</pre>
 <div class="block">Simplify groups based on enzymaticity.</div>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>simplifyGroupsVariants</h4>
 <pre>boolean simplifyGroupsVariants</pre>
 <div class="block">Simplify groups based on variant matching.</div>
+</li>
+<li class="blockListLast">
+<h4>confidenceThreshold</h4>
+<pre>double confidenceThreshold</pre>
+<div class="block">Confidence below which a peptide is considered absent.</div>
 </li>
 </ul>
 </li>

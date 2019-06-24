@@ -329,9 +329,7 @@ public class ThermoRawFileParserParametersDialog extends javax.swing.JDialog {
     public ThermoRawFileParserParameters getThermoRawFileParserParameters() {
         ThermoRawFileParserParameters thermoRawFileParserParameters = new ThermoRawFileParserParameters();
         thermoRawFileParserParameters.setMsFormat((ThermoRawFileParserOutputFormat) outputFormatCmb.getSelectedItem());
-
         thermoRawFileParserParameters.setPeackPicking(peakPickingCmb.getSelectedIndex() == 0);
-
         return thermoRawFileParserParameters;
     }
 }

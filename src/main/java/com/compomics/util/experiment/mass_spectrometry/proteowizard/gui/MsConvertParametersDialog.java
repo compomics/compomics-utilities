@@ -3,7 +3,7 @@ package com.compomics.util.experiment.mass_spectrometry.proteowizard.gui;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.mass_spectrometry.proteowizard.MsConvertParameters;
-import com.compomics.util.experiment.mass_spectrometry.proteowizard.MsFormat;
+import com.compomics.util.experiment.mass_spectrometry.proteowizard.ProteoWizardMsFormat;
 import com.compomics.util.experiment.mass_spectrometry.proteowizard.ProteoWizardFilter;
 import com.compomics.util.gui.renderers.AlignedListCellRenderer;
 import com.compomics.util.parameters.UtilitiesUserParameters;
@@ -28,12 +28,6 @@ import javax.swing.table.TableColumnModel;
  * @author Marc Vaudel
  */
 public class MsConvertParametersDialog extends javax.swing.JDialog {
-
-    /**
-     * Empty default constructor
-     */
-    public MsConvertParametersDialog() {
-    }
 
     /**
      * Boolean indicating whether the editing was canceled.
@@ -83,7 +77,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
             outputFormatCmb.setSelectedItem(msConvertParameters.getMsFormat());
             filters = (HashMap<Integer, String>) msConvertParameters.getFiltersMap().clone();
         } else {
-            outputFormatCmb.setSelectedItem(MsFormat.mzML);
+            outputFormatCmb.setSelectedItem(ProteoWizardMsFormat.mzML);
             filters = new HashMap<>(2);
         }
 
@@ -214,7 +208,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         outputFormatLbl.setText("Output Format");
 
         outputFormatCmb.setMaximumRowCount(10);
-        outputFormatCmb.setModel(new DefaultComboBoxModel(MsFormat.getDataFormats(null, true)));
+        outputFormatCmb.setModel(new DefaultComboBoxModel(ProteoWizardMsFormat.getDataFormats(null, true)));
 
         filtersLbl.setText("Filters (right click in the table to edit)");
 
@@ -388,7 +382,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
 
         boolean formatCheck = true;
 
-        if (((MsFormat) outputFormatCmb.getSelectedItem()) != MsFormat.mgf) {
+        if (((ProteoWizardMsFormat) outputFormatCmb.getSelectedItem()) != ProteoWizardMsFormat.mgf) {
             int value = JOptionPane.showConfirmDialog(this, "Mgf is the only format compatible with SearchGUI. Proceed anyway?",
                     "Output Format Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 //            int value = JOptionPane.showConfirmDialog(this, "Mgf is the only format compatible with PeptideShaker. Proceed anyway?", 
@@ -548,7 +542,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
      */
     public MsConvertParameters getMsConvertParameters() {
         MsConvertParameters msConvertParameters = new MsConvertParameters();
-        msConvertParameters.setMsFormat((MsFormat) outputFormatCmb.getSelectedItem());
+        msConvertParameters.setMsFormat((ProteoWizardMsFormat) outputFormatCmb.getSelectedItem());
         for (Integer filterIndex : filters.keySet()) {
             msConvertParameters.addFilter(filterIndex, filters.get(filterIndex));
         }

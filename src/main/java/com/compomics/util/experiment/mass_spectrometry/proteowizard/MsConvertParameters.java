@@ -13,7 +13,7 @@ public class MsConvertParameters {
     /**
      * The format to convert to.
      */
-    private MsFormat msFormat;
+    private ProteoWizardMsFormat msFormat;
     /**
      * Map of filters to use. Index of the filter - value of the argument
      */
@@ -31,7 +31,7 @@ public class MsConvertParameters {
      *
      * @return the format to convert to
      */
-    public MsFormat getMsFormat() {
+    public ProteoWizardMsFormat getMsFormat() {
         return msFormat;
     }
 
@@ -40,7 +40,7 @@ public class MsConvertParameters {
      *
      * @param msFormat the format to convert to
      */
-    public void setMsFormat(MsFormat msFormat) {
+    public void setMsFormat(ProteoWizardMsFormat msFormat) {
         this.msFormat = msFormat;
     }
 

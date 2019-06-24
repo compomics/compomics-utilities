@@ -434,7 +434,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="advancedSettingsWarningLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Click to open the MS-GF+ help page."/>
+            <Property name="text" type="java.lang.String" value="Click to open the MS-GF+ help page"/>
           </Properties>
         </Component>
       </SubComponents>

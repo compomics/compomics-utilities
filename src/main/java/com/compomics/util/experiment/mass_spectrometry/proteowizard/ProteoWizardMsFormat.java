@@ -8,7 +8,7 @@ import java.util.Vector;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public enum MsFormat {
+public enum ProteoWizardMsFormat {
 
     /**
      * Mascot generic format.
@@ -112,7 +112,7 @@ public enum MsFormat {
      * @param rawFormat is this a format for raw data
      * @param outputFormat it this s format that can be used as output
      */
-    private MsFormat(int index, String commandLineOption, String name, String description, String fileNameEnding, boolean rawFormat, boolean outputFormat) {
+    private ProteoWizardMsFormat(int index, String commandLineOption, String name, String description, String fileNameEnding, boolean rawFormat, boolean outputFormat) {
         this.index = index;
         this.commandLineOption = commandLineOption;
         this.name = name;
@@ -134,11 +134,11 @@ public enum MsFormat {
      * @param outputFormat get output formats, null return both
      * @return the list formats
      */
-    public static Vector<MsFormat> getDataFormats(Boolean raw, Boolean outputFormat) {
+    public static Vector<ProteoWizardMsFormat> getDataFormats(Boolean raw, Boolean outputFormat) {
 
-        Vector<MsFormat> rawFormats = new Vector<>();
+        Vector<ProteoWizardMsFormat> rawFormats = new Vector<>();
 
-        for (MsFormat format : MsFormat.values()) {
+        for (ProteoWizardMsFormat format : ProteoWizardMsFormat.values()) {
             
             boolean rawFilter = true;
             boolean outputFilter = true;
@@ -162,7 +162,7 @@ public enum MsFormat {
     /**
      * Empty default constructor
      */
-    private MsFormat() {
+    private ProteoWizardMsFormat() {
         index = 0;
         commandLineOption = "";
         name = "";

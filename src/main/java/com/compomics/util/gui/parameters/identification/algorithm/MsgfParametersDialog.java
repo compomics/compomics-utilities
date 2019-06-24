@@ -17,12 +17,6 @@ import java.awt.Color;
 public class MsgfParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
 
     /**
-     * Empty default constructor
-     */
-    public MsgfParametersDialog() {
-    }
-
-    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
@@ -466,7 +460,7 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
             }
         });
 
-        advancedSettingsWarningLabel.setText("Click to open the MS-GF+ help page.");
+        advancedSettingsWarningLabel.setText("Click to open the MS-GF+ help page");
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);

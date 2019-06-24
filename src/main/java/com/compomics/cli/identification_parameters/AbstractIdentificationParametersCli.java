@@ -158,8 +158,9 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
                 + "Available Enzymes:" + System.getProperty("line.separator")
                 + "========================"
                 + System.getProperty("line.separator"));
+        String format = "%-40s%s%n";
         for (Enzyme enzyme : EnzymeFactory.getInstance().getEnzymes()) {
-            System.out.println(enzyme.getDescription());
+            System.out.printf(format, enzyme.getName(), enzyme.getDescription());       
         }
         System.out.println();
     }

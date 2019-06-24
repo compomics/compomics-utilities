@@ -1122,7 +1122,7 @@ public class Header implements Cloneable {
     }
 
     /**
-     * Returns the protein evidence level as indexed in UniProt.
+     * Returns the protein evidence level as indexed in UniProt. Null if not available.
      * 
      * @return the protein evidence level
      */

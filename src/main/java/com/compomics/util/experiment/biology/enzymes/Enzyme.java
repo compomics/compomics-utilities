@@ -24,12 +24,7 @@ public class Enzyme extends ExperimentObject {
     public Enzyme() {
         name = "";
     }
-    /*
-     * The enzyme id.
     
-     * @deprecated use the name as identifier.
-     */
-    private int enzymeId;
     /*
      * The enzyme name.
      */
@@ -72,16 +67,6 @@ public class Enzyme extends ExperimentObject {
     public String getName() {
         readDBMode();
         return name;
-    }
-
-    /**
-     * Get the enzyme id.
-     *
-     * @return the enzyme number
-     */
-    public int getEnzymeId() {
-        readDBMode();
-        return enzymeId;
     }
 
     /**
@@ -551,9 +536,6 @@ public class Enzyme extends ExperimentObject {
         readDBMode();
 
         if (otherEnzyme == null) {
-            return false;
-        }
-        if (this.getEnzymeId() != otherEnzyme.getEnzymeId()) {
             return false;
         }
         if (!this.getName().equalsIgnoreCase(otherEnzyme.getName())) {

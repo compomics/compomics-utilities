@@ -740,7 +740,7 @@ public class SpectrumFactory {
      * @return the desired spectrum
      */
     public Spectrum getSpectrum(String spectrumFile, String spectrumTitle) {
-        return getSpectrum(spectrumFile, spectrumTitle, true);
+        return getSpectrum(spectrumFile, spectrumTitle, false);
     }
 
     /**
@@ -786,7 +786,7 @@ public class SpectrumFactory {
      * @return the desired spectrum
      */
     public Spectrum getSpectrum(String spectrumKey) {
-        return getSpectrum(spectrumKey, true);
+        return getSpectrum(spectrumKey, false);
     }
 
     /**

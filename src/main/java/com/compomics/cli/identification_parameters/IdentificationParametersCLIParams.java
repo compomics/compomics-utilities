@@ -172,24 +172,24 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // Comet specific parameters
     //////////////////////////////////
-    COMET_NUM_MATCHES("comet_num_matches", "Comet maximum number of spectrum matches, default is '10'.", false, true),
-    COMET_PTMS("comet_num_ptms", "Comet max number of variable PTMs per peptide, default is '10'.", false, true),
-    COMET_REQ_PTMS("comet_req_ptms", "Comet require at least one variable PTM per peptide, 1: true, 0: false, default is '0'.", false, true),
     COMET_MIN_PEAKS("comet_min_peaks", "Comet min number of peaks for a spectrum, default is '10'.", false, true),
-    COMET_MIN_PEAK_INTENSITY("comet_min_peak_int", "Comet min peak intensity, default is '0.0'.", false, true),
-    COMET_REMOVE_PRECURSOR("comet_remove_prec", "Comet remove precursor peaks, 0: off, 1: all peaks around the precursor m/z, 2: all charge reduced precursor peaks, 3: precursor phosphate neutral loss peaks, default is '0'.", false, true),
+    COMET_MIN_PEAK_INTENSITY("comet_min_peak_int", "Comet minimal peak intensity, default is '0.0'.", false, true),
+    COMET_REMOVE_PRECURSOR("comet_remove_prec", "Comet remove precursor peaks, 0: no, 1: yes, 2: yes + all charge reduced precursor peaks, 3: yes + precursor phosphate neutral loss peaks, default is '0'.", false, true),
     COMET_REMOVE_PRECURSOR_TOLERANCE("comet_remove_prec_tol", "Comet remove precursor tolerance, default is '1.5'.", false, true),
     COMET_CLEAR_MZ_RANGE_LOWER("comet_clear_mz_range_lower", "Comet clear mz range lower, default is '0.0'.", false, true),
     COMET_CLEAR_MZ_RANGE_UPPER("comet_clear_mz_range_upper", "Comet clear mz range upper, default is '0.0'.", false, true),
     COMET_ENZYME_TYPE("comet_enzyme_type", "Comet enzyme type, 1: semi-specific, 2: full-enzyme, 8: unspecific N-term, 9: unspecific C-term, default is '2'.", false, true),
-    COMET_ISOTOPE_CORRECTION("comet_isotope_correction", "Comet isotope correction, 0: no correction, 1: 0, +1, 2: 0, +1, +2, 3: 0,+1,+2,+3, 4: -8,-4,0,+4,+8, default is '3'.", false, true),
-    COMET_MIN_PREC_MASS("comet_min_prec_mass", "Comet minimum precursor mass, default is '0.0'.", false, true),
-    COMET_MAX_PREC_MASS("comet_max_prec_mass", "Comet maximum precursor mass, default is '10000.0'.", false, true),
+    COMET_ISOTOPE_CORRECTION("comet_isotope_correction", "Comet isotope correction, 0: no correction, 1: 0, +1, 2: 0, +1, +2, 3: 0,+1,+2,+3, 4: -8,-4,0,+4,+8, default is '1'.", false, true),
+    COMET_MIN_PREC_MASS("comet_min_prec_mass", "Comet minimum precursor mass, default is '600.0'.", false, true),
+    COMET_MAX_PREC_MASS("comet_max_prec_mass", "Comet maximum precursor mass, default is '5000.0'.", false, true),
     COMET_MAX_FRAGMENT_CHARGE("comet_max_frag_charge", "Comet maximum fragment charge [1-5], default is '3'.", false, true),
     COMET_REMOVE_METH("comet_remove_meth", "Comet remove methionine, 1: true, 0: false, default is '0'.", false, true),
-    COMET_BATCH_SIZE("comet_batch_size", "Comet batch size, '0' means load and search all spectra at once, default is '0'.", false, true),
-    COMET_THEORETICAL_FRAGMENT_IONS("comet_theoretical_fragment_ions", "Comet theoretical_fragment_ions option, 1: true, 0: false, default is '1'.", false, true),
-    COMET_FRAGMENT_BIN_OFFSET("comet_frag_bin_offset", "Comet fragment bin offset, default is '0.0'.", false, true),
+    COMET_BATCH_SIZE("comet_batch_size", "Comet spectrum batch size, '0' means load and search all spectra at once, default is '0'.", false, true),    
+    COMET_PTMS("comet_num_ptms", "Comet max number of variable PTMs per peptide, default is '10'.", false, true),  
+    COMET_REQ_PTMS("comet_req_ptms", "Comet require at least one variable PTM per peptide, 1: true, 0: false, default is '0'.", false, true),  
+    COMET_THEORETICAL_FRAGMENT_IONS("comet_theoretical_fragment_ions", "Comet correlation score type, theoretical_fragment_ions option, 1: true, 0: false, default is '1'.", false, true),
+    COMET_FRAGMENT_BIN_OFFSET("comet_frag_bin_offset", "Comet fragment bin offset, default is '0.01'.", false, true),
+    COMET_NUM_MATCHES("comet_num_matches", "Comet maximum number of spectrum matches, default is '10'.", false, true),
     COMET_OUTPUT("comet_output", "Comet output type, PepXML, SQT, TXT or Percolator, default is 'PepXML'.", false, true),
     //////////////////////////////////
     // Tide specific parameters
@@ -559,9 +559,6 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.OMSSA_FORMAT.id) + " " + IdentificationParametersCLIParams.OMSSA_FORMAT.description + "\n";
         
         output += "\n\nComet advanced parameters:\n\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_NUM_MATCHES.id) + " " + IdentificationParametersCLIParams.COMET_NUM_MATCHES.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_PTMS.id) + " " + IdentificationParametersCLIParams.COMET_PTMS.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_REQ_PTMS.id) + " " + IdentificationParametersCLIParams.COMET_REQ_PTMS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_MIN_PEAKS.id) + " " + IdentificationParametersCLIParams.COMET_MIN_PEAKS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_MIN_PEAK_INTENSITY.id) + " " + IdentificationParametersCLIParams.COMET_MIN_PEAK_INTENSITY.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR.id) + " " + IdentificationParametersCLIParams.COMET_REMOVE_PRECURSOR.description + "\n";
@@ -575,8 +572,11 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.id) + " " + IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_REMOVE_METH.id) + " " + IdentificationParametersCLIParams.COMET_REMOVE_METH.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_BATCH_SIZE.id) + " " + IdentificationParametersCLIParams.COMET_BATCH_SIZE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_PTMS.id) + " " + IdentificationParametersCLIParams.COMET_PTMS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_REQ_PTMS.id) + " " + IdentificationParametersCLIParams.COMET_REQ_PTMS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_THEORETICAL_FRAGMENT_IONS.id) + " " + IdentificationParametersCLIParams.COMET_THEORETICAL_FRAGMENT_IONS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_OFFSET.id) + " " + IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_OFFSET.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_NUM_MATCHES.id) + " " + IdentificationParametersCLIParams.COMET_NUM_MATCHES.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_OUTPUT.id) + " " + IdentificationParametersCLIParams.COMET_OUTPUT.description + "\n";
 
         output += "\n\nTide advanced parameters:\n\n";

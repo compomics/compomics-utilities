@@ -194,43 +194,43 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // Tide specific parameters
     //////////////////////////////////
-    TIDE_PTMS("tide_num_ptms", "Tide max number of PTMs per peptide, default is no limit.", false, true),
-    TIDE_PTMS_PER_TYPE("tide_num_ptms_per_type", "Tide max number of PTMs of each type per peptide, default is '2'.", false, true),
     TIDE_MIN_PEP_LENGTH("tide_min_pep_length", "Tide minumum peptide length, default is '6'.", false, true),
     TIDE_MAX_PEP_LENGTH("tide_max_pep_length", "Tide maximum peptide length, default is '30'.", false, true),
     TIDE_MIN_PREC_MASS("tide_min_prec_mass", "Tide minumum precursor mass, default is '200.0'.", false, true),
     TIDE_MAX_PREC_MASS("tide_max_prec_mass", "Tide maximum precursor mass, default is '7200.0'.", false, true),
+    TIDE_MONOISOTOPIC("tide_monoisotopic", "Tide monoisotopic precursor, 1: true, 0: false, default is '1'.", false, true),
+    TIDE_CLIP_N_TERM("tide_clip_n_term", "Tide clip n term methionine, 1: true, 0: false, default is '0'.", false, true),
+    TIDE_PTMS("tide_num_ptms", "Tide max number of PTMs per peptide, default is no limit.", false, true),
+    TIDE_PTMS_PER_TYPE("tide_num_ptms_per_type", "Tide max number of PTMs of each type per peptide, default is '2'.", false, true),
+    TIDE_DIGESTION_TYPE("tide_digestion_type", "Tide digetion type (full-digest or partial-digest, true), default is 'full-digest'.", false, true),
+    TIDE_PRINT_PEPTIDES("tide_print_peptides", "Tide print peptides, 1: true, 0: false, default is '0'.", false, true),
     TIDE_DECOY_FORMAT("tide_decoy_format", "Tide decoy fomat (none|shuffle|peptide-reverse|protein-reverse, true), default is 'none'.", false, true),
     TIDE_KEEP_TERM_AA("tide_keep_terminals", "Tide keep terminal amino acids when creating decoys (N|C|NC|none, true), default is 'NC'.", false, true),
     TIDE_DECOY_SEED("tide_dedoy_seed", "Tide decoy seed, default is '1'.", false, true),
-    TIDE_OUTPUT_FOLDER("tide_output_folder", "Tide output folder (relative to the Tide working folder, true), default is 'crux-output'.", false, true),
-    TIDE_PRINT_PEPTIDES("tide_print_peptides", "Tide print peptides, 1: true, 0: false, default is '0'.", false, true),
-    TIDE_VERBOSITY("tide_verbosity", "Tide progress display verbosity (0|10|20|30|40|50|60, true), default is '30'.", false, true),
-    TIDE_MONOISOTOPIC("tide_monoisotopic", "Tide monoisotopic precursor, 1: true, 0: false, default is '1'.", false, true),
-    TIDE_CLIP_N_TERM("tide_clip_n_term", "Tide clip n term methionine, 1: true, 0: false, default is '0'.", false, true),
-    TIDE_DIGESTION_TYPE("tide_digestion_type", "Tide digetion type (full-digest or partial-digest, true), default is 'full-digest'.", false, true),
-    TIDE_COMPUTE_SP("tide_compute_sp", "Tide compute sp score, 1: true, 0: false, default is '0'.", false, true),
-    TIDE_MAX_PSMS("tide_max_psms", "Tide maximum number of spectrum matches spectrum, default is '10'.", false, true),
+    TIDE_REMOVE_TEMP("tide_remove_temp", "Tide remove temp folders when the search is done, 1: true, 0: false, default is '1'.", false, true),
     TIDE_COMPUTE_P("tide_compute_p", "Tide compute exact p-values, 1: true, 0: false, default is '0'.", false, true),
+    TIDE_COMPUTE_SP("tide_compute_sp", "Tide compute sp score, 1: true, 0: false, default is '0'.", false, true),
     TIDE_MIN_SPECTRUM_MZ("tide_min_spectrum_mz", "Tide minimum spectrum mz, default is '0.0'.", false, true),
     TIDE_MAX_SPECTRUM_MZ("tide_max_spectrum_mz", "Tide maximum spectrum mz, default is no limit.", false, true),
     TIDE_MIN_SPECTRUM_PEAKS("tide_min_spectrum_peaks", "Tide min spectrum peaks, default is '20'.", false, true),
     TIDE_SPECTRUM_CHARGES("tide_spectrum_charges", "Tide spectrum charges (1|2|3|all, true), default is 'all'.", false, true),
     TIDE_REMOVE_PREC("tide_remove_prec", "Tide remove precursor, 1: true, 0: false, default is '0'.", false, true),
     TIDE_REMOVE_PREC_TOL("tide_remove_prec_tol", "Tide remove precursor tolerance, default is '1.5'.", false, true),
-    TIDE_PROGRESS_INDICATOR("tide_progress_indicator", "Tide progress indicator frequency, default is '1000'.", false, true),
     TIDE_USE_FLANKING("tide_use_flanking", "Tide use flanking peaks, 1: true, 0: false, default is '0'.", false, true),
     TIDE_USE_NEUTRAL_LOSSES("tide_use_neutral_losses", "Tide use neutral losses peaks, 1: true, 0: false, default is '0'.", false, true),
     TIDE_MZ_BIN_WIDTH("tide_mz_bin_width", "Tide mz bin width, default is '0.02'.", false, true),
     TIDE_MZ_BIN_OFFSET("tide_mz_bin_offset", "Tide mz bin offset, default is '0.0'.", false, true),
-    TIDE_CONCAT("tide_concat", "Tide concatenate target and decoy results, 1: true, 0: false, default is '0'.", false, true),
-    TIDE_STORE_SPECTRA("tide_store_spectra", "Tide file name in with to store the binary spectra, default is null, i.e., not set.", false, true),
+    TIDE_MAX_PSMS("tide_max_psms", "Tide maximum number of spectrum matches spectrum, default is '10'.", false, true),
     TIDE_EXPORT_TEXT("tide_export_text", "Tide export text file, 1: true, 0: false, default is '1'.", false, true),
     TIDE_EXPORT_SQT("tide_export_sqt", "Tide export SQT file, 1: true, 0: false, default is '0'.", false, true),
     TIDE_EXPORT_PEPXML("tide_export_pepxml", "Tide export pepxml, 1: true, 0: false, default is '0'.", false, true),
     TIDE_EXPORT_MZID("tide_export_mzid", "Tide export mzid, 1: true, 0: false, default is '0'.", false, true),
     TIDE_EXPORT_PIN("tide_export_pin", "Tide export Percolator input file, 1: true, 0: false, default is '0'.", false, true),
-    TIDE_REMOVE_TEMP("tide_remove_temp", "Tide remove temp folders when the search is done, 1: true, 0: false, default is '1'.", false, true),
+    TIDE_OUTPUT_FOLDER("tide_output_folder", "Tide output folder (relative to the Tide working folder, true), default is 'crux-output'.", false, true),
+    TIDE_VERBOSITY("tide_verbosity", "Tide progress display verbosity (0|10|20|30|40|50|60, true), default is '30'.", false, true),
+    TIDE_PROGRESS_INDICATOR("tide_progress_indicator", "Tide progress indicator frequency, default is '1000'.", false, true),
+    TIDE_CONCAT("tide_concat", "Tide concatenate target and decoy results, 1: true, 0: false, default is '0'.", false, true),
+    TIDE_STORE_SPECTRA("tide_store_spectra", "Tide file name in with to store the binary spectra, default is null, i.e., not set.", false, true),
     //////////////////////////////////
     // Andromeda specific parameters
     //////////////////////////////////
@@ -580,44 +580,44 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_OUTPUT.id) + " " + IdentificationParametersCLIParams.COMET_OUTPUT.description + "\n";
 
         output += "\n\nTide advanced parameters:\n\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_PTMS.id) + " " + IdentificationParametersCLIParams.TIDE_PTMS.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_PTMS_PER_TYPE.id) + " " + IdentificationParametersCLIParams.TIDE_PTMS_PER_TYPE.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_MIN_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.TIDE_MIN_PEP_LENGTH.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_MAX_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.TIDE_MAX_PEP_LENGTH.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_MIN_PREC_MASS.id) + " " + IdentificationParametersCLIParams.TIDE_MIN_PREC_MASS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_MAX_PREC_MASS.id) + " " + IdentificationParametersCLIParams.TIDE_MAX_PREC_MASS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_MONOISOTOPIC.id) + " " + IdentificationParametersCLIParams.TIDE_MONOISOTOPIC.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_CLIP_N_TERM.id) + " " + IdentificationParametersCLIParams.TIDE_CLIP_N_TERM.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_PTMS.id) + " " + IdentificationParametersCLIParams.TIDE_PTMS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_PTMS_PER_TYPE.id) + " " + IdentificationParametersCLIParams.TIDE_PTMS_PER_TYPE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_DIGESTION_TYPE.id) + " " + IdentificationParametersCLIParams.TIDE_DIGESTION_TYPE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_PRINT_PEPTIDES.id) + " " + IdentificationParametersCLIParams.TIDE_PRINT_PEPTIDES.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_DECOY_FORMAT.id) + " " + IdentificationParametersCLIParams.TIDE_DECOY_FORMAT.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_KEEP_TERM_AA.id) + " " + IdentificationParametersCLIParams.TIDE_KEEP_TERM_AA.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_DECOY_SEED.id) + " " + IdentificationParametersCLIParams.TIDE_DECOY_SEED.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_OUTPUT_FOLDER.id) + " " + IdentificationParametersCLIParams.TIDE_OUTPUT_FOLDER.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_PRINT_PEPTIDES.id) + " " + IdentificationParametersCLIParams.TIDE_PRINT_PEPTIDES.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_VERBOSITY.id) + " " + IdentificationParametersCLIParams.TIDE_VERBOSITY.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_MONOISOTOPIC.id) + " " + IdentificationParametersCLIParams.TIDE_MONOISOTOPIC.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_CLIP_N_TERM.id) + " " + IdentificationParametersCLIParams.TIDE_CLIP_N_TERM.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_DIGESTION_TYPE.id) + " " + IdentificationParametersCLIParams.TIDE_DIGESTION_TYPE.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_COMPUTE_SP.id) + " " + IdentificationParametersCLIParams.TIDE_COMPUTE_SP.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_MAX_PSMS.id) + " " + IdentificationParametersCLIParams.TIDE_MAX_PSMS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_REMOVE_TEMP.id) + " " + IdentificationParametersCLIParams.TIDE_REMOVE_TEMP.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_COMPUTE_P.id) + " " + IdentificationParametersCLIParams.TIDE_COMPUTE_P.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_COMPUTE_SP.id) + " " + IdentificationParametersCLIParams.TIDE_COMPUTE_SP.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_MZ.id) + " " + IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_MZ.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_MAX_SPECTRUM_MZ.id) + " " + IdentificationParametersCLIParams.TIDE_MAX_SPECTRUM_MZ.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_PEAKS.id) + " " + IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_PEAKS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_SPECTRUM_CHARGES.id) + " " + IdentificationParametersCLIParams.TIDE_SPECTRUM_CHARGES.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_REMOVE_PREC.id) + " " + IdentificationParametersCLIParams.TIDE_REMOVE_PREC.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_REMOVE_PREC_TOL.id) + " " + IdentificationParametersCLIParams.TIDE_REMOVE_PREC_TOL.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_PROGRESS_INDICATOR.id) + " " + IdentificationParametersCLIParams.TIDE_PROGRESS_INDICATOR.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_USE_FLANKING.id) + " " + IdentificationParametersCLIParams.TIDE_USE_FLANKING.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_USE_NEUTRAL_LOSSES.id) + " " + IdentificationParametersCLIParams.TIDE_USE_NEUTRAL_LOSSES.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_MZ_BIN_WIDTH.id) + " " + IdentificationParametersCLIParams.TIDE_MZ_BIN_WIDTH.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_MZ_BIN_OFFSET.id) + " " + IdentificationParametersCLIParams.TIDE_MZ_BIN_OFFSET.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_CONCAT.id) + " " + IdentificationParametersCLIParams.TIDE_CONCAT.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_STORE_SPECTRA.id) + " " + IdentificationParametersCLIParams.TIDE_STORE_SPECTRA.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_MAX_PSMS.id) + " " + IdentificationParametersCLIParams.TIDE_MAX_PSMS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_EXPORT_TEXT.id) + " " + IdentificationParametersCLIParams.TIDE_EXPORT_TEXT.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_EXPORT_SQT.id) + " " + IdentificationParametersCLIParams.TIDE_EXPORT_SQT.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_EXPORT_PEPXML.id) + " " + IdentificationParametersCLIParams.TIDE_EXPORT_PEPXML.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_EXPORT_MZID.id) + " " + IdentificationParametersCLIParams.TIDE_EXPORT_MZID.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_EXPORT_PIN.id) + " " + IdentificationParametersCLIParams.TIDE_EXPORT_PIN.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_REMOVE_TEMP.id) + " " + IdentificationParametersCLIParams.TIDE_REMOVE_TEMP.description + "\n";
-
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_OUTPUT_FOLDER.id) + " " + IdentificationParametersCLIParams.TIDE_OUTPUT_FOLDER.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_VERBOSITY.id) + " " + IdentificationParametersCLIParams.TIDE_VERBOSITY.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_PROGRESS_INDICATOR.id) + " " + IdentificationParametersCLIParams.TIDE_PROGRESS_INDICATOR.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_CONCAT.id) + " " + IdentificationParametersCLIParams.TIDE_CONCAT.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_STORE_SPECTRA.id) + " " + IdentificationParametersCLIParams.TIDE_STORE_SPECTRA.description + "\n";
+        
         output += "\n\nAndromeda advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id) + " " + IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANDROMEDA_MAX_COMBINATIONS.id) + " " + IdentificationParametersCLIParams.ANDROMEDA_MAX_COMBINATIONS.description + "\n";

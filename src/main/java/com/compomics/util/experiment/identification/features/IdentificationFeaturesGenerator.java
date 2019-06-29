@@ -911,7 +911,7 @@ public class IdentificationFeaturesGenerator {
 
                     Peptide peptide = peptideMatch.getPeptide();
 
-                    int peptideOccurrence = identification.getProteinMatches(peptide).stream()
+                    int peptideOccurrence = identification.getProteinMatches(peptideMatch.getKey()).stream()
                             .map(groupKey -> identification.getProteinMatch(groupKey))
                             .filter(sharedGroup -> ((PSParameter) sharedGroup.getUrParam(PSParameter.dummy))
                             .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel())
@@ -1206,7 +1206,7 @@ public class IdentificationFeaturesGenerator {
 
         return (int) Arrays.stream(proteinMatch.getPeptideMatchesKeys())
                 .mapToObj(peptideKey -> identification.getPeptideMatch(peptideKey))
-                .filter(peptideMatch -> identification.getProteinMatches(peptideMatch.getPeptide()).size() == 1)
+                .filter(peptideMatch -> identification.getProteinMatches(peptideMatch.getKey()).size() == 1)
                 .count();
 
     }
@@ -1248,7 +1248,7 @@ public class IdentificationFeaturesGenerator {
                 .mapToObj(peptideKey -> identification.getPeptideMatch(peptideKey))
                 .filter(peptideMatch
                         -> ((PSParameter) peptideMatch.getUrParam(PSParameter.dummy)).getMatchValidationLevel().isValidated()
-                && identification.getProteinMatches(peptideMatch.getPeptide()).size() == 1)
+                && identification.getProteinMatches(peptideMatch.getKey()).size() == 1)
                 .count();
 
     }
@@ -2533,7 +2533,7 @@ public class IdentificationFeaturesGenerator {
      */
     public int getNValidatedProteinGroups(Peptide peptide, WaitingHandler waitingHandler) {
 
-        HashSet<Long> keys = identification.getProteinMatches(peptide);
+        TreeSet<Long> keys = identification.getProteinMatches(peptide.getKey());
 
         return (int) keys.stream()
                 .filter(key -> ((PSParameter) identification.getProteinMatch(key).getUrParam(PSParameter.dummy))

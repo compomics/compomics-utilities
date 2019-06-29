@@ -453,16 +453,17 @@ public class Identification extends ExperimentObject {
     /**
      * Returns the keys of the protein matches where a peptide can be found.
      *
-     * @param peptide the peptide of interest
+     * @param peptideKey the peptide key
      *
      * @return the keys of the protein matches
      */
-    public HashSet<Long> getProteinMatches(Peptide peptide) {
+    public TreeSet<Long> getProteinMatches(long peptideKey) {
 
-        return peptide.getProteinMapping().navigableKeySet().stream()
+        return getPeptideMatch(peptideKey).getPeptide().getProteinMapping().navigableKeySet().stream()
                 .filter(accession -> identificationKeys.proteinMap.containsKey(accession))
                 .flatMap(accession -> identificationKeys.proteinMap.get(accession).stream())
-                .collect(Collectors.toCollection(HashSet::new));
+                .filter(proteinKey -> getProteinMatch(proteinKey).containsPeptide(peptideKey))
+                .collect(Collectors.toCollection(TreeSet::new));
     }
 
     /**

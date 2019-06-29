@@ -289,7 +289,8 @@ public class ProteinMatch extends IdentificationMatch {
      * Returns a boolean indicating whether a protein was found in this protein
      * match.
      *
-     * @param aProtein the inspected protein
+     * @param aProtein the protein accession
+     * 
      * @return a boolean indicating whether a protein was found in this protein
      * match
      */
@@ -299,6 +300,22 @@ public class ProteinMatch extends IdentificationMatch {
 
         return Arrays.stream(accessions)
                 .anyMatch(accession -> accession.equals(aProtein));
+    }
+
+    /**
+     * Returns a boolean indicating whether a peptide was found in this protein
+     * match.
+     *
+     * @param peptideKey the peptide key
+     * 
+     * @return a boolean indicating whether a peptide was found in this protein
+     * match
+     */
+    public boolean containsPeptide(long peptideKey) {
+        
+        return Arrays.stream(peptideMatchesKeys)
+                .anyMatch(key -> key == peptideKey);
+        
     }
 
     @Override

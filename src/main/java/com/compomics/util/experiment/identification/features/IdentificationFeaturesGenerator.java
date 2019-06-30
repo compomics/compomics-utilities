@@ -1306,15 +1306,18 @@ public class IdentificationFeaturesGenerator {
     }
 
     /**
-     * Returns the maximal number of termini for the given peptide on the given protein. Returns 0 if the peptide is not found on the protein. Returns 2 if no enzyme was used.
+     * Returns the maximal number of termini for the given peptide on the given
+     * protein. Returns 0 if the peptide is not found on the protein. Returns 2
+     * if no enzyme was used.
      *
      * @param peptide the peptide
      * @param accession the accession of the protein
      *
-     * @return the maximal number of termini for the given peptide on the given protein
+     * @return the maximal number of termini for the given peptide on the given
+     * protein
      */
     public int getNEnzymaticTermini(Peptide peptide, String accession) {
-        
+
         if (!peptide.getProteinMapping().containsKey(accession)) {
             return 0;
         }
@@ -1351,7 +1354,7 @@ public class IdentificationFeaturesGenerator {
     private int getNEnzymaticTermini(int[] peptideStarts, int peptideLength, String proteinSequence, Enzyme enzyme) {
         
         return Arrays.stream(peptideStarts)
-                    .map(peptideStart -> PeptideUtils.getNEnzymaticTermini(peptideStart, peptideStart + peptideLength, proteinSequence, enzyme))
+                    .map(peptideStart -> PeptideUtils.getNEnzymaticTermini(peptideStart, peptideStart + peptideLength  - 1, proteinSequence, enzyme))
                     .max()
                     .orElse(0);
 

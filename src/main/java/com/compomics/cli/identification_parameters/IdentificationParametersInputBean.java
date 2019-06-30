@@ -1274,9 +1274,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id);
-            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id, arg)) {
+        if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_ESTIMATE_CHARGE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_ESTIMATE_CHARGE.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.PEPNOVO_ESTIMATE_CHARGE.id, arg)) {
                 return false;
             }
         }
@@ -3005,8 +3005,8 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             pepnovoParameters.setHitListLength(option);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PEPTNOVO_ESTIMATE_CHARGE.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_ESTIMATE_CHARGE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_ESTIMATE_CHARGE.id);
             Integer option = new Integer(arg);
             pepnovoParameters.setEstimateCharge(option == 1);
         }

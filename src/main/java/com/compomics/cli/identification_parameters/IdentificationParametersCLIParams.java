@@ -252,15 +252,6 @@ public enum IdentificationParametersCLIParams {
     ANDROMEDA_MAX_PSMS("andromeda_max_psms", "Andromeda maximum number of spectrum matches spectrum, default is '10'.", false, true),
     ANDROMEDA_DECOY_MODE("andromeda_decoy_mode", "Andromeda decoy mode, none or decoy, default is 'none'.", false, true),
     //////////////////////////////////
-    // PepNovo+ specific parameters
-    //////////////////////////////////
-    PEPNOVO_HITLIST_LENGTH("pepnovo_hitlist_length", "PepNovo+ number of de novo solutions [0-2000], default is '10'.", false, true),
-    PEPTNOVO_ESTIMATE_CHARGE("pepnovo_estimate_charge", "PepNovo+ estimate precursor charge option. 1: true, 0: false, default is '1'.", false, true),
-    PEPNOVO_CORRECT_PREC_MASS("pepnovo_correct_prec_mass", "PepNovo+ correct precursor mass option. 1: true, 0: false, default is '1'.", false, true),
-    PEPNOVO_DISCARD_SPECTRA("pepnovo_discard_spectra", "PepNovo+ discard low quality spectra optoin. 1: true, 0: false, default is '1'.", false, true),
-    PEPNOVO_FRAGMENTATION_MODEL("pepnovo_fragmentation_model", "PepNovo+ fragmentation model. Default is 'CID_IT_TRYP'.", false, true),
-    PEPNOVO_GENERATE_BLAST("pepnovo_generate_blast", "PepNovo+ generate a BLAST query. 1: true, 0: false, default is '0'.", false, true),
-    //////////////////////////////////
     // DirecTag specific parameters
     //////////////////////////////////
     DIRECTAG_TIC_CUTOFF_PERCENTAGE("directag_tic_cutoff", "DirecTag TIC cutoff in percent, default is '85'.", false, true),
@@ -284,12 +275,21 @@ public enum IdentificationParametersCLIParams {
     DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT("directag_fidelity_weight", "DirecTag fidelity score weight, default is '1.0'.", false, true),
     DIRECTAG_COMPLEMENT_SCORE_WEIGHT("directag_complement_weight", "DirecTag complement_score_weight, default is '1.0'.", false, true),
     //////////////////////////////////
+    // PepNovo+ specific parameters
+    //////////////////////////////////
+    PEPNOVO_HITLIST_LENGTH("pepnovo_hitlist_length", "PepNovo+ number of de novo solutions [0-2000], default is '10'.", false, true),
+    PEPNOVO_ESTIMATE_CHARGE("pepnovo_estimate_charge", "PepNovo+ estimate precursor charge option. 1: true, 0: false, default is '1'.", false, true),
+    PEPNOVO_CORRECT_PREC_MASS("pepnovo_correct_prec_mass", "PepNovo+ correct precursor mass option. 1: true, 0: false, default is '1'.", false, true),
+    PEPNOVO_DISCARD_SPECTRA("pepnovo_discard_spectra", "PepNovo+ discard low quality spectra optoin. 1: true, 0: false, default is '1'.", false, true),
+    PEPNOVO_FRAGMENTATION_MODEL("pepnovo_fragmentation_model", "PepNovo+ fragmentation model. Default is 'CID_IT_TRYP'.", false, true),
+    PEPNOVO_GENERATE_BLAST("pepnovo_generate_blast", "PepNovo+ generate a BLAST query. 1: true, 0: false, default is '0'.", false, true),
+    //////////////////////////////////
     // pNovo+ specific parameters
     //////////////////////////////////
     PNOVO_NUMBER_OF_PEPTIDES("pnovo_num_peptides", "pNovo+ number of peptides per spectrum, default is '10'.", false, true),
     PNOVO_LOWER_PRECURSOR_MASS("pnovo_lower_prec", "pNovo+ minimum precursor mass, default is '300'.", false, true),
     PNOVO_UPPER_PRECURSOR_MASS("pnovo_upper_prec", "pNovo+ maximum precursor mass, default is '5000'.", false, true),
-    PNOVO_ACTIVATION_TYPE("pnovo_activation", "pNovo+ actication type (HCD, CID or EDT, true), default is 'HCD'.", false, true),
+    PNOVO_ACTIVATION_TYPE("pnovo_activation", "pNovo+ activation type (HCD, CID or EDT, true), default is 'HCD'.", false, true),
     //////////////////////////////////
     // Novor specific parameters
     //////////////////////////////////
@@ -636,7 +636,24 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.id) + " " + IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id) + " " + IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANDROMEDA_DECOY_MODE.id) + " " + IdentificationParametersCLIParams.ANDROMEDA_DECOY_MODE.description + "\n";
+        
+        output += "\n\nNovor:\n\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id) + " " + IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.id) + " " + IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.description + "\n";
 
+        output += "\n\nPNovo+:\n\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PNOVO_ACTIVATION_TYPE.id) + " " + IdentificationParametersCLIParams.PNOVO_ACTIVATION_TYPE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PNOVO_LOWER_PRECURSOR_MASS.id) + " " + IdentificationParametersCLIParams.PNOVO_LOWER_PRECURSOR_MASS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PNOVO_UPPER_PRECURSOR_MASS.id) + " " + IdentificationParametersCLIParams.PNOVO_UPPER_PRECURSOR_MASS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id) + " " + IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.description + "\n";
+
+        output += "\n\nPepNovo+:\n\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id) + " " + IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PEPNOVO_ESTIMATE_CHARGE.id) + " " + IdentificationParametersCLIParams.PEPNOVO_ESTIMATE_CHARGE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id) + " " + IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id) + " " + IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id) + " " + IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.description + "\n";        
+        
         output += "\n\nSpectrum Annotation:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANNOTATION_LEVEL.id) + " " + IdentificationParametersCLIParams.ANNOTATION_LEVEL.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANNOTATION_MZ_TOLERANCE.id) + " " + IdentificationParametersCLIParams.ANNOTATION_MZ_TOLERANCE.description + "\n";

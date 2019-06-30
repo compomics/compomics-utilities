@@ -434,15 +434,16 @@ public class PeptideUtils {
     }
 
     /**
-     * Returns the number of enzymatic termini for the given enzyme on this
-     * protein at the given location.
+     * Returns the number of enzymatic termini for the given peptide coordinates and enzyme on this
+     * protein.
      *
      * @param peptideStart the 0 based index of the peptide start on the protein
      * @param peptideEnd the 0 based index of the peptide end on the protein
      * @param proteinSequence the protein sequence
      * @param enzyme the enzyme to use
      *
-     * @return true of the peptide is non-enzymatic
+     * @return the number of enzymatic termini for the given peptide coordinates and enzyme on this
+     * protein
      */
     public static int getNEnzymaticTermini(
             int peptideStart,

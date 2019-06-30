@@ -1306,6 +1306,58 @@ public class IdentificationFeaturesGenerator {
     }
 
     /**
+     * Returns the maximal number of termini for the given peptide on the given protein. Returns 0 if the peptide is not found on the protein. Returns 2 if no enzyme was used.
+     *
+     * @param peptide the peptide
+     * @param accession the accession of the protein
+     *
+     * @return the maximal number of termini for the given peptide on the given protein
+     */
+    public int getNEnzymaticTermini(Peptide peptide, String accession) {
+        
+        if (!peptide.getProteinMapping().containsKey(accession)) {
+            return 0;
+        }
+
+        DigestionParameters digestionPreferences = identificationParameters.getSearchParameters().getDigestionParameters();
+
+        if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
+            
+            
+            String proteinSequence = sequenceProvider.getSequence(accession);
+            int peptideLength = peptide.getSequence().length();
+            
+            return digestionPreferences.getEnzymes().stream()
+                    .mapToInt(enzyme -> getNEnzymaticTermini(peptide.getProteinMapping().get(accession), peptideLength, proteinSequence, enzyme))
+                    .max()
+                    .orElse(0);
+
+        }
+
+        return 2;
+
+    }
+
+    /**
+     * Returns the maximal number of termini for the given peptide on the given peptide coordinates and the given enzyme.
+     *
+     * @param peptideStarts the starting indexes on the protein as available in the peptide object
+     * @param peptideLength the length of the peptide
+     * @param proteinSequence the protein sequence
+     * @param enzyme the enzyme
+     *
+     * @return the maximal number of termini for the given peptide on the given peptide coordinates and the given enzyme
+     */
+    private int getNEnzymaticTermini(int[] peptideStarts, int peptideLength, String proteinSequence, Enzyme enzyme) {
+        
+        return Arrays.stream(peptideStarts)
+                    .map(peptideStart -> PeptideUtils.getNEnzymaticTermini(peptideStart, peptideStart + peptideLength, proteinSequence, enzyme))
+                    .max()
+                    .orElse(0);
+
+    }
+
+    /**
      * Returns the number of validated peptides for a given protein match.
      *
      * @param proteinMatchKey the key of the protein match

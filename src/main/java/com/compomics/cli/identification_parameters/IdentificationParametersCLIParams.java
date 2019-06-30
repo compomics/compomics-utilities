@@ -206,7 +206,7 @@ public enum IdentificationParametersCLIParams {
     TIDE_PRINT_PEPTIDES("tide_print_peptides", "Tide print peptides, 1: true, 0: false, default is '0'.", false, true),
     TIDE_DECOY_FORMAT("tide_decoy_format", "Tide decoy fomat (none|shuffle|peptide-reverse|protein-reverse, true), default is 'none'.", false, true),
     TIDE_KEEP_TERM_AA("tide_keep_terminals", "Tide keep terminal amino acids when creating decoys (N|C|NC|none, true), default is 'NC'.", false, true),
-    TIDE_DECOY_SEED("tide_dedoy_seed", "Tide decoy seed, default is '1'.", false, true),
+    TIDE_DECOY_SEED("tide_decoy_seed", "Tide decoy seed, default is '1'.", false, true),
     TIDE_REMOVE_TEMP("tide_remove_temp", "Tide remove temp folders when the search is done, 1: true, 0: false, default is '1'.", false, true),
     TIDE_COMPUTE_P("tide_compute_p", "Tide compute exact p-values, 1: true, 0: false, default is '0'.", false, true),
     TIDE_COMPUTE_SP("tide_compute_sp", "Tide compute sp score, 1: true, 0: false, default is '0'.", false, true),

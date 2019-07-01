@@ -676,7 +676,23 @@ public abstract class AminoAcid {
 
         // Accept all capital letters between A and Z
         int aaInt = (int) aa;
-        return aaInt >= 65 && aaInt <= 90;
+        return isAa(aaInt);
+        
+    }
+
+    /**
+     * Returns a boolean indicating whether the given character is a supported
+     * amino acid.
+     *
+     * @param aa the amino acid as single character code
+     *
+     * @return a boolean indicating whether the given character is a supported
+     * amino acid
+     */
+    public static boolean isAa(int aa) {
+
+        // Accept all capital letters between A and Z
+        return aa >= 65 && aa <= 90;
     }
 
     /**

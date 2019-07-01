@@ -259,7 +259,6 @@ public enum IdentificationParametersCLIParams {
     DIRECTAG_NUM_CHARGE_STATES("directag_charge_states", "DirecTag number of charge states considered, default is '3'.", false, true),
     DIRECTAG_DUPLICATE_SPECTRA("directag_duplicate_spectra", "DirecTag duplicate spectra per charge, 1: true, 0: false, default is '1'.", false, true),
     DIRECTAG_ISOTOPE_MZ_TOLERANCE("directag_isotope_tolerance", "DirecTag isotope mz tolerance, default is '0.25'.", false, true),
-    // TODO: directag_deisotoping should be a dropdown list in the GUI
     DIRECTAG_DEISOTOPING_MODE("directag_deisotoping", "DirecTag deisotoping mode, default is '0', 0: no deisotoping, 1: precursor only, 2: precursor and candidate.", false, true),
     DIRECTAG_NUM_INTENSITY_CLASSES("directag_intensity_classes", "DirecTag number of intensity classses, default is '3'.", false, true),
     DIRECTAG_OUTPUT_SUFFIX("directag_output_suffix", "DirecTag output suffic, default is no suffix.", false, true),
@@ -267,9 +266,9 @@ public enum IdentificationParametersCLIParams {
     DIRECTAG_MAX_TAG_COUNT("directag_max_tag_count", "DirecTag maximum tag count, default is '10'.", false, true),
     DIRECTAG_TIC_CUTOFF_PERCENTAGE("directag_tic_cutoff", "DirecTag TIC cutoff in percent, default is '100'.", false, true),
     DIRECTAG_COMPLEMENT_MZ_TOLERANCE("directag_complement_tolerance", "DirecTag complement mz tolerance, default is '0.1'.", false, true),
-    DIRECTAG_PRECUSOR_ADJUSTMENT_STEP("directag_adjustment_step", "DirecTag precursor adjustment step, default is '0.1'.", false, true),
-    DIRECTAG_MIN_PRECUSOR_ADJUSTMENT("directag_min_adjustment", "DirecTag minimum precursor adjustment, default is '-0.5'.", false, true),
-    DIRECTAG_MAX_PRECUSOR_ADJUSTMENT("directag_max_adjustment", "DirecTag maximum precursor adjustment, default is '1.5'.", false, true),
+    DIRECTAG_PRECURSOR_ADJUSTMENT_STEP("directag_adjustment_step", "DirecTag precursor adjustment step, default is '0.1'.", false, true),
+    DIRECTAG_MIN_PRECURSOR_ADJUSTMENT("directag_min_adjustment", "DirecTag minimum precursor adjustment, default is '-0.5'.", false, true),
+    DIRECTAG_MAX_PRECURSOR_ADJUSTMENT("directag_max_adjustment", "DirecTag maximum precursor adjustment, default is '1.5'.", false, true),
     DIRECTAG_INTENSITY_SCORE_WEIGHT("directag_intensity_weight", "DirecTag intensity score weight, default is '1.0'.", false, true),
     DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT("directag_fidelity_weight", "DirecTag fidelity score weight, default is '1.0'.", false, true),
     DIRECTAG_COMPLEMENT_SCORE_WEIGHT("directag_complement_weight", "DirecTag complement_score_weight, default is '1.0'.", false, true),
@@ -668,9 +667,9 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.id) + " " + IdentificationParametersCLIParams.DIRECTAG_MAX_TAG_COUNT.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id) + " " + IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.id) + " " + IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_MZ_TOLERANCE.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id) + " " + IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id) + " " + IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id) + " " + IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_PRECURSOR_ADJUSTMENT_STEP.id) + " " + IdentificationParametersCLIParams.DIRECTAG_PRECURSOR_ADJUSTMENT_STEP.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_MIN_PRECURSOR_ADJUSTMENT.id) + " " + IdentificationParametersCLIParams.DIRECTAG_MIN_PRECURSOR_ADJUSTMENT.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_MAX_PRECURSOR_ADJUSTMENT.id) + " " + IdentificationParametersCLIParams.DIRECTAG_MAX_PRECURSOR_ADJUSTMENT.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.id) + " " + IdentificationParametersCLIParams.DIRECTAG_INTENSITY_SCORE_WEIGHT.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id) + " " + IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id) + " " + IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.description + "\n";

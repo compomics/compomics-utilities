@@ -1329,21 +1329,21 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id);
-            if (!CommandParameter.isDouble(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id, arg)) {
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECURSOR_ADJUSTMENT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECURSOR_ADJUSTMENT.id);
+            if (!CommandParameter.isDouble(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECURSOR_ADJUSTMENT.id, arg)) {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id);
-            if (!CommandParameter.isDouble(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id, arg)) {
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECURSOR_ADJUSTMENT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECURSOR_ADJUSTMENT.id);
+            if (!CommandParameter.isDouble(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECURSOR_ADJUSTMENT.id, arg)) {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id);
-            if (!CommandParameter.isDouble(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id, arg)) {
+        if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_PRECURSOR_ADJUSTMENT_STEP.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_PRECURSOR_ADJUSTMENT_STEP.id);
+            if (!CommandParameter.isDouble(IdentificationParametersCLIParams.DIRECTAG_PRECURSOR_ADJUSTMENT_STEP.id, arg)) {
                 return false;
             }
         }
@@ -3067,18 +3067,18 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             direcTagParameters.setAdjustPrecursorMass(option == 1);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECUSOR_ADJUSTMENT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECURSOR_ADJUSTMENT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MIN_PRECURSOR_ADJUSTMENT.id);
             Double option = new Double(arg);
             direcTagParameters.setMinPrecursorAdjustment(option);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECUSOR_ADJUSTMENT.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECURSOR_ADJUSTMENT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_MAX_PRECURSOR_ADJUSTMENT.id);
             Double option = new Double(arg);
             direcTagParameters.setMaxPrecursorAdjustment(option);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_PRECUSOR_ADJUSTMENT_STEP.id);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_PRECURSOR_ADJUSTMENT_STEP.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_PRECURSOR_ADJUSTMENT_STEP.id);
             Double option = new Double(arg);
             direcTagParameters.setPrecursorAdjustmentStep(option);
         }

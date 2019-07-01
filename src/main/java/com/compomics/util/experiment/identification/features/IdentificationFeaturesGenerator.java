@@ -163,7 +163,7 @@ public class IdentificationFeaturesGenerator {
 
     /**
      * Estimates the precursor mass errors of validated peptides in a file and
-     * sets in in the massErrorDistribution map.
+     * sets it in the massErrorDistribution map.
      *
      * @param spectrumFile the spectrum file of interest
      */

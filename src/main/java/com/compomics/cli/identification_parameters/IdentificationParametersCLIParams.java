@@ -83,15 +83,15 @@ public enum IdentificationParametersCLIParams {
     // MS-GF+ specific parameters
     //////////////////////////////////
     MSGF_DECOY("msgf_decoy", "MS-GF+ search decoys option, 1: true, 0: false, default is '0'.", false, true),
-    MSGF_INSTRUMENT("msgf_instrument", "MS-GF+ instrument id option, 0: Low-res LCQ/LTQ, 1: High-res LTQ, 2: TOF, 3: Q-Exactive (Default).", false, true),
-    MSGF_FRAGMENTATION("msgf_fragmentation", "MS-GF+ fragmentation id option, 0: As written in the spectrum or CID if no info, 1: CID, 2: ETD, 3: HCD (Default). 4: UVPD.", false, true),
+    MSGF_INSTRUMENT("msgf_instrument", "MS-GF+ instrument id option, 0: Low-res LCQ/LTQ, 1: Orbitrap/FTICR, 2: TOF, 3: Q-Exactive (Default).", false, true),
+    MSGF_FRAGMENTATION("msgf_fragmentation", "MS-GF+ fragmentation id option, 0: Automatic: as written in the spectrum or CID if no info, 1: CID, 2: ETD, 3: HCD (Default). 4: UVPD.", false, true),
     MSGF_PROTOCOL("msgf_protocol", "MS-GF+ protocol id option, 0: Automatic (Default, true), 1: Phosphorylation, 2: iTRAQ, 3: iTRAQPhospho, 4: TMT, 5: Standard.", false, true),
+    MSGF_TERMINI("msgf_termini", "MS-GF+ number of tolerable termini, e.g. 0: Non required, 1: At least one, 2: Both, default is '2'.", false, true),
     MSGF_MIN_PEP_LENGTH("msgf_min_pep_length", "MS-GF+ minumum peptide length, default is '8'.", false, true),
     MSGF_MAX_PEP_LENGTH("msgf_max_pep_length", "MS-GF+ maximum peptide length, default is '30'.", false, true),
-    MSGF_NUM_MATCHES("msgf_num_matches", "MS-GF+ maximum number of spectrum matches, default is '10'.", false, true),
-    MSGF_ADDITIONAL("msgf_additional", "MS-GF+ additional features, 0: output basic scores only (Default, true), 1: output additional features.", false, true),
-    MSGF_TERMINI("msgf_termini", "MS-GF+ number of tolerable termini, e.g. 0: non-tryptic, 1: semi-tryptic, 2: fully-tryptic, default is '2'.", false, true),
     MSGF_PTMS("msgf_num_ptms", "MS-GF+ max number of PTMs per peptide, default is '2'.", false, true),
+    MSGF_NUM_MATCHES("msgf_num_matches", "MS-GF+ maximum number of spectrum matches, default is '10'.", false, true), // @TODO: find an optimal default
+    MSGF_ADDITIONAL("msgf_additional", "MS-GF+ additional output, 0: output basic scores only (Default, true), 1: output additional features.", false, true),
     MSGF_TASKS("msgf_num_tasks", "MS-GF+ number of tasks as an integer, default: internally calculated based on inputs", false, true),
     //////////////////////////////////
     // MS Amanda specific parameters
@@ -296,7 +296,7 @@ public enum IdentificationParametersCLIParams {
     NOVOR_FRAGMENTATION("novor_fragmentation", "Novor fragmentation method, CID or HCD, default is 'HCD'.", false, true),
     NOVOR_MASS_ANALYZER("novor_mass_analyzer", "Novor mass analyzer, Trap, TOF, or FT, default is 'FT'.", false, true),
     //////////////////////////////////
-    // Gene mapping preferences
+    // Gene annotation preferences
     //////////////////////////////////
     USE_GENE_MAPPING("useGeneMapping", "If true gene mappings will be used and saved along with the project (UniProt databases only). (1: true, 0: false, default is '1')", false, true),
     UPDATE_GENE_MAPPING("updateGeneMapping", "If true gene mappings will be updated automatically from Ensembl (UniProt databases only). (1: true, 0: false, default is '1')", false, true),
@@ -512,12 +512,12 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_INSTRUMENT.id) + " " + IdentificationParametersCLIParams.MSGF_INSTRUMENT.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_FRAGMENTATION.id) + " " + IdentificationParametersCLIParams.MSGF_FRAGMENTATION.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_PROTOCOL.id) + " " + IdentificationParametersCLIParams.MSGF_PROTOCOL.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_TERMINI.id) + " " + IdentificationParametersCLIParams.MSGF_TERMINI.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_MIN_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.MSGF_MIN_PEP_LENGTH.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_MAX_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.MSGF_MAX_PEP_LENGTH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_PTMS.id) + " " + IdentificationParametersCLIParams.MSGF_PTMS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_NUM_MATCHES.id) + " " + IdentificationParametersCLIParams.MSGF_NUM_MATCHES.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_ADDITIONAL.id) + " " + IdentificationParametersCLIParams.MSGF_ADDITIONAL.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_TERMINI.id) + " " + IdentificationParametersCLIParams.MSGF_TERMINI.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_PTMS.id) + " " + IdentificationParametersCLIParams.MSGF_PTMS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MSGF_TASKS.id) + " " + IdentificationParametersCLIParams.MSGF_TASKS.description + "\n";
 
         output += "\n\nOMSSA advanced parameters:\n\n";

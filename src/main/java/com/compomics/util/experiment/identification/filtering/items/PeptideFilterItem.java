@@ -96,7 +96,7 @@ public enum PeptideFilterItem implements FilterItem {
     public ArrayList<String> getPossibilities() {
         switch (this) {
             case proteinInference:
-                ArrayList<String> pi = new ArrayList<>(4); // @TODO: check that this is correct
+                ArrayList<String> pi = new ArrayList<>(4);
                 pi.add(PSParameter.getProteinInferenceClassAsString(PSParameter.NOT_GROUP));
                 pi.add(PSParameter.getProteinInferenceClassAsString(PSParameter.RELATED));
                 pi.add(PSParameter.getProteinInferenceClassAsString(PSParameter.RELATED_AND_UNRELATED));

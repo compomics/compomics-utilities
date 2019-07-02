@@ -314,7 +314,7 @@ public class PeptideProteinMapping {
             Peptide peptide = peptidesMap.get(peptideKey);
 
             HashMap<String, HashSet<Integer>> proteinMapping = proteinsMap.get(peptideKey);
-            /*  // TODO: code provides error, changed it back
+            /*  // TODO: the new code below results in an error, changed it back
             TreeMap<String, int[]> proteinMappingArray = proteinMapping.entrySet().stream()
                     .collect(Collectors.toMap(Entry::getKey,
                             entry -> entry.getValue().stream()

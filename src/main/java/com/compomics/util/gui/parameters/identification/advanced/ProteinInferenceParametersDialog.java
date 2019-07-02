@@ -308,11 +308,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
         confidenceTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         modificatoinsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-        modificatoinsCmb.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                modificatoinsCmbActionPerformed(evt);
-            }
-        });
 
         modificationsLbl.setText("Account for modifications in protein mapping");
 
@@ -527,10 +522,6 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
         simplifyVariantsCmb.setEnabled(editable && simplifyGroupsCmb.getSelectedIndex() == 0);
         
     }//GEN-LAST:event_simplifyGroupsCmbActionPerformed
-
-    private void modificatoinsCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificatoinsCmbActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_modificatoinsCmbActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;

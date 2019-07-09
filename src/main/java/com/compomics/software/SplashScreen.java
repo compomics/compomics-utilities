@@ -38,7 +38,7 @@ public class SplashScreen {
         process_name_array.add("-jar");
         process_name_array.add("batik-rasterizer.jar");
         process_name_array.add("-dpi");
-        process_name_array.add("60000");
+        process_name_array.add("600");
         process_name_array.add("-h");
         process_name_array.add("2200");
         process_name_array.add("-d");

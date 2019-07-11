@@ -39,11 +39,11 @@ public class Util {
     /**
      * Forbidden characters in file names.
      */
-    public static final String[] forbiddenCharacters = {"!", ":", ";", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "\\|"};
+    public static final String[] FORBIDDEN_CHARACTERS = {"!", ":", ";", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "'", "\\|"};
     /**
      * Separator which can be used to separate things.
      */
-    public static final String separator = "_cus_";
+    public static final String SEPARATOR = "_cus_";
 
     /**
      * Removes characters from a string.
@@ -179,7 +179,7 @@ public class Util {
      * @return a version without forbidden characters
      */
     public static String removeForbiddenCharacters(String string) {
-        return removeCharacters(string, forbiddenCharacters);
+        return removeCharacters(string, FORBIDDEN_CHARACTERS);
     }
 
     /**
@@ -190,7 +190,7 @@ public class Util {
      * forbidden in file names
      */
     public static boolean containsForbiddenCharacter(String string) {
-        for (String forbiddenCharacter : forbiddenCharacters) {
+        for (String forbiddenCharacter : FORBIDDEN_CHARACTERS) {
             if (string.contains(forbiddenCharacter)) {
                 return true;
             }

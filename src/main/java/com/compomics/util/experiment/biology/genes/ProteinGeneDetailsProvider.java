@@ -163,7 +163,7 @@ public class ProteinGeneDetailsProvider {
                                     success = false;
                                 }
                                 if (!success) {
-                                    waitingHandler.appendReport(PADDING + "Update of gene information for species " + speciesName + " failed. A previous version will be used if available.", true, true);
+                                    waitingHandler.appendReport(PADDING + "Update of gene information for species " + speciesName + " failed.", true, true);
                                 }
                             }
 
@@ -173,10 +173,10 @@ public class ProteinGeneDetailsProvider {
                                     geneMapping.importFromFile(geneMappingFile, waitingHandler);
                                     geneMappings.put(speciesName, geneMapping);
                                 } catch (Exception e) {
-                                    waitingHandler.appendReport(PADDING + "Import of the gene mapping for " + speciesName + " failed. Gene information for this species will not be available.", true, true);
+                                    waitingHandler.appendReport(PADDING + "Import of gene mappings for " + speciesName + " failed.", true, true);
                                 }
                             } else {
-                                waitingHandler.appendReport(PADDING + "Gene mapping for " + speciesName + " not available. Gene information for this species will not be available.", true, true);
+                                waitingHandler.appendReport(PADDING + "Gene mapping for " + speciesName + " not available.", true, true);
                             }
 
                             if (goMappingFile.exists()) {
@@ -185,17 +185,17 @@ public class ProteinGeneDetailsProvider {
                                     goMapping.loadMappingsFromFile(goMappingFile, waitingHandler);
                                     goMappings.put(speciesName, goMapping);
                                 } catch (Exception e) {
-                                    waitingHandler.appendReport(PADDING + "Import of the GO mapping for " + speciesName + " failed. GO annotation for this species will not be available.", true, true);
+                                    waitingHandler.appendReport(PADDING + "Import of the GO mapping for " + speciesName + " failed.", true, true);
                                 }
                             } else {
-                                waitingHandler.appendReport(PADDING + "GO mapping for " + speciesName + " not available. GO annotation for this species will not be available.", true, true);
+                                waitingHandler.appendReport(PADDING + "GO mapping for " + speciesName + " not available.", true, true);
                             }
                         } else {
-                            waitingHandler.appendReport(PADDING + speciesName + " not available in Ensembl. Gene and GO annotation for this species will not be available.", true, true);
+                            waitingHandler.appendReport(PADDING + speciesName + " not available in Ensembl.", true, true);
                         }
                     }
                 } catch (Exception e) {
-                    waitingHandler.appendReport(PADDING + "No taxonomy found for " + uniprotTaxonomy + ". Gene annotation for this species will not be available.", true, true);
+                    waitingHandler.appendReport(PADDING + "No taxonomy found for " + uniprotTaxonomy + ".", true, true);
                 }
             }
         }

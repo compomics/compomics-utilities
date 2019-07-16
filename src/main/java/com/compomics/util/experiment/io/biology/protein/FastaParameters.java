@@ -210,6 +210,7 @@ public class FastaParameters extends DbObject {
     public static FastaParameters inferParameters(String fastaFilePath, WaitingHandler waitingHandler) throws IOException {
 
         FastaParameters fastaParameters = new FastaParameters();
+        fastaParameters.setTargetDecoy(false);
         File fastaFile = new File(fastaFilePath);
 
         HeaderIterator headerIterator = new HeaderIterator(fastaFile);
@@ -245,18 +246,12 @@ public class FastaParameters extends DbObject {
 
                                     headerIterator.close();
 
+                                    fastaParameters.setTargetDecoy(true);
                                     return fastaParameters;
 
                                 }
 
                             }
-
-                            fastaParameters.setDecoySuffix(false);
-                            fastaParameters.setDecoyFlag(decoyFlag);
-
-                            headerIterator.close();
-
-                            return fastaParameters;
 
                         }
 
@@ -278,18 +273,12 @@ public class FastaParameters extends DbObject {
 
                                     headerIterator.close();
 
+                                    fastaParameters.setTargetDecoy(true);
                                     return fastaParameters;
 
                                 }
 
                             }
-
-                            fastaParameters.setDecoySuffix(true);
-                            fastaParameters.setDecoyFlag(decoyFlag);
-
-                            headerIterator.close();
-
-                            return fastaParameters;
 
                         }
                     }
@@ -347,7 +336,15 @@ public class FastaParameters extends DbObject {
 
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
-        output.append("Decoy File Tag: ").append(decoySuffix).append(", ").append("Decoy Tag: ").append(decoyFlag).append(".").append(newLine);
+        output.append("Decoy Type: ");
+        
+        if (decoySuffix) {
+            output.append("Suffix");
+        } else {
+            output.append("Prefix");
+        }
+        
+        output.append(", ").append("Decoy Tag: ").append(decoyFlag).append(".").append(newLine);
 
         return output.toString();
     }

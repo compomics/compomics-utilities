@@ -89,6 +89,11 @@ public class FastaParametersDialog extends javax.swing.JDialog {
         }
 
         fastaSuffixTxt.setText(fastaSettings.getTargetDecoyFileNameSuffix());
+
+        targetDecoyComboBox.setEnabled(editable);
+        decoyFlagTxt.setEnabled(editable);
+        decoyTypeComboBox.setEnabled(editable);
+        fastaSuffixTxt.setEnabled(editable);
     }
 
     /**
@@ -138,7 +143,7 @@ public class FastaParametersDialog extends javax.swing.JDialog {
         helpJButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Database Details");
+        setTitle("Database Processing");
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -158,7 +163,7 @@ public class FastaParametersDialog extends javax.swing.JDialog {
             }
         });
 
-        fileProcessingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Database Processing"));
+        fileProcessingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Settings"));
         fileProcessingPanel.setOpaque(false);
 
         fastaSuffixTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -199,7 +204,7 @@ public class FastaParametersDialog extends javax.swing.JDialog {
                     .addComponent(targetDecoyComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(fastaSuffixTxt)
                     .addComponent(decoyFlagTxt)
-                    .addComponent(decoyTypeComboBox, 0, 345, Short.MAX_VALUE))
+                    .addComponent(decoyTypeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         fileProcessingPanelLayout.setVerticalGroup(
@@ -250,13 +255,15 @@ public class FastaParametersDialog extends javax.swing.JDialog {
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(backgroundPanelLayout.createSequentialGroup()
-                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fileProcessingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(fileProcessingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(15, 15, 15)
                         .addComponent(helpJButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 297, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -298,9 +305,9 @@ public class FastaParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        
+
         boolean valid = true;
-        
+
         // check that decoy tag and decoy file tag are not empty
         if (decoyFlagTxt.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "The decoy tag cannot be empty.", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -310,7 +317,7 @@ public class FastaParametersDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "The decoy file tag cannot be empty.", "Warning", JOptionPane.WARNING_MESSAGE);
             valid = false;
         }
-        
+
         if (valid) {
             dispose();
         }
@@ -344,6 +351,11 @@ public class FastaParametersDialog extends javax.swing.JDialog {
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_helpJButtonMouseExited
 
+    /**
+     * Open the FASTA processing help page.
+     *
+     * @param evt
+     */
     private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         new HelpDialog(parentFrame, getClass().getResource("/helpFiles/FastaPreferences.html"),
@@ -359,9 +371,7 @@ public class FastaParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void targetDecoyComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetDecoyComboBoxActionPerformed
-
         boolean targetDecoy = targetDecoyComboBox.getSelectedIndex() == 0;
-
         decoyFlagTxt.setEnabled(targetDecoy);
         decoyTypeComboBox.setEnabled(targetDecoy);
     }//GEN-LAST:event_targetDecoyComboBoxActionPerformed

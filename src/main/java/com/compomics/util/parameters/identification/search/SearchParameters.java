@@ -858,8 +858,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
             output.append("Isotopic Correction: ").append(minIsotopicCorrection).append("-").append(maxIsotopicCorrection).append(".").append(newLine);
         }
 
-        output.append(".").append(newLine);
-
         return output.toString();
     }
 

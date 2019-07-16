@@ -97,7 +97,7 @@ public class FastaSummary {
         this.lastModified = lastModified;
 
     }
-
+    
     /**
      * Gathers summary data on the FASTA file content.
      *
@@ -112,16 +112,38 @@ public class FastaSummary {
      * the file
      */
     public static FastaSummary getSummary(String fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler) throws IOException {
+        return getSummary(fastaFile, fastaParameters, false, waitingHandler);
+    }
+
+    /**
+     * Gathers summary data on the FASTA file content.
+     *
+     * @param fastaFile path to a FASTA file
+     * @param fastaParameters the parameters to use to parse the file
+     * @param alwaysCreateNew if true, a new summary file will be created even
+     * if one already exists
+     * @param waitingHandler a handler to allow canceling the import and
+     * displaying progress
+     *
+     * @return returns FASTA parameters inferred from the file
+     *
+     * @throws IOException exception thrown if an error occurred while iterating
+     * the file
+     */
+    public static FastaSummary getSummary(String fastaFile, FastaParameters fastaParameters, boolean alwaysCreateNew, WaitingHandler waitingHandler) throws IOException {
 
         FastaSummary fastaSummary = null;
 
-        try {
+        if (!alwaysCreateNew) {
 
-           fastaSummary = getSavedSummary(fastaFile);
+            try {
 
-        } catch (Exception e) {
+                fastaSummary = getSavedSummary(fastaFile);
 
-            // ignore and overwrite corrupted file
+            } catch (Exception e) {
+
+                // ignore and overwrite corrupted file
+            }
         }
 
         if (fastaSummary == null) {
@@ -237,9 +259,9 @@ public class FastaSummary {
     private static FastaSummary parseSummary(String fastaFilePath, FastaParameters fastaParameters, WaitingHandler waitingHandler) throws IOException {
 
         File fastaFile = new File(fastaFilePath);
-        
+
         long lastModified = fastaFile.lastModified();
-        
+
         TreeMap<String, Integer> speciesOccurrence = new TreeMap<>();
         HashMap<ProteinDatabase, Integer> databaseType = new HashMap<>(1);
         int nSequences = 0;
@@ -257,7 +279,7 @@ public class FastaSummary {
             if (species == null) {
                 species = "Unknown";
             }
-            
+
             Integer occurrence = speciesOccurrence.get(species);
 
             if (occurrence == null) {
@@ -275,7 +297,7 @@ public class FastaSummary {
             if (proteinDatabase == null) {
                 proteinDatabase = ProteinDatabase.Unknown;
             }
-            
+
             occurrence = databaseType.get(proteinDatabase);
 
             if (occurrence == null) {
@@ -314,31 +336,31 @@ public class FastaSummary {
         return new FastaSummary(Util.removeExtension(fastaFile.getName()), fastaFile.getAbsolutePath(), new Date(fastaFile.lastModified()).toString(), fastaFile, speciesOccurrence, databaseType, nSequences, nTarget, lastModified);
 
     }
-    
+
     /**
      * Returns a string with the different database types found.
-     * 
+     *
      * @return a string with the different database types found
      */
     public String getTypeAsString() {
-        
+
         if (databaseType.isEmpty()) {
-            
+
             return "Unknown";
-            
+
         } else if (databaseType.size() == 1) {
-            
+
             return databaseType.keySet().stream().findAny().get().getFullName();
-            
+
         }
-        
+
         int sum = databaseType.values().stream().mapToInt(Integer::intValue).sum();
-        
+
         return databaseType.entrySet().stream()
                 .map(entry -> new SimpleEntry<>(entry.getKey(), ((double) entry.getValue()) / sum))
                 .map(entry -> entry.getKey().getFullName() + " (" + Util.roundDouble(entry.getValue(), 1) + "%)")
                 .collect(Collectors.joining(", "));
-        
+
     }
 
     /**
@@ -393,5 +415,14 @@ public class FastaSummary {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Returns true if the FASTA file contains decoys.
+     *
+     * @return true if the FASTA file contains decoys
+     */
+    public boolean containsDecoys() {
+        return nTarget < nSequences;
     }
 }

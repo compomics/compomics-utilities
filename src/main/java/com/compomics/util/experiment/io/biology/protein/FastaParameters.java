@@ -34,7 +34,7 @@ public class FastaParameters extends DbObject {
     /**
      * The flag for decoy proteins in the accession.
      */
-    private String decoyFlag = "-REVERSED";
+    private String decoyFlag = "_REVERSED";
     /**
      * Boolean indicating whether the decoy flag is a suffix or a prefix.
      */

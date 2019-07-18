@@ -663,7 +663,8 @@ public class PSParameter extends DbObject implements UrParameter {
     }
 
     /**
-     * Get the number of validated spectra in the given fraction. Null if not found.
+     * Get the number of validated spectra in the given fraction. Null if not
+     * found.
      *
      * @param fraction the fraction
      * @return the number of validated spectra in the given fraction
@@ -765,9 +766,9 @@ public class PSParameter extends DbObject implements UrParameter {
                     .mapToDouble(Double::doubleValue)
                     .sum();
 
-            if (precursorIntensitySummedPerFraction != null) {
+            if (precursorIntensitySummedPerFraction == null) {
 
-                precursorIntensitySummedPerFraction.put(fraction, sum);
+                precursorIntensitySummedPerFraction = new HashMap<>(2);
 
             }
 
@@ -779,10 +780,12 @@ public class PSParameter extends DbObject implements UrParameter {
 
             if (sum > 0) {
 
+                precursorIntensitySummedPerFraction.put(fraction, sum);
                 precursorIntensityAveragePerFraction.put(fraction, sum / precursorIntensityPerFraction.get(fraction).size());
 
             } else {
 
+                precursorIntensitySummedPerFraction.put(fraction, null);
                 precursorIntensityAveragePerFraction.put(fraction, null);
 
             }
@@ -790,7 +793,8 @@ public class PSParameter extends DbObject implements UrParameter {
     }
 
     /**
-     * Get the average precursor intensity in the given fraction. Null if not found.
+     * Get the average precursor intensity in the given fraction. Null if not
+     * found.
      *
      * @param fraction the fraction
      * @return the average precursor intensity in the given fraction
@@ -818,7 +822,8 @@ public class PSParameter extends DbObject implements UrParameter {
     }
 
     /**
-     * Get the summed precursor intensity in the given fraction. Null if not found.
+     * Get the summed precursor intensity in the given fraction. Null if not
+     * found.
      *
      * @param fraction the fraction
      * @return the summed precursor intensity in the given fraction

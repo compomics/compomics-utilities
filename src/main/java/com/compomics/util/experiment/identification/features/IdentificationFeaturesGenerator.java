@@ -1325,11 +1325,10 @@ public class IdentificationFeaturesGenerator {
         DigestionParameters digestionPreferences = identificationParameters.getSearchParameters().getDigestionParameters();
 
         if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
-            
-            
+
             String proteinSequence = sequenceProvider.getSequence(accession);
             int peptideLength = peptide.getSequence().length();
-            
+
             return digestionPreferences.getEnzymes().stream()
                     .mapToInt(enzyme -> getNEnzymaticTermini(peptide.getProteinMapping().get(accession), peptideLength, proteinSequence, enzyme))
                     .max()
@@ -1342,21 +1341,24 @@ public class IdentificationFeaturesGenerator {
     }
 
     /**
-     * Returns the maximal number of termini for the given peptide on the given peptide coordinates and the given enzyme.
+     * Returns the maximal number of termini for the given peptide on the given
+     * peptide coordinates and the given enzyme.
      *
-     * @param peptideStarts the starting indexes on the protein as available in the peptide object
+     * @param peptideStarts the starting indexes on the protein as available in
+     * the peptide object
      * @param peptideLength the length of the peptide
      * @param proteinSequence the protein sequence
      * @param enzyme the enzyme
      *
-     * @return the maximal number of termini for the given peptide on the given peptide coordinates and the given enzyme
+     * @return the maximal number of termini for the given peptide on the given
+     * peptide coordinates and the given enzyme
      */
     private int getNEnzymaticTermini(int[] peptideStarts, int peptideLength, String proteinSequence, Enzyme enzyme) {
-        
+
         return Arrays.stream(peptideStarts)
-                    .map(peptideStart -> PeptideUtils.getNEnzymaticTermini(peptideStart, peptideStart + peptideLength  - 1, proteinSequence, enzyme))
-                    .max()
-                    .orElse(0);
+                .map(peptideStart -> PeptideUtils.getNEnzymaticTermini(peptideStart, peptideStart + peptideLength - 1, proteinSequence, enzyme))
+                .max()
+                .orElse(0);
 
     }
 
@@ -2554,7 +2556,7 @@ public class IdentificationFeaturesGenerator {
     }
 
     /**
-     * Sets the spectrum couting preferences.
+     * Sets the spectrum counting preferences.
      *
      * @param spectrumCountingPreferences the spectrum counting preferences
      */
@@ -2567,32 +2569,33 @@ public class IdentificationFeaturesGenerator {
     /**
      * Indicates whether a peptide is found in a single protein match.
      *
-     * @param peptide the peptide of interest
+     * @param peptideKey the peptide key of interest
      *
      * @return true if peptide is found in a single protein match
      */
-    public int getNValidatedProteinGroups(Peptide peptide) {
+    public int getNValidatedProteinGroups(long peptideKey) {
 
-        return getNValidatedProteinGroups(peptide, null);
+        return getNValidatedProteinGroups(peptideKey, null);
 
     }
 
     /**
      * Indicates whether a peptide is found in a single protein match.
      *
-     * @param peptide the peptide of interest
+     * @param peptideKey the peptide key of interest
      * @param waitingHandler waiting handler allowing the canceling of the
      * progress
      *
      * @return true if peptide is found in a single protein match
      */
-    public int getNValidatedProteinGroups(Peptide peptide, WaitingHandler waitingHandler) {
+    public int getNValidatedProteinGroups(long peptideKey, WaitingHandler waitingHandler) {
 
-        TreeSet<Long> keys = identification.getProteinMatches(peptide.getKey());
+        TreeSet<Long> keys = identification.getProteinMatches(peptideKey);
 
         return (int) keys.stream()
                 .filter(key -> ((PSParameter) identification.getProteinMatch(key).getUrParam(PSParameter.dummy))
                 .getMatchValidationLevel().isValidated())
                 .count();
+
     }
 }

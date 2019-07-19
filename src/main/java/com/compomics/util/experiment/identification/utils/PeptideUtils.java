@@ -234,9 +234,9 @@ public class PeptideUtils {
                 .map(site -> site.toString())
                 .collect(Collectors.joining(","));
 
-        StringBuilder sb = new StringBuilder(modificationName.length() + sitesString.length() + 2);
+        StringBuilder sb = new StringBuilder(modificationName.length() + sitesString.length() + 3);
 
-        sb.append(modificationName).append("(").append(sitesString).append(")");
+        sb.append(modificationName).append(" (").append(sitesString).append(")");
 
         return sb.toString();
     }

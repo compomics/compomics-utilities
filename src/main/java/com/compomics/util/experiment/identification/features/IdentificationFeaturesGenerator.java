@@ -1732,7 +1732,7 @@ public class IdentificationFeaturesGenerator {
                         .sorted()
                         .map(modSite -> PeptideUtils.getModifiedAaIndex(modSite, sequence.length()))
                         .map(site -> String.join("", sequence.substring(site, site + 1), site.toString()))
-                        .collect(Collectors.joining(", ", "(", ")"))))
+                        .collect(Collectors.joining(", ", " (", ")"))))
                         .collect(Collectors.joining(";"));
 
     }
@@ -1750,7 +1750,7 @@ public class IdentificationFeaturesGenerator {
 
         return modificationScores == null ? ""
                 : modificationScores.getConfidentlyLocalizedModifications().stream()
-                        .map(modName -> String.join("", modName, "(", Integer.toString(modificationScores.getConfidentSitesForModification(modName).size()), ")"))
+                        .map(modName -> String.join("", modName, " (", Integer.toString(modificationScores.getConfidentSitesForModification(modName).size()), ")"))
                         .collect(Collectors.joining(";"));
 
     }
@@ -1772,7 +1772,7 @@ public class IdentificationFeaturesGenerator {
 
         return modificationScores == null ? ""
                 : modificationScores.getAmbiguouslyLocalizedModifications().stream()
-                        .map(modName -> String.join("", modName, "(", getSitesSummary(modificationScores.getAmbiguousModificationsSites(modName), sequence), ")"))
+                        .map(modName -> String.join("", modName, " (", getSitesSummary(modificationScores.getAmbiguousModificationsSites(modName), sequence), ")"))
                         .collect(Collectors.joining(";"));
 
     }
@@ -1827,7 +1827,7 @@ public class IdentificationFeaturesGenerator {
      *
      * @param match the identification match
      * @param sequence the sequence
-     * @param targetedModifications the mosifications to include in the summary
+     * @param targetedModifications the modifications to include in the summary
      *
      * @return a modification summary for the given match
      */

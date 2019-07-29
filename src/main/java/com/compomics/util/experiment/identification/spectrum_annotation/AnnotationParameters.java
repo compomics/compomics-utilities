@@ -30,8 +30,8 @@ public class AnnotationParameters extends DbObject {
      */
     public enum IntensityThresholdType {
 
-        percentile("Percentile of the intensities."),
-        snp("Signal to noise probability.");
+        percentile("Percentile of the intensities"),
+        snp("Signal to noise probability");
 
         /**
          * The description of the threshold.
@@ -45,6 +45,24 @@ public class AnnotationParameters extends DbObject {
          */
         private IntensityThresholdType(String description) {
             this.description = description;
+        }
+        
+        /**
+         * Returns the different intensity threshold types as command line options
+         * description.
+         *
+         * @return the different intensity threshold types as command line options
+         * description
+         */
+        public static String getCommandLineOptions() {
+            StringBuilder optionsStringBuilder = new StringBuilder();
+            for (IntensityThresholdType thresholdType : values()) {
+                if (optionsStringBuilder.length() != 0) {
+                    optionsStringBuilder.append(", ");
+                }
+                optionsStringBuilder.append(thresholdType.name()).append(": ").append(thresholdType.description);
+            }
+            return optionsStringBuilder.toString();
         }
     }
 

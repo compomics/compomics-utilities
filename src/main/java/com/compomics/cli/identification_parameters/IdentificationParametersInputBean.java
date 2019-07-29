@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.cli.CommandLine;
 
 /**
@@ -1464,6 +1465,14 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_LEVEL.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_LEVEL.id);
             if (!CommandParameter.inDoubleRange(IdentificationParametersCLIParams.ANNOTATION_LEVEL.id, arg, 0.0, 1.0)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_LEVEL_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_LEVEL_TYPE.id);
+            List<String> supportedInput = Arrays.asList(AnnotationParameters.IntensityThresholdType.values()).stream()
+                    .map(object -> object.toString()).collect(Collectors.toCollection(ArrayList::new));
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.ANNOTATION_LEVEL_TYPE.id, arg, supportedInput)) {
                 return false;
             }
         }
@@ -3271,6 +3280,11 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_LEVEL.id);
             Double value = new Double(arg);
             annotationSettings.setIntensityLimit(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_LEVEL_TYPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_LEVEL_TYPE.id);
+            AnnotationParameters.IntensityThresholdType value = AnnotationParameters.IntensityThresholdType.valueOf(arg);
+            annotationSettings.setIntensityThresholdType(value);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_MZ_TOLERANCE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_MZ_TOLERANCE.id);

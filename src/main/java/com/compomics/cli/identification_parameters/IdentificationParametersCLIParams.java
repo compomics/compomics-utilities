@@ -2,6 +2,7 @@ package com.compomics.cli.identification_parameters;
 
 import com.compomics.software.cli.CommandLineUtils;
 import com.compomics.util.experiment.identification.modification.ModificationLocalizationScore;
+import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import org.apache.commons.cli.Options;
@@ -303,7 +304,8 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // Spectrum annotation
     //////////////////////////////////
-    ANNOTATION_LEVEL("annotation_level", "The intensity percentile to consider for annotation, e.g. 0.75 means that the 25% most intense peaks will be annotated, default is 0.75.", false, true),
+    ANNOTATION_LEVEL("annotation_level", "The intensity threshold to consider for annotation, e.g. using percentiles, 0.75 means that the 25% most intense peaks will be annotated, default is 0.75.", false, true),
+    ANNOTATION_LEVEL_TYPE("annotation_level_type", "The type of the intensity threshold. (valid values: "+AnnotationParameters.IntensityThresholdType.getCommandLineOptions()+", default is "+AnnotationParameters.IntensityThresholdType.percentile+").", false, true),
     ANNOTATION_MZ_TOLERANCE("annotation_mz_tolerance", "The m/z tolerance to annotate peaks, default is equal to the search settings MS2 tolerance.", false, true),
     ANNOTATION_HIGH_RESOLUTION("annotation_high_resolution", "If true the most accurate peak will be selected within the m/z tolerance. (1: true, 0: false, default is '1')", false, true),
     //////////////////////////////////
@@ -677,6 +679,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id) + " " + IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.description + "\n";        
         
         output += "\n\nSpectrum Annotation:\n\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANNOTATION_LEVEL_TYPE.id) + " " + IdentificationParametersCLIParams.ANNOTATION_LEVEL_TYPE.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANNOTATION_LEVEL.id) + " " + IdentificationParametersCLIParams.ANNOTATION_LEVEL.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANNOTATION_MZ_TOLERANCE.id) + " " + IdentificationParametersCLIParams.ANNOTATION_MZ_TOLERANCE.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.id) + " " + IdentificationParametersCLIParams.ANNOTATION_HIGH_RESOLUTION.description + "\n";

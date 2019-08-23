@@ -171,7 +171,7 @@ public class Spectrum extends ExperimentObject {
      * @param spectrumTitle spectrum title
      * @param peakMap set of peaks
      * @param fileName file name
-     * @param scanStartTime The time point when the spectrum was recorded
+     * @param scanStartTime the time point when the spectrum was recorded
      */
     public Spectrum(int level, Precursor precursor, String spectrumTitle, HashMap<Double, Peak> peakMap, String fileName, double scanStartTime) {
         this.level = level;

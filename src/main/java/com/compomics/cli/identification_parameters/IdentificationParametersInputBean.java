@@ -903,6 +903,18 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PEP_LENGTH.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.COMET_MIN_PEP_LENGTH.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MAX_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MAX_PEP_LENGTH.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.COMET_MAX_PEP_LENGTH.id, arg, true)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.id);
             if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.id, arg, 1, 5)) {
@@ -2665,6 +2677,16 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_MAX_PREC_MASS.id);
             Double option = new Double(arg);
             cometParameters.setMaxPrecursorMass(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            cometParameters.setMinPeptideLength(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_MAX_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_MAX_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            cometParameters.setMaxPeptideLength(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.id);

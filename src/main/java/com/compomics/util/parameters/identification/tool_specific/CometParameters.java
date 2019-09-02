@@ -133,6 +133,14 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      * results reported in .out and SQT formats.
      */
     private Boolean printExpectScore = true;
+    /**
+     * The minimum peptide length.
+     */
+    private Integer minPeptideLength = 8;
+    /**
+     * The maximal peptide length. Maximum length for Comet is 63.
+     */
+    private Integer maxPeptideLength = 30;
 
     /**
      * Constructor.
@@ -194,6 +202,12 @@ public class CometParameters implements IdentificationAlgorithmParameter {
             }
             diff = Math.abs(maxPrecursorMass - cometParameters.getMaxPrecursorMass());
             if (diff > 0.0000000000001) {
+                return false;
+            }
+            if (!minPeptideLength.equals(cometParameters.getMinPeptideLength())) {
+                return false;
+            }
+            if (!maxPeptideLength.equals(cometParameters.getMaxPeptideLength())) {
                 return false;
             }
             if (!maxFragmentCharge.equals(cometParameters.getMaxFragmentCharge())) {
@@ -712,5 +726,41 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      */
     public void setSelectedOutputFormat(CometOutputFormat selectedOutputFormat) {
         this.selectedOutputFormat = selectedOutputFormat;
+    }
+
+    /**
+     * Returns the maximal peptide length allowed.
+     *
+     * @return the maximal peptide length allowed
+     */
+    public int getMaxPeptideLength() {
+        return maxPeptideLength;
+    }
+
+    /**
+     * Sets the maximal peptide length allowed.
+     *
+     * @param maxPeptideLength the maximal peptide length allowed
+     */
+    public void setMaxPeptideLength(int maxPeptideLength) {
+        this.maxPeptideLength = maxPeptideLength;
+    }
+
+    /**
+     * Sets the minimal peptide length allowed.
+     *
+     * @return the minimal peptide length allowed
+     */
+    public int getMinPeptideLength() {
+        return minPeptideLength;
+    }
+
+    /**
+     * Sets the minimal peptide length allowed.
+     *
+     * @param minPeptideLength the minimal peptide length allowed
+     */
+    public void setMinPeptideLength(int minPeptideLength) {
+        this.minPeptideLength = minPeptideLength;
     }
 }

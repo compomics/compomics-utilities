@@ -183,6 +183,8 @@ public enum IdentificationParametersCLIParams {
     COMET_ISOTOPE_CORRECTION("comet_isotope_correction", "Comet isotope correction, 0: no correction, 1: 0, +1, 2: 0, +1, +2, 3: 0,+1,+2,+3, 4: -8,-4,0,+4,+8, default is '1'.", false, true),
     COMET_MIN_PREC_MASS("comet_min_prec_mass", "Comet minimum precursor mass, default is '600.0'.", false, true),
     COMET_MAX_PREC_MASS("comet_max_prec_mass", "Comet maximum precursor mass, default is '5000.0'.", false, true),
+    COMET_MIN_PEP_LENGTH("comet_min_pep_length", "Comet minumum peptide length, default is '8'.", false, true),
+    COMET_MAX_PEP_LENGTH("comet_max_pep_length", "Comet maximum peptide length, default is '30'.", false, true),
     COMET_MAX_FRAGMENT_CHARGE("comet_max_frag_charge", "Comet maximum fragment charge [1-5], default is '3'.", false, true),
     COMET_REMOVE_METH("comet_remove_meth", "Comet remove methionine, 1: true, 0: false, default is '0'.", false, true),
     COMET_BATCH_SIZE("comet_batch_size", "Comet spectrum batch size, '0' means load and search all spectra at once, default is '0'.", false, true),    
@@ -571,6 +573,8 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id) + " " + IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_MIN_PREC_MASS.id) + " " + IdentificationParametersCLIParams.COMET_MIN_PREC_MASS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_MAX_PREC_MASS.id) + " " + IdentificationParametersCLIParams.COMET_MAX_PREC_MASS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_MIN_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.COMET_MIN_PEP_LENGTH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_MAX_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.COMET_MAX_PEP_LENGTH.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.id) + " " + IdentificationParametersCLIParams.COMET_MAX_FRAGMENT_CHARGE.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_REMOVE_METH.id) + " " + IdentificationParametersCLIParams.COMET_REMOVE_METH.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_BATCH_SIZE.id) + " " + IdentificationParametersCLIParams.COMET_BATCH_SIZE.description + "\n";

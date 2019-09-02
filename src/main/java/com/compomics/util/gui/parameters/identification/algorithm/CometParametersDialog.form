@@ -66,16 +66,16 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="tabbedPane" max="32767" attributes="0"/>
-                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="tabbedPane" min="-2" pref="380" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="openDialogHelpJButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="advancedSettingsWarningLabel" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="okButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="closeButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -207,7 +207,7 @@
                               <Component id="clearMzRangeDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="clearMzRangeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="195" max="32767" attributes="0"/>
+                          <EmptySpace pref="163" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -327,6 +327,16 @@
                           <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
+                                  <Component id="maxPtmsLabel" linkSize="14" min="-2" pref="250" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="maxPtmsTxt" max="32767" attributes="2"/>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <Component id="requireVariablePtmLabel" linkSize="14" min="-2" pref="250" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="requireVariablePtmCmb" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -346,34 +356,34 @@
                                               </Group>
                                               <Component id="isotopeCorrectionLabel" min="-2" pref="250" max="-2" attributes="0"/>
                                               <Component id="enzymeTypeLabel" alignment="0" min="-2" pref="250" max="-2" attributes="0"/>
+                                              <Component id="peptideLengthLabel" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace pref="23" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="minPrecursorMassTxt" min="-2" pref="77" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="precursorMassDividerLabel" min="-2" pref="35" max="-2" attributes="0"/>
-                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Component id="maxPrecursorMassTxt" min="-2" pref="83" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Component id="enzymeTypeCmb" alignment="1" max="32767" attributes="0"/>
+                                      <Component id="enzymeTypeCmb" alignment="1" pref="225" max="32767" attributes="0"/>
                                       <Component id="maxFragmentChargeTxt" alignment="0" max="32767" attributes="2"/>
                                       <Component id="removeMethionineCmb" alignment="0" max="32767" attributes="0"/>
                                       <Component id="batchSizeTxt" alignment="1" max="32767" attributes="2"/>
                                       <Component id="isotopeCorrectionCmb" alignment="0" max="32767" attributes="0"/>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                              <Component id="minPepLengthTxt" pref="95" max="32767" attributes="0"/>
+                                              <Component id="minPrecursorMassTxt" max="32767" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="peptideLengthDividerLabel" pref="29" max="32767" attributes="0"/>
+                                              <Component id="precursorMassDividerLabel" max="32767" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="maxPrecursorMassTxt" pref="89" max="32767" attributes="0"/>
+                                              <Component id="maxPepLengthTxt" max="32767" attributes="0"/>
+                                          </Group>
+                                      </Group>
                                   </Group>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <Component id="maxPtmsLabel" linkSize="14" min="-2" pref="250" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="maxPtmsTxt" max="32767" attributes="2"/>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <Component id="requireVariablePtmLabel" linkSize="14" min="-2" pref="250" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="requireVariablePtmCmb" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
@@ -402,6 +412,13 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="peptideLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="minPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="peptideLengthDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="maxPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="maxFragmentChargeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="maxFragmentChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -425,7 +442,7 @@
                               <Component id="requireVariablePtmCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="requireVariablePtmLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="117" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -570,6 +587,35 @@
                     <Property name="selectedIndex" type="int" value="1"/>
                   </Properties>
                 </Component>
+                <Component class="javax.swing.JLabel" name="peptideLengthLabel">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Peptide Length (min - max)"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="minPepLengthTxt">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="text" type="java.lang.String" value="6"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minPepLengthTxtKeyReleased"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="peptideLengthDividerLabel">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="text" type="java.lang.String" value="-"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="maxPepLengthTxt">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="text" type="java.lang.String" value="30"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxPepLengthTxtKeyReleased"/>
+                  </Events>
+                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="fragmentIonsPanel">
@@ -617,7 +663,7 @@
                               <Component id="fragmentBinOffsetLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="fragmentBinOffsetTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="273" max="32767" attributes="0"/>
+                          <EmptySpace pref="265" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>

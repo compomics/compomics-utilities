@@ -381,6 +381,10 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         maxPtmsTxt = new javax.swing.JTextField();
         requireVariablePtmLabel = new javax.swing.JLabel();
         requireVariablePtmCmb = new javax.swing.JComboBox();
+        peptideLengthLabel = new javax.swing.JLabel();
+        minPepLengthTxt = new javax.swing.JTextField();
+        peptideLengthDividerLabel = new javax.swing.JLabel();
+        maxPepLengthTxt = new javax.swing.JTextField();
         fragmentIonsPanel = new javax.swing.JPanel();
         correlationScoreTypeLabel = new javax.swing.JLabel();
         correlationScoreTypeCmb = new javax.swing.JComboBox();
@@ -550,7 +554,7 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
                     .addComponent(clearMzRangeUpperTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(clearMzRangeDividerLabel)
                     .addComponent(clearMzRangeLabel))
-                .addContainerGap(195, Short.MAX_VALUE))
+                .addContainerGap(163, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Spectrum", spectrumProcessingPanel);
@@ -628,6 +632,27 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         requireVariablePtmCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         requireVariablePtmCmb.setSelectedIndex(1);
 
+        peptideLengthLabel.setText("Peptide Length (min - max)");
+
+        minPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        minPepLengthTxt.setText("6");
+        minPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                minPepLengthTxtKeyReleased(evt);
+            }
+        });
+
+        peptideLengthDividerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        peptideLengthDividerLabel.setText("-");
+
+        maxPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        maxPepLengthTxt.setText("30");
+        maxPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                maxPepLengthTxtKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout searchSettingsPanelLayout = new javax.swing.GroupLayout(searchSettingsPanel);
         searchSettingsPanel.setLayout(searchSettingsPanelLayout);
         searchSettingsPanelLayout.setHorizontalGroup(
@@ -636,6 +661,14 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
                 .addGap(25, 25, 25)
                 .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(searchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(maxPtmsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(maxPtmsTxt))
+                    .addGroup(searchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(requireVariablePtmLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(requireVariablePtmCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchSettingsPanelLayout.createSequentialGroup()
                         .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(searchSettingsPanelLayout.createSequentialGroup()
                                 .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -650,28 +683,27 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
                                         .addComponent(removeMethionineLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(batchSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(isotopeCorrectionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(enzymeTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(enzymeTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(peptideLengthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)))
                         .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchSettingsPanelLayout.createSequentialGroup()
-                                .addComponent(minPrecursorMassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(precursorMassDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(maxPrecursorMassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(enzymeTypeCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(enzymeTypeCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 225, Short.MAX_VALUE)
                             .addComponent(maxFragmentChargeTxt)
                             .addComponent(removeMethionineCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(batchSizeTxt, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(isotopeCorrectionCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(searchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(maxPtmsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maxPtmsTxt))
-                    .addGroup(searchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(requireVariablePtmLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(requireVariablePtmCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(isotopeCorrectionCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchSettingsPanelLayout.createSequentialGroup()
+                                .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(minPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                                    .addComponent(minPrecursorMassTxt))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(peptideLengthDividerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                                    .addComponent(precursorMassDividerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(maxPrecursorMassTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+                                    .addComponent(maxPepLengthTxt))))))
                 .addGap(30, 30, 30))
         );
 
@@ -696,6 +728,12 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
                     .addComponent(precursorMassLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(peptideLengthLabel)
+                    .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(peptideLengthDividerLabel)
+                    .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxFragmentChargeLabel)
                     .addComponent(maxFragmentChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -714,7 +752,7 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
                 .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(requireVariablePtmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(requireVariablePtmLabel))
-                .addContainerGap(117, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
         );
 
         tabbedPane.addTab("Search", searchSettingsPanel);
@@ -761,7 +799,7 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
                 .addGroup(fragmentIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fragmentBinOffsetLabel)
                     .addComponent(fragmentBinOffsetTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(273, Short.MAX_VALUE))
+                .addContainerGap(265, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Fragment Ions", fragmentIonsPanel);
@@ -855,7 +893,7 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
@@ -1060,6 +1098,24 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
     }//GEN-LAST:event_outputFormatCmbActionPerformed
 
     /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void minPepLengthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPepLengthTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_minPepLengthTxtKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void maxPepLengthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPepLengthTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_maxPepLengthTxtKeyReleased
+
+    /**
      * Inspects the parameter validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -1076,6 +1132,8 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         valid = GuiUtilities.validateDoubleInput(this, clearMzRangeLabel, clearMzRangeUpperTxt, "upper clear mz range", "Clear MZ Range Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorMassLabel, minPrecursorMassTxt, "minimum precursor mass", "Precursor Mass Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, precursorMassLabel, maxPrecursorMassTxt, "maximum precursor mass", "Precursor Mass Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, minPepLengthTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, maxPepLengthTxt, "maximum peptide length", "Peptide Length Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number of Spectrum Matches Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, maxFragmentChargeLabel, maxFragmentChargeTxt, "maximum fragment charge", "Maximum Fragment Charge Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, batchSizeLabel, batchSizeTxt, "batch size", "Batch Size Error", true, showMessage, valid);
@@ -1145,6 +1203,7 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
     private javax.swing.JLabel isotopeCorrectionLabel;
     private javax.swing.JLabel maxFragmentChargeLabel;
     private javax.swing.JTextField maxFragmentChargeTxt;
+    private javax.swing.JTextField maxPepLengthTxt;
     private javax.swing.JTextField maxPrecursorMassTxt;
     private javax.swing.JLabel maxPtmsLabel;
     private javax.swing.JTextField maxPtmsTxt;
@@ -1152,6 +1211,7 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
     private javax.swing.JTextField minPeakIntensityTxt;
     private javax.swing.JLabel minPeaksLbl;
     private javax.swing.JTextField minPeaksTxt;
+    private javax.swing.JTextField minPepLengthTxt;
     private javax.swing.JTextField minPrecursorMassTxt;
     private javax.swing.JLabel numberMatchesLabel;
     private javax.swing.JTextField numberMatchesTxt;
@@ -1160,6 +1220,8 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
     private javax.swing.JComboBox outputFormatCmb;
     private javax.swing.JPanel outputPanel;
     private javax.swing.JLabel outputPepXmlLabel;
+    private javax.swing.JLabel peptideLengthDividerLabel;
+    private javax.swing.JLabel peptideLengthLabel;
     private javax.swing.JLabel precursorMassDividerLabel;
     private javax.swing.JLabel precursorMassLabel;
     private javax.swing.JLabel printExpecScoreLabel;

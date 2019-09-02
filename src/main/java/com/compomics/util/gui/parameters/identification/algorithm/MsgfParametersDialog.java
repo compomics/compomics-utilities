@@ -555,7 +555,7 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
      */
     private void openDialogHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDialogHelpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("https://htmlpreview.github.io/?https://raw.githubusercontent.com/MSGFPlus/msgfplus/master/doc/MSGFPlus.html");
+        BareBonesBrowserLaunch.openURL("https://msgfplus.github.io/msgfplus/MSGFPlus.html");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_openDialogHelpJButtonActionPerformed
 

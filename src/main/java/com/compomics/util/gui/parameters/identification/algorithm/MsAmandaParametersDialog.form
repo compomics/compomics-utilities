@@ -103,9 +103,9 @@
                                   <Component id="instrumentLabel" alignment="0" min="-2" pref="220" max="-2" attributes="0"/>
                                   <Component id="decoyDatabaseLabel" alignment="0" min="-2" pref="220" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="instrumentCmb" pref="189" max="32767" attributes="0"/>
+                                  <Component id="instrumentCmb" max="32767" attributes="0"/>
                                   <Component id="decoyDatabaseCmb" alignment="1" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -150,9 +150,13 @@
                               <Component id="maxPtmNeutalLossesPerPeptideCmb" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="minPeptideLengthLabel" min="-2" pref="220" max="-2" attributes="0"/>
+                              <Component id="peptideLengthLabel" min="-2" pref="220" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="minPeptideLengthTxt" max="32767" attributes="2"/>
+                              <Component id="minPeptideLengthTxt" linkSize="1" min="-2" pref="54" max="-2" attributes="2"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="peptideLengthDividerLabel" min="-2" pref="27" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <Component id="maxPeptideLengthTxt" linkSize="1" min="-2" pref="77" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="maxProteinsLoadedLabel" min="-2" pref="220" max="-2" attributes="0"/>
@@ -170,6 +174,11 @@
                                   <Component id="maxSpectraLoadedTxt" max="32767" attributes="2"/>
                               </Group>
                           </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="rankTargetAndDecoySeparatelyLabel" min="-2" pref="220" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="rankTargetAndDecoySeparatelyCmb" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -182,6 +191,11 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="decoyDatabaseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="decoyDatabaseCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="rankTargetAndDecoySeparatelyLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="rankTargetAndDecoySeparatelyCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -231,7 +245,9 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="minPeptideLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="minPeptideLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="peptideLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxPeptideLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="peptideLengthDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -478,16 +494,15 @@
                 <Property name="toolTipText" type="java.lang.String" value="Max number identical modification specific losses per peptide"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="minPeptideLengthLabel">
+            <Component class="javax.swing.JLabel" name="peptideLengthLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Min Peptide Length"/>
-                <Property name="toolTipText" type="java.lang.String" value="Minimum peptide length"/>
+                <Property name="text" type="java.lang.String" value="Peptide Length (min - max)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="minPeptideLengthTxt">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="6"/>
+                <Property name="text" type="java.lang.String" value="8"/>
                 <Property name="toolTipText" type="java.lang.String" value="Minimum peptide length"/>
               </Properties>
               <Events>
@@ -537,6 +552,36 @@
                   <StringArray count="2">
                     <StringItem index="0" value="csv"/>
                     <StringItem index="1" value="mzIdentML"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="peptideLengthDividerLabel">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="-"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxPeptideLengthTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="30"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxPeptideLengthTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="rankTargetAndDecoySeparatelyLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Rank Target and Decoy Separately"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="rankTargetAndDecoySeparatelyCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Yes"/>
+                    <StringItem index="1" value="No"/>
                   </StringArray>
                 </Property>
               </Properties>

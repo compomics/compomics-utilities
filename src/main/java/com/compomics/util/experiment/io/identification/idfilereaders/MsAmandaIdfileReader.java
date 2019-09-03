@@ -135,8 +135,8 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
         // parse the header line
         String[] headers = headerString.split("\t");
         int scanNumberIndex = -1, titleIndex = -1, sequenceIndex = -1, modificationsIndex = -1, proteinAccessionsIndex = -1,
-                amandaScoreIndex = -1, rankIndex = -1, mzIndex = -1, chargeIndex = -1, rtIndex = -1, filenameIndex = -1,
-                amandaWeightedProbabilityIndex = -1;
+                amandaScoreIndex = -1, rankIndex = -1, mzIndex = -1, chargeIndex = -1, rtIndex = -1, nrMatchesPeaksIndex = -1, 
+                filenameIndex = -1, amandaWeightedProbabilityIndex = -1;
 
         // get the column index of the headers
         for (int i = 0; i < headers.length; i++) {
@@ -164,6 +164,8 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
                 chargeIndex = i;
             } else if (header.equalsIgnoreCase("RT")) {
                 rtIndex = i;
+            } else if (header.equalsIgnoreCase("Nr of matched peaks")) {
+                nrMatchesPeaksIndex = i;
             } else if (header.equalsIgnoreCase("Filename")) {
                 filenameIndex = i;
             }

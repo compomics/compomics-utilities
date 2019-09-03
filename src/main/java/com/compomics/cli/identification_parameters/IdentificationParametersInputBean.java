@@ -659,6 +659,12 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_DECOY_RANKING.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_DECOY_RANKING.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_DECOY_RANKING.id, arg)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id)) {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_RANK.id)) {
@@ -712,6 +718,12 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.id);
             if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_PEPTIDE_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_PEPTIDE_LENGTH.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.MS_AMANDA_MAX_PEPTIDE_LENGTH.id, arg, true)) {
                 return false;
             }
         }
@@ -2509,6 +2521,11 @@ public class IdentificationParametersInputBean {
             Integer option = new Integer(arg);
             msAmandaParameters.setGenerateDecoyDatabase(option == 1);
         }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_DECOY_RANKING.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_DECOY_RANKING.id);
+            Integer option = new Integer(arg);
+            msAmandaParameters.setReportBothBestHitsForTD(option == 1);
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_INSTRUMENT.id);
             msAmandaParameters.setInstrumentID(arg);
@@ -2557,6 +2574,11 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.id);
             Integer option = new Integer(arg);
             msAmandaParameters.setMinPeptideLength(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_PEPTIDE_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_PEPTIDE_LENGTH.id);
+            Integer option = new Integer(arg);
+            msAmandaParameters.setMaxPeptideLength(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.id);

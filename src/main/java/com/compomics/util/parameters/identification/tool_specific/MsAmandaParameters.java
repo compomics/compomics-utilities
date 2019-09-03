@@ -21,11 +21,16 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
      */
     private boolean generateDecoy = false;
     /**
+     * False = combine ranks for target and decoy, true = own rankings for
+     * target and decoy.
+     */
+    private Boolean reportBothBestHitsForTD;
+    /**
      * The MS Amanda instrument ID.
      */
     private String instrumentID = "b, y";
     /**
-     * The maximum rank.
+     * The maximum rank [1-999]. 
      */
     private Integer maxRank = 10;
     /**
@@ -68,7 +73,11 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
     /**
      * Minimum peptide length.
      */
-    private Integer minPeptideLength = 6;
+    private Integer minPeptideLength = 8;
+    /**
+     * Maximum peptide length.
+     */
+    private Integer maxPeptideLength = 30;
     /**
      * Maximum number of proteins loaded into memory (1000-500000).
      */
@@ -105,6 +114,9 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
             if (generateDecoy != msAmandaParameters.generateDecoy()) {
                 return false;
             }
+            if (reportBothBestHitsForTD != msAmandaParameters.reportBothBestHitsForTD()) {
+                return false;
+            }
             if (monoisotopic != msAmandaParameters.isMonoIsotopic()) {
                 return false;
             }
@@ -133,6 +145,9 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
                 return false;
             }
             if (!minPeptideLength.equals(msAmandaParameters.getMinPeptideLength())) {
+                return false;
+            }
+            if (!maxPeptideLength.equals(msAmandaParameters.getMaxPeptideLength())) {
                 return false;
             }
             if (!maxLoadedProteins.equals(msAmandaParameters.getMaxLoadedProteins())) {
@@ -171,6 +186,9 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
         output.append("SEARCH_DECOY=");
         output.append(generateDecoy);
         output.append(newLine);
+        output.append("REPORT_BOTH_BEST_HITS_FOR_TD=");
+        output.append(reportBothBestHitsForTD);
+        output.append(newLine);
         output.append("INSTRUMENT_ID=");
         output.append(instrumentID);
         output.append(newLine);
@@ -200,6 +218,9 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
         output.append(newLine);
         output.append("MIN_PEPTIDE_LENGTH=");
         output.append(getMinPeptideLength());
+        output.append(newLine);
+        output.append("MAX_PEPTIDE_LENGTH=");
+        output.append(getMaxPeptideLength());
         output.append(newLine);
         output.append("MAX_LOADED_PROTEINS=");
         output.append(getMaxLoadedProteins());
@@ -468,6 +489,27 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
     public void setMinPeptideLength(Integer minPeptideLength) {
         this.minPeptideLength = minPeptideLength;
     }
+    
+    /**
+     * Returns the maximum peptide length.
+     *
+     * @return the the maximum peptide length
+     */
+    public Integer getMaxPeptideLength() {
+        if (maxPeptideLength == null) {
+            maxPeptideLength = 30;
+        }
+        return maxPeptideLength;
+    }
+
+    /**
+     * Set the maximum peptide length.
+     *
+     * @param maxPeptideLength the maximum peptide length
+     */
+    public void setMaxPeptideLength(Integer maxPeptideLength) {
+        this.maxPeptideLength = maxPeptideLength;
+    }
 
     /**
      * Returns the maximum number of proteins loaded into memory.
@@ -531,5 +573,28 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
      */
     public void setOutputFormat(String outputFormat) {
         this.outputFormat = outputFormat;
+    }
+    
+    /**
+     * Returns true if target and decoy are ranked separately, false if shared
+     * rank.
+     *
+     * @return true if target and decoy are ranked separately, false if shared
+     * rank
+     */
+    public boolean reportBothBestHitsForTD() {
+        if (reportBothBestHitsForTD == null) {
+            reportBothBestHitsForTD = true;
+        }
+        return reportBothBestHitsForTD;
+    }
+
+    /**
+     * Set if target and decoy are ranked separately or shared.
+     * 
+     * @param reportBothBestHitsForTD the reportBothBestHitsForTD to set
+     */
+    public void setReportBothBestHitsForTD(boolean reportBothBestHitsForTD) {
+        this.reportBothBestHitsForTD = reportBothBestHitsForTD;
     }
 }

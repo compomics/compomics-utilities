@@ -306,7 +306,7 @@ public class MyriMatchParametersDialog extends javax.swing.JDialog implements Al
         useSmartPlusThreeModelLabel.setText("Use Smart Plus Thee Model");
 
         minPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minPepLengthTxt.setText("6");
+        minPepLengthTxt.setText("8");
         minPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 minPepLengthTxtKeyReleased(evt);

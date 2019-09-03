@@ -299,6 +299,12 @@ public class CometParameters implements IdentificationAlgorithmParameter {
         output.append("MAX_PRECURSOR_MASS=");
         output.append(maxPrecursorMass);
         output.append(newLine);
+        output.append("MIN_PEP_LENGTH=");
+        output.append(minPeptideLength);
+        output.append(newLine);
+        output.append("MAX_PEP_LENGTH=");
+        output.append(maxPeptideLength);
+        output.append(newLine);
         output.append("MAX_FRAGMENT_CHARGE=");
         output.append(maxFragmentCharge);
         output.append(newLine);
@@ -733,7 +739,7 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      *
      * @return the maximal peptide length allowed
      */
-    public int getMaxPeptideLength() {
+    public Integer getMaxPeptideLength() {
         return maxPeptideLength;
     }
 
@@ -751,7 +757,7 @@ public class CometParameters implements IdentificationAlgorithmParameter {
      *
      * @return the minimal peptide length allowed
      */
-    public int getMinPeptideLength() {
+    public Integer getMinPeptideLength() {
         return minPeptideLength;
     }
 

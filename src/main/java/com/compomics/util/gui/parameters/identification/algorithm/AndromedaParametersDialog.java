@@ -334,7 +334,7 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
         peptideLengthNoEnzymeDividerLabel.setText("-");
 
         maxPepLengthNoEnzymeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxPepLengthNoEnzymeTxt.setText("25");
+        maxPepLengthNoEnzymeTxt.setText("30");
         maxPepLengthNoEnzymeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 maxPepLengthNoEnzymeTxtKeyReleased(evt);
@@ -639,7 +639,7 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(openDialogHelpJButton)

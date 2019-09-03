@@ -90,37 +90,26 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         outputFormatCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         printExpectScoreCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
-        minPeaksTxt.setEditable(editable);
         minPeaksTxt.setEnabled(editable);
-        minPeakIntensityTxt.setEditable(editable);
         minPeakIntensityTxt.setEnabled(editable);
         removePrecursorPeakCombo.setEnabled(editable);
-        removePrecursorPeakToleranceTxt.setEditable(editable);
         removePrecursorPeakToleranceTxt.setEnabled(editable);
-        clearMzRangeLowerTxt.setEditable(editable);
         clearMzRangeLowerTxt.setEnabled(editable);
-        clearMzRangeUpperTxt.setEditable(editable);
         clearMzRangeUpperTxt.setEnabled(editable);
         enzymeTypeCmb.setEnabled(editable);
         isotopeCorrectionCmb.setEnabled(editable);
-        minPrecursorMassTxt.setEditable(editable);
         minPrecursorMassTxt.setEnabled(editable);
-        maxPrecursorMassTxt.setEditable(editable);
         maxPrecursorMassTxt.setEnabled(editable);
-        numberMatchesTxt.setEditable(editable);
+        minPepLengthTxt.setEnabled(editable);
+        maxPepLengthTxt.setEnabled(editable);
         numberMatchesTxt.setEnabled(editable);
-        maxFragmentChargeTxt.setEditable(editable);
         maxFragmentChargeTxt.setEnabled(editable);
-        maxFragmentChargeTxt.setEditable(editable);
         removeMethionineCmb.setEnabled(editable);
         batchSizeTxt.setEnabled(editable);
-        batchSizeTxt.setEditable(editable);
         maxPtmsTxt.setEnabled(editable);
-        maxPtmsTxt.setEditable(editable);
         requireVariablePtmCmb.setEnabled(editable);
         correlationScoreTypeCmb.setEnabled(editable);
         fragmentBinOffsetTxt.setEnabled(editable);
-        fragmentBinOffsetTxt.setEditable(editable);
         outputFormatCmb.setEnabled(editable);
         printExpectScoreCmb.setEnabled(editable);
     }
@@ -180,6 +169,13 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         }
         if (cometParameters.getMaxPrecursorMass() != null) {
             maxPrecursorMassTxt.setText(cometParameters.getMaxPrecursorMass() + "");
+        }
+        
+        if (cometParameters.getMinPeptideLength()!= null) {
+            minPepLengthTxt.setText(cometParameters.getMinPeptideLength() + "");
+        }
+        if (cometParameters.getMaxPeptideLength() != null) {
+            maxPepLengthTxt.setText(cometParameters.getMaxPeptideLength() + "");
         }
 
         if (cometParameters.getMaxFragmentCharge() != null) {
@@ -635,7 +631,7 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         peptideLengthLabel.setText("Peptide Length (min - max)");
 
         minPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minPepLengthTxt.setText("6");
+        minPepLengthTxt.setText("8");
         minPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 minPepLengthTxtKeyReleased(evt);

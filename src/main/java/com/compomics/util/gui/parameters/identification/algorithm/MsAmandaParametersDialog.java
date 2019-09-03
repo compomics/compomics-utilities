@@ -77,6 +77,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
     private void setUpGUI() {
 
         decoyDatabaseCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        rankTargetAndDecoySeparatelyCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         instrumentCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         monoIsotopicCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         performDeisotopingCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -88,6 +89,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         outputFormatCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
         decoyDatabaseCmb.setEnabled(editable);
+        rankTargetAndDecoySeparatelyCmb.setEnabled(editable);
         instrumentCmb.setEnabled(editable);
         monoIsotopicCmb.setEnabled(editable);
         maxRankTxt.setEditable(editable);
@@ -99,6 +101,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         maxNeutralLossesPerPeptideCmb.setEnabled(editable);
         maxPtmNeutalLossesPerPeptideCmb.setEnabled(editable);
         minPeptideLengthTxt.setEnabled(editable);
+        maxPeptideLengthTxt.setEnabled(editable);
         maxProteinsLoadedTxt.setEnabled(editable);
         maxSpectraLoadedTxt.setEnabled(editable);
     }
@@ -114,6 +117,12 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
             decoyDatabaseCmb.setSelectedIndex(0);
         } else {
             decoyDatabaseCmb.setSelectedIndex(1);
+        }
+        
+        if (msAmandaParameters.reportBothBestHitsForTD()) {
+            rankTargetAndDecoySeparatelyCmb.setSelectedIndex(0);
+        } else {
+            rankTargetAndDecoySeparatelyCmb.setSelectedIndex(1);
         }
 
         instrumentCmb.setSelectedItem(msAmandaParameters.getInstrumentID());
@@ -138,6 +147,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         maxPtmNeutalLossesPerPeptideCmb.setSelectedIndex(msAmandaParameters.getMaxNeutralLossesPerModification());
 
         minPeptideLengthTxt.setText(msAmandaParameters.getMinPeptideLength().toString());
+        maxPeptideLengthTxt.setText(msAmandaParameters.getMaxPeptideLength().toString());
         maxProteinsLoadedTxt.setText(msAmandaParameters.getMaxLoadedProteins().toString());
         maxSpectraLoadedTxt.setText(msAmandaParameters.getMaxLoadedSpectra().toString());
         
@@ -168,6 +178,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         MsAmandaParameters result = new MsAmandaParameters();
 
         result.setGenerateDecoyDatabase(decoyDatabaseCmb.getSelectedIndex() == 0);
+        result.setReportBothBestHitsForTD(rankTargetAndDecoySeparatelyCmb.getSelectedIndex() == 0);
         result.setInstrumentID((String) instrumentCmb.getSelectedItem());
 
         String input = maxRankTxt.getText().trim();
@@ -187,6 +198,10 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         input = minPeptideLengthTxt.getText().trim();
         if (!input.equals("")) {
             result.setMinPeptideLength(new Integer(input));
+        }
+        input = maxPeptideLengthTxt.getText().trim();
+        if (!input.equals("")) {
+            result.setMaxPeptideLength(new Integer(input));
         }
 
         input = maxProteinsLoadedTxt.getText().trim();
@@ -235,7 +250,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         maxNeutralLossesPerPeptideCmb = new javax.swing.JComboBox();
         maxPtmNeutalLossesPerPeptideLabel = new javax.swing.JLabel();
         maxPtmNeutalLossesPerPeptideCmb = new javax.swing.JComboBox();
-        minPeptideLengthLabel = new javax.swing.JLabel();
+        peptideLengthLabel = new javax.swing.JLabel();
         minPeptideLengthTxt = new javax.swing.JTextField();
         maxProteinsLoadedLabel = new javax.swing.JLabel();
         maxProteinsLoadedTxt = new javax.swing.JTextField();
@@ -243,6 +258,10 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         maxSpectraLoadedTxt = new javax.swing.JTextField();
         outputFormatLabel = new javax.swing.JLabel();
         outputFormatCmb = new javax.swing.JComboBox();
+        peptideLengthDividerLabel = new javax.swing.JLabel();
+        maxPeptideLengthTxt = new javax.swing.JTextField();
+        rankTargetAndDecoySeparatelyLabel = new javax.swing.JLabel();
+        rankTargetAndDecoySeparatelyCmb = new javax.swing.JComboBox();
         okButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
         openDialogHelpJButton = new javax.swing.JButton();
@@ -319,11 +338,10 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         maxPtmNeutalLossesPerPeptideCmb.setSelectedIndex(1);
         maxPtmNeutalLossesPerPeptideCmb.setToolTipText("Max number identical modification specific losses per peptide");
 
-        minPeptideLengthLabel.setText("Min Peptide Length");
-        minPeptideLengthLabel.setToolTipText("Minimum peptide length");
+        peptideLengthLabel.setText("Peptide Length (min - max)");
 
         minPeptideLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minPeptideLengthTxt.setText("6");
+        minPeptideLengthTxt.setText("8");
         minPeptideLengthTxt.setToolTipText("Minimum peptide length");
         minPeptideLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -359,6 +377,21 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
 
         outputFormatCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "csv", "mzIdentML" }));
 
+        peptideLengthDividerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        peptideLengthDividerLabel.setText("-");
+
+        maxPeptideLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        maxPeptideLengthTxt.setText("30");
+        maxPeptideLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                maxPeptideLengthTxtKeyReleased(evt);
+            }
+        });
+
+        rankTargetAndDecoySeparatelyLabel.setText("Rank Target and Decoy Separately");
+
+        rankTargetAndDecoySeparatelyCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
         javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
         advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
         advancedSearchSettingsPanelLayout.setHorizontalGroup(
@@ -372,7 +405,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
                             .addComponent(decoyDatabaseLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(instrumentCmb, 0, 189, Short.MAX_VALUE)
+                            .addComponent(instrumentCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(decoyDatabaseCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(maxRankLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -407,9 +440,13 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(maxPtmNeutalLossesPerPeptideCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedSearchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(minPeptideLengthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(peptideLengthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(minPeptideLengthTxt))
+                        .addComponent(minPeptideLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(peptideLengthDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(maxPeptideLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(maxProteinsLoadedLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -421,9 +458,16 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(outputFormatCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(maxSpectraLoadedTxt))))
+                            .addComponent(maxSpectraLoadedTxt)))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(rankTargetAndDecoySeparatelyLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rankTargetAndDecoySeparatelyCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
+
+        advancedSearchSettingsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {maxPeptideLengthTxt, minPeptideLengthTxt});
+
         advancedSearchSettingsPanelLayout.setVerticalGroup(
             advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
@@ -431,6 +475,10 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(decoyDatabaseLabel)
                     .addComponent(decoyDatabaseCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rankTargetAndDecoySeparatelyLabel)
+                    .addComponent(rankTargetAndDecoySeparatelyCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(instrumentCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -470,7 +518,9 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minPeptideLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(minPeptideLengthLabel))
+                    .addComponent(peptideLengthLabel)
+                    .addComponent(maxPeptideLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(peptideLengthDividerLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxProteinsLoadedTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -655,6 +705,15 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
     }//GEN-LAST:event_maxSpectraLoadedTxtKeyReleased
 
     /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void maxPeptideLengthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPeptideLengthTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_maxPeptideLengthTxtKeyReleased
+
+    /**
      * Inspects the parameters validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -663,7 +722,8 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
     public boolean validateInput(boolean showMessage) {
         boolean valid = true;
         valid = GuiUtilities.validateIntegerInput(this, maxRankLabel, maxRankTxt, "number of spectrum matches", "Number Spectrum Matches Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, minPeptideLengthLabel, minPeptideLengthTxt, "minimum peptide length", "Minimum Peptide Length Error", false, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, minPeptideLengthTxt, "minimum peptide length", "Minimum Peptide Length Error", false, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, maxPeptideLengthTxt, "maximum peptide length", "Maximum Peptide Length Error", false, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, maxProteinsLoadedLabel, maxProteinsLoadedTxt, "maximum number of proteins loaded into memory", "Maximum Proteins Loaded into Memory Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, maxSpectraLoadedLabel, maxSpectraLoadedTxt, "maximum number of spectra loaded into memory", "Maximum Spectra Loaded into Memory Error", true, showMessage, valid);
 
@@ -720,6 +780,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
     private javax.swing.JLabel maxModPerPeptideLabel;
     private javax.swing.JComboBox maxNeutralLossesPerPeptideCmb;
     private javax.swing.JLabel maxNeutralLossesPerPeptideLabel;
+    private javax.swing.JTextField maxPeptideLengthTxt;
     private javax.swing.JComboBox maxPotentialModSitePerPeptideCmb;
     private javax.swing.JLabel maxPotentialModSitePerPeptideLabel;
     private javax.swing.JLabel maxProteinsLoadedLabel;
@@ -732,7 +793,6 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
     private javax.swing.JTextField maxSpectraLoadedTxt;
     private javax.swing.JComboBox maxVariableModPerPeptideCmb;
     private javax.swing.JLabel maxVariableModPerPeptideLabel;
-    private javax.swing.JLabel minPeptideLengthLabel;
     private javax.swing.JTextField minPeptideLengthTxt;
     private javax.swing.JComboBox monoIsotopicCmb;
     private javax.swing.JLabel monoIsotopicLabel;
@@ -740,7 +800,11 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
     private javax.swing.JButton openDialogHelpJButton;
     private javax.swing.JComboBox outputFormatCmb;
     private javax.swing.JLabel outputFormatLabel;
+    private javax.swing.JLabel peptideLengthDividerLabel;
+    private javax.swing.JLabel peptideLengthLabel;
     private javax.swing.JComboBox performDeisotopingCmb;
     private javax.swing.JLabel performDeisotopingLabel;
+    private javax.swing.JComboBox rankTargetAndDecoySeparatelyCmb;
+    private javax.swing.JLabel rankTargetAndDecoySeparatelyLabel;
     // End of variables declaration//GEN-END:variables
 }

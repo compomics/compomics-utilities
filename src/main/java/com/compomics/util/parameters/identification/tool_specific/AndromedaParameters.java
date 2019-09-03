@@ -72,7 +72,7 @@ public class AndromedaParameters implements IdentificationAlgorithmParameter {
     /**
      * The maximal peptide length when no enzyme is used.
      */
-    private Integer maxPeptideLengthNoEnzyme = 25;
+    private Integer maxPeptideLengthNoEnzyme = 30;
     /**
      * Boolean indicating whether I and L should be considered
      * indistinguishable.

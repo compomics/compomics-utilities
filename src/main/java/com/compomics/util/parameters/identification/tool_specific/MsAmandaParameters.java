@@ -24,7 +24,7 @@ public class MsAmandaParameters implements IdentificationAlgorithmParameter {
      * False = combine ranks for target and decoy, true = own rankings for
      * target and decoy.
      */
-    private Boolean reportBothBestHitsForTD;
+    private Boolean reportBothBestHitsForTD = true;
     /**
      * The MS Amanda instrument ID.
      */

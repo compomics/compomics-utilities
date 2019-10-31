@@ -234,6 +234,7 @@ public class NormalDistribution extends DbObject implements Distribution {
 
     @Override
     public double getDescendingCumulativeProbabilityAt(double x) {
+        
         readDBMode();
 
         if (std > 0) {

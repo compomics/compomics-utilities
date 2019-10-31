@@ -30,6 +30,7 @@ import com.compomics.util.experiment.identification.filtering.ProteinFilter;
 import com.compomics.util.experiment.identification.peptide_shaker.Metrics;
 import com.compomics.util.experiment.identification.peptide_shaker.PSParameter;
 import com.compomics.util.experiment.identification.peptide_shaker.PSModificationScores;
+import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.gui.filtering.FilterParameters;
 import com.compomics.util.parameters.quantification.spectrum_counting.SpectrumCountingParameters;
 import com.compomics.util.experiment.identification.validation.MatchValidationLevel;
@@ -1788,12 +1789,18 @@ public class IdentificationFeaturesGenerator {
     private String getSitesSummary(HashMap<Integer, HashSet<Integer>> sites, String sequence) {
 
         return (new TreeMap<>(sites)).entrySet().stream()
-                .map(entry -> String.join("",
-                sequence.substring(entry.getKey() - 1, entry.getKey()),
-                entry.getKey().toString(),
-                entry.getValue().stream()
-                        .map(site -> site.toString())
-                        .collect(Collectors.joining(" ", "-{", "}"))))
+                .map(
+                        entry -> String.join(
+                                "",
+                                sequence.substring(
+                                        ModificationUtils.getSite(entry.getKey(), sequence.length()) - 1,
+                                        ModificationUtils.getSite(entry.getKey(), sequence.length())),
+                                Integer.toString(
+                                        ModificationUtils.getSite(entry.getKey(), sequence.length())),
+                                entry.getValue().stream()
+                                        .map(index -> Integer.toString(
+                                        ModificationUtils.getSite(index, sequence.length())))
+                                        .collect(Collectors.joining(" ", "-{", "}"))))
                 .collect(Collectors.joining(","));
 
     }

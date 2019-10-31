@@ -570,7 +570,15 @@ public class ModificationUtils {
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
      */
-    public static void appendTaggedResidue(StringBuilder stringBuilder, char residue, String modificationName, ModificationParameters modificationProfile, int localizationConfidenceLevel, boolean useHtmlColorCoding, boolean useShortName) {
+    public static void appendTaggedResidue(
+            StringBuilder stringBuilder, 
+            char residue, 
+            String modificationName, 
+            ModificationParameters modificationProfile, 
+            int localizationConfidenceLevel, 
+            boolean useHtmlColorCoding, 
+            boolean useShortName
+    ) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
         Modification modification = modificationFactory.getModification(modificationName);

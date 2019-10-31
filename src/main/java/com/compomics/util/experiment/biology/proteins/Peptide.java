@@ -6,7 +6,6 @@ import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
-import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
@@ -1143,21 +1142,15 @@ public class Peptide extends ExperimentObject {
 
                 if (displayedModifications == null || displayedModifications.contains(modName)) {
 
-                    Modification modification = modificationFactory.getModification(modName);
+                    int modSite = modMatch.getSite();
 
-                    if (modification.getModificationType() == ModificationType.modaa) {
+                    if (modMatch.getConfident()) {
 
-                        int modSite = modMatch.getSite();
+                        confidentModificationSites[modSite] = modName;
 
-                        if (modMatch.getConfident()) {
+                    } else {
 
-                            confidentModificationSites[modSite] = modName;
-
-                        } else {
-
-                            representativeModificationSites[modSite] = modName;
-
-                        }
+                        representativeModificationSites[modSite] = modName;
 
                     }
                 }
@@ -1170,21 +1163,18 @@ public class Peptide extends ExperimentObject {
 
                 Modification modification = modificationFactory.getModification(modName);
 
-                if (modification.getModificationType() == ModificationType.modaa) {
+                int[] sites = ModificationUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
 
-                    int[] sites = ModificationUtils.getPossibleModificationSites(this, modification, sequenceProvider, modificationsSequenceMatchingParameters);
+                for (int site : sites) {
 
-                    for (int site : sites) {
+                    fixedModificationSites[site] = modName;
 
-                        fixedModificationSites[site] = modName;
-
-                    }
                 }
             }
         }
 
         return PeptideUtils.getTaggedModifiedSequence(
-                this, 
+                this,
                 modificationProfile, 
                 confidentModificationSites, 
                 representativeModificationSites, 

@@ -293,7 +293,7 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
 
         if (selection == JFileChooser.APPROVE_OPTION) {
             String selectedFile = chooser.getSelectedFile().getAbsolutePath();
-            lastSelectedFolder.setLastSelectedFolder(ExportWriter.lastFolderKey, selectedFile);
+            lastSelectedFolder.setLastSelectedFolder(ExportWriter.LAST_FOLDER_KEY, selectedFile);
             savePanel(selectedFile, true);
         }
 
@@ -366,7 +366,7 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
         if (saveFile) {
 
             frame.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-            lastSelectedFolder.setLastSelectedFolder(ExportWriter.lastFolderKey, selectedFile);
+            lastSelectedFolder.setLastSelectedFolder(ExportWriter.LAST_FOLDER_KEY, selectedFile);
 
             final String finalSelectedFile = selectedFile;
             final ExportGraphicsDialog tempRef = this;
@@ -511,7 +511,7 @@ public class ExportGraphicsDialog extends javax.swing.JDialog {
      * @return the last selected folder
      */
     private String getLastSelectedFolder() {
-        String result = lastSelectedFolder.getLastSelectedFolder(ExportWriter.lastFolderKey);
+        String result = lastSelectedFolder.getLastSelectedFolder(ExportWriter.LAST_FOLDER_KEY);
         if (result == null) {
             result = lastSelectedFolder.getLastSelectedFolder();
         }

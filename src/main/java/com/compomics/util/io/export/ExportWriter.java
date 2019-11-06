@@ -14,19 +14,19 @@ import java.io.IOException;
 public abstract class ExportWriter {
 
     /**
-     * Empty default constructor
-     */
-    public ExportWriter() {
-    }
-
-    /**
      * Key to store the last export folder.
      */
-    public static final String lastFolderKey = "export";
+    public static final String LAST_FOLDER_KEY = "export";
     /**
      * The format of the export.
      */
     protected ExportFormat exportFormat;
+
+    /**
+     * Empty default constructor.
+     */
+    public ExportWriter() {
+    }
 
     /**
      * Returns the export of the format.
@@ -45,15 +45,15 @@ public abstract class ExportWriter {
      * @throws IOException if an IOException occurs
      */
     public void write(String text) throws IOException {
-        
+
         if (text == null) {
-            
+
             text = "";
-            
+
         }
-        
+
         write(text, null);
-        
+
     }
 
     /**
@@ -149,7 +149,7 @@ public abstract class ExportWriter {
 
     /**
      * Adds a separator.
-     * 
+     *
      * @param textStyle the style to use, overwrites any previous/default
      *
      * @throws IOException if an IOException occurs
@@ -198,18 +198,18 @@ public abstract class ExportWriter {
      * @throws IOException if an IOException occurs
      */
     public static ExportWriter getExportWriter(ExportFormat exportFormat, File destinationFile, String separator, int nSeparationLines, boolean gzip) throws IOException {
-        
+
         switch (exportFormat) {
-            
+
             case excel:
                 return new ExcelWriter(destinationFile);
-            
+
             case text:
                 return new TextWriter(destinationFile, separator, nSeparationLines, gzip);
-            
+
             default:
                 throw new IllegalArgumentException("No exporter implemented for format " + exportFormat.name + ".");
-        
+
         }
     }
 }

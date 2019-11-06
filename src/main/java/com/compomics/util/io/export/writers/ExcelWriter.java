@@ -15,19 +15,11 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 
 /**
- * ExportWriter for the export to excel files.
+ * ExportWriter for the export to Excel files.
  *
  * @author Marc Vaudel
  */
 public class ExcelWriter extends ExportWriter {
-
-    /**
-     * Empty default constructor
-     */
-    public ExcelWriter() {
-        workbook = null;
-        destinationFile = null;
-    }
 
     /**
      * The workbook for excel exports.
@@ -78,6 +70,14 @@ public class ExcelWriter extends ExportWriter {
      */
     private CellStyle currentCellStyle = null;
 
+    /**
+     * Empty default constructor.
+     */
+    public ExcelWriter() {
+        workbook = null;
+        destinationFile = null;
+    }
+    
     /**
      * Constructor.
      *
@@ -228,7 +228,7 @@ public class ExcelWriter extends ExportWriter {
         try {
             Double value = new Double(content);
             cell.setCellValue(value);
-            cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+            //cell.setCellType(Cell.CELL_TYPE_NUMERIC);
         } catch (Exception e) {
             if (!content.equals("")) {
                 cell.setCellValue(content);

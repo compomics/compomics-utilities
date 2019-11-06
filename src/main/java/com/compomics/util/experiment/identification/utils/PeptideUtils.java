@@ -22,11 +22,12 @@ import java.util.stream.IntStream;
  * This class groups functions that can be used to work with peptides.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class PeptideUtils {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public PeptideUtils() {
     }
@@ -95,7 +96,7 @@ public class PeptideUtils {
         return peptide.getProteinMapping().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         entry -> Arrays.stream(entry.getValue())
-                                .mapToObj(index -> getAaAfter(peptide, entry.getKey(), index, nAa, sequenceProvider))
+                                .mapToObj(index -> getAaBefore(peptide, entry.getKey(), index, nAa, sequenceProvider))
                                 .toArray(String[]::new),
                         (a, b) -> {
                             throw new IllegalArgumentException("Duplicate key.");

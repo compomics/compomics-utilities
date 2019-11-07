@@ -12,6 +12,7 @@ import org.apache.commons.math.util.FastMath;
  * This map stores the fragment ions indexed by mass.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class SpectrumIndex extends DbObject implements UrParameter {
     
@@ -22,23 +23,23 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     /**
      * The precursor mass tolerance.
      */
-    double precursorTolerance;
+    public final double precursorTolerance;
     /**
      * Boolean indicating whether the precursor mass tolerance is in ppm.
      */
-    boolean ppm;
+    private boolean ppm;
     /**
      * Map of the precursors by bin and m/z.
      */
     private HashMap<Integer, HashMap<Double, Peak>> peaksMap;
     /**
-     * An m/z anchor to determine the bins in ppm
+     * An m/z anchor to determine the bins in ppm.
      */
-    private static final double mzAnchor = 1000;
+    private static final double MZ_ANCHOR = 1000;
     /**
      * The log of the m/z anchor.
      */
-    private static final double mzAnchorLog = FastMath.log(mzAnchor);
+    private static final double MZ_ANCHOR_LOG = FastMath.log(MZ_ANCHOR);
     /**
      * The scaling factor used for the bins in ppm.
      */
@@ -65,34 +66,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public SpectrumIndex() {
         intensityLimit = 0.0;
-    }
-    
-    public HashMap<Integer, HashMap<Double, Peak>> getPeaksMap(){
-        
-        readDBMode();
-        
-        return peaksMap;
-    }
-    
-    public boolean getPpm(){
-        
-        readDBMode();
-        
-        return ppm;
-    }
-    
-    public double getPrecursorToleance(){
-        
-        readDBMode();
-        
-        return precursorTolerance;
-    }
-    
-    public double getScalingFactor(){
-        
-        readDBMode();
-        
-        return scalingFactor;
+        precursorTolerance = 0.0;
     }
 
     /**
@@ -152,6 +126,54 @@ public class SpectrumIndex extends DbObject implements UrParameter {
             }
         }
     }
+    
+    /**
+     * Returns the peaks map.
+     * 
+     * @return the peaks map
+     */
+    public HashMap<Integer, HashMap<Double, Peak>> getPeaksMap(){
+        
+        readDBMode();
+        
+        return peaksMap;
+    }
+    
+    /**
+     * Returns whether the precursor mass tolerance is in ppm.
+     * 
+     * @return whether the precursor mass tolerance is in ppm
+     */
+    public boolean getPpm(){
+        
+        readDBMode();
+        
+        return ppm;
+    }
+    
+    /**
+     * Returns the precursor tolerance.
+     * 
+     * @return the precursor tolerance
+     */
+    public double getPrecursorToleance(){
+        
+        readDBMode();
+        
+        return precursorTolerance;
+    }
+    
+    /**
+     * Returns the scaling factor.
+     * 
+     * @return the scaling factor
+     */
+    public double getScalingFactor(){
+        
+        readDBMode();
+        
+        return scalingFactor;
+    }
 
     /**
      * Returns the bin corresponding to the given m/z.
@@ -204,7 +226,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
         
         readDBMode();
         
-        int bin = (int) ((FastMath.log(mz) - mzAnchorLog) / scalingFactor);
+        int bin = (int) ((FastMath.log(mz) - MZ_ANCHOR_LOG) / scalingFactor);
         
         return bin;
     }
@@ -337,7 +359,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
         
         readDBMode();
         
-        return ppm ?  FastMath.exp((scalingFactor * bin) + mzAnchorLog)
+        return ppm ?  FastMath.exp((scalingFactor * bin) + MZ_ANCHOR_LOG)
                 : precursorTolerance * (0.5 + bin);
         
     }
@@ -388,6 +410,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
         
     }
     
+    /**
+     * Sets the highest bin in index.
+     * 
+     * @param binMax the highest bin in index
+     */
     public void setBinMax(Integer binMax){
         
         writeDBMode();
@@ -396,6 +423,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
         
     }
     
+    /**
+     * Sets the lowest bin in index.
+     * 
+     * @param binMin the lowest bin in index
+     */
     public void setBinMin(Integer binMin){
         
         writeDBMode();
@@ -404,6 +436,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
         
     }
     
+    /**
+     * Sets the peaks map.
+     * 
+     * @param peaksMap the peaks map.
+     */
     public void setPeaksMap(HashMap<Integer, HashMap<Double, Peak>> peaksMap){
         
         writeDBMode();
@@ -412,6 +449,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
         
     }
     
+    /**
+     * Sets whether the precursor mass tolerance is in ppm.
+     * 
+     * @param ppm whether the precursor mass tolerance is in ppm
+     */
     public void setPpm(boolean ppm){
         
         writeDBMode();
@@ -420,14 +462,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
         
     }
     
-    public void setPrecursorTolerance(double precursorTolerance){
-        
-        writeDBMode();
-        
-        this.precursorTolerance = precursorTolerance;
-        
-    }
-    
+    /**
+     * Sets the scaling factor.
+     * 
+     * @param scalingFactor the scaling factor
+     */
     public void setScalingFactor(double scalingFactor){
         
         writeDBMode();
@@ -436,6 +475,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
         
     }
     
+    /**
+     * Set the total intensity.
+     * 
+     * @param totalIntensity the total intensity
+     */
     public void setTotalIntensity(Double totalIntensity){
         
         writeDBMode();

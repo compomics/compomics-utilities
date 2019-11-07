@@ -26,27 +26,28 @@ import java.util.stream.IntStream;
  * This class groups functions that can be used to work with modifications.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ModificationUtils {
 
     /**
-     * Empty default constructor
+     * Empty array for no result.
+     */
+    public static final int[] EMPTY = new int[0];
+    /**
+     * Array for N-term.
+     */
+    public static final int[] ZERO = new int[]{0};
+    /**
+     * Map of arrays for C-term.
+     */
+    public static final HashMap<Integer, int[]> ARRAYS_MAP = new HashMap<>();
+
+    /**
+     * Empty default constructor.
      */
     public ModificationUtils() {
     }
-
-    /**
-     * Empty array for no result.
-     */
-    public static final int[] empty = new int[0];
-    /**
-     * Array for n-term.
-     */
-    public static final int[] zero = new int[]{0};
-    /**
-     * Map of arrays for c-term.
-     */
-    public static final HashMap<Integer, int[]> arraysMap = new HashMap<>();
 
     /**
      * Returns an array containing only the given index.
@@ -57,13 +58,13 @@ public class ModificationUtils {
      */
     public static int[] getArray(int index) {
 
-        int[] result = arraysMap.get(index);
+        int[] result = ARRAYS_MAP.get(index);
 
         if (result == null) {
 
             result = new int[1];
             result[0] = index;
-            arraysMap.put(index, result);
+            ARRAYS_MAP.put(index, result);
 
         }
 
@@ -84,285 +85,304 @@ public class ModificationUtils {
      *
      * @return an array of the possible modification sites
      */
-    public static int[] getPossibleModificationSites(Peptide peptide, Modification modification, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+    public static int[] getPossibleModificationSites(Peptide peptide, Modification modification,
+            SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
 
         String peptideSequence = peptide.getSequence();
         ModificationType modificationType = modification.getModificationType();
 
-        if (modificationType == ModificationType.modaa) {
-
-            AminoAcidPattern aminoAcidPattern = modification.getPattern();
-
-            if (aminoAcidPattern.length() == 1) {
-
-                return aminoAcidPattern.getIndexes(peptideSequence, modificationsSequenceMatchingParameters);
-
-            } else if (aminoAcidPattern.length() > 1) {
-
-                int minIndex = aminoAcidPattern.getMinIndex();
-                int maxIndex = aminoAcidPattern.getMaxIndex();
-                IntStream allPossibleIndexes = IntStream.empty();
-
-                for (Map.Entry<String, int[]> entry : peptide.getProteinMapping().entrySet()) {
-
-                    String accession = entry.getKey();
-                    String sequence = sequenceProvider.getSequence(accession);
-
-                    for (int startIndex : entry.getValue()) {
-
-                        StringBuilder extendedSequenceBuilder = new StringBuilder(peptideSequence.length() + aminoAcidPattern.length());
-
-                        if (minIndex < 0) {
-                            String prefix = sequence.substring(startIndex + minIndex, startIndex);
-                            extendedSequenceBuilder.append(prefix);
-                        }
-
-                        extendedSequenceBuilder.append(peptideSequence);
-
-                        if (maxIndex > 0) {
-                            String suffix = sequence.substring(startIndex + peptideSequence.length(), startIndex + peptideSequence.length() + maxIndex);
-                            extendedSequenceBuilder.append(suffix);
-                        }
-
-                        int[] sitesAtIndex = aminoAcidPattern.getIndexes(extendedSequenceBuilder.toString(), modificationsSequenceMatchingParameters);
-                        allPossibleIndexes = IntStream.concat(allPossibleIndexes, Arrays.stream(sitesAtIndex));
-
-                    }
-                }
-
-                allPossibleIndexes = allPossibleIndexes
-                        .distinct()
-                        .sorted();
-
-                if (minIndex < 0) {
-                    allPossibleIndexes.map(site -> site - minIndex);
-                }
-
-                return allPossibleIndexes.toArray();
-
-            } else {
-
-                throw new IllegalArgumentException("No pattern set for modification " + modification.getName() + ".");
-
-            }
-
-        } else if (modificationType == ModificationType.modnaa_peptide) {
-
-            AminoAcidPattern aminoAcidPattern = modification.getPattern();
-
-            if (aminoAcidPattern.length() == 1) {
-
-                return aminoAcidPattern.matches(Character.toString(peptideSequence.charAt(0)), modificationsSequenceMatchingParameters) ? zero : empty;
-
-            } else if (aminoAcidPattern.length() > 1) {
-
-                int minIndex = aminoAcidPattern.getMinIndex();
-                int maxIndex = aminoAcidPattern.getMaxIndex();
-
-                if (minIndex == 0 && maxIndex < peptideSequence.length()) {
-                    return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, 0) ? zero : empty;
-                }
-
-                for (Map.Entry<String, int[]> entry : peptide.getProteinMapping().entrySet()) {
-
-                    String accession = entry.getKey();
-                    String sequence = sequenceProvider.getSequence(accession);
-
-                    for (int startIndex : entry.getValue()) {
-
-                        int tempStart = startIndex + minIndex;
-                        int tempEnd = startIndex + maxIndex + 1;
-
-                        if (tempStart >= 0 && tempEnd <= sequence.length()) {
-
-                            String subSequence = sequence.substring(tempStart, tempEnd);
-
-                            if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
-                                return zero;
-                            }
-                        }
-                    }
-                }
-
-                return empty;
-
-            } else {
-
-                throw new IllegalArgumentException("No pattern set for modification " + modification.getName() + ".");
-
-            }
-
-        } else if (modificationType == ModificationType.modn_protein) {
-
-            return PeptideUtils.isNterm(peptide, sequenceProvider) ? zero : empty;
-
-        } else if (modificationType == ModificationType.modn_peptide) {
-
-            return new int[]{0};
-
-        } else if (modificationType == ModificationType.modnaa_protein) {
-
-            String[] accessions = peptide.getProteinMapping().entrySet().stream()
-                    .filter(entry -> Arrays.stream(entry.getValue()).anyMatch(index -> index == 0))
-                    .map(entry -> entry.getKey())
-                    .toArray(String[]::new);
-
-            if (accessions.length > 0) {
-
-                AminoAcidPattern aminoAcidPattern = modification.getPattern();
-
-                if (aminoAcidPattern.length() == 1) {
-
-                    return aminoAcidPattern.matches(Character.toString(peptideSequence.charAt(0)), modificationsSequenceMatchingParameters) ? zero : empty;
-
-                } else if (aminoAcidPattern.length() > 1) {
-
-                    int maxIndex = aminoAcidPattern.getMaxIndex();
-
-                    if (maxIndex < peptideSequence.length()) {
-                        return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, 0) ? zero : empty;
-                    }
-
-                    for (String accession : accessions) {
-
-                        String sequence = sequenceProvider.getSequence(accession);
-
-                        if (maxIndex < sequence.length()) {
-
-                            String subSequence = sequence.substring(0, maxIndex + 1);
-
-                            if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
-                                return zero;
-                            }
-                            
-                            if (sequence.charAt(0) == 'M' && maxIndex + 1 < sequence.length()) {
-
-                            subSequence = sequence.substring(1, maxIndex + 2);
-
-                            if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
-                                return zero;
-                            }
-                        }
-                        }
-                    }
-                } else {
-
-                    throw new IllegalArgumentException("No pattern set for modification " + modification.getName() + ".");
-
-                }
-            }
-
-            return empty;
-
-        } else if (modificationType == ModificationType.modc_peptide) {
-
-            return getArray(peptideSequence.length() + 1);
-
-        } else if (modificationType == ModificationType.modc_protein) {
-
-            return PeptideUtils.isCterm(peptide, sequenceProvider) ? getArray(peptideSequence.length() + 1) : empty;
-
-        } else if (modificationType == ModificationType.modcaa_peptide) {
-
-            AminoAcidPattern aminoAcidPattern = modification.getPattern();
-
-            if (aminoAcidPattern.length() == 1) {
-
-                return aminoAcidPattern.matches(Character.toString(peptideSequence.charAt(peptideSequence.length() - 1)), modificationsSequenceMatchingParameters) ? getArray(peptideSequence.length() + 1) : empty;
-
-            } else if (aminoAcidPattern.length() > 1) {
-
-                int minIndex = aminoAcidPattern.getMinIndex();
-                int maxIndex = aminoAcidPattern.getMaxIndex();
-                int tempStart = peptideSequence.length() + minIndex;
-
-                if (maxIndex == 0 && tempStart > 0) {
-                    return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, peptideSequence.length() - 1) ? getArray(peptideSequence.length() + 1) : empty;
-                }
-
-                for (Map.Entry<String, int[]> entry : peptide.getProteinMapping().entrySet()) {
-
-                    String accession = entry.getKey();
-                    String sequence = sequenceProvider.getSequence(accession);
-
-                    for (int startIndex : entry.getValue()) {
-
-                        int tempStartProtein = startIndex + tempStart;
-                        int tempEndProtien = startIndex + peptideSequence.length() + maxIndex + 1;
-
-                        if (tempStartProtein >= 0 && tempEndProtien <= sequence.length()) {
-
-                            String subSequence = sequence.substring(tempStartProtein, tempEndProtien);
-
-                            if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
-                                return getArray(peptideSequence.length() + 1);
-                            }
-                        }
-                    }
-                }
-
-                return empty;
-
-            } else {
-
-                throw new IllegalArgumentException("No pattern set for modification " + modification.getName() + ".");
-
-            }
-
-        } else if (modificationType == ModificationType.modcaa_protein) {
-
-            String[] accessions = peptide.getProteinMapping().entrySet().stream()
-                    .filter(entry -> Arrays.stream(entry.getValue()).anyMatch(index -> index + peptideSequence.length() == sequenceProvider.getSequence(entry.getKey()).length()))
-                    .map(entry -> entry.getKey())
-                    .toArray(String[]::new);
-
-            if (accessions.length > 0) {
-
-                AminoAcidPattern aminoAcidPattern = modification.getPattern();
-
-                if (aminoAcidPattern.length() == 1) {
-
-                    return aminoAcidPattern.matches(Character.toString(peptideSequence.charAt(peptideSequence.length() - 1)), modificationsSequenceMatchingParameters) ? getArray(peptideSequence.length() + 1) : empty;
-
-                } else if (aminoAcidPattern.length() > 1) {
-
-                    int minIndex = aminoAcidPattern.getMinIndex();
-                    int tempStart = peptideSequence.length() + minIndex;
-
-                    if (tempStart > 0) {
-                        return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, peptideSequence.length() - 1) ? getArray(peptideSequence.length() + 1) : empty;
-                    }
-
-                    for (String accession : accessions) {
-
-                        String sequence = sequenceProvider.getSequence(accession);
-                        int tempStartProtein = sequence.length() - aminoAcidPattern.length() - 1;
-
-                        if (tempStartProtein >= 0) {
-
-                            String subSequence = sequence.substring(tempStartProtein, sequence.length());
-
-                            if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
-
-                                return getArray(peptideSequence.length() + 1);
-
-                            }
-                        }
-                    }
-
-                } else {
-
-                    throw new IllegalArgumentException("No pattern set for modification " + modification.getName() + ".");
-
-                }
-            }
-
-            return empty;
-
-        } else {
+        if (null == modificationType) {
 
             throw new UnsupportedOperationException("Modification mapping not supported for modification of type " + modificationType + ".");
 
+        } else {
+
+            switch (modificationType) {
+
+                case modaa: {
+
+                    AminoAcidPattern aminoAcidPattern = modification.getPattern();
+
+                    if (aminoAcidPattern.length() == 1) {
+
+                        return aminoAcidPattern.getIndexes(peptideSequence, modificationsSequenceMatchingParameters);
+
+                    } else if (aminoAcidPattern.length() > 1) {
+
+                        int minIndex = aminoAcidPattern.getMinIndex();
+                        int maxIndex = aminoAcidPattern.getMaxIndex();
+                        IntStream allPossibleIndexes = IntStream.empty();
+
+                        for (Map.Entry<String, int[]> entry : peptide.getProteinMapping().entrySet()) {
+
+                            String accession = entry.getKey();
+                            String sequence = sequenceProvider.getSequence(accession);
+
+                            for (int startIndex : entry.getValue()) {
+
+                                StringBuilder extendedSequenceBuilder = new StringBuilder(peptideSequence.length() + aminoAcidPattern.length());
+
+                                if (minIndex < 0) {
+                                    String prefix = sequence.substring(Math.max(startIndex + minIndex, 0), startIndex);
+                                    extendedSequenceBuilder.append(prefix);
+                                }
+
+                                extendedSequenceBuilder.append(peptideSequence);
+
+                                if (maxIndex > 0) {
+
+                                    String suffix = sequence.substring(startIndex + peptideSequence.length(),
+                                            Math.min(startIndex + peptideSequence.length() + maxIndex, sequence.length()));
+                                    extendedSequenceBuilder.append(suffix);
+                                }
+
+                                int[] sitesAtIndex = aminoAcidPattern.getIndexes(extendedSequenceBuilder.toString(), modificationsSequenceMatchingParameters);
+                                allPossibleIndexes = IntStream.concat(allPossibleIndexes, Arrays.stream(sitesAtIndex));
+
+                            }
+                        }
+
+                        allPossibleIndexes = allPossibleIndexes
+                                .distinct()
+                                .sorted();
+
+                        if (minIndex < 0) {
+                            allPossibleIndexes.map(site -> site - minIndex);
+                        }
+
+                        return allPossibleIndexes.toArray();
+
+                    } else {
+
+                        throw new IllegalArgumentException("No pattern set for modification " + modification.getName() + ".");
+
+                    }
+
+                }
+
+                case modnaa_peptide: {
+
+                    AminoAcidPattern aminoAcidPattern = modification.getPattern();
+
+                    if (aminoAcidPattern.length() == 1) {
+
+                        return aminoAcidPattern.matches(Character.toString(peptideSequence.charAt(0)), modificationsSequenceMatchingParameters) ? ZERO : EMPTY;
+
+                    } else if (aminoAcidPattern.length() > 1) {
+
+                        int minIndex = aminoAcidPattern.getMinIndex();
+                        int maxIndex = aminoAcidPattern.getMaxIndex();
+
+                        if (minIndex == 0 && maxIndex < peptideSequence.length()) {
+                            return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, 0) ? ZERO : EMPTY;
+                        }
+
+                        for (Map.Entry<String, int[]> entry : peptide.getProteinMapping().entrySet()) {
+
+                            String accession = entry.getKey();
+                            String sequence = sequenceProvider.getSequence(accession);
+
+                            for (int startIndex : entry.getValue()) {
+
+                                int tempStart = startIndex + minIndex;
+                                int tempEnd = startIndex + maxIndex + 1;
+
+                                if (tempStart >= 0 && tempEnd <= sequence.length()) {
+
+                                    String subSequence = sequence.substring(tempStart, tempEnd);
+
+                                    if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
+                                        return ZERO;
+                                    }
+                                }
+                            }
+                        }
+
+                        return EMPTY;
+
+                    } else {
+
+                        throw new IllegalArgumentException("No pattern set for modification " + modification.getName() + ".");
+
+                    }
+
+                }
+
+                case modn_protein:
+
+                    return PeptideUtils.isNterm(peptide, sequenceProvider) ? ZERO : EMPTY;
+
+                case modn_peptide:
+
+                    return new int[]{0};
+
+                case modnaa_protein: {
+
+                    String[] accessions = peptide.getProteinMapping().entrySet().stream()
+                            .filter(entry -> Arrays.stream(entry.getValue()).anyMatch(index -> index == 0))
+                            .map(entry -> entry.getKey())
+                            .toArray(String[]::new);
+
+                    if (accessions.length > 0) {
+
+                        AminoAcidPattern aminoAcidPattern = modification.getPattern();
+
+                        if (aminoAcidPattern.length() == 1) {
+
+                            return aminoAcidPattern.matches(Character.toString(peptideSequence.charAt(0)), modificationsSequenceMatchingParameters) ? ZERO : EMPTY;
+
+                        } else if (aminoAcidPattern.length() > 1) {
+
+                            int maxIndex = aminoAcidPattern.getMaxIndex();
+
+                            if (maxIndex < peptideSequence.length()) {
+                                return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, 0) ? ZERO : EMPTY;
+                            }
+
+                            for (String accession : accessions) {
+
+                                String sequence = sequenceProvider.getSequence(accession);
+
+                                if (maxIndex < sequence.length()) {
+
+                                    String subSequence = sequence.substring(0, maxIndex + 1);
+
+                                    if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
+                                        return ZERO;
+                                    }
+
+                                    if (sequence.charAt(0) == 'M' && maxIndex + 1 < sequence.length()) {
+
+                                        subSequence = sequence.substring(1, maxIndex + 2);
+
+                                        if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
+                                            return ZERO;
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+
+                            throw new IllegalArgumentException("No pattern set for modification " + modification.getName() + ".");
+
+                        }
+                    }
+
+                    return EMPTY;
+
+                }
+
+                case modc_peptide:
+
+                    return getArray(peptideSequence.length() + 1);
+
+                case modc_protein:
+
+                    return PeptideUtils.isCterm(peptide, sequenceProvider) ? getArray(peptideSequence.length() + 1) : EMPTY;
+
+                case modcaa_peptide: {
+
+                    AminoAcidPattern aminoAcidPattern = modification.getPattern();
+
+                    if (aminoAcidPattern.length() == 1) {
+
+                        return aminoAcidPattern.matches(Character.toString(peptideSequence.charAt(peptideSequence.length() - 1)), modificationsSequenceMatchingParameters) ? getArray(peptideSequence.length() + 1) : EMPTY;
+
+                    } else if (aminoAcidPattern.length() > 1) {
+
+                        int minIndex = aminoAcidPattern.getMinIndex();
+                        int maxIndex = aminoAcidPattern.getMaxIndex();
+                        int tempStart = peptideSequence.length() + minIndex;
+
+                        if (maxIndex == 0 && tempStart > 0) {
+                            return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, peptideSequence.length() - 1) ? getArray(peptideSequence.length() + 1) : EMPTY;
+                        }
+
+                        for (Map.Entry<String, int[]> entry : peptide.getProteinMapping().entrySet()) {
+
+                            String accession = entry.getKey();
+                            String sequence = sequenceProvider.getSequence(accession);
+
+                            for (int startIndex : entry.getValue()) {
+
+                                int tempStartProtein = startIndex + tempStart;
+                                int tempEndProtein = startIndex + peptideSequence.length() + maxIndex + 1;
+
+                                if (tempStartProtein >= 0 && tempEndProtein <= sequence.length()) {
+
+                                    String subSequence = sequence.substring(tempStartProtein, tempEndProtein);
+
+                                    if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
+                                        return getArray(peptideSequence.length() + 1);
+                                    }
+                                }
+                            }
+                        }
+
+                        return EMPTY;
+
+                    } else {
+
+                        throw new IllegalArgumentException("No pattern set for modification " + modification.getName() + ".");
+
+                    }
+                }
+
+                case modcaa_protein: {
+
+                    String[] accessions = peptide.getProteinMapping().entrySet().stream()
+                            .filter(entry -> Arrays.stream(entry.getValue()).anyMatch(index -> index + peptideSequence.length() == sequenceProvider.getSequence(entry.getKey()).length()))
+                            .map(entry -> entry.getKey())
+                            .toArray(String[]::new);
+
+                    if (accessions.length > 0) {
+
+                        AminoAcidPattern aminoAcidPattern = modification.getPattern();
+
+                        if (aminoAcidPattern.length() == 1) {
+
+                            return aminoAcidPattern.matches(Character.toString(peptideSequence.charAt(peptideSequence.length() - 1)), modificationsSequenceMatchingParameters) ? getArray(peptideSequence.length() + 1) : EMPTY;
+
+                        } else if (aminoAcidPattern.length() > 1) {
+
+                            int minIndex = aminoAcidPattern.getMinIndex();
+                            int tempStart = peptideSequence.length() + minIndex;
+
+                            if (tempStart > 0) {
+                                return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, peptideSequence.length() - 1) ? getArray(peptideSequence.length() + 1) : EMPTY;
+                            }
+
+                            for (String accession : accessions) {
+
+                                String sequence = sequenceProvider.getSequence(accession);
+                                int tempStartProtein = sequence.length() - aminoAcidPattern.length() - 1;
+
+                                if (tempStartProtein >= 0) {
+
+                                    String subSequence = sequence.substring(tempStartProtein, sequence.length());
+
+                                    if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
+
+                                        return getArray(peptideSequence.length() + 1);
+
+                                    }
+                                }
+                            }
+
+                        } else {
+
+                            throw new IllegalArgumentException("No pattern set for modification " + modification.getName() + ".");
+
+                        }
+                    }
+
+                    return EMPTY;
+
+                }
+
+                default:
+                    throw new UnsupportedOperationException("Modification mapping not supported for modification of type " + modificationType + ".");
+            }
         }
     }
 
@@ -383,62 +403,76 @@ public class ModificationUtils {
      *
      * @return an array of the possible modification sites
      */
-    public static int[] getPossibleModificationSites(AminoAcidSequence aminoAcidSequence, boolean nTerm, boolean cTerm, Modification modification, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+    public static int[] getPossibleModificationSites(AminoAcidSequence aminoAcidSequence, boolean nTerm,
+            boolean cTerm, Modification modification, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
 
         String sequence = aminoAcidSequence.getSequence();
         ModificationType modificationType = modification.getModificationType();
 
-        if (modificationType == ModificationType.modaa) {
-
-            AminoAcidPattern aminoAcidPattern = modification.getPattern();
-            return aminoAcidPattern.getIndexes(sequence, modificationsSequenceMatchingParameters);
-
-        } else if (modificationType == ModificationType.modnaa_peptide) {
-
-            if (!nTerm) {
-                return empty;
-            }
-
-            AminoAcidPattern aminoAcidPattern = modification.getPattern();
-            return aminoAcidPattern.matchesAt(sequence, modificationsSequenceMatchingParameters, 0) ? zero : empty;
-
-        } else if (modificationType == ModificationType.modn_protein) {
-
-            return empty;
-
-        } else if (modificationType == ModificationType.modn_peptide) {
-
-            return nTerm ? zero : empty;
-
-        } else if (modificationType == ModificationType.modnaa_protein) {
-
-            return empty;
-
-        } else if (modificationType == ModificationType.modc_peptide) {
-
-            return cTerm ? getArray(sequence.length() + 1) : empty;
-
-        } else if (modificationType == ModificationType.modc_protein) {
-
-            return empty;
-
-        } else if (modificationType == ModificationType.modcaa_peptide) {
-
-            if (!cTerm) {
-                return empty;
-            }
-
-            AminoAcidPattern aminoAcidPattern = modification.getPattern();
-            return aminoAcidPattern.matchesAt(sequence, modificationsSequenceMatchingParameters, sequence.length() - 1) ? getArray(sequence.length() + 1) : empty;
-
-        } else if (modificationType == ModificationType.modcaa_protein) {
-
-            return empty;
-
-        } else {
+        if (null == modificationType) {
 
             throw new UnsupportedOperationException("Modification mapping not supported for modification of type " + modificationType + ".");
 
+        } else {
+
+            switch (modificationType) {
+
+                case modaa: {
+
+                    AminoAcidPattern aminoAcidPattern = modification.getPattern();
+                    return aminoAcidPattern.getIndexes(sequence, modificationsSequenceMatchingParameters);
+
+                }
+
+                case modnaa_peptide: {
+
+                    if (!nTerm) {
+                        return EMPTY;
+                    }
+
+                    AminoAcidPattern aminoAcidPattern = modification.getPattern();
+                    return aminoAcidPattern.matchesAt(sequence, modificationsSequenceMatchingParameters, 0) ? ZERO : EMPTY;
+
+                }
+
+                case modn_protein:
+
+                    return EMPTY;
+
+                case modn_peptide:
+
+                    return nTerm ? ZERO : EMPTY;
+
+                case modnaa_protein:
+
+                    return EMPTY;
+
+                case modc_peptide:
+
+                    return cTerm ? getArray(sequence.length() + 1) : EMPTY;
+
+                case modc_protein:
+
+                    return EMPTY;
+
+                case modcaa_peptide: {
+
+                    if (!cTerm) {
+                        return EMPTY;
+                    }
+
+                    AminoAcidPattern aminoAcidPattern = modification.getPattern();
+                    return aminoAcidPattern.matchesAt(sequence, modificationsSequenceMatchingParameters, sequence.length() - 1) ? getArray(sequence.length() + 1) : EMPTY;
+
+                }
+
+                case modcaa_protein:
+
+                    return EMPTY;
+
+                default:
+                    throw new UnsupportedOperationException("Modification mapping not supported for modification of type " + modificationType + ".");
+            }
         }
     }
 
@@ -571,14 +605,13 @@ public class ModificationUtils {
      * @param useShortName if true the short names are used in the tags
      */
     public static void appendTaggedResidue(
-            StringBuilder stringBuilder, 
-            char residue, 
-            String modificationName, 
-            ModificationParameters modificationProfile, 
-            int localizationConfidenceLevel, 
-            boolean useHtmlColorCoding, 
-            boolean useShortName
-    ) {
+            StringBuilder stringBuilder,
+            char residue,
+            String modificationName,
+            ModificationParameters modificationProfile,
+            int localizationConfidenceLevel,
+            boolean useHtmlColorCoding,
+            boolean useShortName) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
         Modification modification = modificationFactory.getModification(modificationName);
@@ -664,7 +697,8 @@ public class ModificationUtils {
      *
      * @return a set of the names of all modifications found on a peptide
      */
-    public static HashSet<String> getAllModifications(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+    public static HashSet<String> getAllModifications(Peptide peptide, ModificationParameters modificationParameters, 
+            SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
 
         HashSet<String> modNames = Arrays.stream(peptide.getVariableModifications())
                 .map(ModificationMatch::getModification)
@@ -717,50 +751,53 @@ public class ModificationUtils {
 
         return modNames;
     }
-    
+
     /**
-     * Returns the expected modifications for a given modification mass indexed by site.
-     * 
+     * Returns the expected modifications for a given modification mass indexed
+     * by site.
+     *
      * @param modMass the modification mass
      * @param modificationParameters the modification parameters
      * @param peptide the peptide where to map the modification
      * @param massTolerance the mass tolerance to use
      * @param sequenceProvider a sequence provider
      * @param modificationSequenceMatchingParameters the modification parameters
-     * 
-     * @return the expected modifications for a given protein mass indexed by site
+     *
+     * @return the expected modifications for a given protein mass indexed by
+     * site
      */
-    public static HashMap<Integer, HashSet<String>> getExpectedModifications(double modMass, ModificationParameters modificationParameters, Peptide peptide, double massTolerance, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
-        
+    public static HashMap<Integer, HashSet<String>> getExpectedModifications(double modMass, ModificationParameters modificationParameters, 
+            Peptide peptide, double massTolerance, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
+
         HashMap<Integer, HashSet<String>> results = new HashMap<>(1);
-                
+
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
-        
+
         for (String possibleModName : modificationParameters.getAllNotFixedModifications()) {
-            
+
             Modification possibleModification = modificationFactory.getModification(possibleModName);
-            
+
             if (Math.abs(modMass - possibleModification.getMass()) < massTolerance) {
-                
+
                 int[] possibleSites = getPossibleModificationSites(peptide, possibleModification, sequenceProvider, modificationSequenceMatchingParameters);
-                
+
                 for (int site : possibleSites) {
-                    
+
                     HashSet<String> modifications = results.get(site);
-                    
+
                     if (modifications == null) {
-                        
+
                         modifications = new HashSet<>(1);
                         results.put(site, modifications);
-                        
+
                     }
-                    
+
                     modifications.add(possibleModName);
-                    
+
                 }
             }
         }
-        
+
         return results;
     }
 }

@@ -178,7 +178,7 @@ public class IonFactory {
      * method will work only if the modifications found in the peptide are in
      * the ModificationFactory.
      *
-     * @param peptide The considered peptide
+     * @param peptide the considered peptide
      * @param specificAnnotationSettings if provided, only the ions detectable
      * using these settings will be selected
      * @param modificationParameters the modification parameters the

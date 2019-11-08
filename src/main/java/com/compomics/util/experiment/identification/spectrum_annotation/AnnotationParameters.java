@@ -46,13 +46,13 @@ public class AnnotationParameters extends DbObject {
         private IntensityThresholdType(String description) {
             this.description = description;
         }
-        
+
         /**
-         * Returns the different intensity threshold types as command line options
-         * description.
+         * Returns the different intensity threshold types as command line
+         * options description.
          *
-         * @return the different intensity threshold types as command line options
-         * description
+         * @return the different intensity threshold types as command line
+         * options description
          */
         public static String getCommandLineOptions() {
             StringBuilder optionsStringBuilder = new StringBuilder();
@@ -81,12 +81,12 @@ public class AnnotationParameters extends DbObject {
      */
     private boolean showAllPeaks = false;
     /**
-     * The type of intensity threshold
+     * The type of intensity threshold.
      */
     private IntensityThresholdType intensityThresholdType = IntensityThresholdType.percentile;
     /**
-     * The intensity threshold to use. The type of threshold is defined according
-     * to the IntensityThreshold enum.
+     * The intensity threshold to use. The type of threshold is defined
+     * according to the IntensityThreshold enum.
      */
     private double intensityLimit = 0.75;
     /**
@@ -162,56 +162,57 @@ public class AnnotationParameters extends DbObject {
      * @return the annotation preferences specific to a spectrum and an
      * identification assumption
      */
-    public SpecificAnnotationParameters getSpecificAnnotationParameters(String spectrumKey, 
-            SpectrumIdentificationAssumption spectrumIdentificationAssumption, 
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, 
+    public SpecificAnnotationParameters getSpecificAnnotationParameters(String spectrumKey,
+            SpectrumIdentificationAssumption spectrumIdentificationAssumption,
+            ModificationParameters modificationParameters, SequenceProvider sequenceProvider,
             SequenceMatchingParameters modificationSequenceMatchingParameters,
             SpectrumAnnotator spectrumAnnotator) {
         readDBMode();
 
         SpecificAnnotationParameters specificAnnotationParameters = new SpecificAnnotationParameters(spectrumKey, spectrumIdentificationAssumption);
         specificAnnotationParameters.setNeutralLossesAuto(neutralLossesAuto);
-        
+
         if (neutralLossesAuto) {
-            
-            specificAnnotationParameters.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(spectrumIdentificationAssumption, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, spectrumAnnotator));
-        
+
+            specificAnnotationParameters.setNeutralLossesMap(SpectrumAnnotator.getDefaultLosses(
+                    spectrumIdentificationAssumption, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, spectrumAnnotator));
+
         } else {
-        
+
             NeutralLossesMap tempNeutralLossesMap = new NeutralLossesMap();
-            
+
             for (NeutralLoss neutralLoss : getNeutralLosses()) {
-            
+
                 tempNeutralLossesMap.addNeutralLoss(neutralLoss, 1, 1);
-            
+
             }
-            
+
             specificAnnotationParameters.setNeutralLossesMap(tempNeutralLossesMap);
-        
+
         }
-        
+
         ArrayList<Integer> charges = new ArrayList<>(4);
         int precursorCharge = spectrumIdentificationAssumption.getIdentificationCharge();
-        
+
         if (precursorCharge == 1) {
-        
+
             charges.add(precursorCharge);
-        
+
         } else {
-        
+
             for (int charge = 1; charge < precursorCharge; charge++) {
-            
+
                 charges.add(charge);
-            
+
             }
         }
-        
+
         specificAnnotationParameters.setSelectedCharges(charges);
         specificAnnotationParameters.setSelectedIonsMap((HashMap<Ion.IonType, HashSet<Integer>>) selectedIonsMap.clone());
         specificAnnotationParameters.setFragmentIonAccuracy(fragmentIonAccuracy);
         specificAnnotationParameters.setFragmentIonPpm(fragmentIonPpm);
         return specificAnnotationParameters;
-        
+
     }
 
     /**
@@ -231,48 +232,48 @@ public class AnnotationParameters extends DbObject {
      */
     public void setParametersFromSearchParameters(SearchParameters searchParameters) {
         writeDBMode();
-        
+
         clearIonTypes();
-        
+
         for (Integer ion : searchParameters.getForwardIons()) {
-        
+
             addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, ion);
             addIonType(Ion.IonType.TAG_FRAGMENT_ION, ion);
-        
+
         }
-        
+
         for (Integer ion : searchParameters.getRewindIons()) {
-        
+
             addIonType(Ion.IonType.PEPTIDE_FRAGMENT_ION, ion);
             addIonType(Ion.IonType.TAG_FRAGMENT_ION, ion);
-        
+
         }
-        
+
         addIonType(Ion.IonType.PRECURSOR_ION);
         addIonType(Ion.IonType.IMMONIUM_ION);
         addIonType(Ion.IonType.REPORTER_ION);
         addIonType(Ion.IonType.RELATED_ION);
         setFragmentIonAccuracy(searchParameters.getFragmentIonAccuracy());
         setFragmentIonPpm(searchParameters.getFragmentAccuracyType() == SearchParameters.MassAccuracyType.PPM);
-       
+
         ModificationParameters ptmSettings = searchParameters.getModificationParameters();
-        
+
         if (getReporterIons()) {
-        
+
             HashSet<Integer> ptmReporterIons = IonFactory.getReporterIons(ptmSettings);
             selectedIonsMap.put(ReporterIon.IonType.REPORTER_ION, ptmReporterIons);
-        
+
         }
-        
+
         if (isAutomaticAnnotation() || areNeutralLossesSequenceAuto()) {
-        
+
             HashSet<String> lossesNames = IonFactory.getNeutralLosses(searchParameters.getModificationParameters());
-            
+
             for (String lossName : lossesNames) {
-            
+
                 NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(lossName);
                 addNeutralLoss(neutralLoss);
-            
+
             }
         }
     }
@@ -370,23 +371,23 @@ public class AnnotationParameters extends DbObject {
      */
     public void addNeutralLoss(NeutralLoss neutralLoss) {
         writeDBMode();
-        
+
         boolean alreadyInList = false;
-        
+
         for (NeutralLoss tempNeutralLoss : neutralLossesList) {
-        
+
             if (neutralLoss.isSameAs(tempNeutralLoss)) {
-            
+
                 alreadyInList = true;
                 break;
-            
+
             }
         }
-        
+
         if (!alreadyInList) {
-        
+
             neutralLossesList.add(neutralLoss);
-        
+
         }
     }
 
@@ -407,15 +408,15 @@ public class AnnotationParameters extends DbObject {
      */
     public HashSet<Integer> getFragmentIonTypes() {
         readDBMode();
-        
+
         if (selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION) == null) {
-        
+
             return new HashSet<>(0);
-        
+
         } else {
-        
+
             return selectedIonsMap.get(Ion.IonType.PEPTIDE_FRAGMENT_ION); // @TOOO: what about tags..?
-        
+
         }
     }
 
@@ -427,16 +428,16 @@ public class AnnotationParameters extends DbObject {
      */
     public void addIonType(Ion.IonType ionType, int subType) {
         writeDBMode();
-        
+
         HashSet<Integer> selectedSubtypes = selectedIonsMap.get(ionType);
-        
+
         if (selectedSubtypes == null) {
-        
+
             selectedSubtypes = new HashSet<>(1);
             selectedIonsMap.put(ionType, selectedSubtypes);
-        
+
         }
-        
+
         selectedSubtypes.add(subType);
 
     }
@@ -485,13 +486,11 @@ public class AnnotationParameters extends DbObject {
      */
     public void setAutomaticAnnotation(boolean automaticAnnotation) {
         writeDBMode();
-        
+
         this.automaticAnnotation = automaticAnnotation;
 
         if (automaticAnnotation) {
-           
             neutralLossesAuto = true;
-        
         }
     }
 
@@ -526,9 +525,7 @@ public class AnnotationParameters extends DbObject {
      */
     public double getFragmentIonAccuracyInDa(Double refMass) {
         readDBMode();
-       
         return fragmentIonPpm ? fragmentIonAccuracy * refMass / 1000000 : fragmentIonAccuracy;
-        
     }
 
     /**
@@ -538,9 +535,7 @@ public class AnnotationParameters extends DbObject {
      */
     public void setFragmentIonAccuracy(double fragmentIonAccuracy) {
         writeDBMode();
-       
         this.fragmentIonAccuracy = fragmentIonAccuracy;
-    
     }
 
     /**
@@ -550,9 +545,7 @@ public class AnnotationParameters extends DbObject {
      */
     public boolean isFragmentIonPpm() {
         readDBMode();
-        
         return fragmentIonPpm;
-        
     }
 
     /**
@@ -778,7 +771,9 @@ public class AnnotationParameters extends DbObject {
      * the same as these ones
      */
     public boolean isSameAs(AnnotationParameters annotationSettings) {
+
         readDBMode();
+
         if (yAxisZoomExcludesBackgroundPeaks != annotationSettings.yAxisZoomExcludesBackgroundPeaks()) {
             return false;
         }
@@ -821,6 +816,7 @@ public class AnnotationParameters extends DbObject {
         if (getRelatedIons() != annotationSettings.getRelatedIons()) {
             return false;
         }
+
         ArrayList<NeutralLoss> otherNeutralLosses = annotationSettings.getNeutralLosses();
         if (getNeutralLosses().size() != otherNeutralLosses.size()) {
             return false;
@@ -837,6 +833,7 @@ public class AnnotationParameters extends DbObject {
                 return false;
             }
         }
+
         HashMap<Ion.IonType, HashSet<Integer>> ionTypes = annotationSettings.getIonTypes();
         if (ionTypes.size() != selectedIonsMap.size()) {
             return false;
@@ -863,6 +860,7 @@ public class AnnotationParameters extends DbObject {
                 }
             }
         }
+
         return true;
     }
 
@@ -872,6 +870,7 @@ public class AnnotationParameters extends DbObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
+
         readDBMode();
 
         String newLine = System.getProperty("line.separator");
@@ -879,82 +878,133 @@ public class AnnotationParameters extends DbObject {
         StringBuilder output = new StringBuilder();
 
         if (!selectedIonsMap.isEmpty()) {
+
             output.append("Ion Types: ");
             String ionTypes = "";
 
             for (Ion.IonType ionType : selectedIonsMap.keySet()) {
+
                 if (null != ionType) {
+
                     switch (ionType) {
+
                         case IMMONIUM_ION:
+
                             if (!ionTypes.isEmpty()) {
                                 ionTypes += ", ";
                             }
+
                             ionTypes += "immonium ions";
+
                             break;
+
                         case RELATED_ION:
+
                             if (!ionTypes.isEmpty()) {
                                 ionTypes += ", ";
                             }
+
                             ionTypes += "related ions";
+
                             break;
+
                         case PEPTIDE_FRAGMENT_ION:
+
                             // @TODO: what about tags..?
                             for (int subType : selectedIonsMap.get(ionType)) {
+
                                 switch (subType) {
+
                                     case PeptideFragmentIon.A_ION:
+
                                         if (!ionTypes.isEmpty()) {
                                             ionTypes += ", ";
                                         }
+
                                         ionTypes += "a ions";
+
                                         break;
+
                                     case PeptideFragmentIon.B_ION:
+
                                         if (!ionTypes.isEmpty()) {
                                             ionTypes += ", ";
                                         }
+
                                         ionTypes += "b ions";
+
                                         break;
+
                                     case PeptideFragmentIon.C_ION:
+
                                         if (!ionTypes.isEmpty()) {
                                             ionTypes += ", ";
                                         }
+
                                         ionTypes += "x ions";
+
                                         break;
+
                                     case PeptideFragmentIon.X_ION:
+
                                         if (!ionTypes.isEmpty()) {
                                             ionTypes += ", ";
                                         }
+
                                         ionTypes += "x ions";
+
                                         break;
+
                                     case PeptideFragmentIon.Y_ION:
+
                                         if (!ionTypes.isEmpty()) {
                                             ionTypes += ", ";
                                         }
+
                                         ionTypes += "y ions";
+
                                         break;
+
                                     case PeptideFragmentIon.Z_ION:
+
                                         if (!ionTypes.isEmpty()) {
                                             ionTypes += ", ";
                                         }
+
                                         ionTypes += "z ions";
+
                                         break;
+
                                     default:
+
                                         break;
                                 }
                             }
+
                             break;
+
                         case PRECURSOR_ION:
+
                             if (!ionTypes.isEmpty()) {
                                 ionTypes += ", ";
                             }
+
                             ionTypes += "precursor ions";
+
                             break;
+
                         case REPORTER_ION:
+
                             if (!ionTypes.isEmpty()) {
                                 ionTypes += ", ";
                             }
+
                             ionTypes += "reporter ions";
+
                             break;
+
                         default:
+
                             break;
                     }
                 }
@@ -983,11 +1033,13 @@ public class AnnotationParameters extends DbObject {
         output.append("Intensity Threshold: ").append(intensityLimit * 100).append(".").append(newLine);
 
         String unit;
+
         if (fragmentIonPpm) {
             unit = "ppm";
         } else {
             unit = "Da";
         }
+
         output.append("Fragment Ion Accuracy: ").append(fragmentIonAccuracy).append(" ").append(unit).append(".").append(newLine);
 
         output.append("Best peak selection: ").append(tiesResolution.description).append(".").append(newLine);

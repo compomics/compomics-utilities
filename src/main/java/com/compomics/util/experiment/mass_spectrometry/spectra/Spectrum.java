@@ -25,12 +25,6 @@ import java.util.stream.DoubleStream;
 public class Spectrum extends ExperimentObject {
 
     /**
-     * Empty default constructor
-     */
-    public Spectrum() {
-    }
-
-    /**
      * The version UID for Serialization/Deserialization compatibility.
      */
     static final long serialVersionUID = 7152424141470431489L;
@@ -130,6 +124,12 @@ public class Spectrum extends ExperimentObject {
      * peaks intensities.
      */
     private SimpleNoiseDistribution binnedCumulativeFunction = null;
+    
+    /**
+     * Empty default constructor.
+     */
+    public Spectrum() {
+    }
     
     /**
      * Constructor for the spectrum.
@@ -313,9 +313,7 @@ public class Spectrum extends ExperimentObject {
      */
     public void setPeakMap(HashMap<Double, Peak> peakMap) {
         writeDBMode();
-
         this.peakMap = peakMap;
-
         resetSavedData();
     }
 
@@ -608,7 +606,7 @@ public class Spectrum extends ExperimentObject {
      * Returns the limit in intensity according to the given threshold.
      *
      * @param intensityThresholdType the type of intensity threshold
-     * @param intensityFraction the threshold value.
+     * @param intensityFraction the threshold value
      *
      * @return the intensity limit
      */
@@ -651,22 +649,15 @@ public class Spectrum extends ExperimentObject {
 
             case snp:
 
-                SimpleNoiseDistribution binnedCumulativeFunction = getIntensityLogDistribution();
-                return binnedCumulativeFunction.getIntensityAtP(1 - intensityThreshold);
+                SimpleNoiseDistribution tempBinnedCumulativeFunction = getIntensityLogDistribution();
+                return tempBinnedCumulativeFunction.getIntensityAtP(1 - intensityThreshold);
 
             case percentile:
 
-                // Skip the low mass region of the spectrum @TODO: skip precursor as well
-//                ArrayList<Double> intensities = peakMap.keySet().stream()
-//                        .filter(mz -> mz > 200)
-//                        .collect(Collectors.toCollection(ArrayList::new));
-
-                ArrayList<Double> intensities = new ArrayList<Double>(); // @TODO: figue out how to get the above stream-based code to work when using intensities and not mz values
+                ArrayList<Double> intensities = new ArrayList<>();
                 
                 for (double tempIntensity : getIntensityValuesAsArray()) {
-                    if (tempIntensity > 200) {
-                        intensities.add(tempIntensity);
-                    }
+                    intensities.add(tempIntensity);
                 }    
 
                 if (intensities.isEmpty()) {

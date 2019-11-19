@@ -2680,7 +2680,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
 
         for (String mod : allModificationsAsArray) {
             ((DefaultTableModel) modificationsTable.getModel()).addRow(
-                    new Object[]{modificationFactory.getColor(mod),
+                    new Object[]{new Color(modificationFactory.getColor(mod)),
                         mod,
                         modificationFactory.getModification(mod).getMass(),
                         modificationProfile.getRefinementVariableModifications().contains(mod),

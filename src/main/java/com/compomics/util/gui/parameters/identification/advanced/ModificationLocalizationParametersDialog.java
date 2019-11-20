@@ -194,7 +194,10 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
         ptmScoringPreferences.setProbabilisticScoreCalculation(scoreCmb.getSelectedItem() != ModificationLocalizationScore.None);
         ptmScoringPreferences.setSelectedProbabilisticScore((ModificationLocalizationScore) scoreCmb.getSelectedItem());
         ptmScoringPreferences.setProbabilisticScoreNeutralLosses(neutralLossesCmb.getSelectedIndex() == 0);
-        ptmScoringPreferences.setProbabilisticScoreThreshold(new Double(thresholdTxt.getText().trim()));
+        
+        if (!thresholdTxt.getText().isEmpty()) {
+            ptmScoringPreferences.setProbabilisticScoreThreshold(new Double(thresholdTxt.getText().trim()));
+        }
 
         ptmScoringPreferences.setAlignNonConfidentModifications(alignOnConfidentCmb.getSelectedIndex() == 0);
 

@@ -254,6 +254,8 @@ public class PeptideUtils {
      * @param modificationParameters the modification profile of the search
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param peptide the peptide to annotate
+     * @param allFixedModifications all the fixed modifications
+     * @param allVariableModifications all the variable modifications
      * @param confidentModificationSites the confidently localized variable
      * modification sites indexed by site.
      * @param representativeAmbiguousModificationSites the representative site
@@ -273,6 +275,8 @@ public class PeptideUtils {
     public static String getTaggedModifiedSequence(
             Peptide peptide,
             ModificationParameters modificationParameters,
+            String[] allFixedModifications,
+            String[] allVariableModifications,
             String[] confidentModificationSites,
             String[] representativeAmbiguousModificationSites,
             String[] secondaryAmbiguousModificationSites,
@@ -318,18 +322,14 @@ public class PeptideUtils {
 
         String nTermAsString = getNtermAsString(
                 useShortName,
-                confidentModificationSites,
-                representativeAmbiguousModificationSites,
-                secondaryAmbiguousModificationSites,
-                fixedModificationSites
+                allFixedModifications,
+                allVariableModifications
         );
         String cTermAsString = getCtermAsString(
                 useShortName,
                 peptideSequence.length(),
-                confidentModificationSites,
-                representativeAmbiguousModificationSites,
-                secondaryAmbiguousModificationSites,
-                fixedModificationSites
+                allFixedModifications,
+                allVariableModifications
         );
 
         modifiedSequence.append(nTermAsString)

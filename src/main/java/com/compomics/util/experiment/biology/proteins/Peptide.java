@@ -1176,6 +1176,8 @@ public class Peptide extends ExperimentObject {
         return PeptideUtils.getTaggedModifiedSequence(
                 this,
                 modificationProfile, 
+                getFixedModifications(modificationProfile, sequenceProvider, modificationsSequenceMatchingParameters),
+                getIndexedVariableModifications(),
                 confidentModificationSites, 
                 representativeModificationSites, 
                 secondaryModificationSites,

@@ -1,6 +1,8 @@
 package com.compomics.util.experiment.io.identification.idfilereaders;
 
+import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.proteins.Peptide;
@@ -34,8 +36,9 @@ import javax.xml.stream.XMLStreamReader;
 
 /**
  * This IdfileReader reads identifications from an X! Tandem xml result file.
- * 
+ *
  * @author Dominik Kopczynski
+ * @author Harald Barsnes
  */
 public class XTandemIdfileReader extends ExperimentObject implements IdfileReader {
 
@@ -98,14 +101,56 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
 
         // @TODO: use the waiting handler
-        
+
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
-        HashSet<String> fixedModifications = searchParameters.getModificationParameters().getFixedModifications().stream()
+        HashSet<String> fixedNonTerminalModifications = searchParameters.getModificationParameters().getFixedModifications().stream()
                 .map(modName -> modificationFactory.getModification(modName))
                 .filter(modification -> modification.getModificationType() == ModificationType.modaa)
                 .flatMap(mod -> mod.getPattern().getAminoAcidsAtTarget().stream()
                 .map(aa -> trimModificationName(String.join("@", Double.toString(mod.getMass()), aa.toString()))))
                 .collect(Collectors.toCollection(HashSet::new));
+
+        HashSet<String> fixedNTerminalModifications = new HashSet<>();
+        HashSet<String> fixedCTerminalModifications = new HashSet<>();
+
+        ArrayList<String> allFixedModifications = searchParameters.getModificationParameters().getFixedModifications();
+
+        for (String tempFixedModification : allFixedModifications) {
+
+            Modification tempModification = modificationFactory.getModification(tempFixedModification);
+
+            if (tempModification.getModificationType() != ModificationType.modaa) {
+
+                switch (tempModification.getModificationType()) {
+                    case modn_protein:
+                    case modn_peptide:
+                        for (String tempAminoAcid : AminoAcid.getAminoAcidsList()) {
+                            fixedNTerminalModifications.add(trimModificationName(String.join("@", Double.toString(tempModification.getMass()), tempAminoAcid)));
+                        }
+                        break;
+                    case modnaa_protein:
+                    case modnaa_peptide:
+                        for (Character tempCharacter : tempModification.getPattern().getAminoAcidsAtTarget()) {
+                            fixedNTerminalModifications.add(trimModificationName(String.join("@", Double.toString(tempModification.getMass()), tempCharacter.toString())));
+                        }
+                        break;
+                    case modc_protein:
+                    case modc_peptide:
+                        for (String tempAminoAcid : AminoAcid.getAminoAcidsList()) {
+                            fixedCTerminalModifications.add(trimModificationName(String.join("@", Double.toString(tempModification.getMass()), tempAminoAcid)));
+                        }
+                        break;
+                    case modcaa_protein:
+                    case modcaa_peptide:
+                        for (Character tempCharacter : tempModification.getPattern().getAminoAcidsAtTarget()) {
+                            fixedCTerminalModifications.add(trimModificationName(String.join("@", Double.toString(tempModification.getMass()), tempCharacter.toString())));
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
         XMLInputFactory factory = XMLInputFactory.newInstance();
         XMLStreamReader parser = factory.createXMLStreamReader(new FileInputStream(inputFileName));
@@ -135,7 +180,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                                 allMatches.put(id, spectrumMatch);
                                 double expect = Double.parseDouble(parser.getAttributeValue("", "expect"));
 
-                                readGroupOrProtein(parser, id, expect, fixedModifications);
+                                readGroupOrProtein(parser, id, expect, fixedNonTerminalModifications, fixedNTerminalModifications, fixedCTerminalModifications);
                                 break;
 
                             case "parameters":
@@ -209,7 +254,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         return false;
     }
 
-    private void readGroupOrProtein(XMLStreamReader parser, int id, double expect, HashSet<String> fixedModifications) throws XMLStreamException, UnsupportedEncodingException {
+    private void readGroupOrProtein(XMLStreamReader parser, int id, double expect, HashSet<String> fixedNonTerminalModifications,
+            HashSet<String> fixedNTerminalModifications, HashSet<String> fixedCTerminalModifications) throws XMLStreamException, UnsupportedEncodingException {
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
@@ -236,7 +282,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             break;
 
                         case "protein":
-                            readProtein(parser, id, expect, fixedModifications);
+                            readProtein(parser, id, expect, fixedNonTerminalModifications, fixedNTerminalModifications, fixedCTerminalModifications);
                             break;
 
                         default:
@@ -352,7 +398,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private void readProtein(XMLStreamReader parser, int id, double expect, HashSet<String> fixedModifications) throws XMLStreamException {
+    private void readProtein(XMLStreamReader parser, int id, double expect, HashSet<String> fixedNonTerminalModifications,
+            HashSet<String> fixedNTerminalModifications, HashSet<String> fixedCTerminalModifications) throws XMLStreamException {
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
@@ -372,7 +419,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                 case XMLStreamConstants.START_ELEMENT:
                     if ("peptide".equalsIgnoreCase(parser.getLocalName().toLowerCase())) {
-                        readPeptide(parser, id, expect, fixedModifications);
+                        readPeptide(parser, id, expect, fixedNonTerminalModifications, fixedNTerminalModifications, fixedCTerminalModifications);
                     }
                     break;
 
@@ -382,7 +429,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private void readPeptide(XMLStreamReader parser, int id, double expect, HashSet<String> fixedModifications) throws XMLStreamException {
+    private void readPeptide(XMLStreamReader parser, int id, double expect, HashSet<String> fixedNonTerminalModifications,
+            HashSet<String> fixedNTerminalModifications, HashSet<String> fixedCTerminalModifications) throws XMLStreamException {
         Peptide peptide = null;
         int pepStart = -1;
         boolean addAA = false;
@@ -440,7 +488,22 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                                 int modPosition = Integer.parseInt(parser.getAttributeValue("", "at")) - pepStart + 1;
                                 String reformattedName = trimModificationName(modName);
 
-                                if (!fixedModifications.contains(reformattedName)) {
+                                // potential n-terminal ptm
+                                if (modPosition == 1 && !fixedNTerminalModifications.isEmpty()) {
+                                    if (fixedNTerminalModifications.contains(reformattedName)) {
+                                        break;
+                                    }
+                                }
+
+                                // potential c-terminal ptm
+                                if (modPosition == peptide.getSequence().length() && !fixedCTerminalModifications.isEmpty()) {
+                                    if (fixedCTerminalModifications.contains(reformattedName)) {
+                                        break;
+                                    }
+                                }
+
+                                // non-terminal ptm
+                                if (!fixedNonTerminalModifications.contains(reformattedName)) {
                                     peptide.addVariableModification(new ModificationMatch(modName, modPosition));
                                 }
                             }

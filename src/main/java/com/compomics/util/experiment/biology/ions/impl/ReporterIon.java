@@ -194,6 +194,70 @@ public class ReporterIon extends Ion {
      */
     public final static ReporterIon TMT_226 = new ReporterIon("TMT226", 225.2); // @TODO: add the actual composition
     /**
+     * Standard reporter ion TMTpro-126.
+     */
+    public final static ReporterIon TMTpro_126 = new ReporterIon("TMTpro-126", getComposition("TMTpro-126"));
+    /**
+     * Standard reporter ion TMTpro-127N.
+     */
+    public final static ReporterIon TMTpro_127N = new ReporterIon("TMTpro-127N", getComposition("TMTpro-127N"));
+    /**
+     * Standard reporter ion TMTpro-127C.
+     */
+    public final static ReporterIon TMTpro_127C = new ReporterIon("TMTpro-127C", getComposition("TMTpro-127C"));
+    /**
+     * Standard reporter ion TMTpro-128N.
+     */
+    public final static ReporterIon TMTpro_128N = new ReporterIon("TMTpro-128N", getComposition("TMTpro-128N"));
+    /**
+     * Standard reporter ion TMTpro-128C.
+     */
+    public final static ReporterIon TMTpro_128C = new ReporterIon("TMTpro-128C", getComposition("TMTpro-128C"));
+    /**
+     * Standard reporter ion TMTpro-129N.
+     */
+    public final static ReporterIon TMTpro_129N = new ReporterIon("TMTpro-129N", getComposition("TMTpro-129N"));
+    /**
+     * Standard reporter ion TMTpro-129C.
+     */
+    public final static ReporterIon TMTpro_129C = new ReporterIon("TMTpro-129C", getComposition("TMTpro-129C"));
+    /**
+     * Standard reporter ion TMTpro-130N.
+     */
+    public final static ReporterIon TMTpro_130N = new ReporterIon("TMTpro-130N", getComposition("TMTpro-130N"));
+    /**
+     * Standard reporter ion TMTpro-130C.
+     */
+    public final static ReporterIon TMTpro_130C = new ReporterIon("TMTpro-130C", getComposition("TMTpro-130C"));
+    /**
+     * Standard reporter ion TMTpro-131N.
+     */
+    public final static ReporterIon TMTpro_131N = new ReporterIon("TMTpro-131N", getComposition("TMTpro-131N"));
+    /**
+     * Standard reporter ion TMTpro-131C.
+     */
+    public final static ReporterIon TMTpro_131C = new ReporterIon("TMTpro-131C", getComposition("TMTpro-131C"));
+    /**
+     * Standard reporter ion TMTpro-132N.
+     */
+    public final static ReporterIon TMTpro_132N = new ReporterIon("TMTpro-132N", getComposition("TMTpro-132N"));
+    /**
+     * Standard reporter ion TMTpro-132C.
+     */
+    public final static ReporterIon TMTpro_132C = new ReporterIon("TMTpro-132C", getComposition("TMTpro-132C"));
+    /**
+     * Standard reporter ion TMTpro-133N.
+     */
+    public final static ReporterIon TMTpro_133N = new ReporterIon("TMTpro-133N", getComposition("TMTpro-133N"));
+    /**
+     * Standard reporter ion TMTpro-133C.
+     */
+    public final static ReporterIon TMTpro_133C = new ReporterIon("TMTpro-133C", getComposition("TMTpro-133C"));
+    /**
+     * Standard reporter ion TMTpro-134N.
+     */
+    public final static ReporterIon TMTpro_134N = new ReporterIon("TMTpro-134N", getComposition("TMTpro-134N"));
+    /**
      * Standard reporter ion iodoTMT zero.
      */
     public final static ReporterIon iodoTMT_zero = new ReporterIon("iodoTMT_zero", getComposition("iodoTMT_zero"));
@@ -664,346 +728,526 @@ public class ReporterIon extends Ion {
      * @return the atomic composition of the reporter ion of the given name
      */
     private static AtomChain getComposition(String reporterIonName) {
-        if (reporterIonName.equals("iTRAQ4Plex_114")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 5);
-            atomChain.append(new AtomImpl(Atom.C, 1), 1);
-            atomChain.append(new AtomImpl(Atom.H, 0), 12);
-            atomChain.append(new AtomImpl(Atom.N, 0), 2);
-            return atomChain;
-        } else if (reporterIonName.equals("iTRAQ4Plex_115")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 5);
-            atomChain.append(new AtomImpl(Atom.C, 1), 1);
-            atomChain.append(new AtomImpl(Atom.H, 0), 12);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iTRAQ4Plex_116")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 4);
-            atomChain.append(new AtomImpl(Atom.C, 1), 2);
-            atomChain.append(new AtomImpl(Atom.H, 0), 12);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iTRAQ4Plex_117")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 3);
-            atomChain.append(new AtomImpl(Atom.C, 1), 3);
-            atomChain.append(new AtomImpl(Atom.H, 0), 12);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iTRAQ4Plex_118")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 4);
-            atomChain.append(new AtomImpl(Atom.C, 1), 3);
-            atomChain.append(new AtomImpl(Atom.H, 0), 12);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iTRAQ8Plex_113")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 6);
-            atomChain.append(new AtomImpl(Atom.H, 0), 12);
-            atomChain.append(new AtomImpl(Atom.N, 0), 2);
-            return atomChain;
-        } else if (reporterIonName.equals("iTRAQ8Plex_114")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 5);
-            atomChain.append(new AtomImpl(Atom.C, 1), 1);
-            atomChain.append(new AtomImpl(Atom.H, 0), 12);
-            atomChain.append(new AtomImpl(Atom.N, 0), 2);
-            return atomChain;
-        } else if (reporterIonName.equals("iTRAQ8Plex_115")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 5);
-            atomChain.append(new AtomImpl(Atom.C, 1), 1);
-            atomChain.append(new AtomImpl(Atom.H, 0), 12);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iTRAQ8Plex_116")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 4);
-            atomChain.append(new AtomImpl(Atom.C, 1), 2);
-            atomChain.append(new AtomImpl(Atom.H, 0), 12);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iTRAQ8Plex_117")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 3);
-            atomChain.append(new AtomImpl(Atom.C, 1), 3);
-            atomChain.append(new AtomImpl(Atom.H, 0), 12);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iTRAQ8Plex_118")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 3);
-            atomChain.append(new AtomImpl(Atom.C, 1), 3);
-            atomChain.append(new AtomImpl(Atom.H, 0), 12);
-            atomChain.append(new AtomImpl(Atom.N, 1), 2);
-            return atomChain;
-        } else if (reporterIonName.equals("iTRAQ8Plex_119")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 2);
-            atomChain.append(new AtomImpl(Atom.C, 1), 4);
-            atomChain.append(new AtomImpl(Atom.H, 0), 12);
-            atomChain.append(new AtomImpl(Atom.N, 1), 2);
-            return atomChain;
-        } else if (reporterIonName.equals("iTRAQ8Plex_121")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 1), 6);
-            atomChain.append(new AtomImpl(Atom.H, 0), 12);
-            atomChain.append(new AtomImpl(Atom.N, 1), 2);
-            return atomChain;
-        } else if (reporterIonName.equals("iTRAQ145")) {
-            //@TODO!
-        } else if (reporterIonName.equals("iTRAQ305")) {
-            //@TODO!
-        } else if (reporterIonName.equals("TMT_126")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 8);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_127N")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 8);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_127C")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 7);
-            atomChain.append(new AtomImpl(Atom.C, 1), 1);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_128N")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 7);
-            atomChain.append(new AtomImpl(Atom.C, 1), 1);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_128C")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 6);
-            atomChain.append(new AtomImpl(Atom.C, 1), 2);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_129N")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 6);
-            atomChain.append(new AtomImpl(Atom.C, 1), 2);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_129C")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 5);
-            atomChain.append(new AtomImpl(Atom.C, 1), 3);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_130N")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 5);
-            atomChain.append(new AtomImpl(Atom.C, 1), 3);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_130C")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 4);
-            atomChain.append(new AtomImpl(Atom.C, 1), 4);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_131")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 4);
-            atomChain.append(new AtomImpl(Atom.C, 1), 4);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_131C")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 3);
-            atomChain.append(new AtomImpl(Atom.C, 1), 5);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_126_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 7);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_127N_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 7);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_127C_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 7);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_128N_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 7);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_128C_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 5);
-            atomChain.append(new AtomImpl(Atom.C, 1), 2);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_129N_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 5);
-            atomChain.append(new AtomImpl(Atom.C, 1), 2);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_129C_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 5);
-            atomChain.append(new AtomImpl(Atom.C, 1), 2);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_130N_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 5);
-            atomChain.append(new AtomImpl(Atom.C, 1), 2);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_130C_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 3);
-            atomChain.append(new AtomImpl(Atom.C, 1), 4);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_131_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 3);
-            atomChain.append(new AtomImpl(Atom.C, 1), 4);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("TMT_131C_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 3);
-            atomChain.append(new AtomImpl(Atom.C, 1), 4);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_zero")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 8);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_126")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 8);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_127")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 8);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_128")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 6);
-            atomChain.append(new AtomImpl(Atom.C, 1), 2);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_129")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 6);
-            atomChain.append(new AtomImpl(Atom.C, 1), 2);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_130")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 4);
-            atomChain.append(new AtomImpl(Atom.C, 1), 4);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_131")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 4);
-            atomChain.append(new AtomImpl(Atom.C, 1), 4);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_zero_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 7);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_126_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 7);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_127_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 7);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_128_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 5);
-            atomChain.append(new AtomImpl(Atom.C, 1), 2);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_129_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 5);
-            atomChain.append(new AtomImpl(Atom.C, 1), 2);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_130_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 3);
-            atomChain.append(new AtomImpl(Atom.C, 1), 4);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 0), 1);
-            return atomChain;
-        } else if (reporterIonName.equals("iodoTMT_131_ETD")) {
-            AtomChain atomChain = new AtomChain();
-            atomChain.append(new AtomImpl(Atom.C, 0), 3);
-            atomChain.append(new AtomImpl(Atom.C, 1), 4);
-            atomChain.append(new AtomImpl(Atom.H, 0), 15);
-            atomChain.append(new AtomImpl(Atom.N, 1), 1);
-            return atomChain;
+        switch (reporterIonName) {
+            case "iTRAQ4Plex_114": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 1);
+                atomChain.append(new AtomImpl(Atom.H, 0), 12);
+                atomChain.append(new AtomImpl(Atom.N, 0), 2);
+                return atomChain;
+            }
+            case "iTRAQ4Plex_115": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 1);
+                atomChain.append(new AtomImpl(Atom.H, 0), 12);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "iTRAQ4Plex_116": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 4);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 12);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "iTRAQ4Plex_117": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 3);
+                atomChain.append(new AtomImpl(Atom.C, 1), 3);
+                atomChain.append(new AtomImpl(Atom.H, 0), 12);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "iTRAQ4Plex_118": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 4);
+                atomChain.append(new AtomImpl(Atom.C, 1), 3);
+                atomChain.append(new AtomImpl(Atom.H, 0), 12);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "iTRAQ8Plex_113": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 6);
+                atomChain.append(new AtomImpl(Atom.H, 0), 12);
+                atomChain.append(new AtomImpl(Atom.N, 0), 2);
+                return atomChain;
+            }
+            case "iTRAQ8Plex_114": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 1);
+                atomChain.append(new AtomImpl(Atom.H, 0), 12);
+                atomChain.append(new AtomImpl(Atom.N, 0), 2);
+                return atomChain;
+            }
+            case "iTRAQ8Plex_115": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 1);
+                atomChain.append(new AtomImpl(Atom.H, 0), 12);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "iTRAQ8Plex_116": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 4);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 12);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "iTRAQ8Plex_117": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 3);
+                atomChain.append(new AtomImpl(Atom.C, 1), 3);
+                atomChain.append(new AtomImpl(Atom.H, 0), 12);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "iTRAQ8Plex_118": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 3);
+                atomChain.append(new AtomImpl(Atom.C, 1), 3);
+                atomChain.append(new AtomImpl(Atom.H, 0), 12);
+                atomChain.append(new AtomImpl(Atom.N, 1), 2);
+                return atomChain;
+            }
+            case "iTRAQ8Plex_119": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 2);
+                atomChain.append(new AtomImpl(Atom.C, 1), 4);
+                atomChain.append(new AtomImpl(Atom.H, 0), 12);
+                atomChain.append(new AtomImpl(Atom.N, 1), 2);
+                return atomChain;
+            }
+            case "iTRAQ8Plex_121": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 1), 6);
+                atomChain.append(new AtomImpl(Atom.H, 0), 12);
+                atomChain.append(new AtomImpl(Atom.N, 1), 2);
+                return atomChain;
+            }
+            case "iTRAQ145":
+                //@TODO!
+                break;
+            case "iTRAQ305":
+                //@TODO!
+                break;
+            case "TMT_126": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 8);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMT_127N": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 8);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMT_127C": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 7);
+                atomChain.append(new AtomImpl(Atom.C, 1), 1);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMT_128N": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 7);
+                atomChain.append(new AtomImpl(Atom.C, 1), 1);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMT_128C": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 6);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMT_129N": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 6);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMT_129C": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 3);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMT_130N": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 3);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMT_130C": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 4);
+                atomChain.append(new AtomImpl(Atom.C, 1), 4);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMT_131": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 4);
+                atomChain.append(new AtomImpl(Atom.C, 1), 4);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMT_131C": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 3);
+                atomChain.append(new AtomImpl(Atom.C, 1), 5);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMT_126_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 7);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMT_127N_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 7);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMT_127C_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 7);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMT_128N_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 7);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMT_128C_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMT_129N_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMT_129C_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMT_130N_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMT_130C_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 3);
+                atomChain.append(new AtomImpl(Atom.C, 1), 4);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMT_131_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 3);
+                atomChain.append(new AtomImpl(Atom.C, 1), 4);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMT_131C_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 3);
+                atomChain.append(new AtomImpl(Atom.C, 1), 4);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMTpro-126": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 8);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMTpro-127N": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 8);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMTpro-127C": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 7);
+                atomChain.append(new AtomImpl(Atom.C, 1), 1);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMTpro-128N": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 7);
+                atomChain.append(new AtomImpl(Atom.C, 1), 1);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMTpro-128C": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 6);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMTpro-129N": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 6);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMTpro-129C": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 3);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMTpro-130N": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 3);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMTpro-130C": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 4);
+                atomChain.append(new AtomImpl(Atom.C, 1), 4);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMTpro-131N": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 4);
+                atomChain.append(new AtomImpl(Atom.C, 1), 4);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMTpro-131C": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 3);
+                atomChain.append(new AtomImpl(Atom.C, 1), 5);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMTpro-132N": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 3);
+                atomChain.append(new AtomImpl(Atom.C, 1), 5);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMTpro-132C": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 2);
+                atomChain.append(new AtomImpl(Atom.C, 1), 6);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMTpro-133N": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 2);
+                atomChain.append(new AtomImpl(Atom.C, 1), 6);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMTpro-133C": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 1);
+                atomChain.append(new AtomImpl(Atom.C, 1), 7);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMTpro-134N": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 1);
+                atomChain.append(new AtomImpl(Atom.C, 1), 7);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "iodoTMT_zero": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 8);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "iodoTMT_126": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 8);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "iodoTMT_127": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 8);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "iodoTMT_128": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 6);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "iodoTMT_129": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 6);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "iodoTMT_130": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 4);
+                atomChain.append(new AtomImpl(Atom.C, 1), 4);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "iodoTMT_131": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 4);
+                atomChain.append(new AtomImpl(Atom.C, 1), 4);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "iodoTMT_zero_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 7);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "iodoTMT_126_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 7);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "iodoTMT_127_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 7);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "iodoTMT_128_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "iodoTMT_129_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 5);
+                atomChain.append(new AtomImpl(Atom.C, 1), 2);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "iodoTMT_130_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 3);
+                atomChain.append(new AtomImpl(Atom.C, 1), 4);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "iodoTMT_131_ETD": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 0), 3);
+                atomChain.append(new AtomImpl(Atom.C, 1), 4);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            default:
+                break;
         }
         throw new UnsupportedOperationException("Atomic composition not implemented for reporter ion " + reporterIonName + ".");
     }

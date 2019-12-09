@@ -43,7 +43,7 @@ public class ModificationFactory {
      * The name of the Modification factory back-up file. The version number
      * follows the one of utilities.
      */
-    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.1-SNAPSHOT.json";
+    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.0-beta.json";
     /**
      * A map linking indexes with modifications.
      */
@@ -2452,6 +2452,72 @@ public class ModificationFactory {
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
 
+        // TMTpro of peptide N-term
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 25);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 7);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
+        atomChainRemoved = null;
+        aminoAcidPattern = null;
+        modificationName = "TMTpro of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:2016", "TMTpro", null)); // note: does not have a PSI name, using interim name
+        // @TODO: add PSI_MOD cv term?
+        modification.addReporterIon(ReporterIon.TMTpro_126);
+        modification.addReporterIon(ReporterIon.TMTpro_127N);
+        modification.addReporterIon(ReporterIon.TMTpro_127C);
+        modification.addReporterIon(ReporterIon.TMTpro_128N);
+        modification.addReporterIon(ReporterIon.TMTpro_128C);
+        modification.addReporterIon(ReporterIon.TMTpro_129N);
+        modification.addReporterIon(ReporterIon.TMTpro_129C);
+        modification.addReporterIon(ReporterIon.TMTpro_130N);
+        modification.addReporterIon(ReporterIon.TMTpro_130C);
+        modification.addReporterIon(ReporterIon.TMTpro_131N);
+        modification.addReporterIon(ReporterIon.TMTpro_131C);
+        modification.addReporterIon(ReporterIon.TMTpro_132N);
+        modification.addReporterIon(ReporterIon.TMTpro_132C);
+        modification.addReporterIon(ReporterIon.TMTpro_133N);
+        modification.addReporterIon(ReporterIon.TMTpro_133C);
+        modification.addReporterIon(ReporterIon.TMTpro_134N);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // TMTpro of K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 25);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.C, 1), 7);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
+        atomChainRemoved = null;
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "TMTpro of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "TMT", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:2016", "TMTpro", null)); // note: does not have a PSI name, using interim name
+        // @TODO: add PSI_MOD cv term?
+        modification.addReporterIon(ReporterIon.TMTpro_126);
+        modification.addReporterIon(ReporterIon.TMTpro_127N);
+        modification.addReporterIon(ReporterIon.TMTpro_127C);
+        modification.addReporterIon(ReporterIon.TMTpro_128N);
+        modification.addReporterIon(ReporterIon.TMTpro_128C);
+        modification.addReporterIon(ReporterIon.TMTpro_129N);
+        modification.addReporterIon(ReporterIon.TMTpro_129C);
+        modification.addReporterIon(ReporterIon.TMTpro_130N);
+        modification.addReporterIon(ReporterIon.TMTpro_130C);
+        modification.addReporterIon(ReporterIon.TMTpro_131N);
+        modification.addReporterIon(ReporterIon.TMTpro_131C);
+        modification.addReporterIon(ReporterIon.TMTpro_132N);
+        modification.addReporterIon(ReporterIon.TMTpro_132C);
+        modification.addReporterIon(ReporterIon.TMTpro_133N);
+        modification.addReporterIon(ReporterIon.TMTpro_133C);
+        modification.addReporterIon(ReporterIon.TMTpro_134N);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
         // iodoTMT zero of C
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 28);

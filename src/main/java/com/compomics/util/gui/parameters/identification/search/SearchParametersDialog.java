@@ -16,7 +16,6 @@ import com.compomics.util.parameters.identification.tool_specific.MsgfParameters
 import com.compomics.util.parameters.identification.tool_specific.MyriMatchParameters;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.modification.ModificationsDialog;
-import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.search.DigestionParameters.CleavageParameter;
 import com.compomics.util.parameters.identification.search.DigestionParameters.Specificity;
@@ -46,10 +45,6 @@ import org.jfree.chart.plot.PlotOrientation;
  */
 public class SearchParametersDialog extends javax.swing.JDialog {
 
-    /**
-     * A simple progress dialog.
-     */
-    private static ProgressDialogX progressDialog;
     /**
      * The enzyme factory.
      */
@@ -2362,11 +2357,11 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         boolean pyroConflict = false;
         ModificationParameters modificationProfile = new ModificationParameters();
         for (int i = 0; i < fixedModsTable.getRowCount(); i++) {
-            
+
             String modName = (String) fixedModsTable.getValueAt(i, 1);
             Modification modification = modificationFactory.getModification(modName);
             Color modificationColor = (Color) fixedModsTable.getValueAt(i, 0);
-            
+
             modificationProfile.addFixedModification(modification);
             modificationProfile.addRefinementFixedModification(modification);
             modificationProfile.setColor(modName, modificationColor.getRGB());
@@ -2379,13 +2374,13 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         }
 
         for (int i = 0; i < variableModsTable.getRowCount(); i++) {
-            
+
             String modName = (String) variableModsTable.getValueAt(i, 1);
             Color modificationColor = (Color) variableModsTable.getValueAt(i, 0);
-            
+
             modificationProfile.addVariableModification(modificationFactory.getModification(modName));
             modificationProfile.setColor(modName, modificationColor.getRGB());
-            
+
         }
 
         // re-add the variable refinement modifications
@@ -2522,8 +2517,9 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
                 if (defaultModifications.contains(name)) {
 
-                    allModificationsList.add(name);
-
+                    if (modificationFactory.getModification(name) != null) {
+                        allModificationsList.add(name);
+                    }
                 }
             }
 

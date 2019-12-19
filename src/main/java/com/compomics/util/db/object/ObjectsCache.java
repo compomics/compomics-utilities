@@ -9,7 +9,7 @@ import javax.jdo.PersistenceManager;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
- * single cache can be used by different databases. This ough not to be
+ * single cache can be used by different databases. This ought not to be
  * serialized. The length of lists/maps in the cache shall stay independent from
  * the number of objects in cache.
  *
@@ -45,7 +45,7 @@ public class ObjectsCache {
      */
     private ObjectsDB objectsDB = null;
     /**
-     * Number of objects thats should be at least kept.
+     * Number of objects that should at least be kept.
      */
     private final int keepObjectsThreshold = 10000;
     /**
@@ -127,10 +127,10 @@ public class ObjectsCache {
     }
 
     /**
-     * Removes an object from the cache
+     * Removes an object from the cache.
      *
      * @param objectKey the key of the object
-     * 
+     *
      * @return the class name of the object
      */
     public String removeObject(long objectKey) {
@@ -283,7 +283,7 @@ public class ObjectsCache {
                 long key = clearEntries ? objectQueue.pollFirst() : listIterator.next();
 
                 Object obj = loadedObjects.get(key);
-                
+
                 if (!((DbObject) obj).jdoZooIsPersistent()) {
 
                     pm.makePersistent(obj);

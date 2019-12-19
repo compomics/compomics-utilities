@@ -481,9 +481,9 @@ public class ObjectsDB {
         dbMutex.acquire();
 
         if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " | retrieving one objects with key: " + longKey);
+            System.out.println(System.currentTimeMillis() + " | retrieving one object with key: " + longKey);
         }
-
+        
         Long zooid = idMap.get(longKey);
 
         if (zooid != null) {

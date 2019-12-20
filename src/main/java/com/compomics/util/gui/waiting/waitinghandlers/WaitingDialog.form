@@ -3,7 +3,7 @@
 <Form version="1.9" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="0"/>
-    <Property name="title" type="java.lang.String" value="Importing Data - Please Wait..."/>
+    <Property name="title" type="java.lang.String" value="Importing Data. Please Wait..."/>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
       <Dimension value="[700, 500]"/>
     </Property>
@@ -184,7 +184,6 @@
                             </Property>
                             <Property name="horizontalScrollBarPolicy" type="int" value="31"/>
                             <Property name="verticalScrollBarPolicy" type="int" value="21"/>
-                            <Property name="opaque" type="boolean" value="false"/>
                           </Properties>
                           <AuxValues>
                             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -369,7 +368,6 @@
             <Property name="text" type="java.lang.String" value="Show Tip of the Day"/>
             <Property name="toolTipText" type="java.lang.String" value="Show/Hide Tip of the Day"/>
             <Property name="iconTextGap" type="int" value="10"/>
-            <Property name="opaque" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showTipOfTheDayCheckBoxActionPerformed"/>
@@ -379,7 +377,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Close this dialog when the process is complete."/>
             <Property name="iconTextGap" type="int" value="10"/>
-            <Property name="opaque" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="closeDialogWhenImportCompletesCheckBoxActionPerformed"/>

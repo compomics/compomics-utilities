@@ -384,7 +384,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         closeDialogWhenImportCompletesCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Importing Data - Please Wait...");
+        setTitle("Importing Data. Please Wait...");
         setMinimumSize(new java.awt.Dimension(700, 500));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -415,7 +415,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         tipOfTheDayScrollPane.setBorder(new org.jdesktop.swingx.border.DropShadowBorder());
         tipOfTheDayScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         tipOfTheDayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        tipOfTheDayScrollPane.setOpaque(false);
 
         tipOfTheDayEditorPane.setEditable(false);
         tipOfTheDayEditorPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 240, 240), 20));
@@ -452,9 +451,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
                 closeJButtonActionPerformed(evt);
             }
         });
-        tipOfTheDayLayeredPane.add(closeJButton);
-        closeJButton.setBounds(170, 0, 40, 33);
         tipOfTheDayLayeredPane.setLayer(closeJButton, javax.swing.JLayeredPane.POPUP_LAYER);
+        tipOfTheDayLayeredPane.add(closeJButton);
+        closeJButton.setBounds(170, 0, 40, 41);
 
         nextJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/next_grey.png"))); // NOI18N
         nextJButton.setToolTipText("Next Tip");
@@ -476,9 +475,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
                 nextJButtonActionPerformed(evt);
             }
         });
-        tipOfTheDayLayeredPane.add(nextJButton);
-        nextJButton.setBounds(170, 230, 40, 33);
         tipOfTheDayLayeredPane.setLayer(nextJButton, javax.swing.JLayeredPane.POPUP_LAYER);
+        tipOfTheDayLayeredPane.add(nextJButton);
+        nextJButton.setBounds(170, 230, 40, 41);
 
         javax.swing.GroupLayout tipOfTheDayJPanelLayout = new javax.swing.GroupLayout(tipOfTheDayJPanel);
         tipOfTheDayJPanel.setLayout(tipOfTheDayJPanelLayout);
@@ -491,9 +490,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             .addComponent(tipOfTheDayLayeredPane, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
         );
 
+        layeredPane.setLayer(tipOfTheDayJPanel, javax.swing.JLayeredPane.POPUP_LAYER);
         layeredPane.add(tipOfTheDayJPanel);
         tipOfTheDayJPanel.setBounds(610, 200, 210, 270);
-        layeredPane.setLayer(tipOfTheDayJPanel, javax.swing.JLayeredPane.POPUP_LAYER);
 
         reportTextArea.setEditable(false);
         reportTextArea.setColumns(20);
@@ -568,7 +567,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         showTipOfTheDayCheckBox.setText("Show Tip of the Day");
         showTipOfTheDayCheckBox.setToolTipText("Show/Hide Tip of the Day");
         showTipOfTheDayCheckBox.setIconTextGap(10);
-        showTipOfTheDayCheckBox.setOpaque(false);
         showTipOfTheDayCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showTipOfTheDayCheckBoxActionPerformed(evt);
@@ -577,7 +575,6 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
 
         closeDialogWhenImportCompletesCheckBox.setText("Close this dialog when the process is complete.");
         closeDialogWhenImportCompletesCheckBox.setIconTextGap(10);
-        closeDialogWhenImportCompletesCheckBox.setOpaque(false);
         closeDialogWhenImportCompletesCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 closeDialogWhenImportCompletesCheckBoxActionPerformed(evt);

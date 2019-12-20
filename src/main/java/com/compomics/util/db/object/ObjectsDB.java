@@ -108,7 +108,7 @@ public class ObjectsDB {
 
         this.path = path;
         this.dbName = dbName;
-        
+
         File dbFolder = getDbFolder();
 
         if (!dbFolder.exists()) {
@@ -314,15 +314,15 @@ public class ObjectsDB {
      * @return the iterator
      */
     public Iterator<?> getObjectsIterator(Class className, String filters) {
-        
+
         Query q;
         dumpToDB();
         dbMutex.acquire();
         q = pm.newQuery(className, filters);
         dbMutex.release();
-        
+
         return ((SynchronizedROCollection<?>) q.execute()).iterator();
-    
+
     }
 
     /**
@@ -469,10 +469,10 @@ public class ObjectsDB {
     }
 
     /**
-     * Retrieves some objects from the database or cache.
+     * Retrieves an object from the database or cache.
      *
-     * @param longKey the keys of the object to load
-     * @return the retrieved objects
+     * @param longKey the key of the object to load
+     * @return the retrieved object
      */
     public Object retrieveObject(long longKey) {
 
@@ -483,7 +483,7 @@ public class ObjectsDB {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " | retrieving one object with key: " + longKey);
         }
-        
+
         Long zooid = idMap.get(longKey);
 
         if (zooid != null) {
@@ -536,7 +536,7 @@ public class ObjectsDB {
     }
 
     /**
-     * retrieves some objects from the database or cache.
+     * Retrieves some objects from the database or cache.
      *
      * @param keys the keys of the objects to load
      * @param waitingHandler the waiting handler allowing displaying progress
@@ -795,7 +795,7 @@ public class ObjectsDB {
 
         objectsCache.saveCache(waitingHandler, false);
         objectsCache.clearCache();
-        
+
         pm.currentTransaction().commit();
 
         dbMutex.release();
@@ -888,7 +888,7 @@ public class ObjectsDB {
     public void establishConnection(boolean loading) {
 
         dbMutex.acquire();
-        
+
         File dbFile = getDbFile();
 
         if (debugInteractions) {
@@ -903,7 +903,7 @@ public class ObjectsDB {
         connectionActive = true;
 
         if (loading) {
-            
+
             idMap.clear();
             classCounter.clear();
 

@@ -93,16 +93,16 @@ public class ObjectsCache {
     public void setMemoryShare(double memoryShare) {
         this.memoryShare = memoryShare;
         try {
+            loadObjectMutex.acquire();
             updateCache();
+            loadObjectMutex.release();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Returns the objects if present in the cache. Null if not. Warning: this
-     * method returns the object as it is and does not wait for cache edition
-     * operations to finish.
+     * Returns the objects if present in the cache. Null if not.
      *
      * @param objectKey the key of the object
      *
@@ -110,7 +110,6 @@ public class ObjectsCache {
      */
     public Object getObject(Long objectKey) {
 
-        updateCache();
         Object object = null;
 
         loadObjectMutex.acquire();
@@ -181,7 +180,7 @@ public class ObjectsCache {
         }
 
         loadObjectMutex.release();
-
+        
     }
 
     /**
@@ -229,7 +228,9 @@ public class ObjectsCache {
      * @param numLastEntries number of keys of the entries
      */
     public void saveObjects(int numLastEntries) {
+        loadObjectMutex.acquire();
         saveObjects(numLastEntries, null, true);
+        loadObjectMutex.release();
     }
 
     /**
@@ -240,7 +241,9 @@ public class ObjectsCache {
      * Can be null. Progress will be displayed as secondary.
      */
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler) {
+        loadObjectMutex.acquire();
         saveObjects(numLastEntries, waitingHandler, true);
+        loadObjectMutex.release();
     }
 
     /**
@@ -253,8 +256,6 @@ public class ObjectsCache {
      * cleared from the cache
      */
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) {
-
-        loadObjectMutex.acquire();
 
         if (!readOnly) {
             if (waitingHandler != null) {
@@ -307,8 +308,6 @@ public class ObjectsCache {
 
         }
 
-        loadObjectMutex.release();
-
     }
 
     /**
@@ -350,7 +349,9 @@ public class ObjectsCache {
      */
     public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) {
 
+        loadObjectMutex.acquire();
         saveObjects(loadedObjects.size(), waitingHandler, emptyCache);
+        loadObjectMutex.release();
 
     }
 

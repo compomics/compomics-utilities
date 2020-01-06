@@ -178,7 +178,7 @@ public class ObjectsDB {
     /**
      * Getter for the current number of added objects.
      *
-     * @return the current number of added objects.
+     * @return the current number of added objects
      */
     public int getCurrentAdded() {
         return currentAdded;
@@ -187,7 +187,7 @@ public class ObjectsDB {
     /**
      * Getter for the id map mapping the hashed keys into zoo db ids.
      *
-     * @return The id map.
+     * @return the id map
      */
     public HashMap<Long, Long> getIdMap() {
         return idMap;
@@ -196,7 +196,7 @@ public class ObjectsDB {
     /**
      * Getter for the database file.
      *
-     * @return the database file.
+     * @return the database file
      */
     public File getDbFile() {
         return new File(path, dbName);
@@ -205,7 +205,7 @@ public class ObjectsDB {
     /**
      * Getter for the database folder.
      *
-     * @return the database folder.
+     * @return the database folder
      */
     public File getDbFolder() {
         return new File(path);
@@ -214,7 +214,7 @@ public class ObjectsDB {
     /**
      * Getter for the persistence manager.
      *
-     * @return the persistence manager.
+     * @return the persistence manager
      */
     public PersistenceManager getDB() {
         return pm;
@@ -793,8 +793,7 @@ public class ObjectsDB {
 
         connectionActive = false;
 
-        objectsCache.saveCache(waitingHandler, false);
-        objectsCache.clearCache();
+        objectsCache.saveCache(waitingHandler, true);
 
         pm.currentTransaction().commit();
 
@@ -846,7 +845,7 @@ public class ObjectsDB {
 
         }
 
-        objectsCache.saveCache(null, clearing);
+        objectsCache.saveCache(null, clearing); // @TODO: verify that this is actullly needed (as this looks more like saving?)
         objectsCache.clearCache();
 
         connectionActive = false;

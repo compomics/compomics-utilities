@@ -15,6 +15,7 @@ import javax.jdo.PersistenceManager;
  *
  * @author Marc Vaudel
  * @author Dominik Kopczynski
+ * @author Harald Barsnes
  */
 public class ObjectsCache {
 
@@ -180,7 +181,7 @@ public class ObjectsCache {
         }
 
         loadObjectMutex.release();
-        
+
     }
 
     /**
@@ -234,19 +235,6 @@ public class ObjectsCache {
     }
 
     /**
-     * Saves an entry in the database if modified and clears it from the cache.
-     *
-     * @param numLastEntries number of keys of the entries
-     * @param waitingHandler a waiting handler displaying progress to the user.
-     * Can be null. Progress will be displayed as secondary.
-     */
-    public void saveObjects(int numLastEntries, WaitingHandler waitingHandler) {
-        loadObjectMutex.acquire();
-        saveObjects(numLastEntries, waitingHandler, true);
-        loadObjectMutex.release();
-    }
-
-    /**
      * Saves an entry in the database if modified.
      *
      * @param numLastEntries number of keys of the entries
@@ -258,12 +246,6 @@ public class ObjectsCache {
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) {
 
         if (!readOnly) {
-            if (waitingHandler != null) {
-
-                waitingHandler.resetSecondaryProgressCounter();
-                waitingHandler.setMaxSecondaryProgressCounter(numLastEntries);
-
-            }
 
             ListIterator<Long> listIterator = objectQueue.listIterator();
             PersistenceManager pm = objectsDB.getDB();
@@ -289,18 +271,12 @@ public class ObjectsCache {
 
                     pm.makePersistent(obj);
                     objectsDB.getIdMap().put(key, ((DbObject) obj).jdoZooGetOid());
-
+                    
                 }
-
+                    
                 if (clearEntries) {
                     loadedObjects.remove(key);
                 }
-
-            }
-
-            if (waitingHandler != null) {
-
-                waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 
             }
 
@@ -344,13 +320,36 @@ public class ObjectsCache {
      * Saves the cache content in the database.
      *
      * @param waitingHandler a waiting handler on which the progress will be
+     * displayed
      * @param emptyCache boolean indicating whether the cache content shall be
-     * cleared while saving displayed as secondary progress. can be null
+     * cleared while saving displayed as secondary progress. Can be null.
      */
     public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) {
 
         loadObjectMutex.acquire();
-        saveObjects(loadedObjects.size(), waitingHandler, emptyCache);
+
+        // save in batches to enable progress display
+        int numSaveIterations = (int) Math.ceil(((double) loadedObjects.size()) / numToCommit); // @TODO: optimize batch size?
+
+        if (waitingHandler != null) {
+            waitingHandler.resetSecondaryProgressCounter();
+            waitingHandler.setMaxSecondaryProgressCounter(loadedObjects.size() + 1); // @TODO: can this number get bigger than the max integer value? 
+        }
+
+        for (int i = 0; i < numSaveIterations; i++) {
+            if (loadedObjects.size() > numToCommit) {
+                saveObjects(numToCommit, waitingHandler, emptyCache);
+            } else {
+                saveObjects(loadedObjects.size(), waitingHandler, emptyCache);
+            }
+        }
+
+        if (waitingHandler != null) {
+
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+
+        }
+
         loadObjectMutex.release();
 
     }

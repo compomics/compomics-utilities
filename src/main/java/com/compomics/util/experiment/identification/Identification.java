@@ -93,7 +93,7 @@ public class Identification extends ExperimentObject {
 
         identificationKeys.spectrumIdentification = getClassObjects(SpectrumMatch.class).stream()
                 .collect(Collectors.groupingBy(
-                        key -> Spectrum.getSpectrumFile(getSpectrumMatch(key).getSpectrumKey()),
+                        key -> Spectrum.getSpectrumFile(getSpectrumMatch(key).getSpectrumKey()), // @TODO: should use batches instead of one key at the time!
                         HashMap::new,
                         Collectors.toCollection(HashSet::new)));
     }

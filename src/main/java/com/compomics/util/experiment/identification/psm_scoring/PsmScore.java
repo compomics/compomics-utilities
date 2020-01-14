@@ -10,7 +10,7 @@ public enum PsmScore {
     /**
      * The native score of the search engine.
      */
-    native_score(-1, "Native", false, "The algorithm native scor"),
+    native_score(-1, "Native", false, "The algorithm native score"),
     /**
      * The precursor accuracy.
      */

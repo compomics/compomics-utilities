@@ -90,7 +90,7 @@ public abstract class Atom extends ExperimentObject {
     /**
      * The monoisotopic mass. Access is faster then querying the isotope map.
      */
-    protected Double monoisotopicMass;
+    protected double monoisotopicMass;
     /**
      * Map of the isotope masses relative to the monoisotopic peak (+1 for
      * carbon 13).
@@ -166,7 +166,7 @@ public abstract class Atom extends ExperimentObject {
      *
      * @return the monoisotopic mass in Da
      */
-    public Double getMonoisotopicMass() {
+    public double getMonoisotopicMass() {
         readDBMode();
         return monoisotopicMass;
     }
@@ -232,15 +232,15 @@ public abstract class Atom extends ExperimentObject {
      * @return the mass difference between the given isotope and the
      * monoisotopic mass
      */
-    public Double getDifferenceToMonoisotopic(int isotopeNumber) {
+    public double getDifferenceToMonoisotopic(int isotopeNumber) {
         readDBMode();
-        Double isotopeMass = null;
-        if (isotopeMap != null) {
-            isotopeMass = isotopeMap.get(isotopeNumber);
-        }
-        if (isotopeMass == null) {
+        
+        if (!isotopeMap.containsKey(isotopeNumber)) {
             throw new IllegalArgumentException("No isotope mass found for isotope " + isotopeNumber + " of atom " + name + ".");
         }
+        
+        double isotopeMass = isotopeMap.get(isotopeNumber);
+        
         return isotopeMass - getMonoisotopicMass();
     }
     

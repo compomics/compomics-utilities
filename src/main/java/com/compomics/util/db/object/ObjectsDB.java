@@ -334,7 +334,11 @@ public class ObjectsDB {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      */
-    public void insertObjects(HashMap<Long, Object> objects, WaitingHandler waitingHandler, boolean displayProgress) {
+    public void insertObjects(
+            HashMap<Long, Object> objects, 
+            WaitingHandler waitingHandler, 
+            boolean displayProgress
+    ) {
 
         dbMutex.acquire();
 
@@ -380,6 +384,7 @@ public class ObjectsDB {
         objectsCache.addObjects(objects);
 
         dbMutex.release();
+    
     }
 
     /**
@@ -552,7 +557,7 @@ public class ObjectsDB {
 
         dbMutex.acquire();
 
-        if (true || debugInteractions) {
+        if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " retrieving " + keys.size() + " objects");
         }
 

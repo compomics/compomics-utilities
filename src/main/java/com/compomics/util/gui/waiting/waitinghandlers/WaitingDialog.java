@@ -161,7 +161,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         this.toolName = toolName;
         this.toolVersion = toolVersion;
 
-        setTitle(processName + " - Please Wait...");
+        setTitle(processName + ". Please Wait...");
 
         setSecondaryProgressCounterIndeterminate(true);
 

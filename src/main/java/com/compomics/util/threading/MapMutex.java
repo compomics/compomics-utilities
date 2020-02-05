@@ -43,7 +43,11 @@ public class MapMutex<K> {
      * @param initialSize the initial size of the map, the default HashMap size
      * if null
      */
-    public MapMutex(Integer permits, Integer cacheLimitSize, Integer initialSize) {
+    public MapMutex(
+            Integer permits, 
+            Integer cacheLimitSize, 
+            Integer initialSize
+    ) {
         if (permits != null) {
             this.permits = permits;
         } else {

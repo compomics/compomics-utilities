@@ -87,11 +87,11 @@ public interface WaitingHandler {
     public void setSecondaryProgressCounter(int value);
 
     /**
-     * Increase the secondary progress counter by the given amount.
+     * Increase the secondary progress counter by the given value.
      *
-     * @param amount the amount to increase the value by
+     * @param value the value to increase the value by
      */
-    public void increaseSecondaryProgressCounter(int amount);
+    public void increaseSecondaryProgressCounter(int value);
 
     /**
      * Sets the secondary progress counter to indeterminate or not.

@@ -1,5 +1,6 @@
 package com.compomics.util.gui.waiting.waitinghandlers;
 
+import com.compomics.util.threading.SimpleSemaphore;
 import com.compomics.util.waiting.WaitingActionListener;
 import com.compomics.util.waiting.WaitingHandler;
 import java.awt.Frame;
@@ -67,6 +68,10 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      * The waiting action listener.
      */
     private WaitingActionListener waitingActionListener = null;
+    /**
+     * Mutex to synchronize multiple threads.
+     */
+    private final SimpleSemaphore mutex = new SimpleSemaphore(1);
 
     /**
      * Opens a new ProgressDialogX with a Frame as a parent.
@@ -76,7 +81,12 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      * @param normalIcon the frame icon to use when done
      * @param modal if the dialog is to be modal or not
      */
-    public ProgressDialogX(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean modal) {
+    public ProgressDialogX(
+            Frame waitingHandlerParent,
+            Image normalIcon,
+            Image waitingIcon,
+            boolean modal
+    ) {
         super(waitingHandlerParent, modal);
         initComponents();
         setLocationRelativeTo(waitingHandlerParent);
@@ -101,7 +111,13 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      * @param normalIcon the frame icon to use when done
      * @param modal if the dialog is to be modal or not
      */
-    public ProgressDialogX(JDialog waitingHandlerParent, Frame waitingHandlerParentFrame, Image normalIcon, Image waitingIcon, boolean modal) {
+    public ProgressDialogX(
+            JDialog waitingHandlerParent,
+            Frame waitingHandlerParentFrame,
+            Image normalIcon,
+            Image waitingIcon,
+            boolean modal
+    ) {
         super(waitingHandlerParent, modal);
         initComponents();
         setLocationRelativeTo(waitingHandlerParent);
@@ -123,7 +139,9 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      *
      * @param modal if the dialog is to be modal or not
      */
-    public ProgressDialogX(boolean modal) {
+    public ProgressDialogX(
+            boolean modal
+    ) {
         this.setModal(true);
         initComponents();
         setLocationRelativeTo(null);
@@ -134,10 +152,13 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      *
      * @param value the progress bar value
      */
-    public void setValue(final int value) {
+    public void setValue(
+            final int value
+    ) {
         if (displayProgress) {
             // invoke later to give time for components to update
-            SwingUtilities.invokeLater(new Runnable() {
+            SwingUtilities.invokeLater(
+                    new Runnable() {
                 public void run() {
                     progressBar.setValue(value);
                 }
@@ -146,7 +167,9 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     }
 
     @Override
-    public void setPrimaryProgressCounterIndeterminate(final boolean indeterminate) {
+    public void setPrimaryProgressCounterIndeterminate(
+            final boolean indeterminate
+    ) {
         if (displayProgress) {
             // invoke later to give time for components to update
             SwingUtilities.invokeLater(new Runnable() {
@@ -159,18 +182,19 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     }
 
     /**
-     * Sets the string to display in the progress bar. For example to show the
-     * name of the file currently being converted.
+     * Sets the string to display in the progress bar.
      *
-     * @param currentFileName the current file name
+     * @param displayString the string to display
      */
-    public void setString(final String currentFileName) {
+    public void setString(
+            final String displayString
+    ) {
         if (displayProgress) {
             // invoke later to give time for components to update
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    progressBar.setStringPainted(currentFileName != null);
-                    progressBar.setString(currentFileName);
+                    progressBar.setStringPainted(displayString != null);
+                    progressBar.setString(displayString);
                 }
             });
         }
@@ -184,7 +208,9 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
      *
      * @param unstoppable if the current process is unstoppable
      */
-    public void setUnstoppable(boolean unstoppable) {
+    public void setUnstoppable(
+            boolean unstoppable
+    ) {
         this.unstoppable = unstoppable;
     }
 
@@ -252,7 +278,9 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     }
 
     @Override
-    public void setMaxPrimaryProgressCounter(final int maxProgressValue) {
+    public void setMaxPrimaryProgressCounter(
+            final int maxProgressValue
+    ) {
         if (displayProgress) {
             // invoke later to give time for components to update
             SwingUtilities.invokeLater(new Runnable() {
@@ -265,47 +293,47 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
 
     @Override
     public void increasePrimaryProgressCounter() {
+        
+        increasePrimaryProgressCounter(1);
+    }
+
+    @Override
+    public void increasePrimaryProgressCounter(
+            final int increment
+    ) {
+        
+        mutex.acquire();
+        final int newValue = progressBar.getValue() + increment;
+        mutex.release();
+        
         if (displayProgress) {
             // invoke later to give time for components to update
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    progressBar.setValue(progressBar.getValue() + 1);
+                    progressBar.setValue(newValue);
                 }
             });
         }
     }
 
     @Override
-    public void increasePrimaryProgressCounter(final int increment) {
-        if (displayProgress) {
-            // invoke later to give time for components to update
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    progressBar.setValue(progressBar.getValue() + increment);
-                }
-            });
-        }
-    }
-
-    /**
-     * Sets the maximal value of the progress bar.
-     *
-     * @param maxProgressValue the maximal progress value
-     */
-    public void setMaxSecondaryProgressCounter(int maxProgressValue) {
+    public void setMaxSecondaryProgressCounter(
+            int maxProgressValue
+    ) {
         if (displayProgress) {
             setMaxPrimaryProgressCounter(maxProgressValue);
         }
     }
 
-    /**
-     * Resets the value of the progress bar.
-     */
+    @Override
     public void resetSecondaryProgressCounter() {
+        
         if (displayProgress) {
+        
             // invoke later to give time for components to update
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
+                    
                     finished = false;
                     canceled = false;
                     progressBar.setIndeterminate(false);
@@ -321,55 +349,40 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
         }
     }
 
-    /**
-     * Sets the value of the progress bar.
-     *
-     * @param value the progress value
-     */
+    @Override
     public void setPrimaryProgressCounter(int value) {
         if (displayProgress) {
             setValue(value);
         }
     }
 
-    /**
-     * Increases the progress bar.
-     */
+    @Override
     public void increaseSecondaryProgressCounter() {
         if (displayProgress) {
             increasePrimaryProgressCounter();
         }
     }
 
-    /**
-     * Sets the value of the progress bar.
-     *
-     * @param value the progress value
-     */
+    @Override
     public void setSecondaryProgressCounter(int value) {
         if (displayProgress) {
             setValue(value);
         }
     }
 
-    /**
-     * Increases the value of the progress bar.
-     *
-     * @param number the increment number
-     */
-    public void increaseSecondaryProgressCounter(int number) {
+    @Override
+    public void increaseSecondaryProgressCounter(
+            int number
+    ) {
         if (displayProgress) {
             increasePrimaryProgressCounter(number);
         }
     }
 
-    /**
-     * Makes the dialog indeterminate or not indeterminate. Also turns the paint
-     * progress string on or off.
-     *
-     * @param indeterminate if the progress is indeterminate
-     */
-    public void setSecondaryProgressCounterIndeterminate(boolean indeterminate) {
+    @Override
+    public void setSecondaryProgressCounterIndeterminate(
+            boolean indeterminate
+    ) {
         if (displayProgress) {
             setPrimaryProgressCounterIndeterminate(indeterminate);
         }
@@ -477,6 +490,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
         }
     }
 
+    @Override
     public void resetPrimaryProgressCounter() {
         if (displayProgress) {
             resetSecondaryProgressCounter(); // has only one progress bar

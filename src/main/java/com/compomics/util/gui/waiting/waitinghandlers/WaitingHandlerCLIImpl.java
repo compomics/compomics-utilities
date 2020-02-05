@@ -1,5 +1,6 @@
 package com.compomics.util.gui.waiting.waitinghandlers;
 
+import com.compomics.util.threading.SimpleSemaphore;
 import com.compomics.util.waiting.WaitingHandler;
 
 import java.util.Date;
@@ -61,87 +62,134 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
      * The line break type.
      */
     private final String lineBreak = System.getProperty("line.separator");
+    /**
+     * Mutex to synchronize multiple threads on the primary error bar.
+     */
+    private final SimpleSemaphore primaryMutex = new SimpleSemaphore(1);
+    /**
+     * Mutex to synchronize multiple threads on the secondary error bar.
+     */
+    private final SimpleSemaphore secondaryMutex = new SimpleSemaphore(1);
+    /**
+     * Mutex to synchronize multiple threads writing progress.
+     */
+    private final SimpleSemaphore progressMutex = new SimpleSemaphore(1);
+    /**
+     * Mutex to synchronize multiple threads writing text.
+     */
+    private final SimpleSemaphore textMutex = new SimpleSemaphore(1);
 
     @Override
-    public synchronized void setMaxPrimaryProgressCounter(int maxProgressValue) {
+    public void setMaxPrimaryProgressCounter(int maxProgressValue) {
         if (displayProgress) {
             primaryMaxProgressCounter = maxProgressValue;
         }
     }
 
     @Override
-    public synchronized void increasePrimaryProgressCounter() {
+    public void increasePrimaryProgressCounter() {
         if (displayProgress) {
-            primaryProgressCounter++;
+            increasePrimaryProgressCounter(1);
         }
     }
 
     @Override
-    public synchronized void increasePrimaryProgressCounter(int amount) {
+    public void increasePrimaryProgressCounter(int value) {
+        
         if (displayProgress) {
-            primaryProgressCounter += amount;
+        
+            primaryMutex.acquire();
+            primaryProgressCounter += value;
+            primaryMutex.release();
+            
         }
     }
 
     @Override
-    public void setPrimaryProgressCounter(int value) {
+    public void setPrimaryProgressCounter(
+            int value
+    ) {
         if (displayProgress) {
+            
+            primaryMutex.acquire();
             primaryProgressCounter = value;
+            primaryMutex.release();
+            
         }
     }
 
     @Override
-    public synchronized void setMaxSecondaryProgressCounter(int maxProgressValue) {
+    public void setMaxSecondaryProgressCounter(
+            int maxProgressValue
+    ) {
         if (displayProgress) {
+    
             secondaryMaxProgressCounter = maxProgressValue;
+        
         }
     }
 
     @Override
-    public synchronized void resetSecondaryProgressCounter() {
+    public void resetSecondaryProgressCounter() {
         if (displayProgress) {
             secondaryProgressCounter = 0;
         }
     }
 
     @Override
-    public synchronized void increaseSecondaryProgressCounter() {
+    public void increaseSecondaryProgressCounter() {
+        
+        increaseSecondaryProgressCounter(1);
+        
+    }
+
+    @Override
+    public void setSecondaryProgressCounter(
+            int value
+    ) {
+        
         if (displayProgress) {
             if (secondaryMaxProgressCounter != 0) {
+                
+                secondaryMutex.acquire();
                 int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-                secondaryProgressCounter++;
+                secondaryProgressCounter = value;
                 int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
+                secondaryMutex.release();
+                
                 printProgress(progress1, progress2);
+                
             } else {
-                secondaryProgressCounter++;
+                
+                secondaryMutex.acquire();
+                secondaryProgressCounter = value;
+                secondaryMutex.release();
+                
             }
         }
     }
 
     @Override
-    public synchronized void setSecondaryProgressCounter(int value) {
+    public void increaseSecondaryProgressCounter(int value) {
+        
         if (displayProgress) {
+            
             if (secondaryMaxProgressCounter != 0) {
+                
+                secondaryMutex.acquire();
                 int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-                secondaryProgressCounter = value;
+                secondaryProgressCounter += value;
                 int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
+                secondaryMutex.release();
+                
                 printProgress(progress1, progress2);
+                
             } else {
-                secondaryProgressCounter = value;
-            }
-        }
-    }
-
-    @Override
-    public synchronized void increaseSecondaryProgressCounter(int amount) {
-        if (displayProgress) {
-            if (secondaryMaxProgressCounter != 0) {
-                int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-                secondaryProgressCounter += amount;
-                int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
-                printProgress(progress1, progress2);
-            } else {
-                secondaryProgressCounter += amount;
+                
+                secondaryMutex.acquire();
+                secondaryProgressCounter += value;
+                secondaryMutex.release();
+            
             }
         }
     }
@@ -152,8 +200,12 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
      * @param progress1 previous progress value
      * @param progress2 current progress value
      */
-    private synchronized void printProgress(int progress1, int progress2) {
+    private void printProgress(int progress1, int progress2) {
+        
         if (progress2 > progress1) {
+            
+            progressMutex.acquire();
+        
             int progress = 10 * progress2;
             if (progress1 == 0) {
                 if (needNewLine) {
@@ -169,13 +221,21 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
                 System.out.print(" " + progress + "%");
                 needNewLine = true;
             }
+            
+            progressMutex.release();
+            
         }
     }
 
     @Override
-    public synchronized void setSecondaryProgressCounterIndeterminate(boolean indeterminate) {
+    public void setSecondaryProgressCounterIndeterminate(
+            boolean indeterminate
+    ) {
+    
         if (displayProgress) {
+        
             secondaryProgressCounter = -1;
+        
         }
     }
 
@@ -190,8 +250,13 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     }
 
     @Override
-    public synchronized void appendReport(String report, boolean includeDate, boolean addNewLine) {
+    public void appendReport(
+            String report, 
+            boolean includeDate, 
+            boolean addNewLine
+    ) {
         if (displayProgress) {
+            
             String tempReport = report;
 
             if (includeDate) {
@@ -202,36 +267,60 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
             if (addNewLine) {
                 tempReport = tempReport + lineBreak;
             }
-
+            
+            textMutex.acquire();
             iReport = iReport + tempReport;
+            textMutex.release();
+            
             if (needNewLine) {
+            
                 System.out.append(lineBreak);
                 needNewLine = false;
+            
             }
+            
             System.out.append(tempReport);
+            
         }
     }
 
     @Override
-    public synchronized void appendReportNewLineNoDate() {
+    public void appendReportNewLineNoDate() {
+        
         if (displayProgress) {
+        
             if (needNewLine) {
+            
                 System.out.append(lineBreak);
                 needNewLine = false;
+            
             }
+            
+            textMutex.acquire();
             iReport = iReport + lineBreak;
+            textMutex.release();
+            
             System.out.append(lineBreak);
+        
         }
     }
 
     @Override
-    public synchronized void appendReportEndLine() {
+    public void appendReportEndLine() {
+        
         if (displayProgress) {
+        
             if (needNewLine) {
+            
                 System.out.append(lineBreak);
                 needNewLine = false;
+            
             }
+            
+            textMutex.acquire();
             iReport = iReport + lineBreak;
+            textMutex.release();
+            
             System.out.append(lineBreak);
         }
     }
@@ -247,14 +336,21 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     }
 
     @Override
-    public void setWaitingText(String text) {
+    public void setWaitingText(
+            String text
+    ) {
+    
         if (displayProgress) {
+        
             appendReport(text, true, true);
+        
         }
     }
 
     @Override
-    public synchronized void setPrimaryProgressCounterIndeterminate(boolean indeterminate) {
+    public void setPrimaryProgressCounterIndeterminate(
+            boolean indeterminate
+    ) {
         if (displayProgress) {
             if (indeterminate) {
                 primaryProgressCounter = -1;
@@ -268,36 +364,38 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     }
 
     @Override
-    public void setSecondaryProgressText(String text) {
+    public void setSecondaryProgressText(
+            String text
+    ) {
         if (displayProgress) {
             appendReport(text, true, true);
         }
     }
 
     @Override
-    public synchronized void resetPrimaryProgressCounter() {
+    public void resetPrimaryProgressCounter() {
         if (displayProgress) {
             primaryProgressCounter = 0;
         }
     }
 
     @Override
-    public synchronized int getPrimaryProgressCounter() {
+    public int getPrimaryProgressCounter() {
         return primaryProgressCounter;
     }
 
     @Override
-    public synchronized int getMaxPrimaryProgressCounter() {
+    public int getMaxPrimaryProgressCounter() {
         return primaryMaxProgressCounter;
     }
 
     @Override
-    public synchronized int getSecondaryProgressCounter() {
+    public int getSecondaryProgressCounter() {
         return secondaryProgressCounter;
     }
 
     @Override
-    public synchronized int getMaxSecondaryProgressCounter() {
+    public int getMaxSecondaryProgressCounter() {
         return secondaryMaxProgressCounter;
     }
 

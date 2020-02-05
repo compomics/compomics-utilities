@@ -2,6 +2,7 @@ package com.compomics.util.gui.waiting.waitinghandlers;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.DummyFrame;
+import com.compomics.util.threading.SimpleSemaphore;
 import com.compomics.util.waiting.WaitingActionListener;
 import com.compomics.util.waiting.WaitingHandler;
 import java.awt.Frame;
@@ -106,6 +107,18 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * The line break type.
      */
     private String lineBreak = System.getProperty("line.separator");
+    /**
+     * Mutex to synchronize multiple threads on the primary error bar.
+     */
+    private final SimpleSemaphore primaryMutex = new SimpleSemaphore(1);
+    /**
+     * Mutex to synchronize multiple threads on the secondary error bar.
+     */
+    private final SimpleSemaphore secondaryMutex = new SimpleSemaphore(1);
+    /**
+     * Mutex to synchronize multiple threads writing text.
+     */
+    private final SimpleSemaphore textMutex = new SimpleSemaphore(1);
 
     /**
      * Empty default constructor
@@ -127,9 +140,27 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param toolVersion the version number of the tool, needed for the report
      * @param modal if the dialog is to be modal or not
      */
-    public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished, String processName,
-            String toolName, String toolVersion, boolean modal) {
-        this(waitingHandlerParent, normalIcon, waitingIcon, shakeWhenFinished, new ArrayList<String>(), processName, toolName, toolVersion, modal);
+    public WaitingDialog(
+            Frame waitingHandlerParent, 
+            Image normalIcon, 
+            Image waitingIcon, 
+            boolean shakeWhenFinished, 
+            String processName,
+            String toolName, 
+            String toolVersion, 
+            boolean modal
+    ) {
+        this(
+                waitingHandlerParent, 
+                normalIcon, 
+                waitingIcon, 
+                shakeWhenFinished, 
+                new ArrayList<String>(0), 
+                processName, 
+                toolName, 
+                toolVersion, 
+                modal
+        );
     }
 
     /**
@@ -146,8 +177,17 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      * @param toolVersion the version number of the tool, needed for the report
      * @param tips the list of Tip of the day
      */
-    public WaitingDialog(Frame waitingHandlerParent, Image normalIcon, Image waitingIcon, boolean shakeWhenFinished,
-            ArrayList<String> tips, String processName, String toolName, String toolVersion, boolean modal) {
+    public WaitingDialog(
+            Frame waitingHandlerParent, 
+            Image normalIcon, 
+            Image waitingIcon, 
+            boolean shakeWhenFinished,
+            ArrayList<String> tips, 
+            String processName, 
+            String toolName, 
+            String toolVersion, 
+            boolean modal
+    ) {
         super(waitingHandlerParent, modal);
         initComponents();
 
@@ -193,14 +233,19 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @param close if the dialog is to be closed when the process is complete
      */
-    public void closeWhenComplete(boolean close) {
+    public void closeWhenComplete(
+            boolean close
+    ) {
         closeDialogWhenImportCompletesCheckBox.setSelected(close);
     }
 
     /**
      * Set up the list of tip of the day.
      */
-    private void setTipOfTheDay(ArrayList<String> tips) {
+    private void setTipOfTheDay(
+            ArrayList<String> tips
+    ) {
+    
         this.tips = tips;
 
         if (tips == null || tips.isEmpty()) {
@@ -210,65 +255,61 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         }
     }
 
-    /**
-     * Sets the primary progress bar to the given value.
-     *
-     * @param value the progress value
-     */
-    public void setPrimaryProgressCounter(int value) {
+    @Override
+    public void setPrimaryProgressCounter(
+            int value
+    ) {
         if (displayProgress) {
+            
+            primaryMutex.acquire();
             secondaryJProgressBar.setValue(value);
+            primaryMutex.release();
+            
         }
     }
 
-    /**
-     * Set the maximum value of the progress bar.
-     *
-     * @param maxProgressValue the max value
-     */
-    public synchronized void setMaxPrimaryProgressCounter(int maxProgressValue) {
+    @Override
+    public void setMaxPrimaryProgressCounter(
+            int maxProgressValue
+    ) {
         if (displayProgress) {
             progressBar.setMaximum(maxProgressValue);
         }
     }
 
-    /**
-     * Increase the progress bar value by one "counter".
-     */
-    public synchronized void increasePrimaryProgressCounter() {
-        if (displayProgress) {
-            progressBar.setValue(progressBar.getValue() + 1);
-        }
+    @Override
+    public void increasePrimaryProgressCounter() {
+        increasePrimaryProgressCounter(1);
     }
 
-    /**
-     * Increase the progress bar value by the given amount.
-     *
-     * @param amount the amount to increase the value by
-     */
-    public synchronized void increasePrimaryProgressCounter(int amount) {
+    @Override
+    public void increasePrimaryProgressCounter(
+            int value
+    ) {
+        primaryMutex.acquire();
+        final int newValue = progressBar.getValue() + value;
+        
         if (displayProgress) {
-            progressBar.setValue(progressBar.getValue() + amount);
+        
+            progressBar.setValue(newValue);
+        
         }
+        
+        primaryMutex.release();
     }
 
-    /**
-     * Set the maximum value of the secondary progress bar. And resets the value
-     * to 0.
-     *
-     * @param maxProgressValue the max value
-     */
-    public synchronized void setMaxSecondaryProgressCounter(int maxProgressValue) {
+    @Override
+    public void setMaxSecondaryProgressCounter(
+            int maxProgressValue
+    ) {
         if (displayProgress) {
             secondaryJProgressBar.setValue(0);
             secondaryJProgressBar.setMaximum(maxProgressValue);
         }
     }
 
-    /**
-     * Reset the secondary progress bar value to 0.
-     */
-    public synchronized void resetSecondaryProgressCounter() {
+    @Override
+    public void resetSecondaryProgressCounter() {
         if (displayProgress) {
             secondaryJProgressBar.setIndeterminate(false);
             secondaryJProgressBar.setStringPainted(true);
@@ -276,10 +317,8 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         }
     }
 
-    /**
-     * Reset the primary progress bar value to 0.
-     */
-    public synchronized void resetPrimaryProgressCounter() {
+    @Override
+    public void resetPrimaryProgressCounter() {
         if (displayProgress) {
             // @TODO: perhaps this should be added to the waiting handler interface?
             progressBar.setIndeterminate(false);
@@ -291,39 +330,39 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     /**
      * Increase the secondary progress bar value by one "counter".
      */
-    public synchronized void increaseSecondaryProgressCounter() {
-        if (displayProgress) {
-            secondaryJProgressBar.setValue(secondaryJProgressBar.getValue() + 1);
-        }
+    @Override
+    public void increaseSecondaryProgressCounter() {
+        increaseSecondaryProgressCounter(1);
     }
 
-    /**
-     * Sets the secondary progress bar to the given value.
-     *
-     * @param value the progress value
-     */
-    public synchronized void setSecondaryProgressCounter(int value) {
+    @Override
+    public void setSecondaryProgressCounter(
+            int value
+    ) {
         if (displayProgress) {
+            
+            secondaryMutex.acquire();
             secondaryJProgressBar.setValue(value);
+            secondaryMutex.release();
+            
         }
     }
 
-    /**
-     * Increase the secondary progress bar value by the given amount.
-     *
-     * @param amount the amount to increase the value by
-     */
-    public synchronized void increaseSecondaryProgressCounter(int amount) {
+    @Override
+    public void increaseSecondaryProgressCounter(int value) {
+        
+        secondaryMutex.acquire();
+        
+        final int newValue = secondaryJProgressBar.getValue() + value;
+        
         if (displayProgress) {
-            secondaryJProgressBar.setValue(secondaryJProgressBar.getValue() + amount);
+            secondaryJProgressBar.setValue(newValue);
         }
+        
+        secondaryMutex.release();
     }
 
-    /**
-     * Sets the secondary progress bar to indeterminate or not.
-     *
-     * @param indeterminate if true, set to indeterminate
-     */
+    @Override
     public void setSecondaryProgressCounterIndeterminate(boolean indeterminate) {
         if (displayProgress) {
             // this split pane trick should not be needed, but if not used the look and feel of the
@@ -858,9 +897,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     private javax.swing.JScrollPane tipOfTheDayScrollPane;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * Set the process as finished.
-     */
+    @Override
     public void setRunFinished() {
         runFinished = true;
         okButton.setText("OK");
@@ -891,9 +928,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         }
     }
 
-    /**
-     * Set the process as canceled.
-     */
+    @Override
     public void setRunCanceled() {
 
         if (!runCanceled) {
@@ -924,8 +959,11 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     @Override
-    public synchronized void appendReport(String report, boolean includeDate, boolean addNewLine) {
+    public void appendReport(String report, boolean includeDate, boolean addNewLine) {
         if (displayProgress) {
+            
+            textMutex.acquire();
+            
             if (includeDate) {
                 Date date = new Date();
                 if (addNewLine) {
@@ -940,33 +978,38 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
                     reportTextArea.append(report);
                 }
             }
+            
+            textMutex.release();
+            
         }
     }
 
-    /**
-     * Append tabs to the report. No new line.
-     */
-    public synchronized void appendReportNewLineNoDate() {
+    @Override
+    public void appendReportNewLineNoDate() {
+        
         if (displayProgress) {
+            
+            textMutex.acquire();
             reportTextArea.append(TAB_NON_HTML);
+            textMutex.release();
+            
         }
     }
 
-    /**
-     * Append a new line to the report.
-     */
-    public synchronized void appendReportEndLine() {
+    @Override
+    public void appendReportEndLine() {
+        
         if (displayProgress) {
+            
+            textMutex.acquire();
             reportTextArea.append(lineBreak);
+            textMutex.release();
+            
         }
     }
 
-    /**
-     * Returns true if the run is canceled.
-     *
-     * @return true if the run is canceled
-     */
-    public synchronized boolean isRunCanceled() {
+    @Override
+    public boolean isRunCanceled() {
         return runCanceled;
     }
 
@@ -975,7 +1018,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
      *
      * @param aFile file to save the report in
      */
-    private void saveReport(File aFile) {
+    private void saveReport(
+            File aFile
+    ) {
 
         String report = getReport(aFile);
 
@@ -1224,6 +1269,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         this.waitingActionListener = waitingActionListener;
     }
 
+    @Override
     public void setSecondaryProgressText(String text) {
         if (displayProgress) {
             secondaryJProgressBar.setString(text);
@@ -1231,22 +1277,22 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     @Override
-    public synchronized int getPrimaryProgressCounter() {
+    public int getPrimaryProgressCounter() {
         return progressBar.getValue();
     }
 
     @Override
-    public synchronized int getMaxPrimaryProgressCounter() {
+    public int getMaxPrimaryProgressCounter() {
         return progressBar.getMaximum();
     }
 
     @Override
-    public synchronized int getSecondaryProgressCounter() {
+    public int getSecondaryProgressCounter() {
         return secondaryJProgressBar.getValue();
     }
 
     @Override
-    public synchronized int getMaxSecondaryProgressCounter() {
+    public int getMaxSecondaryProgressCounter() {
         return secondaryJProgressBar.getMaximum();
     }
 

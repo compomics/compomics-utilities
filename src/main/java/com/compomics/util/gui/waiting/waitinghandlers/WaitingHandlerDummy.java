@@ -28,52 +28,66 @@ public class WaitingHandlerDummy implements WaitingHandler {
     private boolean runCanceled = false;
 
     @Override
-    public synchronized void setMaxPrimaryProgressCounter(int maxProgressValue) {
+    public void setMaxPrimaryProgressCounter(
+            int maxProgressValue
+    ) {
         // not implemented
     }
 
     @Override
-    public synchronized void increasePrimaryProgressCounter() {
+    public void increasePrimaryProgressCounter() {
         // not implemented
     }
 
     @Override
-    public synchronized void increasePrimaryProgressCounter(int amount) {
+    public void increasePrimaryProgressCounter(
+            int value
+    ) {
         // not implemented
     }
 
     @Override
-    public void setPrimaryProgressCounter(int value) {
+    public void setPrimaryProgressCounter(
+            int value
+    ) {
         // not implemented
     }
 
     @Override
-    public synchronized void setMaxSecondaryProgressCounter(int maxProgressValue) {
+    public void setMaxSecondaryProgressCounter(
+            int maxProgressValue
+    ) {
         // not implemented
     }
 
     @Override
-    public synchronized void resetSecondaryProgressCounter() {
+    public void resetSecondaryProgressCounter() {
         // not implemented
     }
 
     @Override
-    public synchronized void increaseSecondaryProgressCounter() {
+    public void increaseSecondaryProgressCounter() {
         // not implemented
     }
 
     @Override
-    public synchronized void setSecondaryProgressCounter(int value) {
+    public void setSecondaryProgressCounter(
+            int value
+    ) {
         // not implemented
     }
 
     @Override
-    public synchronized void increaseSecondaryProgressCounter(int amount) {
+    public void increaseSecondaryProgressCounter(
+            int value
+    ) {
         // not implemented
     }
 
     @Override
-    public synchronized void setSecondaryProgressCounterIndeterminate(boolean indeterminate) {
+    public void setSecondaryProgressCounterIndeterminate(
+            boolean indeterminate
+    ) {
         // not implemented
     }
 
@@ -88,17 +102,21 @@ public class WaitingHandlerDummy implements WaitingHandler {
     }
 
     @Override
-    public synchronized void appendReport(String report, boolean includeDate, boolean addNewLine) {
+    public void appendReport(
+            String report, 
+            boolean includeDate, 
+            boolean addNewLine
+    ) {
         // not implemented
     }
 
     @Override
-    public synchronized void appendReportNewLineNoDate() {
+    public void appendReportNewLineNoDate() {
         // not implemented
     }
 
     @Override
-    public synchronized void appendReportEndLine() {
+    public void appendReportEndLine() {
         // not implemented
     }
 
@@ -113,12 +131,16 @@ public class WaitingHandlerDummy implements WaitingHandler {
     }
 
     @Override
-    public void setWaitingText(String text) {
+    public void setWaitingText(
+            String text
+    ) {
         // not implemented
     }
 
     @Override
-    public synchronized void setPrimaryProgressCounterIndeterminate(boolean indeterminate) {
+    public void setPrimaryProgressCounterIndeterminate(
+            boolean indeterminate
+    ) {
         // not implemented
     }
 
@@ -128,37 +150,41 @@ public class WaitingHandlerDummy implements WaitingHandler {
     }
 
     @Override
-    public void setSecondaryProgressText(String text) {
+    public void setSecondaryProgressText(
+            String text
+    ) {
         // not implemented
     }
 
     @Override
-    public synchronized void resetPrimaryProgressCounter() {
+    public void resetPrimaryProgressCounter() {
         // not implemented
     }
 
     @Override
-    public synchronized int getPrimaryProgressCounter() {
+    public int getPrimaryProgressCounter() {
         return 0;
     }
 
     @Override
-    public synchronized int getMaxPrimaryProgressCounter() {
+    public int getMaxPrimaryProgressCounter() {
         return 0;
     }
 
     @Override
-    public synchronized int getSecondaryProgressCounter() {
+    public int getSecondaryProgressCounter() {
         return 0;
     }
 
     @Override
-    public synchronized int getMaxSecondaryProgressCounter() {
+    public int getMaxSecondaryProgressCounter() {
         return 0;
     }
     
     @Override
-    public void setDisplayProgress(boolean displayProgress) {
+    public void setDisplayProgress(
+            boolean displayProgress
+    ) {
         // not implemented
     }
 

@@ -83,7 +83,9 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      */
-    public PepNovoIdfileReader(File identificationFile) throws FileNotFoundException, IOException {
+    public PepNovoIdfileReader(
+            File identificationFile
+    ) throws IOException {
         this(identificationFile, null);
     }
 
@@ -101,7 +103,10 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file
      */
-    public PepNovoIdfileReader(File identificationFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+    public PepNovoIdfileReader(
+            File identificationFile, 
+            WaitingHandler waitingHandler
+    ) throws IOException {
 
         bufferedRandomAccessFile = new BufferedRandomAccessFile(identificationFile, "r", 1024 * 100);
         fileName = Util.getFileName(identificationFile);
@@ -150,21 +155,32 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters) 
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        
+        return getAllSpectrumMatches(
+                waitingHandler, 
+                searchParameters, 
+                null, 
+                false
+        );
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, 
-            SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations) 
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters, 
+            SequenceMatchingParameters sequenceMatchingPreferences, 
+            boolean expandAaCombinations
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (bufferedRandomAccessFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
 
-        LinkedList<SpectrumMatch> spectrumMatches = new LinkedList<>();
+        ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -240,7 +256,10 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * @param rank the rank of the assumption
      * @return the corresponding assumption
      */
-    private TagAssumption getAssumptionFromLine(String line, int rank) {
+    private TagAssumption getAssumptionFromLine(
+            String line, 
+            int rank
+    ) {
 
         String[] lineComponents = line.trim().split("\t");
 
@@ -356,7 +375,10 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      *
      * @return the PTM as a string
      */
-    public static String getPTM(PepnovoParameters pepnovoParameters, String pepNovoModification) {
+    public static String getPTM(
+            PepnovoParameters pepnovoParameters, 
+            String pepNovoModification
+    ) {
 
         Map<String, String> invertedPtmMap = pepnovoParameters.getPepNovoPtmMap();
 

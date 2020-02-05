@@ -19,10 +19,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import javax.xml.bind.JAXBException;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
@@ -60,10 +59,12 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
      * Constructor for an Novor csv result file reader.
      *
      * @param novorCsvFile the Novor csv file
-     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * 
      * @throws IOException if an IOException occurs
      */
-    public NovorIdfileReader(File novorCsvFile) throws FileNotFoundException, IOException {
+    public NovorIdfileReader(
+            File novorCsvFile
+    ) throws IOException {
         this(novorCsvFile, null);
     }
 
@@ -72,10 +73,14 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
      *
      * @param novorCsvFile the Novor csv file
      * @param waitingHandler the waiting handler
-     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * 
      * @throws IOException if an IOException occurs
      */
-    public NovorIdfileReader(File novorCsvFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+    public NovorIdfileReader(
+            File novorCsvFile, 
+            WaitingHandler waitingHandler
+    ) throws IOException {
+        
         this.novorCsvFile = novorCsvFile;
 
         // get the novor version number
@@ -116,25 +121,30 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters
+    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences, 
+            boolean expandAaCombinations
+    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
 //        int tagMapKeyLength = 0;
 //        if (sequenceMatchingPreferences != null) {
 //            SequenceFactory sequenceFactory = SequenceFactory.getInstance();
 //            tagMapKeyLength = sequenceFactory.getDefaultProteinTree().getInitialTagSize();
-//            tagsMap = new HashMap<String, LinkedList<SpectrumMatch>>(1024);
+//            tagsMap = new HashMap<String, ArrayList<SpectrumMatch>>(1024);
 //        }
         NovorParameters novorParameters = (NovorParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex());
 
-        LinkedList<SpectrumMatch> result = new LinkedList<>();
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
 
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(novorCsvFile, "r", 1024 * 100);
 
@@ -355,9 +365,9 @@ public class NovorIdfileReader extends ExperimentObject implements IdfileReader 
 //                    HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength, sequenceMatchingPreferences);
 //                    for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
 //                        for (String key : advocateMap.keySet()) {
-//                            LinkedList<SpectrumMatch> tagMatches = tagsMap.get(key);
+//                            ArrayList<SpectrumMatch> tagMatches = tagsMap.get(key);
 //                            if (tagMatches == null) {
-//                                tagMatches = new LinkedList<SpectrumMatch>();
+//                                tagMatches = new ArrayList<SpectrumMatch>();
 //                                tagsMap.put(key, tagMatches);
 //                            }
 //                            tagMatches.add(currentMatch);

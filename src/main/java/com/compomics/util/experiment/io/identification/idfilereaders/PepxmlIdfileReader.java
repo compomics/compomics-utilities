@@ -21,10 +21,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 import javax.xml.bind.JAXBException;
 import org.xmlpull.v1.XmlPullParser;
@@ -42,7 +41,7 @@ public class PepxmlIdfileReader implements IdfileReader {
     /**
      * List of the spectrum matches in the file.
      */
-    private LinkedList<SpectrumMatch> spectrumMatches = null;
+    private ArrayList<SpectrumMatch> spectrumMatches = null;
     /**
      * The name of the search engine which was used to create the file.
      */
@@ -94,7 +93,9 @@ public class PepxmlIdfileReader implements IdfileReader {
      *
      * @param idFile the file to parse
      */
-    public PepxmlIdfileReader(File idFile) {
+    public PepxmlIdfileReader(
+            File idFile
+    ) {
         this.idFile = idFile;
     }
 
@@ -108,15 +109,14 @@ public class PepxmlIdfileReader implements IdfileReader {
      * @param overwriteExtension if true, the extension of the input file will
      * be overwritten to mgf
      *
-     * @throws XmlPullParserException
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws SQLException
-     * @throws ClassNotFoundException
-     * @throws InterruptedException
+     * @throws XmlPullParserException Exception thrown if an error occurred while parsing the xml file.
+     * @throws IOException Exception thrown if an error occurred while reading the file.
      */
-    private void parseFile(WaitingHandler waitingHandler, boolean expandAaCombinations, boolean overwriteExtension)
-            throws XmlPullParserException, FileNotFoundException, IOException, SQLException, ClassNotFoundException, InterruptedException {
+    private void parseFile(
+            WaitingHandler waitingHandler, 
+            boolean expandAaCombinations, 
+            boolean overwriteExtension
+    ) throws XmlPullParserException, IOException {
 
         // Create the pull parser.
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance(System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
@@ -134,7 +134,7 @@ public class PepxmlIdfileReader implements IdfileReader {
             boolean hasMatch = false;
 
             HashMap<Long, SpectrumMatch> spectrumMatchesMap = new HashMap<>();
-            spectrumMatches = new LinkedList<>();
+            spectrumMatches = new ArrayList<>();
             SpectrumMatch currentMatch = null;
             Integer currentCharge = null;
 
@@ -278,10 +278,13 @@ public class PepxmlIdfileReader implements IdfileReader {
      *
      * @return the peptide assumption in the search hit
      *
-     * @throws XmlPullParserException
-     * @throws IOException
+     * @throws XmlPullParserException Exception thrown if an error occurred while parsing the xml file.
+     * @throws IOException Exception thrown if an error occurred while reading the file.
      */
-    private PeptideAssumption parseSearchHit(XmlPullParser parser, Integer charge) throws XmlPullParserException, IOException {
+    private PeptideAssumption parseSearchHit(
+            XmlPullParser parser, 
+            int charge
+    ) throws XmlPullParserException, IOException {
 
         Integer rank = null;
         String sequence = null;
@@ -464,9 +467,21 @@ public class PepxmlIdfileReader implements IdfileReader {
             type = parser.next();
         }
 
-        Peptide peptide = new Peptide(sequence, modificationMatches.toArray(new ModificationMatch[modificationMatches.size()]), true);
+        Peptide peptide = new Peptide(
+                sequence, 
+                modificationMatches.toArray(new ModificationMatch[modificationMatches.size()]), 
+                true
+        );
         Advocate advocate = Advocate.getAdvocate(searchEngine);
-        return new PeptideAssumption(peptide, rank, advocate.getIndex(), charge, score, idFile.getName());
+        
+        return new PeptideAssumption(
+                peptide, 
+                rank, 
+                advocate.getIndex(), 
+                charge, 
+                score, 
+                idFile.getName()
+        );
     }
 
     /**
@@ -476,10 +491,12 @@ public class PepxmlIdfileReader implements IdfileReader {
      *
      * @return the spectrum match in this spectrum query
      *
-     * @throws XmlPullParserException
-     * @throws IOException
+     * @throws XmlPullParserException Exception thrown if an error occurred while parsing the xml file.
+     * @throws IOException Exception thrown if an error occurred while reading the file.
      */
-    private SpectrumMatch parseSpectrumQuery(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private SpectrumMatch parseSpectrumQuery(
+            XmlPullParser parser
+    ) throws XmlPullParserException, IOException {
 
         Integer index = null;
         String spectrumId = null;
@@ -529,10 +546,13 @@ public class PepxmlIdfileReader implements IdfileReader {
      * @param overwriteExtension if true, the extension of the input file will
      * be overwritten to mgf
      *
-     * @throws XmlPullParserException
-     * @throws IOException
+     * @throws XmlPullParserException Exception thrown if an error occurred while parsing the xml file.
+     * @throws IOException Exception thrown if an error occurred while reading the file.
      */
-    private void parseRunSummary(XmlPullParser parser, boolean overwriteExtension) throws XmlPullParserException, IOException {
+    private void parseRunSummary(
+            XmlPullParser parser, 
+            boolean overwriteExtension
+    ) throws XmlPullParserException, IOException {
 
         // Something like  <msms_run_summary base_name="D:\path\filename" raw_data="extention"> is expected 
         String path = "";
@@ -558,10 +578,13 @@ public class PepxmlIdfileReader implements IdfileReader {
      *
      * @param parser the XML parser
      *
-     * @throws XmlPullParserException
-     * @throws IOException
+     * @throws XmlPullParserException Exception thrown if an error occurred while parsing the xml file.
+     * @throws IOException Exception thrown if an error occurred while reading the file.
      */
-    private void parseSearchSummary(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private void parseSearchSummary(
+            XmlPullParser parser
+    ) throws XmlPullParserException, IOException {
+        
         for (int i = 0; i < parser.getAttributeCount(); i++) {
             String name = parser.getAttributeName(i);
             if (name.equals("search_engine")) {
@@ -691,17 +714,25 @@ public class PepxmlIdfileReader implements IdfileReader {
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations) throws IOException, IllegalArgumentException,
-            SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences, 
+            boolean expandAaCombinations
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
+        
         if (spectrumMatches == null) {
+        
             parseFile(waitingHandler, expandAaCombinations, true);
+        
         }
         return spectrumMatches;
     }

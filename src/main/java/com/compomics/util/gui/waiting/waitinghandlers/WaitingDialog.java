@@ -349,7 +349,9 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
     }
 
     @Override
-    public void increaseSecondaryProgressCounter(int value) {
+    public void increaseSecondaryProgressCounter(
+            int value
+    ) {
         
         secondaryMutex.acquire();
         

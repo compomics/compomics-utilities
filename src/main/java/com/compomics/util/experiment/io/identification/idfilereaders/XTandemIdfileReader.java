@@ -14,6 +14,7 @@ import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,11 +23,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLInputFactory;
@@ -64,10 +64,12 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * Constructor for an X!Tandem xml result file reader.
      *
      * @param inputFile the Mascot dat file
-     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * 
      * @throws IOException if an IOException occurs
      */
-    public XTandemIdfileReader(File inputFile) throws FileNotFoundException, IOException {
+    public XTandemIdfileReader(
+            File inputFile
+    ) throws IOException {
         this(inputFile, null);
     }
 
@@ -76,10 +78,13 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      *
      * @param inputFile the Mascot dat file
      * @param waitingHandler the waiting handler
-     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * 
      * @throws IOException if an IOException occurs
      */
-    public XTandemIdfileReader(File inputFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+    public XTandemIdfileReader(
+            File inputFile, 
+            WaitingHandler waitingHandler
+    ) throws IOException {
 
         inputFileName = inputFile;
 
@@ -91,14 +96,20 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, com.compomics.util.parameters.identification.search.SearchParameters searchParameters) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, com.compomics.util.parameters.identification.search.SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences, 
+            boolean expandAaCombinations
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
 
         // @TODO: use the waiting handler
 
@@ -233,7 +244,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             }
         }
 
-        return new LinkedList<>(allMatches.values());
+        return new ArrayList<>(allMatches.values());
     }
 
     @Override
@@ -254,8 +265,14 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         return false;
     }
 
-    private void readGroupOrProtein(XMLStreamReader parser, int id, double expect, HashSet<String> fixedNonTerminalModifications,
-            HashSet<String> fixedNTerminalModifications, HashSet<String> fixedCTerminalModifications) throws XMLStreamException, UnsupportedEncodingException {
+    private void readGroupOrProtein(
+            XMLStreamReader parser, 
+            int id, 
+            double expect, 
+            HashSet<String> fixedNonTerminalModifications,
+            HashSet<String> fixedNTerminalModifications, 
+            HashSet<String> fixedCTerminalModifications
+    ) throws XMLStreamException, UnsupportedEncodingException {
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
@@ -296,7 +313,11 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private void readGroupFragment(XMLStreamReader parser, int id) throws XMLStreamException, UnsupportedEncodingException {
+    private void readGroupFragment(
+            XMLStreamReader parser, 
+            int id
+    ) throws XMLStreamException, UnsupportedEncodingException {
+        
         boolean write = false;
         StringBuilder content = new StringBuilder();
         while (parser.hasNext()) {
@@ -353,7 +374,10 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private void readGroupFragmentTrace(XMLStreamReader parser, int id) throws XMLStreamException {
+    private void readGroupFragmentTrace(
+            XMLStreamReader parser, 
+            int id
+    ) throws XMLStreamException {
         boolean readCharge = false;
         while (parser.hasNext()) {
             parser.next();
@@ -398,8 +422,14 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private void readProtein(XMLStreamReader parser, int id, double expect, HashSet<String> fixedNonTerminalModifications,
-            HashSet<String> fixedNTerminalModifications, HashSet<String> fixedCTerminalModifications) throws XMLStreamException {
+    private void readProtein(
+            XMLStreamReader parser, 
+            int id, 
+            double expect, 
+            HashSet<String> fixedNonTerminalModifications,
+            HashSet<String> fixedNTerminalModifications, 
+            HashSet<String> fixedCTerminalModifications
+    ) throws XMLStreamException {
         while (parser.hasNext()) {
             parser.next();
             switch (parser.getEventType()) {
@@ -429,8 +459,14 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private void readPeptide(XMLStreamReader parser, int id, double expect, HashSet<String> fixedNonTerminalModifications,
-            HashSet<String> fixedNTerminalModifications, HashSet<String> fixedCTerminalModifications) throws XMLStreamException {
+    private void readPeptide(
+            XMLStreamReader parser, 
+            int id, 
+            double expect, 
+            HashSet<String> fixedNonTerminalModifications,
+            HashSet<String> fixedNTerminalModifications, 
+            HashSet<String> fixedCTerminalModifications
+    ) throws XMLStreamException {
         Peptide peptide = null;
         int pepStart = -1;
         boolean addAA = false;
@@ -520,7 +556,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private void readParameters(XMLStreamReader parser) throws XMLStreamException, UnsupportedEncodingException {
+    private void readParameters(
+            XMLStreamReader parser
+    ) throws XMLStreamException, UnsupportedEncodingException {
         int theCase = 0; // 1: fixed mod, 2: variable mod, 3: software version
         while (parser.hasNext()) {
             parser.next();
@@ -571,7 +609,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
     }
 
-    private String trimModificationName(String modification) {
+    private String trimModificationName(
+            String modification
+    ) {
         int indexPoint = modification.indexOf(".");
         int size = modification.length();
         if (indexPoint >= 0) {

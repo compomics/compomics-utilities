@@ -20,13 +20,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.JAXBException;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import uk.ac.ebi.jmzidml.model.mzidml.AnalysisData;
 import uk.ac.ebi.jmzidml.model.mzidml.AnalysisSoftware;
@@ -89,7 +89,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * A temporary peptide map used by the custom parser only. Key: peptide
      * id/ref, element: the peptide object.
      */
-    private HashMap<String, PeptideCustom> tempPeptideMap;
+    private HashMap<String, SimplePeptide> tempPeptideMap;
     /**
      * A temporary peptide evidence id to peptide ref map used by the custom
      * parser only. Key: peptide evidence id, element: the peptide ref.
@@ -133,10 +133,13 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * Constructor for an mzIdentML result file reader.
      *
      * @param mzIdentMLFile the mzIdentML file
+     * 
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      */
-    public MzIdentMLIdfileReader(File mzIdentMLFile) throws FileNotFoundException, IOException {
+    public MzIdentMLIdfileReader(
+            File mzIdentMLFile
+    ) throws IOException {
         this(mzIdentMLFile, null);
     }
 
@@ -145,10 +148,14 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      *
      * @param mzIdentMLFile the mzIdentML file
      * @param waitingHandler the waiting handler
+     * 
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      */
-    public MzIdentMLIdfileReader(File mzIdentMLFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+    public MzIdentMLIdfileReader(
+            File mzIdentMLFile, 
+            WaitingHandler waitingHandler
+    ) throws IOException {
 
         this.mzIdentMLFile = mzIdentMLFile;
         mzIdentMLFileName = Util.getFileName(mzIdentMLFile);
@@ -210,20 +217,25 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters
+    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences, 
+            boolean expandAaCombinations
+    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;
         this.expandAaCombinations = expandAaCombinations;
 
-        LinkedList<SpectrumMatch> result = new LinkedList<>();
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
 
         if (useCustomParser) {
 
@@ -472,7 +484,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      *
      * @return a map of the score accession to score value of the given scores
      */
-    private HashMap<String, Double> getAccessionToEValue(SpectrumIdentificationItem spectrumIdentItem) {
+    private HashMap<String, Double> getAccessionToEValue(
+            SpectrumIdentificationItem spectrumIdentItem
+    ) {
         HashMap<String, Double> result = new HashMap<>();
         for (CvParam cvParam : spectrumIdentItem.getCvParam()) {
             String accession = cvParam.getAccession();
@@ -538,9 +552,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      *
      * @return the list of spectrum matches
      */
-    private LinkedList<SpectrumMatch> parseFile(WaitingHandler waitingHandler) {
+    private ArrayList<SpectrumMatch> parseFile(
+            WaitingHandler waitingHandler
+    ) {
 
-        LinkedList<SpectrumMatch> result = new LinkedList<>();
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
 
         try {
             // create the pull parser
@@ -602,9 +618,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * Parse a peptide evidence object.
      *
      * @param parser the XML parser
-     * @throws Exception thrown if an exception occurs
      */
-    private void parsePeptideEvidence(XmlPullParser parser) throws Exception {
+    private void parsePeptideEvidence(
+            XmlPullParser parser
+    ) {
 
         String peptideEvidenceId = null;
         String peptideRef = null;
@@ -627,9 +644,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * Parse a peptide object.
      *
      * @param parser the XML parser
-     * @throws Exception thrown if an exception occurs
      */
-    private void parsePeptide(XmlPullParser parser) throws Exception {
+    private void parsePeptide(
+            XmlPullParser parser
+    ) throws XmlPullParserException, IOException {
 
         String pepKey = parser.getAttributeValue(0);
 
@@ -688,7 +706,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             parser.next();
         }
 
-        tempPeptideMap.put(pepKey, new PeptideCustom(peptideSequence, modifications));
+        tempPeptideMap.put(pepKey, new SimplePeptide(peptideSequence, modifications));
     }
 
     /**
@@ -697,7 +715,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * @param parser the XML parser
      * @throws Exception thrown if an exception occurs
      */
-    private void parseSoftware(XmlPullParser parser) throws Exception {
+    private void parseSoftware(XmlPullParser parser) throws XmlPullParserException, IOException {
 
         String softwareVersion = null;
 
@@ -767,7 +785,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * @param monoMassDelta the delta mass of the modification
      * @param peptideSequence the peptide sequence of the modification
      */
-    private boolean isVariableModification(SearchModificationCustom modification, String peptideSequence) {
+    private boolean isVariableModification(
+            SearchModificationCustom modification, 
+            String peptideSequence
+    ) {
 
         boolean fixed = false;
         int peptidePtmLocation = modification.getLocation();
@@ -849,9 +870,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * Parse the list of fixed modifications.
      *
      * @param parser the XML parser
-     * @throws Exception thrown if an exception occurs
      */
-    private void parseFixedModifications(XmlPullParser parser) throws Exception {
+    private void parseFixedModifications(
+            XmlPullParser parser
+    ) throws XmlPullParserException, IOException {
 
         parser.next();
         parser.next();
@@ -962,9 +984,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      *
      * @param parser the XML parser
      * @param spectrumFileNameMap the spectrum file name map
-     * @throws Exception thrown if an exception occurs
      */
-    private void parseSpectraData(XmlPullParser parser, HashMap<String, String> spectrumFileNameMap) throws Exception {
+    private void parseSpectraData(
+            XmlPullParser parser, 
+            HashMap<String, String> spectrumFileNameMap
+    ) {
 
         String location = null;
         String id = null;
@@ -1000,9 +1024,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      *
      * @param parser the XML parser
      * @param result the list to add the extracted PSM to
-     * @throws Exception thrown if an exception occurs
      */
-    private void parsePsm(XmlPullParser parser, LinkedList<SpectrumMatch> result) throws Exception {
+    private void parsePsm(
+            XmlPullParser parser, 
+            ArrayList<SpectrumMatch> result
+    ) throws XmlPullParserException, IOException {
 
         String spectraDataRef = null;
         String spectrumId = null;
@@ -1169,7 +1195,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             }
 
             // get the peptide
-            PeptideCustom tempPeptide = tempPeptideMap.get(peptideRef);
+            SimplePeptide tempPeptide = tempPeptideMap.get(peptideRef);
 
             // create a new peptide
             ArrayList<ModificationMatch> modMatches = new ArrayList<>();
@@ -1282,9 +1308,15 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * @param advocate the advocate
      * @param cvTerm the CV term to look for
      * @param rawValueConversionType the raw value conversion type
+     * 
      * @return the e-value object for the given CV term, null if not found
      */
-    private EValueObject getEValueObject(HashMap<String, Double> scoreMap, Advocate advocate, String cvTerm, RawValueConversionType rawValueConversionType) {
+    private EValueObject getEValueObject(
+            HashMap<String, Double> scoreMap, 
+            Advocate advocate, 
+            String cvTerm, 
+            RawValueConversionType rawValueConversionType
+    ) {
 
         EValueObject eValueObject = null;
         Double eValue = scoreMap.get(cvTerm), rawScore = null;
@@ -1336,9 +1368,13 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
      * @param scoreMap the map of the possible e-values
      * @param spectrumIdItemId the spectrum identification ID, only used if no
      * e-value is found
+     * 
      * @return the extracted e-value details
      */
-    private EValueObject getEValue(HashMap<String, Double> scoreMap, String spectrumIdItemId) {
+    private EValueObject getEValue(
+            HashMap<String, Double> scoreMap, 
+            String spectrumIdItemId
+    ) {
 
         String cvTerm; //TODO: select the "best" algorithm or include all?
 
@@ -1680,7 +1716,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
          * @param rawScore the raw score
          * @param advocate the advocate
          */
-        public EValueObject(Double eValue, Double rawScore, Advocate advocate) {
+        public EValueObject(
+                Double eValue, 
+                Double rawScore, 
+                Advocate advocate
+        ) {
             this.eValue = eValue;
             this.rawScore = rawScore;
             this.advocate = advocate;
@@ -1747,7 +1787,11 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
          * @param location the location
          * @param massDelta the mass delta
          */
-        public SearchModificationCustom(String accession, int location, Double massDelta) {
+        public SearchModificationCustom(
+                String accession, 
+                int location, 
+                double massDelta
+        ) {
             this.accession = accession;
             this.location = location;
             this.massDelta = massDelta;
@@ -1761,7 +1805,12 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
          * @param massDelta the mass delta
          * @param modRuleCvTerms the specificity rule CV terms
          */
-        public SearchModificationCustom(String accession, String residues, Double massDelta, ArrayList<String> modRuleCvTerms) {
+        public SearchModificationCustom(
+                String accession, 
+                String residues, 
+                double massDelta, 
+                ArrayList<String> modRuleCvTerms
+        ) {
             this.accession = accession;
             this.residues = residues;
             this.massDelta = massDelta;
@@ -1815,9 +1864,9 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     /**
-     * A peptide created by the custom parser.
+     * A simple model for a peptide.
      */
-    private class PeptideCustom {
+    private class SimplePeptide {
 
         /**
          * The peptide sequence.
@@ -1834,7 +1883,10 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
          * @param peptideSequence the peptide sequence
          * @param modifications the modifications
          */
-        public PeptideCustom(String peptideSequence, ArrayList<SearchModificationCustom> modifications) {
+        public SimplePeptide(
+                String peptideSequence, 
+                ArrayList<SearchModificationCustom> modifications
+        ) {
             this.peptideSequence = peptideSequence;
             this.modifications = modifications;
         }

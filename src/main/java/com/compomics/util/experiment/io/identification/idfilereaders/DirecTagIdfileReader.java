@@ -21,9 +21,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Set;
 import javax.xml.bind.JAXBException;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
@@ -139,7 +138,9 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @throws IOException if an IOException occurs
      */
-    public DirecTagIdfileReader(File tagFile) throws IOException {
+    public DirecTagIdfileReader(
+            File tagFile
+    ) throws IOException {
         this(tagFile, false);
     }
 
@@ -151,10 +152,15 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @throws IOException if an IOException occurs
      */
-    public DirecTagIdfileReader(File tagFile, boolean indexResults) throws IOException {
+    public DirecTagIdfileReader(
+            File tagFile, 
+            boolean indexResults
+    ) throws IOException {
+    
         this.tagFile = tagFile;
         bufferedRandomAccessFile = new BufferedRandomAccessFile(tagFile, "r", 1024 * 100);
         parseFile(indexResults);
+    
     }
 
     /**
@@ -174,9 +180,13 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @return the parameter of interest
      */
-    public String getTagParameter(String tagParameterName) {
+    public String getTagParameter(
+            String tagParameterName
+    ) {
+    
         readDBMode();
         return tagsParameters.get(tagParameterName);
+    
     }
 
     /**
@@ -187,7 +197,9 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @throws IOException if an IOException occurs
      */
     private void parseFile(boolean indexResults) throws IOException {
+        
         writeDBMode();
+        
         try {
             boolean endOfFile = parseParameters();
             if (!endOfFile) {
@@ -321,7 +333,10 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @throws IOException if an IOException occurs
      */
-    private void parseHeaderLine(String line) throws IOException {
+    private void parseHeaderLine(
+            String line
+    ) throws IOException {
+    
         writeDBMode();
         if (line.startsWith("S") || line.startsWith("T")) {
             throw new IOException("No Header found.");
@@ -383,7 +398,10 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @throws IOException if an IOException occurs
      */
-    public String getSpectrumComponent(int spectrumId, String componentName) throws IOException {
+    public String getSpectrumComponent(
+            int spectrumId, 
+            String componentName
+    ) throws IOException {
         readDBMode();
         long index = spectrumIndexes.get(spectrumId);
         bufferedRandomAccessFile.seek(index);
@@ -427,7 +445,9 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @throws IOException if an IOException occurs
      */
-    private ArrayList<HashMap<String, String>> getTags(int spectrumId) throws IOException {
+    private ArrayList<HashMap<String, String>> getTags(
+            int spectrumId
+    ) throws IOException {
         readDBMode();
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
         ArrayList<Long> indexes = tagIndexes.get(spectrumId);
@@ -450,15 +470,22 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         readDBMode();
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences, 
+            boolean expandAaCombinations
+    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        
         readDBMode();
 
         direcTagParameters = (DirecTagParameters) searchParameters.getAlgorithmSpecificParameters().get(Advocate.direcTag.getIndex());
@@ -482,13 +509,12 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
             waitingHandler.setMaxSecondaryProgressCounter(spectrumFactory.getNSpectra(spectrumFileName));
         }
 
-        LinkedList<SpectrumMatch> result = new LinkedList<>();
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
         int sCpt = 0;
         Integer sIdColumnIndex = spectrumLineContent.get("ID");
         Integer chargeColumnIndex = spectrumLineContent.get("Charge");
-        BufferedReader reader = new BufferedReader(new FileReader(tagFile));
-
-        try {
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(tagFile))) {
             Integer lastId = null, lastCharge = null;
             int rank = 0;
             SpectrumMatch currentMatch = null;
@@ -537,8 +563,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
 
                 result.add(currentMatch);
             }
-        } finally {
-            reader.close();
         }
         return result;
     }
@@ -553,7 +577,11 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @return the assumption associated to a tag line
      */
-    private TagAssumption getAssumptionFromLine(String line, int rank) {
+    private TagAssumption getAssumptionFromLine(
+            String line, 
+            int rank
+    ) {
+        
         readDBMode();
         line = line.substring(1).trim();
         String[] components = line.split("\t");

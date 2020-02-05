@@ -14014,6 +14014,11 @@
 <pre><a href="com/compomics/util/waiting/WaitingActionListener.html" title="interface in com.compomics.util.waiting">WaitingActionListener</a> waitingActionListener</pre>
 <div class="block">The waiting action listener.</div>
 </li>
+<li class="blockList">
+<h4>mutex</h4>
+<pre><a href="com/compomics/util/threading/SimpleSemaphore.html" title="class in com.compomics.util.threading">SimpleSemaphore</a> mutex</pre>
+<div class="block">Mutex to synchronize multiple threads.</div>
+</li>
 <li class="blockListLast">
 <h4>progressBar</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JProgressBar.html?is-external=true" title="class or interface in javax.swing">JProgressBar</a> progressBar</pre>
@@ -14124,6 +14129,21 @@
 <h4>lineBreak</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> lineBreak</pre>
 <div class="block">The line break type.</div>
+</li>
+<li class="blockList">
+<h4>primaryMutex</h4>
+<pre><a href="com/compomics/util/threading/SimpleSemaphore.html" title="class in com.compomics.util.threading">SimpleSemaphore</a> primaryMutex</pre>
+<div class="block">Mutex to synchronize multiple threads on the primary error bar.</div>
+</li>
+<li class="blockList">
+<h4>secondaryMutex</h4>
+<pre><a href="com/compomics/util/threading/SimpleSemaphore.html" title="class in com.compomics.util.threading">SimpleSemaphore</a> secondaryMutex</pre>
+<div class="block">Mutex to synchronize multiple threads on the secondary error bar.</div>
+</li>
+<li class="blockList">
+<h4>textMutex</h4>
+<pre><a href="com/compomics/util/threading/SimpleSemaphore.html" title="class in com.compomics.util.threading">SimpleSemaphore</a> textMutex</pre>
+<div class="block">Mutex to synchronize multiple threads writing text.</div>
 </li>
 <li class="blockList">
 <h4>backgroundPanel</h4>

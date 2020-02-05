@@ -17,10 +17,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import javax.xml.bind.JAXBException;
 import org.apache.commons.math.util.FastMath;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
@@ -54,7 +53,9 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      *
      * @throws IOException if a IOException occurs
      */
-    public AndromedaIdfileReader(File resultsFile) throws IOException {
+    public AndromedaIdfileReader(
+            File resultsFile
+    ) throws IOException {
         this.resultsFile = resultsFile;
         fileName = Util.getFileName(resultsFile);
     }
@@ -66,21 +67,30 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
-            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        
         readDBMode();
+        
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
+    
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences, 
+            boolean expandAaCombinations
+    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+      
         readDBMode();
 
         String mgfFile = Util.removeExtension(fileName) + ".mgf"; //@TODO: make this generic?
 
-        LinkedList<SpectrumMatch> result = new LinkedList<>();
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
         HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<>();
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(resultsFile, "r", 1024 * 100);
         if (waitingHandler != null) {
@@ -154,7 +164,11 @@ public class AndromedaIdfileReader extends ExperimentObject implements IdfileRea
      *
      * @return the corresponding assumption
      */
-    private PeptideAssumption getAssumptionFromLine(String line, int rank) {
+    private PeptideAssumption getAssumptionFromLine(
+            String line, 
+            int rank
+    ) {
+        
         readDBMode();
 
         String[] temp = line.trim().split("\t");

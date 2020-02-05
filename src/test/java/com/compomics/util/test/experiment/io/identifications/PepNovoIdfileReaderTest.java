@@ -4,7 +4,7 @@ import com.compomics.util.experiment.io.identification.idfilereaders.PepNovoIdfi
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class PepNovoIdfileReaderTest extends TestCase {
 
     @Test
     public void testGetAllSpectrumMatches() throws Exception {
-        LinkedList<SpectrumMatch> allSpectrumMatches = idfileReader.getAllSpectrumMatches(null, null);
+        ArrayList<SpectrumMatch> allSpectrumMatches = idfileReader.getAllSpectrumMatches(null, null);
         for (SpectrumMatch sm : allSpectrumMatches) {
             if (sm.getSpectrumKey().contains("Scan 835")) {
                 assertEquals("test.mgf_cus_7: Scan 835 (rt=12.4589) [NQIGDKEK]", sm.getSpectrumKey());

@@ -18,10 +18,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import javax.xml.bind.JAXBException;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
@@ -55,10 +54,13 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
      * Constructor for an MS Amanda csv result file reader.
      *
      * @param msAmandaCsvFile the MS Amanda csv file
+     * 
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      */
-    public MsAmandaIdfileReader(File msAmandaCsvFile) throws FileNotFoundException, IOException {
+    public MsAmandaIdfileReader(
+            File msAmandaCsvFile
+    ) throws IOException {
         this(msAmandaCsvFile, null);
     }
 
@@ -67,10 +69,15 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
      *
      * @param msAmandaCsvFile the MS Amanda csv file
      * @param waitingHandler the waiting handler
+     * 
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      */
-    public MsAmandaIdfileReader(File msAmandaCsvFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+    public MsAmandaIdfileReader(
+            File msAmandaCsvFile, 
+            WaitingHandler waitingHandler
+    ) throws IOException {
+    
         this.msAmandaCsvFile = msAmandaCsvFile;
 
         // get the ms amanda version number
@@ -100,17 +107,22 @@ public class MsAmandaIdfileReader extends ExperimentObject implements IdfileRead
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters
+    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences, 
+            boolean expandAaCombinations
+    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        LinkedList<SpectrumMatch> result = new LinkedList<>();
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
 
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(msAmandaCsvFile, "r", 1024 * 100);
 

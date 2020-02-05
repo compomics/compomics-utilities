@@ -10,6 +10,7 @@ import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,10 +19,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.TreeMap;
 import javax.xml.bind.JAXBException;
 
@@ -29,6 +29,7 @@ import javax.xml.bind.JAXBException;
  * This IdfileReader reads identifications from a Mascot results file.
  *
  * @author Dominik Kopczynski
+ * @author Marc Vaudel
  */
 public class MascotIdfileReader extends ExperimentObject implements IdfileReader {
 
@@ -51,10 +52,13 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
      * Constructor for an Mascot dat result file reader.
      *
      * @param inputFile the Mascot dat file
+     *
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      */
-    public MascotIdfileReader(File inputFile) throws FileNotFoundException, IOException {
+    public MascotIdfileReader(
+            File inputFile
+    ) throws FileNotFoundException, IOException {
         this(inputFile, null);
     }
 
@@ -63,87 +67,87 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
      *
      * @param inputFile the Mascot dat file
      * @param waitingHandler the waiting handler
+     *
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      */
-    public MascotIdfileReader(File inputFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+    public MascotIdfileReader(
+            File inputFile,
+            WaitingHandler waitingHandler
+    ) throws IOException {
 
         varMods.add("dummy");
         charges.add(-100000);
         matches.add(-1);
 
-        try {
-            FileReader fr = new FileReader(inputFile);
-            BufferedReader in = new BufferedReader(fr, 1 << 24);
-            String line, boundary;
+        FileReader fr = new FileReader(inputFile);
+        BufferedReader in = new BufferedReader(fr, 1 << 24);
+        String line, boundary;
 
-            // read first line
-            line = in.readLine();
+        // read first line
+        line = in.readLine();
 
-            // second line should contain boundary information
-            line = in.readLine();
-            int boundaryStart = line.indexOf("boundary=");
-            if (boundaryStart >= 0) {
-                boundary = line.substring(line.indexOf("=", boundaryStart) + 1);
-            } else {
-                throw new Exception("File format not parsable, no boundary provided.");
-            }
-
-            // find first new file occurence
-            while ((line = in.readLine()) != null) {
-                if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
-                    break;
-                }
-            }
-            int xx = 0;
-            while ((line = in.readLine()) != null) {
-                int nameIndex = line.indexOf("name=\"");
-                if (nameIndex < 0) {
-                    throw new Exception("File format not parsable.");
-                }
-                String state = line.substring(line.indexOf("=\"", nameIndex) + 2, line.indexOf("\"", nameIndex + 6));
-                if (state.startsWith("query")) {
-                    parseQuery(in, boundary, state);
-                } else {
-                    switch (state) {
-                        case "masses":
-                            parseMasses(in, boundary);
-                            break;
-                        case "peptides":
-                            parsePeptides(in, boundary, inputFile.getName());
-                            break;
-                        case "summary":
-                            parseSummary(in, boundary);
-                            break;
-
-                        case "parameters":
-                            parseParameters(in, boundary);
-                            break;
-
-                        case "header":
-                            parseHeader(in, boundary);
-                            break;
-
-                        case "index":
-                        case "enzyme":
-                        case "unimod":
-                        case "proteins":
-                            parse(in, boundary);
-                            break;
-
-                        default:
-                            throw new Exception("File format not parsable name '" + state + "'.");
-                    }
-                }
-
-                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                    break;
-                }
-            }
-            in.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        // second line should contain boundary information
+        line = in.readLine();
+        int boundaryStart = line.indexOf("boundary=");
+        if (boundaryStart >= 0) {
+            boundary = line.substring(line.indexOf("=", boundaryStart) + 1);
+        } else {
+            throw new IllegalArgumentException("File format not parsable, no boundary provided.");
         }
+
+        // find first new file occurence
+        while ((line = in.readLine()) != null) {
+            if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
+                break;
+            }
+        }
+        int xx = 0;
+        while ((line = in.readLine()) != null) {
+            int nameIndex = line.indexOf("name=\"");
+            if (nameIndex < 0) {
+                throw new IllegalArgumentException("File format not parsable.");
+            }
+            String state = line.substring(line.indexOf("=\"", nameIndex) + 2, line.indexOf("\"", nameIndex + 6));
+            if (state.startsWith("query")) {
+                parseQuery(in, boundary, state);
+            } else {
+                switch (state) {
+                    case "masses":
+                        parseMasses(in, boundary);
+                        break;
+                    case "peptides":
+                        parsePeptides(in, boundary, inputFile.getName());
+                        break;
+                    case "summary":
+                        parseSummary(in, boundary);
+                        break;
+
+                    case "parameters":
+                        parseParameters(in, boundary);
+                        break;
+
+                    case "header":
+                        parseHeader(in, boundary);
+                        break;
+
+                    case "index":
+                    case "enzyme":
+                    case "unimod":
+                    case "proteins":
+                        parse(in, boundary);
+                        break;
+
+                    default:
+                        throw new IllegalArgumentException("File format not parsable name '" + state + "'.");
+                }
+            }
+
+            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                break;
+            }
+        }
+        in.close();
 
     }
 
@@ -153,20 +157,26 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, com.compomics.util.parameters.identification.search.SearchParameters searchParameters) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler,
+            SearchParameters searchParameters
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, com.compomics.util.parameters.identification.search.SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler,
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences,
+            boolean expandAaCombinations
+    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);
             waitingHandler.setMaxSecondaryProgressCounter(allMatches.size());
         }
-        
+
         if (expandAaCombinations) {
 
             for (SpectrumMatch currentMatch : allMatches.values()) {
@@ -196,7 +206,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                             currentMatch.addPeptideAssumption(Advocate.mascot.getIndex(), newAssumption);
 
                             if (waitingHandler != null) {
-                                if (waitingHandler.isRunCanceled()) { 
+                                if (waitingHandler.isRunCanceled()) {
                                     break;
                                 }
                                 waitingHandler.increaseSecondaryProgressCounter();
@@ -207,7 +217,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
             }
         }
 
-        return new LinkedList<>(allMatches.values());
+        return new ArrayList<>(allMatches.values());
     }
 
     @Override
@@ -234,294 +244,286 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
 
     /**
      * Parse the masses.
-     * 
+     *
      * @param in the buffered reader
      * @param boundary the boundary
      */
-    private void parseMasses(BufferedReader in, String boundary) {
+    private void parseMasses(
+            BufferedReader in,
+            String boundary
+    ) throws IOException {
         String mass = "";
         String line;
 
         int theCase = 0; // 1 = fix
 
-        try {
-
-            while ((line = in.readLine()) != null) {
-                if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
-                    break;
-                }
-                if (line.length() < 2) {
-                    continue;
-                }
-
-                String[] parts = line.split("=");
-                if (parts.length != 2) {
-                    continue;
-                }
-                switch (theCase) {
-                    case 0:
-                        if (parts[0].startsWith("delta")) {
-                            varMods.add(parts[1].split(",")[0]);
-                        } else if (parts[0].startsWith("FixedMod")) {
-                            mass = parts[1].split(",")[0];
-                            theCase = 1;
-                        }
-                        break;
-
-                    case 1:
-                        if (!parts[0].startsWith("FixedModResidues")) {
-                            throw new Exception("File format not parsable.");
-                        }
-                        theCase = 0;
-                        break;
-                }
+        while ((line = in.readLine()) != null) {
+            if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
+                break;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (line.length() < 2) {
+                continue;
+            }
+
+            String[] parts = line.split("=");
+            if (parts.length != 2) {
+                continue;
+            }
+            switch (theCase) {
+                case 0:
+                    if (parts[0].startsWith("delta")) {
+                        varMods.add(parts[1].split(",")[0]);
+                    } else if (parts[0].startsWith("FixedMod")) {
+                        mass = parts[1].split(",")[0];
+                        theCase = 1;
+                    }
+                    break;
+
+                case 1:
+                    if (!parts[0].startsWith("FixedModResidues")) {
+                        throw new IllegalArgumentException("File format not parsable.");
+                    }
+                    theCase = 0;
+                    break;
+            }
         }
     }
 
     /**
      * Parse a query.
-     * 
+     *
      * @param in the buffered reader
      * @param boundary the boundary
      * @param state the state
      */
-    private void parseQuery(BufferedReader in, String boundary, String state) {
+    private void parseQuery(
+            BufferedReader in,
+            String boundary,
+            String state
+    ) throws IOException {
         String line;
-        try {
-            while ((line = in.readLine()) != null) {
-                if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
-                    break;
-                }
-                if (line.length() < 2) {
-                    continue;
-                }
+        while ((line = in.readLine()) != null) {
+            if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
+                break;
+            }
+            if (line.length() < 2) {
+                continue;
+            }
 
-                String[] parts = line.split("=");
-                if (parts.length != 2) {
-                    continue;
-                }
-                if ("title".equals(parts[0])) {
+            String[] parts = line.split("=");
+            if (parts.length != 2) {
+                continue;
+            }
+            if ("title".equals(parts[0])) {
 
-                    int specNum = Integer.parseInt(state.substring(5, state.length()));
-                    String specTitle = URLDecoder.decode(parts[1], "utf8");
-                    SpectrumMatch spectrumMatch = allMatches.get(specNum);
+                int specNum = Integer.parseInt(state.substring(5, state.length()));
+                String specTitle = URLDecoder.decode(parts[1], "utf8");
+                SpectrumMatch spectrumMatch = allMatches.get(specNum);
 
-                    if (spectrumMatch != null) {
+                if (spectrumMatch != null) {
 
-                        String spectrumKey = Spectrum.getSpectrumKey(spectrumMatch.getSpectrumKey(), specTitle);
-                        spectrumMatch.setSpectrumKey(spectrumKey);
+                    String spectrumKey = Spectrum.getSpectrumKey(spectrumMatch.getSpectrumKey(), specTitle);
+                    spectrumMatch.setSpectrumKey(spectrumKey);
 
-                    }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
     /**
      * Parse a header.
-     * 
+     *
      * @param in the buffered reader
      * @param boundary the boundary
      */
-    private void parseHeader(BufferedReader in, String boundary) {
+    private void parseHeader(
+            BufferedReader in,
+            String boundary
+    ) throws IOException {
         String line;
-        try {
-            while ((line = in.readLine()) != null) {
-                if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
-                    break;
-                }
-                if (line.length() < 2) {
-                    continue;
-                }
-
-                String[] parts = line.split("=");
-                if (parts.length != 2) {
-                    continue;
-                }
-                if ("version".equals(parts[0])) {
-                    softwareVersion = parts[1];
-                }
+        while ((line = in.readLine()) != null) {
+            if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
+                break;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (line.length() < 2) {
+                continue;
+            }
+
+            String[] parts = line.split("=");
+            if (parts.length != 2) {
+                continue;
+            }
+            if ("version".equals(parts[0])) {
+                softwareVersion = parts[1];
+            }
         }
     }
 
     /**
      * Parse parameters.
-     * 
+     *
      * @param in the buffered reader
      * @param boundary the boundary
      */
-    private void parseParameters(BufferedReader in, String boundary) {
+    private void parseParameters(
+            BufferedReader in,
+            String boundary
+    ) throws IOException {
         String line;
-        try {
-            while ((line = in.readLine()) != null) {
-                if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
-                    break;
-                }
-                if (line.length() < 2) {
-                    continue;
-                }
-
-                String[] parts = line.split("=");
-                if (parts.length != 2) {
-                    continue;
-                }
-
-                if ("FILE".equals(parts[0])) {
-                    File f = new File(parts[1].replaceAll("\\\\", "/"));
-                    fileName = f.getName();
-                }
+        while ((line = in.readLine()) != null) {
+            if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
+                break;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (line.length() < 2) {
+                continue;
+            }
+
+            String[] parts = line.split("=");
+            if (parts.length != 2) {
+                continue;
+            }
+
+            if ("FILE".equals(parts[0])) {
+                File f = new File(parts[1].replaceAll("\\\\", "/"));
+                fileName = f.getName();
+            }
         }
     }
 
     /**
      * Parse peptides.
-     * 
+     *
      * @param in the buffered reader
      * @param boundary the boundary
      * @param sourceFile the source file
-     * @throws Exception thrown if an exception occurs
+     *
+     * @throws IOException thrown if an io exception occurs
      */
-    private void parsePeptides(BufferedReader in, String boundary, String sourceFile) throws Exception {
+    private void parsePeptides(
+            BufferedReader in,
+            String boundary,
+            String sourceFile
+    ) throws IOException {
         String line;
 
         if (fileName == null) {
-            throw new Exception("File format not parsable.");
+            throw new IllegalArgumentException("File format not parsable.");
         }
 
-        try {
-            while ((line = in.readLine()) != null) {
-                if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
-                    break;
-                }
-                if (line.length() < 2) {
-                    continue;
-                }
+        while ((line = in.readLine()) != null) {
+            if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
+                break;
+            }
+            if (line.length() < 2) {
+                continue;
+            }
 
-                String[] parts = line.split("=");
-                if (parts.length < 2) {
-                    continue;
-                }
-                String[] pre = parts[0].split("_");
-                if (pre.length != 2) {
-                    continue;
-                }
+            String[] parts = line.split("=");
+            if (parts.length < 2) {
+                continue;
+            }
+            String[] pre = parts[0].split("_");
+            if (pre.length != 2) {
+                continue;
+            }
 
-                int spectrumNumber = Integer.parseInt(pre[0].substring(1, pre[0].length()));
+            int spectrumNumber = Integer.parseInt(pre[0].substring(1, pre[0].length()));
 
-                String[] content = parts[1].split(";")[0].split(",");
-                if (content.length != 11) {
-                    continue;
+            String[] content = parts[1].split(";")[0].split(",");
+            if (content.length != 11) {
+                continue;
+            }
+            String peptideSequence = content[4];
+            String varModSequence = content[6];
+            ArrayList<ModificationMatch> foundModifications = new ArrayList<>(1);
+
+            // check for variable modifications
+            for (int pos = 1; pos < varModSequence.length() - 1; ++pos) {
+                char vC = varModSequence.charAt(pos);
+                if (vC != '0' && vC != 'X') {
+                    foundModifications.add(new ModificationMatch(varMods.get(vC - '0') + "@" + peptideSequence.charAt(pos - 1), pos));
                 }
-                String peptideSequence = content[4];
-                String varModSequence = content[6];
-                ArrayList<ModificationMatch> foundModifications = new ArrayList<>(1);
+            }
 
-                // check for variable modifications
-                for (int pos = 1; pos < varModSequence.length() - 1; ++pos) {
-                    char vC = varModSequence.charAt(pos);
-                    if (vC != '0' && vC != 'X') {
-                        foundModifications.add(new ModificationMatch(varMods.get(vC - '0') + "@" + peptideSequence.charAt(pos - 1), pos));
-                    }
-                }
+            double ionScore = Double.parseDouble(content[7]);
+            int specCharge = charges.get(spectrumNumber);
+            double lThreshold = 10.0 * Math.log(matches.get(spectrumNumber)) / Math.log(10);
+            double expectancy = (0.05 * Math.pow(10, ((lThreshold - (double) ionScore) / 10)));
+            SpectrumMatch currentMatch;
+            int rank;
+            if (!allMatches.containsKey(spectrumNumber)) {
+                currentMatch = new SpectrumMatch(fileName);
+                currentMatch.setSpectrumNumber(spectrumNumber);
+                allMatches.put(spectrumNumber, currentMatch);
+                rank = 1;
+            } else {
 
-                double ionScore = Double.parseDouble(content[7]);
-                int specCharge = charges.get(spectrumNumber);
-                double lThreshold = 10.0 * Math.log(matches.get(spectrumNumber)) / Math.log(10);
-                double expectancy = (0.05 * Math.pow(10, ((lThreshold - (double) ionScore) / 10)));
-                SpectrumMatch currentMatch;
-                int rank;
-                if (!allMatches.containsKey(spectrumNumber)) {
-                    currentMatch = new SpectrumMatch(fileName);
-                    currentMatch.setSpectrumNumber(spectrumNumber);
-                    allMatches.put(spectrumNumber, currentMatch);
-                    rank = 1;
+                currentMatch = allMatches.get(spectrumNumber);
+                TreeMap<Double, ArrayList<PeptideAssumption>> assump = allMatches.get(spectrumNumber).getAllPeptideAssumptions(Advocate.mascot.getIndex());
+
+                if (assump.containsKey(expectancy)) {
+
+                    rank = assump.get(expectancy).get(0).getRank();
+
                 } else {
 
-                    currentMatch = allMatches.get(spectrumNumber);
-                    TreeMap<Double, ArrayList<PeptideAssumption>> assump = allMatches.get(spectrumNumber).getAllPeptideAssumptions(Advocate.mascot.getIndex());
+                    rank = (int) allMatches.get(spectrumNumber).getAllPeptideAssumptions().count() + 1;
 
-                    if (assump.containsKey(expectancy)) {
-
-                        rank = assump.get(expectancy).get(0).getRank();
-
-                    } else {
-
-                        rank = (int) allMatches.get(spectrumNumber).getAllPeptideAssumptions().count() + 1;
-
-                    }
                 }
-
-                Peptide peptide = new Peptide(peptideSequence, foundModifications.toArray(new ModificationMatch[foundModifications.size()]));
-                PeptideAssumption currentAssumption = new PeptideAssumption(peptide, rank, Advocate.mascot.getIndex(), specCharge, expectancy, sourceFile);
-                currentAssumption.setRawScore(ionScore);
-                currentMatch.addPeptideAssumption(Advocate.mascot.getIndex(), currentAssumption);
-
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            Peptide peptide = new Peptide(peptideSequence, foundModifications.toArray(new ModificationMatch[foundModifications.size()]));
+            PeptideAssumption currentAssumption = new PeptideAssumption(peptide, rank, Advocate.mascot.getIndex(), specCharge, expectancy, sourceFile);
+            currentAssumption.setRawScore(ionScore);
+            currentMatch.addPeptideAssumption(Advocate.mascot.getIndex(), currentAssumption);
+
         }
     }
 
     /**
      * Prase the summary.
-     * 
+     *
      * @param in the buffered reader
-     * @param boundary the boundary 
+     * @param boundary the boundary
      */
-    private void parseSummary(BufferedReader in, String boundary) {
+    private void parseSummary(
+            BufferedReader in,
+            String boundary
+    ) throws IOException {
         String line;
-        try {
-            while ((line = in.readLine()) != null) {
-                if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
-                    break;
-                }
-                if (line.length() < 2) {
-                    continue;
-                }
-
-                String[] parts = line.split("=");
-                if (parts[0].startsWith("qexp")) {
-                    int sign = parts[1].charAt(parts[1].length() - 1) == '+' ? 1 : -1;
-                    String chrg = parts[1].split(",")[1];
-                    chrg = chrg.substring(0, chrg.length() - 1);
-                    charges.add(sign * Integer.parseInt(chrg));
-                } else if (parts[0].startsWith("qmatch")) {
-                    matches.add(Integer.parseInt(parts[1]));
-                }
+        while ((line = in.readLine()) != null) {
+            if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
+                break;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (line.length() < 2) {
+                continue;
+            }
+
+            String[] parts = line.split("=");
+            if (parts[0].startsWith("qexp")) {
+                int sign = parts[1].charAt(parts[1].length() - 1) == '+' ? 1 : -1;
+                String chrg = parts[1].split(",")[1];
+                chrg = chrg.substring(0, chrg.length() - 1);
+                charges.add(sign * Integer.parseInt(chrg));
+            } else if (parts[0].startsWith("qmatch")) {
+                matches.add(Integer.parseInt(parts[1]));
+            }
         }
     }
 
     /**
      * Parse.
-     * 
+     *
      * @param in the buffered reader
      * @param boundary the boundary
      */
-    private void parse(BufferedReader in, String boundary) {
+    private void parse(BufferedReader in, String boundary) throws IOException {
         String line;
-        try {
-            while ((line = in.readLine()) != null) {
-                int lineLength = line.length();
-                if (lineLength > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
-                    break;
-                }
+        while ((line = in.readLine()) != null) {
+            int lineLength = line.length();
+            if (lineLength > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
+                break;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

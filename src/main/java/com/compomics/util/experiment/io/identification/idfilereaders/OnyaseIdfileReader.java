@@ -22,11 +22,10 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.zip.GZIPInputStream;
 import javax.xml.bind.JAXBException;
@@ -104,7 +103,10 @@ public class OnyaseIdfileReader implements IdfileReader {
      *
      * @throws IOException if an error occurrs while parsing the file
      */
-    public OnyaseIdfileReader(File resultsFile) throws IOException {
+    public OnyaseIdfileReader(
+            File resultsFile
+    ) throws IOException {
+        
         this.resultsFile = resultsFile;
         fileName = Util.getFileName(resultsFile);
         
@@ -152,15 +154,20 @@ public class OnyaseIdfileReader implements IdfileReader {
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences, 
+            boolean expandAaCombinations
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         // @TODO: use the waitingHandler
         
@@ -207,7 +214,7 @@ public class OnyaseIdfileReader implements IdfileReader {
             }
         }
 
-        LinkedList<SpectrumMatch> result = new LinkedList<>();
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
         
         for (SpectrumMatch spectrumMatch : spectrumMatchesMap.values()) {
             
@@ -249,7 +256,9 @@ public class OnyaseIdfileReader implements IdfileReader {
      * @throws UnsupportedEncodingException exception thrown whenever an error
      * occurred while decoding the string
      */
-    private ModificationMatch[] getModificationMatches(String modificationsString) throws UnsupportedEncodingException {
+    private ModificationMatch[] getModificationMatches(
+            String modificationsString
+    ) throws UnsupportedEncodingException {
         
         if (modificationsString.length() == 0) {
         

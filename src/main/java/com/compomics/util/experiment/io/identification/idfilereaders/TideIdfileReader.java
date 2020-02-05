@@ -18,10 +18,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import javax.xml.bind.JAXBException;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
@@ -71,10 +70,13 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
      *
      * @param tideTsvFile the Tide tsv file
      * @param waitingHandler the waiting handler
-     * @throws FileNotFoundException if a FileNotFoundException occurs
+     * 
      * @throws IOException if an IOException occurs
      */
-    public TideIdfileReader(File tideTsvFile, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
+    public TideIdfileReader(
+            File tideTsvFile, 
+            WaitingHandler waitingHandler
+    ) throws IOException {
         this.tideTsvFile = tideTsvFile;
 
         // get the tide version number
@@ -103,17 +105,22 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
     }
 
     @Override
-    public LinkedList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler, 
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences, 
+            boolean expandAaCombinations
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        LinkedList<SpectrumMatch> result = new LinkedList<>();
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
 
         BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(tideTsvFile, "r", 1024 * 100);
 

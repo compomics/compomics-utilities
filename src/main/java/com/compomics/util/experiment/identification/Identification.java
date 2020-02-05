@@ -333,7 +333,11 @@ public class Identification extends ExperimentObject {
             boolean displayProgress
     ) {
     
-        objectsDB.insertObjects(objects, waitingHandler, displayProgress);
+        objectsDB.insertObjects(
+                objects, 
+                waitingHandler, 
+                displayProgress
+        );
     
     }
 

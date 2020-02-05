@@ -1,18 +1,20 @@
 package com.compomics.util.threading;
 
+import java.util.ArrayList;
+
 /**
- * Simple synchronized array iterator.
+ * Simple synchronized ArrayList iterator.
  *
  * @param <K> the class of objects in the array
  *
  * @author Marc Vaudel
  */
-public class SimpleArrayIterator<K> {
+public class SimpleArrayListIterator<K> {
 
     /**
      * The array to iterate.
      */
-    private final K[] array;
+    private final ArrayList<K> array;
     /**
      * Mutex for synchronization.
      */
@@ -27,8 +29,8 @@ public class SimpleArrayIterator<K> {
      *
      * @param array The array to iterate.
      */
-    public SimpleArrayIterator(
-            K[] array
+    public SimpleArrayListIterator(
+            ArrayList<K> array
     ) {
 
         this.array = array;
@@ -44,7 +46,7 @@ public class SimpleArrayIterator<K> {
 
         mutex.acquire();
 
-        if (i >= array.length) {
+        if (i >= array.size()) {
 
             mutex.release();
 
@@ -52,7 +54,7 @@ public class SimpleArrayIterator<K> {
 
         }
 
-        K result = array[i];
+        K result = array.get(i);
 
         i++;
 

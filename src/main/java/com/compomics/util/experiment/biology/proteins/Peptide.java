@@ -605,7 +605,9 @@ public class Peptide extends ExperimentObject {
      *
      * @param matchingKey the key accounting for sequence matching preferences
      */
-    public void setMatchingKey(long matchingKey) {
+    public void setMatchingKey(
+            long matchingKey
+    ) {
 
         writeDBMode();
 
@@ -942,9 +944,19 @@ public class Peptide extends ExperimentObject {
     ) {
 
         readDBMode();
+        
+        String otherSequence = anotherPeptide.getSequence();
+        
+        if (sequence.length() != otherSequence.length()) {
+            
+            return false;
+            
+        }
+        
+        String matchingSequence = AminoAcid.getMatchingSequence(sequence, sequenceMatchingPreferences);
+        String otherMatchingSequence = AminoAcid.getMatchingSequence(otherSequence, sequenceMatchingPreferences);
 
-        AminoAcidSequence pattern = new AminoAcidSequence(anotherPeptide.getSequence());
-        return pattern.matches(getSequence(), sequenceMatchingPreferences);
+        return matchingSequence.equals(otherMatchingSequence);
 
     }
 

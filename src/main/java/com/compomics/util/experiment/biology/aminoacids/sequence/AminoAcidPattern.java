@@ -107,7 +107,7 @@ public class AminoAcidPattern extends ExperimentObject {
 
         if (cntOpenBrackets == 0) {
             for (int i = 0; i < aminoAcidPatternAsString.length(); ++i) {
-                ArrayList<Character> aminoAcids = new ArrayList<>();
+                ArrayList<Character> aminoAcids = new ArrayList<>(1);
                 AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(i));
                 aminoAcids.add(aminoAcidPatternAsString.charAt(i));
                 aminoAcidPattern.addModificationSite(i, aminoAcids);
@@ -117,7 +117,7 @@ public class AminoAcidPattern extends ExperimentObject {
             while (pos < aminoAcidPatternAsString.length()) {
                 if (aminoAcidPatternAsString.charAt(pos) == '[') {
                     int end = aminoAcidPatternAsString.indexOf("]", pos + 1);
-                    ArrayList<Character> aminoAcids = new ArrayList<>();
+                    ArrayList<Character> aminoAcids = new ArrayList<>(end - pos + 1);
                     for (int i = pos + 1; i < end; ++i) {
                         AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(i));
                         aminoAcids.add(aminoAcidPatternAsString.charAt(i));
@@ -125,7 +125,7 @@ public class AminoAcidPattern extends ExperimentObject {
                     aminoAcidPattern.addModificationSite(siteIndex++, aminoAcids);
                     pos = end + 1;
                 } else {
-                    ArrayList<Character> aminoAcids = new ArrayList<>();
+                    ArrayList<Character> aminoAcids = new ArrayList<>(1);
                     AminoAcid.getAminoAcid(aminoAcidPatternAsString.charAt(pos));
                     aminoAcids.add(aminoAcidPatternAsString.charAt(pos));
                     aminoAcidPattern.addModificationSite(siteIndex++, aminoAcids);

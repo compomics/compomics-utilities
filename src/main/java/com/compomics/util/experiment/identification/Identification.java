@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 
 /**
  * This class interacts with the back-end database to manage identification
- * objects. 
- * 
- * Interacting with the back-end database might cause
- * InterruptedException. These exceptions are passed as runtime exceptions for
- * methods returning identification objects.
+ * objects.
+ *
+ * Interacting with the back-end database might cause InterruptedException.
+ * These exceptions are passed as runtime exceptions for methods returning
+ * identification objects.
  *
  * @author Marc Vaudel
  * @author Dominik Kopczynski
@@ -96,11 +96,14 @@ public class Identification extends ExperimentObject {
      */
     public synchronized void fillSpectrumIdentification() {
 
-        identificationKeys.spectrumIdentification = getClassObjects(SpectrumMatch.class).stream()
-                .collect(Collectors.groupingBy(
-                        key -> Spectrum.getSpectrumFile(getSpectrumMatch(key).getSpectrumKey()), // @TODO: should use batches instead of one key at the time!
-                        HashMap::new,
-                        Collectors.toCollection(HashSet::new)));
+        identificationKeys.spectrumIdentification = getSpectrumIdentificationKeys().stream()
+                .collect(
+                        Collectors.groupingBy(
+                                key -> Spectrum.getSpectrumFile(getSpectrumMatch(key).getSpectrumKey()), // @TODO: should use batches instead of one key at the time!
+                                HashMap::new,
+                                Collectors.toCollection(HashSet::new)
+                        )
+                );
     }
 
     /**
@@ -110,6 +113,17 @@ public class Identification extends ExperimentObject {
      */
     public HashMap<String, HashSet<Long>> getSpectrumIdentification() {
         return identificationKeys.spectrumIdentification;
+    }
+
+    /**
+     * Returns the keys of all the spectrum matches in the db.
+     *
+     * @return the keys of all the spectrum matches in the db
+     */
+    public HashSet<Long> getSpectrumIdentificationKeys() {
+
+        return getClassObjects(SpectrumMatch.class);
+
     }
 
     /**
@@ -143,7 +157,7 @@ public class Identification extends ExperimentObject {
      * @return the iterator
      */
     public Iterator<?> getIterator(
-            Class className, 
+            Class className,
             String filters
     ) {
         return objectsDB.getObjectsIterator(className, filters);
@@ -175,13 +189,13 @@ public class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public void loadObjects(
-            Class className, 
-            WaitingHandler waitingHandler, 
+            Class className,
+            WaitingHandler waitingHandler,
             boolean displayProgress
     ) throws InterruptedException {
-        
+
         objectsDB.loadObjects(className, waitingHandler, displayProgress);
-    
+
     }
 
     /**
@@ -197,13 +211,13 @@ public class Identification extends ExperimentObject {
      * while interacting with the database
      */
     public void loadObjects(
-            ArrayList<Long> keyList, 
-            WaitingHandler waitingHandler, 
+            ArrayList<Long> keyList,
+            WaitingHandler waitingHandler,
             boolean displayProgress
     ) throws InterruptedException {
-    
+
         objectsDB.loadObjects(keyList, waitingHandler, displayProgress);
-    
+
     }
 
     /**
@@ -216,7 +230,7 @@ public class Identification extends ExperimentObject {
     public Object retrieveObject(
             long longKey
     ) {
-    
+
         return objectsDB.retrieveObject(longKey);
 
     }
@@ -231,7 +245,7 @@ public class Identification extends ExperimentObject {
     public SpectrumMatch getSpectrumMatch(
             long key
     ) {
-    
+
         return (SpectrumMatch) retrieveObject(key);
 
     }
@@ -246,7 +260,7 @@ public class Identification extends ExperimentObject {
     public PeptideMatch getPeptideMatch(
             long key
     ) {
-    
+
         return (PeptideMatch) retrieveObject(key);
 
     }
@@ -261,7 +275,7 @@ public class Identification extends ExperimentObject {
     public ProteinMatch getProteinMatch(
             long key
     ) {
-    
+
         return (ProteinMatch) retrieveObject(key);
 
     }
@@ -278,8 +292,8 @@ public class Identification extends ExperimentObject {
      * @return list of objects
      */
     public ArrayList<Object> retrieveObjects(
-            Collection<Long> keyList, 
-            WaitingHandler waitingHandler, 
+            Collection<Long> keyList,
+            WaitingHandler waitingHandler,
             boolean displayProgress
     ) {
 
@@ -300,7 +314,7 @@ public class Identification extends ExperimentObject {
     public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
 
         return objectsDB.retrieveObjects(className, waitingHandler, displayProgress);
-    
+
     }
 
     /**
@@ -310,7 +324,7 @@ public class Identification extends ExperimentObject {
      * @param object the object
      */
     public void addObject(
-            long key, 
+            long key,
             Object object
     ) {
 
@@ -328,17 +342,17 @@ public class Identification extends ExperimentObject {
      * method should be displayed on the waiting handler
      */
     public void addObjects(
-            HashMap<Long, Object> objects, 
-            WaitingHandler waitingHandler, 
+            HashMap<Long, Object> objects,
+            WaitingHandler waitingHandler,
             boolean displayProgress
     ) {
-    
+
         objectsDB.insertObjects(
-                objects, 
-                waitingHandler, 
+                objects,
+                waitingHandler,
                 displayProgress
         );
-    
+
     }
 
     /**
@@ -404,13 +418,13 @@ public class Identification extends ExperimentObject {
      * method should be displayed on the waiting handler
      */
     public void removeObjects(
-            ArrayList<Long> keys, 
-            WaitingHandler waitingHandler, 
+            ArrayList<Long> keys,
+            WaitingHandler waitingHandler,
             boolean displayProgress
     ) {
-    
+
         objectsDB.removeObjects(keys, waitingHandler, displayProgress);
-    
+
     }
 
     /**
@@ -448,14 +462,14 @@ public class Identification extends ExperimentObject {
      * @param peptideMatch the peptide match
      */
     public void addPeptideMatch(
-            long key, 
+            long key,
             PeptideMatch peptideMatch
     ) {
 
         identificationKeys.peptideIdentification.add(key);
 
         objectsDB.insertObject(key, peptideMatch);
-        
+
     }
 
     /**
@@ -471,7 +485,7 @@ public class Identification extends ExperimentObject {
         identificationKeys.peptideIdentification.addAll(peptideMatches.keySet());
 
         objectsDB.insertObjects(peptideMatches, null, false);
-        
+
     }
 
     /**
@@ -482,10 +496,10 @@ public class Identification extends ExperimentObject {
      * @param proteinMatch The protein match.
      */
     public void addProteinMatch(
-            long key, 
+            long key,
             ProteinMatch proteinMatch
     ) {
-        
+
         fillProteinMap(key, proteinMatch);
 
         identificationKeys.proteinIdentification.add(key);
@@ -503,20 +517,20 @@ public class Identification extends ExperimentObject {
     public void addProteinMatches(
             HashMap<Long, Object> proteinMatches
     ) {
-        
+
         proteinMatches.entrySet().forEach(
                 entry -> fillProteinMap(entry.getKey(), (ProteinMatch) entry.getValue())
         );
-        
+
         identificationKeys.proteinIdentification.addAll(proteinMatches.keySet());
-        
+
         objectsDB.insertObjects(proteinMatches, null, false);
-        
+
     }
-    
+
     /**
      * Fills the protein map using the given protein match.
-     * 
+     *
      * @param key The match key.
      * @param proteinMatch The protein match.
      */
@@ -539,7 +553,7 @@ public class Identification extends ExperimentObject {
             proteinMatchKeys.add(key);
 
         }
-        
+
     }
 
     /**
@@ -598,12 +612,12 @@ public class Identification extends ExperimentObject {
      * @return a spectrum matches iterator
      */
     public SpectrumMatchesIterator getSpectrumMatchesIterator(
-            long[] spectrumMatches, 
+            long[] spectrumMatches,
             WaitingHandler waitingHandler
     ) {
-    
+
         return new SpectrumMatchesIterator(spectrumMatches, this, waitingHandler, false);
-    
+
     }
 
     /**
@@ -616,9 +630,9 @@ public class Identification extends ExperimentObject {
     public SpectrumMatchesIterator getSpectrumMatchesIterator(
             WaitingHandler waitingHandler
     ) {
-    
+
         return new SpectrumMatchesIterator(this, waitingHandler, false);
-    
+
     }
 
     /**
@@ -630,12 +644,12 @@ public class Identification extends ExperimentObject {
      * @return a peptide matches iterator
      */
     public SpectrumMatchesIterator getSpectrumMatchesIterator(
-            WaitingHandler waitingHandler, 
+            WaitingHandler waitingHandler,
             String filters
     ) {
-    
+
         return new SpectrumMatchesIterator(null, this, waitingHandler, false, filters);
-    
+
     }
 
     /**
@@ -647,12 +661,12 @@ public class Identification extends ExperimentObject {
      * @return a peptide matches iterator
      */
     public PeptideMatchesIterator getPeptideMatchesIterator(
-            long[] peptideKeys, 
+            long[] peptideKeys,
             WaitingHandler waitingHandler
     ) {
-    
+
         return new PeptideMatchesIterator(peptideKeys, this, waitingHandler, false);
-    
+
     }
 
     /**
@@ -665,9 +679,9 @@ public class Identification extends ExperimentObject {
     public PeptideMatchesIterator getPeptideMatchesIterator(
             WaitingHandler waitingHandler
     ) {
-    
+
         return new PeptideMatchesIterator(this, waitingHandler, false);
-    
+
     }
 
     /**
@@ -679,12 +693,12 @@ public class Identification extends ExperimentObject {
      * @return a peptide matches iterator
      */
     public ProteinMatchesIterator getProteinMatchesIterator(
-            long[] proteinKeys, 
+            long[] proteinKeys,
             WaitingHandler waitingHandler
     ) {
-    
+
         return new ProteinMatchesIterator(proteinKeys, this, waitingHandler, false);
-    
+
     }
 
     /**
@@ -697,9 +711,9 @@ public class Identification extends ExperimentObject {
     public ProteinMatchesIterator getProteinMatchesIterator(
             WaitingHandler waitingHandler
     ) {
-    
+
         return new ProteinMatchesIterator(this, waitingHandler, false);
-    
+
     }
 
     /**

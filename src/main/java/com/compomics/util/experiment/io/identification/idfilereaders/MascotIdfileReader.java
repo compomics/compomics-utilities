@@ -8,15 +8,13 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.waiting.WaitingHandler;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -31,7 +29,7 @@ import javax.xml.bind.JAXBException;
  * @author Dominik Kopczynski
  * @author Marc Vaudel
  */
-public class MascotIdfileReader extends ExperimentObject implements IdfileReader {
+public class MascotIdfileReader implements IdfileReader {
 
     private ArrayList<String> varMods = new ArrayList<>();
     private String softwareVersion;
@@ -52,13 +50,12 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
      * Constructor for an Mascot dat result file reader.
      *
      * @param inputFile the Mascot dat file
-     *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws IOException if an IOException occurs
+     * 
+     * @throws UnsupportedEncodingException Exception thrown if an error occurred when decoding a spectrum title.
      */
     public MascotIdfileReader(
             File inputFile
-    ) throws FileNotFoundException, IOException {
+    ) throws UnsupportedEncodingException {
         this(inputFile, null);
     }
 
@@ -67,28 +64,27 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
      *
      * @param inputFile the Mascot dat file
      * @param waitingHandler the waiting handler
-     *
-     * @throws FileNotFoundException if a FileNotFoundException occurs
-     * @throws IOException if an IOException occurs
+     * 
+     * @throws UnsupportedEncodingException Exception thrown if an error occurred when decoding a spectrum title.
      */
     public MascotIdfileReader(
             File inputFile,
             WaitingHandler waitingHandler
-    ) throws IOException {
+    ) throws UnsupportedEncodingException {
 
         varMods.add("dummy");
         charges.add(-100000);
         matches.add(-1);
 
-        FileReader fr = new FileReader(inputFile);
-        BufferedReader in = new BufferedReader(fr, 1 << 24);
+        try (SimpleFileReader reader = SimpleFileReader.getFileReader(inputFile)) {
+        
         String line, boundary;
 
         // read first line
-        line = in.readLine();
+        line = reader.readLine();
 
         // second line should contain boundary information
-        line = in.readLine();
+        line = reader.readLine();
         int boundaryStart = line.indexOf("boundary=");
         if (boundaryStart >= 0) {
             boundary = line.substring(line.indexOf("=", boundaryStart) + 1);
@@ -97,45 +93,45 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
         }
 
         // find first new file occurence
-        while ((line = in.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
                 break;
             }
         }
         int xx = 0;
-        while ((line = in.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             int nameIndex = line.indexOf("name=\"");
             if (nameIndex < 0) {
                 throw new IllegalArgumentException("File format not parsable.");
             }
             String state = line.substring(line.indexOf("=\"", nameIndex) + 2, line.indexOf("\"", nameIndex + 6));
             if (state.startsWith("query")) {
-                parseQuery(in, boundary, state);
+                parseQuery(reader, boundary, state);
             } else {
                 switch (state) {
                     case "masses":
-                        parseMasses(in, boundary);
+                        parseMasses(reader, boundary);
                         break;
                     case "peptides":
-                        parsePeptides(in, boundary, inputFile.getName());
+                        parsePeptides(reader, boundary, inputFile.getName());
                         break;
                     case "summary":
-                        parseSummary(in, boundary);
+                        parseSummary(reader, boundary);
                         break;
 
                     case "parameters":
-                        parseParameters(in, boundary);
+                        parseParameters(reader, boundary);
                         break;
 
                     case "header":
-                        parseHeader(in, boundary);
+                        parseHeader(reader, boundary);
                         break;
 
                     case "index":
                     case "enzyme":
                     case "unimod":
                     case "proteins":
-                        parse(in, boundary);
+                        parse(reader, boundary);
                         break;
 
                     default:
@@ -147,8 +143,7 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
                 break;
             }
         }
-        in.close();
-
+        }
     }
 
     @Override
@@ -245,19 +240,20 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     /**
      * Parse the masses.
      *
-     * @param in the buffered reader
+     * @param reader the buffered reader
      * @param boundary the boundary
      */
     private void parseMasses(
-            BufferedReader in,
+            SimpleFileReader reader,
             String boundary
-    ) throws IOException {
+    ) {
+        
         String mass = "";
         String line;
 
         int theCase = 0; // 1 = fix
 
-        while ((line = in.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
                 break;
             }
@@ -292,17 +288,19 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     /**
      * Parse a query.
      *
-     * @param in the buffered reader
+     * @param reader the buffered reader
      * @param boundary the boundary
      * @param state the state
+     * 
+     * @throws UnsupportedEncodingException Exception thrown if an error occurred when decoding a spectrum title.
      */
     private void parseQuery(
-            BufferedReader in,
+            SimpleFileReader reader,
             String boundary,
             String state
-    ) throws IOException {
+    ) throws UnsupportedEncodingException {
         String line;
-        while ((line = in.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
                 break;
             }
@@ -333,15 +331,15 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     /**
      * Parse a header.
      *
-     * @param in the buffered reader
+     * @param reader the buffered reader
      * @param boundary the boundary
      */
     private void parseHeader(
-            BufferedReader in,
+            SimpleFileReader reader,
             String boundary
-    ) throws IOException {
+    ) {
         String line;
-        while ((line = in.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
                 break;
             }
@@ -362,15 +360,16 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     /**
      * Parse parameters.
      *
-     * @param in the buffered reader
+     * @param reader the buffered reader
      * @param boundary the boundary
      */
     private void parseParameters(
-            BufferedReader in,
+            SimpleFileReader reader,
             String boundary
-    ) throws IOException {
+    ) {
+        
         String line;
-        while ((line = in.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
                 break;
             }
@@ -393,24 +392,22 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     /**
      * Parse peptides.
      *
-     * @param in the buffered reader
+     * @param reader the buffered reader
      * @param boundary the boundary
      * @param sourceFile the source file
-     *
-     * @throws IOException thrown if an io exception occurs
      */
     private void parsePeptides(
-            BufferedReader in,
+            SimpleFileReader reader,
             String boundary,
             String sourceFile
-    ) throws IOException {
+    ) {
         String line;
 
         if (fileName == null) {
             throw new IllegalArgumentException("File format not parsable.");
         }
 
-        while ((line = in.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
                 break;
             }
@@ -483,15 +480,16 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     /**
      * Prase the summary.
      *
-     * @param in the buffered reader
+     * @param reader the buffered reader
      * @param boundary the boundary
      */
     private void parseSummary(
-            BufferedReader in,
+            SimpleFileReader reader,
             String boundary
-    ) throws IOException {
+    ) {
+        
         String line;
-        while ((line = in.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
                 break;
             }
@@ -514,12 +512,16 @@ public class MascotIdfileReader extends ExperimentObject implements IdfileReader
     /**
      * Parse.
      *
-     * @param in the buffered reader
+     * @param reader the buffered reader
      * @param boundary the boundary
      */
-    private void parse(BufferedReader in, String boundary) throws IOException {
+    private void parse(
+            SimpleFileReader reader, 
+            String boundary
+    ) {
+        
         String line;
-        while ((line = in.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
             int lineLength = line.length();
             if (lineLength > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
                 break;

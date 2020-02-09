@@ -36,7 +36,7 @@ import javax.xml.bind.JAXBException;
  * @author Marc Vaudel
  */
 public class OnyaseIdfileReader implements IdfileReader {
-
+    
     /**
      * The columns separator.
      */
@@ -94,7 +94,7 @@ public class OnyaseIdfileReader implements IdfileReader {
      * Default constructor instantiation purposes.
      */
     public OnyaseIdfileReader() {
-    }
+}
 
     /**
      * Constructor for an onyase file reader.

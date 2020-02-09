@@ -12,17 +12,17 @@ import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import static com.compomics.util.io.IoUtils.ENCODING;
+import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.ArrayList;
 import javax.xml.bind.JAXBException;
-import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
  * This class can be used to parse pNovo identification files.
@@ -32,18 +32,9 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 public class PNovoIdfileReader extends ExperimentObject implements IdfileReader {
 
     /**
-     * A map of all spectrum titles and the associated index in the random
-     * access file.
+     * The file to parse.
      */
-    private HashMap<String, Long> index;
-    /**
-     * The result file in random access.
-     */
-    private BufferedRandomAccessFile bufferedRandomAccessFile = null;
-    /**
-     * The name of the result file.
-     */
-    private String fileName;
+    private File identificationFile;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -52,80 +43,19 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
     }
 
     /**
-     * Constructor, initiate the parser. Displays the progress using the waiting
-     * handler. The close() method shall be used when the file reader is no
-     * longer used.
+     * Constructor, initiate the parser.
      *
      * @param identificationFile the identification file to parse
-     *
-     * @throws FileNotFoundException exception thrown whenever the provided file
-     * was not found
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the file
      */
     public PNovoIdfileReader(
             File identificationFile
-    ) throws IOException {
-        this(identificationFile, null);
-    }
-
-    /**
-     * Constructor, initiate the parser. Displays the progress using the waiting
-     * handler. The close() method shall be used when the file reader is no
-     * longer used.
-     *
-     * @param identificationFile the identification file to parse
-     * @param waitingHandler a waiting handler providing progress feedback to
-     * the user
-     *
-     * @throws FileNotFoundException exception thrown whenever the provided file
-     * was not found
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the file
-     */
-    public PNovoIdfileReader(
-            File identificationFile, 
-            WaitingHandler waitingHandler
-    ) throws IOException {
-
-        bufferedRandomAccessFile = new BufferedRandomAccessFile(identificationFile, "r", 1024 * 100);
-        fileName = Util.getFileName(identificationFile);
-
-        if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressCounter(100);
-        }
-
-        long progressUnit = bufferedRandomAccessFile.length() / 100;
-
-        if (progressUnit == 0) {
-            progressUnit = 1;
-        }
-
-        index = new HashMap<>();
-
-        String line;
-        while ((line = bufferedRandomAccessFile.readLine()) != null) {
-            if (line.startsWith("S")) {
-                long currentIndex = bufferedRandomAccessFile.getFilePointer();
-
-                String[] splitLine = line.split("\\t");
-                String spectrumTitle = splitLine[1].trim();
-                index.put(spectrumTitle, currentIndex);
-
-                if (waitingHandler != null) {
-                    if (waitingHandler.isRunCanceled()) {
-                        break;
-                    }
-                    waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
-                }
-            }
-        }
+    ) {
+        this.identificationFile = identificationFile;
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            WaitingHandler waitingHandler, 
+            WaitingHandler waitingHandler,
             SearchParameters searchParameters
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
@@ -133,55 +63,53 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            WaitingHandler waitingHandler, 
+            WaitingHandler waitingHandler,
             SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences, 
+            SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        if (bufferedRandomAccessFile == null) {
+        if (identificationFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
 
         ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
 
-        if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandler.resetSecondaryProgressCounter();
-            waitingHandler.setMaxSecondaryProgressCounter(index.size());
-        }
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(identificationFile)) {
 
-        for (String title : index.keySet()) {
+            SpectrumMatch currentMatch = null;
+            int rank = 1;
+            String line;
+            while ((line = reader.readLine()) != null) {
 
-            // remove any html from the title
-            String decodedTitle = URLDecoder.decode(title, "utf-8");
-            String spectrumKey = Spectrum.getSpectrumKey(getMgfFileName(), decodedTitle);
-            SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
+                if (line.charAt(0) == 'S') {
 
-            int cpt = 1;
-            bufferedRandomAccessFile.seek(index.get(title));
-            String line = bufferedRandomAccessFile.getNextLine().trim();
-            boolean solutionsFound = false;
-            if (line.startsWith("P")) {
-                solutionsFound = true;
-            }
+                    if (currentMatch != null) {
 
-            while (line != null && line.startsWith("P")) {
-                currentMatch.addTagAssumption(Advocate.pNovo.getIndex(), getAssumptionFromLine(line, cpt, searchParameters));
-                cpt++;
-                line = bufferedRandomAccessFile.getNextLine();
-            }
+                        spectrumMatches.add(currentMatch);
+                        rank = 1;
 
-            if (solutionsFound) {
+                    }
 
-                spectrumMatches.add(currentMatch);
-            }
+                    String[] splitLine = line.split("\\t");
+                    String spectrumTitle = splitLine[1].trim();
 
-            if (waitingHandler != null) {
-                if (waitingHandler.isRunCanceled()) {
-                    break;
+                    // remove any html from the title
+                    String decodedTitle = URLDecoder.decode(spectrumTitle, ENCODING);
+                    String spectrumKey = Spectrum.getSpectrumKey(getMgfFileName(), decodedTitle);
+                    currentMatch = new SpectrumMatch(spectrumKey);
+
+                } else if (line.charAt(0) == 'P') {
+
+                    if (currentMatch == null) {
+
+                        throw new IllegalArgumentException("No spectrum title found for peptide.\n" + line);
+
+                    }
+
+                    currentMatch.addTagAssumption(Advocate.pNovo.getIndex(), getAssumptionFromLine(line, rank, searchParameters));
+
                 }
-                waitingHandler.increaseSecondaryProgressCounter();
             }
         }
 
@@ -195,7 +123,10 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
      * @return the spectrum file name
      */
     public String getMgfFileName() {
+        
+        String fileName = Util.getFileName(identificationFile);
         return fileName.substring(0, fileName.length() - ".pnovo.txt".length()) + ".mgf";
+    
     }
 
     @Override
@@ -205,7 +136,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
     @Override
     public void close() throws IOException {
-        bufferedRandomAccessFile.close();
+        
     }
 
     /**
@@ -215,12 +146,12 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
      * @param line the line to parse
      * @param rank the rank of the assumption
      * @param searchParameters the search parameters
-     * 
+     *
      * @return the corresponding assumption
      */
     private TagAssumption getAssumptionFromLine(
-            String line, 
-            int rank, 
+            String line,
+            int rank,
             SearchParameters searchParameters
     ) {
 
@@ -261,8 +192,8 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<>();
-        ArrayList<String> versions = new ArrayList<>();
+        HashMap<String, ArrayList<String>> result = new HashMap<>(1);
+        ArrayList<String> versions = new ArrayList<>(1);
         versions.add("unknown"); // @TODO: add version number
         result.put("pNovo+", versions);
         return result;

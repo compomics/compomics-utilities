@@ -16,6 +16,8 @@ import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails;
+import static com.compomics.util.io.IoUtils.ENCODING;
+import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
@@ -25,10 +27,8 @@ import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import javax.xml.bind.JAXBException;
-import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
  * This class can be used to parse PepNovo identification files.
@@ -38,22 +38,13 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 public class PepNovoIdfileReader extends ExperimentObject implements IdfileReader {
 
     /**
-     * A map of all spectrum titles and the associated index in the random
-     * access file.
+     * The file to parse.
      */
-    private HashMap<String, Long> index;
-    /**
-     * The result file in random access.
-     */
-    private BufferedRandomAccessFile bufferedRandomAccessFile = null;
-    /**
-     * The name of the result file.
-     */
-    private String fileName;
+    private File identificationFile;
     /**
      * The standard format.
      */
-    public static final String tableHeader = "#Index	RnkScr	PnvScr	N-Gap	C-Gap	[M+H]	Charge	Sequence";
+    public static final String DEFAULT_HEADER = "#Index	RnkScr	PnvScr	N-Gap	C-Gap	[M+H]	Charge	Sequence";
     /**
      * The mass to add to the C-terminal gap so that is corresponds to a peptide
      * fragment.
@@ -77,148 +68,100 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * longer used.
      *
      * @param identificationFile the identification file to parse
-     *
-     * @throws FileNotFoundException exception thrown whenever the provided file
-     * was not found
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the file
      */
     public PepNovoIdfileReader(
             File identificationFile
-    ) throws IOException {
-        this(identificationFile, null);
-    }
-
-    /**
-     * Constructor, initiate the parser. Displays the progress using the waiting
-     * handler. The close() method shall be used when the file reader is no
-     * longer used.
-     *
-     * @param identificationFile the identification file to parse
-     * @param waitingHandler a waiting handler providing progress feedback to
-     * the user
-     *
-     * @throws FileNotFoundException exception thrown whenever the provided file
-     * was not found
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading the file
-     */
-    public PepNovoIdfileReader(
-            File identificationFile, 
-            WaitingHandler waitingHandler
-    ) throws IOException {
-
-        bufferedRandomAccessFile = new BufferedRandomAccessFile(identificationFile, "r", 1024 * 100);
-        fileName = Util.getFileName(identificationFile);
-
-        if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressCounter(100);
-        }
-
-        long progressUnit = bufferedRandomAccessFile.length() / 100;
-
-        if (progressUnit == 0) {
-            progressUnit = 1;
-        }
-
-        index = new HashMap<>();
-
-        String line;
-        while ((line = bufferedRandomAccessFile.readLine()) != null) {
-            if (line.startsWith(">>")) {
-                long currentIndex = bufferedRandomAccessFile.getFilePointer();
-
-                String[] temp = line.split("\\s+");
-                String formatted = "";
-                for (int i = 3; i < temp.length; i++) {
-                    formatted += (temp[i] + " ");
-                }
-                int endIndex = formatted.lastIndexOf("#Problem");
-                if (endIndex == -1) {
-                    endIndex = formatted.lastIndexOf("(SQS");
-                }
-
-                // Condition: Skip problematic spectra not containing (SQS) at the end of the line.
-                if (endIndex > -1) {
-                    String spectrumTitle = formatted.substring(0, endIndex).trim();
-                    index.put(spectrumTitle, currentIndex);
-                }
-                if (waitingHandler != null) {
-                    if (waitingHandler.isRunCanceled()) {
-                        break;
-                    }
-                    waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
-                }
-            }
-        }
+    ) {
+        this.identificationFile = identificationFile;
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            WaitingHandler waitingHandler, 
+            WaitingHandler waitingHandler,
             SearchParameters searchParameters
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        
+
         return getAllSpectrumMatches(
-                waitingHandler, 
-                searchParameters, 
-                null, 
+                waitingHandler,
+                searchParameters,
+                null,
                 false
         );
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            WaitingHandler waitingHandler, 
-            SearchParameters searchParameters, 
-            SequenceMatchingParameters sequenceMatchingPreferences, 
+            WaitingHandler waitingHandler,
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        if (bufferedRandomAccessFile == null) {
+        if (identificationFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
 
         ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
 
-        if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandler.resetSecondaryProgressCounter();
-            waitingHandler.setMaxSecondaryProgressCounter(index.size());
-        }
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(identificationFile)) {
 
-        for (String title : index.keySet()) {
+            SpectrumMatch currentMatch = null;
+            int rank = 1;
+            String line;
+            while ((line = reader.readLine()) != null) {
 
-            // remove any html from the title
-            String decodedTitle = URLDecoder.decode(title, "utf-8");
-            String spectrumKey = Spectrum.getSpectrumKey(getMgfFileName(), decodedTitle);
-            SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
+                if (line.startsWith(">>")) {
 
-            int cpt = 1;
-            bufferedRandomAccessFile.seek(index.get(title));
-            String line = bufferedRandomAccessFile.getNextLine().trim();
-            boolean solutionsFound = true;
-            if (line.startsWith("# No") || line.startsWith("# Charge") || line.startsWith("#Problem") || line.startsWith("# too")) {
-                solutionsFound = false;
-            } else if (!line.equals(tableHeader)) {
-                throw new IllegalArgumentException("Unrecognized table format. Expected: \"" + tableHeader + "\", found:\"" + line + "\".");
-            }
+                    if (currentMatch != null) {
 
-            while ((line = bufferedRandomAccessFile.getNextLine()) != null
-                    && !line.equals("") && !line.startsWith(">>")) {
-                currentMatch.addTagAssumption(Advocate.pepnovo.getIndex(), getAssumptionFromLine(line, cpt));
-                cpt++;
-            }
-            if (solutionsFound) {
-                spectrumMatches.add(currentMatch);
-            }
+                        spectrumMatches.add(currentMatch);
+                        rank = 1;
 
-            if (waitingHandler != null) {
-                if (waitingHandler.isRunCanceled()) {
-                    break;
+                    }
+
+                    String[] temp = line.split("\\s+");
+                    StringBuilder sb = new StringBuilder(line.length());
+                    sb.append(temp[3]);
+                    for (int i = 4 ; i < temp.length ; i++) {
+                        sb.append(" ").append(temp[i]);
+                    }
+                    String formatted = sb.toString();
+                    int endIndex = formatted.lastIndexOf("#Problem");
+                    if (endIndex == -1) {
+                        endIndex = formatted.lastIndexOf("(SQS");
+                    }
+
+                    // Condition: Skip problematic spectra not containing (SQS) at the end of the line.
+                    if (endIndex > -1) {
+
+                        String spectrumTitle = formatted.substring(0, endIndex).trim();
+
+                        // remove any html from the title
+                        String decodedTitle = URLDecoder.decode(spectrumTitle, ENCODING);
+                        String spectrumKey = Spectrum.getSpectrumKey(getMgfFileName(), decodedTitle);
+                        currentMatch = new SpectrumMatch(spectrumKey);
+
+                        while (true) {
+                            line = reader.readLine();
+                            if (line.startsWith("# No") || line.startsWith("# Charge") || line.startsWith("#Problem") || line.startsWith("# too")) {
+                                // Skip
+                            } else if (!line.equals(DEFAULT_HEADER)) {
+                                throw new IllegalArgumentException("Unrecognized table format. Expected: \"" + DEFAULT_HEADER + "\", found:\"" + line + "\".");
+                            } else {
+                                break;
+                            }
+                        }
+
+                    } else {
+
+                        currentMatch = null;
+
+                    }
+                } else if (line.length() > 0 && line.charAt(0) != '#' && currentMatch != null) {
+
+                    currentMatch.addTagAssumption(Advocate.pepnovo.getIndex(), getAssumptionFromLine(line, rank));
+                    rank++;
                 }
-                waitingHandler.increaseSecondaryProgressCounter();
             }
         }
 
@@ -232,6 +175,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * @return the spectrum file name
      */
     public String getMgfFileName() {
+        String fileName = Util.getFileName(identificationFile);
         return fileName.substring(0, fileName.length() - 4);
     }
 
@@ -242,7 +186,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public void close() throws IOException {
-        bufferedRandomAccessFile.close();
+        
     }
 
     /**
@@ -257,7 +201,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * @return the corresponding assumption
      */
     private TagAssumption getAssumptionFromLine(
-            String line, 
+            String line,
             int rank
     ) {
 
@@ -376,7 +320,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * @return the PTM as a string
      */
     public static String getPTM(
-            PepnovoParameters pepnovoParameters, 
+            PepnovoParameters pepnovoParameters,
             String pepNovoModification
     ) {
 
@@ -398,8 +342,8 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<>();
-        ArrayList<String> versions = new ArrayList<>();
+        HashMap<String, ArrayList<String>> result = new HashMap<>(1);
+        ArrayList<String> versions = new ArrayList<>(1);
         versions.add("3.1 (beta)");
         result.put("PepNovo+", versions);
         return result;

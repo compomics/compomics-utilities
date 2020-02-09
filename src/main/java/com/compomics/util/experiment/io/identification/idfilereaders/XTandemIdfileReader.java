@@ -13,12 +13,12 @@ import com.compomics.util.experiment.identification.spectrum_assumptions.Peptide
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -43,13 +43,13 @@ import javax.xml.stream.XMLStreamReader;
 public class XTandemIdfileReader extends ExperimentObject implements IdfileReader {
 
     /**
-     * The name of the input file.
+     * The input file.
      */
-    private File inputFileName = null;
+    private File inputFile = null;
     /**
      * Map of all matches indexed by X!Tandem spectrum id.
      */
-    private HashMap<Integer, SpectrumMatch> allMatches = new HashMap<>();
+    private final HashMap<Integer, SpectrumMatch> allMatches = new HashMap<>();
     private int specNumber = 0;
     private String PSMFileName;
     private String softwareVersion;
@@ -64,7 +64,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * Constructor for an X!Tandem xml result file reader.
      *
      * @param inputFile the Mascot dat file
-     * 
+     *
      * @throws IOException if an IOException occurs
      */
     public XTandemIdfileReader(
@@ -78,15 +78,15 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      *
      * @param inputFile the Mascot dat file
      * @param waitingHandler the waiting handler
-     * 
+     *
      * @throws IOException if an IOException occurs
      */
     public XTandemIdfileReader(
-            File inputFile, 
+            File inputFile,
             WaitingHandler waitingHandler
     ) throws IOException {
 
-        inputFileName = inputFile;
+        this.inputFile = inputFile;
 
     }
 
@@ -97,7 +97,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            WaitingHandler waitingHandler, 
+            WaitingHandler waitingHandler,
             SearchParameters searchParameters
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
         return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
@@ -105,14 +105,13 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            WaitingHandler waitingHandler, 
+            WaitingHandler waitingHandler,
             SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences, 
+            SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
 
         // @TODO: use the waiting handler
-
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
         HashSet<String> fixedNonTerminalModifications = searchParameters.getModificationParameters().getFixedModifications().stream()
                 .map(modName -> modificationFactory.getModification(modName))
@@ -163,84 +162,87 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             }
         }
 
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLStreamReader parser = factory.createXMLStreamReader(new FileInputStream(inputFileName));
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(inputFile)) {
 
-        while (parser.hasNext()) {
-            parser.next();
-            switch (parser.getEventType()) {
-                case XMLStreamConstants.START_DOCUMENT:
-                    break;
-                case XMLStreamConstants.END_DOCUMENT:
-                    parser.close();
-                    break;
-                case XMLStreamConstants.NAMESPACE:
-                    break;
-                case XMLStreamConstants.CHARACTERS:
-                    break;
-                case XMLStreamConstants.END_ELEMENT:
-                    break;
-                case XMLStreamConstants.START_ELEMENT:
-                    String element = parser.getLocalName();
-                    if (element.equalsIgnoreCase("group") && parser.getAttributeValue("", "type") != null) {
-                        switch (parser.getAttributeValue("", "type").toLowerCase()) {
-                            case "model":
-                                int id = Integer.parseInt(parser.getAttributeValue("", "id"));
-                                SpectrumMatch spectrumMatch = new SpectrumMatch(PSMFileName);
-                                spectrumMatch.setSpectrumNumber(++specNumber);
-                                allMatches.put(id, spectrumMatch);
-                                double expect = Double.parseDouble(parser.getAttributeValue("", "expect"));
+            XMLInputFactory factory = XMLInputFactory.newInstance();
+            XMLStreamReader parser = factory.createXMLStreamReader(reader.getReader());
 
-                                readGroupOrProtein(parser, id, expect, fixedNonTerminalModifications, fixedNTerminalModifications, fixedCTerminalModifications);
-                                break;
+            while (parser.hasNext()) {
+                parser.next();
+                switch (parser.getEventType()) {
+                    case XMLStreamConstants.START_DOCUMENT:
+                        break;
+                    case XMLStreamConstants.END_DOCUMENT:
+                        parser.close();
+                        break;
+                    case XMLStreamConstants.NAMESPACE:
+                        break;
+                    case XMLStreamConstants.CHARACTERS:
+                        break;
+                    case XMLStreamConstants.END_ELEMENT:
+                        break;
+                    case XMLStreamConstants.START_ELEMENT:
+                        String element = parser.getLocalName();
+                        if (element.equalsIgnoreCase("group") && parser.getAttributeValue("", "type") != null) {
+                            switch (parser.getAttributeValue("", "type").toLowerCase()) {
+                                case "model":
+                                    int id = Integer.parseInt(parser.getAttributeValue("", "id"));
+                                    SpectrumMatch spectrumMatch = new SpectrumMatch(PSMFileName);
+                                    spectrumMatch.setSpectrumNumber(++specNumber);
+                                    allMatches.put(id, spectrumMatch);
+                                    double expect = Double.parseDouble(parser.getAttributeValue("", "expect"));
 
-                            case "parameters":
-                                readParameters(parser);
-                                break;
+                                    readGroupOrProtein(parser, id, expect, fixedNonTerminalModifications, fixedNTerminalModifications, fixedCTerminalModifications);
+                                    break;
 
-                            default:
-                                break;
+                                case "parameters":
+                                    readParameters(parser);
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                        } else if (element.equalsIgnoreCase("bioml")) {
+                            PSMFileName = parser.getAttributeValue("", "label");
+                            PSMFileName = PSMFileName.split("'")[1];
+                            PSMFileName = (new File(PSMFileName.replaceAll("\\\\", "/"))).getName();
                         }
-                    } else if (element.equalsIgnoreCase("bioml")) {
-                        PSMFileName = parser.getAttributeValue("", "label");
-                        PSMFileName = PSMFileName.split("'")[1];
-                        PSMFileName = (new File(PSMFileName.replaceAll("\\\\", "/"))).getName();
-                    }
-                    break;
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
             }
-        }
 
-        if (expandAaCombinations) {
+            if (expandAaCombinations) {
 
-            for (SpectrumMatch spectrumMatch : allMatches.values()) {
+                for (SpectrumMatch spectrumMatch : allMatches.values()) {
 
-                spectrumMatch.getAllPeptideAssumptions().forEach(currentAssumption -> {
+                    spectrumMatch.getAllPeptideAssumptions().forEach(currentAssumption -> {
 
-                    Peptide peptide = currentAssumption.getPeptide();
-                    String peptideSequence = peptide.getSequence();
-                    ModificationMatch[] foundModifications = peptide.getVariableModifications();
+                        Peptide peptide = currentAssumption.getPeptide();
+                        String peptideSequence = peptide.getSequence();
+                        ModificationMatch[] foundModifications = peptide.getVariableModifications();
 
-                    if (AminoAcidSequence.hasCombination(peptideSequence)) {
+                        if (AminoAcidSequence.hasCombination(peptideSequence)) {
 
-                        for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
+                            for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
 
-                            if (!expandedSequence.toString().equals(peptideSequence)) {
+                                if (!expandedSequence.toString().equals(peptideSequence)) {
 
-                                ModificationMatch[] newModificationMatches = Arrays.stream(foundModifications)
-                                        .map(modificationMatch -> modificationMatch.clone())
-                                        .toArray(ModificationMatch[]::new);
+                                    ModificationMatch[] newModificationMatches = Arrays.stream(foundModifications)
+                                            .map(modificationMatch -> modificationMatch.clone())
+                                            .toArray(ModificationMatch[]::new);
 
-                                Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
-                                PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, currentAssumption.getRank(), currentAssumption.getAdvocate(), currentAssumption.getIdentificationCharge(), currentAssumption.getScore(), currentAssumption.getIdentificationFile());
-                                spectrumMatch.addPeptideAssumption(Advocate.mascot.getIndex(), newAssumption);
+                                    Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
+                                    PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, currentAssumption.getRank(), currentAssumption.getAdvocate(), currentAssumption.getIdentificationCharge(), currentAssumption.getScore(), currentAssumption.getIdentificationFile());
+                                    spectrumMatch.addPeptideAssumption(Advocate.mascot.getIndex(), newAssumption);
 
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
 
@@ -265,12 +267,28 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         return false;
     }
 
+    /**
+     * Parses a group or protein.
+     *
+     * @param parser The xml parser.
+     * @param id The id of the group or protein.
+     * @param expect The expectation value.
+     * @param fixedNonTerminalModifications The fixed non-terminal
+     * modifications.
+     * @param fixedNTerminalModifications The fixed modifications on the N-term.
+     * @param fixedCTerminalModifications The fixed modifications on the C-term.
+     *
+     * @throws XMLStreamException Exception thrown if an error occurred while
+     * parsing the xml
+     * @throws UnsupportedEncodingException Exception thrown if an error
+     * occurred while decoding a spectrum title.
+     */
     private void readGroupOrProtein(
-            XMLStreamReader parser, 
-            int id, 
-            double expect, 
+            XMLStreamReader parser,
+            int id,
+            double expect,
             HashSet<String> fixedNonTerminalModifications,
-            HashSet<String> fixedNTerminalModifications, 
+            HashSet<String> fixedNTerminalModifications,
             HashSet<String> fixedCTerminalModifications
     ) throws XMLStreamException, UnsupportedEncodingException {
         while (parser.hasNext()) {
@@ -314,10 +332,10 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     private void readGroupFragment(
-            XMLStreamReader parser, 
+            XMLStreamReader parser,
             int id
     ) throws XMLStreamException, UnsupportedEncodingException {
-        
+
         boolean write = false;
         StringBuilder content = new StringBuilder();
         while (parser.hasNext()) {
@@ -375,7 +393,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     private void readGroupFragmentTrace(
-            XMLStreamReader parser, 
+            XMLStreamReader parser,
             int id
     ) throws XMLStreamException {
         boolean readCharge = false;
@@ -423,11 +441,11 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     private void readProtein(
-            XMLStreamReader parser, 
-            int id, 
-            double expect, 
+            XMLStreamReader parser,
+            int id,
+            double expect,
             HashSet<String> fixedNonTerminalModifications,
-            HashSet<String> fixedNTerminalModifications, 
+            HashSet<String> fixedNTerminalModifications,
             HashSet<String> fixedCTerminalModifications
     ) throws XMLStreamException {
         while (parser.hasNext()) {
@@ -460,11 +478,11 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     private void readPeptide(
-            XMLStreamReader parser, 
-            int id, 
-            double expect, 
+            XMLStreamReader parser,
+            int id,
+            double expect,
             HashSet<String> fixedNonTerminalModifications,
-            HashSet<String> fixedNTerminalModifications, 
+            HashSet<String> fixedNTerminalModifications,
             HashSet<String> fixedCTerminalModifications
     ) throws XMLStreamException {
         Peptide peptide = null;
@@ -508,7 +526,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             if (adding) {
 
                                 peptide = new Peptide(pepSeq);
-                                PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.xtandem.getIndex(), 0, expect, inputFileName.getName());
+                                PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.xtandem.getIndex(), 0, expect, inputFile.getName());
                                 allMatches.get(id).addPeptideAssumption(Advocate.xtandem.getIndex(), currentAssumption);
                                 pepStart = Integer.parseInt(parser.getAttributeValue("", "start"));
                                 addAA = true;

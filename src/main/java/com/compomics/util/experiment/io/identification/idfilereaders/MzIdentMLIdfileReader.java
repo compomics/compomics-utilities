@@ -11,12 +11,11 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
@@ -51,7 +50,7 @@ import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
  * @author Harald Barsnes
  * @author Marc Vaudel
  */
-public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileReader {
+public class MzIdentMLIdfileReader implements IdfileReader {
 
     /**
      * Enum for the raw value to e-value conversion.
@@ -172,6 +171,7 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             AnalysisSoftwareList analysisSoftwareList = unmarshaller.unmarshal(AnalysisSoftwareList.class);
 
             for (AnalysisSoftware software : analysisSoftwareList.getAnalysisSoftware()) {
+
                 Param softwareNameObject = software.getSoftwareName();
 
                 String softwareName = softwareNameObject.getCvParam().getName();
@@ -180,16 +180,24 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
                 }
 
                 String version = software.getVersion();
+
                 if (softwareName != null && version != null) {
+
                     // only keep known software
                     if (Advocate.getAdvocate(softwareName) != null) {
+
                         ArrayList<String> versions = tempSoftwareVersions.get(softwareName);
+
                         if (versions == null) {
+
                             versions = new ArrayList<>();
                             versions.add(version);
                             tempSoftwareVersions.put(softwareName, versions);
+
                         } else if (!versions.contains(version)) {
+
                             versions.add(version);
+
                         }
                     }
                 }
@@ -201,10 +209,15 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
             fixedModifications = new ArrayList<>();
             SpectrumIdentificationProtocol spectrumIdentificationProtocol = unmarshaller.unmarshal(SpectrumIdentificationProtocol.class);
             ModificationParams modifications = spectrumIdentificationProtocol.getModificationParams();
+
             if (modifications != null) {
+
                 for (SearchModification tempMod : modifications.getSearchModification()) {
+
                     if (tempMod.isFixedMod()) {
+
                         fixedModifications.add(tempMod);
+
                     }
                 }
             }
@@ -244,23 +257,24 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
 
                 waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 
-                BufferedReader br = new BufferedReader(new FileReader(mzIdentMLFile));
+                try ( SimpleFileReader reader = SimpleFileReader.getFileReader(mzIdentMLFile)) {
 
-                int lineCounter = 0;
-                String line = br.readLine();
+                    int lineCounter = 0;
+                    String line = reader.readLine();
 
-                while (line != null) {
-                    line = br.readLine();
-                    lineCounter++;
+                    while (line != null) {
+                        line = reader.readLine();
+                        lineCounter++;
+                    }
+
+                    waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+                    waitingHandler.setMaxSecondaryProgressCounter(lineCounter);
+
                 }
-
-                br.close();
-
-                waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-                waitingHandler.setMaxSecondaryProgressCounter(lineCounter);
             }
 
             return parseFile(waitingHandler);
+
         } else {
 
             DataCollection dataCollection = unmarshaller.unmarshal(DataCollection.class);
@@ -569,47 +583,46 @@ public class MzIdentMLIdfileReader extends ExperimentObject implements IdfileRea
         XmlPullParser parser = factory.newPullParser();
 
         // create a reader for the input file
-        BufferedReader br = new BufferedReader(new FileReader(mzIdentMLFile));
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(mzIdentMLFile)) {
 
-        // set the XML Pull Parser to read from this reader
-        parser.setInput(br);
+            // set the XML Pull Parser to read from this reader
+            parser.setInput(reader.getReader());
 
-        // start the parsing
-        int type = parser.next();
+            // start the parsing
+            int type = parser.next();
 
-        tempPeptideMap = new HashMap<>();
-        tempPeptideEvidenceMap = new HashMap<>();
-        spectrumFileNameMap = new HashMap<>();
-        fixedModificationsCustomParser = new ArrayList<>();
+            tempPeptideMap = new HashMap<>();
+            tempPeptideEvidenceMap = new HashMap<>();
+            spectrumFileNameMap = new HashMap<>();
+            fixedModificationsCustomParser = new ArrayList<>();
 
-        // reset the software versions to keep only the advocates which were used for scoring
-        softwareVersions.clear();
+            // reset the software versions to keep only the advocates which were used for scoring
+            softwareVersions.clear();
 
-        // get the analysis software, the spectra data,the peptides and the psms
-        while (type != XmlPullParser.END_DOCUMENT) {
+            // get the analysis software, the spectra data,the peptides and the psms
+            while (type != XmlPullParser.END_DOCUMENT) {
 
-            if (type == XmlPullParser.START_TAG && parser.getName().equals("AnalysisSoftware")) {
-                parseSoftware(parser);
-            } else if (type == XmlPullParser.START_TAG && parser.getName().equals("Peptide")) {
-                parsePeptide(parser);
-            } else if (type == XmlPullParser.START_TAG && parser.getName().equals("PeptideEvidence")) {
-                parsePeptideEvidence(parser);
-            } else if (type == XmlPullParser.START_TAG && parser.getName().equals("SpectraData")) {
-                parseSpectraData(parser, spectrumFileNameMap);
-            } else if (type == XmlPullParser.START_TAG && parser.getName().equals("ModificationParams")) {
-                parseFixedModifications(parser);
-            } else if (type == XmlPullParser.START_TAG && parser.getName().equals("SpectrumIdentificationResult")) {
-                parsePsm(parser, result);
-            }
+                if (type == XmlPullParser.START_TAG && parser.getName().equals("AnalysisSoftware")) {
+                    parseSoftware(parser);
+                } else if (type == XmlPullParser.START_TAG && parser.getName().equals("Peptide")) {
+                    parsePeptide(parser);
+                } else if (type == XmlPullParser.START_TAG && parser.getName().equals("PeptideEvidence")) {
+                    parsePeptideEvidence(parser);
+                } else if (type == XmlPullParser.START_TAG && parser.getName().equals("SpectraData")) {
+                    parseSpectraData(parser, spectrumFileNameMap);
+                } else if (type == XmlPullParser.START_TAG && parser.getName().equals("ModificationParams")) {
+                    parseFixedModifications(parser);
+                } else if (type == XmlPullParser.START_TAG && parser.getName().equals("SpectrumIdentificationResult")) {
+                    parsePsm(parser, result);
+                }
 
-            type = parser.next();
+                type = parser.next();
 
-            if (waitingHandler != null) {
-                waitingHandler.setSecondaryProgressCounter(parser.getLineNumber());
+                if (waitingHandler != null) {
+                    waitingHandler.setSecondaryProgressCounter(parser.getLineNumber());
+                }
             }
         }
-
-        br.close();
 
         return result;
     }

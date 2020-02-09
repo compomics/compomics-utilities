@@ -2,6 +2,7 @@ package com.compomics.util.gui.error_handlers;
 
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.io.IoUtils;
 import com.compomics.util.io.file.LastSelectedFolder;
 import java.io.*;
 import java.util.Date;
@@ -407,7 +408,7 @@ public class BugReport extends javax.swing.JDialog {
 
             try {
                 if (logFile.exists()) {
-                    Util.copyFile(logFile, finalOutputFile);
+                    IoUtils.copyFile(logFile, finalOutputFile);
                 }
 
                 if (!finalOutputFile.exists()) {

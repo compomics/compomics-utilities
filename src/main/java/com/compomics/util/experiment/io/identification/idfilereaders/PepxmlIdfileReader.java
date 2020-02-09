@@ -13,12 +13,10 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
+import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -61,7 +59,7 @@ public class PepxmlIdfileReader implements IdfileReader {
     /**
      * The spectrum factory used to retrieve spectrum titles.
      */
-    private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
+    private final SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
     /**
      * Stores the mass differences of the fixed modifications. The key is the
      * amino acid residue as a single upper case character and the element is
@@ -124,11 +122,11 @@ public class PepxmlIdfileReader implements IdfileReader {
         XmlPullParser parser = factory.newPullParser();
 
         // Create a reader for the input file.
-        BufferedReader br = new BufferedReader(new FileReader(idFile));
-
-        try {
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(idFile)) {
+            
             // Set the XML Pull Parser to read from this reader.
-            parser.setInput(br);
+            parser.setInput(reader.getReader());
+            
             // Start the parsing.
             int type;
             boolean hasMatch = false;
@@ -265,8 +263,6 @@ public class PepxmlIdfileReader implements IdfileReader {
 
             spectrumMatchesMap.clear();
 
-        } finally {
-            br.close();
         }
     }
 

@@ -11,6 +11,7 @@ import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.parameters.identification.advanced.GeneParameters;
 import com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.io.IoUtils;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -694,7 +695,7 @@ public class ProteinGeneDetailsProvider {
                     throw new IllegalArgumentException("Could not create the Ensembl versions file.");
                 }
 
-                Util.copyFile(sourceEnsemblVersionsFile, targetEnsemblVersionsFile);
+                IoUtils.copyFile(sourceEnsemblVersionsFile, targetEnsemblVersionsFile);
 
                 localEnsemblVersionsMap = getEnsemblSpeciesVersions(targetEnsemblVersionsFile);
                 for (Map.Entry<String, String> entry : localEnsemblVersionsMap.entrySet()) {
@@ -741,7 +742,7 @@ public class ProteinGeneDetailsProvider {
                     throw new IllegalArgumentException("Could not create the GO domains file.");
                 }
             }
-            Util.copyFile(sourceGoDomainsFile, targetGoDomainsFile);
+            IoUtils.copyFile(sourceGoDomainsFile, targetGoDomainsFile);
         } catch (IOException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Could not create the GO domains file.");
@@ -764,7 +765,7 @@ public class ProteinGeneDetailsProvider {
                         }
                     }
 
-                    Util.copyFile(sourceSpeciesGoMappingsFile, targetSpeciesGoMappingsFile);
+                    IoUtils.copyFile(sourceSpeciesGoMappingsFile, targetSpeciesGoMappingsFile);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -779,7 +780,7 @@ public class ProteinGeneDetailsProvider {
                         }
                     }
 
-                    Util.copyFile(sourceSpeciesGeneMappingFile, targetSpeciesGeneMappingFile);
+                    IoUtils.copyFile(sourceSpeciesGeneMappingFile, targetSpeciesGeneMappingFile);
 
                 } catch (IOException e) {
                     e.printStackTrace();

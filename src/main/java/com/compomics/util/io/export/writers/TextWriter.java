@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.zip.GZIPOutputStream;
+import static com.compomics.util.io.IoUtils.ENCODING;
 
 /**
  * ExportWriter for the export to text files.
@@ -32,10 +33,6 @@ public class TextWriter extends ExportWriter {
      * Writer.
      */
     private final BufferedWriter writer;
-    /**
-     * Encoding for the file, cf the second rule.
-     */
-    public static final String encoding = "UTF-8";
     /**
      * The separator.
      */
@@ -71,7 +68,7 @@ public class TextWriter extends ExportWriter {
             // Setup the writer
             FileOutputStream fileStream = new FileOutputStream(destinationFile);
             GZIPOutputStream gzipStream = new GZIPOutputStream(fileStream);
-            OutputStreamWriter encoder = new OutputStreamWriter(gzipStream, encoding);
+            OutputStreamWriter encoder = new OutputStreamWriter(gzipStream, ENCODING);
             this.writer = new BufferedWriter(encoder);
 
         } else {

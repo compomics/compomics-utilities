@@ -13,26 +13,23 @@ import com.compomics.util.parameters.identification.tool_specific.DirecTagParame
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
-import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Set;
 import javax.xml.bind.JAXBException;
-import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
  * An identification file reader for Direct tag results.
  *
  * @author Marc Vaudel
  */
-public class DirecTagIdfileReader extends ExperimentObject implements IdfileReader {
+public class DirecTagIdfileReader implements IdfileReader {
 
     /**
      * The name of the tags generator used to create the file.
@@ -73,29 +70,17 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
     /**
      * The tags parameters in a map.
      */
-    private HashMap<String, String> tagsParameters = new HashMap<>();
+    private final HashMap<String, String> tagsParameters = new HashMap<>();
     /**
      * Returns the content of the columns for a spectrum line. Name &gt; index
      * in the column.
      */
-    private HashMap<String, Integer> spectrumLineContent = new HashMap<>();
+    private final HashMap<String, Integer> spectrumLineContent = new HashMap<>();
     /**
      * Returns the content of the columns for a tag line. Name &gt; index in the
      * column.
      */
-    private HashMap<String, Integer> tagLineContent = new HashMap<>();
-    /**
-     * The indexes at which are the spectra. Spectrum ID &gt; index.
-     */
-    private HashMap<Integer, Long> spectrumIndexes = new HashMap<>();
-    /**
-     * The indexes at which are the tags. Spectrum ID &gt; indexes.
-     */
-    private HashMap<Integer, ArrayList<Long>> tagIndexes = new HashMap<>();
-    /**
-     * The random access file used.
-     */
-    private BufferedRandomAccessFile bufferedRandomAccessFile;
+    private final HashMap<String, Integer> tagLineContent = new HashMap<>();
     /**
      * The file inspected.
      */
@@ -103,7 +88,7 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
     /**
      * The spectrum factory used to retrieve spectrum titles.
      */
-    private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
+    private final SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
     /**
      * The mass to add to the C-terminal gap so that is corresponds to a peptide
      * fragment.
@@ -132,35 +117,16 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
     }
 
     /**
-     * Constructors, parses a file but does not index the results.
-     *
-     * @param tagFile the file to parse
-     *
-     * @throws IOException if an IOException occurs
-     */
-    public DirecTagIdfileReader(
-            File tagFile
-    ) throws IOException {
-        this(tagFile, false);
-    }
-
-    /**
      * Constructors, parses a file.
      *
      * @param tagFile the file to parse
-     * @param indexResults if true the results section will be indexed
-     *
-     * @throws IOException if an IOException occurs
      */
     public DirecTagIdfileReader(
-            File tagFile, 
-            boolean indexResults
-    ) throws IOException {
-    
+            File tagFile
+    ) {
+
         this.tagFile = tagFile;
-        bufferedRandomAccessFile = new BufferedRandomAccessFile(tagFile, "r", 1024 * 100);
-        parseFile(indexResults);
-    
+
     }
 
     /**
@@ -169,7 +135,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @return the name of the different parameters names found
      */
     public Set<String> getTagsParametersNames() {
-        readDBMode();
         return tagsParameters.keySet();
     }
 
@@ -183,312 +148,229 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
     public String getTagParameter(
             String tagParameterName
     ) {
-    
-        readDBMode();
-        return tagsParameters.get(tagParameterName);
-    
-    }
 
-    /**
-     * Parses a result file.
-     *
-     * @param indexResults if true the results section will be indexed
-     *
-     * @throws IOException if an IOException occurs
-     */
-    private void parseFile(boolean indexResults) throws IOException {
-        
-        writeDBMode();
-        
-        try {
-            boolean endOfFile = parseParameters();
-            if (!endOfFile) {
-                endOfFile = parseTagParameters();
-            }
-            if (!endOfFile) {
-                endOfFile = parseHeaders();
-            }
-            if (!endOfFile && indexResults) {
-                parseResults();
-            }
-        } finally {
-            bufferedRandomAccessFile.close();
-        }
+        return tagsParameters.get(tagParameterName);
+
     }
 
     /**
      * Parses the parameters section.
      *
+     * @param reader The file reader.
+     *
      * @return true if the end of the file was reached
      *
      * @throws IOException if an IOException occurs
      */
-    private boolean parseParameters() throws IOException {
-        writeDBMode();
+    private boolean parseParameters(
+            SimpleFileReader reader
+    ) {
+
         String line;
-        while ((line = bufferedRandomAccessFile.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
+
             if (line == null || line.startsWith("H	TagsParameters")) {
+
                 break;
+
             } else if (line == null) {
-                throw new IOException("Unexpected end of file while parsing the parameters.");
+
+                throw new IllegalArgumentException("Unexpected end of file while parsing the parameters.");
+
             } else if (line.startsWith("H(S)") || line.startsWith("H(T)") || line.startsWith("S") || line.startsWith("T")) {
-                throw new IOException("Unexpected end of parameters section.");
+
+                throw new IllegalArgumentException("Unexpected end of parameters section.");
+
             } else {
+
                 line = line.substring(1).trim();
+
                 if (line.startsWith("TagsGeneratorVersion")) {
+
                     tagsGeneratorVersion = line.substring(line.indexOf("\t")).trim();
+
                 } else if (line.startsWith("TagsGenerator")) {
+
                     tagsGenerator = line.substring(line.indexOf("\t")).trim();
+
                 } else if (line.contains("(c)")) {
+
                     copyRight = line;
+
                 } else if (line.contains("License")) {
+
                     license = line;
+
                 } else if (line.startsWith("Tagging started at")) {
+
                     tagsGeneratorVersion = line.substring(line.indexOf("Tagging started at")).trim();
+
                 } else if (line.startsWith("Tagging started at")) {
+
                     timeStart = line.substring(line.indexOf("Tagging started at")).trim();
+
                 } else if (line.startsWith("Tagging finished at")) {
+
                     timeEnd = line.substring(line.indexOf("Tagging finished at")).trim();
+
                 } else if (line.startsWith("Total tagging time:")) {
+
                     line = line.substring(line.indexOf(":") + 1).trim();
                     line = line.substring(0, line.indexOf(" ")).trim();
+
                     try {
+
                         taggingTimeSeconds = new Double(line);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
                 } else if (line.contains("node")) {
+
                     line = line.substring(line.indexOf(" ")).trim();
                     line = line.substring(0, line.indexOf(" ")).trim();
+
                     try {
+
                         nProcessingNode = new Integer(line);
+
                     } catch (Exception e) {
                         // ignore
                     }
+
                 } else if (line.startsWith("InputFile")) {
+
                     inputFile = line.substring(line.indexOf("\t")).trim();
+
                 }
             }
         }
+
         return line == null;
+
     }
 
     /**
      * Parses the tag parameters.
      *
      * @return true if the end of the file was reached
-     *
-     * @throws IOException if an IOException occurs
      */
-    private boolean parseTagParameters() throws IOException {
-        writeDBMode();
+    private boolean parseTagParameters(
+            SimpleFileReader reader
+    ) {
+
         String line;
-        while ((line = bufferedRandomAccessFile.readLine()) != null) {
+        while ((line = reader.readLine()) != null) {
+
             if (line.trim().isEmpty()) {
+
                 break;
+
             } else if (line == null) {
-                throw new IOException("Unexpected end of file while parsing the tag parameters.");
+
+                throw new IllegalArgumentException("Unexpected end of file while parsing the tag parameters.");
+
             } else if (line.startsWith("H(S)") || line.startsWith("H(T)") || line.startsWith("S") || line.startsWith("T")) {
-                throw new IOException("Unexpected end of tag parameters section.");
+
+                throw new IllegalArgumentException("Unexpected end of tag parameters section.");
+
             } else {
+
                 line = line.substring(1).trim();
                 String[] components = line.split(", ");
+
                 for (String component : components) {
+
                     int index = component.indexOf(": ");
+
                     if (index != -1) {
+
                         String key = component.substring(0, index).trim();
                         String value = component.substring(index + 1).trim();
                         tagsParameters.put(key, value);
+
                     }
                 }
             }
         }
+
         return line == null;
+
     }
 
     /**
      * Parses the tables headers.
      *
      * @return true if the end of the file was reached
-     *
-     * @throws IOException if an IOException occurs
      */
-    private boolean parseHeaders() throws IOException {
-        writeDBMode();
-        String line = bufferedRandomAccessFile.readLine();
+    private boolean parseHeaders(
+            SimpleFileReader reader
+    ) {
+
+        String line = reader.readLine();
+
         if (line != null) {
+
             parseHeaderLine(line);
+
         }
-        line = bufferedRandomAccessFile.readLine();
+
+        line = reader.readLine();
+
         if (line != null) {
+
             parseHeaderLine(line);
+
         }
+
         return line == null;
+
     }
 
     /**
      * Parses a line corresponding to a header.
      *
      * @param linea line corresponding to a header
-     *
-     * @throws IOException if an IOException occurs
      */
     private void parseHeaderLine(
             String line
-    ) throws IOException {
-    
-        writeDBMode();
+    ) {
+
         if (line.startsWith("S") || line.startsWith("T")) {
-            throw new IOException("No Header found.");
+
+            throw new IllegalArgumentException("No Header found.");
+
         }
+
         if (line.startsWith("H(S)")) {
+
             line = line.substring(4).trim();
             String[] components = line.split("\t");
+
             for (int i = 0; i < components.length; i++) {
+
                 spectrumLineContent.put(components[i], i);
+
             }
+
         } else if (line.startsWith("H(T)")) {
+
             line = line.substring(4).trim();
             String[] components = line.split("\t");
+
             for (int i = 0; i < components.length; i++) {
+
                 tagLineContent.put(components[i], i);
+
             }
         }
     }
 
     /**
-     * Parses the results section.
-     *
-     * @throws IOException if an IOException occurs
+     * Sets the dynamic modifications from the tags parameters.
      */
-    private void parseResults() throws IOException {
-        writeDBMode();
-        String line;
-        Integer sIdIndex = spectrumLineContent.get("Index");
-        int scpt = 0;
-        while ((line = bufferedRandomAccessFile.readLine()) != null) {
-            long lineIndex = bufferedRandomAccessFile.getFilePointer();
-            Integer id = ++scpt;
-            if (line.startsWith("S")) {
-                line = line.substring(1).trim();
-                if (sIdIndex != null) {
-                    String[] components = line.split("\t");
-                    id = new Integer(components[sIdIndex]);
-                }
-                spectrumIndexes.put(id, lineIndex);
-            } else if (line.startsWith("T")) {
-                ArrayList<Long> indexes = tagIndexes.get(id);
-                if (indexes == null) {
-                    indexes = new ArrayList<>();
-                    tagIndexes.put(id, indexes);
-                }
-                indexes.add(lineIndex);
-            }
-        }
-    }
-
-    /**
-     * Returns a component in a spectrum line.
-     *
-     * @param spectrumId the id of the spectrum of interest
-     * @param componentName the name of the component of interest according to
-     * the header
-     *
-     * @return the component
-     *
-     * @throws IOException if an IOException occurs
-     */
-    public String getSpectrumComponent(
-            int spectrumId, 
-            String componentName
-    ) throws IOException {
-        readDBMode();
-        long index = spectrumIndexes.get(spectrumId);
-        bufferedRandomAccessFile.seek(index);
-        String line = bufferedRandomAccessFile.readLine();
-        line = line.substring(1).trim();
-        String[] components = line.split("\t");
-        Integer columnIndex = spectrumLineContent.get(componentName);
-        if (columnIndex != null && columnIndex < components.length) {
-            return components[columnIndex];
-        }
-        return null;
-    }
-
-    /**
-     * Returns all the spectrum IDs found.
-     *
-     * @return the spectrum IDs found in a set
-     */
-    public Set<Integer> getSpectrumIds() {
-        readDBMode();
-        return spectrumIndexes.keySet();
-    }
-
-    /**
-     * Returns all the spectrum components names found in the header.
-     *
-     * @return all the spectrum components names found in the header
-     */
-    public Set<String> getSpectrumComponentNames() {
-        readDBMode();
-        return spectrumLineContent.keySet();
-    }
-
-    /**
-     * Returns the tag components associated to a spectrum in a map: component
-     * name -> value.
-     *
-     * @param spectrumId the id of the spectrum
-     *
-     * @return the tag components associated to a spectrum in a map
-     *
-     * @throws IOException if an IOException occurs
-     */
-    private ArrayList<HashMap<String, String>> getTags(
-            int spectrumId
-    ) throws IOException {
-        readDBMode();
-        ArrayList<HashMap<String, String>> result = new ArrayList<>();
-        ArrayList<Long> indexes = tagIndexes.get(spectrumId);
-        if (indexes != null) {
-            for (Long index : indexes) {
-                bufferedRandomAccessFile.seek(index);
-                String line = bufferedRandomAccessFile.readLine();
-                line = line.substring(1).trim();
-                String[] components = line.split("\t");
-                HashMap<String, String> lineMap = new HashMap<>();
-                for (String componentName : tagLineContent.keySet()) {
-                    int columnIndex = tagLineContent.get(componentName);
-                    String value = components[columnIndex];
-                    lineMap.put(componentName, value);
-                }
-                result.add(lineMap);
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            WaitingHandler waitingHandler, 
-            SearchParameters searchParameters
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        readDBMode();
-        return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
-    }
-
-    @Override
-    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            WaitingHandler waitingHandler, 
-            SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences, 
-            boolean expandAaCombinations
-    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        
-        readDBMode();
-
-        direcTagParameters = (DirecTagParameters) searchParameters.getAlgorithmSpecificParameters().get(Advocate.direcTag.getIndex());
+    private void setDynamicMods() {
 
         // get the ptm residues from the DynamicMods field
         dynamicModsResidues = new HashMap<>();
@@ -502,66 +384,118 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
                 index += 3;
             }
         }
+    }
 
-        String spectrumFileName = Util.getFileName(getInputFile());
-        if (waitingHandler != null && spectrumFactory.fileLoaded(spectrumFileName)) {
-            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressCounter(spectrumFactory.getNSpectra(spectrumFileName));
-        }
+    /**
+     * Parses the results section.
+     */
+    private ArrayList<SpectrumMatch> parseResults(
+            SimpleFileReader reader
+    ) {
 
         ArrayList<SpectrumMatch> result = new ArrayList<>();
-        int sCpt = 0;
+        
+        String spectrumFileName = Util.getFileName(getInputFile());
+
+        int spectrumCount = 0;
         Integer sIdColumnIndex = spectrumLineContent.get("ID");
         Integer chargeColumnIndex = spectrumLineContent.get("Charge");
-        
-        try (BufferedReader reader = new BufferedReader(new FileReader(tagFile))) {
-            Integer lastId = null, lastCharge = null;
-            int rank = 0;
-            SpectrumMatch currentMatch = null;
-            String line;
 
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("S")) {
-                    Integer sId = ++sCpt;
-                    rank = 0;
-                    if (sIdColumnIndex != null) {
-                        line = line.substring(1).trim();
-                        String[] components = line.split("\t");
-                        String id = components[sIdColumnIndex];
-                        sId = new Integer(id.substring(id.indexOf("=") + 1));
-                        String chargeString = components[chargeColumnIndex];
-                        lastCharge = new Integer(chargeString);
-                    }
-                    if (!sId.equals(lastId)) {
-                        if (currentMatch != null && currentMatch.getAllTagAssumptions().count() > 0) {
+        Integer lastId = null, lastCharge = null;
+        int rank = 0;
+        SpectrumMatch currentMatch = null;
+        String line;
 
-                            result.add(currentMatch);
-                        }
-                        int utilitiesId = sId + 1; // first spectrum is 1 in utilities
-                        String spectrumTitle = utilitiesId + "";
-                        if (spectrumFactory.fileLoaded(spectrumFileName)) {
-                            spectrumTitle = spectrumFactory.getSpectrumTitle(spectrumFileName, utilitiesId);
-                        }
-                        String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
-                        currentMatch = new SpectrumMatch(spectrumKey);
-                        currentMatch.setSpectrumNumber(utilitiesId);
-                        lastId = sId;
-                    }
-                    if (waitingHandler != null && spectrumFactory.fileLoaded(spectrumFileName)) {
-                        waitingHandler.increaseSecondaryProgressCounter();
-                    }
-                } else if (line.startsWith("T")) {
-                    ++rank;
-                    TagAssumption tagAssumption = getAssumptionFromLine(line, rank);
-                    //@TODO: check with the developers if this is correct
-                    tagAssumption.setIdentificationCharge(lastCharge);
-                    currentMatch.addTagAssumption(Advocate.direcTag.getIndex(), tagAssumption);
+        while ((line = reader.readLine()) != null) {
+            
+            if (line.startsWith("S")) {
+            
+                Integer sId = ++spectrumCount;
+                rank = 0;
+                
+                if (sIdColumnIndex != null) {
+                
+                    line = line.substring(1).trim();
+                    String[] components = line.split("\t");
+                    String id = components[sIdColumnIndex];
+                    sId = new Integer(id.substring(id.indexOf("=") + 1));
+                    String chargeString = components[chargeColumnIndex];
+                    lastCharge = new Integer(chargeString);
+                    
                 }
+                if (!sId.equals(lastId)) {
+                    if (currentMatch != null && currentMatch.getAllTagAssumptions().count() > 0) {
+
+                        result.add(currentMatch);
+                    }
+                    int utilitiesId = sId + 1; // first spectrum is 1 in utilities
+                    String spectrumTitle = utilitiesId + "";
+                    if (spectrumFactory.fileLoaded(spectrumFileName)) {
+                        spectrumTitle = spectrumFactory.getSpectrumTitle(spectrumFileName, utilitiesId);
+                    }
+                    String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
+                    currentMatch = new SpectrumMatch(spectrumKey);
+                    currentMatch.setSpectrumNumber(utilitiesId);
+                    lastId = sId;
+                }
+            } else if (line.startsWith("T")) {
+                ++rank;
+                TagAssumption tagAssumption = getAssumptionFromLine(line, rank);
+                //@TODO: check with the developers if this is correct
+                tagAssumption.setIdentificationCharge(lastCharge);
+                currentMatch.addTagAssumption(Advocate.direcTag.getIndex(), tagAssumption);
             }
+        }
 
-            if (currentMatch != null && currentMatch.getAllTagAssumptions().count() > 0) {
+        if (currentMatch != null && currentMatch.getAllTagAssumptions().count() > 0) {
 
-                result.add(currentMatch);
+            result.add(currentMatch);
+        }
+
+        return result;
+
+    }
+
+    @Override
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler,
+            SearchParameters searchParameters
+    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+
+        return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
+    }
+
+    @Override
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            WaitingHandler waitingHandler,
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences,
+            boolean expandAaCombinations
+    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+
+        direcTagParameters = (DirecTagParameters) searchParameters.getAlgorithmSpecificParameters().get(Advocate.direcTag.getIndex());
+
+        ArrayList<SpectrumMatch> result = new ArrayList<>(0);
+
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(tagFile)) {
+
+            boolean endOfFile = parseParameters(reader);
+
+            if (!endOfFile) {
+
+                endOfFile = parseTagParameters(reader);
+
+            }
+            if (!endOfFile) {
+
+                endOfFile = parseHeaders(reader);
+
+            }
+            if (!endOfFile) {
+
+                setDynamicMods();
+                result = parseResults(reader);
+
             }
         }
         return result;
@@ -578,11 +512,10 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @return the assumption associated to a tag line
      */
     private TagAssumption getAssumptionFromLine(
-            String line, 
+            String line,
             int rank
     ) {
-        
-        readDBMode();
+
         line = line.substring(1).trim();
         String[] components = line.split("\t");
         Integer cGapIndex = tagLineContent.get("cTerminusMass");
@@ -653,7 +586,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @return the tags generator used to create the file
      */
     public String getTagsGenerator() {
-        readDBMode();
         return tagsGenerator;
     }
 
@@ -663,7 +595,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @return the version of the tags generator used to create the file
      */
     public String getTagsGeneratorVersion() {
-        readDBMode();
         return tagsGeneratorVersion;
     }
 
@@ -673,7 +604,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @return the copyright
      */
     public String getCopyRight() {
-        readDBMode();
         return copyRight;
     }
 
@@ -683,7 +613,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @return the license information of this file
      */
     public String getLicense() {
-        readDBMode();
         return license;
     }
 
@@ -693,7 +622,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @return the starting time of the tagging
      */
     public String getTimeStart() {
-        readDBMode();
         return timeStart;
     }
 
@@ -703,7 +631,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @return the ending time of the tagging
      */
     public String getTimeEnd() {
-        readDBMode();
         return timeEnd;
     }
 
@@ -713,7 +640,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @return the tagging time in seconds as listed in the file
      */
     public Double getTaggingTimeSeconds() {
-        readDBMode();
         return taggingTimeSeconds;
     }
 
@@ -723,7 +649,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @return the number of processing nodes used
      */
     public Integer getnProcessingNode() {
-        readDBMode();
         return nProcessingNode;
     }
 
@@ -733,25 +658,22 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
      * @return the spectrum file name
      */
     public File getInputFile() {
-        readDBMode();
         return new File(inputFile);
     }
 
     @Override
     public String getExtension() {
-        readDBMode();
         return ".tags";
     }
 
     @Override
     public void close() throws IOException {
-        writeDBMode();
-        bufferedRandomAccessFile.close();
+
     }
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        readDBMode();
+
         HashMap<String, ArrayList<String>> result = new HashMap<>();
         ArrayList<String> versions = new ArrayList<>();
         versions.add(tagsGeneratorVersion);
@@ -761,7 +683,6 @@ public class DirecTagIdfileReader extends ExperimentObject implements IdfileRead
 
     @Override
     public boolean hasDeNovoTags() {
-        readDBMode();
         return true;
     }
 }

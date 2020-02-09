@@ -148,8 +148,9 @@ public class IdfileReaderFactory {
 
             String key = extensions.next();
             String extension = key.toLowerCase();
+            String gzippedExtension = extension + ".gz";
 
-            if (name.endsWith(extension)) {
+            if (name.endsWith(extension) || name.endsWith(gzippedExtension)) {
 
                 Class idfileReaderClass = idFileReaders.get(key);
 

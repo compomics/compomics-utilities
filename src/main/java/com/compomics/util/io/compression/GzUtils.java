@@ -1,0 +1,173 @@
+package com.compomics.util.io.compression;
+
+import static com.compomics.util.io.IoUtils.ENCODING;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+
+/**
+ * Convenience methods to work with gzipped files.
+ *
+ * @author Marc Vaudel
+ */
+public class GzUtils {
+
+    /**
+     * The length of the character buffer to use.
+     */
+    public static final int BUFFER_LENGTH = 1024;
+    /**
+     * The extension to use for gz files.
+     */
+    public static final String GZ_EXTENSION = ".gz";
+
+    /**
+     * Gzip a file.If the gz file already exists it will be silently
+     * overwritten.
+     *
+     * @param file The file to read.
+     * @param remove If true the original file will be removed.
+     *
+     * @throws java.io.IOException Exception thrown if an error occurred while
+     * reading or writing a file.
+     */
+    public void gzFile(
+            File file,
+            boolean remove
+    ) throws IOException {
+
+        File gzFile = new File(file.getAbsoluteFile() + GZ_EXTENSION);
+
+        gzFile(
+                file,
+                gzFile,
+                remove
+        );
+
+    }
+
+    /**
+     * Gzip a file.If the gz file already exists it will be silently
+     * overwritten.
+     *
+     * @param file The file to read.
+     * @param gzFile The gz file to write.
+     * @param remove If true the original file will be removed.
+     *
+     * @throws java.io.IOException Exception thrown if an error occurred while
+     * reading or writing a file.
+     */
+    public void gzFile(
+            File file,
+            File gzFile,
+            boolean remove
+    ) throws IOException {
+
+        char[] buffer = new char[BUFFER_LENGTH];
+
+        try ( BufferedReader reader = new BufferedReader(new FileReader(file))) {
+
+            FileOutputStream fileStream = new FileOutputStream(gzFile);
+            GZIPOutputStream gzipStream = new GZIPOutputStream(fileStream);
+            OutputStreamWriter encoder = new OutputStreamWriter(gzipStream, ENCODING);
+
+            try ( BufferedWriter bw = new BufferedWriter(encoder)) {
+
+                int read;
+                while ((read = reader.read(buffer)) != -1) {
+
+                    bw.write(buffer, 0, read);
+
+                }
+            }
+        }
+
+        if (remove) {
+
+            file.delete();
+
+        }
+    }
+
+    /**
+     * Uncompresses the given gz file to the given destination file. If the destination file already exists it will be silently overwritten.
+     * 
+     * @param gzFile The gz file to read.
+     * @param remove If true the gz file will be deleted upon completion.
+     * 
+     * @throws IOException Exception thrown if an error occurred while reading or writing a file.
+     */
+    public void gunzipFile(
+            File gzFile,
+            boolean remove
+    ) throws IOException {
+        
+        String gzFilePath = gzFile.getAbsolutePath();
+        
+        if (!gzFilePath.endsWith(GZ_EXTENSION)) {
+            
+            throw new IllegalArgumentException("Gz file expected to end with " + GZ_EXTENSION);
+            
+        }
+        
+        File destinationFile = new File(
+                gzFilePath.substring(0, gzFilePath.length() - GZ_EXTENSION.length())
+        );
+        
+        gunzipFile(gzFile, destinationFile, remove);
+        
+    }
+            
+
+    /**
+     * Uncompresses the given gz file to the given destination file. If the destination file already exists it will be silently overwritten.
+     * 
+     * @param gzFile The gz file to read.
+     * @param destinationFile The file to write.
+     * @param remove If true the gz file will be deleted upon completion.
+     * 
+     * @throws IOException Exception thrown if an error occurred while reading or writing a file.
+     */
+    public void gunzipFile(
+            File gzFile,
+            File destinationFile,
+            boolean remove
+    ) throws IOException {
+
+        char[] buffer = new char[BUFFER_LENGTH];
+
+        InputStream fileStream = new FileInputStream(gzFile);
+        InputStream gzipStream = new GZIPInputStream(fileStream);
+        Reader decoder = new InputStreamReader(gzipStream, ENCODING);
+
+        try ( BufferedReader reader = new BufferedReader(decoder)) {
+
+            try ( BufferedWriter writer = new BufferedWriter(new FileWriter(destinationFile))) {
+
+                int read;
+                while ((read = reader.read(buffer)) != -1) {
+
+                    writer.write(buffer, 0, read);
+
+                }
+            }
+        }
+
+        if (remove) {
+
+            gzFile.delete();
+
+        }
+    }
+}

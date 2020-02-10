@@ -402,6 +402,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         } else if (userCanDispose) {
 
             dispose();
+            return false;
 
         }
 

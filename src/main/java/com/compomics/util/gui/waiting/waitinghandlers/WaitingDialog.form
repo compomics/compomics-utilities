@@ -355,7 +355,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="saveReportLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href=\u005c&quot;dummy_link&quot;&gt;&lt;i&gt;Save Report&lt;/i&gt;&lt;/a&gt;&lt;/html&gt;" containsInvalidXMLChars="true"/>
+            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a style=&quot;text-decoration: none&quot; href=\u005c&quot;dummy_link&quot;&gt;Save Report&lt;/a&gt;&lt;/html&gt;" containsInvalidXMLChars="true"/>
             <Property name="toolTipText" type="java.lang.String" value="Save the report to a text file"/>
           </Properties>
           <Events>

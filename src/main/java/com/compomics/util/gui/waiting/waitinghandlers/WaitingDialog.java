@@ -590,7 +590,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             }
         });
 
-        saveReportLabel.setText("<html><a href=\\\"dummy_link\"><i>Save Report</i></a></html>");
+        saveReportLabel.setText("<html><a style=\"text-decoration: none\" href=\\\"dummy_link\">Save Report</a></html>");
         saveReportLabel.setToolTipText("Save the report to a text file");
         saveReportLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {

@@ -198,8 +198,8 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
             SpectrumMatch currentMatch = null;
 
             // get the name of the mgf file
-            String spectrumFileName = Util.getFileName(tideTsvFile);
-            spectrumFileName = spectrumFileName.substring(0, spectrumFileName.length() - ".tide-search.target.txt".length()) + ".mgf"; // @TODO: will only work for files from searchgui...
+            String fileName = Util.getFileName(tideTsvFile);
+            String spectrumFileName = getMgfFileName(fileName);
 
             // get the psms
             while ((line = reader.readLine()) != null) {
@@ -331,5 +331,30 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
     @Override
     public boolean hasDeNovoTags() {
         return false;
+    }
+
+    /**
+     * Returns the spectrum file name.This method assumes that the PepNovo
+     * output file is the mgf file name + "tide-search.target.txt"
+     *
+     * @param fileName the name of the results file
+     *
+     * @return the spectrum file name
+     */
+    public static String getMgfFileName(String fileName) {
+
+        if (fileName.endsWith(".tide-search.target.txt.gz")) {
+
+            return fileName.substring(0, fileName.length() - 26) + ".mgf";
+
+        } else if (fileName.endsWith(".tide-search.target.txt")) {
+
+            return fileName.substring(0, fileName.length() - 23) + ".mgf";
+
+        } else {
+
+            throw new IllegalArgumentException("Unexpected file extension. Expected: tide-search.target.txt or tide-search.target.txt.gz. File name: " + fileName + ".");
+
+        }
     }
 }

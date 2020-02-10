@@ -167,6 +167,10 @@ public class UtilitiesUserParameters {
      */
     private double refMass = 2000.0;
     /**
+     * Boolean indicating whether the output files should be gzipped.
+     */
+    private boolean gzip = true;
+    /**
      * The way output files should be exported.
      */
     private OutputParameters outputOption = OutputParameters.grouped;
@@ -696,9 +700,6 @@ public class UtilitiesUserParameters {
      * @return the displayed tips
      */
     public ArrayList<String> getDisplayedTips() {
-        if (displayedTips == null) {
-            displayedTips = new ArrayList<>(0);
-        }
         return displayedTips;
     }
 
@@ -924,6 +925,26 @@ public class UtilitiesUserParameters {
     public OutputParameters getSearchGuiOutputParameters() {
         return outputOption;
     }
+
+    /**
+     * Indicates whether identification files should be gzipped.
+     * 
+     * @return A boolean indicating whether identification files should be gzipped.
+     */
+    public boolean isGzip() {
+        return gzip;
+    }
+
+    /**
+     * Sets whether identification files should be gzipped.
+     * 
+     * @param gzip A boolean indicating whether identification files should be gzipped.
+     */
+    public void setGzip(boolean gzip) {
+        this.gzip = gzip;
+    }
+    
+    
 
     /**
      * Indicates whether data should be copied along with the identification

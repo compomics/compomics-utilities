@@ -1802,6 +1802,14 @@
 <dd>
 <div class="block">The length of the character buffer to use.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/TarUtils.html#BUFFER_SIZE">BUFFER_SIZE</a></span> - Static variable in class com.compomics.util.io.compression.<a href="com/compomics/util/io/compression/TarUtils.html" title="class in com.compomics.util.io.compression">TarUtils</a></dt>
+<dd>
+<div class="block">The buffer size.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/ZipUtils.html#BUFFER_SIZE">BUFFER_SIZE</a></span> - Static variable in class com.compomics.util.io.compression.<a href="com/compomics/util/io/compression/ZipUtils.html" title="class in com.compomics.util.io.compression">ZipUtils</a></dt>
+<dd>
+<div class="block">The buffer size.</div>
+</dd>
 <dt><a href="com/compomics/util/gui/error_handlers/BugReport.html" title="class in com.compomics.util.gui.error_handlers"><span class="typeNameLink">BugReport</span></a> - Class in <a href="com/compomics/util/gui/error_handlers/package-summary.html">com.compomics.util.gui.error_handlers</a></dt>
 <dd>
 <div class="block">A simple bug report dialog.</div>
@@ -10597,13 +10605,24 @@
 <dd>
 <div class="block">Returns the file associated with the given name.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/idfilereaders/PepNovoIdfileReader.html#getMgfFileName--">getMgfFileName()</a></span> - Method in class com.compomics.util.experiment.io.identification.idfilereaders.<a href="com/compomics/util/experiment/io/identification/idfilereaders/PepNovoIdfileReader.html" title="class in com.compomics.util.experiment.io.identification.idfilereaders">PepNovoIdfileReader</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/idfilereaders/AndromedaIdfileReader.html#getMgfFileName-java.lang.String-">getMgfFileName(String)</a></span> - Static method in class com.compomics.util.experiment.io.identification.idfilereaders.<a href="com/compomics/util/experiment/io/identification/idfilereaders/AndromedaIdfileReader.html" title="class in com.compomics.util.experiment.io.identification.idfilereaders">AndromedaIdfileReader</a></dt>
 <dd>
-<div class="block">Returns the spectrum file name.</div>
+<div class="block">Returns the name of the mgf file corresponding to the given Andromeda file name.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/idfilereaders/PNovoIdfileReader.html#getMgfFileName--">getMgfFileName()</a></span> - Method in class com.compomics.util.experiment.io.identification.idfilereaders.<a href="com/compomics/util/experiment/io/identification/idfilereaders/PNovoIdfileReader.html" title="class in com.compomics.util.experiment.io.identification.idfilereaders">PNovoIdfileReader</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/idfilereaders/PepNovoIdfileReader.html#getMgfFileName-java.lang.String-">getMgfFileName(String)</a></span> - Static method in class com.compomics.util.experiment.io.identification.idfilereaders.<a href="com/compomics/util/experiment/io/identification/idfilereaders/PepNovoIdfileReader.html" title="class in com.compomics.util.experiment.io.identification.idfilereaders">PepNovoIdfileReader</a></dt>
 <dd>
-<div class="block">Returns the spectrum file name.</div>
+<div class="block">Returns the spectrum file name.This method assumes that the PepNovo
+ output file is the mgf file name + ".out"</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/idfilereaders/PNovoIdfileReader.html#getMgfFileName-java.lang.String-">getMgfFileName(String)</a></span> - Static method in class com.compomics.util.experiment.io.identification.idfilereaders.<a href="com/compomics/util/experiment/io/identification/idfilereaders/PNovoIdfileReader.html" title="class in com.compomics.util.experiment.io.identification.idfilereaders">PNovoIdfileReader</a></dt>
+<dd>
+<div class="block">Returns the spectrum file name.This method assumes that the pNovo output
+ file is the mgf file name + ".pnovo.txt"</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/idfilereaders/TideIdfileReader.html#getMgfFileName-java.lang.String-">getMgfFileName(String)</a></span> - Static method in class com.compomics.util.experiment.io.identification.idfilereaders.<a href="com/compomics/util/experiment/io/identification/idfilereaders/TideIdfileReader.html" title="class in com.compomics.util.experiment.io.identification.idfilereaders">TideIdfileReader</a></dt>
+<dd>
+<div class="block">Returns the spectrum file name.This method assumes that the PepNovo
+ output file is the mgf file name + "tide-search.target.txt"</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/SpectrumFactory.html#getMgfFileNames--">getMgfFileNames()</a></span> - Method in class com.compomics.util.experiment.mass_spectrometry.<a href="com/compomics/util/experiment/mass_spectrometry/SpectrumFactory.html" title="class in com.compomics.util.experiment.mass_spectrometry">SpectrumFactory</a></dt>
 <dd>
@@ -15669,11 +15688,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/GuiUtilities.html#GuiUtilities--">GuiUtilities()</a></span> - Constructor for class com.compomics.util.gui.<a href="com/compomics/util/gui/GuiUtilities.html" title="class in com.compomics.util.gui">GuiUtilities</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/GzUtils.html#gunzipFile-java.io.File-boolean-">gunzipFile(File, boolean)</a></span> - Method in class com.compomics.util.io.compression.<a href="com/compomics/util/io/compression/GzUtils.html" title="class in com.compomics.util.io.compression">GzUtils</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/GzUtils.html#gunzipFile-java.io.File-boolean-">gunzipFile(File, boolean)</a></span> - Static method in class com.compomics.util.io.compression.<a href="com/compomics/util/io/compression/GzUtils.html" title="class in com.compomics.util.io.compression">GzUtils</a></dt>
 <dd>
 <div class="block">Uncompresses the given gz file to the given destination file.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/GzUtils.html#gunzipFile-java.io.File-java.io.File-boolean-">gunzipFile(File, File, boolean)</a></span> - Method in class com.compomics.util.io.compression.<a href="com/compomics/util/io/compression/GzUtils.html" title="class in com.compomics.util.io.compression">GzUtils</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/GzUtils.html#gunzipFile-java.io.File-java.io.File-boolean-">gunzipFile(File, File, boolean)</a></span> - Static method in class com.compomics.util.io.compression.<a href="com/compomics/util/io/compression/GzUtils.html" title="class in com.compomics.util.io.compression">GzUtils</a></dt>
 <dd>
 <div class="block">Uncompresses the given gz file to the given destination file.</div>
 </dd>
@@ -15681,12 +15700,12 @@
 <dd>
 <div class="block">The extension to use for gz files.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/GzUtils.html#gzFile-java.io.File-boolean-">gzFile(File, boolean)</a></span> - Method in class com.compomics.util.io.compression.<a href="com/compomics/util/io/compression/GzUtils.html" title="class in com.compomics.util.io.compression">GzUtils</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/GzUtils.html#gzFile-java.io.File-boolean-">gzFile(File, boolean)</a></span> - Static method in class com.compomics.util.io.compression.<a href="com/compomics/util/io/compression/GzUtils.html" title="class in com.compomics.util.io.compression">GzUtils</a></dt>
 <dd>
 <div class="block">Gzip a file.If the gz file already exists it will be silently
  overwritten.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/GzUtils.html#gzFile-java.io.File-java.io.File-boolean-">gzFile(File, File, boolean)</a></span> - Method in class com.compomics.util.io.compression.<a href="com/compomics/util/io/compression/GzUtils.html" title="class in com.compomics.util.io.compression">GzUtils</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/GzUtils.html#gzFile-java.io.File-java.io.File-boolean-">gzFile(File, File, boolean)</a></span> - Static method in class com.compomics.util.io.compression.<a href="com/compomics/util/io/compression/GzUtils.html" title="class in com.compomics.util.io.compression">GzUtils</a></dt>
 <dd>
 <div class="block">Gzip a file.If the gz file already exists it will be silently
  overwritten.</div>
@@ -17579,6 +17598,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html#isFragmentIonPpm--">isFragmentIonPpm()</a></span> - Method in class com.compomics.util.experiment.identification.spectrum_annotation.<a href="com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpecificAnnotationParameters</a></dt>
 <dd>
 <div class="block">Indicates whether the fragment ion accuracy is in ppm.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/UtilitiesUserParameters.html#isGzip--">isGzip()</a></span> - Method in class com.compomics.util.parameters.<a href="com/compomics/util/parameters/UtilitiesUserParameters.html" title="class in com.compomics.util.parameters">UtilitiesUserParameters</a></dt>
+<dd>
+<div class="block">Indicates whether identification files should be gzipped.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/ExportScheme.html#isHeader--">isHeader()</a></span> - Method in class com.compomics.util.io.export.<a href="com/compomics/util/io/export/ExportScheme.html" title="class in com.compomics.util.io.export">ExportScheme</a></dt>
 <dd>
@@ -25142,6 +25165,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html#setGroupClass-int-">setGroupClass(int)</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSParameter</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/UtilitiesUserParameters.html#setGzip-boolean-">setGzip(boolean)</a></span> - Method in class com.compomics.util.parameters.<a href="com/compomics/util/parameters/UtilitiesUserParameters.html" title="class in com.compomics.util.parameters">UtilitiesUserParameters</a></dt>
+<dd>
+<div class="block">Sets whether identification files should be gzipped.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/nucleotide/NucleotideSequence.html#setHeader-com.compomics.util.experiment.io.biology.protein.Header-">setHeader(Header)</a></span> - Method in class com.compomics.util.nucleotide.<a href="com/compomics/util/nucleotide/NucleotideSequence.html" title="class in com.compomics.util.nucleotide">NucleotideSequence</a></dt>
 <dd>
 <div class="block">This method sets the header.</div>

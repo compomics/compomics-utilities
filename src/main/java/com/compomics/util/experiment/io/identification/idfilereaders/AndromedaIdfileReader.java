@@ -10,7 +10,6 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
@@ -81,7 +80,8 @@ public class AndromedaIdfileReader implements IdfileReader {
             boolean expandAaCombinations
     ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        String mgfFile = Util.removeExtension(fileName) + ".mgf"; //@TODO: make this generic?
+        
+        String mgfFile = getMgfFileName(fileName);
 
         ArrayList<SpectrumMatch> result = new ArrayList<>();
         HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<>();
@@ -208,5 +208,31 @@ public class AndromedaIdfileReader implements IdfileReader {
     @Override
     public boolean hasDeNovoTags() {
         return false;
+    }
+    
+    /**
+     * Returns the name of the mgf file corresponding to the given Andromeda file name. Note: the Andromeda result name is expected to be the mgf file without extension appended with ".res" or ".res.gz". 
+     * 
+     * @param fileName the Andromeda result file
+     * 
+     * @return The name of the mgf file corresponding to the given Andromeda file name.
+     */
+    public static String getMgfFileName(
+            String fileName
+    ) {
+        
+        if (fileName.endsWith(".res.gz")) {
+            
+            return fileName.substring(0, fileName.length() - 7) + ".mgf";
+            
+        } else if (fileName.endsWith(".res")) {
+            
+            return fileName.substring(0, fileName.length() - 4) + ".mgf";
+            
+        } else {
+            
+            throw new IllegalArgumentException("Unexpected file extension. Expected: .res or .res.gz. File name: " + fileName + ".");
+            
+        }
     }
 }

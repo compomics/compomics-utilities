@@ -72,6 +72,9 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
         if (identificationFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
+            
+        String fileName = Util.getFileName(identificationFile);
+        String mgfFileName = getMgfFileName(fileName);
 
         ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
 
@@ -96,7 +99,8 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
                     // remove any html from the title
                     String decodedTitle = URLDecoder.decode(spectrumTitle, ENCODING);
-                    String spectrumKey = Spectrum.getSpectrumKey(getMgfFileName(), decodedTitle);
+                    
+                    String spectrumKey = Spectrum.getSpectrumKey(mgfFileName, decodedTitle);
                     currentMatch = new SpectrumMatch(spectrumKey);
 
                 } else if (line.charAt(0) == 'P') {
@@ -117,15 +121,28 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
     }
 
     /**
-     * Returns the spectrum file name. This method assumes that the pNovo output
-     * file is the mgf file name + ".pnovo.txt"
+     * Returns the spectrum file name.This method assumes that the pNovo output
+ file is the mgf file name + ".pnovo.txt"
      *
-     * @return the spectrum file name
+     * @param fileName the name of the results file.
+     * 
+     * @return The spectrum file name.
      */
-    public String getMgfFileName() {
+    public static String getMgfFileName(String fileName) {
         
-        String fileName = Util.getFileName(identificationFile);
-        return fileName.substring(0, fileName.length() - ".pnovo.txt".length()) + ".mgf";
+        if (fileName.endsWith(".pnovo.txt")) {
+        
+            return fileName.substring(0, fileName.length() - 10) + ".mgf";
+        
+        } else if (fileName.endsWith(".pnovo.txt.gz")) {
+        
+            return fileName.substring(0, fileName.length() - 13) + ".mgf";
+            
+        } else {
+            
+            throw new IllegalArgumentException("Unexpected file extension. Expected: .pnovo.txt or .pnovo.txt.gz. File name: " + fileName + ".");
+            
+        }
     
     }
 

@@ -13,6 +13,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.io.identification.IdfileReader;
+import static com.compomics.util.experiment.io.identification.idfilereaders.PNovoIdfileReader.getMgfFileName;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails;
@@ -100,6 +101,9 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         if (identificationFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
+            
+        String fileName = Util.getFileName(identificationFile);
+        String mgfFileName = getMgfFileName(fileName);
 
         ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
 
@@ -138,7 +142,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
                         // remove any html from the title
                         String decodedTitle = URLDecoder.decode(spectrumTitle, ENCODING);
-                        String spectrumKey = Spectrum.getSpectrumKey(getMgfFileName(), decodedTitle);
+                        String spectrumKey = Spectrum.getSpectrumKey(mgfFileName, decodedTitle);
                         currentMatch = new SpectrumMatch(spectrumKey);
 
                         while (true) {
@@ -169,14 +173,28 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     /**
-     * Returns the spectrum file name. This method assumes that the PepNovo
-     * output file is the mgf file name + ".out"
+     * Returns the spectrum file name.This method assumes that the PepNovo
+ output file is the mgf file name + ".out"
      *
+     * @param fileName the name of the results file
+     * 
      * @return the spectrum file name
      */
-    public String getMgfFileName() {
-        String fileName = Util.getFileName(identificationFile);
-        return fileName.substring(0, fileName.length() - 4);
+    public static String getMgfFileName(String fileName) {
+        
+        if (fileName.endsWith(".out.gz")) {
+            
+            return fileName.substring(0, fileName.length() - 7);
+            
+        } else if (fileName.endsWith(".out")) {
+            
+            return fileName.substring(0, fileName.length() - 4);
+            
+        } else {
+            
+            throw new IllegalArgumentException("Unexpected file extension. Expected: .out or .out.gz. File name: " + fileName + ".");
+            
+        }
     }
 
     @Override

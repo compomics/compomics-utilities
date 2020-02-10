@@ -329,8 +329,8 @@
                               <Component id="accessionsSpinner" min="-2" pref="192" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="targetDecoyTxt" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="96" max="32767" attributes="0"/>
-                              <Component id="editFastaParametersJLabel" min="-2" pref="258" max="-2" attributes="0"/>
+                              <EmptySpace pref="199" max="32767" attributes="0"/>
+                              <Component id="editFastaParametersJLabel" min="-2" pref="155" max="-2" attributes="0"/>
                           </Group>
                           <Component id="proteinYxtScrollPane" max="32767" attributes="0"/>
                       </Group>
@@ -395,7 +395,7 @@
                   <Color blue="ff" green="0" red="0" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;u&gt;Click here to edit the FASTA parsing options&lt;/u&gt;&lt;/html&gt;"/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a style=&quot;text-decoration: none&quot;&gt;Edit FASTA parsing options&lt;/a&gt;&lt;/html&gt;"/>
                 <Property name="toolTipText" type="java.lang.String" value="Edit the FASTA parsing options"/>
               </Properties>
               <Events>
@@ -412,7 +412,7 @@
               <Color blue="ff" green="0" red="0" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;u&gt;Database help?&lt;/u&gt;&lt;/html&gt;"/>
+            <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a style=&quot;text-decoration: none&quot;&gt;Database help?&lt;/a&gt;&lt;/html&gt;"/>
             <Property name="toolTipText" type="java.lang.String" value="Open Database Help"/>
           </Properties>
           <Events>

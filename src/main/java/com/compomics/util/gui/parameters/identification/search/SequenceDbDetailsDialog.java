@@ -839,7 +839,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         editFastaParametersJLabel.setForeground(new java.awt.Color(0, 0, 255));
         editFastaParametersJLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        editFastaParametersJLabel.setText("<html><u>Click here to edit the FASTA parsing options</u></html>");
+        editFastaParametersJLabel.setText("<html><a style=\"text-decoration: none\">Edit FASTA parsing options</a></html>");
         editFastaParametersJLabel.setToolTipText("Edit the FASTA parsing options");
         editFastaParametersJLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -866,8 +866,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                         .addComponent(accessionsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(targetDecoyTxt)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, Short.MAX_VALUE)
-                        .addComponent(editFastaParametersJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 199, Short.MAX_VALUE)
+                        .addComponent(editFastaParametersJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(proteinYxtScrollPane))
                 .addContainerGap())
         );
@@ -887,7 +887,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         databaseHelpSettingsJLabel.setForeground(new java.awt.Color(0, 0, 255));
         databaseHelpSettingsJLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        databaseHelpSettingsJLabel.setText("<html><u>Database help?</u></html>");
+        databaseHelpSettingsJLabel.setText("<html><a style=\"text-decoration: none\">Database help?</a></html>");
         databaseHelpSettingsJLabel.setToolTipText("Open Database Help");
         databaseHelpSettingsJLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

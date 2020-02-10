@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -89,21 +90,6 @@ public class Identification extends ExperimentObject {
             IdentificationKeys identificationKeys
     ) {
         this.identificationKeys = identificationKeys;
-    }
-
-    /**
-     * Fills the spectra per file map.
-     */
-    public synchronized void fillSpectrumIdentification() {
-
-        identificationKeys.spectrumIdentification = getSpectrumIdentificationKeys().stream()
-                .collect(
-                        Collectors.groupingBy(
-                                key -> Spectrum.getSpectrumFile(getSpectrumMatch(key).getSpectrumKey()), // @TODO: should use batches instead of one key at the time!
-                                HashMap::new,
-                                Collectors.toCollection(HashSet::new)
-                        )
-                );
     }
 
     /**
@@ -485,6 +471,49 @@ public class Identification extends ExperimentObject {
         identificationKeys.peptideIdentification.addAll(peptideMatches.keySet());
 
         objectsDB.insertObjects(peptideMatches, null, false);
+
+    }
+
+    /**
+     * Adds a spectrum matches into the database.
+     *
+     * @param spectrumMatches the spectrum matches
+     * @param waitingHandler the waiting handler allowing displaying progress
+     * and canceling the process
+     * @param displayProgress boolean indicating whether the progress of this
+     * method should be displayed on the waiting handler
+     */
+    public void addSpectrumMatches(
+            HashMap<Long, Object> spectrumMatches,
+            WaitingHandler waitingHandler,
+            boolean displayProgress
+    ) {
+
+        for (Entry<Long, Object> entry : spectrumMatches.entrySet()) {
+
+            long key = entry.getKey();
+            SpectrumMatch spectrumMatch = (SpectrumMatch) entry.getValue();
+
+            String fileName = Spectrum.getSpectrumFile(spectrumMatch.getSpectrumKey());
+
+            HashSet<Long> fileKeys = identificationKeys.spectrumIdentification.get(fileName);
+
+            if (fileKeys == null) {
+
+                fileKeys = new HashSet<>();
+                identificationKeys.spectrumIdentification.put(fileName, fileKeys);
+
+            }
+
+            fileKeys.add(key);
+
+        }
+
+        objectsDB.insertObjects(
+                spectrumMatches,
+                waitingHandler,
+                displayProgress
+        );
 
     }
 

@@ -37,8 +37,8 @@ public class GzUtils {
      * Gzip a file.If the gz file already exists it will be silently
      * overwritten.
      *
-     * @param file The file to read.
-     * @param remove If true the original file will be removed.
+     * @param file the file to read
+     * @param remove if true the original file will be removed
      */
     public static void gzFile(
             File file,
@@ -59,9 +59,9 @@ public class GzUtils {
      * Gzip a file.If the gz file already exists it will be silently
      * overwritten.
      *
-     * @param file The file to read.
-     * @param gzFile The gz file to write.
-     * @param remove If true the original file will be removed.
+     * @param file the file to read
+     * @param gzFile the gz file to write
+     * @param remove if true the original file will be removed
      */
     public static void gzFile(
             File file,
@@ -106,8 +106,8 @@ public class GzUtils {
      * Uncompresses the given gz file to the given destination file. If the
      * destination file already exists it will be silently overwritten.
      *
-     * @param gzFile The gz file to read.
-     * @param remove If true the gz file will be deleted upon completion.
+     * @param gzFile the gz file to read
+     * @param remove if true the gz file will be deleted upon completion
      */
     public static void gunzipFile(
             File gzFile,
@@ -134,9 +134,9 @@ public class GzUtils {
      * Uncompresses the given gz file to the given destination file. If the
      * destination file already exists it will be silently overwritten.
      *
-     * @param gzFile The gz file to read.
-     * @param destinationFile The file to write.
-     * @param remove If true the gz file will be deleted upon completion.
+     * @param gzFile the gz file to read
+     * @param destinationFile the file to write
+     * @param remove if true the gz file will be deleted upon completion
      */
     public static void gunzipFile(
             File gzFile,

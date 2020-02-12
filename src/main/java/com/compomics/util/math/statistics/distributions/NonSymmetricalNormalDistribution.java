@@ -128,6 +128,24 @@ public class NonSymmetricalNormalDistribution extends DbObject implements Distri
         return new NonSymmetricalNormalDistribution(median, median - percentileDown, percentileUp - median);
     }
 
+    /**
+     * Returns the non-symmetrical distribution of the input array of double
+     * calibrated on the median, 15.9% and 84.1% percentiles.
+     *
+     * @param input the input array
+     * 
+     * @return the non symmetrical distribution calibrated on the median, 15.9%
+     * and 84.1% percentiles.
+     */
+    public static NonSymmetricalNormalDistribution getRobustNonSymmetricalNormalDistributionFromSortedArray(double[] input) {
+        
+        double median = BasicMathFunctions.median(input);
+        double percentileDown = BasicMathFunctions.percentileSorted(input, 0.159);
+        double percentileUp = BasicMathFunctions.percentileSorted(input, 0.841);
+        
+        return new NonSymmetricalNormalDistribution(median, median - percentileDown, percentileUp - median);
+    }
+
     @Override
     public double getProbabilityAt(double x) {
         readDBMode();

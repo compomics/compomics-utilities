@@ -3,6 +3,7 @@ package com.compomics.util.experiment.mass_spectrometry;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import org.apache.commons.math.util.FastMath;
@@ -50,16 +51,17 @@ public class SimpleNoiseDistribution {
     /**
      * Constructor.
      * 
-     * @param peakList the peak list
+     * @param intensities The intensities.
      */
-    public SimpleNoiseDistribution(HashMap<Double, Peak> peakList) {
+    public SimpleNoiseDistribution(
+            double[] intensities
+    ) {
 
-        ArrayList<Double> intensitiesLog = peakList.values().stream()
-                .map(peak -> FastMath.log10(peak.intensity))
-                .sorted()
-                .collect(Collectors.toCollection(ArrayList::new));
+        double[] intensitiesLog = Arrays.stream(intensities)
+                .map(intensity -> FastMath.log10(intensity))
+                .toArray();
         
-        intensityLogDistribution = NonSymmetricalNormalDistribution.getRobustNonSymmetricalNormalDistributionFromSortedList(intensitiesLog);
+        intensityLogDistribution = NonSymmetricalNormalDistribution.getRobustNonSymmetricalNormalDistributionFromSortedArray(intensitiesLog);
 
         orderedBins = new int[nBins - 1];
         pLog = new double[nBins - 1];

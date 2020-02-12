@@ -232,7 +232,9 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     }
 
     /**
-     * Returns the peaks matching the given m/z. TODO: check only one/two bins
+     * Returns the peaks matching the given m/z. 
+     * 
+     * TODO: check only one/two bins
      * when possible.
      *
      * @param mz a m/z to query

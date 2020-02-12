@@ -3,6 +3,7 @@ package com.compomics.util.experiment.io.mass_spectrometry.mgf;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.UtilitiesUserParameters;
 import com.compomics.util.waiting.WaitingHandler;
 
@@ -16,6 +17,8 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
  * This class will read an MGF file.
+ * 
+ * @deprecated for testing only
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -26,156 +29,6 @@ public class MgfReader {
      * General constructor for an mgf reader.
      */
     public MgfReader() {
-    }
-
-    /**
-     * Returns the next spectrum found in the mgf file. Null if none found.
-     *
-     * @param br a buffered reader
-     * @param fileName the name of the mgf file
-     *
-     * @return the next spectrum found in the mgf file
-     *
-     * @throws IOException if an IOException occurs
-     */
-    public static Spectrum getSpectrum(BufferedReader br, String fileName) throws IOException {
-
-        String line;
-        HashMap<Double, Peak> spectrum = new HashMap<>();
-        double precursorMz = 0;
-        double precursorIntensity = 0;
-        double rt = -1.0;
-        double rt1 = -1.0;
-        double rt2 = -1.0;
-        ArrayList<Integer> precursorCharges = new ArrayList<>();
-        String scanNumber = "";
-        String spectrumTitle = "";
-        boolean insideSpectrum = false;
-
-        while ((line = br.readLine()) != null) {
-
-            // fix for lines ending with \r
-            if (line.endsWith("\r")) {
-                line = line.replace("\r", "");
-            }
-
-            if (line.startsWith("BEGIN IONS")) {
-                // reset the spectrum details
-                insideSpectrum = true;
-            } else if (line.startsWith("TITLE")) {
-                spectrumTitle = line.substring(line.indexOf('=') + 1);
-                try {
-                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    System.out.println("An exception was thrown when trying to decode the mgf title '" + spectrumTitle + "'.");
-                    e.printStackTrace();
-                }
-            } else if (line.startsWith("CHARGE")) {
-                precursorCharges = parseCharges(line);
-            } else if (line.startsWith("PEPMASS")) {
-                String temp = line.substring(line.indexOf("=") + 1);
-                String[] values = temp.split("\\s");
-                precursorMz = Double.parseDouble(values[0]);
-                if (values.length > 1) {
-                    precursorIntensity = Double.parseDouble(values[1]);
-                } else {
-                    precursorIntensity = 0.0;
-                }
-            } else if (line.startsWith("RTINSECONDS")) {
-                String rtInput = line.substring(line.indexOf('=') + 1);
-                try {
-                    String[] rtWindow = rtInput.split("-");
-                    if (rtWindow.length == 1) {
-                        String tempRt = rtWindow[0];
-                        // possible fix for values like RTINSECONDS=PT121.250000S
-                        if (tempRt.startsWith("PT") && tempRt.endsWith("S")) {
-                            tempRt = tempRt.substring(2, tempRt.length() - 1);
-                        }
-                        rt = new Double(tempRt);
-                    } else if (rtWindow.length == 2) {
-                        rt1 = new Double(rtWindow[0]);
-                        rt2 = new Double(rtWindow[1]);
-                    }
-                } catch (Exception e) {
-                    System.out.println("An exception was thrown when trying to decode the retention time " + rtInput + " in spectrum " + spectrumTitle + ".");
-                    e.printStackTrace();
-                    // ignore exception, RT will not be parsed
-                }
-            } else if (line.startsWith("TOLU")) {
-                // peptide tolerance unit not implemented
-            } else if (line.startsWith("TOL")) {
-                // peptide tolerance not implemented
-            } else if (line.startsWith("SEQ")) {
-                // sequence qualifier not implemented
-            } else if (line.startsWith("COMP")) {
-                // composition qualifier not implemented
-            } else if (line.startsWith("ETAG")) {
-                // error tolerant search sequence tag not implemented
-            } else if (line.startsWith("TAG")) {
-                // sequence tag not implemented
-            } else if (line.startsWith("SCANS")) {
-                try {
-                    scanNumber = line.substring(line.indexOf('=') + 1);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Cannot parse scan number.");
-                }
-            } else if (line.startsWith("TAG")) {
-                // sequence tag not implemented
-            } else if (line.startsWith("RAWSCANS")) {
-                // raw scans not implemented
-            } else if (line.startsWith("END IONS")) {
-                insideSpectrum = false;
-                Precursor precursor;
-                if (rt1 != -1 && rt2 != -1) {
-                    precursor = new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
-                } else {
-                    precursor = new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
-                }
-                Spectrum msnSpectrum = new Spectrum(2, precursor, spectrumTitle, spectrum, fileName);
-                if (scanNumber.length() > 0) {
-                    msnSpectrum.setScanNumber(scanNumber);
-                }
-                return msnSpectrum;
-            } else if (insideSpectrum && !line.equals("")) {
-                try {
-                    String values[] = line.split("\\s+");
-                    double mz = Double.valueOf(values[0]);
-                    double intensity = Double.valueOf(values[1]);
-                    spectrum.put(mz, new Peak(mz, intensity));
-                } catch (Exception e1) {
-                    // ignore comments and all other lines
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Reads an MGF file and retrieves a list of spectra.
-     *
-     * @param aFile the mgf file
-     * @return list of MSnSpectra imported from the file
-     * @throws FileNotFoundException Exception thrown if a problem is
-     * encountered reading the file
-     * @throws IOException Exception thrown if a problem is encountered reading
-     * the file
-     * @throws IllegalArgumentException thrown when a parameter in the file
-     * cannot be parsed correctly
-     */
-    public ArrayList<Spectrum> getSpectra(File aFile) throws FileNotFoundException, IOException, IllegalArgumentException {
-
-        ArrayList<Spectrum> spectra = new ArrayList<>();
-        BufferedReader br = new BufferedReader(new FileReader(aFile));
-        try {
-            Spectrum spectrum;
-            while ((spectrum = getSpectrum(br, aFile.getName())) != null) {
-                spectra.add(spectrum);
-            }
-        } finally {
-            br.close();
-        }
-        return spectra;
     }
 
     /**
@@ -276,7 +129,7 @@ public class MgfReader {
                 indexes.put(title, currentIndex);
                 spectrumIndexes.put(title, spectrumCounter - 1);
             } else if (line.startsWith("CHARGE")) {
-                ArrayList<Integer> precursorCharges = parseCharges(line);
+                int[] precursorCharges = parseCharges(line);
                 for (int charge : precursorCharges) {
                     if (charge > maxCharge) {
                         maxCharge = charge;
@@ -379,7 +232,7 @@ public class MgfReader {
         }
 
         // convert the spectrum titles to an arraylist
-        ArrayList<String> spectrumTitlesAsArrayList = new ArrayList<>(); // @TODO: is there a faster way of doing this?
+        ArrayList<String> spectrumTitlesAsArrayList = new ArrayList<>(spectrumTitles.size()); // @TODO: is there a faster way of doing this?
         for (String temp : spectrumTitles) {
             spectrumTitlesAsArrayList.add(temp);
         }
@@ -1040,23 +893,24 @@ public class MgfReader {
      * mgf file
      * @param index The index where to start looking for the spectrum
      * @param fileName The name of the MGF file
+     * 
      * @return The next spectrum encountered
+     * 
      * @throws IOException Exception thrown whenever an error is encountered
      * while reading the spectrum
-     * @throws IllegalArgumentException Exception thrown whenever the file is
-     * not of a compatible format
      */
-    public static Spectrum getSpectrum(BufferedRandomAccessFile bufferedRandomAccessFile, long index, String fileName) throws IOException, IllegalArgumentException {
+    public static Spectrum getSpectrum(BufferedRandomAccessFile bufferedRandomAccessFile, long index, String fileName) throws IOException {
 
         // @TODO get fileName from the random access file?
         bufferedRandomAccessFile.seek(index);
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
-        ArrayList<Integer> precursorCharges = new ArrayList<>();
-        String scanNumber = "", spectrumTitle = "";
-        HashMap<Double, Peak> spectrum = new HashMap<>();
-        String line;
+        int[] precursorCharges = null;
+        String spectrumTitle = "";
         boolean insideSpectrum = false;
+        ArrayList<Double> mzList = new ArrayList<>(0);
+        ArrayList<Double> intensityList = new ArrayList<>(0);
 
+        String line;
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
             // fix for lines ending with \r
@@ -1066,7 +920,8 @@ public class MgfReader {
 
             if (line.startsWith("BEGIN IONS")) {
                 insideSpectrum = true;
-                spectrum = new HashMap<>();
+                mzList = new ArrayList<>();
+        intensityList = new ArrayList<>();
             } else if (line.startsWith("TITLE")) {
                 insideSpectrum = true;
                 spectrumTitle = line.substring(line.indexOf('=') + 1);
@@ -1120,11 +975,7 @@ public class MgfReader {
             } else if (line.startsWith("TAG")) {
                 // sequence tag not implemented
             } else if (line.startsWith("SCANS")) {
-                try {
-                    scanNumber = line.substring(line.indexOf('=') + 1);
-                } catch (Exception e) {
-                    throw new IllegalArgumentException("Cannot parse scan number.");
-                }
+                // scan number not implemented
             } else if (line.startsWith("INSTRUMENT")) {
                 // ion series not implemented
             } else if (line.startsWith("END IONS")) {
@@ -1135,15 +986,27 @@ public class MgfReader {
                 } else {
                     precursor = new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
                 }
-                Spectrum msnSpectrum = new Spectrum(2, precursor, spectrumTitle, spectrum, fileName);
-                msnSpectrum.setScanNumber(scanNumber);
-                return msnSpectrum;
+                double[] mzArray = mzList.stream()
+                        .mapToDouble(
+                                a -> a
+                        )
+                        .toArray();
+                double[] intensityArray = intensityList.stream()
+                        .mapToDouble(
+                                a -> a
+                        )
+                        .toArray();
+                Spectrum spectrum = new Spectrum(precursor, mzArray, intensityArray);
+                
+                return spectrum;
+                
             } else if (insideSpectrum && !line.equals("")) {
                 try {
                     String values[] = line.split("\\s+");
-                    Double mz = new Double(values[0]);
-                    Double intensity = new Double(values[1]);
-                    spectrum.put(mz, new Peak(mz, intensity));
+                    double mz = Double.parseDouble(values[0]);
+                    mzList.add(mz);
+                    double intensity = Double.parseDouble(values[1]);
+                    intensityList.add(intensity);
                 } catch (Exception e1) {
                     // ignore comments and all other lines
                 }
@@ -1158,9 +1021,8 @@ public class MgfReader {
      *
      * @param chargeLine the charge line
      * @return the possible charges found
-     * @throws IllegalArgumentException
      */
-    private static ArrayList<Integer> parseCharges(String chargeLine) throws IllegalArgumentException {
+    private static int[] parseCharges(String chargeLine) {
 
         ArrayList<Integer> result = new ArrayList<>(1);
         String tempLine = chargeLine.substring(chargeLine.indexOf("=") + 1);
@@ -1201,7 +1063,9 @@ public class MgfReader {
             result.add(1);
         }
 
-        return result;
+        return result.stream()
+                .mapToInt(a -> a)
+                .toArray();
     }
 
     /**
@@ -1211,19 +1075,19 @@ public class MgfReader {
      * mgf file
      * @param index the index where to start looking for the spectrum
      * @param fileName the name of the mgf file
+     * 
      * @return the next spectrum encountered
+     * 
      * @throws IOException thrown whenever an error is encountered while reading
      * the spectrum
-     * @throws IllegalArgumentException thrown whenever the file is not of a
-     * compatible format
      */
-    public static Precursor getPrecursor(BufferedRandomAccessFile bufferedRandomAccessFile, Long index, String fileName) throws IOException, IllegalArgumentException {
+    public static Precursor getPrecursor(BufferedRandomAccessFile bufferedRandomAccessFile, Long index, String fileName) throws IOException {
 
         // @TODO: get fileName from the random access file?
         bufferedRandomAccessFile.seek(index);
         String line, title = null;
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
-        ArrayList<Integer> precursorCharges = new ArrayList<>(1);
+        int[] precursorCharges = null;
 
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
@@ -1280,67 +1144,5 @@ public class MgfReader {
         }
 
         throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\". File: " + fileName + ", title: " + title);
-    }
-
-    /**
-     * Writes an apl file from an MGF file. @TODO: move to
-     * massspectrometry.export
-     *
-     * @param mgfFile the mgf file
-     * @param aplFile the target apl file
-     * @param fragmentation the fragmentation method used
-     * @throws FileNotFoundException exception thrown whenever a file was not
-     * found
-     * @throws IOException exception thrown whenever an error occurred while
-     * reading/writing a file
-     * @throws IllegalArgumentException exception thrown whenever the mgf file
-     * is truncated in the middle of a spectrum
-     */
-    public static void writeAplFile(File mgfFile, File aplFile, String fragmentation) throws FileNotFoundException, IOException, IllegalArgumentException {
-
-        if (fragmentation == null) {
-            fragmentation = "Unknown";
-        }
-
-        Writer aplWriter = new BufferedWriter(new FileWriter(aplFile));
-        MgfIndex mgfIndex = getIndexMap(mgfFile);
-        HashMap<Double, ArrayList<String>> spectrumTitleMap = new HashMap<>();
-        BufferedRandomAccessFile mgfRFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
-
-        for (String title : mgfIndex.getSpectrumTitles()) {
-            Precursor precursor = getPrecursor(mgfRFile, mgfIndex.getIndex(title), mgfFile.getName());
-            if (!spectrumTitleMap.containsKey(precursor.getMz())) {
-                spectrumTitleMap.put(precursor.getMz(), new ArrayList<>());
-            }
-            spectrumTitleMap.get(precursor.getMz()).add(title);
-        }
-
-        ArrayList<Double> masses = new ArrayList<>(spectrumTitleMap.keySet());
-        Collections.sort(masses);
-
-        for (double mz : masses) {
-
-            for (String title : spectrumTitleMap.get(mz)) {
-
-                Spectrum spectrum = getSpectrum(mgfRFile, mgfIndex.getIndex(title), mgfFile.getName());
-                aplWriter.write("peaklist start\n");
-                aplWriter.write("mz=" + mz + "\n");
-                aplWriter.write("fragmentation=" + fragmentation + "\n");
-                aplWriter.write("charge=" + spectrum.getPrecursor().getPossibleCharges().get(0) + "\n"); //@TODO what if many/no charge is present?
-                aplWriter.write("header=" + spectrum.getSpectrumTitle() + "\n");
-                HashMap<Double, Peak> peakMap = spectrum.getPeakMap();
-                ArrayList<Double> fragmentMasses = new ArrayList<>(peakMap.keySet());
-                Collections.sort(fragmentMasses);
-
-                for (double fragmentMass : fragmentMasses) {
-                    aplWriter.write(fragmentMass + "\t" + peakMap.get(fragmentMass).intensity + "\n");
-                }
-
-                aplWriter.write("peaklist end\n\n");
-            }
-        }
-
-        mgfRFile.close();
-        aplWriter.close();
     }
 }

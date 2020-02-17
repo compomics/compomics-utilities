@@ -13,6 +13,7 @@ import com.compomics.util.experiment.identification.modification.Modificationtab
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
@@ -59,6 +60,10 @@ public class ModificationTable extends JTable {
      */
     private final SequenceProvider sequenceProvider;
     /**
+     * The spectrum provider.
+     */
+    private final SpectrumProvider spectrumProvider;
+    /**
      * The modification sequence matching parameters.
      */
     private final SequenceMatchingParameters modificationSequenceMatchingParameters;
@@ -69,11 +74,11 @@ public class ModificationTable extends JTable {
     /**
      * The PTM to analyze.
      */
-    private final Modification ptm;
+    private final Modification modification;
     /**
      * Number of PTMs.
      */
-    private int nPTM;
+    private int nModifications;
     /**
      * If true, area charts are used, false results in bar charts.
      */
@@ -99,8 +104,9 @@ public class ModificationTable extends JTable {
         identification = null;
         modificationParameters = null;
         sequenceProvider = null;
+        spectrumProvider = null;
         modificationSequenceMatchingParameters = null;
-        ptm = null;
+        modification = null;
         modificationSites = null;
     }
 
@@ -110,7 +116,7 @@ public class ModificationTable extends JTable {
      * @param identification the identification object
      * @param annotationParameters the annotation parameters
      * @param peptideMatch the peptide match
-     * @param ptm the ptm
+     * @param modification the modification
      * @param areaChart if true an area chart version will be used, false
      * displays bar charts
      * @param modificationParameters the modification parameters
@@ -118,25 +124,35 @@ public class ModificationTable extends JTable {
      * @param modificationSequenceMatchingParameters the sequence matching
      * preferences for modification to peptide mapping
      */
-    public ModificationTable(Identification identification, AnnotationParameters annotationParameters, PeptideMatch peptideMatch, Modification ptm, boolean areaChart,
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
+    public ModificationTable(
+            Identification identification,
+            AnnotationParameters annotationParameters,
+            PeptideMatch peptideMatch,
+            Modification modification,
+            boolean areaChart,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
+            SpectrumProvider spectrumProvider,
+            SequenceMatchingParameters modificationSequenceMatchingParameters
+    ) {
 
         this.identification = identification;
         this.annotationParameters = annotationParameters;
-        this.ptm = ptm;
-        this.nPTM = 0;
+        this.modification = modification;
+        this.nModifications = 0;
         this.peptideMatch = peptideMatch;
         this.areaChart = areaChart;
         this.modificationParameters = modificationParameters;
         this.sequenceProvider = sequenceProvider;
+        this.spectrumProvider = spectrumProvider;
         this.modificationSequenceMatchingParameters = modificationSequenceMatchingParameters;
 
         modificationSites = new ArrayList<>();
 
         for (ModificationMatch modMatch : peptideMatch.getPeptide().getVariableModifications()) {
-            if (modMatch.getModification().equals(ptm.getName())) {
+            if (modMatch.getModification().equals(modification.getName())) {
                 modificationSites.add(modMatch.getSite());
-                nPTM++;
+                nModifications++;
             }
         }
 
@@ -153,6 +169,7 @@ public class ModificationTable extends JTable {
         }
     }
 
+    @Override
     protected JTableHeader createDefaultTableHeader() {
         return new JTableHeader(columnModel) {
 
@@ -319,15 +336,16 @@ public class ModificationTable extends JTable {
 
         ModificationtableContent tempContent;
         ModificationtableContent tableContent = new ModificationtableContent();
-        SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
         Peptide peptide = peptideMatch.getPeptide();
 
         for (long spectrumMatchKey : peptideMatch.getSpectrumMatchesKeys()) {
 
             SpectrumMatch spectrumMatch = identification.getSpectrumMatch(spectrumMatchKey);
-            String spectrumKey = spectrumMatch.getSpectrumKey();
-            Spectrum spectrum = spectrumFactory.getSpectrum(spectrumKey);
-            tempContent = ModificationtableContent.getModificationTableContent(spectrumMatch.getBestPeptideAssumption(), ptm, nPTM, spectrum, annotationParameters,
+            Spectrum spectrum = spectrumProvider.getSpectrum(
+                    spectrumMatch.getSpectrumFile(),
+                    spectrumMatch.getSpectrumtitle()
+            );
+            tempContent = ModificationtableContent.getModificationTableContent(spectrumMatch.getBestPeptideAssumption(), modification, nModifications, spectrum, annotationParameters,
                     modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
             tempContent.normalize();
             tableContent.addAll(tempContent);
@@ -427,9 +445,9 @@ public class ModificationTable extends JTable {
         ArrayList<Double> data;
         int[] histogram;
         String modification = "";
-        String shortName = ptm.getShortName();
+        String shortName = this.modification.getShortName();
 
-        for (int modCpt = 0; modCpt <= nPTM; modCpt++) {
+        for (int modCpt = 0; modCpt <= nModifications; modCpt++) {
 
             if (modCpt > 0) {
                 if (modCpt == 1) {
@@ -460,10 +478,10 @@ public class ModificationTable extends JTable {
 
             // find area color
             double colorCoef;
-            if (nPTM == 0) {
+            if (nModifications == 0) {
                 colorCoef = 1;
             } else {
-                colorCoef = 1.0 - ((1.0 * modCpt) / nPTM);
+                colorCoef = 1.0 - ((1.0 * modCpt) / nModifications);
             }
 
             Ion genericIon = Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, fragmentIonType, new NeutralLoss[0]);
@@ -490,16 +508,18 @@ public class ModificationTable extends JTable {
 
         ModificationtableContent tempContent;
         ModificationtableContent tableContent = new ModificationtableContent();
-        SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
-        String shortName = ptm.getShortName();
+
+        String shortName = modification.getShortName();
         Peptide peptide = peptideMatch.getPeptide();
 
         for (long spectrumMatchKey : peptideMatch.getSpectrumMatchesKeys()) {
 
             SpectrumMatch spectrumMatch = identification.getSpectrumMatch(spectrumMatchKey);
-            String spectrumKey = spectrumMatch.getSpectrumKey();
-            Spectrum spectrum = spectrumFactory.getSpectrum(spectrumKey);
-            tempContent = ModificationtableContent.getModificationTableContent(spectrumMatch.getBestPeptideAssumption(), ptm, nPTM, spectrum, annotationParameters,
+            Spectrum spectrum = spectrumProvider.getSpectrum(
+                    spectrumMatch.getSpectrumFile(),
+                    spectrumMatch.getSpectrumtitle()
+            );
+            tempContent = ModificationtableContent.getModificationTableContent(spectrumMatch.getBestPeptideAssumption(), modification, nModifications, spectrum, annotationParameters,
                     modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
             tempContent.normalize();
             tableContent.addAll(tempContent);
@@ -510,7 +530,7 @@ public class ModificationTable extends JTable {
 
             int column = 1;
 
-            for (int modCpt = 0; modCpt <= nPTM; modCpt++) {
+            for (int modCpt = 0; modCpt <= nModifications; modCpt++) {
 
                 if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.A_ION)) {
 
@@ -536,7 +556,7 @@ public class ModificationTable extends JTable {
 
             column++;
 
-            for (int modCpt = 0; modCpt <= nPTM; modCpt++) {
+            for (int modCpt = 0; modCpt <= nModifications; modCpt++) {
 
                 if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.X_ION)) {
 
@@ -562,7 +582,7 @@ public class ModificationTable extends JTable {
         }
 
         // set the column renderers
-        for (int modCpt = 0; modCpt <= nPTM; modCpt++) {
+        for (int modCpt = 0; modCpt <= nModifications; modCpt++) {
 
             String modification = "";
 

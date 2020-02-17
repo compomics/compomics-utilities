@@ -162,11 +162,13 @@ public class AnnotationParameters extends DbObject {
      * @return the annotation preferences specific to a spectrum and an
      * identification assumption
      */
-    public SpecificAnnotationParameters getSpecificAnnotationParameters(String spectrumKey,
+    public SpecificAnnotationParameters getSpecificAnnotationParameters(
+            String spectrumKey,
             SpectrumIdentificationAssumption spectrumIdentificationAssumption,
             ModificationParameters modificationParameters, SequenceProvider sequenceProvider,
             SequenceMatchingParameters modificationSequenceMatchingParameters,
-            SpectrumAnnotator spectrumAnnotator) {
+            SpectrumAnnotator spectrumAnnotator
+    ) {
         readDBMode();
 
         SpecificAnnotationParameters specificAnnotationParameters = new SpecificAnnotationParameters(spectrumKey, spectrumIdentificationAssumption);

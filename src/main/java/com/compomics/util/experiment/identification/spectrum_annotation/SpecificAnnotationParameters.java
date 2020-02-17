@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification.spectrum_annotation;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -19,14 +18,19 @@ public class SpecificAnnotationParameters {
      * Empty default constructor
      */
     public SpecificAnnotationParameters() {
-        spectrumKey = "";
+        spectrumFile = null;
+        spectrumTitle = null;
         spectrumIdentificationAssumption = null;
     }
 
     /**
-     * The key of the currently annotated spectrum.
+     * The file of the currently annotated spectrum.
      */
-    private final String spectrumKey;
+    private final String spectrumFile;
+    /**
+     * The title of the currently annotated spectrum.
+     */
+    private final String spectrumTitle;
     /**
      * The currently annotated spectrumIdentificationAssumption.
      */
@@ -34,7 +38,7 @@ public class SpecificAnnotationParameters {
     /**
      * The types of ions to annotate.
      */
-    private HashMap<Ion.IonType, HashSet<Integer>> selectedIonsMap = new HashMap<>();
+    private HashMap<Ion.IonType, HashSet<Integer>> selectedIonsMap = new HashMap<>(2);
     /**
      * If true neutral losses will be automatically deduced from the spectrum
      * identification assumption.
@@ -47,7 +51,7 @@ public class SpecificAnnotationParameters {
     /**
      * The fragment charge to be searched for.
      */
-    private ArrayList<Integer> selectedCharges = new ArrayList<>();
+    private HashSet<Integer> selectedCharges = new HashSet<>(1);
     /**
      * Fragment ion accuracy used for peak matching.
      */
@@ -60,22 +64,39 @@ public class SpecificAnnotationParameters {
     /**
      * Constructor.
      *
-     * @param spectrumKey the key of the spectrum to annotate
+     * @param spectrumFile The key of the spectrum to annotate.
+     * @param spectrumTitle The title of the spectrum to annotate.
      * @param spectrumIdentificationAssumption the spectrum identification
      * assumption to annotate with
      */
-    public SpecificAnnotationParameters(String spectrumKey, SpectrumIdentificationAssumption spectrumIdentificationAssumption) {
-        this.spectrumKey = spectrumKey;
+    public SpecificAnnotationParameters(
+            String spectrumFile,
+            String spectrumTitle,
+            SpectrumIdentificationAssumption spectrumIdentificationAssumption
+    ) {
+
+        this.spectrumFile = spectrumFile;
+        this.spectrumTitle = spectrumTitle;
         this.spectrumIdentificationAssumption = spectrumIdentificationAssumption;
+
     }
 
     /**
-     * Returns the key of the spectrum to annotate.
+     * Returns the file of the spectrum to annotate.
      *
-     * @return the key of the spectrum to annotate
+     * @return The file of the spectrum to annotate.
      */
-    public String getSpectrumKey() {
-        return spectrumKey;
+    public String getSpectrumFile() {
+        return spectrumFile;
+    }
+
+    /**
+     * Returns the title of the spectrum to annotate.
+     *
+     * @return The title of the spectrum to annotate.
+     */
+    public String getSpectrumTitle() {
+        return spectrumTitle;
     }
 
     /**
@@ -123,7 +144,9 @@ public class SpecificAnnotationParameters {
      *
      * @param selectedIonsMap the map of ions to annotate
      */
-    public void setSelectedIonsMap(HashMap<Ion.IonType, HashSet<Integer>> selectedIonsMap) {
+    public void setSelectedIonsMap(
+            HashMap<Ion.IonType, HashSet<Integer>> selectedIonsMap
+    ) {
         this.selectedIonsMap = selectedIonsMap;
     }
 
@@ -140,9 +163,12 @@ public class SpecificAnnotationParameters {
      * @param ionType a new ion type to annotate
      * @param subType the ion sub type
      */
-    public void addIonType(Ion.IonType ionType, int subType) {
+    public void addIonType(
+            Ion.IonType ionType,
+            int subType
+    ) {
         if (!selectedIonsMap.containsKey(ionType)) {
-            selectedIonsMap.put(ionType, new HashSet<>());
+            selectedIonsMap.put(ionType, new HashSet<>(1));
         }
         this.selectedIonsMap.get(ionType).add(subType);
     }
@@ -152,9 +178,11 @@ public class SpecificAnnotationParameters {
      *
      * @param ionType a new ion type to annotate
      */
-    public void addIonType(Ion.IonType ionType) {
+    public void addIonType(
+            Ion.IonType ionType
+    ) {
         if (!selectedIonsMap.containsKey(ionType)) {
-            selectedIonsMap.put(ionType, new HashSet<>());
+            selectedIonsMap.put(ionType, new HashSet<>(1));
         }
         for (int subType : Ion.getPossibleSubtypes(ionType)) {
             this.selectedIonsMap.get(ionType).add(subType);
@@ -175,7 +203,9 @@ public class SpecificAnnotationParameters {
      *
      * @param neutralLossesMap the map of neutral losses to annotate
      */
-    public void setNeutralLossesMap(NeutralLossesMap neutralLossesMap) {
+    public void setNeutralLossesMap(
+            NeutralLossesMap neutralLossesMap
+    ) {
         this.neutralLossesMap = neutralLossesMap;
     }
 
@@ -191,7 +221,9 @@ public class SpecificAnnotationParameters {
      *
      * @param neutralLoss a new neutral loss
      */
-    public void addNeutralLoss(NeutralLoss neutralLoss) {
+    public void addNeutralLoss(
+            NeutralLoss neutralLoss
+    ) {
         neutralLossesMap.addNeutralLoss(neutralLoss, 1, 1);
     }
 
@@ -200,7 +232,7 @@ public class SpecificAnnotationParameters {
      *
      * @return the charges selected for annotation
      */
-    public ArrayList<Integer> getSelectedCharges() {
+    public HashSet<Integer> getSelectedCharges() {
         return selectedCharges;
     }
 
@@ -209,7 +241,7 @@ public class SpecificAnnotationParameters {
      *
      * @param selectedCharges the charges selected for annotation
      */
-    public void setSelectedCharges(ArrayList<Integer> selectedCharges) {
+    public void setSelectedCharges(HashSet<Integer> selectedCharges) {
         this.selectedCharges = selectedCharges;
     }
 
@@ -226,11 +258,10 @@ public class SpecificAnnotationParameters {
      * @param selectedCharge a charge to take into account when annotating the
      * spectrum
      */
-    public void addSelectedCharge(int selectedCharge) {
-        if (!selectedCharges.contains(selectedCharge)) {
-            selectedCharges = new ArrayList<>(selectedCharges);
-            selectedCharges.add(selectedCharge);
-        }
+    public void addSelectedCharge(
+            int selectedCharge
+    ) {
+        selectedCharges.add(selectedCharge);
     }
 
     /**
@@ -243,13 +274,16 @@ public class SpecificAnnotationParameters {
     }
 
     /**
-     * Returns the fragment ion accuracy in Da. If the tolerance is in ppm it will be converted using the given reference mass.
+     * Returns the fragment ion accuracy in Da. If the tolerance is in ppm it
+     * will be converted using the given reference mass.
      *
      * @param refMass the reference mass to use for the ppm to Da conversion
-     * 
+     *
      * @return the fragment ion accuracy
      */
-    public double getFragmentIonAccuracyInDa(Double refMass) {
+    public double getFragmentIonAccuracyInDa(
+            double refMass
+    ) {
         if (fragmentIonPpm) {
             return fragmentIonAccuracy * refMass / 1000000;
         } else {
@@ -262,7 +296,9 @@ public class SpecificAnnotationParameters {
      *
      * @param fragmentIonAccuracy the fragment ion accuracy
      */
-    public void setFragmentIonAccuracy(double fragmentIonAccuracy) {
+    public void setFragmentIonAccuracy(
+            double fragmentIonAccuracy
+    ) {
         this.fragmentIonAccuracy = fragmentIonAccuracy;
     }
 
@@ -281,7 +317,9 @@ public class SpecificAnnotationParameters {
      * @param fragmentIonPpm a boolean indicating whether the fragment ion
      * accuracy is in ppm
      */
-    public void setFragmentIonPpm(boolean fragmentIonPpm) {
+    public void setFragmentIonPpm(
+            boolean fragmentIonPpm
+    ) {
         this.fragmentIonPpm = fragmentIonPpm;
     }
 
@@ -307,12 +345,16 @@ public class SpecificAnnotationParameters {
 
     @Override
     public SpecificAnnotationParameters clone() {
-        SpecificAnnotationParameters clone = new SpecificAnnotationParameters(spectrumKey, spectrumIdentificationAssumption);
+        SpecificAnnotationParameters clone = new SpecificAnnotationParameters(
+                spectrumFile,
+                spectrumTitle,
+                spectrumIdentificationAssumption
+        );
         clone.setFragmentIonAccuracy(getFragmentIonAccuracy());
         clone.setFragmentIonPpm(isFragmentIonPpm());
         clone.setNeutralLossesAuto(isNeutralLossesAuto());
         clone.setNeutralLossesMap(getNeutralLossesMap().clone());
-        clone.setSelectedCharges(new ArrayList<>(getSelectedCharges()));
+        clone.setSelectedCharges(new HashSet<>(getSelectedCharges()));
         HashMap<Ion.IonType, HashSet<Integer>> currentIonsMap = getIonTypes(),
                 newMap = new HashMap<>(currentIonsMap.size());
         for (Ion.IonType ionType : currentIonsMap.keySet()) {

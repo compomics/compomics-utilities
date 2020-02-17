@@ -124,7 +124,7 @@ public class SimpleNoiseDistribution {
     }
     
     /**
-     * Returns the log10 intensity at a given upper tale cumulative probability.
+     * Returns the log10 intensity at a given upper tail cumulative probability.
      * 
      * @param p the probability
      * 
@@ -135,7 +135,7 @@ public class SimpleNoiseDistribution {
     }
     
     /**
-     * Returns the intensity at a given upper tale cumulative probability.
+     * Returns the intensity at a given upper tail cumulative probability.
      * 
      * @param p the probability
      * 

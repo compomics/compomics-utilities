@@ -60,7 +60,12 @@ public class ModificationtableContent {
      * @param aa the amino acid
      * @param intensity the intensity
      */
-    public void addIntensity(int nMod, Integer peptideFragmentIonType, int aa, double intensity) {
+    public void addIntensity(
+            int nMod, 
+            Integer peptideFragmentIonType, 
+            int aa, 
+            double intensity
+    ) {
         if (!map.containsKey(nMod)) {
             map.put(nMod, new HashMap<>());
         }
@@ -83,9 +88,14 @@ public class ModificationtableContent {
      * @param nMod the modification number
      * @param peptideFragmentIonType the peptide fragment ion type
      * @param aa the amino acid
+     * 
      * @return the list of intensities
      */
-    public ArrayList<Double> getIntensities(int nMod, Integer peptideFragmentIonType, int aa) {
+    public ArrayList<Double> getIntensities(
+            int nMod, 
+            Integer peptideFragmentIonType, 
+            int aa
+    ) {
         if (map.containsKey(nMod)
                 && map.get(nMod).containsKey(peptideFragmentIonType)
                 && map.get(nMod).get(peptideFragmentIonType).containsKey(aa)) {
@@ -102,9 +112,15 @@ public class ModificationtableContent {
      * @param peptideFragmentIonType the peptide fragment ion type
      * @param aa the amino acid
      * @param quantile the quantile
+     * 
      * @return the quantile
      */
-    public Double getQuantile(int nMod, Integer peptideFragmentIonType, int aa, double quantile) {
+    public Double getQuantile(
+            int nMod, 
+            Integer peptideFragmentIonType, 
+            int aa, 
+            double quantile
+    ) {
         ArrayList<Double> intensities = getIntensities(nMod, peptideFragmentIonType, aa);
         if (intensities.size() > 0) {
             int index = (int) (quantile * intensities.size());
@@ -121,9 +137,15 @@ public class ModificationtableContent {
      * @param peptideFragmentIonType the peptide fragment ion type
      * @param aa the amino acid
      * @param bins the bins
+     * 
      * @return the histogram
      */
-    public int[] getHistogram(int nMod, Integer peptideFragmentIonType, int aa, int bins) {
+    public int[] getHistogram(
+            int nMod, 
+            Integer peptideFragmentIonType, 
+            int aa, 
+            int bins
+    ) {
         ArrayList<Double> intensities = getIntensities(nMod, peptideFragmentIonType, aa);
 
         int[] values = new int[bins];
@@ -168,7 +190,9 @@ public class ModificationtableContent {
      *
      * @param anotherContent another table content
      */
-    public void addAll(ModificationtableContent anotherContent) {
+    public void addAll(
+            ModificationtableContent anotherContent
+    ) {
 
         for (int nMod : anotherContent.getMap().keySet()) {
 
@@ -247,9 +271,17 @@ public class ModificationtableContent {
      * @return the modification plot series in the JFreechart format for one
      * PSM.
      */
-    public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getModificationPlotData(Peptide peptide, Modification modification, int nMod, Spectrum spectrum,
-            AnnotationParameters annotationParameters, SpecificAnnotationParameters specificAnnotationParameters, 
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
+    public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getModificationPlotData(
+            Peptide peptide, 
+            Modification modification, 
+            int nMod, 
+            Spectrum spectrum,
+            AnnotationParameters annotationParameters, 
+            SpecificAnnotationParameters specificAnnotationParameters, 
+            ModificationParameters modificationParameters, 
+            SequenceProvider sequenceProvider, 
+            SequenceMatchingParameters modificationSequenceMatchingParameters
+    ) {
 
         ModificationMatch[] modificationMatches = peptide.getVariableModifications();
 
@@ -307,9 +339,16 @@ public class ModificationtableContent {
      *
      * @return the table content
      */
-    public static ModificationtableContent getModificationTableContent(PeptideAssumption peptideAssumption, Modification modification, int nMod, Spectrum spectrum,
+    public static ModificationtableContent getModificationTableContent(
+            PeptideAssumption peptideAssumption, 
+            Modification modification, 
+            int nMod, 
+            Spectrum spectrum,
             AnnotationParameters annotationParameters, 
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
+            ModificationParameters modificationParameters, 
+            SequenceProvider sequenceProvider, 
+            SequenceMatchingParameters modificationSequenceMatchingParameters
+    ) {
 
         Peptide peptide = peptideAssumption.getPeptide();
         ModificationtableContent tableContent = new ModificationtableContent();

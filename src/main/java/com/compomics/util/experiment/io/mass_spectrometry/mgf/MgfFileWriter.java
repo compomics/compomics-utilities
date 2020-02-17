@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.io.mass_spectrometry.writers;
+package com.compomics.util.experiment.io.mass_spectrometry.mgf;
 
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
@@ -31,7 +31,7 @@ public class MgfFileWriter implements AutoCloseable {
 
     /**
      * Constructor.
-     * 
+     *
      * @param destinationFile The file where to write.
      */
     public MgfFileWriter(
@@ -52,11 +52,11 @@ public class MgfFileWriter implements AutoCloseable {
     ) {
 
         String toWrite = asMgf(
-                spectrumTitle, 
+                spectrumTitle,
                 spectrum
         );
         writer.write(toWrite, true);
-        
+
     }
 
     @Override
@@ -79,8 +79,8 @@ public class MgfFileWriter implements AutoCloseable {
             Spectrum spectrum
     ) {
         return asMgf(
-                spectrumTitle, 
-                spectrum, 
+                spectrumTitle,
+                spectrum,
                 null
         );
     }
@@ -125,11 +125,7 @@ public class MgfFileWriter implements AutoCloseable {
 
         result.append("PEPMASS=").append(precursor.mz).append("\t").append(precursor.intensity).append(lineBreak);
 
-        if (!Double.isNaN(precursor.rtMin) && !Double.isNaN(precursor.rtMax)) {
-            result.append("RTINSECONDS=").append(precursor.rtMin).append("-").append(precursor.rtMax).append(lineBreak);
-        } else if (!Double.isNaN(precursor.rt)) {
-            result.append("RTINSECONDS=").append(precursor.rt).append(lineBreak);
-        }
+        result.append("RTINSECONDS=").append(precursor.rt).append(lineBreak);
 
         if (precursor.possibleCharges.length > 0) {
             result.append("CHARGE=");
@@ -151,7 +147,7 @@ public class MgfFileWriter implements AutoCloseable {
         result.append("END IONS").append(lineBreak);
 
         return result.toString();
-        
+
     }
 
 }

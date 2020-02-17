@@ -1,4 +1,4 @@
-package com.compomics.util;
+package com.compomics.util.gui.file_handling;
 
 import java.io.File;
 

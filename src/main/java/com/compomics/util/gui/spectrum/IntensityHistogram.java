@@ -42,14 +42,13 @@ public class IntensityHistogram extends JPanel {
      *
      * @param annotations the full list of spectrum annotations
      * @param currentSpectrum the current spectrum
-     * @param intensityThresholdType the type of intensity threshold
      * @param intensityThreshold the intensity threshold
      */
     public IntensityHistogram(
             IonMatch[] annotations,
             Spectrum currentSpectrum,
-            AnnotationParameters.IntensityThresholdType intensityThresholdType,
-            double intensityThreshold) {
+            double intensityThreshold
+    ) {
         super();
 
         setOpaque(false);
@@ -64,8 +63,8 @@ public class IntensityHistogram extends JPanel {
 
         // the non annotated intensities above threshold
         double[] nonAnnotatedPeakIntensities
-                = currentSpectrum.getPeaksAboveIntensityThreshold(currentSpectrum.getIntensityLimit(intensityThresholdType, intensityThreshold))
-                        .filter(intensity -> !annotatedPeakIntensitiesSet.contains(intensity))
+                = Arrays.stream(currentSpectrum.intensity)
+                        .filter(intensity -> intensity > intensityThreshold && !annotatedPeakIntensitiesSet.contains(intensity))
                         .toArray();
 
         // create the peak histograms

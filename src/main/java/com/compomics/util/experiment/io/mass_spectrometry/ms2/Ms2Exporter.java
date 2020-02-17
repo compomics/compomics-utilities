@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.io.mass_spectrometry.writers;
+package com.compomics.util.experiment.io.mass_spectrometry.ms2;
 
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;

@@ -7,14 +7,14 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import com.compomics.util.experiment.io.mass_spectrometry.MsFileIterator;
 
 /**
  * An iterator of the spectra in an mgf file.
  *
  * @author Marc Vaudel
  */
-public class MgfFileIterator implements AutoCloseable {
-
+public class MgfFileIterator implements MsFileIterator {
     /**
      * Empty default constructor
      */
@@ -27,13 +27,9 @@ public class MgfFileIterator implements AutoCloseable {
      */
     private final SimpleFileReader reader;
     /**
-     * The title of the next spectrum in the file.
+     * The spectrum read in the last call of the next method.
      */
-    private String nextTitle = null;
-    /**
-     * The next spectrum in the file.
-     */
-    private Spectrum nextSpectrum = null;
+    private Spectrum spectrum = null;
 
     /**
      * Constructor.
@@ -48,15 +44,10 @@ public class MgfFileIterator implements AutoCloseable {
 
     }
 
-    /**
-     * Returns the title of the next spectrum and sets the spectrum as
-     * nextSpectrum, null if iteration is finished.
-     *
-     * @return the title of the next spectrum
-     */
-    private String next() {
+    @Override
+    public String next() {
 
-        nextSpectrum = null;
+        spectrum = null;
 
         double precursorMz = 0;
         double precursorIntensity = 0;
@@ -181,7 +172,7 @@ public class MgfFileIterator implements AutoCloseable {
                         )
                         .toArray();
 
-                nextSpectrum = new Spectrum(precursor, mzArray, intensityArray);
+                spectrum = new Spectrum(precursor, mzArray, intensityArray);
 
                 spectrumBlock = false;
 
@@ -205,6 +196,11 @@ public class MgfFileIterator implements AutoCloseable {
         }
 
         return null;
+    }
+
+    @Override
+    public Spectrum getSpectrum() {
+        return spectrum;
     }
 
     /**
@@ -260,7 +256,7 @@ public class MgfFileIterator implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
 
         reader.close();
 

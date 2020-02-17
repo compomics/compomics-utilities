@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.io.mass_spectrometry.writers;
+package com.compomics.util.experiment.io.mass_spectrometry.apl;
 
 import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;

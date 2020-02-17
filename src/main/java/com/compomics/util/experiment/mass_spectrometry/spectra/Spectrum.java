@@ -4,10 +4,7 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Annotati
 import com.compomics.util.experiment.mass_spectrometry.SimpleNoiseDistribution;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.math.BasicMathFunctions;
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -133,46 +130,6 @@ public class Spectrum extends ExperimentObject {
                 .min()
                 .orElse(0.0);
 
-    }
-
-    /**
-     * Returns the limit in intensity according to the given threshold.
-     *
-     * @param intensityThresholdType the type of intensity threshold
-     * @param intensityThreshold the threshold value
-     *
-     * @return the intensity limit
-     */
-    public double getIntensityLimit(
-            AnnotationParameters.IntensityThresholdType intensityThresholdType,
-            double intensityThreshold
-    ) {
-        readDBMode();
-
-        if (intensityThreshold == 0) {
-
-            return 0.0;
-
-        } else if (intensityThreshold == 1.0) {
-
-            return getMaxIntensity();
-
-        }
-
-        switch (intensityThresholdType) {
-
-            case snp:
-
-                SimpleNoiseDistribution tempBinnedCumulativeFunction = new SimpleNoiseDistribution(intensity);
-                return tempBinnedCumulativeFunction.getIntensityAtP(1 - intensityThreshold);
-
-            case percentile:
-
-                return BasicMathFunctions.percentile(intensity, intensityThreshold);
-
-            default:
-                throw new UnsupportedOperationException("Threshold of type " + intensityThresholdType + " not supported.");
-        }
     }
 
     /**

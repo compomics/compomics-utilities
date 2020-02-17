@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.gui.error_handlers.HelpDialog;
+import com.compomics.util.gui.file_handling.FileChooserUtils;
 import com.compomics.util.pride.CvTerm;
 import java.awt.Color;
 import java.awt.Frame;
@@ -1076,7 +1077,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void exportDefaultModsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportDefaultModsLabelMouseReleased
 
         // get the file to send the output to
-        final File selectedFile = Util.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export...", "user.home", "default modifications.txt", false);
+        final File selectedFile = FileChooserUtils.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export...", "user.home", "default modifications.txt", false);
 
         if (selectedFile != null) {
             try {
@@ -1117,7 +1118,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void exportUserModsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportUserModsLabelMouseReleased
 
         // get the file to send the output to
-        final File selectedFile = Util.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export...", "user.home", "user modifications.txt", false);
+        final File selectedFile = FileChooserUtils.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export...", "user.home", "user modifications.txt", false);
 
         if (selectedFile != null) {
             try {

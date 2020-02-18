@@ -458,10 +458,10 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         tipOfTheDayScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
         tipOfTheDayEditorPane.setEditable(false);
+        tipOfTheDayEditorPane.setBackground(new java.awt.Color(240, 240, 240));
         tipOfTheDayEditorPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(240, 240, 240), 20));
         tipOfTheDayEditorPane.setContentType("text/html"); // NOI18N
         tipOfTheDayEditorPane.setText("<html>\r\n  <head>\r\n\r\n  </head>\r\n<body style=\"background-color:#F0F0F0;\">\n    <p style=\"margin-top: 0\">\r\n     <b> \rTip of the Day!</b>\n     <br><br>\n     Did you know that. Did you know that. Did you know that. Did you know that. Did you know that. \n     Did you know that.  Did you know that.  Did you know that.  Did you know that.  Did you know that.\n    <br><br>\n    Did you know that.  Did you know that.  Did you know that.  Did you know that.  Did you know that.\n    </p>\r\n  </body>\r\n</html>\r\n");
-        tipOfTheDayEditorPane.setOpaque(false);
         tipOfTheDayEditorPane.addHyperlinkListener(new javax.swing.event.HyperlinkListener() {
             public void hyperlinkUpdate(javax.swing.event.HyperlinkEvent evt) {
                 tipOfTheDayEditorPaneHyperlinkUpdate(evt);
@@ -590,7 +590,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
             }
         });
 
-        saveReportLabel.setText("<html><a href=\\\"dummy_link\"><i>Save Report</i></a></html>");
+        saveReportLabel.setText("<html><a style=\"text-decoration: none\" href=\\\"dummy_link\">Save Report</a></html>");
         saveReportLabel.setToolTipText("Save the report to a text file");
         saveReportLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {

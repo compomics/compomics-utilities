@@ -185,6 +185,19 @@ public class MsFileHandler implements SpectrumProvider {
             }
         }
     }
+    
+    /**
+     * Returns the cms file reader for the given ms file. Null if not set.
+     * 
+     * @param fileName The name of the ms file.
+     * 
+     * @return The cms file reader.
+     */
+    public CmsFileReader getReader(
+            String fileName
+    ) {
+        return cmsFileReaderMap.get(fileName);
+    }
 
     @Override
     public Spectrum getSpectrum(

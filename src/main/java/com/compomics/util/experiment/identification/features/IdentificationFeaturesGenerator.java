@@ -16,8 +16,6 @@ import com.compomics.util.experiment.identification.matches_iterators.SpectrumMa
 import com.compomics.util.experiment.identification.utils.PeptideUtils;
 import com.compomics.util.experiment.identification.utils.ProteinUtils;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
-import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.experiment.quantification.spectrumcounting.SpectrumCountingMethod;
 import com.compomics.util.experiment.units.StandardUnit;
 import com.compomics.util.experiment.units.UnitOfMeasurement;
@@ -34,6 +32,7 @@ import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.gui.filtering.FilterParameters;
 import com.compomics.util.parameters.quantification.spectrum_counting.SpectrumCountingParameters;
 import com.compomics.util.experiment.identification.validation.MatchValidationLevel;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,19 +51,18 @@ import java.util.stream.Collectors;
  */
 public class IdentificationFeaturesGenerator {
 
-    // @TODO: move to utilities once the back-end allows it
     /**
      * The modification factory.
      */
     private final ModificationFactory modificationFactory = ModificationFactory.getInstance();
     /**
-     * The spectrum factory.
-     */
-    private final SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
-    /**
      * The sequence provider.
      */
     private final SequenceProvider sequenceProvider;
+    /**
+     * The spectrum provider.
+     */
+    private final SpectrumProvider spectrumProvider;
     /**
      * The identification features cache where the recently accessed
      * identification features are stored
@@ -96,6 +94,7 @@ public class IdentificationFeaturesGenerator {
      */
     public IdentificationFeaturesGenerator() {
         sequenceProvider = null;
+        spectrumProvider = null;
         metrics = null;
         identification = null;
         identificationParameters = null;
@@ -104,18 +103,26 @@ public class IdentificationFeaturesGenerator {
     /**
      * Constructor.
      *
-     * @param identification an identification object allowing retrieving
-     * matches and parameters
-     * @param identificationParameters the identification parameters
-     * @param sequenceProvider a protein sequence provider
-     * @param metrics the metrics picked-up wile loading the data
-     * @param spectrumCountingPreferences the spectrum counting preferences
+     * @param identification The identification object allowing retrieving
+     * matches and parameters.
+     * @param identificationParameters The identification parameters.
+     * @param sequenceProvider The protein sequence provider.
+     * @param spectrumProvider The spectrum provider.
+     * @param metrics The identification metrics.
+     * @param spectrumCountingPreferences The spectrum counting preferences.
      */
-    public IdentificationFeaturesGenerator(Identification identification, IdentificationParameters identificationParameters, SequenceProvider sequenceProvider,
-            Metrics metrics, SpectrumCountingParameters spectrumCountingPreferences) {
+    public IdentificationFeaturesGenerator(
+            Identification identification,
+            IdentificationParameters identificationParameters,
+            SequenceProvider sequenceProvider,
+            SpectrumProvider spectrumProvider,
+            Metrics metrics,
+            SpectrumCountingParameters spectrumCountingPreferences
+    ) {
 
         this.metrics = metrics;
         this.sequenceProvider = sequenceProvider;
+        this.spectrumProvider = spectrumProvider;
         this.identificationParameters = identificationParameters;
         this.identification = identification;
         this.spectrumCountingPreferences = spectrumCountingPreferences;
@@ -128,7 +135,10 @@ public class IdentificationFeaturesGenerator {
      * @param spectrumFile the spectrum file of interest
      * @param precursorMzDeviations list of precursor mass errors
      */
-    public void setMassErrorDistribution(String spectrumFile, ArrayList<Double> precursorMzDeviations) {
+    public void setMassErrorDistribution(
+            String spectrumFile,
+            ArrayList<Double> precursorMzDeviations
+    ) {
 
         if (massErrorDistribution == null) {
 
@@ -150,7 +160,9 @@ public class IdentificationFeaturesGenerator {
      * @return the precursor mass error distribution of validated peptides in a
      * spectrum file
      */
-    public NonSymmetricalNormalDistribution getMassErrorDistribution(String spectrumFile) {
+    public NonSymmetricalNormalDistribution getMassErrorDistribution(
+            String spectrumFile
+    ) {
 
         if (massErrorDistribution == null || massErrorDistribution.get(spectrumFile) == null) {
 
@@ -168,22 +180,39 @@ public class IdentificationFeaturesGenerator {
      *
      * @param spectrumFile the spectrum file of interest
      */
-    private void estimateMassErrorDistribution(String spectrumFile) {
+    private void estimateMassErrorDistribution(
+            String spectrumFile
+    ) {
 
         HashSet<Long> spectrumMatchesKeys = identification.getSpectrumIdentification().get(spectrumFile);
         SearchParameters searchParameters = identificationParameters.getSearchParameters();
 
         ArrayList<Double> precursorMzDeviations = spectrumMatchesKeys.stream()
-                .map(key -> identification.getSpectrumMatch(key))
-                .filter(spectrumMatch -> spectrumMatch.getBestPeptideAssumption() != null
-                && ((PSParameter) spectrumMatch.getUrParam(PSParameter.dummy)).getMatchValidationLevel().isValidated())
-                .map(spectrumMatch -> spectrumMatch.getBestPeptideAssumption().getDeltaMass(
-                spectrumFactory.getPrecursorMz(spectrumMatch.getSpectrumKey()),
-                searchParameters.isPrecursorAccuracyTypePpm(),
-                searchParameters.getMinIsotopicCorrection(),
-                searchParameters.getMaxIsotopicCorrection()))
+                .map(
+                        key -> identification.getSpectrumMatch(key)
+                )
+                .filter(
+                        spectrumMatch -> spectrumMatch.getBestPeptideAssumption() != null
+                        && ((PSParameter) spectrumMatch.getUrParam(PSParameter.dummy))
+                                .getMatchValidationLevel()
+                                .isValidated()
+                )
+                .map(
+                        spectrumMatch -> spectrumMatch.getBestPeptideAssumption()
+                                .getDeltaMass(
+                                        spectrumProvider.getPrecursorMz(
+                                                spectrumMatch.getSpectrumFile(),
+                                                spectrumMatch.getSpectrumtitle()
+                                        ),
+                                        searchParameters.isPrecursorAccuracyTypePpm(),
+                                        searchParameters.getMinIsotopicCorrection(),
+                                        searchParameters.getMaxIsotopicCorrection()
+                                )
+                )
                 .sorted()
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(
+                        Collectors.toCollection(ArrayList::new)
+                );
 
         setMassErrorDistribution(spectrumFile, precursorMzDeviations);
 
@@ -198,14 +227,23 @@ public class IdentificationFeaturesGenerator {
      * @return an array of boolean indicating whether the amino acids of given
      * peptides can generate peptides
      */
-    public double[] getCoverableAA(long proteinMatchKey) {
+    public double[] getCoverableAA(
+            long proteinMatchKey
+    ) {
 
-        double[] result = (double[]) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.coverable_AA_p, proteinMatchKey);
+        double[] result = (double[]) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.coverable_AA_p,
+                proteinMatchKey
+        );
 
         if (result == null) {
 
             result = estimateCoverableAA(proteinMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.coverable_AA_p, proteinMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.coverable_AA_p,
+                    proteinMatchKey,
+                    result
+            );
 
         }
 
@@ -220,14 +258,23 @@ public class IdentificationFeaturesGenerator {
      * @return an array of boolean indicating whether the amino acids of given
      * peptides can generate peptides
      */
-    public int[] getAACoverage(long proteinMatchKey) {
+    public int[] getAACoverage(
+            long proteinMatchKey
+    ) {
 
-        int[] result = (int[]) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.AA_coverage, proteinMatchKey);
+        int[] result = (int[]) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.AA_coverage,
+                proteinMatchKey
+        );
 
         if (result == null) {
 
             result = estimateAACoverage(proteinMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.AA_coverage, proteinMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.AA_coverage,
+                    proteinMatchKey,
+                    result
+            );
 
         }
 
@@ -241,10 +288,16 @@ public class IdentificationFeaturesGenerator {
      *
      * @param proteinMatchKey the key of the protein of interest
      */
-    public void updateCoverableAA(long proteinMatchKey) {
+    public void updateCoverableAA(
+            long proteinMatchKey
+    ) {
 
         double[] result = estimateCoverableAA(proteinMatchKey);
-        identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.coverable_AA_p, proteinMatchKey, result);
+        identificationFeaturesCache.addObject(
+                IdentificationFeaturesCache.ObjectType.coverable_AA_p,
+                proteinMatchKey,
+                result
+        );
 
     }
 
@@ -254,12 +307,6 @@ public class IdentificationFeaturesGenerator {
      * @return the variable modifications found in the currently loaded dataset
      */
     public TreeSet<String> getFoundModifications() {
-
-        if (metrics == null) {
-
-            return new TreeSet<>();
-
-        }
 
         return metrics.getFoundModifications();
 
@@ -274,7 +321,9 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the sequence coverage
      */
-    private HashMap<Integer, Double> estimateSequenceCoverage(long proteinMatchKey) {
+    private HashMap<Integer, Double> estimateSequenceCoverage(
+            long proteinMatchKey
+    ) {
 
         int[] aaCoverage = getAACoverage(proteinMatchKey);
         HashMap<Integer, Double> result = new HashMap<>();
@@ -311,7 +360,9 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the sequence coverage
      */
-    private Double estimateValidatedSequenceCoverage(long proteinMatchKey) {
+    private double estimateValidatedSequenceCoverage(
+            long proteinMatchKey
+    ) {
 
         int[] aaCoverage = getAACoverage(proteinMatchKey);
 
@@ -339,9 +390,16 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the identification coverage of the protein sequence
      */
-    public int[] estimateAACoverage(long proteinMatchKey, boolean enzymatic) {
+    public int[] estimateAACoverage(
+            long proteinMatchKey,
+            boolean enzymatic
+    ) {
 
-        return estimateAACoverage(proteinMatchKey, false, enzymatic);
+        return estimateAACoverage(
+                proteinMatchKey,
+                false,
+                enzymatic
+        );
 
     }
 
@@ -359,7 +417,11 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the identification coverage of the protein sequence
      */
-    private int[] estimateAACoverage(long proteinMatchKey, boolean allPeptides, boolean enzymatic) {
+    private int[] estimateAACoverage(
+            long proteinMatchKey,
+            boolean allPeptides,
+            boolean enzymatic
+    ) {
 
         ProteinMatch proteinMatch = identification.getProteinMatch(proteinMatchKey);
         String accession = proteinMatch.getLeadingAccession();
@@ -444,8 +506,14 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the identification coverage of the protein sequence
      */
-    private int[] estimateAACoverage(long proteinMatchKey) {
-        return estimateAACoverage(proteinMatchKey, true, true);
+    private int[] estimateAACoverage(
+            long proteinMatchKey
+    ) {
+        return estimateAACoverage(
+                proteinMatchKey,
+                true,
+                true
+        );
     }
 
     /**
@@ -457,7 +525,9 @@ public class IdentificationFeaturesGenerator {
      * @return an array of boolean indicating whether the amino acids of given
      * peptides can generate peptides
      */
-    private double[] estimateCoverableAA(long proteinMatchKey) {
+    private double[] estimateCoverableAA(
+            long proteinMatchKey
+    ) {
 
         ProteinMatch proteinMatch = (ProteinMatch) identification.retrieveObject(proteinMatchKey);
         String accession = proteinMatch.getLeadingAccession();
@@ -569,14 +639,23 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the sequence coverage
      */
-    public double getValidatedSequenceCoverage(long proteinMatchKey) {
+    public double getValidatedSequenceCoverage(
+            long proteinMatchKey
+    ) {
 
-        Double result = (Double) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.sequence_coverage, proteinMatchKey);
+        Double result = (Double) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.sequence_coverage,
+                proteinMatchKey
+        );
 
         if (result == null) {
 
             result = estimateValidatedSequenceCoverage(proteinMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.sequence_coverage, proteinMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.sequence_coverage,
+                    proteinMatchKey,
+                    result
+            );
 
         }
 
@@ -590,9 +669,14 @@ public class IdentificationFeaturesGenerator {
      *
      * @return true if the sequence coverage is in cache
      */
-    public boolean validatedSequenceCoverageInCache(long proteinMatchKey) {
+    public boolean validatedSequenceCoverageInCache(
+            long proteinMatchKey
+    ) {
 
-        return identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.sequence_validation_coverage, proteinMatchKey) != null;
+        return identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.sequence_validation_coverage,
+                proteinMatchKey
+        ) != null;
 
     }
 
@@ -603,14 +687,23 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the sequence coverage
      */
-    public HashMap<Integer, Double> getSequenceCoverage(long proteinMatchKey) {
+    public HashMap<Integer, Double> getSequenceCoverage(
+            long proteinMatchKey
+    ) {
 
-        HashMap<Integer, Double> result = (HashMap<Integer, Double>) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.sequence_validation_coverage, proteinMatchKey);
+        HashMap<Integer, Double> result = (HashMap<Integer, Double>) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.sequence_validation_coverage,
+                proteinMatchKey
+        );
 
         if (result == null) {
 
             result = estimateSequenceCoverage(proteinMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.sequence_validation_coverage, proteinMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.sequence_validation_coverage,
+                    proteinMatchKey,
+                    result
+            );
 
         }
 
@@ -625,9 +718,14 @@ public class IdentificationFeaturesGenerator {
      *
      * @return true if the sequence coverage is in cache
      */
-    public boolean sequenceCoverageInCache(long proteinMatchKey) {
+    public boolean sequenceCoverageInCache(
+            long proteinMatchKey
+    ) {
 
-        return identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.sequence_validation_coverage, proteinMatchKey) != null;
+        return identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.sequence_validation_coverage,
+                proteinMatchKey
+        ) != null;
 
     }
 
@@ -639,14 +737,24 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a list of non-enzymatic peptides for a given protein match
      */
-    public long[] getNonEnzymatic(long proteinMatchKey, DigestionParameters digestionPreferences) {
+    public long[] getNonEnzymatic(
+            long proteinMatchKey,
+            DigestionParameters digestionPreferences
+    ) {
 
-        long[] result = (long[]) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.tryptic_protein, proteinMatchKey);
+        long[] result = (long[]) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.tryptic_protein,
+                proteinMatchKey
+        );
 
         if (result == null) {
 
             result = estimateNonEnzymatic(proteinMatchKey, digestionPreferences);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.tryptic_protein, proteinMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.tryptic_protein,
+                    proteinMatchKey,
+                    result
+            );
 
         }
 
@@ -661,18 +769,24 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a list of non-enzymatic peptides for a given protein match
      */
-    private long[] estimateNonEnzymatic(long proteinMatchKey, DigestionParameters digestionPreferences) {
+    private long[] estimateNonEnzymatic(
+            long proteinMatchKey,
+            DigestionParameters digestionPreferences
+    ) {
 
         ProteinMatch proteinMatch = (ProteinMatch) identification.retrieveObject(proteinMatchKey);
         long[] peptideKeys = proteinMatch.getPeptideMatchesKeys();
 
         return digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme
                 ? Arrays.stream(peptideKeys)
-                        .filter(key -> ((PSParameter) (identification.getSpectrumMatch(key)).getUrParam(PSParameter.dummy)).getMatchValidationLevel().isValidated()
-                        && !PeptideUtils.isEnzymatic(
-                                identification.getSpectrumMatch(key).getBestPeptideAssumption().getPeptide(),
-                                sequenceProvider,
-                                digestionPreferences.getEnzymes()))
+                        .filter(
+                                key -> ((PSParameter) (identification.getSpectrumMatch(key)).getUrParam(PSParameter.dummy)).getMatchValidationLevel().isValidated()
+                                && !PeptideUtils.isEnzymatic(
+                                        identification.getSpectrumMatch(key).getBestPeptideAssumption().getPeptide(),
+                                        sequenceProvider,
+                                        digestionPreferences.getEnzymes()
+                                )
+                        )
                         .toArray()
                 : new long[0];
     }
@@ -682,9 +796,16 @@ public class IdentificationFeaturesGenerator {
      *
      * @param proteinMatchKey the key of the protein of interest
      */
-    public void updateSequenceCoverage(long proteinMatchKey) {
+    public void updateSequenceCoverage(
+            long proteinMatchKey
+    ) {
+
         HashMap<Integer, Double> result = estimateSequenceCoverage(proteinMatchKey);
-        identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.sequence_validation_coverage, proteinMatchKey, result);
+        identificationFeaturesCache.addObject(
+                IdentificationFeaturesCache.ObjectType.sequence_validation_coverage,
+                proteinMatchKey,
+                result
+        );
     }
 
     /**
@@ -698,8 +819,16 @@ public class IdentificationFeaturesGenerator {
      * @return the corresponding spectrum counting metric normalized in the
      * metrics prefix of mol
      */
-    public double getNormalizedSpectrumCounting(long proteinMatchKey) {
-        return getNormalizedSpectrumCounting(proteinMatchKey, metrics, spectrumCountingPreferences.getUnit(), spectrumCountingPreferences.getReferenceMass(), spectrumCountingPreferences.getSelectedMethod());
+    public double getNormalizedSpectrumCounting(
+            long proteinMatchKey
+    ) {
+        return getNormalizedSpectrumCounting(
+                proteinMatchKey,
+                metrics,
+                spectrumCountingPreferences.getUnit(),
+                spectrumCountingPreferences.getReferenceMass(),
+                spectrumCountingPreferences.getSelectedMethod()
+        );
     }
 
     /**
@@ -714,8 +843,19 @@ public class IdentificationFeaturesGenerator {
      * @return the corresponding spectrum counting metric normalized in the
      * metricsprefix of mol
      */
-    public double getNormalizedSpectrumCounting(long proteinMatchKey, SpectrumCountingParameters spectrumCountingPreferences, Metrics metrics) {
-        return getNormalizedSpectrumCounting(proteinMatchKey, metrics, spectrumCountingPreferences.getUnit(), spectrumCountingPreferences.getReferenceMass(), spectrumCountingPreferences.getSelectedMethod());
+    public double getNormalizedSpectrumCounting(
+            long proteinMatchKey,
+            SpectrumCountingParameters spectrumCountingPreferences,
+            Metrics metrics
+    ) {
+
+        return getNormalizedSpectrumCounting(
+                proteinMatchKey,
+                metrics,
+                spectrumCountingPreferences.getUnit(),
+                spectrumCountingPreferences.getReferenceMass(),
+                spectrumCountingPreferences.getSelectedMethod()
+        );
     }
 
     /**
@@ -729,8 +869,18 @@ public class IdentificationFeaturesGenerator {
      * @return the corresponding spectrum counting metric normalized in the
      * metricsprefix of mol
      */
-    public double getNormalizedSpectrumCounting(long proteinMatchKey, UnitOfMeasurement unit, SpectrumCountingMethod method) {
-        return getNormalizedSpectrumCounting(proteinMatchKey, metrics, unit, spectrumCountingPreferences.getReferenceMass(), method);
+    public double getNormalizedSpectrumCounting(
+            long proteinMatchKey,
+            UnitOfMeasurement unit,
+            SpectrumCountingMethod method
+    ) {
+        return getNormalizedSpectrumCounting(
+                proteinMatchKey,
+                metrics,
+                unit,
+                spectrumCountingPreferences.getReferenceMass(),
+                method
+        );
     }
 
     /**
@@ -747,7 +897,13 @@ public class IdentificationFeaturesGenerator {
      * @return the corresponding spectrum counting metric normalized in the
      * metrics prefix of mol
      */
-    public double getNormalizedSpectrumCounting(long proteinMatchKey, Metrics metrics, UnitOfMeasurement unit, Double referenceMass, SpectrumCountingMethod method) {
+    public double getNormalizedSpectrumCounting(
+            long proteinMatchKey,
+            Metrics metrics,
+            UnitOfMeasurement unit,
+            Double referenceMass,
+            SpectrumCountingMethod method
+    ) {
 
         double spectrumCounting = getSpectrumCounting(proteinMatchKey, method);
 
@@ -809,8 +965,13 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the corresponding spectrum counting metric
      */
-    public double getSpectrumCounting(long proteinMatchKey) {
-        return getSpectrumCounting(proteinMatchKey, spectrumCountingPreferences.getSelectedMethod());
+    public double getSpectrumCounting(
+            long proteinMatchKey
+    ) {
+        return getSpectrumCounting(
+                proteinMatchKey,
+                spectrumCountingPreferences.getSelectedMethod()
+        );
     }
 
     /**
@@ -822,16 +983,26 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the corresponding spectrum counting metric
      */
-    public Double getSpectrumCounting(long proteinMatchKey, SpectrumCountingMethod method) {
+    public Double getSpectrumCounting(
+            long proteinMatchKey,
+            SpectrumCountingMethod method
+    ) {
 
         if (method == spectrumCountingPreferences.getSelectedMethod()) {
 
-            Double result = (Double) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.spectrum_counting, proteinMatchKey);
+            Double result = (Double) identificationFeaturesCache.getObject(
+                    IdentificationFeaturesCache.ObjectType.spectrum_counting,
+                    proteinMatchKey
+            );
 
             if (result == null) {
 
                 result = estimateSpectrumCounting(proteinMatchKey);
-                identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.spectrum_counting, proteinMatchKey, result);
+                identificationFeaturesCache.addObject(
+                        IdentificationFeaturesCache.ObjectType.spectrum_counting,
+                        proteinMatchKey,
+                        result
+                );
 
             }
 
@@ -841,8 +1012,14 @@ public class IdentificationFeaturesGenerator {
             SpectrumCountingParameters tempPreferences = new SpectrumCountingParameters();
             tempPreferences.setSelectedMethod(method);
 
-            return estimateSpectrumCounting(identification, sequenceProvider, proteinMatchKey, tempPreferences,
-                    identificationParameters.getPeptideAssumptionFilter().getMaxPepLength(), identificationParameters);
+            return estimateSpectrumCounting(
+                    identification,
+                    sequenceProvider,
+                    proteinMatchKey,
+                    tempPreferences,
+                    identificationParameters.getPeptideAssumptionFilter().getMaxPepLength(),
+                    identificationParameters
+            );
 
         }
     }
@@ -855,9 +1032,14 @@ public class IdentificationFeaturesGenerator {
      *
      * @return true if the data is cached
      */
-    public boolean spectrumCountingInCache(long proteinMatchKey) {
+    public boolean spectrumCountingInCache(
+            long proteinMatchKey
+    ) {
 
-        Double result = (Double) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.spectrum_counting, proteinMatchKey);
+        Double result = (Double) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.spectrum_counting,
+                proteinMatchKey
+        );
         return result != null;
 
     }
@@ -869,11 +1051,20 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the spectrum counting score
      */
-    private double estimateSpectrumCounting(long proteinMatchKey) {
+    private double estimateSpectrumCounting(
+            long proteinMatchKey
+    ) {
 
-        return estimateSpectrumCounting(identification, sequenceProvider, proteinMatchKey,
+        return estimateSpectrumCounting(
+                identification,
+                sequenceProvider,
+                proteinMatchKey,
                 spectrumCountingPreferences,
-                identificationParameters.getPeptideAssumptionFilter().getMaxPepLength(), identificationParameters);
+                identificationParameters
+                        .getPeptideAssumptionFilter()
+                        .getMaxPepLength(),
+                identificationParameters
+        );
 
     }
 
@@ -889,8 +1080,14 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the spectrum counting index
      */
-    public static double estimateSpectrumCounting(Identification identification, SequenceProvider sequenceProvider, long proteinMatchKey,
-            SpectrumCountingParameters spectrumCountingPreferences, int maxPepLength, IdentificationParameters identificationParameters) {
+    public static double estimateSpectrumCounting(
+            Identification identification,
+            SequenceProvider sequenceProvider,
+            long proteinMatchKey,
+            SpectrumCountingParameters spectrumCountingPreferences,
+            int maxPepLength,
+            IdentificationParameters identificationParameters
+    ) {
 
         ProteinMatch proteinMatch = (ProteinMatch) identification.retrieveObject(proteinMatchKey);
         DigestionParameters digestionPreferences = identificationParameters.getSearchParameters().getDigestionParameters();
@@ -901,7 +1098,10 @@ public class IdentificationFeaturesGenerator {
             double result = 0;
 
             // iterate the peptides and store the coverage for each peptide validation level
-            PeptideMatchesIterator peptideMatchesIterator = identification.getPeptideMatchesIterator(proteinMatch.getPeptideMatchesKeys(), null);
+            PeptideMatchesIterator peptideMatchesIterator = identification.getPeptideMatchesIterator(
+                    proteinMatch.getPeptideMatchesKeys(),
+                    null
+            );
             PeptideMatch peptideMatch;
 
             while ((peptideMatch = peptideMatchesIterator.next()) != null) {
@@ -913,17 +1113,29 @@ public class IdentificationFeaturesGenerator {
                     Peptide peptide = peptideMatch.getPeptide();
 
                     int peptideOccurrence = identification.getProteinMatches(peptideMatch.getKey()).stream()
-                            .map(groupKey -> identification.getProteinMatch(groupKey))
-                            .filter(sharedGroup -> ((PSParameter) sharedGroup.getUrParam(PSParameter.dummy))
-                            .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel())
-                            .filter(sharedGroup -> peptide.getProteinMapping().containsKey(sharedGroup.getLeadingAccession()))
-                            .mapToInt(sharedGroup -> peptide.getProteinMapping().get(sharedGroup.getLeadingAccession()).length)
+                            .map(
+                                    groupKey -> identification.getProteinMatch(groupKey)
+                            )
+                            .filter(
+                                    sharedGroup -> ((PSParameter) sharedGroup.getUrParam(PSParameter.dummy))
+                                            .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()
+                            )
+                            .filter(
+                                    sharedGroup -> peptide.getProteinMapping().containsKey(sharedGroup.getLeadingAccession())
+                            )
+                            .mapToInt(
+                                    sharedGroup -> peptide.getProteinMapping().get(sharedGroup.getLeadingAccession()).length
+                            )
                             .sum();
 
                     double spectrumCount = Arrays.stream(peptideMatch.getSpectrumMatchesKeys())
-                            .mapToObj(key -> identification.getSpectrumMatch(key))
-                            .filter(spectrumMatch -> ((PSParameter) spectrumMatch.getUrParam(PSParameter.dummy))
-                            .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel())
+                            .mapToObj(
+                                    key -> identification.getSpectrumMatch(key)
+                            )
+                            .filter(
+                                    spectrumMatch -> ((PSParameter) spectrumMatch.getUrParam(PSParameter.dummy))
+                                            .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()
+                            )
                             .count();
 
                     double ratio = spectrumCount / peptideOccurrence;
@@ -937,7 +1149,11 @@ public class IdentificationFeaturesGenerator {
 
             if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
 
-                result /= ProteinUtils.getObservableLength(proteinSequence, digestionPreferences.getEnzymes(), maxPepLength);
+                result /= ProteinUtils.getObservableLength(
+                        proteinSequence,
+                        digestionPreferences.getEnzymes(),
+                        maxPepLength
+                );
 
             } else {
 
@@ -957,9 +1173,13 @@ public class IdentificationFeaturesGenerator {
 
             // emPAI
             double result = Arrays.stream(proteinMatch.getPeptideMatchesKeys())
-                    .mapToObj(key -> identification.getPeptideMatch(key))
-                    .filter(peptideMatch -> ((PSParameter) peptideMatch.getUrParam(PSParameter.dummy))
-                    .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel())
+                    .mapToObj(
+                            key -> identification.getPeptideMatch(key)
+                    )
+                    .filter(
+                            peptideMatch -> ((PSParameter) peptideMatch.getUrParam(PSParameter.dummy))
+                                    .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()
+                    )
                     .count();
 
             if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
@@ -994,14 +1214,23 @@ public class IdentificationFeaturesGenerator {
      * cleavage settings while estimating the probability to observe an amino
      * acid
      */
-    public double getObservableCoverage(long proteinMatchKey) {
+    public double getObservableCoverage(
+            long proteinMatchKey
+    ) {
 
-        Double result = (Double) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.expected_coverage, proteinMatchKey);
+        Double result = (Double) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.expected_coverage,
+                proteinMatchKey
+        );
 
         if (result == null) {
 
             result = estimateObservableCoverage(proteinMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.expected_coverage, proteinMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.expected_coverage,
+                    proteinMatchKey,
+                    result
+            );
 
         }
 
@@ -1015,9 +1244,14 @@ public class IdentificationFeaturesGenerator {
      *
      * @return true if the data is in cache
      */
-    public boolean observableCoverageInCache(long proteinMatchKey) {
+    public boolean observableCoverageInCache(
+            long proteinMatchKey
+    ) {
 
-        return identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.expected_coverage, proteinMatchKey) != null;
+        return identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.expected_coverage,
+                proteinMatchKey
+        ) != null;
 
     }
 
@@ -1027,11 +1261,17 @@ public class IdentificationFeaturesGenerator {
      *
      * @param proteinMatchKey the key of the protein match of interest
      */
-    public void updateObservableCoverage(long proteinMatchKey) {
+    public void updateObservableCoverage(
+            long proteinMatchKey
+    ) {
 
         double result = estimateObservableCoverage(proteinMatchKey);
 
-        identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.expected_coverage, proteinMatchKey, result);
+        identificationFeaturesCache.addObject(
+                IdentificationFeaturesCache.ObjectType.expected_coverage,
+                proteinMatchKey,
+                result
+        );
 
     }
 
@@ -1044,7 +1284,9 @@ public class IdentificationFeaturesGenerator {
      * @return the best protein coverage possible according to the given
      * cleavage settings
      */
-    private double estimateObservableCoverage(long proteinMatchKey) {
+    private double estimateObservableCoverage(
+            long proteinMatchKey
+    ) {
 
         DigestionParameters digestionPreferences = identificationParameters.getSearchParameters().getDigestionParameters();
 
@@ -1065,7 +1307,13 @@ public class IdentificationFeaturesGenerator {
 
         }
 
-        return ((double) ProteinUtils.getObservableLength(sequence, digestionPreferences.getEnzymes(), lengthMax)) / sequence.length();
+        int observableLength = ProteinUtils.getObservableLength(
+                sequence,
+                digestionPreferences.getEnzymes(),
+                lengthMax
+        );
+
+        return ((double) observableLength) / sequence.length();
 
     }
 
@@ -1094,11 +1342,16 @@ public class IdentificationFeaturesGenerator {
 
         metrics.setnValidatedProteins(
                 (int) identification.getProteinIdentification().stream()
-                        .map(key -> identification.getProteinMatch(key))
-                        .filter(proteinMatch -> !proteinMatch.isDecoy()
-                        && ((PSParameter) proteinMatch.getUrParam(PSParameter.dummy))
-                                .getMatchValidationLevel().isValidated())
-                        .count());
+                        .map(
+                                key -> identification.getProteinMatch(key)
+                        )
+                        .filter(
+                                proteinMatch -> !proteinMatch.isDecoy()
+                                && ((PSParameter) proteinMatch.getUrParam(PSParameter.dummy))
+                                        .getMatchValidationLevel().isValidated()
+                        )
+                        .count()
+        );
     }
 
     /**
@@ -1126,11 +1379,16 @@ public class IdentificationFeaturesGenerator {
 
         metrics.setnConfidentProteins(
                 (int) identification.getProteinIdentification().stream()
-                        .map(key -> identification.getProteinMatch(key))
-                        .filter(proteinMatch -> !proteinMatch.isDecoy()
-                        && ((PSParameter) proteinMatch.getUrParam(PSParameter.dummy))
-                                .getMatchValidationLevel() == MatchValidationLevel.confident)
-                        .count());
+                        .map(
+                                key -> identification.getProteinMatch(key)
+                        )
+                        .filter(
+                                proteinMatch -> !proteinMatch.isDecoy()
+                                && ((PSParameter) proteinMatch.getUrParam(PSParameter.dummy))
+                                        .getMatchValidationLevel() == MatchValidationLevel.confident
+                        )
+                        .count()
+        );
 
     }
 
@@ -1141,14 +1399,20 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of validated peptides
      */
-    private int estimateNValidatedPeptides(long proteinMatchKey) {
+    private int estimateNValidatedPeptides(
+            long proteinMatchKey
+    ) {
 
         ProteinMatch proteinMatch = identification.getProteinMatch(proteinMatchKey);
 
         return (int) Arrays.stream(proteinMatch.getPeptideMatchesKeys())
-                .mapToObj(key -> identification.getPeptideMatch(key))
-                .filter(peptideMatch -> ((PSParameter) peptideMatch.getUrParam(PSParameter.dummy))
-                .getMatchValidationLevel().isValidated())
+                .mapToObj(
+                        key -> identification.getPeptideMatch(key)
+                )
+                .filter(
+                        peptideMatch -> ((PSParameter) peptideMatch.getUrParam(PSParameter.dummy))
+                                .getMatchValidationLevel().isValidated()
+                )
                 .count();
 
     }
@@ -1160,14 +1424,20 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of confident peptides
      */
-    private int estimateNConfidentPeptides(long proteinMatchKey) {
+    private int estimateNConfidentPeptides(
+            long proteinMatchKey
+    ) {
 
         ProteinMatch proteinMatch = identification.getProteinMatch(proteinMatchKey);
 
         return (int) Arrays.stream(proteinMatch.getPeptideMatchesKeys())
-                .mapToObj(key -> identification.getPeptideMatch(key))
-                .filter(peptideMatch -> ((PSParameter) peptideMatch.getUrParam(PSParameter.dummy))
-                .getMatchValidationLevel() == MatchValidationLevel.confident)
+                .mapToObj(
+                        key -> identification.getPeptideMatch(key)
+                )
+                .filter(
+                        peptideMatch -> ((PSParameter) peptideMatch.getUrParam(PSParameter.dummy))
+                                .getMatchValidationLevel() == MatchValidationLevel.confident
+                )
                 .count();
     }
 
@@ -1179,14 +1449,23 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of unique peptides
      */
-    public int getNUniquePeptides(long proteinMatchKey) {
+    public int getNUniquePeptides(
+            long proteinMatchKey
+    ) {
 
-        Integer result = (Integer) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.unique_peptides, proteinMatchKey);
+        Integer result = (Integer) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.unique_peptides,
+                proteinMatchKey
+        );
 
         if (result == null) {
 
             result = estimateNUniquePeptides(proteinMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.unique_peptides, proteinMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.unique_peptides,
+                    proteinMatchKey,
+                    result
+            );
 
         }
 
@@ -1201,13 +1480,19 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of peptides unique to a protein match
      */
-    private int estimateNUniquePeptides(long proteinMatchKey) {
+    private int estimateNUniquePeptides(
+            long proteinMatchKey
+    ) {
 
         ProteinMatch proteinMatch = identification.getProteinMatch(proteinMatchKey);
 
         return (int) Arrays.stream(proteinMatch.getPeptideMatchesKeys())
-                .mapToObj(peptideKey -> identification.getPeptideMatch(peptideKey))
-                .filter(peptideMatch -> identification.getProteinMatches(peptideMatch.getKey()).size() == 1)
+                .mapToObj(
+                        peptideKey -> identification.getPeptideMatch(peptideKey)
+                )
+                .filter(
+                        peptideMatch -> identification.getProteinMatches(peptideMatch.getKey()).size() == 1
+                )
                 .count();
 
     }
@@ -1219,15 +1504,23 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of unique peptides
      */
-    public int getNUniqueValidatedPeptides(long proteinMatchKey) {
+    public int getNUniqueValidatedPeptides(
+            long proteinMatchKey
+    ) {
 
-        Integer result = (Integer) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.unique_validated_peptides, proteinMatchKey);
+        Integer result = (Integer) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.unique_validated_peptides,
+                proteinMatchKey
+        );
 
         if (result == null) {
 
             result = estimateNUniqueValidatedPeptides(proteinMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.unique_validated_peptides, proteinMatchKey, result);
-
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.unique_validated_peptides,
+                    proteinMatchKey,
+                    result
+            );
         }
 
         return result;
@@ -1241,15 +1534,20 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of peptides unique to a protein match
      */
-    private int estimateNUniqueValidatedPeptides(long proteinMatchKey) {
+    private int estimateNUniqueValidatedPeptides(
+            long proteinMatchKey
+    ) {
 
         ProteinMatch proteinMatch = identification.getProteinMatch(proteinMatchKey);
 
         return (int) Arrays.stream(proteinMatch.getPeptideMatchesKeys())
-                .mapToObj(peptideKey -> identification.getPeptideMatch(peptideKey))
-                .filter(peptideMatch
-                        -> ((PSParameter) peptideMatch.getUrParam(PSParameter.dummy)).getMatchValidationLevel().isValidated()
-                && identification.getProteinMatches(peptideMatch.getKey()).size() == 1)
+                .mapToObj(
+                        peptideKey -> identification.getPeptideMatch(peptideKey)
+                )
+                .filter(
+                        peptideMatch -> ((PSParameter) peptideMatch.getUrParam(PSParameter.dummy)).getMatchValidationLevel().isValidated()
+                        && identification.getProteinMatches(peptideMatch.getKey()).size() == 1
+                )
                 .count();
 
     }
@@ -1262,14 +1560,23 @@ public class IdentificationFeaturesGenerator {
      *
      * @return true if the protein has any enzymatic peptides
      */
-    public boolean hasEnzymaticPeptides(long proteinMatchKey) {
+    public boolean hasEnzymaticPeptides(
+            long proteinMatchKey
+    ) {
 
-        Boolean result = (Boolean) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.containsEnzymaticPeptides, proteinMatchKey);
+        Boolean result = (Boolean) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.containsEnzymaticPeptides,
+                proteinMatchKey
+        );
 
         if (result == null) {
 
             result = checkEnzymaticPeptides(proteinMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.containsEnzymaticPeptides, proteinMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.containsEnzymaticPeptides,
+                    proteinMatchKey,
+                    result
+            );
 
         }
 
@@ -1285,7 +1592,9 @@ public class IdentificationFeaturesGenerator {
      *
      * @return true if the protein has any enzymatic peptides
      */
-    private boolean checkEnzymaticPeptides(long proteinMatchKey) {
+    private boolean checkEnzymaticPeptides(
+            long proteinMatchKey
+    ) {
 
         ProteinMatch proteinMatch = identification.getProteinMatch(proteinMatchKey);
 
@@ -1294,11 +1603,15 @@ public class IdentificationFeaturesGenerator {
         if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
 
             return Arrays.stream(proteinMatch.getPeptideMatchesKeys())
-                    .mapToObj(key -> identification.getPeptideMatch(key))
-                    .anyMatch(peptideMatch -> PeptideUtils.isEnzymatic(
-                    peptideMatch.getPeptide(),
-                    sequenceProvider,
-                    digestionPreferences.getEnzymes()));
+                    .mapToObj(
+                            key -> identification.getPeptideMatch(key)
+                    )
+                    .anyMatch(
+                            peptideMatch -> PeptideUtils.isEnzymatic(
+                                    peptideMatch.getPeptide(),
+                                    sequenceProvider,
+                                    digestionPreferences.getEnzymes())
+                    );
 
         }
 
@@ -1317,7 +1630,10 @@ public class IdentificationFeaturesGenerator {
      * @return the maximal number of termini for the given peptide on the given
      * protein
      */
-    public int getNEnzymaticTermini(Peptide peptide, String accession) {
+    public int getNEnzymaticTermini(
+            Peptide peptide,
+            String accession
+    ) {
 
         if (!peptide.getProteinMapping().containsKey(accession)) {
             return 0;
@@ -1331,10 +1647,16 @@ public class IdentificationFeaturesGenerator {
             int peptideLength = peptide.getSequence().length();
 
             return digestionPreferences.getEnzymes().stream()
-                    .mapToInt(enzyme -> getNEnzymaticTermini(peptide.getProteinMapping().get(accession), peptideLength, proteinSequence, enzyme))
+                    .mapToInt(
+                            enzyme -> getNEnzymaticTermini(
+                                    peptide.getProteinMapping().get(accession),
+                                    peptideLength,
+                                    proteinSequence,
+                                    enzyme
+                            )
+                    )
                     .max()
                     .orElse(0);
-
         }
 
         return 2;
@@ -1354,10 +1676,22 @@ public class IdentificationFeaturesGenerator {
      * @return the maximal number of termini for the given peptide on the given
      * peptide coordinates and the given enzyme
      */
-    private int getNEnzymaticTermini(int[] peptideStarts, int peptideLength, String proteinSequence, Enzyme enzyme) {
+    private int getNEnzymaticTermini(
+            int[] peptideStarts,
+            int peptideLength,
+            String proteinSequence,
+            Enzyme enzyme
+    ) {
 
         return Arrays.stream(peptideStarts)
-                .map(peptideStart -> PeptideUtils.getNEnzymaticTermini(peptideStart, peptideStart + peptideLength - 1, proteinSequence, enzyme))
+                .map(
+                        peptideStart -> PeptideUtils.getNEnzymaticTermini(
+                                peptideStart,
+                                peptideStart + peptideLength - 1,
+                                proteinSequence,
+                                enzyme
+                        )
+                )
                 .max()
                 .orElse(0);
 
@@ -1370,14 +1704,23 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of validated peptides
      */
-    public int getNValidatedPeptides(long proteinMatchKey) {
+    public int getNValidatedPeptides(
+            long proteinMatchKey
+    ) {
 
-        Integer result = (Integer) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.number_of_validated_peptides, proteinMatchKey);
+        Integer result = (Integer) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.number_of_validated_peptides,
+                proteinMatchKey
+        );
 
         if (result == null) {
 
             result = estimateNValidatedPeptides(proteinMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.number_of_validated_peptides, proteinMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.number_of_validated_peptides,
+                    proteinMatchKey,
+                    result
+            );
 
         }
 
@@ -1391,14 +1734,23 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of confident peptides
      */
-    public int getNConfidentPeptides(long proteinMatchKey) {
+    public int getNConfidentPeptides(
+            long proteinMatchKey
+    ) {
 
-        Integer result = (Integer) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.number_of_confident_peptides, proteinMatchKey);
+        Integer result = (Integer) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.number_of_confident_peptides,
+                proteinMatchKey
+        );
 
         if (result == null) {
 
             result = estimateNConfidentPeptides(proteinMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.number_of_confident_peptides, proteinMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.number_of_confident_peptides,
+                    proteinMatchKey,
+                    result
+            );
 
         }
 
@@ -1410,10 +1762,16 @@ public class IdentificationFeaturesGenerator {
      *
      * @param proteinMatchKey the key of the protein match
      */
-    public void updateNConfidentPeptides(long proteinMatchKey) {
+    public void updateNConfidentPeptides(
+            long proteinMatchKey
+    ) {
 
         Integer result = estimateNConfidentPeptides(proteinMatchKey);
-        identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.number_of_confident_peptides, proteinMatchKey, result);
+        identificationFeaturesCache.addObject(
+                IdentificationFeaturesCache.ObjectType.number_of_confident_peptides,
+                proteinMatchKey,
+                result
+        );
 
     }
 
@@ -1422,10 +1780,16 @@ public class IdentificationFeaturesGenerator {
      *
      * @param proteinMatchKey the key of the protein match
      */
-    public void updateNConfidentSpectra(long proteinMatchKey) {
+    public void updateNConfidentSpectra(
+            long proteinMatchKey
+    ) {
 
         Integer result = estimateNConfidentSpectra(proteinMatchKey);
-        identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.number_of_confident_spectra, proteinMatchKey, result);
+        identificationFeaturesCache.addObject(
+                IdentificationFeaturesCache.ObjectType.number_of_confident_spectra,
+                proteinMatchKey,
+                result
+        );
 
     }
 
@@ -1437,9 +1801,16 @@ public class IdentificationFeaturesGenerator {
      *
      * @return true if the information is in cache
      */
-    public boolean nValidatedPeptidesInCache(long proteinMatchKey) {
+    public boolean nValidatedPeptidesInCache(
+            long proteinMatchKey
+    ) {
 
-        return identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.number_of_validated_peptides, proteinMatchKey) != null;
+        Object object = identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.number_of_validated_peptides,
+                proteinMatchKey
+        );
+
+        return object != null;
 
     }
 
@@ -1452,12 +1823,19 @@ public class IdentificationFeaturesGenerator {
      */
     public Integer getNSpectra(long proteinMatchKey) {
 
-        Integer result = (Integer) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.number_of_spectra, proteinMatchKey);
+        Integer result = (Integer) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.number_of_spectra,
+                proteinMatchKey
+        );
 
         if (result == null) {
 
             result = estimateNSpectra(proteinMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.number_of_spectra, proteinMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.number_of_spectra,
+                    proteinMatchKey,
+                    result
+            );
 
         }
 
@@ -1473,9 +1851,16 @@ public class IdentificationFeaturesGenerator {
      *
      * @return true if the data is in cache
      */
-    public boolean nSpectraInCache(long proteinMatchKey) {
+    public boolean nSpectraInCache(
+            long proteinMatchKey
+    ) {
 
-        return identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.number_of_spectra, proteinMatchKey) != null;
+        Object object = identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.number_of_spectra,
+                proteinMatchKey
+        );
+
+        return object != null;
 
     }
 
@@ -1487,12 +1872,16 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of spectra where this protein was found
      */
-    private int estimateNSpectra(long proteinMatchKey) {
+    private int estimateNSpectra(
+            long proteinMatchKey
+    ) {
 
         ProteinMatch proteinMatch = identification.getProteinMatch(proteinMatchKey);
 
         return Arrays.stream(proteinMatch.getPeptideMatchesKeys())
-                .mapToInt(key -> identification.getPeptideMatch(key).getSpectrumCount())
+                .mapToInt(
+                        key -> identification.getPeptideMatch(key).getSpectrumCount()
+                )
                 .sum();
 
     }
@@ -1517,14 +1906,23 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of validated spectra
      */
-    public int getNValidatedSpectra(long proteinMatchKey) {
+    public int getNValidatedSpectra(
+            long proteinMatchKey
+    ) {
 
-        Integer result = (Integer) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.number_of_validated_spectra, proteinMatchKey);
+        Integer result = (Integer) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.number_of_validated_spectra,
+                proteinMatchKey
+        );
 
         if (result == null) {
 
             result = estimateNValidatedSpectra(proteinMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.number_of_validated_spectra, proteinMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.number_of_validated_spectra,
+                    proteinMatchKey,
+                    result
+            );
 
         }
 
@@ -1538,13 +1936,22 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of validated spectra
      */
-    public int getNConfidentSpectra(long proteinMatchKey) {
+    public int getNConfidentSpectra(
+            long proteinMatchKey
+    ) {
 
-        Integer result = (Integer) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.number_of_confident_spectra, proteinMatchKey);
+        Integer result = (Integer) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.number_of_confident_spectra,
+                proteinMatchKey
+        );
 
         if (result == null) {
             result = estimateNConfidentSpectra(proteinMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.number_of_confident_spectra, proteinMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.number_of_confident_spectra,
+                    proteinMatchKey,
+                    result
+            );
         }
 
         return result;
@@ -1558,9 +1965,16 @@ public class IdentificationFeaturesGenerator {
      *
      * @return true if the data is in cache
      */
-    public boolean nValidatedSpectraInCache(long proteinMatchKey) {
+    public boolean nValidatedSpectraInCache(
+            long proteinMatchKey
+    ) {
 
-        return identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.number_of_validated_spectra, proteinMatchKey) != null;
+        Object object = identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.number_of_validated_spectra,
+                proteinMatchKey
+        );
+
+        return object != null;
 
     }
 
@@ -1576,9 +1990,13 @@ public class IdentificationFeaturesGenerator {
         ProteinMatch proteinMatch = identification.getProteinMatch(proteinMatchKey);
 
         return (int) Arrays.stream(proteinMatch.getPeptideMatchesKeys())
-                .flatMap(key -> Arrays.stream(identification.getPeptideMatch(key).getSpectrumMatchesKeys()))
-                .filter(key -> ((PSParameter) identification.getSpectrumMatch(key).getUrParam(PSParameter.dummy))
-                .getMatchValidationLevel().isValidated())
+                .flatMap(
+                        key -> Arrays.stream(identification.getPeptideMatch(key).getSpectrumMatchesKeys())
+                )
+                .filter(
+                        key -> ((PSParameter) identification.getSpectrumMatch(key).getUrParam(PSParameter.dummy))
+                                .getMatchValidationLevel().isValidated()
+                )
                 .count();
     }
 
@@ -1594,9 +2012,13 @@ public class IdentificationFeaturesGenerator {
         ProteinMatch proteinMatch = identification.getProteinMatch(proteinMatchKey);
 
         return (int) Arrays.stream(proteinMatch.getPeptideMatchesKeys())
-                .flatMap(key -> Arrays.stream(identification.getPeptideMatch(key).getSpectrumMatchesKeys()))
-                .filter(key -> ((PSParameter) identification.getSpectrumMatch(key).getUrParam(PSParameter.dummy))
-                .getMatchValidationLevel() == MatchValidationLevel.confident)
+                .flatMap(
+                        key -> Arrays.stream(identification.getPeptideMatch(key).getSpectrumMatchesKeys())
+                )
+                .filter(
+                        key -> ((PSParameter) identification.getSpectrumMatch(key).getUrParam(PSParameter.dummy))
+                                .getMatchValidationLevel() == MatchValidationLevel.confident
+                )
                 .count();
     }
 
@@ -1609,12 +2031,19 @@ public class IdentificationFeaturesGenerator {
      */
     public int getNValidatedSpectraForPeptide(long peptideMatchKey) {
 
-        Integer result = (Integer) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.number_of_validated_spectra, peptideMatchKey);
+        Integer result = (Integer) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.number_of_validated_spectra,
+                peptideMatchKey
+        );
 
         if (result == null) {
 
             result = estimateNValidatedSpectraForPeptide(peptideMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.number_of_validated_spectra, peptideMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.number_of_validated_spectra,
+                    peptideMatchKey,
+                    result
+            );
 
         }
 
@@ -1628,14 +2057,23 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of confident spectra
      */
-    public int getNConfidentSpectraForPeptide(long peptideMatchKey) {
+    public int getNConfidentSpectraForPeptide(
+            long peptideMatchKey
+    ) {
 
-        Integer result = (Integer) identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.number_of_confident_spectra, peptideMatchKey);
+        Integer result = (Integer) identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.number_of_confident_spectra,
+                peptideMatchKey
+        );
 
         if (result == null) {
 
             result = estimateNConfidentSpectraForPeptide(peptideMatchKey);
-            identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.number_of_confident_spectra, peptideMatchKey, result);
+            identificationFeaturesCache.addObject(
+                    IdentificationFeaturesCache.ObjectType.number_of_confident_spectra,
+                    peptideMatchKey,
+                    result
+            );
 
         }
 
@@ -1647,10 +2085,16 @@ public class IdentificationFeaturesGenerator {
      *
      * @param peptideMatchKey the key of the peptide match
      */
-    public void updateNConfidentSpectraForPeptide(long peptideMatchKey) {
+    public void updateNConfidentSpectraForPeptide(
+            long peptideMatchKey
+    ) {
 
         Integer result = estimateNConfidentSpectraForPeptide(peptideMatchKey);
-        identificationFeaturesCache.addObject(IdentificationFeaturesCache.ObjectType.number_of_confident_spectra, peptideMatchKey, result);
+        identificationFeaturesCache.addObject(
+                IdentificationFeaturesCache.ObjectType.number_of_confident_spectra,
+                peptideMatchKey,
+                result
+        );
 
     }
 
@@ -1664,7 +2108,12 @@ public class IdentificationFeaturesGenerator {
      */
     public boolean nValidatedSpectraForPeptideInCache(long peptideMatchKey) {
 
-        return identificationFeaturesCache.getObject(IdentificationFeaturesCache.ObjectType.number_of_validated_spectra, peptideMatchKey) != null;
+        Object object = identificationFeaturesCache.getObject(
+                IdentificationFeaturesCache.ObjectType.number_of_validated_spectra,
+                peptideMatchKey
+        );
+
+        return object != null;
 
     }
 
@@ -1675,13 +2124,17 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of confident spectra where this peptide was found
      */
-    private int estimateNConfidentSpectraForPeptide(long peptideMatchKey) {
+    private int estimateNConfidentSpectraForPeptide(
+            long peptideMatchKey
+    ) {
 
         PeptideMatch peptideMatch = identification.getPeptideMatch(peptideMatchKey);
 
         return (int) Arrays.stream(peptideMatch.getSpectrumMatchesKeys())
-                .filter(key -> ((PSParameter) identification.getSpectrumMatch(key).getUrParam(PSParameter.dummy))
-                .getMatchValidationLevel() == MatchValidationLevel.confident)
+                .filter(
+                        key -> ((PSParameter) identification.getSpectrumMatch(key).getUrParam(PSParameter.dummy))
+                                .getMatchValidationLevel() == MatchValidationLevel.confident
+                )
                 .count();
 
     }
@@ -1693,13 +2146,17 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the number of validated spectra where this peptide was found
      */
-    private int estimateNValidatedSpectraForPeptide(long peptideMatchKey) {
+    private int estimateNValidatedSpectraForPeptide(
+            long peptideMatchKey
+    ) {
 
         PeptideMatch peptideMatch = identification.getPeptideMatch(peptideMatchKey);
 
         return (int) Arrays.stream(peptideMatch.getSpectrumMatchesKeys())
-                .filter(key -> ((PSParameter) identification.getSpectrumMatch(key).getUrParam(PSParameter.dummy))
-                .getMatchValidationLevel().isValidated())
+                .filter(
+                        key -> ((PSParameter) identification.getSpectrumMatch(key).getUrParam(PSParameter.dummy))
+                                .getMatchValidationLevel().isValidated()
+                )
                 .count();
 
     }
@@ -1709,7 +2166,9 @@ public class IdentificationFeaturesGenerator {
      */
     public void clearSpectrumCounting() {
 
-        identificationFeaturesCache.removeObjects(IdentificationFeaturesCache.ObjectType.spectrum_counting);
+        identificationFeaturesCache.removeObjects(
+                IdentificationFeaturesCache.ObjectType.spectrum_counting
+        );
 
     }
 
@@ -1723,18 +2182,36 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a modification summary for the given match
      */
-    public String getConfidentModificationSites(IdentificationMatch identificationMatch, String sequence) {
+    public String getConfidentModificationSites(
+            IdentificationMatch identificationMatch,
+            String sequence
+    ) {
 
         PSModificationScores modificationsScores = (PSModificationScores) identificationMatch.getUrParam(new PSModificationScores());
 
         return modificationsScores == null ? ""
                 : modificationsScores.getConfidentlyLocalizedModifications().stream()
-                        .map(modName -> String.join("", modName, modificationsScores.getConfidentSitesForModification(modName).stream()
-                        .sorted()
-                        .map(modSite -> PeptideUtils.getModifiedAaIndex(modSite, sequence.length()))
-                        .map(site -> String.join("", sequence.substring(site, site + 1), site.toString()))
-                        .collect(Collectors.joining(", ", " (", ")"))))
-                        .collect(Collectors.joining(";"));
+                        .map(
+                                modName -> String.join("",
+                                        modName,
+                                        modificationsScores.getConfidentSitesForModification(modName).stream()
+                                                .sorted()
+                                                .map(
+                                                        modSite -> PeptideUtils.getModifiedAaIndex(modSite, sequence.length())
+                                                )
+                                                .map(
+                                                        site -> String.join("",
+                                                                sequence.substring(site, site + 1), site.toString()
+                                                        )
+                                                )
+                                                .collect(
+                                                        Collectors.joining(", ", " (", ")")
+                                                )
+                                )
+                        )
+                        .collect(
+                                Collectors.joining(";")
+                        );
 
     }
 
@@ -1745,14 +2222,25 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a modification summary for the given protein
      */
-    public String getConfidentModificationSitesNumber(IdentificationMatch identificationMatch) {
+    public String getConfidentModificationSitesNumber(
+            IdentificationMatch identificationMatch
+    ) {
 
         final PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(new PSModificationScores());
 
         return modificationScores == null ? ""
                 : modificationScores.getConfidentlyLocalizedModifications().stream()
-                        .map(modName -> String.join("", modName, " (", Integer.toString(modificationScores.getConfidentSitesForModification(modName).size()), ")"))
-                        .collect(Collectors.joining(";"));
+                        .map(
+                                modName -> String.join("",
+                                        modName,
+                                        " (",
+                                        Integer.toString(modificationScores.getConfidentSitesForModification(modName).size()),
+                                        ")"
+                                )
+                        )
+                        .collect(
+                                Collectors.joining(";")
+                        );
 
     }
 
@@ -1767,14 +2255,29 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a modification summary for the given protein
      */
-    public String getAmbiguousModificationSites(IdentificationMatch identificationMatch, String sequence) {
+    public String getAmbiguousModificationSites(
+            IdentificationMatch identificationMatch,
+            String sequence
+    ) {
 
         final PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(new PSModificationScores());
 
         return modificationScores == null ? ""
                 : modificationScores.getAmbiguouslyLocalizedModifications().stream()
-                        .map(modName -> String.join("", modName, " (", getSitesSummary(modificationScores.getAmbiguousModificationsSites(modName), sequence), ")"))
-                        .collect(Collectors.joining(";"));
+                        .map(
+                                modName -> String.join("",
+                                        modName,
+                                        " (",
+                                        getSitesSummary(
+                                                modificationScores.getAmbiguousModificationsSites(modName),
+                                                sequence
+                                        ),
+                                        ")"
+                                )
+                        )
+                        .collect(
+                                Collectors.joining(";")
+                        );
 
     }
 
@@ -1786,22 +2289,48 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a string representing the given map of modification sites
      */
-    private String getSitesSummary(HashMap<Integer, HashSet<Integer>> sites, String sequence) {
+    private String getSitesSummary(
+            HashMap<Integer, HashSet<Integer>> sites,
+            String sequence
+    ) {
 
         return (new TreeMap<>(sites)).entrySet().stream()
                 .map(
                         entry -> String.join(
                                 "",
                                 sequence.substring(
-                                        ModificationUtils.getSite(entry.getKey(), sequence.length()) - 1,
-                                        ModificationUtils.getSite(entry.getKey(), sequence.length())),
+                                        ModificationUtils.getSite(
+                                                entry.getKey(),
+                                                sequence.length()
+                                        ) - 1,
+                                        ModificationUtils.getSite(
+                                                entry.getKey(),
+                                                sequence.length()
+                                        )
+                                ),
                                 Integer.toString(
-                                        ModificationUtils.getSite(entry.getKey(), sequence.length())),
+                                        ModificationUtils.getSite(
+                                                entry.getKey(),
+                                                sequence.length()
+                                        )
+                                ),
                                 entry.getValue().stream()
-                                        .map(index -> Integer.toString(
-                                        ModificationUtils.getSite(index, sequence.length())))
-                                        .collect(Collectors.joining(" ", "-{", "}"))))
-                .collect(Collectors.joining(","));
+                                        .map(
+                                                index -> Integer.toString(
+                                                        ModificationUtils.getSite(
+                                                                index,
+                                                                sequence.length()
+                                                        )
+                                                )
+                                        )
+                                        .collect(
+                                                Collectors.joining(" ", "-{", "}")
+                                        )
+                        )
+                )
+                .collect(
+                        Collectors.joining(",")
+                );
 
     }
 
@@ -1815,15 +2344,27 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a modification summary for the given match
      */
-    public String getAmbiguousModificationSiteNumber(IdentificationMatch identificationMatch) {
+    public String getAmbiguousModificationSiteNumber(
+            IdentificationMatch identificationMatch
+    ) {
 
         final PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(new PSModificationScores());
 
         return modificationScores == null ? ""
                 : modificationScores.getAmbiguouslyLocalizedModifications().stream()
-                        .map(modName -> String.join("",
-                        modName, " (", Integer.toString(modificationScores.getAmbiguousModificationsSites(modName).size()), ")"))
-                        .collect(Collectors.joining(";"));
+                        .map(
+                                modName -> String.join("",
+                                        modName,
+                                        " (",
+                                        Integer.toString(
+                                                modificationScores.getAmbiguousModificationsSites(modName).size()
+                                        ),
+                                        ")"
+                                )
+                        )
+                        .collect(
+                                Collectors.joining(";")
+                        );
 
     }
 
@@ -1838,18 +2379,36 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a modification summary for the given match
      */
-    public String getConfidentModificationSites(IdentificationMatch match, String sequence, ArrayList<String> targetedModifications) {
+    public String getConfidentModificationSites(
+            IdentificationMatch match,
+            String sequence,
+            ArrayList<String> targetedModifications
+    ) {
 
         final PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(new PSModificationScores());
 
         return modificationScores == null ? ""
                 : targetedModifications.stream()
-                        .flatMap(modName -> modificationScores.getConfidentSitesForModification(modName).stream())
+                        .flatMap(
+                                modName -> modificationScores.getConfidentSitesForModification(modName).stream()
+                        )
                         .distinct()
                         .sorted()
-                        .map(modSite -> PeptideUtils.getModifiedAaIndex(modSite, sequence.length()))
-                        .map(site -> String.join("", sequence.substring(site, site + 1), site.toString()))
-                        .collect(Collectors.joining(","));
+                        .map(
+                                modSite -> PeptideUtils.getModifiedAaIndex(
+                                        modSite,
+                                        sequence.length()
+                                )
+                        )
+                        .map(
+                                site -> String.join("",
+                                        sequence.substring(site, site + 1),
+                                        site.toString()
+                                )
+                        )
+                        .collect(
+                                Collectors.joining(",")
+                        );
 
     }
 
@@ -1861,14 +2420,19 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a modification summary for the given match
      */
-    public String getConfidentModificationSitesNumber(IdentificationMatch match, ArrayList<String> targetedModifications) {
+    public String getConfidentModificationSitesNumber(
+            IdentificationMatch match,
+            ArrayList<String> targetedModifications
+    ) {
 
         final PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(new PSModificationScores());
 
         return modificationScores == null ? ""
                 : Long.toString(
                         targetedModifications.stream()
-                                .flatMap(modName -> modificationScores.getConfidentSitesForModification(modName).stream())
+                                .flatMap(
+                                        modName -> modificationScores.getConfidentSitesForModification(modName).stream()
+                                )
                                 .distinct()
                                 .count());
 
@@ -1886,7 +2450,11 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a modification summary for the given match
      */
-    public String getAmbiguousModificationSites(IdentificationMatch match, String sequence, ArrayList<String> targetedModifications) {
+    public String getAmbiguousModificationSites(
+            IdentificationMatch match,
+            String sequence,
+            ArrayList<String> targetedModifications
+    ) {
 
         PSModificationScores modificationScores = new PSModificationScores();
         modificationScores = (PSModificationScores) match.getUrParam(modificationScores);
@@ -1909,12 +2477,25 @@ public class IdentificationFeaturesGenerator {
                     HashSet<Integer> ambiguousSites = entry.getValue();
 
                     StringBuilder prefix = new StringBuilder();
-                    prefix.append(sequence.charAt(representativeSite - 1)).append(representativeSite).append("-{");
+                    prefix
+                            .append(sequence.charAt(representativeSite - 1))
+                            .append(representativeSite)
+                            .append("-{");
 
                     String reportAtSite = ambiguousSites.stream()
                             .sorted()
-                            .map(site -> String.join("", sequence.substring(site - 1, site), site.toString()))
-                            .collect(Collectors.joining(" ", prefix, "}"));
+                            .map(
+                                    site -> String.join("",
+                                            sequence.substring(site - 1, site),
+                                            site.toString()
+                                    )
+                            )
+                            .collect(
+                                    Collectors.joining(" ",
+                                            prefix,
+                                            "}"
+                                    )
+                            );
 
                     ArrayList<String> reportsAtSite = reportPerSite.get(representativeSite);
 
@@ -1948,16 +2529,22 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a modification summary for the given match
      */
-    public String getAmbiguousModificationSiteNumber(IdentificationMatch match, ArrayList<String> targetedModifications) {
+    public String getAmbiguousModificationSiteNumber(
+            IdentificationMatch match,
+            ArrayList<String> targetedModifications
+    ) {
 
         final PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(new PSModificationScores());
 
         return modificationScores == null ? ""
                 : Long.toString(
                         targetedModifications.stream()
-                                .flatMap(modName -> modificationScores.getAmbiguousModificationsSites(modName).keySet().stream())
+                                .flatMap(
+                                        modName -> modificationScores.getAmbiguousModificationsSites(modName).keySet().stream()
+                                )
                                 .distinct()
-                                .count());
+                                .count()
+                );
 
     }
 
@@ -1969,7 +2556,10 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the protein sequence annotated with modifications
      */
-    public String getModifiedSequence(IdentificationMatch identificationMatch, String sequence) {
+    public String getModifiedSequence(
+            IdentificationMatch identificationMatch,
+            String sequence
+    ) {
 
         PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(new PSModificationScores());
 
@@ -1993,8 +2583,13 @@ public class IdentificationFeaturesGenerator {
                     result.append(
                             modificationsAtSite.stream()
                                     .sorted()
-                                    .map(modName -> modificationFactory.getModification(modName).getShortName())
-                                    .collect(Collectors.joining(",", "<", ">")));
+                                    .map(
+                                            modName -> modificationFactory.getModification(modName).getShortName()
+                                    )
+                                    .collect(
+                                            Collectors.joining(",", "<", ">")
+                                    )
+                    );
 
                 }
             }
@@ -2012,7 +2607,9 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the list of validated protein keys
      */
-    public long[] getValidatedProteins(FilterParameters filterPreferences) {
+    public long[] getValidatedProteins(
+            FilterParameters filterPreferences
+    ) {
 
         return getValidatedProteins(null, filterPreferences);
 
@@ -2027,7 +2624,10 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the list of validated protein keys
      */
-    public long[] getValidatedProteins(WaitingHandler waitingHandler, FilterParameters filterPreferences) {
+    public long[] getValidatedProteins(
+            WaitingHandler waitingHandler,
+            FilterParameters filterPreferences
+    ) {
 
         long[] result = identificationFeaturesCache.getValidatedProteinList();
 
@@ -2049,7 +2649,10 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the sorted list of protein keys
      */
-    public long[] getProcessedProteinKeys(WaitingHandler waitingHandler, FilterParameters filterPreferences) {
+    public long[] getProcessedProteinKeys(
+            WaitingHandler waitingHandler,
+            FilterParameters filterPreferences
+    ) {
 
         if (identificationFeaturesCache.getProteinList() == null) {
             if (waitingHandler != null) {
@@ -2302,7 +2905,10 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the ordered protein keys to display when no filtering is applied.
      */
-    public long[] getProteinKeys(WaitingHandler waitingHandler, FilterParameters filterPreferences) {
+    public long[] getProteinKeys(
+            WaitingHandler waitingHandler,
+            FilterParameters filterPreferences
+    ) {
 
         if (identificationFeaturesCache.getProteinList() == null) {
 
@@ -2320,31 +2926,47 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a sorted list of the corresponding peptide keys
      */
-    public long[] getSortedPeptideKeys(long proteinKey) {
+    public long[] getSortedPeptideKeys(
+            long proteinKey
+    ) {
 
         if (proteinKey != identificationFeaturesCache.getCurrentProteinKey() || identificationFeaturesCache.getPeptideList() == null) {
 
             ProteinMatch proteinMatch = identification.getProteinMatch(proteinKey);
 
             TreeMap<Double, TreeMap<Integer, TreeSet<Long>>> peptideMap = Arrays.stream(proteinMatch.getPeptideMatchesKeys())
-                    .filter(peptideKey -> !((PSParameter) identification.getPeptideMatch(peptideKey).getUrParam(PSParameter.dummy)).getHidden())
+                    .filter(
+                            peptideKey -> !((PSParameter) identification.getPeptideMatch(peptideKey).getUrParam(PSParameter.dummy)).getHidden()
+                    )
                     .boxed()
-                    .collect(Collectors.groupingBy(peptideKey -> ((PSParameter) identification.getPeptideMatch(peptideKey).getUrParam(PSParameter.dummy)).getScore(),
-                            TreeMap::new,
-                            Collectors.groupingBy(peptideKey -> identification.getPeptideMatch(peptideKey).getSpectrumCount(),
+                    .collect(
+                            Collectors.groupingBy(
+                                    peptideKey -> ((PSParameter) identification.getPeptideMatch(peptideKey).getUrParam(PSParameter.dummy)).getScore(),
                                     TreeMap::new,
-                                    Collectors.toCollection(TreeSet::new))));
+                                    Collectors.groupingBy(
+                                            peptideKey -> identification.getPeptideMatch(peptideKey).getSpectrumCount(),
+                                            TreeMap::new,
+                                            Collectors.toCollection(TreeSet::new)
+                                    )
+                            )
+                    );
 
             int maxSpectrumCount = peptideMap.values().stream()
-                    .mapToInt(map -> map.lastKey())
+                    .mapToInt(
+                            map -> map.lastKey()
+                    )
                     .max()
                     .orElse(0);
 
             identificationFeaturesCache.setMaxSpectrumCount(maxSpectrumCount);
 
             long[] sortedKeys = peptideMap.values().stream()
-                    .flatMap(map -> map.descendingMap().values().stream())
-                    .flatMap(subKeys -> subKeys.stream())
+                    .flatMap(
+                            map -> map.descendingMap().values().stream()
+                    )
+                    .flatMap(
+                            subKeys -> subKeys.stream()
+                    )
                     .mapToLong(a -> a)
                     .toArray();
 
@@ -2366,15 +2988,19 @@ public class IdentificationFeaturesGenerator {
      *
      * @return the ordered list of spectrum keys
      */
-    public long[] getSortedPsmKeys(long peptideKey, boolean sortOnRt, boolean forceUpdate) {
+    public long[] getSortedPsmKeys(
+            long peptideKey,
+            boolean sortOnRt,
+            boolean forceUpdate
+    ) {
 
         if (peptideKey != identificationFeaturesCache.getCurrentPeptideKey() || identificationFeaturesCache.getPsmList() == null || forceUpdate) {
 
             PeptideMatch peptideMatch = identification.getPeptideMatch(peptideKey);
 
             HashMap<Integer, HashMap<Double, ArrayList<Long>>> orderingMap = new HashMap<>(1);
+            double precursorRT = Double.NaN;
             boolean hasRT = sortOnRt;
-            double rt = -1;
             int nValidatedPsms = 0;
 
             long[] spectrumKeys = peptideMatch.getSpectrumMatchesKeys();
@@ -2407,10 +3033,12 @@ public class IdentificationFeaturesGenerator {
 
                         try {
 
-                            Precursor precursor = spectrumFactory.getPrecursor(spectrumMatch.getSpectrumKey());
-                            rt = precursor.getRt();
+                            precursorRT = spectrumProvider.getPrecursorRt(
+                                    spectrumMatch.getSpectrumFile(),
+                                    spectrumMatch.getSpectrumtitle()
+                            );
 
-                            if (rt == -1) {
+                            if (Double.isNaN(precursorRT)) {
 
                                 hasRT = false;
 
@@ -2426,17 +3054,17 @@ public class IdentificationFeaturesGenerator {
 
                     if (!hasRT) {
 
-                        rt = psParameter.getScore();
+                        precursorRT = psParameter.getScore();
 
                     }
 
-                    if (!orderingMap.get(charge).containsKey(rt)) {
+                    if (!orderingMap.get(charge).containsKey(precursorRT)) {
 
-                        orderingMap.get(charge).put(rt, new ArrayList<>(1));
+                        orderingMap.get(charge).put(precursorRT, new ArrayList<>(1));
 
                     }
 
-                    orderingMap.get(charge).get(rt).add(matchKey);
+                    orderingMap.get(charge).get(precursorRT).add(matchKey);
 
                 }
             }
@@ -2491,7 +3119,9 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a boolean indicating whether hiding proteins is necessary
      */
-    private boolean hidingNeeded(FilterParameters filterPreferences) {
+    private boolean hidingNeeded(
+            FilterParameters filterPreferences
+    ) {
 
         if (filterPreferences == null) {
 
@@ -2523,7 +3153,9 @@ public class IdentificationFeaturesGenerator {
      *
      * @param proteinList the ordered protein list
      */
-    public void setProteinKeys(long[] proteinList) {
+    public void setProteinKeys(
+            long[] proteinList
+    ) {
 
         identificationFeaturesCache.setProteinList(proteinList);
 
@@ -2545,7 +3177,9 @@ public class IdentificationFeaturesGenerator {
      *
      * @param identificationFeaturesCache the new identification features cache
      */
-    public void setIdentificationFeaturesCache(IdentificationFeaturesCache identificationFeaturesCache) {
+    public void setIdentificationFeaturesCache(
+            IdentificationFeaturesCache identificationFeaturesCache
+    ) {
 
         this.identificationFeaturesCache = identificationFeaturesCache;
 
@@ -2567,7 +3201,9 @@ public class IdentificationFeaturesGenerator {
      *
      * @param spectrumCountingPreferences the spectrum counting preferences
      */
-    public void setSpectrumCountingPreferences(SpectrumCountingParameters spectrumCountingPreferences) {
+    public void setSpectrumCountingPreferences(
+            SpectrumCountingParameters spectrumCountingPreferences
+    ) {
 
         this.spectrumCountingPreferences = spectrumCountingPreferences;
 
@@ -2580,7 +3216,9 @@ public class IdentificationFeaturesGenerator {
      *
      * @return true if peptide is found in a single protein match
      */
-    public int getNValidatedProteinGroups(long peptideKey) {
+    public int getNValidatedProteinGroups(
+            long peptideKey
+    ) {
 
         return getNValidatedProteinGroups(peptideKey, null);
 
@@ -2595,13 +3233,18 @@ public class IdentificationFeaturesGenerator {
      *
      * @return true if peptide is found in a single protein match
      */
-    public int getNValidatedProteinGroups(long peptideKey, WaitingHandler waitingHandler) {
+    public int getNValidatedProteinGroups(
+            long peptideKey,
+            WaitingHandler waitingHandler
+    ) {
 
         TreeSet<Long> keys = identification.getProteinMatches(peptideKey);
 
         return (int) keys.stream()
-                .filter(key -> ((PSParameter) identification.getProteinMatch(key).getUrParam(PSParameter.dummy))
-                .getMatchValidationLevel().isValidated())
+                .filter(
+                        key -> ((PSParameter) identification.getProteinMatch(key).getUrParam(PSParameter.dummy))
+                                .getMatchValidationLevel().isValidated()
+                )
                 .count();
 
     }

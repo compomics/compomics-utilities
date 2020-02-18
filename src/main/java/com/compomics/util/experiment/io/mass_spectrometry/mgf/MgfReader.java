@@ -1,16 +1,13 @@
 package com.compomics.util.experiment.io.mass_spectrometry.mgf;
 
-import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.UtilitiesUserParameters;
 import com.compomics.util.waiting.WaitingHandler;
 
 import java.io.*;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;

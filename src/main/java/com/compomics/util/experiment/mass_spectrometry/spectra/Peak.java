@@ -20,10 +20,6 @@ public class Peak extends ExperimentObject {
     }
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
-     */
-    static final long serialVersionUID = -7425947046833405676L;
-    /**
      * The mass over charge ratio of the peak.
      */
     public final double mz;

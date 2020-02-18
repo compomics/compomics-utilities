@@ -24,7 +24,7 @@ import org.apache.commons.codec.binary.Base64;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class IoUtils {
+public class IoUtil {
 
     /**
      * Default encoding, cf the second rule.

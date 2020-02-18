@@ -7,7 +7,7 @@ import com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileWriter;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.io.IoUtils;
+import com.compomics.util.io.IoUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -146,7 +146,7 @@ public class MsFileHandler implements SpectrumProvider {
 
         }
 
-        String newName = IoUtils.removeExtension(fileName) + CmsFileUtils.EXTENSION;
+        String newName = IoUtil.removeExtension(fileName) + CmsFileUtils.EXTENSION;
 
         File folder = cmsFolder == null ? msFile.getParentFile() : cmsFolder;
 

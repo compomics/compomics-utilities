@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.zip.Deflater;
 import static com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileUtils.mergeArrays;
-import static com.compomics.util.io.IoUtils.ENCODING;
+import static com.compomics.util.io.IoUtil.ENCODING;
 import static com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileUtils.MAGIC_NUMBER;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;

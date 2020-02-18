@@ -1,11 +1,11 @@
 package com.compomics.util.experiment.mass_spectrometry.indexes;
 
 import com.compomics.util.db.object.DbObject;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.personalization.UrParameter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.stream.Stream;
 import org.apache.commons.math.util.FastMath;
 
 /**
@@ -15,23 +15,27 @@ import org.apache.commons.math.util.FastMath;
  * @author Harald Barsnes
  */
 public class SpectrumIndex extends DbObject implements UrParameter {
-    
+
     /**
      * Serial number used for serialization and object key.
      */
     private static final long serialVersionUID = -4447843223014568761L;
     /**
-     * The precursor mass tolerance.
+     * The mass tolerance.
      */
-    public final double precursorTolerance;
+    public final double tolerance;
     /**
      * Boolean indicating whether the precursor mass tolerance is in ppm.
      */
     private boolean ppm;
     /**
-     * Map of the precursors by bin and m/z.
+     * Map of the fragment ions index by bin.
      */
-    private HashMap<Integer, HashMap<Double, Peak>> peaksMap;
+    private final HashMap<Integer, ArrayList<Integer>> peaksMap = new HashMap<>();
+    /**
+     * The mz array of the spectrum.
+     */
+    private final double[] mzArray;
     /**
      * An m/z anchor to determine the bins in ppm.
      */
@@ -66,112 +70,124 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public SpectrumIndex() {
         intensityLimit = 0.0;
-        precursorTolerance = 0.0;
+        tolerance = 0.0;
+        mzArray = null;
     }
 
     /**
      * Builds a new index.
      *
-     * @param peaks map of the peaks indexed by m/z
+     * @param mz array of the mz of the fragment ions
+     * @param intensity array of the intensity of the fragment ions
      * @param intenstiyLimit a lower limit for the intensity of the peaks to
      * index
      * @param tolerance the tolerance to use
      * @param ppm boolean indicating whether the tolerance is in ppm
      */
-    public SpectrumIndex(HashMap<Double, Peak> peaks, double intenstiyLimit, double tolerance, boolean ppm) {
-        
+    public SpectrumIndex(
+            double[] mz,
+            double[] intensity,
+            double intenstiyLimit,
+            double tolerance,
+            boolean ppm
+    ) {
+
         this.intensityLimit = intenstiyLimit;
-        this.peaksMap = new HashMap<>();
-        this.precursorTolerance = tolerance;
+        this.mzArray = mz;
+        this.tolerance = tolerance;
         this.ppm = ppm;
-        
+
         if (ppm) {
-            
+
             scalingFactor = FastMath.log((1000000 - tolerance) / (1000000 + tolerance));
-            
+
         }
-        
+
         totalIntensity = 0.0;
-        
-        for (Peak peak : peaks.values()) {
-            
-            if (peak.intensity >= intenstiyLimit) {
-                
-                totalIntensity += peak.intensity;
-                Integer bin = getBin(peak.mz);
-                
+
+        for (int i = 0; i < mz.length; i++) {
+
+            double peakInt = intensity[i];
+
+            if (peakInt >= intenstiyLimit) {
+
+                totalIntensity += peakInt;
+
+                double peakMz = mz[i];
+                Integer bin = getBin(peakMz);
+
                 if (binMax == null || bin > binMax) {
-                    
+
                     binMax = bin;
-                    
+
                 }
-                
+
                 if (binMin == null || bin < binMin) {
-                    
+
                     binMin = bin;
-                    
+
                 }
-                
-                HashMap<Double, Peak> peaksInBin = peaksMap.get(bin);
-                
-                if (peaksInBin == null) {
-                    
-                    peaksInBin = new HashMap<>(4);
-                    peaksMap.put(bin, peaksInBin);
-                    
+
+                ArrayList<Integer> indexes = peaksMap.get(bin);
+
+                if (indexes == null) {
+
+                    indexes = new ArrayList<>(4);
+                    peaksMap.put(bin, indexes);
+
                 }
-                
-                peaksInBin.put(peak.mz, peak);
-                
+
+                indexes.add(i);
+
             }
         }
     }
-    
+
     /**
      * Returns the peaks map.
-     * 
+     *
      * @return the peaks map
      */
-    public HashMap<Integer, HashMap<Double, Peak>> getPeaksMap(){
-        
+    public HashMap<Integer, ArrayList<Integer>> getPeaksMap() {
+
         readDBMode();
-        
+
         return peaksMap;
     }
-    
+
     /**
      * Returns whether the precursor mass tolerance is in ppm.
-     * 
+     *
      * @return whether the precursor mass tolerance is in ppm
      */
-    public boolean getPpm(){
-        
+    public boolean getPpm() {
+
         readDBMode();
-        
+
         return ppm;
     }
-    
+
     /**
      * Returns the precursor tolerance.
-     * 
+     *
      * @return the precursor tolerance
      */
-    public double getPrecursorToleance(){
-        
+    public double getPrecursorToleance() {
+
         readDBMode();
-        
-        return precursorTolerance;
+
+        return tolerance;
     }
-    
+
     /**
      * Returns the scaling factor.
-     * 
+     *
      * @return the scaling factor
      */
-    public double getScalingFactor(){
-        
+    public double getScalingFactor() {
+
         readDBMode();
-        
+
         return scalingFactor;
     }
 
@@ -183,18 +199,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the bin
      */
     public int getBin(double mz) {
-        
+
         readDBMode();
-        
-        if (ppm) {
-            
-            return getBinPpm(mz);
-            
-        } else {
-            
-            return getBinAbsolute(mz);
-            
-        }
+
+        return ppm ? getBinPpm(mz) : getBinAbsolute(mz);
+
     }
 
     /**
@@ -205,12 +214,14 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      *
      * @return the bin
      */
-    private int getBinAbsolute(double mz) {
-        
+    private int getBinAbsolute(
+            double mz
+    ) {
+
         readDBMode();
-        
-        int bin = (int) (mz / precursorTolerance);
-        
+
+        int bin = (int) (mz / tolerance);
+
         return bin;
     }
 
@@ -222,104 +233,92 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      *
      * @return the bin
      */
-    private int getBinPpm(double mz) {
-        
+    private int getBinPpm(
+            double mz
+    ) {
+
         readDBMode();
-        
+
         int bin = (int) ((FastMath.log(mz) - MZ_ANCHOR_LOG) / scalingFactor);
-        
+
         return bin;
     }
 
     /**
-     * Returns the peaks matching the given m/z. 
-     * 
-     * TODO: check only one/two bins
-     * when possible.
+     * Returns the peaks matching the given m/z.
      *
-     * @param mz a m/z to query
+     * TODO: check only one/two bins when possible.
      *
-     * @return the peaks matching the given m/z
+     * @param queryMz a m/z to query
+     *
+     * @return the index of the peaks matching the given m/z
      */
-    public ArrayList<Peak> getMatchingPeaks(double mz) {
-        
+    public int[] getMatchingPeaks(
+            double queryMz
+    ) {
+
         readDBMode();
-        
+
         int bin0;
         if (ppm) {
-            
-            bin0 = getBinPpm(mz);
-            
+
+            bin0 = getBinPpm(queryMz);
+
         } else {
-            
-            bin0 = getBinAbsolute(mz);
-            
+
+            bin0 = getBinAbsolute(queryMz);
+
         }
-        
-        ArrayList<Peak> result = new ArrayList<>(0);
-        HashMap<Double, Peak> binContent = peaksMap.get(bin0 - 1);
-        
-        if (binContent != null) {
-            
-            for (Double peakMz : binContent.keySet()) {
-                
-                double error = ppm ? 1000000 * (peakMz - mz) / mz : peakMz - mz;
-                
-                if (Math.abs(error) <= precursorTolerance) {
-                    
-                    result.add(binContent.get(peakMz));
-                    
-                }
-            }
-        }
-        
-        binContent = peaksMap.get(bin0);
-        
-        if (binContent != null) {
-            
-            for (Double peakMz : binContent.keySet()) {
-                
-                double error = ppm ? 1000000 * (peakMz - mz) / mz : peakMz - mz;
-                
-                if (Math.abs(error) <= precursorTolerance) {
-                    
-                    result.add(binContent.get(peakMz));
-                    
-                }
-            }
-        }
-        
-        binContent = peaksMap.get(bin0 + 1);
-        
-        if (binContent != null) {
-            
-            for (Double peakMz : binContent.keySet()) {
-                
-                double error = ppm ? 1000000 * (peakMz - mz) / mz : peakMz - mz;
-                
-                if (Math.abs(error) <= precursorTolerance) {
-                    
-                    result.add(binContent.get(peakMz));
-                    
-                }
-            }
-        }
-        
-        return result;
-        
+
+        ArrayList<Integer> binContent1 = peaksMap.get(bin0 - 1);
+        ArrayList<Integer> binContent2 = peaksMap.get(bin0);
+        ArrayList<Integer> binContent3 = peaksMap.get(bin0 + 1);
+
+        return Stream.concat(
+                binContent1.stream(),
+                Stream.concat(
+                        binContent2.stream(),
+                        binContent3.stream()
+                )
+        )
+                .mapToInt(i -> i)
+                .filter(
+                        i -> isBelowTolerance(queryMz, i)
+                )
+                .toArray();
     }
 
     /**
-     * Returns the bins in the map as a list. The list is created every time me method is called.
+     * Indicates whether the peak at the given index is matching the queried m/z.
+     * 
+     * @param queryMz The queried m/z.
+     * @param index The index of the peak.
+     * 
+     * @return A boolean indicating whether the peak at the given index is matching the queried m/z.
+     */
+    private boolean isBelowTolerance(
+            double queryMz,
+            int index
+    ) {
+
+        double peakMz = mzArray[index];
+        double error = ppm ? 1000000 * (peakMz - queryMz) / queryMz : peakMz - queryMz;
+
+        return Math.abs(error) <= tolerance;
+    }
+
+    /**
+     * Returns the bins in the map as a list. The list is created every time me
+     * method is called.
      *
      * @return the bins in the map
      */
     public ArrayList<Integer> getBins() {
-        
+
         readDBMode();
-        
+
         return new ArrayList<>(peaksMap.keySet());
-        
+
     }
 
     /**
@@ -328,26 +327,29 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the bins in the map
      */
     public Set<Integer> getRawBins() {
-        
+
         readDBMode();
-        
+
         return peaksMap.keySet();
-        
+
     }
 
     /**
-     * Returns the peaks at the given bin indexed by m/z. Null if none found.
+     * Returns the indexes of the peaks at the given bin indexed by m/z. Null if
+     * none found.
      *
      * @param bin the bin number
      *
-     * @return the peaks at the given bin
+     * @return the indexes of the peaks at the given bin
      */
-    public HashMap<Double, Peak> getPeaksInBin(Integer bin) {
-        
+    public ArrayList<Integer> getPeaksInBin(
+            int bin
+    ) {
+
         readDBMode();
-        
+
         return peaksMap.get(bin);
-        
+
     }
 
     /**
@@ -357,136 +359,135 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      *
      * @return the mass associated with the given bin
      */
-    public Double getMass(int bin) {
-        
+    public double getMass(
+            int bin
+    ) {
+
         readDBMode();
-        
-        return ppm ?  FastMath.exp((scalingFactor * bin) + MZ_ANCHOR_LOG)
-                : precursorTolerance * (0.5 + bin);
-        
+
+        return ppm ? FastMath.exp((scalingFactor * bin) + MZ_ANCHOR_LOG)
+                : tolerance * (0.5 + bin);
+
     }
 
     /**
      * Returns the highest bin.
-     * 
+     *
      * @return binMax the highest bin
      */
     public Integer getBinMax() {
-        
+
         readDBMode();
-        
+
         return binMax;
-        
+
     }
 
     /**
      * Returns the lowest bin.
-     * 
+     *
      * @return binMin the lowest bin
      */
     public Integer getBinMin() {
-        
+
         readDBMode();
-        
+
         return binMin;
-        
+
     }
 
     /**
      * Returns the total intensity of the peaks above the intensity threshold.
-     * 
+     *
      * @return the total intensity of the peaks above the intensity threshold
      */
-    public Double getTotalIntensity() {
-        
+    public double getTotalIntensity() {
+
         readDBMode();
-        
+
         return totalIntensity;
-        
+
     }
 
     @Override
     public long getParameterKey() {
-        
+
         return serialVersionUID;
-        
+
     }
-    
+
     /**
      * Sets the highest bin in index.
-     * 
+     *
      * @param binMax the highest bin in index
      */
-    public void setBinMax(Integer binMax){
-        
+    public void setBinMax(
+            Integer binMax
+    ) {
+
         writeDBMode();
-        
+
         this.binMax = binMax;
-        
+
     }
-    
+
     /**
      * Sets the lowest bin in index.
-     * 
+     *
      * @param binMin the lowest bin in index
      */
-    public void setBinMin(Integer binMin){
-        
+    public void setBinMin(
+            Integer binMin
+    ) {
+
         writeDBMode();
-        
+
         this.binMin = binMin;
-        
+
     }
-    
-    /**
-     * Sets the peaks map.
-     * 
-     * @param peaksMap the peaks map.
-     */
-    public void setPeaksMap(HashMap<Integer, HashMap<Double, Peak>> peaksMap){
-        
-        writeDBMode();
-        
-        this.peaksMap = peaksMap;
-        
-    }
-    
+
     /**
      * Sets whether the precursor mass tolerance is in ppm.
-     * 
+     *
      * @param ppm whether the precursor mass tolerance is in ppm
      */
-    public void setPpm(boolean ppm){
-        
+    public void setPpm(
+            boolean ppm
+    ) {
+
         writeDBMode();
-        
+
         this.ppm = ppm;
-        
+
     }
-    
+
     /**
      * Sets the scaling factor.
-     * 
+     *
      * @param scalingFactor the scaling factor
      */
-    public void setScalingFactor(double scalingFactor){
-        
+    public void setScalingFactor(
+            double scalingFactor
+    ) {
+
         writeDBMode();
-        
+
         this.scalingFactor = scalingFactor;
-        
+
     }
-    
+
     /**
      * Set the total intensity.
-     * 
+     *
      * @param totalIntensity the total intensity
      */
-    public void setTotalIntensity(Double totalIntensity){
-        
+    public void setTotalIntensity(
+            double totalIntensity
+    ) {
+
         writeDBMode();
-        
+
         this.totalIntensity = totalIntensity;
-        
+
     }
 }

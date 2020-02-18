@@ -1,6 +1,6 @@
 package com.compomics.util.io.flat.readers;
 
-import static com.compomics.util.io.IoUtils.ENCODING;
+import static com.compomics.util.io.IoUtil.ENCODING;
 import com.compomics.util.io.flat.SimpleFileReader;
 import java.io.BufferedReader;
 import java.io.File;

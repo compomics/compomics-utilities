@@ -332,8 +332,25 @@ public class AssumptionFilter extends MatchFilter {
                 ModificationParameters modificationParameters = identificationParameters.getSearchParameters().getModificationParameters();
                 SequenceMatchingParameters modificationSequenceMatchingParameters = identificationParameters.getModificationLocalizationParameters().getSequenceMatchingParameters();
                 PeptideSpectrumAnnotator peptideSpectrumAnnotator = new PeptideSpectrumAnnotator();
-                SpecificAnnotationParameters specificAnnotationPreferences = annotationPreferences.getSpecificAnnotationParameters(spectrum.getSpectrumKey(), peptideAssumption, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, peptideSpectrumAnnotator);
-                Map<Integer, ArrayList<IonMatch>> matches = peptideSpectrumAnnotator.getCoveredAminoAcids(annotationPreferences, specificAnnotationPreferences, spectrum, peptide, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, true);
+                SpecificAnnotationParameters specificAnnotationPreferences = annotationPreferences.getSpecificAnnotationParameters(
+                        spectrumFile, 
+                        spectrumTitle, 
+                        peptideAssumption, 
+                        modificationParameters, 
+                        sequenceProvider, 
+                        modificationSequenceMatchingParameters, 
+                        peptideSpectrumAnnotator
+                );
+                Map<Integer, ArrayList<IonMatch>> matches = peptideSpectrumAnnotator.getCoveredAminoAcids(
+                        annotationPreferences, 
+                        specificAnnotationPreferences, 
+                        spectrum, 
+                        peptide, 
+                        modificationParameters, 
+                        sequenceProvider, 
+                        modificationSequenceMatchingParameters, 
+                        true
+                );
                 double nCovered = 0;
                 int nAA = peptide.getSequence().length();
 
@@ -355,9 +372,6 @@ public class AssumptionFilter extends MatchFilter {
             case algorithmScore:
                 double score = peptideAssumption.getRawScore();
                 return filterItemComparator.passes(input, score);
-
-            case fileNames:
-                return filterItemComparator.passes(input, Spectrum.getSpectrumFile(spectrumKey));
 
             case confidence:
                 PSParameter psParameter = (PSParameter) (identification.getSpectrumMatch(spectrumMatchKey)).getUrParam(PSParameter.dummy);

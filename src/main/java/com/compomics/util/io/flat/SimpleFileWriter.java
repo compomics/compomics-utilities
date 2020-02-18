@@ -1,6 +1,6 @@
 package com.compomics.util.io.flat;
 
-import static com.compomics.util.io.IoUtils.DEFAULT_SEPARATOR;
+import static com.compomics.util.io.IoUtil.DEFAULT_SEPARATOR;
 import com.compomics.util.threading.SimpleSemaphore;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,7 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.zip.GZIPOutputStream;
-import static com.compomics.util.io.IoUtils.ENCODING;
+import static com.compomics.util.io.IoUtil.ENCODING;
 
 /**
  * Simple gz file writer that is thread safe and throws exceptions as runtime

@@ -180,7 +180,11 @@ public class Identification extends ExperimentObject {
             boolean displayProgress
     ) throws InterruptedException {
 
-        objectsDB.loadObjects(className, waitingHandler, displayProgress);
+        objectsDB.loadObjects(
+                className, 
+                waitingHandler, 
+                displayProgress
+        );
 
     }
 
@@ -202,7 +206,11 @@ public class Identification extends ExperimentObject {
             boolean displayProgress
     ) throws InterruptedException {
 
-        objectsDB.loadObjects(keyList, waitingHandler, displayProgress);
+        objectsDB.loadObjects(
+                keyList, 
+                waitingHandler, 
+                displayProgress
+        );
 
     }
 
@@ -283,7 +291,11 @@ public class Identification extends ExperimentObject {
             boolean displayProgress
     ) {
 
-        return objectsDB.retrieveObjects(keyList, waitingHandler, displayProgress);
+        return objectsDB.retrieveObjects(
+                keyList, 
+                waitingHandler, 
+                displayProgress
+        );
     }
 
     /**
@@ -297,9 +309,17 @@ public class Identification extends ExperimentObject {
      *
      * @return list of objects
      */
-    public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
+    public ArrayList<Object> retrieveObjects(
+            Class className, 
+            WaitingHandler waitingHandler, 
+            boolean displayProgress
+    ) {
 
-        return objectsDB.retrieveObjects(className, waitingHandler, displayProgress);
+        return objectsDB.retrieveObjects(
+                className, 
+                waitingHandler, 
+                displayProgress
+        );
 
     }
 
@@ -409,7 +429,11 @@ public class Identification extends ExperimentObject {
             boolean displayProgress
     ) {
 
-        objectsDB.removeObjects(keys, waitingHandler, displayProgress);
+        objectsDB.removeObjects(
+                keys, 
+                waitingHandler, 
+                displayProgress
+        );
 
     }
 
@@ -494,7 +518,7 @@ public class Identification extends ExperimentObject {
             long key = entry.getKey();
             SpectrumMatch spectrumMatch = (SpectrumMatch) entry.getValue();
 
-            String fileName = Spectrum.getSpectrumFile(spectrumMatch.getSpectrumKey());
+            String fileName = spectrumMatch.getSpectrumFile();
 
             HashSet<Long> fileKeys = identificationKeys.spectrumIdentification.get(fileName);
 
@@ -625,11 +649,24 @@ public class Identification extends ExperimentObject {
             long peptideKey
     ) {
 
-        return getPeptideMatch(peptideKey).getPeptide().getProteinMapping().navigableKeySet().stream()
-                .filter(accession -> identificationKeys.proteinMap.containsKey(accession))
-                .flatMap(accession -> identificationKeys.proteinMap.get(accession).stream())
-                .filter(proteinKey -> getProteinMatch(proteinKey).containsPeptide(peptideKey))
-                .collect(Collectors.toCollection(TreeSet::new));
+        return getPeptideMatch(peptideKey)
+                .getPeptide()
+                .getProteinMapping()
+                .navigableKeySet()
+                .stream()
+                .filter(
+                        accession -> identificationKeys.proteinMap.containsKey(accession)
+                )
+                .flatMap(
+                        accession -> identificationKeys.proteinMap.get(accession).stream()
+                )
+                .filter(
+                        proteinKey -> getProteinMatch(proteinKey)
+                                .containsPeptide(peptideKey)
+                )
+                .collect(
+                        Collectors.toCollection(TreeSet::new)
+                );
     }
 
     /**

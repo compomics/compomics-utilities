@@ -12,7 +12,7 @@ import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import static com.compomics.util.io.IoUtils.ENCODING;
+import static com.compomics.util.io.IoUtil.ENCODING;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;

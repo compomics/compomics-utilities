@@ -2,7 +2,7 @@ package com.compomics.software.autoupdater;
 
 import com.compomics.software.settings.UtilitiesPathParameters;
 import com.compomics.util.Util;
-import com.compomics.util.io.IoUtils;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.parameters.UtilitiesUserParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.awt.GraphicsEnvironment;
@@ -251,7 +251,7 @@ public class DownloadLatestZipFromRepo {
             if (pathFile.exists()) {
                 String downloadFolderPath = new File(downloadedJarFile.getAbsoluteFilePath()).getParent();
                 File newPathFile = new File(downloadFolderPath, UtilitiesPathParameters.configurationFileName);
-                IoUtils.copyFile(pathFile, newPathFile);
+                IoUtil.copyFile(pathFile, newPathFile);
             }
 
             try {

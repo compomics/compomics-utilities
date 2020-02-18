@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.filtering;
 
 import com.compomics.util.experiment.filtering.FilterItemComparator;
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.genes.GeneMaps;
 import com.compomics.util.experiment.filtering.Filter;
 import com.compomics.util.experiment.filtering.FilterItem;
@@ -9,7 +8,9 @@ import com.compomics.util.experiment.identification.Identification;
 import com.compomics.util.experiment.identification.features.IdentificationFeaturesGenerator;
 import com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.parameters.identification.IdentificationParameters;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -26,11 +27,6 @@ public abstract class MatchFilter implements Filter {
      */
     public MatchFilter() {
     }
-
-    /**
-     * Serial number for serialization compatibility.
-     */
-    static final long serialVersionUID = 7413446840381260115L;
     /**
      * Name of the filter.
      */
@@ -70,11 +66,11 @@ public abstract class MatchFilter implements Filter {
     /**
      * Map of the comparators to use.
      */
-    protected HashMap<String, FilterItemComparator> comparatorsMap = new HashMap<>();
+    protected HashMap<String, FilterItemComparator> comparatorsMap = new HashMap<>(0);
     /**
      * Map of the values to filter on.
      */
-    protected HashMap<String, Object> valuesMap = new HashMap<>();
+    protected HashMap<String, Object> valuesMap = new HashMap<>(0);
 
     /**
      * Enum for the type of possible filter.
@@ -119,12 +115,12 @@ public abstract class MatchFilter implements Filter {
     }
 
     @Override
-    public String getReport(boolean filterPassed) {
-        if (filterPassed) {
-            return reportPassed;
-        } else {
-            return reportFailed;
-        }
+    public String getReport(
+            boolean filterPassed
+    ) {
+        
+        return filterPassed ? reportPassed : reportFailed;
+        
     }
 
     /**
@@ -132,7 +128,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param newName the name to be given to the filter
      */
-    public void setName(String newName) {
+    public void setName(
+            String newName
+    ) {
         name = newName;
     }
 
@@ -141,7 +139,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param description the description of the filter
      */
-    public void setDescription(String description) {
+    public void setDescription(
+            String description
+    ) {
         this.description = description;
     }
 
@@ -150,7 +150,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param condition the description of the condition to meet
      */
-    public void setCondition(String condition) {
+    public void setCondition(
+            String condition
+    ) {
         this.condition = condition;
     }
 
@@ -159,7 +161,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param reportPassed the report when the filter is passed
      */
-    public void setReportPassed(String reportPassed) {
+    public void setReportPassed(
+            String reportPassed
+    ) {
         this.reportPassed = reportPassed;
     }
 
@@ -168,7 +172,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param reportFailed the report when the filter is not passed
      */
-    public void setReportFailed(String reportFailed) {
+    public void setReportFailed(
+            String reportFailed
+    ) {
         this.reportFailed = reportFailed;
     }
 
@@ -186,7 +192,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param filterType the type of the filter
      */
-    public void setType(FilterType filterType) {
+    public void setType(
+            FilterType filterType
+    ) {
         this.filterType = filterType;
     }
 
@@ -204,7 +212,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param active a boolean indicating whether the filter is active
      */
-    public void setActive(boolean active) {
+    public void setActive(
+            boolean active
+    ) {
         this.active = active;
     }
 
@@ -231,7 +241,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param matchKey the key of the match to add
      */
-    public void addManualValidation(Long matchKey) {
+    public void addManualValidation(
+            long matchKey
+    ) {
         manualValidation.add(matchKey);
     }
 
@@ -240,7 +252,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param manualValidation list of manually validated keys
      */
-    public void setManualValidation(HashSet<Long> manualValidation) {
+    public void setManualValidation(
+            HashSet<Long> manualValidation
+    ) {
         this.manualValidation = manualValidation;
     }
 
@@ -249,7 +263,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param matchKey the key of the exception to add
      */
-    public void addException(Long matchKey) {
+    public void addException(
+            long matchKey
+    ) {
         exceptions.add(matchKey);
     }
 
@@ -258,7 +274,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param exceptions the excepted matches
      */
-    public void setExceptions(HashSet<Long> exceptions) {
+    public void setExceptions(
+            HashSet<Long> exceptions
+    ) {
         this.exceptions = exceptions;
     }
 
@@ -267,7 +285,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param matchKey the key of the match to remove
      */
-    public void removeManualValidation(Long matchKey) {
+    public void removeManualValidation(
+            long matchKey
+    ) {
         manualValidation.remove(matchKey);
     }
 
@@ -276,7 +296,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param matchKey the key of the exception to remove
      */
-    public void removeException(Long matchKey) {
+    public void removeException(
+            long matchKey
+    ) {
         exceptions.remove(matchKey);
     }
 
@@ -317,7 +339,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @param itemName the name of the item to remove
      */
-    public void removeFilterItem(String itemName) {
+    public void removeFilterItem(
+            String itemName
+    ) {
         comparatorsMap.remove(itemName);
         valuesMap.remove(itemName);
     }
@@ -329,7 +353,11 @@ public abstract class MatchFilter implements Filter {
      * @param filterItemComparator the comparator
      * @param value the value to filter
      */
-    public void setFilterItem(String itemName, FilterItemComparator filterItemComparator, Object value) {
+    public void setFilterItem(
+            String itemName, 
+            FilterItemComparator filterItemComparator, 
+            Object value
+    ) {
         setComparatorForItem(itemName, filterItemComparator);
         setValueForItem(itemName, value);
     }
@@ -340,7 +368,10 @@ public abstract class MatchFilter implements Filter {
      * @param itemName the name of the item to filter on
      * @param filterItemComparator the comparator
      */
-    public void setComparatorForItem(String itemName, FilterItemComparator filterItemComparator) {
+    public void setComparatorForItem(
+            String itemName, 
+            FilterItemComparator filterItemComparator
+    ) {
         comparatorsMap.put(itemName, filterItemComparator);
     }
     
@@ -350,7 +381,10 @@ public abstract class MatchFilter implements Filter {
      * @param itemName the name of the item to filter on
      * @param value the comparator
      */
-    public void setValueForItem(String itemName, Object value) {
+    public void setValueForItem(
+            String itemName, 
+            Object value
+    ) {
         valuesMap.put(itemName, value);
     }
 
@@ -370,7 +404,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @return the comparator set for a given filtering item
      */
-    public FilterItemComparator getComparatorForItem(String itemName) {
+    public FilterItemComparator getComparatorForItem(
+            String itemName
+    ) {
         return comparatorsMap.get(itemName);
     }
 
@@ -381,7 +417,9 @@ public abstract class MatchFilter implements Filter {
      *
      * @return the value used for comparison for a given filtering item
      */
-    public Object getValue(String itemName) {
+    public Object getValue(
+            String itemName
+    ) {
         return valuesMap.get(itemName);
     }
     
@@ -404,13 +442,22 @@ public abstract class MatchFilter implements Filter {
      * generator providing identification features
      * @param identificationParameters the identification parameters
      * @param sequenceProvider the protein sequence provider
+     * @param spectrumProvider the spectrum provider
      * @param proteinDetailsProvider a provider for protein details
      *
      * @return a boolean indicating whether a match is validated by a given
      * filter
      */
-    public boolean isValidated(long matchKey, Identification identification, GeneMaps geneMaps, IdentificationFeaturesGenerator identificationFeaturesGenerator,
-            IdentificationParameters identificationParameters, SequenceProvider sequenceProvider, ProteinDetailsProvider proteinDetailsProvider) {
+    public boolean isValidated(
+            long matchKey, 
+            Identification identification, 
+            GeneMaps geneMaps, 
+            IdentificationFeaturesGenerator identificationFeaturesGenerator,
+            IdentificationParameters identificationParameters, 
+            SequenceProvider sequenceProvider, 
+            SpectrumProvider spectrumProvider, 
+            ProteinDetailsProvider proteinDetailsProvider
+    ) {
 
         if (exceptions.contains(matchKey)) {
             
@@ -430,7 +477,21 @@ public abstract class MatchFilter implements Filter {
             Object value = entry.getValue();
             FilterItemComparator filterItemComparator = comparatorsMap.get(itemName);
             
-            if (!isValidated(itemName, filterItemComparator, value, matchKey, identification, geneMaps, identificationFeaturesGenerator, identificationParameters, sequenceProvider, proteinDetailsProvider)) {
+            boolean validated = isValidated(
+                    itemName, 
+                    filterItemComparator, 
+                    value, 
+                    matchKey, 
+                    identification, 
+                    geneMaps, 
+                    identificationFeaturesGenerator, 
+                    identificationParameters, 
+                    sequenceProvider, 
+                    spectrumProvider,
+                    proteinDetailsProvider
+            );
+            
+            if (!validated) {
             
                 return false;
             
@@ -456,14 +517,26 @@ public abstract class MatchFilter implements Filter {
      * generator where to get identification features
      * @param identificationParameters the identification parameters used
      * @param sequenceProvider the protein sequence provider
+     * @param spectrumProvider the spectrum provider
      * @param proteinDetailsProvider the protein details provider
      *
      * @return a boolean indicating whether the match designated by the protein
      * key validates the given item using the given comparator and value
      * threshold.
      */
-    public abstract boolean isValidated(String itemName, FilterItemComparator filterItemComparator, Object value, long matchKey, Identification identification, GeneMaps geneMaps, IdentificationFeaturesGenerator identificationFeaturesGenerator,
-            IdentificationParameters identificationParameters, SequenceProvider sequenceProvider, ProteinDetailsProvider proteinDetailsProvider);
+    public abstract boolean isValidated(
+            String itemName, 
+            FilterItemComparator filterItemComparator, 
+            Object value, 
+            long matchKey, 
+            Identification identification, 
+            GeneMaps geneMaps, 
+            IdentificationFeaturesGenerator identificationFeaturesGenerator,
+            IdentificationParameters identificationParameters, 
+            SequenceProvider sequenceProvider, 
+            SpectrumProvider spectrumProvider,
+            ProteinDetailsProvider proteinDetailsProvider
+    );
 
     @Override
     public boolean isSameAs(Filter anotherFilter) {
@@ -526,12 +599,13 @@ public abstract class MatchFilter implements Filter {
      * @return the filter items accepted by this filter
      */
     public String[] getPossibleFilterItemsNames() {
-        FilterItem[] values = getPossibleFilterItems();
-        String[] names = new String[values.length];
-        for (int i = 0 ; i < values.length ; i++) {
-            names[i] = values[i].getName();
-        }
-        return names;
+        
+        return Arrays.stream(getPossibleFilterItems())
+                .map(
+                        item -> item.getName()
+                )
+                .toArray(String[]::new);
+        
     }
     
     /**

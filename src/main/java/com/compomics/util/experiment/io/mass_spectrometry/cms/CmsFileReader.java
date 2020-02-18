@@ -5,7 +5,7 @@ import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.spectra.SpectrumUtils;
-import static com.compomics.util.io.IoUtils.ENCODING;
+import static com.compomics.util.io.IoUtil.ENCODING;
 import com.compomics.util.threading.SimpleSemaphore;
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.filtering.items;
 
 import com.compomics.util.experiment.filtering.FilterItem;
-import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.experiment.identification.validation.MatchValidationLevel;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +23,6 @@ public enum AssumptionFilterItem implements FilterItem {
     ptm("PTM", "Post-translational modification carried by the match."),
     sequenceCoverage("Sequence coverage", "Coverage of the sequence by fragment ions in percent."),
     algorithmScore("Algorithm score", "Score given by the identification algorithm."),
-    fileNames("Spectrum file", "Name of the spectrum file."),
     confidence("Confidence", "Confidence in protein identification."),
     validationStatus("Validation", "Validation status."),
     stared("Stared", "Marked with a yellow star.");
@@ -44,7 +42,10 @@ public enum AssumptionFilterItem implements FilterItem {
      * @param name name of the filtering item
      * @param description description of the filtering item
      */
-    private AssumptionFilterItem(String name, String description) {
+    private AssumptionFilterItem(
+            String name, 
+            String description
+    ) {
         this.name = name;
         this.description = description;
     }
@@ -56,7 +57,9 @@ public enum AssumptionFilterItem implements FilterItem {
      *
      * @return the item of interest
      */
-    public static AssumptionFilterItem getItem(String itemName) {
+    public static AssumptionFilterItem getItem(
+            String itemName
+    ) {
         for (AssumptionFilterItem filterItem : AssumptionFilterItem.values()) {
             if (filterItem.name.equals(itemName)) {
                 return filterItem;
@@ -106,8 +109,6 @@ public enum AssumptionFilterItem implements FilterItem {
     @Override
     public ArrayList<String> getPossibilities() {
         switch (this) {
-            case fileNames:
-                return SpectrumFactory.getInstance().getMgfFileNames();
             case validationStatus:
                 return new ArrayList<>(Arrays.asList(MatchValidationLevel.getValidationLevelsNames()));
             case stared:

@@ -79,7 +79,7 @@ public abstract class SpectrumAnnotator {
     /**
      * The precursor charges to inspect by default.
      */
-    protected ArrayList<Integer> defaultPrecursorCharges;
+    protected HashSet<Integer> defaultPrecursorCharges;
     /**
      * The theoretic fragment ions.
      */
@@ -91,11 +91,11 @@ public abstract class SpectrumAnnotator {
     /**
      * The file of the currently loaded spectrum.
      */
-    private String spectrumFile = "";
+    protected String spectrumFile = "";
     /**
      * The title of the currently loaded spectrum.
      */
-    private String spectrumTitle = "";
+    protected String spectrumTitle = "";
     /**
      * The intensity limit to use.
      */
@@ -518,6 +518,8 @@ public abstract class SpectrumAnnotator {
      * Returns the currently matched ions with the given settings using the
      * intensity filter.
      *
+     * @param spectrumFile the file of the spectrum to annotate
+     * @param spectrumTitle the title of the spectrum to annotate
      * @param spectrum the spectrum of interest
      * @param annotationSettings the annotation settings
      * @param specificAnnotationSettings the specific annotation settings
@@ -530,6 +532,8 @@ public abstract class SpectrumAnnotator {
      * @return the currently matched ions with the given settings
      */
     public IonMatch[] getCurrentAnnotation(
+            String spectrumFile,
+            String spectrumTitle,
             Spectrum spectrum,
             AnnotationParameters annotationSettings,
             SpecificAnnotationParameters specificAnnotationSettings,
@@ -538,6 +542,8 @@ public abstract class SpectrumAnnotator {
             SequenceMatchingParameters modificationsSequenceMatchingParameters
     ) {
         return getCurrentAnnotation(
+                spectrumFile,
+                spectrumTitle,
                 spectrum,
                 annotationSettings,
                 specificAnnotationSettings,
@@ -551,7 +557,9 @@ public abstract class SpectrumAnnotator {
     /**
      * Returns the currently matched ions with the given settings.
      *
-     * @param spectrum the spectrum of interest
+     * @param spectrumFile the file of the spectrum to annotate
+     * @param spectrumTitle the title of the spectrum to annotate
+     * @param spectrum the spectrum to annotate
      * @param annotationSettings the annotation settings
      * @param specificAnnotationSettings the specific annotation settings
      * @param modificationParameters the modification parameters the
@@ -565,6 +573,8 @@ public abstract class SpectrumAnnotator {
      * @return the currently matched ions with the given settings
      */
     public abstract IonMatch[] getCurrentAnnotation(
+            String spectrumFile,
+            String spectrumTitle,
             Spectrum spectrum,
             AnnotationParameters annotationSettings,
             SpecificAnnotationParameters specificAnnotationSettings,

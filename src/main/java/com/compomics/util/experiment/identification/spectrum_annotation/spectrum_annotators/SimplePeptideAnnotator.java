@@ -50,9 +50,14 @@ public class SimplePeptideAnnotator {
          * @param forwardSeries the index of the forward ion
          * @param complementarySeries the index of the complementary ion
          */
-        private IonSeries(int forwardSeries, int complementarySeries) {
+        private IonSeries(
+                int forwardSeries,
+                int complementarySeries
+        ) {
+
             this.forwardSeries = forwardSeries;
             this.complementarySeries = complementarySeries;
+
         }
     }
 
@@ -92,16 +97,22 @@ public class SimplePeptideAnnotator {
      * Annotator for the reporter ions.
      */
     private ReporterIonAnnotator reporterIonAnnotator;
-    
+
     /**
-     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
-     * 
+     * Constructor. Fixed modifications must be indexed as provided by the
+     * peptide class.
+     *
      * @param peptide the peptide to annotate
      * @param fixedModifications the fixed modifications of the peptide
      * @param charge the charge of the peptide
      * @param annotationSettings the annotation preferences
      */
-    public SimplePeptideAnnotator(Peptide peptide, String[] fixedModifications, int charge, AnnotationParameters annotationSettings) {
+    public SimplePeptideAnnotator(
+            Peptide peptide,
+            String[] fixedModifications,
+            int charge,
+            AnnotationParameters annotationSettings
+    ) {
 
         boolean neutralLossesSequence = annotationSettings.areNeutralLossesSequenceAuto();
         ArrayList<NeutralLoss> neutralLosses = annotationSettings.getNeutralLosses();
@@ -113,61 +124,135 @@ public class SimplePeptideAnnotator {
         if (peptideFragmentIons != null) {
 
             for (int fragmentIonType : peptideFragmentIons) {
+
                 IonSeries ionSeries;
+
                 switch (fragmentIonType) {
                     case PeptideFragmentIon.A_ION:
+
                     case PeptideFragmentIon.X_ION:
+
                         ionSeries = IonSeries.ax;
+
                         if (axFragmentAnnotator == null) {
-                            axFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, ionSeries, peptideFragmentIons.contains(PeptideFragmentIon.A_ION), peptideFragmentIons.contains(PeptideFragmentIon.X_ION));
+
+                            axFragmentAnnotator = new FragmentAnnotator(
+                                    peptide,
+                                    fixedModifications,
+                                    ionSeries,
+                                    peptideFragmentIons.contains(PeptideFragmentIon.A_ION),
+                                    peptideFragmentIons.contains(PeptideFragmentIon.X_ION)
+                            );
+
                             if (!neutralLosses.isEmpty()) {
-                                axFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, ionSeries, neutralLossesSequence, peptideFragmentIons.contains(PeptideFragmentIon.A_ION), peptideFragmentIons.contains(PeptideFragmentIon.X_ION));
+
+                                axFragmentAnnotatorNL = new FragmentAnnotatorNL(
+                                        peptide,
+                                        fixedModifications,
+                                        ionSeries,
+                                        neutralLossesSequence,
+                                        peptideFragmentIons.contains(PeptideFragmentIon.A_ION),
+                                        peptideFragmentIons.contains(PeptideFragmentIon.X_ION)
+                                );
                             }
                         }
                         break;
+
                     case PeptideFragmentIon.B_ION:
+
                     case PeptideFragmentIon.Y_ION:
+
                         ionSeries = IonSeries.by;
+
                         if (byFragmentAnnotator == null) {
-                            byFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, ionSeries, peptideFragmentIons.contains(PeptideFragmentIon.B_ION), peptideFragmentIons.contains(PeptideFragmentIon.Y_ION));
+
+                            byFragmentAnnotator = new FragmentAnnotator(
+                                    peptide,
+                                    fixedModifications,
+                                    ionSeries,
+                                    peptideFragmentIons.contains(PeptideFragmentIon.B_ION),
+                                    peptideFragmentIons.contains(PeptideFragmentIon.Y_ION)
+                            );
+
                             if (!neutralLosses.isEmpty()) {
-                                byFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, ionSeries, neutralLossesSequence, peptideFragmentIons.contains(PeptideFragmentIon.B_ION), peptideFragmentIons.contains(PeptideFragmentIon.Y_ION));
+
+                                byFragmentAnnotatorNL = new FragmentAnnotatorNL(
+                                        peptide,
+                                        fixedModifications,
+                                        ionSeries,
+                                        neutralLossesSequence,
+                                        peptideFragmentIons.contains(PeptideFragmentIon.B_ION),
+                                        peptideFragmentIons.contains(PeptideFragmentIon.Y_ION)
+                                );
                             }
                         }
                         break;
+
                     case PeptideFragmentIon.C_ION:
+
                     case PeptideFragmentIon.Z_ION:
+
                         ionSeries = IonSeries.cz;
+
                         if (czFragmentAnnotator == null) {
-                            czFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, ionSeries, peptideFragmentIons.contains(PeptideFragmentIon.C_ION), peptideFragmentIons.contains(PeptideFragmentIon.Z_ION));
+
+                            czFragmentAnnotator = new FragmentAnnotator(
+                                    peptide,
+                                    fixedModifications,
+                                    ionSeries,
+                                    peptideFragmentIons.contains(PeptideFragmentIon.C_ION),
+                                    peptideFragmentIons.contains(PeptideFragmentIon.Z_ION)
+                            );
+
                             if (!neutralLosses.isEmpty()) {
-                                czFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, ionSeries, neutralLossesSequence, peptideFragmentIons.contains(PeptideFragmentIon.C_ION), peptideFragmentIons.contains(PeptideFragmentIon.Z_ION));
+
+                                czFragmentAnnotatorNL = new FragmentAnnotatorNL(
+                                        peptide,
+                                        fixedModifications,
+                                        ionSeries,
+                                        neutralLossesSequence,
+                                        peptideFragmentIons.contains(PeptideFragmentIon.C_ION),
+                                        peptideFragmentIons.contains(PeptideFragmentIon.Z_ION)
+                                );
                             }
                         }
                         break;
+
                     default:
                         throw new UnsupportedOperationException("Ion type " + fragmentIonType + " not supported.");
+
                 }
             }
         }
 
         if (ionTypes.containsKey(IonType.PRECURSOR_ION)) {
+
             precursorAnnotator = new PrecursorAnnotator(peptide, fixedModifications);
+
         }
-        
+
         if (ionTypes.containsKey(IonType.IMMONIUM_ION) || ionTypes.containsKey(IonType.RELATED_ION)) {
-        char[] peptideSequence = peptide.getSequence().toCharArray();
+
+            char[] peptideSequence = peptide.getSequence().toCharArray();
             immoniumIonAnnotator = new ImmoniumIonAnnotator(peptideSequence);
+
         }
 
         HashSet<Integer> reporterIonsIndexes = ionTypes.get(IonType.REPORTER_ION);
+
         if (reporterIonsIndexes != null) {
+
             ReporterIon[] reporterIons = new ReporterIon[reporterIonsIndexes.size()];
             int cpt = 0;
+
             for (int index : reporterIonsIndexes) {
+
                 reporterIons[cpt++] = ReporterIon.getReporterIon(index);
+
             }
+
             reporterIonAnnotator = new ReporterIonAnnotator(reporterIons);
+
         }
     }
 
@@ -178,8 +263,9 @@ public class SimplePeptideAnnotator {
     }
 
     /**
-     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
-     * 
+     * Constructor. Fixed modifications must be indexed as provided by the
+     * peptide class.
+     *
      * @param peptide the peptide to annotate
      * @param fixedModifications the fixed modifications of the peptide
      * @param charge the charge of the peptide
@@ -189,102 +275,294 @@ public class SimplePeptideAnnotator {
      * @param x boolean indicating whether x ions should be annotated
      * @param y boolean indicating whether y ions should be annotated
      * @param z boolean indicating whether z ions should be annotated
-     * @param precursor boolean indicating whether precursor ions should be annotated
-     * @param immonium boolean indicating whether immonium ions should be annotated
-     * @param related boolean indicating whether related ions should be annotated
-     * @param reporter boolean indicating whether reporter ions should be annotated
-     * @param neutralLosses boolean indicating whether fragment ions with neutral losses should be annotated
-     * @param neutralLossesSequenceDependent  boolean indicating whether the neutral losses should be selected depending on the sequence
+     * @param precursor boolean indicating whether precursor ions should be
+     * annotated
+     * @param immonium boolean indicating whether immonium ions should be
+     * annotated
+     * @param related boolean indicating whether related ions should be
+     * annotated
+     * @param reporter boolean indicating whether reporter ions should be
+     * annotated
+     * @param neutralLosses boolean indicating whether fragment ions with
+     * neutral losses should be annotated
+     * @param neutralLossesSequenceDependent boolean indicating whether the
+     * neutral losses should be selected depending on the sequence
      * @param reporterIons the reporter ions to annotate
      */
-    public SimplePeptideAnnotator(Peptide peptide, String[] fixedModifications, 
-            int charge, boolean a, boolean b, boolean c, boolean x, boolean y, boolean z,
-            boolean precursor, boolean immonium, boolean related, boolean reporter, boolean neutralLosses, boolean neutralLossesSequenceDependent, ReporterIon[] reporterIons) {
-        
+    public SimplePeptideAnnotator(
+            Peptide peptide,
+            String[] fixedModifications,
+            int charge,
+            boolean a,
+            boolean b,
+            boolean c,
+            boolean x,
+            boolean y,
+            boolean z,
+            boolean precursor,
+            boolean immonium,
+            boolean related,
+            boolean reporter,
+            boolean neutralLosses,
+            boolean neutralLossesSequenceDependent,
+            ReporterIon[] reporterIons
+    ) {
+
         if (a & x) {
-            axFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, IonSeries.ax);
+
+            axFragmentAnnotator = new FragmentAnnotator(
+                    peptide,
+                    fixedModifications,
+                    IonSeries.ax
+            );
+
             if (neutralLosses) {
-                axFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, IonSeries.ax, neutralLossesSequenceDependent);
+
+                axFragmentAnnotatorNL = new FragmentAnnotatorNL(
+                        peptide,
+                        fixedModifications,
+                        IonSeries.ax,
+                        neutralLossesSequenceDependent
+                );
             }
+
         } else if (a || x) {
-            axFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, IonSeries.ax, a, x);
+
+            axFragmentAnnotator = new FragmentAnnotator(
+                    peptide,
+                    fixedModifications,
+                    IonSeries.ax,
+                    a,
+                    x
+            );
+
             if (neutralLosses) {
-                axFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, IonSeries.ax, neutralLossesSequenceDependent, a, x);
+
+                axFragmentAnnotatorNL = new FragmentAnnotatorNL(
+                        peptide,
+                        fixedModifications,
+                        IonSeries.ax,
+                        neutralLossesSequenceDependent,
+                        a,
+                        x
+                );
             }
         }
+
         if (b & y) {
-            byFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, IonSeries.by);
+
+            byFragmentAnnotator = new FragmentAnnotator(
+                    peptide,
+                    fixedModifications,
+                    IonSeries.by
+            );
+
             if (neutralLosses) {
-                byFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, IonSeries.by, neutralLossesSequenceDependent);
+
+                byFragmentAnnotatorNL = new FragmentAnnotatorNL(
+                        peptide,
+                        fixedModifications,
+                        IonSeries.by,
+                        neutralLossesSequenceDependent
+                );
             }
+
         } else if (b || y) {
-            byFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, IonSeries.by, b, y);
+
+            byFragmentAnnotator = new FragmentAnnotator(
+                    peptide,
+                    fixedModifications,
+                    IonSeries.by,
+                    b,
+                    y
+            );
+
             if (neutralLosses) {
-                byFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, IonSeries.by, neutralLossesSequenceDependent, b, y);
+
+                byFragmentAnnotatorNL = new FragmentAnnotatorNL(
+                        peptide,
+                        fixedModifications,
+                        IonSeries.by,
+                        neutralLossesSequenceDependent,
+                        b,
+                        y
+                );
             }
         }
+
         if (c & z) {
-            czFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, IonSeries.cz);
+
+            czFragmentAnnotator = new FragmentAnnotator(
+                    peptide,
+                    fixedModifications,
+                    IonSeries.cz
+            );
+
             if (neutralLosses) {
-                czFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, IonSeries.cz, neutralLossesSequenceDependent);
+
+                czFragmentAnnotatorNL = new FragmentAnnotatorNL(
+                        peptide,
+                        fixedModifications,
+                        IonSeries.cz,
+                        neutralLossesSequenceDependent
+                );
             }
+
         } else if (c || z) {
-            czFragmentAnnotator = new FragmentAnnotator(peptide, fixedModifications, IonSeries.cz, c, z);
+
+            czFragmentAnnotator = new FragmentAnnotator(
+                    peptide,
+                    fixedModifications,
+                    IonSeries.cz,
+                    c,
+                    z
+            );
+
             if (neutralLosses) {
-                czFragmentAnnotatorNL = new FragmentAnnotatorNL(peptide, fixedModifications, IonSeries.cz, neutralLossesSequenceDependent, c, z);
+
+                czFragmentAnnotatorNL = new FragmentAnnotatorNL(
+                        peptide,
+                        fixedModifications,
+                        IonSeries.cz,
+                        neutralLossesSequenceDependent,
+                        c,
+                        z
+                );
             }
         }
+
         if (precursor) {
-            precursorAnnotator = new PrecursorAnnotator(peptide, fixedModifications);
+
+            precursorAnnotator = new PrecursorAnnotator(
+                    peptide,
+                    fixedModifications
+            );
         }
+
         if (immonium || related) {
-            immoniumIonAnnotator = new ImmoniumIonAnnotator(peptide.getSequence().toCharArray(), immonium, related);
+
+            immoniumIonAnnotator = new ImmoniumIonAnnotator(
+                    peptide.getSequence().toCharArray(),
+                    immonium,
+                    related
+            );
         }
+
         if (reporter) {
-            reporterIonAnnotator = new ReporterIonAnnotator(reporterIons);
+
+            reporterIonAnnotator = new ReporterIonAnnotator(
+                    reporterIons
+            );
         }
     }
- 
+
     /**
      * Returns the ion matches for the given spectrum.
-     * 
+     *
      * @param spectrumIndex the spectrum index
      * @param peptideCharge the peptide charge
-     * @param precursorIsotopeMax the number of isotopes to test for the precursor ion
-     * 
+     * @param precursorIsotopeMax the number of isotopes to test for the
+     * precursor ion
+     *
      * @return the ion matches in a list
      */
-    public ArrayList<IonMatch> getIonMatches(SpectrumIndex spectrumIndex, int peptideCharge, int precursorIsotopeMax) {
-        
+    public ArrayList<IonMatch> getIonMatches(
+            SpectrumIndex spectrumIndex,
+            int peptideCharge,
+            int precursorIsotopeMax
+    ) {
+
         ArrayList<IonMatch> result = new ArrayList<>(0);
+
         if (axFragmentAnnotator != null) {
-            result.addAll(axFragmentAnnotator.getIonMatches(spectrumIndex, peptideCharge));
+
+            result.addAll(
+                    axFragmentAnnotator.getIonMatches(
+                            spectrumIndex,
+                            peptideCharge
+                    )
+            );
         }
+
         if (axFragmentAnnotatorNL != null) {
-            result.addAll(axFragmentAnnotatorNL.getIonMatches(spectrumIndex, peptideCharge));
+
+            result.addAll(
+                    axFragmentAnnotatorNL.getIonMatches(
+                            spectrumIndex,
+                            peptideCharge
+                    )
+            );
         }
+
         if (byFragmentAnnotator != null) {
-            result.addAll(byFragmentAnnotator.getIonMatches(spectrumIndex, peptideCharge));
+
+            result.addAll(
+                    byFragmentAnnotator.getIonMatches(
+                            spectrumIndex,
+                            peptideCharge
+                    )
+            );
         }
+
         if (byFragmentAnnotatorNL != null) {
-            result.addAll(byFragmentAnnotatorNL.getIonMatches(spectrumIndex, peptideCharge));
+
+            result.addAll(
+                    byFragmentAnnotatorNL.getIonMatches(
+                            spectrumIndex,
+                            peptideCharge
+                    )
+            );
         }
+
         if (czFragmentAnnotator != null) {
-            result.addAll(czFragmentAnnotator.getIonMatches(spectrumIndex, peptideCharge));
+
+            result.addAll(
+                    czFragmentAnnotator.getIonMatches(
+                            spectrumIndex,
+                            peptideCharge
+                    )
+            );
         }
+
         if (czFragmentAnnotatorNL != null) {
-            result.addAll(czFragmentAnnotatorNL.getIonMatches(spectrumIndex, peptideCharge));
+
+            result.addAll(
+                    czFragmentAnnotatorNL.getIonMatches(
+                            spectrumIndex,
+                            peptideCharge
+                    )
+            );
         }
+
         if (precursorAnnotator != null) {
-            result.addAll(precursorAnnotator.getIonMatches(spectrumIndex, peptideCharge, precursorIsotopeMax));
+
+            result.addAll(
+                    precursorAnnotator.getIonMatches(
+                            spectrumIndex,
+                            peptideCharge,
+                            precursorIsotopeMax
+                    )
+            );
         }
+
         if (immoniumIonAnnotator != null) {
-            result.addAll(immoniumIonAnnotator.getIonMatches(spectrumIndex));
+
+            result.addAll(
+                    immoniumIonAnnotator.getIonMatches(
+                            spectrumIndex
+                    )
+            );
         }
         if (reporterIonAnnotator != null) {
-            result.addAll(reporterIonAnnotator.getIonMatches(spectrumIndex));
+
+            result.addAll(
+                    reporterIonAnnotator.getIonMatches(
+                            spectrumIndex
+                    )
+            );
         }
+
         return result;
     }
-    
+
 }

@@ -35,7 +35,11 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     /**
      * The mz array of the spectrum.
      */
-    private final double[] mzArray;
+    public final double[] mzArray;
+    /**
+     * The mz array of the spectrum.
+     */
+    public final double[] intensityArray;
     /**
      * An m/z anchor to determine the bins in ppm.
      */
@@ -72,6 +76,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
         intensityLimit = 0.0;
         tolerance = 0.0;
         mzArray = null;
+        intensityArray = null;
     }
 
     /**
@@ -94,6 +99,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
 
         this.intensityLimit = intenstiyLimit;
         this.mzArray = mz;
+        this.intensityArray = intensity;
         this.tolerance = tolerance;
         this.ppm = ppm;
 
@@ -114,7 +120,7 @@ public class SpectrumIndex extends DbObject implements UrParameter {
                 totalIntensity += peakInt;
 
                 double peakMz = mz[i];
-                Integer bin = getBin(peakMz);
+                int bin = getBin(peakMz);
 
                 if (binMax == null || bin > binMax) {
 

@@ -47,7 +47,9 @@ public class ImmoniumIonAnnotator {
      *
      * @param peptideSequence the peptide sequence
      */
-    public ImmoniumIonAnnotator(char[] peptideSequence) {
+    public ImmoniumIonAnnotator(
+            char[] peptideSequence
+    ) {
         this(peptideSequence, true, true);
     }
 
@@ -61,7 +63,11 @@ public class ImmoniumIonAnnotator {
      * @param related boolean indicating whether related ions should be
      * annotated
      */
-    public ImmoniumIonAnnotator(char[] peptideSequence, boolean immonium, boolean related) {
+    public ImmoniumIonAnnotator(
+            char[] peptideSequence,
+            boolean immonium,
+            boolean related
+    ) {
 
         aas = peptideSequence;
         immoniumIonsMz = new double[peptideSequence.length];
@@ -104,7 +110,9 @@ public class ImmoniumIonAnnotator {
      *
      * @return the ions matched in the given spectrum
      */
-    public ArrayList<IonMatch> getIonMatches(SpectrumIndex spectrumIndex) {
+    public ArrayList<IonMatch> getIonMatches(
+            SpectrumIndex spectrumIndex
+    ) {
 
         ArrayList<IonMatch> results = new ArrayList<>(0);
 
@@ -113,13 +121,23 @@ public class ImmoniumIonAnnotator {
 
             double ionMz = immoniumIonsMz[i];
             char aa = aas[i];
-            ArrayList<Peak> peaks = spectrumIndex.getMatchingPeaks(ionMz);
+            int[] indexes = spectrumIndex.getMatchingPeaks(ionMz);
 
-            for (Peak peak : peaks) {
+            if (indexes.length > 0) {
 
                 Ion ion = ImmoniumIon.getImmoniumIon(aa);
-                results.add(new IonMatch(peak, ion, 1));
 
+                for (int index : indexes) {
+
+                    results.add(
+                            new IonMatch(
+                                    spectrumIndex.mzArray[index],
+                                    spectrumIndex.intensityArray[index],
+                                    ion,
+                                    1
+                            )
+                    );
+                }
             }
         }
 
@@ -127,15 +145,24 @@ public class ImmoniumIonAnnotator {
         for (int i = 0; i < relatedIons.length; i++) {
 
             double ionMz = relatedIonsMz[i];
-            RelatedIon relatedIon = relatedIons[i];
-            ArrayList<Peak> peaks = spectrumIndex.getMatchingPeaks(ionMz);
+            int[] indexes = spectrumIndex.getMatchingPeaks(ionMz);
 
-            for (Peak peak : peaks) {
+            if (indexes.length > 0) {
 
-                results.add(new IonMatch(peak, relatedIon, 1));
+                RelatedIon ion = relatedIons[i];
 
+                for (int index : indexes) {
+
+                    results.add(
+                            new IonMatch(
+                                    spectrumIndex.mzArray[index],
+                                    spectrumIndex.intensityArray[index],
+                                    ion,
+                                    1
+                            )
+                    );
+                }
             }
-
         }
 
         return results;

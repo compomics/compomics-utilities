@@ -84,7 +84,8 @@ public class FragmentAnnotatorNL {
     private final ArrayList<ArrayList<NeutralLoss>> complementaryNeutralLosses;
 
     /**
-     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
+     * Constructor. Fixed modifications must be indexed as provided by the
+     * peptide class.
      *
      * @param peptide the peptide
      * @param fixedModifications the fixed modifications of the peptide
@@ -92,7 +93,12 @@ public class FragmentAnnotatorNL {
      * @param sequenceDependent boolean indicating whether the H2O and NH3
      * losses should be adapted to the sequence
      */
-    public FragmentAnnotatorNL(Peptide peptide, String[] fixedModifications, IonSeries ionSeries, boolean sequenceDependent) {
+    public FragmentAnnotatorNL(
+            Peptide peptide,
+            String[] fixedModifications,
+            IonSeries ionSeries,
+            boolean sequenceDependent
+    ) {
 
         char[] aas = peptide.getSequence().toCharArray();
         peptideLength = aas.length;
@@ -121,8 +127,8 @@ public class FragmentAnnotatorNL {
             if (modName != null) {
 
                 Modification modification = modificationFactory.getModification(modName);
-            
-            int site = ModificationUtils.getSite(i, peptideLength)-1;
+
+                int site = ModificationUtils.getSite(i, peptideLength) - 1;
 
                 modificationsMasses[site] += modification.getMass();
 
@@ -282,7 +288,8 @@ public class FragmentAnnotatorNL {
     }
 
     /**
-     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
+     * Constructor. Fixed modifications must be indexed as provided by the
+     * peptide class.
      *
      * @param peptide the peptide
      * @param fixedModifications the fixed modifications
@@ -294,7 +301,14 @@ public class FragmentAnnotatorNL {
      * @param complementary boolean indicating whether complementary ions should
      * be annotated
      */
-    public FragmentAnnotatorNL(Peptide peptide, String[] fixedModifications, IonSeries ionSeries, boolean sequenceDependent, boolean forward, boolean complementary) {
+    public FragmentAnnotatorNL(
+            Peptide peptide,
+            String[] fixedModifications,
+            IonSeries ionSeries,
+            boolean sequenceDependent,
+            boolean forward,
+            boolean complementary
+    ) {
 
         char[] aas = peptide.getSequence().toCharArray();
         peptideLength = aas.length;
@@ -323,26 +337,33 @@ public class FragmentAnnotatorNL {
             if (modName != null) {
 
                 Modification modification = modificationFactory.getModification(modName);
-            
-            int site = ModificationUtils.getSite(i, peptideLength)-1;
+
+                int site = ModificationUtils.getSite(i, peptideLength) - 1;
 
                 modificationsMasses[site] += modification.getMass();
 
                 for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
 
                     int[] sites = modificationLossesSites.get(neutralLoss.name);
+
                     if (sites == null) {
+
                         sites = new int[]{site, site};
                         modificationLossesSites.put(neutralLoss.name, sites);
+
                     } else {
+
                         if (site < sites[0]) {
+
                             sites[0] = site;
+
                         } else if (site > sites[1]) {
+
                             sites[1] = site;
+
                         }
                     }
                 }
-
             }
         }
 
@@ -376,33 +397,48 @@ public class FragmentAnnotatorNL {
             for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
 
                 int[] sites = modificationLossesSites.get(neutralLoss.name);
+
                 if (sites == null) {
+
                     sites = new int[]{site, site};
                     modificationLossesSites.put(neutralLoss.name, sites);
+
                 } else {
+
                     if (site < sites[0]) {
+
                         sites[0] = site;
+
                     } else if (site > sites[1]) {
+
                         sites[1] = site;
+
                     }
                 }
             }
         }
+
         if (!modificationLossesSites.isEmpty()) {
+
             int[][] newIndexes = new int[lossesIndexes.length + modificationLossesSites.size()][2];
             System.arraycopy(lossesIndexes, 0, newIndexes, 0, lossesIndexes.length);
             NeutralLoss[] newLosses = new NeutralLoss[losses.length + modificationLossesSites.size()];
             System.arraycopy(losses, 0, newLosses, 0, losses.length);
             int index = lossesIndexes.length;
+
             for (String lossName : modificationLossesSites.keySet()) {
+
                 int[] sites = modificationLossesSites.get(lossName);
                 newIndexes[index][1] = sites[0];
                 newIndexes[index][1] = sites[1];
                 newLosses[index] = NeutralLoss.getNeutralLoss(lossName);
                 index++;
+
             }
+
             lossesIndexes = newIndexes;
             losses = newLosses;
+
         }
 
         double forwardMass;
@@ -525,50 +561,75 @@ public class FragmentAnnotatorNL {
         for (int i = 0; i < aas.length; i++) {
 
             char aa = aas[i];
+
             if (!waterForward) {
+
                 for (char lossAa : NeutralLoss.H2O.aminoAcids) {
+
                     if (aa == lossAa) {
+
                         lossesIndexes[0] = i;
                         waterForward = true;
                         break;
+
                     }
                 }
             }
+
             if (!ammoniaForward) {
+
                 for (char lossAa : NeutralLoss.NH3.aminoAcids) {
+
                     if (aa == lossAa) {
+
                         lossesIndexes[1] = i;
                         ammoniaForward = true;
                         break;
+
                     }
                 }
             }
 
             int rewindI = aas.length - i - 1;
             aa = aas[rewindI];
+
             if (!waterComplementary) {
+
                 for (char lossAa : NeutralLoss.H2O.aminoAcids) {
+
                     if (aa == lossAa) {
+
                         lossesIndexes[2] = rewindI;
                         waterComplementary = true;
                         break;
+
                     }
                 }
             }
+
             if (!ammoniaComplementary) {
+
                 for (char lossAa : NeutralLoss.NH3.aminoAcids) {
+
                     if (aa == lossAa) {
+
                         lossesIndexes[3] = rewindI;
                         ammoniaComplementary = true;
                         break;
+
                     }
                 }
             }
+
             if (waterForward && ammoniaForward && waterComplementary && ammoniaComplementary) {
+
                 break;
+
             }
         }
+
         return lossesIndexes;
+
     }
 
     /**
@@ -579,7 +640,10 @@ public class FragmentAnnotatorNL {
      *
      * @return the ions matched in the given spectrum at the given charge
      */
-    public ArrayList<IonMatch> getIonMatches(SpectrumIndex spectrumIndex, int peptideCharge) {
+    public ArrayList<IonMatch> getIonMatches(
+            SpectrumIndex spectrumIndex,
+            int peptideCharge
+    ) {
 
         ArrayList<IonMatch> results = new ArrayList<>(0);
 
@@ -589,28 +653,64 @@ public class FragmentAnnotatorNL {
             int ionNumber = i + 1;
             ArrayList<NeutralLoss> neutralLosses = forwardNeutralLosses.get(i);
             double[] neutralLossesMasses = forwardNeutralLossesMasses.get(i);
+
             for (int j = 0; j < neutralLosses.size(); j++) {
+
                 double lossMass1 = neutralLossesMasses[j];
                 double mz1WithLoss = ionMz1 - lossMass1;
-                ArrayList<Peak> peaks = spectrumIndex.getMatchingPeaks(mz1WithLoss);
-                if (!peaks.isEmpty()) {
+                int[] indexes = spectrumIndex.getMatchingPeaks(mz1WithLoss);
+
+                if (indexes.length > 0) {
+
                     NeutralLoss[] ionLosses = {neutralLosses.get(j)};
                     double ionMass = mz1WithLoss - ElementaryIon.proton.getTheoreticMass();
-                    for (Peak peak : peaks) {
-                        Ion ion = new PeptideFragmentIon(forwardIonType, ionNumber, ionMass, ionLosses);
-                        results.add(new IonMatch(peak, ion, 1));
+
+                    for (int index : indexes) {
+
+                        Ion ion = new PeptideFragmentIon(
+                                forwardIonType,
+                                ionNumber,
+                                ionMass,
+                                ionLosses
+                        );
+                        results.add(
+                                new IonMatch(
+                                        spectrumIndex.mzArray[index],
+                                        spectrumIndex.intensityArray[index],
+                                        ion,
+                                        1
+                                )
+                        );
                     }
                 }
+
                 for (int k = j + 1; k < neutralLosses.size(); k++) {
+
                     double lossMass2 = neutralLossesMasses[k];
                     double mz1WithLoss2 = mz1WithLoss - lossMass2;
-                    peaks = spectrumIndex.getMatchingPeaks(mz1WithLoss2);
-                    if (!peaks.isEmpty()) {
+                    indexes = spectrumIndex.getMatchingPeaks(mz1WithLoss2);
+
+                    if (indexes.length > 0) {
+
                         NeutralLoss[] ionLosses = {neutralLosses.get(j), neutralLosses.get(k)};
                         double ionMass = mz1WithLoss2 - ElementaryIon.proton.getTheoreticMass();
-                        for (Peak peak : peaks) {
-                            Ion ion = new PeptideFragmentIon(forwardIonType, ionNumber, ionMass, ionLosses);
-                            results.add(new IonMatch(peak, ion, 1));
+
+                        for (int index : indexes) {
+
+                            Ion ion = new PeptideFragmentIon(
+                                    forwardIonType,
+                                    ionNumber,
+                                    ionMass,
+                                    ionLosses
+                            );
+                            results.add(
+                                    new IonMatch(
+                                            spectrumIndex.mzArray[index],
+                                            spectrumIndex.intensityArray[index],
+                                            ion,
+                                            1
+                                    )
+                            );
                         }
                     }
                 }
@@ -620,28 +720,64 @@ public class FragmentAnnotatorNL {
             ionNumber = peptideLength - ionNumber;
             neutralLosses = complementaryNeutralLosses.get(i);
             neutralLossesMasses = complementaryNeutralLossesMasses.get(i);
+
             for (int j = 0; j < neutralLosses.size(); j++) {
+
                 double lossMass1 = neutralLossesMasses[j];
                 double mz1WithLoss = ionMz1 - lossMass1;
-                ArrayList<Peak> peaks = spectrumIndex.getMatchingPeaks(mz1WithLoss);
-                if (!peaks.isEmpty()) {
+                int[] indexes = spectrumIndex.getMatchingPeaks(mz1WithLoss);
+
+                if (indexes.length > 0) {
+
                     NeutralLoss[] ionLosses = {neutralLosses.get(j)};
                     double ionMass = mz1WithLoss - ElementaryIon.proton.getTheoreticMass();
-                    for (Peak peak : peaks) {
-                        Ion ion = new PeptideFragmentIon(complementaryIonType, ionNumber, ionMass, ionLosses);
-                        results.add(new IonMatch(peak, ion, 1));
+
+                    for (int index : indexes) {
+
+                        Ion ion = new PeptideFragmentIon(
+                                complementaryIonType,
+                                ionNumber,
+                                ionMass,
+                                ionLosses
+                        );
+                        results.add(
+                                new IonMatch(
+                                        spectrumIndex.mzArray[index],
+                                        spectrumIndex.intensityArray[index],
+                                        ion,
+                                        1
+                                )
+                        );
                     }
                 }
+
                 for (int k = j + 1; k < neutralLosses.size(); k++) {
+
                     double lossMass2 = neutralLossesMasses[k];
                     double mz1WithLoss2 = mz1WithLoss - lossMass2;
-                    peaks = spectrumIndex.getMatchingPeaks(mz1WithLoss2);
+                    indexes = spectrumIndex.getMatchingPeaks(mz1WithLoss2);
                     double ionMass = mz1WithLoss2 - ElementaryIon.proton.getTheoreticMass();
-                    if (!peaks.isEmpty()) {
+
+                    if (indexes.length > 0) {
+
                         NeutralLoss[] ionLosses = {neutralLosses.get(j), neutralLosses.get(k)};
-                        for (Peak peak : peaks) {
-                            Ion ion = new PeptideFragmentIon(complementaryIonType, ionNumber, ionMass, ionLosses);
-                            results.add(new IonMatch(peak, ion, 1));
+
+                        for (int index : indexes) {
+
+                            Ion ion = new PeptideFragmentIon(
+                                    complementaryIonType,
+                                    ionNumber,
+                                    ionMass,
+                                    ionLosses
+                            );
+                            results.add(
+                                    new IonMatch(
+                                            spectrumIndex.mzArray[index],
+                                            spectrumIndex.intensityArray[index],
+                                            ion,
+                                            1
+                                    )
+                            );
                         }
                     }
                 }
@@ -659,30 +795,66 @@ public class FragmentAnnotatorNL {
                 int ionNumber = i + 1;
                 ArrayList<NeutralLoss> neutralLosses = forwardNeutralLosses.get(i);
                 double[] neutralLossesMasses = forwardNeutralLossesMasses.get(i);
+
                 for (int j = 0; j < neutralLosses.size(); j++) {
+
                     double lossMass1 = neutralLossesMasses[j];
                     double mz1WithLoss = ionMz1 - lossMass1;
                     double mzWithLoss = (mz1WithLoss + protonContribution) / ionCharge;
-                    ArrayList<Peak> peaks = spectrumIndex.getMatchingPeaks(mzWithLoss);
-                    if (!peaks.isEmpty()) {
+                    int[] indexes = spectrumIndex.getMatchingPeaks(mzWithLoss);
+
+                    if (indexes.length > 0) {
+
                         NeutralLoss[] ionLosses = {neutralLosses.get(j)};
                         double ionMass = mz1WithLoss - ElementaryIon.proton.getTheoreticMass();
-                        for (Peak peak : peaks) {
-                            Ion ion = new PeptideFragmentIon(forwardIonType, ionNumber, ionMass, ionLosses);
-                            results.add(new IonMatch(peak, ion, ionCharge));
+
+                        for (int index : indexes) {
+
+                            Ion ion = new PeptideFragmentIon(
+                                    forwardIonType,
+                                    ionNumber,
+                                    ionMass,
+                                    ionLosses
+                            );
+                            results.add(
+                                    new IonMatch(
+                                            spectrumIndex.mzArray[index],
+                                            spectrumIndex.intensityArray[index],
+                                            ion,
+                                            ionCharge
+                                    )
+                            );
                         }
                     }
+
                     for (int k = j + 1; k < neutralLosses.size(); k++) {
+
                         double lossMass2 = neutralLossesMasses[k];
                         double mz1WithLoss2 = mz1WithLoss - lossMass2;
                         double mzWithLoss2 = (mz1WithLoss2 + protonContribution) / ionCharge;
-                        peaks = spectrumIndex.getMatchingPeaks(mzWithLoss2);
-                        if (!peaks.isEmpty()) {
+                        indexes = spectrumIndex.getMatchingPeaks(mzWithLoss2);
+
+                        if (indexes.length > 0) {
+
                             NeutralLoss[] ionLosses = {neutralLosses.get(j), neutralLosses.get(k)};
                             double ionMass = mz1WithLoss2 - ElementaryIon.proton.getTheoreticMass();
-                            for (Peak peak : peaks) {
-                                Ion ion = new PeptideFragmentIon(forwardIonType, ionNumber, ionMass, ionLosses);
-                                results.add(new IonMatch(peak, ion, ionCharge));
+
+                            for (int index : indexes) {
+
+                                Ion ion = new PeptideFragmentIon(
+                                        forwardIonType,
+                                        ionNumber,
+                                        ionMass,
+                                        ionLosses
+                                );
+                                results.add(
+                                        new IonMatch(
+                                                spectrumIndex.mzArray[index],
+                                                spectrumIndex.intensityArray[index],
+                                                ion,
+                                                ionCharge
+                                        )
+                                );
                             }
                         }
                     }
@@ -692,30 +864,66 @@ public class FragmentAnnotatorNL {
                 ionNumber = peptideLength - ionNumber;
                 neutralLosses = complementaryNeutralLosses.get(i);
                 neutralLossesMasses = complementaryNeutralLossesMasses.get(i);
+
                 for (int j = 0; j < neutralLosses.size(); j++) {
+
                     double lossMass1 = neutralLossesMasses[j];
                     double mz1WithLoss = ionMz1 - lossMass1;
                     double mzWithLoss = (mz1WithLoss + protonContribution) / ionCharge;
-                    ArrayList<Peak> peaks = spectrumIndex.getMatchingPeaks(mzWithLoss);
-                    if (!peaks.isEmpty()) {
+                    int[] indexes = spectrumIndex.getMatchingPeaks(mzWithLoss);
+
+                    if (indexes.length > 0) {
+
                         NeutralLoss[] ionLosses = {neutralLosses.get(j)};
                         double ionMass = mz1WithLoss - ElementaryIon.proton.getTheoreticMass();
-                        for (Peak peak : peaks) {
-                            Ion ion = new PeptideFragmentIon(complementaryIonType, ionNumber, ionMass, ionLosses);
-                            results.add(new IonMatch(peak, ion, ionCharge));
+
+                        for (int index : indexes) {
+
+                            Ion ion = new PeptideFragmentIon(
+                                    complementaryIonType,
+                                    ionNumber,
+                                    ionMass,
+                                    ionLosses
+                            );
+                            results.add(
+                                    new IonMatch(
+                                            spectrumIndex.mzArray[index],
+                                            spectrumIndex.intensityArray[index],
+                                            ion,
+                                            ionCharge
+                                    )
+                            );
                         }
                     }
+
                     for (int k = j + 1; k < neutralLosses.size(); k++) {
+
                         double lossMass2 = neutralLossesMasses[k];
                         double mz1WithLoss2 = mz1WithLoss - lossMass2;
                         double mzWithLoss2 = (mz1WithLoss2 + protonContribution) / ionCharge;
-                        peaks = spectrumIndex.getMatchingPeaks(mzWithLoss2);
+                        indexes = spectrumIndex.getMatchingPeaks(mzWithLoss2);
                         double ionMass = mz1WithLoss2 - ElementaryIon.proton.getTheoreticMass();
-                        if (!peaks.isEmpty()) {
+
+                        if (indexes.length > 0) {
+
                             NeutralLoss[] ionLosses = {neutralLosses.get(j), neutralLosses.get(k)};
-                            for (Peak peak : peaks) {
-                                Ion ion = new PeptideFragmentIon(complementaryIonType, ionNumber, ionMass, ionLosses);
-                                results.add(new IonMatch(peak, ion, ionCharge));
+
+                            for (int index : indexes) {
+
+                                Ion ion = new PeptideFragmentIon(
+                                        complementaryIonType,
+                                        ionNumber,
+                                        ionMass,
+                                        ionLosses
+                                );
+                                results.add(
+                                        new IonMatch(
+                                                spectrumIndex.mzArray[index],
+                                                spectrumIndex.intensityArray[index],
+                                                ion,
+                                                ionCharge
+                                        )
+                                );
                             }
                         }
                     }

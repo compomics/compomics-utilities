@@ -59,18 +59,30 @@ public class FragmentAnnotator {
     private final int complementaryIonType;
 
     /**
-     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
+     * Constructor. Fixed modifications must be indexed as provided by the
+     * peptide class.
      *
      * @param peptide the peptide
      * @param fixedModifications the fixed modifications on the peptide
      * @param ionSeries the ion series to annotate
      */
-    public FragmentAnnotator(Peptide peptide, String[] fixedModifications, IonSeries ionSeries) {
-        this(peptide, fixedModifications, ionSeries, true, true);
+    public FragmentAnnotator(
+            Peptide peptide,
+            String[] fixedModifications,
+            IonSeries ionSeries
+    ) {
+        this(
+                peptide,
+                fixedModifications,
+                ionSeries,
+                true,
+                true
+        );
     }
 
     /**
-     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
+     * Constructor. Fixed modifications must be indexed as provided by the
+     * peptide class.
      *
      * @param peptide the peptide
      * @param fixedModifications the fixed modifications on the peptide
@@ -80,7 +92,13 @@ public class FragmentAnnotator {
      * @param complementary boolean indicating whether complementary ions should
      * be annotated
      */
-    public FragmentAnnotator(Peptide peptide, String[] fixedModifications, IonSeries ionSeries, boolean forward, boolean complementary) {
+    public FragmentAnnotator(
+            Peptide peptide,
+            String[] fixedModifications,
+            IonSeries ionSeries,
+            boolean forward,
+            boolean complementary
+    ) {
 
         char[] aas = peptide.getSequence().toCharArray();
         peptideLength = aas.length;
@@ -178,37 +196,68 @@ public class FragmentAnnotator {
      *
      * @return the ions matched in the given spectrum at the given charge
      */
-    public ArrayList<IonMatch> getIonMatches(SpectrumIndex spectrumIndex, int peptideCharge) {
+    public ArrayList<IonMatch> getIonMatches(
+            SpectrumIndex spectrumIndex,
+            int peptideCharge
+    ) {
 
         ArrayList<IonMatch> results = new ArrayList<>(0);
 
         for (int i = 0; i < peptideLength; i++) {
 
             double ionMz = forwardIonMz1[i];
-            ArrayList<Peak> peaks = spectrumIndex.getMatchingPeaks(ionMz);
 
-            if (!peaks.isEmpty()) {
+            int[] indexes = spectrumIndex.getMatchingPeaks(ionMz);
+
+            if (indexes.length > 0) {
 
                 int ionNumber = i + 1;
                 double ionMass = ionMz - ElementaryIon.proton.getTheoreticMass();
 
-                for (Peak peak : peaks) {
-                    Ion ion = new PeptideFragmentIon(forwardIonType, ionNumber, ionMass, null);
-                    results.add(new IonMatch(peak, ion, 1));
+                for (int index : indexes) {
+
+                    Ion ion = new PeptideFragmentIon(
+                            forwardIonType,
+                            ionNumber,
+                            ionMass,
+                            null
+                    );
+                    results.add(
+                            new IonMatch(
+                                    spectrumIndex.mzArray[index],
+                                    spectrumIndex.intensityArray[index],
+                                    ion,
+                                    1
+                            )
+                    );
                 }
             }
 
             ionMz = complementaryIonMz1[i];
-            peaks = spectrumIndex.getMatchingPeaks(ionMz);
+            indexes = spectrumIndex.getMatchingPeaks(ionMz);
 
-            if (!peaks.isEmpty()) {
+            if (indexes.length > 0) {
 
                 double ionMass = ionMz - ElementaryIon.proton.getTheoreticMass();
                 int ionNumber = peptideLength - i - 1;
 
-                for (Peak peak : peaks) {
-                    Ion ion = new PeptideFragmentIon(complementaryIonType, ionNumber, ionMass, null);
-                    results.add(new IonMatch(peak, ion, 1));
+                for (int index : indexes) {
+
+                    Ion ion = new PeptideFragmentIon(
+                            complementaryIonType,
+                            ionNumber,
+                            ionMass,
+                            null
+                    );
+
+                    results.add(
+                            new IonMatch(
+                                    spectrumIndex.mzArray[index],
+                                    spectrumIndex.intensityArray[index],
+                                    ion,
+                                    1
+                            )
+                    );
                 }
             }
         }
@@ -222,31 +271,58 @@ public class FragmentAnnotator {
 
                 double ionMz1 = forwardIonMz1[i];
                 double ionMz = (ionMz1 + protonContribution) / ionCharge;
-                ArrayList<Peak> peaks = spectrumIndex.getMatchingPeaks(ionMz);
+                int[] indexes = spectrumIndex.getMatchingPeaks(ionMz);
 
-                if (!peaks.isEmpty()) {
+                if (indexes.length > 0) {
 
                     int ionNumber = i + 1;
                     double ionMass = ionMz1 - ElementaryIon.proton.getTheoreticMass();
 
-                    for (Peak peak : peaks) {
-                        Ion ion = new PeptideFragmentIon(forwardIonType, ionNumber, ionMass, null);
-                        results.add(new IonMatch(peak, ion, ionCharge));
+                    for (int index : indexes) {
+
+                        Ion ion = new PeptideFragmentIon(
+                                forwardIonType,
+                                ionNumber,
+                                ionMass,
+                                null
+                        );
+                        results.add(
+                                new IonMatch(
+                                        spectrumIndex.mzArray[index],
+                                        spectrumIndex.intensityArray[index],
+                                        ion,
+                                        ionCharge
+                                )
+                        );
                     }
                 }
 
                 ionMz1 = complementaryIonMz1[i];
                 ionMz = (ionMz1 + protonContribution) / ionCharge;
-                peaks = spectrumIndex.getMatchingPeaks(ionMz);
+                indexes = spectrumIndex.getMatchingPeaks(ionMz);
 
-                if (!peaks.isEmpty()) {
+                if (indexes.length > 0) {
 
                     double ionMass = ionMz1 - ElementaryIon.proton.getTheoreticMass();
                     int ionNumber = peptideLength - i - 1;
 
-                    for (Peak peak : peaks) {
-                        Ion ion = new PeptideFragmentIon(complementaryIonType, ionNumber, ionMass, null);
-                        results.add(new IonMatch(peak, ion, ionCharge));
+                    for (int index : indexes) {
+
+                        Ion ion = new PeptideFragmentIon(
+                                complementaryIonType,
+                                ionNumber,
+                                ionMass,
+                                null
+                        );
+
+                        results.add(
+                                new IonMatch(
+                                        spectrumIndex.mzArray[index],
+                                        spectrumIndex.intensityArray[index],
+                                        ion,
+                                        1
+                                )
+                        );
                     }
                 }
             }

@@ -61,9 +61,9 @@ public class ModificationtableContent {
      * @param intensity the intensity
      */
     public void addIntensity(
-            int nMod, 
-            Integer peptideFragmentIonType, 
-            int aa, 
+            int nMod,
+            Integer peptideFragmentIonType,
+            int aa,
             double intensity
     ) {
         if (!map.containsKey(nMod)) {
@@ -88,12 +88,12 @@ public class ModificationtableContent {
      * @param nMod the modification number
      * @param peptideFragmentIonType the peptide fragment ion type
      * @param aa the amino acid
-     * 
+     *
      * @return the list of intensities
      */
     public ArrayList<Double> getIntensities(
-            int nMod, 
-            Integer peptideFragmentIonType, 
+            int nMod,
+            Integer peptideFragmentIonType,
             int aa
     ) {
         if (map.containsKey(nMod)
@@ -112,13 +112,13 @@ public class ModificationtableContent {
      * @param peptideFragmentIonType the peptide fragment ion type
      * @param aa the amino acid
      * @param quantile the quantile
-     * 
+     *
      * @return the quantile
      */
     public Double getQuantile(
-            int nMod, 
-            Integer peptideFragmentIonType, 
-            int aa, 
+            int nMod,
+            Integer peptideFragmentIonType,
+            int aa,
             double quantile
     ) {
         ArrayList<Double> intensities = getIntensities(nMod, peptideFragmentIonType, aa);
@@ -137,13 +137,13 @@ public class ModificationtableContent {
      * @param peptideFragmentIonType the peptide fragment ion type
      * @param aa the amino acid
      * @param bins the bins
-     * 
+     *
      * @return the histogram
      */
     public int[] getHistogram(
-            int nMod, 
-            Integer peptideFragmentIonType, 
-            int aa, 
+            int nMod,
+            Integer peptideFragmentIonType,
+            int aa,
             int bins
     ) {
         ArrayList<Double> intensities = getIntensities(nMod, peptideFragmentIonType, aa);
@@ -260,7 +260,9 @@ public class ModificationtableContent {
      * @param peptide the peptide of interest
      * @param modification the modification to score
      * @param nMod the number of times the modification is expected
-     * @param spectrum the corresponding spectrum
+     * @param spectrumFile the file of the spectrum
+     * @param spectrumTitle the title of the spectrum
+     * @param spectrum the spectrum
      * @param annotationParameters the annotation preferences
      * @param specificAnnotationParameters the specific annotation preferences
      * @param modificationParameters the modification parameters
@@ -272,31 +274,35 @@ public class ModificationtableContent {
      * PSM.
      */
     public static HashMap<PeptideFragmentIon, ArrayList<IonMatch>> getModificationPlotData(
-            Peptide peptide, 
-            Modification modification, 
-            int nMod, 
+            Peptide peptide,
+            Modification modification,
+            int nMod,
+            String spectrumFile,
+            String spectrumTitle,
             Spectrum spectrum,
-            AnnotationParameters annotationParameters, 
-            SpecificAnnotationParameters specificAnnotationParameters, 
-            ModificationParameters modificationParameters, 
-            SequenceProvider sequenceProvider, 
+            AnnotationParameters annotationParameters,
+            SpecificAnnotationParameters specificAnnotationParameters,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
             SequenceMatchingParameters modificationSequenceMatchingParameters
     ) {
 
         ModificationMatch[] modificationMatches = peptide.getVariableModifications();
 
         ModificationMatch[] newMatches = Arrays.stream(modificationMatches)
-                .filter(modificationMatch -> !modificationMatch.getModification().equals(modification.getName()))
+                .filter(
+                        modificationMatch -> !modificationMatch.getModification().equals(modification.getName())
+                )
                 .toArray(ModificationMatch[]::new);
 
         Peptide noModPeptide = new Peptide(peptide.getSequence(), newMatches);
 
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
         HashMap<Integer, ArrayList<Ion>> fragmentIons = spectrumAnnotator.getExpectedIons(
-                        specificAnnotationParameters, 
-                noModPeptide, 
-                modificationParameters, 
-                sequenceProvider, 
+                specificAnnotationParameters,
+                noModPeptide,
+                modificationParameters,
+                sequenceProvider,
                 modificationSequenceMatchingParameters
         );
         HashMap<PeptideFragmentIon, ArrayList<IonMatch>> map = new HashMap<>(); //@TODO: refactor using another key for the map
@@ -306,37 +312,39 @@ public class ModificationtableContent {
             spectrumAnnotator.setMassShift(i * modification.getMass());
 
             IonMatch[] matches = spectrumAnnotator.getSpectrumAnnotation(
-                    annotationParameters, 
-                    specificAnnotationParameters, 
-                    spectrum, 
-                    noModPeptide, 
-                    modificationParameters, 
-                    sequenceProvider, 
+                    annotationParameters,
+                    specificAnnotationParameters,
+                    spectrumFile,
+                    spectrumTitle,
+                    spectrum,
+                    noModPeptide,
+                    modificationParameters,
+                    sequenceProvider,
                     modificationSequenceMatchingParameters
             );
 
             for (IonMatch ionMatch : matches) {
-                
+
                 if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
-                
+
                     PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
-                    
+
                     for (Ion noModIon : fragmentIons.get(ionMatch.charge)) {
-                    
+
                         if (noModIon.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION
                                 && peptideFragmentIon.isSameAs(noModIon)) {
-                        
+
                             PeptideFragmentIon noModFragmentIon = (PeptideFragmentIon) noModIon;
-                            
+
                             if (!map.containsKey(noModFragmentIon)) {
-                            
+
                                 map.put(noModFragmentIon, new ArrayList<>(1));
-                            
+
                             }
-                            
+
                             map.get(noModFragmentIon).add(ionMatch);
                             break;
-                            
+
                         }
                     }
                 }
@@ -364,15 +372,15 @@ public class ModificationtableContent {
      * @return the table content
      */
     public static ModificationtableContent getModificationTableContent(
-            PeptideAssumption peptideAssumption, 
-            Modification modification, 
-            int nMod, 
+            PeptideAssumption peptideAssumption,
+            Modification modification,
+            int nMod,
             String spectrumFile,
             String spectrumTitle,
             Spectrum spectrum,
-            AnnotationParameters annotationParameters, 
-            ModificationParameters modificationParameters, 
-            SequenceProvider sequenceProvider, 
+            AnnotationParameters annotationParameters,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
             SequenceMatchingParameters modificationSequenceMatchingParameters
     ) {
 
@@ -382,64 +390,68 @@ public class ModificationtableContent {
         HashSet<String> forbiddenMod = new HashSet<>(1);
         forbiddenMod.add(modification.getName());
         Peptide noModPeptide = peptide.getNoModPeptide(forbiddenMod);
-        
+
         PeptideSpectrumAnnotator spectrumAnnotator = new PeptideSpectrumAnnotator();
         SpecificAnnotationParameters specificAnnotationParameters = annotationParameters.getSpecificAnnotationParameters(
-                spectrumFile, 
-                spectrumTitle, 
-                peptideAssumption, 
-                modificationParameters, 
-                sequenceProvider, 
-                modificationSequenceMatchingParameters, 
+                spectrumFile,
+                spectrumTitle,
+                peptideAssumption,
+                modificationParameters,
+                sequenceProvider,
+                modificationSequenceMatchingParameters,
                 spectrumAnnotator
         );
         spectrumAnnotator.setPeptide(
-                noModPeptide, 
-                specificAnnotationParameters.getPrecursorCharge(), 
-                modificationParameters, 
-                sequenceProvider, 
-                modificationSequenceMatchingParameters, 
+                noModPeptide,
+                specificAnnotationParameters.getPrecursorCharge(),
+                modificationParameters,
+                sequenceProvider,
+                modificationSequenceMatchingParameters,
                 specificAnnotationParameters
         );
-        
+
         NeutralLossesMap lossesMap = new NeutralLossesMap();
         
-        for (String neutralLossName : specificAnnotationParameters.getNeutralLossesMap().getAccountedNeutralLosses()) {
-        
-            NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(neutralLossName);
-            
-            if (Math.abs(neutralLoss.getMass() - modification.getMass()) > specificAnnotationParameters.getFragmentIonAccuracyInDa(spectrum.getMaxMz())) {
-            
-                lossesMap.addNeutralLoss(neutralLoss, 1, 1);
-            
-            }
-        }
+        specificAnnotationParameters.getNeutralLossesMap().getAccountedNeutralLosses().stream()
+                .map(
+                        name -> NeutralLoss.getNeutralLoss(name)
+                )
+                .filter(
+                        neutralLoss -> Math.abs(neutralLoss.getMass() - modification.getMass()) > specificAnnotationParameters.getFragmentIonAccuracyInDa(spectrum.getMaxMz())
+                )
+                .forEach(
+                        neutralLoss -> lossesMap.addNeutralLoss(neutralLoss, 1, 1)
+                );
 
         for (int i = 0; i <= nMod; i++) {
 
             spectrumAnnotator.setMassShift(i * modification.getMass());
 
             final int index = i;
-            Stream<IonMatch> matches = spectrumAnnotator.getSpectrumAnnotationStream(
-                    annotationParameters, 
-                    specificAnnotationParameters, 
-                    spectrum, 
-                    noModPeptide, 
-                    modificationParameters, 
-                    sequenceProvider, 
+            spectrumAnnotator.getSpectrumAnnotationStream(
+                    annotationParameters,
+                    specificAnnotationParameters,
+                    spectrumFile,
+                    spectrumTitle,
+                    spectrum,
+                    noModPeptide,
+                    modificationParameters,
+                    sequenceProvider,
                     modificationSequenceMatchingParameters
-            );
-            matches.filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
-                    .forEach(ionMatch -> {
-                        PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
-                        tableContent.addIntensity(
-                                index, 
-                                peptideFragmentIon.getSubType(), 
-                                peptideFragmentIon.getAaNumber(peptide.getSequence().length()), 
-                                ionMatch.peakIntensity
-                        );
-                    });
-
+            )
+                    .filter(
+                            ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION
+                    )
+                    .forEach(
+                            ionMatch -> {
+                                PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ionMatch.ion;
+                                tableContent.addIntensity(
+                                        index,
+                                        peptideFragmentIon.getSubType(),
+                                        peptideFragmentIon.getAaNumber(peptide.getSequence().length()),
+                                        ionMatch.peakIntensity
+                                );
+                            });
         }
 
         return tableContent;

@@ -1,7 +1,6 @@
 package com.compomics.util.gui.spectrum;
 
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.awt.Color;
 import java.util.Arrays;
@@ -56,7 +55,7 @@ public class IntensityHistogram extends JPanel {
 
         // the annotated intensities
         double[] annotatedPeakIntensities = Arrays.stream(annotations)
-                .mapToDouble(ionMatch -> ionMatch.peak.intensity)
+                .mapToDouble(ionMatch -> ionMatch.peakIntensity)
                 .toArray();
         HashSet<Double> annotatedPeakIntensitiesSet = Arrays.stream(annotatedPeakIntensities)
                 .boxed().collect(Collectors.toCollection(HashSet::new));

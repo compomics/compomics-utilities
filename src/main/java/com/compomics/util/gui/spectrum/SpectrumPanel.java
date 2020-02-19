@@ -58,7 +58,7 @@ public class SpectrumPanel extends GraphicsPanel {
     /**
      * Color map for the ion annotation.
      */
-    private static HashMap<Ion.IonType, HashMap<Integer, HashMap<String, Color>>> colorMap = new HashMap<Ion.IonType, HashMap<Integer, HashMap<String, Color>>>();
+    private static HashMap<Ion.IonType, HashMap<Integer, HashMap<String, Color>>> colorMap = new HashMap<Ion.IonType, HashMap<Integer, HashMap<String, Color>>>(2);
 
     /**
      * This constructor creates a SpectrumPanel based on the spectrum
@@ -68,8 +68,14 @@ public class SpectrumPanel extends GraphicsPanel {
      * intensities that will be copied here. Note that mass-sorting will take
      * place in this step as well.
      */
-    public SpectrumPanel(SpectrumFile aSpecFile) {
-        this(aSpecFile, DrawingStyle.LINES, true);
+    public SpectrumPanel(
+            SpectrumFile aSpecFile
+    ) {
+        this(
+                aSpecFile,
+                DrawingStyle.LINES,
+                true
+        );
     }
 
     /**
@@ -82,8 +88,15 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
      */
-    public SpectrumPanel(SpectrumFile aSpecFile, boolean aEnableInteraction) {
-        this(aSpecFile, DrawingStyle.LINES, aEnableInteraction);
+    public SpectrumPanel(
+            SpectrumFile aSpecFile,
+            boolean aEnableInteraction
+    ) {
+        this(
+                aSpecFile,
+                DrawingStyle.LINES,
+                aEnableInteraction
+        );
     }
 
     /**
@@ -98,8 +111,17 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aEnableInteraction boolean that specifies whether user-derived
      * events should be caught and dealt with.
      */
-    public SpectrumPanel(SpectrumFile aSpecFile, DrawingStyle aDrawStyle, boolean aEnableInteraction) {
-        this(aSpecFile, aDrawStyle, aEnableInteraction, null);
+    public SpectrumPanel(
+            SpectrumFile aSpecFile,
+            DrawingStyle aDrawStyle,
+            boolean aEnableInteraction
+    ) {
+        this(
+                aSpecFile,
+                aDrawStyle,
+                aEnableInteraction,
+                null
+        );
     }
 
     /**
@@ -116,8 +138,22 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aSpectrumFilenameColor Color with the color for the
      * spectrumfilename on the panel can be 'null' for default coloring.
      */
-    public SpectrumPanel(SpectrumFile aSpecFile, DrawingStyle aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor) {
-        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, 50, false, true, true);
+    public SpectrumPanel(
+            SpectrumFile aSpecFile,
+            DrawingStyle aDrawStyle,
+            boolean aEnableInteraction,
+            Color aSpectrumFilenameColor
+    ) {
+        this(
+                aSpecFile,
+                aDrawStyle,
+                aEnableInteraction,
+                aSpectrumFilenameColor,
+                50,
+                false,
+                true,
+                true
+        );
     }
 
     /**
@@ -143,9 +179,24 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aShowFileName boolean that specifies if the file name should be
      * shown in the panel
      */
-    public SpectrumPanel(SpectrumFile aSpecFile, DrawingStyle aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
-            int aMaxPadding, boolean aShowFileName) {
-        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, aMaxPadding, aShowFileName, true, true);
+    public SpectrumPanel(
+            SpectrumFile aSpecFile,
+            DrawingStyle aDrawStyle,
+            boolean aEnableInteraction,
+            Color aSpectrumFilenameColor,
+            int aMaxPadding,
+            boolean aShowFileName
+    ) {
+        this(
+                aSpecFile,
+                aDrawStyle,
+                aEnableInteraction,
+                aSpectrumFilenameColor,
+                aMaxPadding,
+                aShowFileName,
+                true,
+                true
+        );
     }
 
     /**
@@ -169,9 +220,27 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aShowResolution boolean that specifies if the resolution should be
      * shown in the panel
      */
-    public SpectrumPanel(SpectrumFile aSpecFile, DrawingStyle aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
-            int aMaxPadding, boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution) {
-        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, aMaxPadding, aShowFileName, aShowPrecursorDetails, aShowResolution, 0);
+    public SpectrumPanel(
+            SpectrumFile aSpecFile,
+            DrawingStyle aDrawStyle,
+            boolean aEnableInteraction,
+            Color aSpectrumFilenameColor,
+            int aMaxPadding,
+            boolean aShowFileName,
+            boolean aShowPrecursorDetails,
+            boolean aShowResolution
+    ) {
+        this(
+                aSpecFile,
+                aDrawStyle,
+                aEnableInteraction,
+                aSpectrumFilenameColor,
+                aMaxPadding,
+                aShowFileName,
+                aShowPrecursorDetails,
+                aShowResolution,
+                0
+        );
     }
 
     /**
@@ -196,9 +265,29 @@ public class SpectrumPanel extends GraphicsPanel {
      * shown in the panel
      * @param aMSLevel int with the ms level for the spectrum
      */
-    public SpectrumPanel(SpectrumFile aSpecFile, DrawingStyle aDrawStyle, boolean aEnableInteraction, Color aSpectrumFilenameColor,
-            int aMaxPadding, boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution, int aMSLevel) {
-        this(aSpecFile, aDrawStyle, aEnableInteraction, aSpectrumFilenameColor, aMaxPadding, aShowFileName, aShowPrecursorDetails, aShowResolution, aMSLevel, false);
+    public SpectrumPanel(
+            SpectrumFile aSpecFile,
+            DrawingStyle aDrawStyle,
+            boolean aEnableInteraction,
+            Color aSpectrumFilenameColor,
+            int aMaxPadding,
+            boolean aShowFileName,
+            boolean aShowPrecursorDetails,
+            boolean aShowResolution,
+            int aMSLevel
+    ) {
+        this(
+                aSpecFile,
+                aDrawStyle,
+                aEnableInteraction,
+                aSpectrumFilenameColor,
+                aMaxPadding,
+                aShowFileName,
+                aShowPrecursorDetails,
+                aShowResolution,
+                aMSLevel,
+                false
+        );
     }
 
     /**
@@ -227,33 +316,48 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aProfileMode boolean if set to true the spectrum will be drawn in
      * profile mode
      */
-    public SpectrumPanel(SpectrumFile aSpecFile, DrawingStyle aDrawStyle, boolean aEnableInteraction,
-            Color aSpectrumFilenameColor, int aMaxPadding,
-            boolean aShowFileName, boolean aShowPrecursorDetails, boolean aShowResolution,
-            int aMSLevel, boolean aProfileMode) {
+    public SpectrumPanel(
+            SpectrumFile aSpecFile,
+            DrawingStyle aDrawStyle,
+            boolean aEnableInteraction,
+            Color aSpectrumFilenameColor,
+            int aMaxPadding,
+            boolean aShowFileName,
+            boolean aShowPrecursorDetails,
+            boolean aShowResolution,
+            int aMSLevel,
+            boolean aProfileMode
+    ) {
+
         this.iCurrentDrawStyle = aDrawStyle;
         this.iSpecPanelListeners = new ArrayList();
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         this.setBackground(Color.WHITE);
+
         if (aSpecFile != null) {
+
             dataSetCounter = 0;
-            this.processSpectrumFile(aSpecFile, spectrumPeakColor, spectrumProfileModeLineColor);
+            this.processSpectrumFile(
+                    aSpecFile,
+                    spectrumPeakColor,
+                    spectrumProfileModeLineColor
+            );
         }
+
         if (aEnableInteraction) {
+
             this.addListeners();
+
         }
+
         this.iFilenameColor = aSpectrumFilenameColor;
         this.maxPadding = aMaxPadding;
         this.showFileName = aShowFileName;
         this.showPrecursorDetails = aShowPrecursorDetails;
         this.showResolution = aShowResolution;
         this.iMSLevel = aMSLevel;
+        this.currentGraphicsPanelType = aProfileMode ? GraphicsPanelType.profileSpectrum : GraphicsPanelType.centroidSpectrum;
 
-        if (aProfileMode) {
-            this.currentGraphicsPanelType = GraphicsPanelType.profileSpectrum;
-        } else {
-            this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
-        }
     }
 
     /**
@@ -267,8 +371,24 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aPrecursorCharge String with the precursor intensity.
      * @param aFileName String with the title of the Query.
      */
-    public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge, String aFileName) {
-        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, 50, false, true, true);
+    public SpectrumPanel(
+            double[] aXAxisData,
+            double[] aYAxisData,
+            double aPrecursorMZ,
+            String aPrecursorCharge,
+            String aFileName
+    ) {
+        this(
+                aXAxisData,
+                aYAxisData,
+                aPrecursorMZ,
+                aPrecursorCharge,
+                aFileName,
+                50,
+                false,
+                true,
+                true
+        );
     }
 
     /**
@@ -284,9 +404,25 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aShowFileName boolean that specifies if the file name should be
      * shown in the panel.
      */
-    public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge, String aFileName,
-            boolean aShowFileName) {
-        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, 50, aShowFileName, true, true);
+    public SpectrumPanel(
+            double[] aXAxisData,
+            double[] aYAxisData,
+            double aPrecursorMZ,
+            String aPrecursorCharge,
+            String aFileName,
+            boolean aShowFileName
+    ) {
+        this(
+                aXAxisData,
+                aYAxisData,
+                aPrecursorMZ,
+                aPrecursorCharge,
+                aFileName,
+                50,
+                aShowFileName,
+                true,
+                true
+        );
     }
 
     /**
@@ -303,9 +439,26 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aShowFileName boolean that specifies if the file name should be
      * shown in the panel.
      */
-    public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge,
-            String aFileName, int aMaxPadding, boolean aShowFileName) {
-        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, aMaxPadding, aShowFileName, true, true);
+    public SpectrumPanel(
+            double[] aXAxisData,
+            double[] aYAxisData,
+            double aPrecursorMZ,
+            String aPrecursorCharge,
+            String aFileName,
+            int aMaxPadding,
+            boolean aShowFileName
+    ) {
+        this(
+                aXAxisData,
+                aYAxisData,
+                aPrecursorMZ,
+                aPrecursorCharge,
+                aFileName,
+                aMaxPadding,
+                aShowFileName,
+                true,
+                true
+        );
     }
 
     /**
@@ -326,11 +479,29 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aShowResolution boolean that specifies if the resolution should be
      * shown in the panel
      */
-    public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge,
-            String aFileName, int aMaxPadding, boolean aShowFileName,
-            boolean aShowPrecursorDetails, boolean aShowResolution) {
-        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, aMaxPadding,
-                aShowFileName, aShowPrecursorDetails, aShowResolution, 0);
+    public SpectrumPanel(
+            double[] aXAxisData,
+            double[] aYAxisData,
+            double aPrecursorMZ,
+            String aPrecursorCharge,
+            String aFileName,
+            int aMaxPadding,
+            boolean aShowFileName,
+            boolean aShowPrecursorDetails,
+            boolean aShowResolution
+    ) {
+        this(
+                aXAxisData,
+                aYAxisData,
+                aPrecursorMZ,
+                aPrecursorCharge,
+                aFileName,
+                aMaxPadding,
+                aShowFileName,
+                aShowPrecursorDetails,
+                aShowResolution,
+                0
+        );
     }
 
     /**
@@ -353,11 +524,31 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aMSLevel int with the ms level for the spectrum, set to 0 if ms
      * level is unknown
      */
-    public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge,
-            String aFileName, int aMaxPadding, boolean aShowFileName,
-            boolean aShowPrecursorDetails, boolean aShowResolution, int aMSLevel) {
-        this(aXAxisData, aYAxisData, aPrecursorMZ, aPrecursorCharge, aFileName, aMaxPadding,
-                aShowFileName, aShowPrecursorDetails, aShowResolution, aMSLevel, false);
+    public SpectrumPanel(
+            double[] aXAxisData,
+            double[] aYAxisData,
+            double aPrecursorMZ,
+            String aPrecursorCharge,
+            String aFileName,
+            int aMaxPadding,
+            boolean aShowFileName,
+            boolean aShowPrecursorDetails,
+            boolean aShowResolution,
+            int aMSLevel
+    ) {
+        this(
+                aXAxisData,
+                aYAxisData,
+                aPrecursorMZ,
+                aPrecursorCharge,
+                aFileName,
+                aMaxPadding,
+                aShowFileName,
+                aShowPrecursorDetails,
+                aShowResolution,
+                aMSLevel,
+                false
+        );
     }
 
     /**
@@ -382,16 +573,31 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aProfileMode boolean if set to true the spectrum will be drawn in
      * profile mode
      */
-    public SpectrumPanel(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge,
-            String aFileName, int aMaxPadding, boolean aShowFileName,
-            boolean aShowPrecursorDetails, boolean aShowResolution, int aMSLevel,
-            boolean aProfileMode) {
+    public SpectrumPanel(
+            double[] aXAxisData,
+            double[] aYAxisData,
+            double aPrecursorMZ,
+            String aPrecursorCharge,
+            String aFileName,
+            int aMaxPadding,
+            boolean aShowFileName,
+            boolean aShowPrecursorDetails,
+            boolean aShowResolution,
+            int aMSLevel,
+            boolean aProfileMode
+    ) {
+
         this.iCurrentDrawStyle = DrawingStyle.LINES;
         this.iSpecPanelListeners = new ArrayList();
         this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         this.setBackground(Color.WHITE);
         dataSetCounter = 0;
-        processXAndYData(aXAxisData, aYAxisData, spectrumPeakColor, spectrumProfileModeLineColor);
+        processXAndYData(
+                aXAxisData,
+                aYAxisData,
+                spectrumPeakColor,
+                spectrumProfileModeLineColor
+        );
         iPrecursorMZ = aPrecursorMZ;
         iPrecursorCharge = aPrecursorCharge;
         iFilename = aFileName;
@@ -400,12 +606,7 @@ public class SpectrumPanel extends GraphicsPanel {
         this.showPrecursorDetails = aShowPrecursorDetails;
         this.showResolution = aShowResolution;
         this.iMSLevel = aMSLevel;
-
-        if (aProfileMode) {
-            this.currentGraphicsPanelType = GraphicsPanelType.profileSpectrum;
-        } else {
-            this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
-        }
+        this.currentGraphicsPanelType = aProfileMode ? GraphicsPanelType.profileSpectrum : GraphicsPanelType.centroidSpectrum;
 
         this.addListeners();
     }
@@ -422,21 +623,29 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param aSpectrumPeakColor the spectrum peak color
      * @param aSpectrumProfileModeLineColor the spectrum profile mode line color
      */
-    public void addMirroredSpectrum(double[] aXAxisData, double[] aYAxisData, double aPrecursorMZ, String aPrecursorCharge, String aFileName, boolean aProfileMode,
-            Color aSpectrumPeakColor, Color aSpectrumProfileModeLineColor) {
+    public void addMirroredSpectrum(
+            double[] aXAxisData,
+            double[] aYAxisData,
+            double aPrecursorMZ,
+            String aPrecursorCharge,
+            String aFileName,
+            boolean aProfileMode,
+            Color aSpectrumPeakColor,
+            Color aSpectrumProfileModeLineColor
+    ) {
 
         iPrecursorMZMirroredSpectrum = aPrecursorMZ;
         iPrecursorChargeMirorredSpectrum = aPrecursorCharge;
         iFilenameMirrorredSpectrum = aFileName;
 
-        processMirroredXAndYData(aXAxisData, aYAxisData, aSpectrumPeakColor, aSpectrumProfileModeLineColor);
+        processMirroredXAndYData(
+                aXAxisData,
+                aYAxisData,
+                aSpectrumPeakColor,
+                aSpectrumProfileModeLineColor
+        );
 
-        if (aProfileMode) {
-            this.currentGraphicsPanelType = GraphicsPanelType.profileSpectrum;
-        } else {
-            this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
-        }
-
+        this.currentGraphicsPanelType = aProfileMode ? GraphicsPanelType.profileSpectrum : GraphicsPanelType.centroidSpectrum;
         this.showFileName = false;
         this.showPrecursorDetails = false;
         this.showResolution = false;
@@ -454,9 +663,19 @@ public class SpectrumPanel extends GraphicsPanel {
      * lines
      * @param areaUnderCurveColor the color to use for the area under the curve
      */
-    public void addAdditionalDataset(double[] aXAxisData, double[] aYAxisData, Color dataPointAndLineColor, Color areaUnderCurveColor) {
+    public void addAdditionalDataset(
+            double[] aXAxisData,
+            double[] aYAxisData,
+            Color dataPointAndLineColor,
+            Color areaUnderCurveColor
+    ) {
 
-        processXAndYData(aXAxisData, aYAxisData, dataPointAndLineColor, areaUnderCurveColor);
+        processXAndYData(
+                aXAxisData,
+                aYAxisData,
+                dataPointAndLineColor,
+                areaUnderCurveColor
+        );
 
         this.showFileName = false;
         this.showPrecursorDetails = false;
@@ -474,9 +693,19 @@ public class SpectrumPanel extends GraphicsPanel {
      * lines
      * @param areaUnderCurveColor the color to use for the area under the curve
      */
-    public void addAdditionalMirroredDataset(double[] aXAxisData, double[] aYAxisData, Color dataPointAndLineColor, Color areaUnderCurveColor) {
+    public void addAdditionalMirroredDataset(
+            double[] aXAxisData,
+            double[] aYAxisData,
+            Color dataPointAndLineColor,
+            Color areaUnderCurveColor
+    ) {
 
-        processMirroredXAndYData(aXAxisData, aYAxisData, dataPointAndLineColor, areaUnderCurveColor);
+        processMirroredXAndYData(
+                aXAxisData,
+                aYAxisData,
+                dataPointAndLineColor,
+                areaUnderCurveColor
+        );
 
         this.showFileName = false;
         this.showPrecursorDetails = false;
@@ -488,12 +717,12 @@ public class SpectrumPanel extends GraphicsPanel {
      *
      * @param aProfileMode if true, the spectrum is drawn in profile mode
      */
-    public void setProfileMode(boolean aProfileMode) {
-        if (aProfileMode) {
-            this.currentGraphicsPanelType = GraphicsPanelType.profileSpectrum;
-        } else {
-            this.currentGraphicsPanelType = GraphicsPanelType.centroidSpectrum;
-        }
+    public void setProfileMode(
+            boolean aProfileMode
+    ) {
+
+        this.currentGraphicsPanelType = aProfileMode ? GraphicsPanelType.profileSpectrum : GraphicsPanelType.centroidSpectrum;
+
     }
 
     /**
@@ -503,8 +732,12 @@ public class SpectrumPanel extends GraphicsPanel {
      *
      * @param aSpectrumPeakColor the color to set
      */
-    public void setSpectrumPeakColor(Color aSpectrumPeakColor) {
+    public void setSpectrumPeakColor(
+            Color aSpectrumPeakColor
+    ) {
+
         this.spectrumPeakColor = aSpectrumPeakColor;
+
     }
 
     /**
@@ -514,7 +747,9 @@ public class SpectrumPanel extends GraphicsPanel {
      *
      * @param aSpectrumProfileModeLineColor the color to set
      */
-    public void setSpectrumProfileModeLineColor(Color aSpectrumProfileModeLineColor) {
+    public void setSpectrumProfileModeLineColor(
+            Color aSpectrumProfileModeLineColor
+    ) {
         this.spectrumProfileModeLineColor = aSpectrumProfileModeLineColor;
     }
 
@@ -525,7 +760,9 @@ public class SpectrumPanel extends GraphicsPanel {
      *
      * @param aAnnotatedPeaks if true only the annotated peaks will be drawn
      */
-    public void showAnnotatedPeaksOnly(boolean aAnnotatedPeaks) {
+    public void showAnnotatedPeaksOnly(
+            boolean aAnnotatedPeaks
+    ) {
         this.showAllPeaks = !aAnnotatedPeaks;
     }
 
@@ -537,8 +774,14 @@ public class SpectrumPanel extends GraphicsPanel {
      * intensities that will be copied here. Note that mass-sorting will take
      * place in this step as well.
      */
-    public void setSpectrumFile(SpectrumFile aSpecFile) {
-        this.processSpectrumFile(aSpecFile, spectrumPeakColor, spectrumProfileModeLineColor);
+    public void setSpectrumFile(
+            SpectrumFile aSpecFile
+    ) {
+        this.processSpectrumFile(
+                aSpecFile,
+                spectrumPeakColor,
+                spectrumProfileModeLineColor
+        );
     }
 
     /**
@@ -552,7 +795,11 @@ public class SpectrumPanel extends GraphicsPanel {
      * line
      * @param areaUnderCurveColor the color to use for the area under the curve
      */
-    private void processSpectrumFile(SpectrumFile aSpecFile, Color dataPointAndLineColor, Color areaUnderCurveColor) {
+    private void processSpectrumFile(
+            SpectrumFile aSpecFile,
+            Color dataPointAndLineColor,
+            Color areaUnderCurveColor
+    ) {
 
         if (dataSetCounter == 0) {
             iXAxisData = new ArrayList<>();
@@ -562,7 +809,7 @@ public class SpectrumPanel extends GraphicsPanel {
         iDataPointAndLineColor.add(dataPointAndLineColor);
         iAreaUnderCurveColor.add(areaUnderCurveColor);
 
-        HashMap peaks = aSpecFile.getPeaks();
+        HashMap<Double, Double> peaks = aSpecFile.getPeaks();
 
         iXAxisData.add(new double[peaks.size()]);
         iYAxisData.add(new double[peaks.size()]);
@@ -574,20 +821,25 @@ public class SpectrumPanel extends GraphicsPanel {
 
         // TreeSets are sorted.
         TreeSet masses = new TreeSet(peaks.keySet());
-        Iterator iter = masses.iterator();
+        Iterator<Double> iter = masses.iterator();
 
         int count = 0;
 
         while (iter.hasNext()) {
-            Double key = (Double) iter.next();
-            double mass = key.doubleValue();
-            double intensity = ((Double) peaks.get(key)).doubleValue();
+
+            double mass = iter.next();
+            double intensity = peaks.get(mass);
+
             if (intensity > maxInt) {
+
                 maxInt = intensity;
+
             }
+
             iXAxisData.get(dataSetCounter)[count] = mass;
             iYAxisData.get(dataSetCounter)[count] = intensity;
             count++;
+
         }
 
         if (iXAxisStartAtZero) {
@@ -618,7 +870,9 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param peakLabel the peak label
      * @return the peak color
      */
-    public static Color determineColorOfPeak(String peakLabel) {
+    public static Color determineColorOfPeak(
+            String peakLabel
+    ) {
 
         Color currentColor = Color.GRAY;
 
@@ -716,7 +970,8 @@ public class SpectrumPanel extends GraphicsPanel {
             ArrayList<NeutralLoss> neutralLosses,
             boolean singleChargeSelected,
             boolean doubleChargeSelected,
-            boolean moreThanTwoChargesSelected) {
+            boolean moreThanTwoChargesSelected
+    ) {
 
         Vector<SpectrumAnnotation> filteredAnnotations = new Vector();
 
@@ -839,14 +1094,25 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param ion the ion
      * @param color the new color
      */
-    public static void setIonColor(Ion ion, Color color) {
+    public static void setIonColor(
+            Ion ion,
+            Color color
+    ) {
+
         if (!colorMap.containsKey(ion.getType())) {
-            colorMap.put(ion.getType(), new HashMap<>());
+
+            colorMap.put(ion.getType(), new HashMap<>(1));
+
         }
+
         if (!colorMap.get(ion.getType()).containsKey(ion.getSubType())) {
-            colorMap.get(ion.getType()).put(ion.getSubType(), new HashMap<>());
+
+            colorMap.get(ion.getType()).put(ion.getSubType(), new HashMap<>(1));
+
         }
+
         colorMap.get(ion.getType()).get(ion.getSubType()).put(ion.getNeutralLossesAsString(), color);
+
     }
 
     /**
@@ -856,15 +1122,24 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param ion the ion
      * @param isSpectrum if true, the special spectrum color is used for the
      * y-ion
+     *
      * @return the peak color
      */
-    public static Color determineFragmentIonColor(Ion ion, boolean isSpectrum) {
+    public static Color determineFragmentIonColor(
+            Ion ion,
+            boolean isSpectrum
+    ) {
+
         if (colorMap.containsKey(ion.getType())
                 && colorMap.get(ion.getType()).containsKey(ion.getSubType())
                 && colorMap.get(ion.getType()).get(ion.getSubType()).containsKey(ion.getNeutralLossesAsString())) {
+
             return colorMap.get(ion.getType()).get(ion.getSubType()).get(ion.getNeutralLossesAsString());
+
         }
+
         return determineDefaultFragmentIonColor(ion, isSpectrum);
+
     }
 
     /**
@@ -874,169 +1149,295 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param ion the ion
      * @param isSpectrum if true, the special spectrum color is used for the
      * y-ion
+     *
      * @return the peak color
      */
-    public static Color determineDefaultFragmentIonColor(Ion ion, boolean isSpectrum) {
+    public static Color determineDefaultFragmentIonColor(
+            Ion ion,
+            boolean isSpectrum
+    ) {
 
         switch (ion.getType()) {
+
             case PEPTIDE_FRAGMENT_ION:
+
             case TAG_FRAGMENT_ION:
+
                 switch (ion.getSubType()) {
+
                     case PeptideFragmentIon.A_ION:
+
                         if (ion.hasNeutralLosses()) {
+
                             NeutralLoss[] neutralLosses = ion.getNeutralLosses();
+
                             if (neutralLosses.length == 1) {
+
                                 NeutralLoss neutralLoss = neutralLosses[0];
+
                                 if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+
                                     // light purple-blue
                                     return new Color(171, 161, 255);
+
                                 } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
-                                    // ugly purple pink
+
+                                    // purple pink
                                     return new Color(248, 151, 202);
+
                                 } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
                                         || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                                    return Color.BLACK; // @TODO: black can _not_ be used here!!
+
+                                    return Color.BLACK;
+
                                 }
                             } else if (neutralLosses.length > 1) {
+
                                 return Color.GRAY;
+
                             }
                         }
+
                         // turquoise
                         return new Color(153, 0, 0);
+
                     case PeptideFragmentIon.B_ION:
+
                         if (ion.hasNeutralLosses()) {
+
                             NeutralLoss[] neutralLosses = ion.getNeutralLosses();
+
                             if (neutralLosses.length == 1) {
+
                                 NeutralLoss neutralLoss = neutralLosses[0];
+
                                 if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+
                                     // nice blue
                                     return new Color(0, 125, 200);
+
                                 } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+
                                     // another purple
                                     return new Color(153, 0, 255);
+
                                 } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
                                         || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                                    return Color.BLACK; // @TODO: black can _not_ be used here!!
+
+                                    return Color.PINK;
+
                                 }
+
                             } else if (neutralLosses.length > 1) {
+
                                 return Color.GRAY;
+
                             }
                         }
+
                         // dark blue
                         return new Color(0, 0, 255);
+
                     case PeptideFragmentIon.C_ION:
+
                         if (ion.hasNeutralLosses()) {
+
                             NeutralLoss[] neutralLosses = ion.getNeutralLosses();
+
                             if (neutralLosses.length == 1) {
+
                                 NeutralLoss neutralLoss = neutralLosses[0];
+
                                 if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+
                                     // ??
                                     return new Color(188, 150, 255);
+
                                 } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+
                                     // ??
                                     return new Color(255, 0, 255);
+
                                 } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
                                         || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                                    return Color.BLACK; // @TODO: black can _not_ be used here!!
+
+                                    return Color.PINK;
+
                                 }
+
                             } else if (neutralLosses.length > 1) {
+
                                 return Color.GRAY;
+
                             }
                         }
+
                         // purple blue
                         return new Color(188, 0, 255);
+
                     case PeptideFragmentIon.X_ION:
+
                         if (ion.hasNeutralLosses()) {
+
                             NeutralLoss[] neutralLosses = ion.getNeutralLosses();
+
                             if (neutralLosses.length == 1) {
+
                                 NeutralLoss neutralLoss = neutralLosses[0];
+
                                 if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+
                                     // ??
                                     return new Color(78, 200, 150);
+
                                 } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+
                                     // ??
                                     return new Color(255, 200, 255);
+
                                 } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
                                         || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                                    return Color.BLACK; // @TODO: black can _not_ be used here!!
+
+                                    return Color.PINK;
+
                                 }
+
                             } else if (neutralLosses.length > 1) {
+
                                 return Color.GRAY;
+
                             }
                         }
+
                         // green
                         return new Color(78, 200, 0);
+
                     case PeptideFragmentIon.Y_ION:
+
                         if (ion.hasNeutralLosses()) {
+
                             NeutralLoss[] neutralLosses = ion.getNeutralLosses();
+
                             if (neutralLosses.length == 1) {
+
                                 NeutralLoss neutralLoss = neutralLosses[0];
+
                                 if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+
                                     if (isSpectrum) {
+
                                         // navy blue
                                         return new Color(0, 70, 135);
+
                                     } else {
+
                                         // orange
                                         return new Color(255, 150, 0);
+
                                     }
+
                                 } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+
                                     if (isSpectrum) {
+
                                         // another purple
                                         return new Color(155, 0, 155);
+
                                     } else {
+
                                         // pink
                                         return new Color(255, 0, 150);
+
                                     }
+
                                 } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
                                         || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                                    return Color.BLACK; // @TODO: black can _not_ be used here!!
+
+                                    return Color.PINK;
+
                                 }
+
                             } else if (neutralLosses.length > 1) {
+
                                 return Color.GRAY;
+
                             }
                         }
 
                         if (isSpectrum) {
+
                             // black
                             return Color.BLACK; // special case for spectra, as the default peak color is red...
+
                         } else {
+
                             // red
                             return new Color(255, 0, 0);
+
                         }
+
                     case PeptideFragmentIon.Z_ION:
+
                         if (ion.hasNeutralLosses()) {
+
                             NeutralLoss[] neutralLosses = ion.getNeutralLosses();
+
                             if (neutralLosses.length == 1) {
+
                                 NeutralLoss neutralLoss = neutralLosses[0];
+
                                 if (neutralLoss.isSameAs(NeutralLoss.H2O)) {
+
                                     // ??
                                     return new Color(64, 179, 150);
+
                                 } else if (neutralLoss.isSameAs(NeutralLoss.NH3)) {
+
                                     // ??
                                     return new Color(255, 179, 150);
+
                                 } else if (neutralLoss.isSameAs(NeutralLoss.H3PO4)
                                         || neutralLoss.isSameAs(NeutralLoss.HPO3)) {
-                                    return Color.BLACK; // @TODO: black can _not_ be used here!!
+
+                                    return Color.PINK;
+
                                 }
+
                             } else if (neutralLosses.length > 1) {
+
                                 return Color.GRAY;
+
                             }
                         }
+
                         // dark green
                         return new Color(64, 179, 0);
+
                     default:
                         return Color.GRAY;
+
                 }
+
             case PRECURSOR_ION:
+
                 return Color.GRAY;
+
             case IMMONIUM_ION:
+
                 return Color.GRAY;
+
             case REPORTER_ION:
+
                 return Color.ORANGE;
+
             case RELATED_ION:
+
                 return Color.GRAY;
+
             default:
+
                 return Color.GRAY;
+
         }
     }
 
@@ -1047,7 +1448,9 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param seriesLabel the series label
      * @return the fragment ion color
      */
-    public static Color determineFragmentIonColor(String seriesLabel) {
+    public static Color determineFragmentIonColor(
+            String seriesLabel
+    ) {
 
         Color currentColor = Color.GRAY;
 
@@ -1057,16 +1460,22 @@ public class SpectrumPanel extends GraphicsPanel {
             currentColor = new Color(153, 0, 0);
 
             if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+
                 // light purple-blue
                 currentColor = new Color(171, 161, 255);
+
             } else if (seriesLabel.lastIndexOf("NH3") != -1) {
-                // ugly purple pink
+
+                // purple pink
                 currentColor = new Color(248, 151, 202);
+
             }
 
             // change color slightly if a double charge is detected
             if (seriesLabel.lastIndexOf("++") != -1) {
+
                 currentColor = new Color(currentColor.getRed() - 100, currentColor.getGreen(), currentColor.getBlue());
+
             }
 
         } else if (seriesLabel.startsWith("b")) {
@@ -1076,14 +1485,24 @@ public class SpectrumPanel extends GraphicsPanel {
 
             // change color slightly if a neutral loss is detected
             if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+
                 currentColor = new Color(0, 150, 255);
+
             } else if (seriesLabel.lastIndexOf("NH3") != -1 || seriesLabel.equalsIgnoreCase("b ions - mod.")) {
+
                 currentColor = new Color(150, 0, 255);
+
             }
 
             // change color slightly if a double charge is detected
             if (seriesLabel.lastIndexOf("++") != -1) {
-                currentColor = new Color(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue() - 100);
+
+                currentColor = new Color(
+                        currentColor.getRed(),
+                        currentColor.getGreen(),
+                        currentColor.getBlue() - 100
+                );
+
             }
 
         } else if (seriesLabel.startsWith("c")) {
@@ -1093,14 +1512,23 @@ public class SpectrumPanel extends GraphicsPanel {
 
             // change color slightly if a neutral loss is detected
             if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+
                 currentColor = new Color(188, 150, 255);
+
             } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+
                 currentColor = new Color(255, 0, 255);
+
             }
 
             // change color slightly if a double charge is detected
             if (seriesLabel.lastIndexOf("++") != -1) {
-                currentColor = new Color(currentColor.getRed(), currentColor.getGreen(), currentColor.getBlue() - 100);
+
+                currentColor = new Color(
+                        currentColor.getRed(),
+                        currentColor.getGreen(),
+                        currentColor.getBlue() - 100
+                );
             }
 
         } else if (seriesLabel.startsWith("x")) {
@@ -1110,14 +1538,23 @@ public class SpectrumPanel extends GraphicsPanel {
 
             // change color slightly if a neutral loss is detected
             if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+
                 currentColor = new Color(78, 200, 150);
+
             } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+
                 currentColor = new Color(255, 200, 255);
+
             }
 
             // change color slightly if a double charge is detected
             if (seriesLabel.lastIndexOf("++") != -1) {
-                currentColor = new Color(currentColor.getRed(), currentColor.getGreen() - 100, currentColor.getBlue());
+
+                currentColor = new Color(
+                        currentColor.getRed(),
+                        currentColor.getGreen() - 100,
+                        currentColor.getBlue()
+                );
             }
 
         } else if (seriesLabel.startsWith("y")) {
@@ -1127,14 +1564,20 @@ public class SpectrumPanel extends GraphicsPanel {
 
             // change color slightly if a neutral loss is detected
             if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+
                 currentColor = new Color(255, 150, 0);
+
             } else if (seriesLabel.lastIndexOf("NH3") != -1 || seriesLabel.equalsIgnoreCase("y ions - mod.")) {
+
                 currentColor = new Color(255, 0, 150);
+
             }
 
             // change color slightly if a double charge is detected
             if (seriesLabel.lastIndexOf("++") != -1) {
+
                 currentColor = new Color(currentColor.getRed() - 100, currentColor.getGreen(), currentColor.getBlue());
+
             }
 
         } else if (seriesLabel.startsWith("z")) {
@@ -1144,18 +1587,26 @@ public class SpectrumPanel extends GraphicsPanel {
 
             // change color slightly if a neutral loss is detected
             if (seriesLabel.lastIndexOf("H2O") != -1 || seriesLabel.lastIndexOf("H20") != -1) {
+
                 currentColor = new Color(64, 179, 150);
+
             } else if (seriesLabel.lastIndexOf("NH3") != -1) {
+
                 currentColor = new Color(255, 179, 150);
+
             }
 
             // change color slightly if a double charge is detected
             if (seriesLabel.lastIndexOf("++") != -1) {
+
                 currentColor = new Color(currentColor.getRed(), currentColor.getGreen() - 100, currentColor.getBlue());
+
             }
 
         } else if (seriesLabel.startsWith("iTRAQ") || seriesLabel.startsWith("TMT")) {
+
             return Color.ORANGE;
+
         }
 
         return currentColor;
@@ -1186,13 +1637,38 @@ public class SpectrumPanel extends GraphicsPanel {
      * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
-            Peptide currentPeptide, IonMatch[] annotations,
-            int aForwardIon, int aRewindIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showRewindTags, boolean mirrored,
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
-        addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                0.9, 1.0, 0.2f, 0.2f, null, true, mirrored,
-                modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
+            Peptide currentPeptide,
+            IonMatch[] annotations,
+            int aForwardIon,
+            int aRewindIon,
+            int aDeNovoCharge,
+            boolean showForwardTags,
+            boolean showRewindTags,
+            boolean mirrored,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
+            SequenceMatchingParameters modificationSequenceMatchingParameters
+    ) {
+
+        addAutomaticDeNovoSequencing(
+                currentPeptide,
+                annotations,
+                aForwardIon,
+                aRewindIon,
+                aDeNovoCharge,
+                showForwardTags,
+                showRewindTags,
+                0.9,
+                1.0,
+                0.2f,
+                0.2f,
+                null,
+                true,
+                mirrored,
+                modificationParameters,
+                sequenceProvider,
+                modificationSequenceMatchingParameters
+        );
     }
 
     /**
@@ -1223,14 +1699,40 @@ public class SpectrumPanel extends GraphicsPanel {
      * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
-            Peptide currentPeptide, IonMatch[] annotations,
-            int aForwardIon, int aRewindIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showRewindTags,
-            double forwardIonPercentHeight, double rewindIonPercentHeight, boolean mirrored,
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
-        addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, null, true, mirrored,
-                modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
+            Peptide currentPeptide,
+            IonMatch[] annotations,
+            int aForwardIon,
+            int aRewindIon,
+            int aDeNovoCharge,
+            boolean showForwardTags,
+            boolean showRewindTags,
+            double forwardIonPercentHeight,
+            double rewindIonPercentHeight,
+            boolean mirrored,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
+            SequenceMatchingParameters modificationSequenceMatchingParameters
+    ) {
+
+        addAutomaticDeNovoSequencing(
+                currentPeptide,
+                annotations,
+                aForwardIon,
+                aRewindIon,
+                aDeNovoCharge,
+                showForwardTags,
+                showRewindTags,
+                forwardIonPercentHeight,
+                rewindIonPercentHeight,
+                0.2f,
+                0.2f,
+                null,
+                true,
+                mirrored,
+                modificationParameters,
+                sequenceProvider,
+                modificationSequenceMatchingParameters
+        );
     }
 
     /**
@@ -1262,16 +1764,41 @@ public class SpectrumPanel extends GraphicsPanel {
      * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
-            Peptide currentPeptide, IonMatch[] annotations,
-            int aForwardIon, int aRewindIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showRewindTags,
-            double forwardIonPercentHeight, double rewindIonPercentHeight, boolean excludeFixedModifications, boolean mirrored,
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
+            Peptide currentPeptide,
+            IonMatch[] annotations,
+            int aForwardIon,
+            int aRewindIon,
+            int aDeNovoCharge,
+            boolean showForwardTags,
+            boolean showRewindTags,
+            double forwardIonPercentHeight,
+            double rewindIonPercentHeight,
+            boolean excludeFixedModifications,
+            boolean mirrored,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
+            SequenceMatchingParameters modificationSequenceMatchingParameters
+    ) {
 
-        addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, null, excludeFixedModifications, mirrored,
-                modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
-
+        addAutomaticDeNovoSequencing(
+                currentPeptide,
+                annotations,
+                aForwardIon,
+                aRewindIon,
+                aDeNovoCharge,
+                showForwardTags,
+                showRewindTags,
+                forwardIonPercentHeight,
+                rewindIonPercentHeight,
+                0.2f,
+                0.2f,
+                null,
+                excludeFixedModifications,
+                mirrored,
+                modificationParameters,
+                sequenceProvider,
+                modificationSequenceMatchingParameters
+        );
     }
 
     /**
@@ -1295,11 +1822,31 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param mirrored if true the annotation is for the mirrored spectrum
      */
     public void addAutomaticDeNovoSequencing(
-            Tag tag, IonMatch[] annotations,
-            int aForwardIon, int aRewindIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showRewindTags, boolean mirrored) {
-        addAutomaticDeNovoSequencing(tag, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                0.9, 1.0, 0.2f, 0.2f, null, true, mirrored);
+            Tag tag,
+            IonMatch[] annotations,
+            int aForwardIon,
+            int aRewindIon,
+            int aDeNovoCharge,
+            boolean showForwardTags,
+            boolean showRewindTags,
+            boolean mirrored
+    ) {
+        addAutomaticDeNovoSequencing(
+                tag,
+                annotations,
+                aForwardIon,
+                aRewindIon,
+                aDeNovoCharge,
+                showForwardTags,
+                showRewindTags,
+                0.9,
+                1.0,
+                0.2f,
+                0.2f,
+                null,
+                true,
+                mirrored
+        );
     }
 
     /**
@@ -1326,12 +1873,34 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param mirrored if true the annotation is for the mirrored spectrum
      */
     public void addAutomaticDeNovoSequencing(
-            Tag tag, IonMatch[] annotations,
-            int aForwardIon, int aRewindIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showRewindTags,
-            double forwardIonPercentHeight, double rewindIonPercentHeight, boolean mirrored) {
-        addAutomaticDeNovoSequencing(tag, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, null, true, mirrored);
+            Tag tag,
+            IonMatch[] annotations,
+            int aForwardIon,
+            int aRewindIon,
+            int aDeNovoCharge,
+            boolean showForwardTags,
+            boolean showRewindTags,
+            double forwardIonPercentHeight,
+            double rewindIonPercentHeight,
+            boolean mirrored
+    ) {
+
+        addAutomaticDeNovoSequencing(
+                tag,
+                annotations,
+                aForwardIon,
+                aRewindIon,
+                aDeNovoCharge,
+                showForwardTags,
+                showRewindTags,
+                forwardIonPercentHeight,
+                rewindIonPercentHeight,
+                0.2f,
+                0.2f,
+                null,
+                true,
+                mirrored
+        );
     }
 
     /**
@@ -1361,14 +1930,35 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param mirrored if true the annotation is for the mirrored spectrum
      */
     public void addAutomaticDeNovoSequencing(
-            Tag tag, IonMatch[] annotations,
-            int aForwardIon, int aRewindIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showRewindTags,
-            double forwardIonPercentHeight, double rewindIonPercentHeight, ArrayList<float[]> alphaLevels, boolean excludeFixedModifications, boolean mirrored) {
+            Tag tag,
+            IonMatch[] annotations,
+            int aForwardIon,
+            int aRewindIon,
+            int aDeNovoCharge,
+            boolean showForwardTags,
+            boolean showRewindTags,
+            double forwardIonPercentHeight,
+            double rewindIonPercentHeight,
+            ArrayList<float[]> alphaLevels,
+            boolean excludeFixedModifications,
+            boolean mirrored
+    ) {
 
-        addAutomaticDeNovoSequencing(tag, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, alphaLevels, excludeFixedModifications, mirrored);
-
+        addAutomaticDeNovoSequencing(
+                tag, annotations,
+                aForwardIon,
+                aRewindIon,
+                aDeNovoCharge,
+                showForwardTags,
+                showRewindTags,
+                forwardIonPercentHeight,
+                rewindIonPercentHeight,
+                0.2f,
+                0.2f,
+                alphaLevels,
+                excludeFixedModifications,
+                mirrored
+        );
     }
 
     /**
@@ -1401,17 +1991,42 @@ public class SpectrumPanel extends GraphicsPanel {
      * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
-            Peptide currentPeptide, IonMatch[] annotations,
-            int aForwardIon, int aRewindIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showRewindTags,
-            double forwardIonPercentHeight, double rewindIonPercentHeight,
-            ArrayList<float[]> alphaLevels, boolean excludeFixedModifications, boolean mirrored,
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
+            Peptide currentPeptide,
+            IonMatch[] annotations,
+            int aForwardIon,
+            int aRewindIon,
+            int aDeNovoCharge,
+            boolean showForwardTags,
+            boolean showRewindTags,
+            double forwardIonPercentHeight,
+            double rewindIonPercentHeight,
+            ArrayList<float[]> alphaLevels,
+            boolean excludeFixedModifications,
+            boolean mirrored,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
+            SequenceMatchingParameters modificationSequenceMatchingParameters
+    ) {
 
-        addAutomaticDeNovoSequencing(currentPeptide, annotations, aForwardIon, aRewindIon, aDeNovoCharge, showForwardTags, showRewindTags,
-                forwardIonPercentHeight, rewindIonPercentHeight, 0.2f, 0.2f, alphaLevels, excludeFixedModifications, mirrored,
-                modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
-
+        addAutomaticDeNovoSequencing(
+                currentPeptide,
+                annotations,
+                aForwardIon,
+                aRewindIon,
+                aDeNovoCharge,
+                showForwardTags,
+                showRewindTags,
+                forwardIonPercentHeight,
+                rewindIonPercentHeight,
+                0.2f,
+                0.2f,
+                alphaLevels,
+                excludeFixedModifications,
+                mirrored,
+                modificationParameters,
+                sequenceProvider,
+                modificationSequenceMatchingParameters
+        );
     }
 
     /**
@@ -1446,13 +2061,24 @@ public class SpectrumPanel extends GraphicsPanel {
      * preferences for modification to peptide mapping
      */
     public void addAutomaticDeNovoSequencing(
-            Peptide currentPeptide, IonMatch[] annotations,
-            int aForwardIon, int aRewindIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showRewindTags,
-            double forwardIonPercentHeight, double rewindIonPercentHeight,
-            float forwardIonAlphaLevel, float rewindIonAlphaLevel, ArrayList<float[]> alphaLevels,
-            boolean excludeFixedModifications, boolean mirrored,
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
+            Peptide currentPeptide,
+            IonMatch[] annotations,
+            int aForwardIon,
+            int aRewindIon,
+            int aDeNovoCharge,
+            boolean showForwardTags,
+            boolean showRewindTags,
+            double forwardIonPercentHeight,
+            double rewindIonPercentHeight,
+            float forwardIonAlphaLevel,
+            float rewindIonAlphaLevel,
+            ArrayList<float[]> alphaLevels,
+            boolean excludeFixedModifications,
+            boolean mirrored,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
+            SequenceMatchingParameters modificationSequenceMatchingParameters
+    ) {
 
         int forwardIon = aForwardIon;
         int reverseIon = aRewindIon;
@@ -1463,32 +2089,46 @@ public class SpectrumPanel extends GraphicsPanel {
 
         // iterate the annotations and find the de novo tags
         Arrays.stream(annotations)
-                .filter(tempMatch -> tempMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION
-                && !tempMatch.ion.hasNeutralLosses()
-                && tempMatch.charge == deNovoCharge)
-                .forEach(tempMatch -> {
+                .filter(
+                        tempMatch -> tempMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION
+                        && !tempMatch.ion.hasNeutralLosses()
+                        && tempMatch.charge == deNovoCharge
+                )
+                .forEach(
+                        tempMatch -> {
 
-                    PeptideFragmentIon fragmentIon = (PeptideFragmentIon) tempMatch.ion;
+                            PeptideFragmentIon fragmentIon = (PeptideFragmentIon) tempMatch.ion;
 
-                    if (fragmentIon.getSubType() == forwardIon) {
+                            if (fragmentIon.getSubType() == forwardIon) {
 
-                        forwardIons[fragmentIon.getNumber() - 1] = tempMatch;
+                                forwardIons[fragmentIon.getNumber() - 1] = tempMatch;
 
-                    } else if (fragmentIon.getSubType() == reverseIon) {
+                            } else if (fragmentIon.getSubType() == reverseIon) {
 
-                        reverseIons[fragmentIon.getNumber() - 1] = tempMatch;
+                                reverseIons[fragmentIon.getNumber() - 1] = tempMatch;
 
-                    }
-                });
+                            }
+                        }
+                );
 
         HashSet<Integer> modifiedIndexes = Arrays.stream(currentPeptide.getVariableModifications())
-                .map(modificationMatch -> modificationMatch.getSite())
-                .map(i -> ModificationUtils.getSite(i, currentPeptide.getSequence().length()))
-                .collect(Collectors.toCollection(HashSet::new));
+                .map(
+                        modificationMatch -> modificationMatch.getSite()
+                )
+                .map(
+                        i -> ModificationUtils.getSite(i, currentPeptide.getSequence().length())
+                )
+                .collect(
+                        Collectors.toCollection(HashSet::new)
+                );
 
         if (!excludeFixedModifications) {
 
-            String[] fixedModifications = currentPeptide.getFixedModifications(modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
+            String[] fixedModifications = currentPeptide.getFixedModifications(
+                    modificationParameters,
+                    sequenceProvider,
+                    modificationSequenceMatchingParameters
+            );
 
             for (int i = 0; i < fixedModifications.length; i++) {
 
@@ -1519,11 +2159,25 @@ public class SpectrumPanel extends GraphicsPanel {
                         currentAlphaLevel = alphaLevels.get(0)[currentPeptide.getSequence().length() - i];
                     }
 
-                    addReferenceAreaXAxis(new ReferenceArea(
-                            "r" + i + "_" + mirrored,
-                            currentPeptide.getSequence().substring(currentPeptide.getSequence().length() - i - 1, currentPeptide.getSequence().length() - i) + mod,
-                            reverseIons[i - 1].peak.mz, reverseIons[i].peak.mz, annotationColor, currentAlphaLevel, false, true, annotationColor, true,
-                            Color.lightGray, 0.2f, rewindIonPercentHeight, !mirrored));
+                    addReferenceAreaXAxis(
+                            new ReferenceArea(
+                                    "r" + i + "_" + mirrored,
+                                    currentPeptide.getSequence()
+                                            .substring(currentPeptide.getSequence().length() - i - 1, currentPeptide.getSequence().length() - i) + mod,
+                                    reverseIons[i - 1].peakMz,
+                                    reverseIons[i].peakMz,
+                                    annotationColor,
+                                    currentAlphaLevel,
+                                    false,
+                                    true,
+                                    annotationColor,
+                                    true,
+                                    Color.lightGray,
+                                    0.2f,
+                                    rewindIonPercentHeight,
+                                    !mirrored
+                            )
+                    );
                 }
             }
         }
@@ -1547,11 +2201,24 @@ public class SpectrumPanel extends GraphicsPanel {
                         currentAlphaLevel = alphaLevels.get(0)[i];
                     }
 
-                    addReferenceAreaXAxis(new ReferenceArea(
-                            "f" + i + "_" + mirrored,
-                            currentPeptide.getSequence().substring(i, i + 1) + mod,
-                            forwardIons[i - 1].peak.mz, forwardIons[i].peak.mz, annotationColor, currentAlphaLevel, false, true, annotationColor, true,
-                            Color.lightGray, 0.2f, forwardIonPercentHeight, !mirrored));
+                    addReferenceAreaXAxis(
+                            new ReferenceArea(
+                                    "f" + i + "_" + mirrored,
+                                    currentPeptide.getSequence().substring(i, i + 1) + mod,
+                                    forwardIons[i - 1].peakMz,
+                                    forwardIons[i].peakMz,
+                                    annotationColor,
+                                    currentAlphaLevel,
+                                    false,
+                                    true,
+                                    annotationColor,
+                                    true,
+                                    Color.lightGray,
+                                    0.2f,
+                                    forwardIonPercentHeight,
+                                    !mirrored
+                            )
+                    );
                 }
             }
         }
@@ -1585,29 +2252,45 @@ public class SpectrumPanel extends GraphicsPanel {
      * @param mirrored if true the annotation is for the mirrored spectrum
      */
     public void addAutomaticDeNovoSequencing(
-            Tag tag, IonMatch[] annotations,
-            int aForwardIon, int aRewindIon, int aDeNovoCharge,
-            boolean showForwardTags, boolean showReverseTags,
-            double forwardIonPercentHeight, double rewindIonPercentHeight,
-            float forwardIonAlphaLevel, float rewindIonAlphaLevel, ArrayList<float[]> alphaLevels,
-            boolean excludeFixedModifications, boolean mirrored) {
+            Tag tag,
+            IonMatch[] annotations,
+            int aForwardIon,
+            int aRewindIon,
+            int aDeNovoCharge,
+            boolean showForwardTags,
+            boolean showReverseTags,
+            double forwardIonPercentHeight,
+            double rewindIonPercentHeight,
+            float forwardIonAlphaLevel,
+            float rewindIonAlphaLevel,
+            ArrayList<float[]> alphaLevels,
+            boolean excludeFixedModifications,
+            boolean mirrored
+    ) {
 
         int forwardIon = aForwardIon;
         int rewindIon = aRewindIon;
         int deNovoCharge = aDeNovoCharge;
         // @TODO: include multiple ions
-        HashMap<Integer, IonMatch> forwardMap = new HashMap<>();
-        HashMap<Integer, IonMatch> rewindMap = new HashMap<>();
+        HashMap<Integer, IonMatch> forwardMap = new HashMap<>(2);
+        HashMap<Integer, IonMatch> rewindMap = new HashMap<>(2);
+
         for (IonMatch ionMatch : annotations) {
+
             if (ionMatch.ion.getType() == Ion.IonType.TAG_FRAGMENT_ION
                     && !ionMatch.ion.hasNeutralLosses()
                     && ionMatch.charge == deNovoCharge) {
 
                 TagFragmentIon fragmentIon = (TagFragmentIon) ionMatch.ion;
+
                 if (fragmentIon.getSubType() == forwardIon) {
+
                     forwardMap.put(fragmentIon.getSubNumber(), ionMatch);
+
                 } else if (fragmentIon.getSubType() == rewindIon) {
+
                     rewindMap.put(fragmentIon.getSubNumber(), ionMatch);
+
                 }
             }
         }
@@ -1652,12 +2335,24 @@ public class SpectrumPanel extends GraphicsPanel {
                                 currentAlphaLevel = alphaLevels.get(tagCount)[i];
                             }
 
-                            addReferenceAreaXAxis(new ReferenceArea(
-                                    "f" + i + "_" + mirrored,
-                                    aminoAcidSequence.charAt(i) + mod,
-                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, currentAlphaLevel, false, true, annotationColor, true,
-                                    Color.lightGray, 0.2f, forwardIonPercentHeight, !mirrored));
-
+                            addReferenceAreaXAxis(
+                                    new ReferenceArea(
+                                            "f" + i + "_" + mirrored,
+                                            aminoAcidSequence.charAt(i) + mod,
+                                            ionMatch1.peakMz,
+                                            ionMatch2.peakMz,
+                                            annotationColor,
+                                            currentAlphaLevel,
+                                            false,
+                                            true,
+                                            annotationColor,
+                                            true,
+                                            Color.lightGray,
+                                            0.2f,
+                                            forwardIonPercentHeight,
+                                            !mirrored
+                                    )
+                            );
                         }
                     }
                 }
@@ -1720,12 +2415,24 @@ public class SpectrumPanel extends GraphicsPanel {
 
                             }
 
-                            addReferenceAreaXAxis(new ReferenceArea(
-                                    "r" + sequenceIndex + "_" + mirrored,
-                                    aminoAcidSequence.charAt(sequenceIndex) + mod,
-                                    ionMatch1.peak.mz, ionMatch2.peak.mz, annotationColor, currentAlphaLevel, false, true, annotationColor, true,
-                                    Color.lightGray, 0.2f, rewindIonPercentHeight, !mirrored));
-
+                            addReferenceAreaXAxis(
+                                    new ReferenceArea(
+                                            "r" + sequenceIndex + "_" + mirrored,
+                                            aminoAcidSequence.charAt(sequenceIndex) + mod,
+                                            ionMatch1.peakMz,
+                                            ionMatch2.peakMz,
+                                            annotationColor,
+                                            currentAlphaLevel,
+                                            false,
+                                            true,
+                                            annotationColor,
+                                            true,
+                                            Color.lightGray,
+                                            0.2f,
+                                            rewindIonPercentHeight,
+                                            !mirrored
+                                    )
+                            );
                         }
                     }
                 }

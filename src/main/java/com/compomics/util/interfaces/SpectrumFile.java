@@ -67,7 +67,7 @@ public interface SpectrumFile extends Comparable {
      *
      * @return  HashMap with Doubles as keys (the masses) and Doubles as values (the intensities).
      */
-    HashMap getPeaks();
+    HashMap<Double, Double> getPeaks();
 
     /**
      * This method sets the peaks on the spectrum.

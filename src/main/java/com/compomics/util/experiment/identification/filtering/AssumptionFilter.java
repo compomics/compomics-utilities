@@ -11,7 +11,6 @@ import com.compomics.util.experiment.identification.spectrum_assumptions.Peptide
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
@@ -344,6 +343,8 @@ public class AssumptionFilter extends MatchFilter {
                 Map<Integer, ArrayList<IonMatch>> matches = peptideSpectrumAnnotator.getCoveredAminoAcids(
                         annotationPreferences, 
                         specificAnnotationPreferences, 
+                        spectrumFile, 
+                        spectrumTitle, 
                         spectrum, 
                         peptide, 
                         modificationParameters, 

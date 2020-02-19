@@ -52,8 +52,15 @@ public class MassErrorPlot extends JPanel {
     public MassErrorPlot(
             IonMatch[] annotations,
             Spectrum currentSpectrum,
-            double massTolerance) throws InterruptedException {
-        this(annotations, currentSpectrum, massTolerance, false);
+            double massTolerance
+    ) throws InterruptedException {
+    
+        this(
+                annotations, 
+                currentSpectrum, 
+                massTolerance, 
+                false
+        );
     }
 
     /**
@@ -69,7 +76,8 @@ public class MassErrorPlot extends JPanel {
             IonMatch[] annotations,
             Spectrum currentSpectrum,
             double massTolerance,
-            boolean useRelativeError) {
+            boolean useRelativeError
+    ) {
         super();
 
         setOpaque(false);
@@ -83,31 +91,16 @@ public class MassErrorPlot extends JPanel {
             DefaultXYDataset xyDataset = new DefaultXYDataset();
             ArrayList<Color> colors = new ArrayList<>();
 
-            // find the most intense annotated peak
-            double maxAnnotatedIntensity = Arrays.stream(annotations)
-                    .mapToDouble(ionMatch -> ionMatch.peak.intensity)
-                    .max()
-                    .orElse(0.0);
-
-            double maxError = useRelativeError ? Arrays.stream(annotations)
-                            .mapToDouble(ionMatch -> ionMatch.getRelativeError())
-                            .max()
-                            .orElse(0.0)
-                    : Arrays.stream(annotations)
-                            .mapToDouble(ionMatch -> ionMatch.getAbsoluteError())
-                            .max()
-                            .orElse(0.0);
-
             Arrays.stream(annotations)
                     .forEach(ionMatch -> {
                 double[][] dataXY = new double[2][1];
-                dataXY[0][0] = ionMatch.peak.mz;
+                dataXY[0][0] = ionMatch.peakMz;
 
                 dataXY[1][0] = useRelativeError ? ionMatch.getRelativeError() : ionMatch.getAbsoluteError();
 
                 xyDataset.addSeries(ionMatch.getPeakAnnotation(true), dataXY);
 
-                // use the two lines below if all points ought to have the same color
+//                // use the lines below if all points ought to have the same color
                 //int alphaLevel = Double.valueOf((ionMatch.peak.intensity / totalIntensity) / (maxAnnotatedIntensity / totalIntensity) * 255).intValue();
                 //colors.add(new Color(255, 0, 0, alphaLevel)); // @TODO: make color selectable by the user?
                 // use the same colors as for the SpectrumPanel annotation

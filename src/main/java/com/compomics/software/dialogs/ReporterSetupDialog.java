@@ -1,7 +1,7 @@
 package com.compomics.software.dialogs;
 
-import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.gui.file_handling.FileChooserUtils;
 import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.io.File;
 import java.io.FileNotFoundException;

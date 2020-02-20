@@ -2,6 +2,7 @@ package com.compomics.software.dialogs;
 
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.gui.file_handling.FileChooserUtils;
 import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -309,7 +310,7 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
-        File selectedFile = Util.getUserSelectedFolder(this, "ProteoWizard Installation Folder", lastSelectedFolder, "ProteoWizard installation folder", "OK", true);
+        File selectedFile = FileChooserUtils.getUserSelectedFolder(this, "ProteoWizard Installation Folder", lastSelectedFolder, "ProteoWizard installation folder", "OK", true);
 
         if (selectedFile != null) {
             // check if it is a valid folder

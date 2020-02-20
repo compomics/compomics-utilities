@@ -4,6 +4,7 @@ import com.compomics.software.cli.CommandParameter;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.experiment.io.biology.protein.FastaSummary;
+import com.compomics.util.io.IoUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -109,7 +110,7 @@ public class FastaParametersInputBean {
 
         } else {
 
-            String fileName = Util.removeExtension(fastaFile.getName());
+            String fileName = IoUtil.removeExtension(fastaFile.getName());
             fastaSummary.setName(fileName);
 
         }
@@ -121,7 +122,7 @@ public class FastaParametersInputBean {
 
         } else {
 
-            String fileName = Util.removeExtension(fastaFile.getName());
+            String fileName = IoUtil.removeExtension(fastaFile.getName());
             fastaSummary.setDescription(fileName);
 
         }

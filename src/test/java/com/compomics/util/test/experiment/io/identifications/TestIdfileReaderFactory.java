@@ -38,14 +38,30 @@ public class TestIdfileReaderFactory extends TestCase {
         IdfileReader tifr = new IdfileReader() {
 
             @Override
-            public ArrayList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
+            public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+                    String[] spectrumTitles,
+                    WaitingHandler waitingHandler, 
+                    SearchParameters searchParameters
+            )
                     throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-                return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
+                
+                return getAllSpectrumMatches(
+                        spectrumTitles,
+                        waitingHandler, 
+                        searchParameters, 
+                        null, 
+                        true
+                );
             }
 
             @Override
-            public ArrayList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters,
-                    SequenceMatchingParameters sequenceMatchingPreferences, boolean expandAaCombinations)
+            public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+                    String[] spectrumTitles,
+                    WaitingHandler waitingHandler, 
+                    SearchParameters searchParameters,
+                    SequenceMatchingParameters sequenceMatchingPreferences, 
+                    boolean expandAaCombinations
+            )
                     throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
                 return null;
             }
@@ -120,14 +136,29 @@ public class TestIdfileReaderFactory extends TestCase {
         }
 
         @Override
-        public ArrayList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters)
+        public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+                    String[] spectrumTitles,
+                WaitingHandler waitingHandler, 
+                SearchParameters searchParameters
+        )
                 throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-            return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
+            return getAllSpectrumMatches(
+                    spectrumTitles,
+                    waitingHandler, 
+                    searchParameters, 
+                    null, 
+                    true
+            );
         }
 
         @Override
-        public ArrayList<SpectrumMatch> getAllSpectrumMatches(WaitingHandler waitingHandler, SearchParameters searchParameters, SequenceMatchingParameters sequenceMatchingPreferences,
-                boolean expandAaCombinations) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+                    String[] spectrumTitles,
+                WaitingHandler waitingHandler, 
+                SearchParameters searchParameters, 
+                SequenceMatchingParameters sequenceMatchingPreferences,
+                boolean expandAaCombinations
+        ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
             // Does nothing.
             return null;
         }

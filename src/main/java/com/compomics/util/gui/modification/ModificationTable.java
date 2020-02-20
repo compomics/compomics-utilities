@@ -343,14 +343,14 @@ public class ModificationTable extends JTable {
             SpectrumMatch spectrumMatch = identification.getSpectrumMatch(spectrumMatchKey);
             Spectrum spectrum = spectrumProvider.getSpectrum(
                     spectrumMatch.getSpectrumFile(),
-                    spectrumMatch.getSpectrumtitle()
+                    spectrumMatch.getSpectrumTitle()
             );
             tempContent = ModificationtableContent.getModificationTableContent(
                     spectrumMatch.getBestPeptideAssumption(),
                     modification,
                     nModifications,
                     spectrumMatch.getSpectrumFile(),
-                    spectrumMatch.getSpectrumtitle(),
+                    spectrumMatch.getSpectrumTitle(),
                     spectrum,
                     annotationParameters,
                     modificationParameters,
@@ -622,14 +622,14 @@ public class ModificationTable extends JTable {
             SpectrumMatch spectrumMatch = identification.getSpectrumMatch(spectrumMatchKey);
             Spectrum spectrum = spectrumProvider.getSpectrum(
                     spectrumMatch.getSpectrumFile(),
-                    spectrumMatch.getSpectrumtitle()
+                    spectrumMatch.getSpectrumTitle()
             );
             tempContent = ModificationtableContent.getModificationTableContent(
                     spectrumMatch.getBestPeptideAssumption(),
                     modification,
                     nModifications,
                     spectrumMatch.getSpectrumFile(),
-                    spectrumMatch.getSpectrumtitle(),
+                    spectrumMatch.getSpectrumTitle(),
                     spectrum,
                     annotationParameters,
                     modificationParameters,

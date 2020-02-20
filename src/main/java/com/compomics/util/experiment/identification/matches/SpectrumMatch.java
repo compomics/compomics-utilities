@@ -176,7 +176,7 @@ public class SpectrumMatch extends IdentificationMatch {
      * 
      * @return The title of the spectrum.
      */
-    public String getSpectrumtitle() {
+    public String getSpectrumTitle() {
         
         readDBMode();
         

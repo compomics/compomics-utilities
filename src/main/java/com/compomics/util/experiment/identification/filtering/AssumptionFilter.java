@@ -121,7 +121,7 @@ public class AssumptionFilter extends MatchFilter {
                 value,
                 spectrumMatchKey,
                 spectrumMatch.getSpectrumFile(),
-                spectrumMatch.getSpectrumtitle(),
+                spectrumMatch.getSpectrumTitle(),
                 peptideAssumption,
                 identification,
                 sequenceProvider,

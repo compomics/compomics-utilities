@@ -4,6 +4,7 @@ import static com.compomics.software.autoupdater.DownloadLatestZipFromRepo.downl
 import com.compomics.software.autoupdater.GUIFileDAO;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.gui.file_handling.FileChooserUtils;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.awt.Toolkit;
@@ -58,7 +59,11 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public SearchGuiSetupDialog(JFrame parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public SearchGuiSetupDialog(
+            JFrame parent, 
+            boolean modal
+    ) throws FileNotFoundException, IOException, ClassNotFoundException {
+    
         super(parent, modal);
         initComponents();
         parentFrame = parent;
@@ -75,7 +80,11 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public SearchGuiSetupDialog(JDialog parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public SearchGuiSetupDialog(
+            JDialog parent, 
+            boolean modal
+    ) throws FileNotFoundException, IOException, ClassNotFoundException {
+    
         super(parent, modal);
         initComponents();
         parentDialog = parent;
@@ -87,13 +96,19 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGUI() {
+        
         utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
 
         if (utilitiesUserParameters.getSearchGuiPath() == null) {
+            
             boolean downloaded = downloadSearchGUI();
+            
             if (downloaded) {
+            
                 dialogCanceled = false;
+            
             } else {
+            
                 // display the current searchgui path
                 if (utilitiesUserParameters != null) {
                     searchGuiInstallationJTextField.setText(utilitiesUserParameters.getSearchGuiPath());
@@ -337,20 +352,45 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
-        File selectedFile = FileChooserUtils.getUserSelectedFile(this, ".jar", "SearchGUI jar file (.jar)", "Select SearchGUI Jar File", lastSelectedFolder, null, true);
+        File selectedFile = FileChooserUtils.getUserSelectedFile(
+                this, 
+                ".jar", 
+                "SearchGUI jar file (.jar)", 
+                "Select SearchGUI Jar File", 
+                lastSelectedFolder, 
+                null, 
+                true
+        );
 
         if (selectedFile != null) {
+            
             if (!selectedFile.getName().endsWith(".jar")) {
-                JOptionPane.showMessageDialog(this, "The selected file is not a jar file!", "Wrong File Selected", JOptionPane.WARNING_MESSAGE);
+                
+                JOptionPane.showMessageDialog(
+                        this, 
+                        "The selected file is not a jar file.", 
+                        "Wrong File Selected", 
+                        JOptionPane.WARNING_MESSAGE
+                );
                 okButton.setEnabled(false);
+                
             } else if (!selectedFile.getName().contains("SearchGUI")) {
-                JOptionPane.showMessageDialog(this, "The selected file is not a SearchGUI jar file!", "Wrong File Selected", JOptionPane.WARNING_MESSAGE);
+ 
+                JOptionPane.showMessageDialog(
+                        this, 
+                        "The selected file is not a SearchGUI jar file.", 
+                        "Wrong File Selected", 
+                        JOptionPane.WARNING_MESSAGE
+                );
                 okButton.setEnabled(false);
+                
             } else {
+               
                 // file assumed to be ok
                 lastSelectedFolder = selectedFile.getPath();
                 searchGuiInstallationJTextField.setText(lastSelectedFolder);
                 okButton.setEnabled(true);
+            
             }
         }
     }//GEN-LAST:event_browseButtonActionPerformed
@@ -361,15 +401,23 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+
         utilitiesUserParameters.setSearchGuiPath(searchGuiInstallationJTextField.getText());
+
         try {
+
             UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
             dialogCanceled = false;
+
         } catch (Exception e) {
+
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "An error occurred while saving the preferences.", "Error", JOptionPane.WARNING_MESSAGE);
+
         }
+
         dispose();
+
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**
@@ -489,7 +537,14 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
                 }
             }
 
-            final File downloadFolder = Util.getUserSelectedFolder(this, "Select SearchGUI Folder", installPath, "SearchGUI Folder", "Select", false);
+            final File downloadFolder = FileChooserUtils.getUserSelectedFolder(
+                    this, 
+                    "Select SearchGUI Folder", 
+                    installPath, 
+                    "SearchGUI Folder", 
+                    "Select", 
+                    false
+            );
 
             if (downloadFolder != null) {
 
@@ -527,9 +582,24 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
                     @Override
                     public void run() {
                         try {
-                            URL jarRepository = new URL("http", "genesis.ugent.be", new StringBuilder().append("/maven2/").toString());
-                            downloadLatestZipFromRepo(downloadFolder, "SearchGUI", "eu.isas.searchgui", "SearchGUI", "searchgui.ico",
-                                    null, jarRepository, false, true, new GUIFileDAO(), progressDialog);
+                            URL jarRepository = new URL(
+                                    "http", 
+                                    "genesis.ugent.be", 
+                                    new StringBuilder().append("/maven2/").toString()
+                            );
+                            downloadLatestZipFromRepo(
+                                    downloadFolder, 
+                                    "SearchGUI", 
+                                    "eu.isas.searchgui", 
+                                    "SearchGUI", 
+                                    "searchgui.ico",
+                                    null, 
+                                    jarRepository, 
+                                    false, 
+                                    true, 
+                                    new GUIFileDAO(), 
+                                    progressDialog
+                            );
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (URISyntaxException e) {

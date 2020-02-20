@@ -3,6 +3,7 @@ package com.compomics.util.test.io;
 import com.compomics.util.Util;
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
@@ -76,7 +77,7 @@ public class TestSearchParameterMarshaller {
             if (objectsDB != null){
                 objectsDB.close();
             }
-            Util.deleteDir(dbFolder);
+            IoUtil.deleteDir(dbFolder);
         }
     }
 

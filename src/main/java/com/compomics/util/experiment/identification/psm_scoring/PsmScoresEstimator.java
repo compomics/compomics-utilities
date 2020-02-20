@@ -24,9 +24,9 @@ public class PsmScoresEstimator {
      */
     private PeptideFragmentationModel peptideFragmentationModel;
     /**
-     * Instance of the cross correlation score.
+     * Instance of the hyperScore.
      */
-    private HyperScore crossCorrelation;
+    private HyperScore hyperScore;
     /**
      * Instance of the PrecursorAccuracy.
      */
@@ -37,7 +37,9 @@ public class PsmScoresEstimator {
      *
      * @param peptideFragmentationModel the peptide fragmentation model to use
      */
-    public PsmScoresEstimator(PeptideFragmentationModel peptideFragmentationModel) {
+    public PsmScoresEstimator(
+            PeptideFragmentationModel peptideFragmentationModel
+    ) {
         this.peptideFragmentationModel = peptideFragmentationModel;
         instantiateScores();
     }
@@ -46,7 +48,7 @@ public class PsmScoresEstimator {
      * Instantiates the different scores.
      */
     private void instantiateScores() {
-        crossCorrelation = new HyperScore(peptideFragmentationModel);
+        hyperScore = new HyperScore(peptideFragmentationModel);
         precursorAccuracy = new PrecursorAccuracy();
     }
 
@@ -64,6 +66,8 @@ public class PsmScoresEstimator {
      *
      * @param peptide the peptide of interest
      * @param peptideCharge the charge of the peptide
+     * @param spectrumFile the file of the spectrum
+     * @param spectrumTitle the title of the spectrum
      * @param spectrum the spectrum of interest
      * @param identificationParameters the identification parameters
      * @param specificAnnotationParameters the annotation preferences specific
@@ -77,17 +81,39 @@ public class PsmScoresEstimator {
      *
      * @return the score of the match
      */
-    public double getDecreasingScore(Peptide peptide, Integer peptideCharge, Spectrum spectrum, IdentificationParameters identificationParameters,
-            SpecificAnnotationParameters specificAnnotationParameters, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, 
-            SequenceMatchingParameters modificationSequenceMatchingParameters, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) {
-        
+    public double getDecreasingScore(
+            Peptide peptide,
+            int peptideCharge,
+            String spectrumFile,
+            String spectrumTitle,
+            Spectrum spectrum,
+            IdentificationParameters identificationParameters,
+            SpecificAnnotationParameters specificAnnotationParameters,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
+            SequenceMatchingParameters modificationSequenceMatchingParameters,
+            PeptideSpectrumAnnotator peptideSpectrumAnnotator,
+            int scoreIndex
+    ) {
+
         PsmScore psmScore = PsmScore.getScore(scoreIndex);
-        double score = getScore(peptide, peptideCharge, spectrum, identificationParameters,
-                specificAnnotationParameters, modificationParameters, sequenceProvider, 
-                modificationSequenceMatchingParameters, peptideSpectrumAnnotator, psmScore);
-        
+        double score = getScore(
+                peptide,
+                peptideCharge,
+                spectrumFile,
+                spectrumTitle,
+                spectrum,
+                identificationParameters,
+                specificAnnotationParameters,
+                modificationParameters,
+                sequenceProvider,
+                modificationSequenceMatchingParameters,
+                peptideSpectrumAnnotator,
+                psmScore
+        );
+
         return psmScore.increasing ? -score : score;
-        
+
     }
 
     /**
@@ -96,6 +122,8 @@ public class PsmScoresEstimator {
      *
      * @param peptide the peptide of interest
      * @param peptideCharge the charge of the peptide
+     * @param spectrumFile the file of the spectrum
+     * @param spectrumTitle the title of the spectrum
      * @param spectrum the spectrum of interest
      * @param identificationParameters the identification parameters
      * @param specificAnnotationParameters the annotation preferences specific
@@ -109,12 +137,37 @@ public class PsmScoresEstimator {
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, Integer peptideCharge, Spectrum spectrum, IdentificationParameters identificationParameters,
-            SpecificAnnotationParameters specificAnnotationParameters, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, 
-            SequenceMatchingParameters modificationSequenceMatchingParameters, PeptideSpectrumAnnotator peptideSpectrumAnnotator, int scoreIndex) {
+    public double getScore(
+            Peptide peptide,
+            int peptideCharge,
+            String spectrumFile,
+            String spectrumTitle,
+            Spectrum spectrum,
+            IdentificationParameters identificationParameters,
+            SpecificAnnotationParameters specificAnnotationParameters,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
+            SequenceMatchingParameters modificationSequenceMatchingParameters,
+            PeptideSpectrumAnnotator peptideSpectrumAnnotator,
+            int scoreIndex
+    ) {
+
         PsmScore psmScore = PsmScore.getScore(scoreIndex);
-        return getScore(peptide, peptideCharge, spectrum, identificationParameters, specificAnnotationParameters,
-                        modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, peptideSpectrumAnnotator, psmScore);
+
+        return getScore(
+                peptide,
+                peptideCharge,
+                spectrumFile,
+                spectrumTitle,
+                spectrum,
+                identificationParameters,
+                specificAnnotationParameters,
+                modificationParameters,
+                sequenceProvider,
+                modificationSequenceMatchingParameters,
+                peptideSpectrumAnnotator,
+                psmScore
+        );
     }
 
     /**
@@ -124,6 +177,8 @@ public class PsmScoresEstimator {
      * @param peptide the peptide of interest
      * @param peptideCharge the charge of the peptide
      * @param spectrum the spectrum of interest
+     * @param spectrumFile the file of the spectrum
+     * @param spectrumTitle the title of the spectrum
      * @param identificationParameters the identification parameters
      * @param specificAnnotationParameters the annotation preferences specific
      * to this psm
@@ -136,21 +191,45 @@ public class PsmScoresEstimator {
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, Integer peptideCharge, Spectrum spectrum, IdentificationParameters identificationParameters,
-            SpecificAnnotationParameters specificAnnotationParameters, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, 
-            SequenceMatchingParameters modificationSequenceMatchingParameters, PeptideSpectrumAnnotator peptideSpectrumAnnotator, PsmScore psmScore) {
+    public double getScore(
+            Peptide peptide,
+            int peptideCharge,
+            String spectrumFile,
+            String spectrumTitle,
+            Spectrum spectrum,
+            IdentificationParameters identificationParameters,
+            SpecificAnnotationParameters specificAnnotationParameters,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
+            SequenceMatchingParameters modificationSequenceMatchingParameters,
+            PeptideSpectrumAnnotator peptideSpectrumAnnotator,
+            PsmScore psmScore
+    ) {
         switch (psmScore) {
             case native_score:
                 throw new IllegalArgumentException("Impossible to compute the native score of an algorithm");
             case precursor_accuracy:
-                return precursorAccuracy.getScore(peptide, peptideCharge, spectrum.getPrecursor(),
+                return precursorAccuracy.getScore(
+                        peptide,
+                        peptideCharge,
+                        spectrum.getPrecursor(),
                         identificationParameters.getSearchParameters().isPrecursorAccuracyTypePpm(),
                         identificationParameters.getSearchParameters().getMinIsotopicCorrection(),
-                        identificationParameters.getSearchParameters().getMaxIsotopicCorrection());
+                        identificationParameters.getSearchParameters().getMaxIsotopicCorrection()
+                );
             case hyperScore:
-                return crossCorrelation.getScore(peptide, spectrum, identificationParameters.getAnnotationParameters(),
-                        specificAnnotationParameters, peptideSpectrumAnnotator,
-                        modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
+                return hyperScore.getScore(
+                        peptide,
+                        spectrumFile,
+                        spectrumTitle,
+                        spectrum,
+                        identificationParameters.getAnnotationParameters(),
+                        specificAnnotationParameters,
+                        peptideSpectrumAnnotator,
+                        modificationParameters,
+                        sequenceProvider,
+                        modificationSequenceMatchingParameters
+                );
             default:
                 throw new UnsupportedOperationException("Score not implemented.");
         }

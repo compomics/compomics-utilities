@@ -2,8 +2,8 @@ package com.compomics.software.dialogs;
 
 import static com.compomics.software.autoupdater.DownloadLatestZipFromRepo.downloadLatestZipFromRepo;
 import com.compomics.software.autoupdater.GUIFileDAO;
-import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.gui.file_handling.FileChooserUtils;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.awt.Toolkit;
@@ -58,12 +58,17 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public PeptideShakerSetupDialog(JFrame parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public PeptideShakerSetupDialog(
+            JFrame parent, 
+            boolean modal
+    ) throws FileNotFoundException, IOException, ClassNotFoundException {
+    
         super(parent, modal);
         initComponents();
         parentFrame = parent;
         setLocationRelativeTo(parent);
         setUpGUI();
+    
     }
 
     /**
@@ -75,18 +80,24 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public PeptideShakerSetupDialog(JDialog parent, boolean modal) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public PeptideShakerSetupDialog(
+            JDialog parent, 
+            boolean modal
+    ) throws FileNotFoundException, IOException, ClassNotFoundException {
+    
         super(parent, modal);
         initComponents();
         parentDialog = parent;
         setLocationRelativeTo(parent);
         setUpGUI();
+        
     }
 
     /**
      * Set up the GUI.
      */
     private void setUpGUI() {
+        
         utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
         
         if (utilitiesUserParameters.getPeptideShakerPath() == null) {
@@ -335,7 +346,15 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
-        File selectedFile = FileChooserUtils.getUserSelectedFile(this, ".jar", "PeptideShaker jar file (.jar)", "Select PeptideShaker Jar File", lastSelectedFolder, null, true);
+        File selectedFile = FileChooserUtils.getUserSelectedFile(
+                this, 
+                ".jar", 
+                "PeptideShaker jar file (.jar)", 
+                "Select PeptideShaker Jar File", 
+                lastSelectedFolder, 
+                null, 
+                true
+        );
 
         if (selectedFile != null) {
             if (!selectedFile.getName().endsWith(".jar")) {
@@ -491,7 +510,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
                 }
             }
 
-            final File downloadFolder = Util.getUserSelectedFolder(this, "Select PeptideShaker Folder", installPath, "PeptideShaker Folder", "Select", false);
+            final File downloadFolder = FileChooserUtils.getUserSelectedFolder(this, "Select PeptideShaker Folder", installPath, "PeptideShaker Folder", "Select", false);
 
             if (downloadFolder != null) {
 

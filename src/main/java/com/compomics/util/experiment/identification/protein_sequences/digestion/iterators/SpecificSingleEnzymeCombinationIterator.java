@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.protein_sequences.digestion.iterators;
 
-import com.compomics.util.Util;
+import com.compomics.util.ArrayUtil;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
@@ -299,7 +299,7 @@ public class SpecificSingleEnzymeCombinationIterator implements SequenceIterator
                                 int peptideMissedCleavages = peptideStartMap.get(peptideStart);
                                 if (peptideMissedCleavages < nMissedCleavages) {
                                     char[] previousSequence = Arrays.copyOfRange(proteinSequenceAsCharArray, peptideStart, initialIndex);
-                                    char[] misCleavedSequence = Util.mergeCharArrays(previousSequence, newSequence);
+                                    char[] misCleavedSequence = ArrayUtil.concatenate(previousSequence, newSequence, newSequence.length);
                                     String newSequenceAsString = new String(misCleavedSequence);
                                     newAmbiguousPeptidesStartMap.put(newSequenceAsString, peptideStart);
                                     newambiguousPeptidesMC.put(newSequenceAsString, peptideMissedCleavages + 1);

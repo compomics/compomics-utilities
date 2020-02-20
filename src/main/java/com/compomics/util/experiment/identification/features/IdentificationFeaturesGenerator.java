@@ -202,7 +202,7 @@ public class IdentificationFeaturesGenerator {
                                 .getDeltaMass(
                                         spectrumProvider.getPrecursorMz(
                                                 spectrumMatch.getSpectrumFile(),
-                                                spectrumMatch.getSpectrumtitle()
+                                                spectrumMatch.getSpectrumTitle()
                                         ),
                                         searchParameters.isPrecursorAccuracyTypePpm(),
                                         searchParameters.getMinIsotopicCorrection(),
@@ -3035,7 +3035,7 @@ public class IdentificationFeaturesGenerator {
 
                             precursorRT = spectrumProvider.getPrecursorRt(
                                     spectrumMatch.getSpectrumFile(),
-                                    spectrumMatch.getSpectrumtitle()
+                                    spectrumMatch.getSpectrumTitle()
                             );
 
                             if (Double.isNaN(precursorRT)) {

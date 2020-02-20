@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.io.mass_spectrometry.cms;
 
+import com.compomics.util.ArrayUtil;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,7 +9,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.zip.Deflater;
-import static com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileUtils.mergeArrays;
 import static com.compomics.util.io.IoUtil.ENCODING;
 import static com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileUtils.MAGIC_NUMBER;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
@@ -191,15 +191,29 @@ public class CmsFileWriter implements AutoCloseable {
         int outputLength = compressedData.length;
 
         deflater.setInput(uncompressedData);
-        int compressedByteLength = deflater.deflate(compressedData, 0, compressedData.length, Deflater.FULL_FLUSH);
+        int compressedByteLength = deflater.deflate(
+                compressedData, 
+                0, 
+                compressedData.length, 
+                Deflater.FULL_FLUSH
+        );
         int compressedDataLength = compressedByteLength;
 
         while (compressedByteLength == outputLength) {
 
             byte[] output2 = new byte[outputLength];
-            compressedByteLength = deflater.deflate(output2, 0, outputLength, Deflater.FULL_FLUSH);
+            compressedByteLength = deflater.deflate(
+                    output2, 
+                    0, 
+                    outputLength, 
+                    Deflater.FULL_FLUSH
+            );
 
-            compressedData = mergeArrays(compressedData, output2, compressedByteLength);
+            compressedData = ArrayUtil.concatenate(
+                    compressedData, 
+                    output2, 
+                    compressedByteLength
+            );
             compressedDataLength += compressedByteLength;
 
         }

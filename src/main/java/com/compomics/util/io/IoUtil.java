@@ -9,10 +9,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -31,9 +33,65 @@ public class IoUtil {
      */
     public static final String ENCODING = "UTF-8";
     /**
-     * Default separator.
+     * Default separator for tabular files.
      */
     public static final String DEFAULT_SEPARATOR = "\t";
+
+    /**
+     * Deletes all files and subdirectories under dir. Returns true if all
+     * deletions were successful. If a deletion fails, the method stops
+     * attempting to delete and returns false.
+     *
+     * @param dir the directory to delete
+     *
+     * @return rue if all deletions were successful
+     */
+    public static boolean emptyDir(
+            File dir
+    ) {
+
+        if (dir.isDirectory()) {
+
+            for (File child : dir.listFiles()) {
+
+                boolean success = deleteDir(child);
+
+                if (!success) {
+
+                    return false;
+
+                }
+            }
+        }
+
+        return true;
+
+    }
+
+    /**
+     * Deletes all files and subdirectories under dir and dir itself. Returns
+     * true if all deletions were successful. If a deletion fails, the method
+     * stops attempting to delete and returns false.
+     *
+     * @param dir the directory to delete
+     * 
+     * @return rue if all deletions were successful
+     */
+    public static boolean deleteDir(
+            File dir
+    ) {
+
+        boolean empty = emptyDir(dir);
+
+        if (!empty) {
+
+            return false;
+
+        }
+
+        return dir.delete();
+
+    }
 
     /**
      * Copy the content of a file to another.
@@ -346,6 +404,30 @@ public class IoUtil {
             return -1;
         } finally {
             conn.disconnect();
+        }
+    }
+
+    /**
+     * Attempts at closing a buffer. Taken from
+     * https://stackoverflow.com/questions/2972986/how-to-unmap-a-file-from-memory-mapped-using-filechannel-in-java.
+     *
+     * @param buffer the buffer to close
+     */
+    public static void closeBuffer(MappedByteBuffer buffer) {
+
+        if (buffer == null || !buffer.isDirect()) {
+            return;
+        }
+
+        try {
+
+            Method cleaner = buffer.getClass().getMethod("cleaner");
+            cleaner.setAccessible(true);
+            Method clean = Class.forName("sun.misc.Cleaner").getMethod("clean");
+            clean.setAccessible(true);
+            clean.invoke(cleaner.invoke(buffer));
+
+        } catch (Exception ex) {
         }
     }
 

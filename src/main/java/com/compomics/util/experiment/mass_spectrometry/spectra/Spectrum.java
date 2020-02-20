@@ -1,9 +1,6 @@
 package com.compomics.util.experiment.mass_spectrometry.spectra;
 
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
-import com.compomics.util.experiment.mass_spectrometry.SimpleNoiseDistribution;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import com.compomics.util.math.BasicMathFunctions;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -19,15 +16,15 @@ public class Spectrum extends ExperimentObject {
     /**
      * The precursor if any.
      */
-    public final Precursor precursor;
+    public Precursor precursor;
     /**
      * The array of the m/z of the peaks.
      */
-    public final double[] mz;
+    public double[] mz;
     /**
      * The array of the intensities of the peaks.
      */
-    public final double[] intensity;
+    public double[] intensity;
 
     /**
      * Empty default constructor.

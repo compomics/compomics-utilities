@@ -1,26 +1,18 @@
 package com.compomics.util;
 
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
-import com.compomics.util.waiting.WaitingHandler;
 import java.awt.Color;
-import java.awt.Component;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  * Includes general help methods that are used by the other classes.
@@ -53,47 +45,75 @@ public class Util {
      *
      * @return a version without forbidden characters
      */
-    public static String removeSubString(String string, String subString) {
+    public static String removeSubString(
+            String string,
+            String subString
+    ) {
+
         String result;
         String[] split = string.split(subString);
+
         if (split.length > 1) {
+
             StringBuilder stringBuilder = new StringBuilder(string.length());
+
             for (String splitPart : split) {
+
                 stringBuilder.append(splitPart);
+
             }
+
             result = stringBuilder.toString();
+
         } else {
+
             result = string;
+
         }
+
         return result;
+
     }
 
     /**
      * Function for sending event requests to Google analytics.
      *
-     * @param UA tracking ID
+     * @param ua tracking ID
      * @param action the action
      * @param label the label
+     *
      * @return true if the update was successful
      */
-    public static boolean sendGAUpdate(String UA, String action, String label) {
+    public static boolean sendGAUpdate(
+            String ua,
+            String action,
+            String label
+    ) {
+
         // the plain java way
         boolean returnVal = true;
-        String COLLECT_URL = "https://www.google-analytics.com/collect";
-        String POST = "v=1&tid=" + UA + "&cid=35119a79-1a05-49d7-b876-bb88420f825b&uid=asuueffeqqss&t=event&ec=usage&ea=" + action + "&el=" + label;
+        String collect_url = "https://www.google-analytics.com/collect";
+        String post = "v=1&tid=" + ua + "&cid=35119a79-1a05-49d7-b876-bb88420f825b&uid=asuueffeqqss&t=event&ec=usage&ea=" + action + "&el=" + label;
+
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(COLLECT_URL).openConnection();
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(collect_url).openConnection();
             connection.setRequestMethod("POST");
             connection.setConnectTimeout(3000);
             connection.setReadTimeout(1000);
             connection.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes(POST);
+            wr.writeBytes(post);
             connection.getResponseCode();
+
         } catch (IOException ex) {
+
             returnVal = false;
+
         }
+
         return returnVal;
+
     }
 
     /**
@@ -106,10 +126,14 @@ public class Util {
         java.util.Properties p = new java.util.Properties();
 
         try {
+
             InputStream is = Util.class.getClassLoader().getResourceAsStream("compomics-utilities.properties");
             p.load(is);
+
         } catch (IOException e) {
+
             e.printStackTrace();
+
         }
 
         return p.getProperty("compomics-utilities.version");
@@ -123,7 +147,10 @@ public class Util {
      *
      * @return a version without forbidden characters
      */
-    public static String removeCharacters(String string, char forbiddenCharacter) {
+    public static String removeCharacters(
+            String string,
+            char forbiddenCharacter
+    ) {
 
         StringBuilder sb = new StringBuilder(string.length());
 
@@ -154,7 +181,10 @@ public class Util {
      *
      * @return a version without forbidden characters
      */
-    public static String removeCharacters(String string, String[] forbiddenCharacters) {
+    public static String removeCharacters(
+            String string,
+            String[] forbiddenCharacters
+    ) {
 
         String result = string;
 
@@ -169,6 +199,7 @@ public class Util {
 
             }
         }
+
         return result;
     }
 
@@ -178,7 +209,9 @@ public class Util {
      * @param string the string of interest
      * @return a version without forbidden characters
      */
-    public static String removeForbiddenCharacters(String string) {
+    public static String removeForbiddenCharacters(
+            String string
+    ) {
         return removeCharacters(string, FORBIDDEN_CHARACTERS);
     }
 
@@ -189,13 +222,21 @@ public class Util {
      * @return a boolean indicating whether a string contains characters
      * forbidden in file names
      */
-    public static boolean containsForbiddenCharacter(String string) {
+    public static boolean containsForbiddenCharacter(
+            String string
+    ) {
+
         for (String forbiddenCharacter : FORBIDDEN_CHARACTERS) {
+
             if (string.contains(forbiddenCharacter)) {
+
                 return true;
+
             }
         }
+
         return false;
+
     }
 
     /**
@@ -207,14 +248,20 @@ public class Util {
      *
      * @return a string equal to string with a replaced by b
      */
-    public static String replaceAll(String string, char a, char b) {
+    public static String replaceAll(
+            String string,
+            char a,
+            char b
+    ) {
 
         char[] stringArray = string.toCharArray();
 
         for (int i = 0; i < stringArray.length; i++) {
 
             if (stringArray[i] == a) {
+
                 stringArray[i] = b;
+
             }
         }
 
@@ -228,8 +275,13 @@ public class Util {
      * @param places number of decimal places wanted
      * @return double - the new double
      */
-    public static double roundDouble(double d, int places) {
+    public static double roundDouble(
+            double d,
+            int places
+    ) {
+
         return Math.round(d * Math.pow(10, (double) places)) / Math.pow(10, (double) places);
+
     }
 
     /**
@@ -240,45 +292,11 @@ public class Util {
      *
      * @return double - the new double
      */
-    public static double floorDouble(double d, int places) {
+    public static double floorDouble(
+            double d,
+            int places
+    ) {
         return (new BigDecimal(String.valueOf(d)).setScale(places, BigDecimal.ROUND_FLOOR)).doubleValue();
-    }
-
-    /**
-     * Deletes all files and subdirectories under dir. Returns true if all
-     * deletions were successful. If a deletion fails, the method stops
-     * attempting to delete and returns false.
-     *
-     * @param dir the directory to delete
-     *
-     * @return rue if all deletions were successful
-     */
-    public static boolean emptyDir(File dir) {
-        if (dir.isDirectory()) {
-            for (File child : dir.listFiles()) {
-                boolean success = deleteDir(child);
-                if (!success) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Deletes all files and subdirectories under dir and dir itself. Returns
-     * true if all deletions were successful. If a deletion fails, the method
-     * stops attempting to delete and returns false.
-     *
-     * @param dir the directory to delete
-     * @return rue if all deletions were successful
-     */
-    public static boolean deleteDir(File dir) {
-        boolean empty = emptyDir(dir);
-        if (!empty) {
-            return false;
-        }
-        return dir.delete();
     }
 
     /**
@@ -287,9 +305,13 @@ public class Util {
      *
      * @param theoreticalMzValue the theoretical mass
      * @param massError the mass error
+     *
      * @return the mass error as a ppm value relative to the theoretical mass
      */
-    public static double getPpmError(double theoreticalMzValue, double massError) {
+    public static double getPpmError(
+            double theoreticalMzValue,
+            double massError
+    ) {
         double ppmValue = (massError / theoreticalMzValue) * 1000000;
         return ppmValue;
     }
@@ -301,7 +323,9 @@ public class Util {
      *
      * @return the color in hex format
      */
-    public static String color2Hex(int colorRGB) {
+    public static String color2Hex(
+            int colorRGB
+    ) {
         return Integer.toHexString(colorRGB & 0x00ffffff);
     }
 
@@ -312,7 +336,9 @@ public class Util {
      *
      * @return the color in hex format
      */
-    public static String color2Hex(Color color) {
+    public static String color2Hex(
+            Color color
+    ) {
         return color2Hex(color.getRGB());
     }
 
@@ -323,7 +349,9 @@ public class Util {
      *
      * @return the color object
      */
-    public static Color getColor(int colorRGB) {
+    public static Color getColor(
+            int colorRGB
+    ) {
         return new Color((colorRGB >> 16) & 0xFF, (colorRGB >> 8) & 0xFF, colorRGB & 0xFF);
     }
 
@@ -337,7 +365,12 @@ public class Util {
      *
      * @return the table as a separated text file
      */
-    public static String tableToText(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml) {
+    public static String tableToText(
+            JTable table,
+            String separator,
+            ProgressDialogX progressDialog,
+            boolean removeHtml
+    ) {
 
         StringBuilder tableAsString = new StringBuilder();
 
@@ -389,7 +422,13 @@ public class Util {
      *
      * @throws IOException if a problem occurs when writing to the file
      */
-    public static void tableToFile(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml, BufferedWriter writer) throws IOException {
+    public static void tableToFile(
+            JTable table,
+            String separator,
+            ProgressDialogX progressDialog,
+            boolean removeHtml,
+            BufferedWriter writer
+    ) throws IOException {
 
         for (int i = 0; i < table.getColumnCount(); i++) {
             writer.write(table.getColumnName(i) + separator);
@@ -449,26 +488,37 @@ public class Util {
      *
      * @return a boolean indicating whether list1 has the same content as list2
      */
-    public static boolean sameLists(ArrayList<?> list1, ArrayList<?> list2) {
+    public static boolean sameLists(
+            ArrayList<?> list1,
+            ArrayList<?> list2
+    ) {
 
         if (list1.size() != list2.size()) {
             return false;
         }
 
         HashMap<Object, Long> list1Occurrence = list1.stream()
-                .collect(Collectors.groupingBy(
-                        a -> a,
-                        HashMap::new,
-                        Collectors.counting()));
+                .collect(
+                        Collectors.groupingBy(
+                                a -> a,
+                                HashMap::new,
+                                Collectors.counting()
+                        )
+                );
 
         HashMap<Object, Long> list2Occurrence = list2.stream()
-                .collect(Collectors.groupingBy(
-                        a -> a,
-                        HashMap::new,
-                        Collectors.counting()));
+                .collect(
+                        Collectors.groupingBy(
+                                a -> a,
+                                HashMap::new,
+                                Collectors.counting()
+                        )
+                );
 
         return list1Occurrence.entrySet().stream()
-                .allMatch(entry -> list2Occurrence.containsKey(entry.getKey()) && list2Occurrence.get(entry.getKey()).equals(entry.getValue()));
+                .allMatch(
+                        entry -> list2Occurrence.containsKey(entry.getKey()) && list2Occurrence.get(entry.getKey()).equals(entry.getValue())
+                );
     }
 
     /**
@@ -479,7 +529,10 @@ public class Util {
      *
      * @return the occurrence of a character in a string
      */
-    public static int getOccurrence(String input, char character) {
+    public static int getOccurrence(
+            String input,
+            char character
+    ) {
 
         return (int) input.chars()
                 .filter(aa -> aa == character)
@@ -495,18 +548,26 @@ public class Util {
      * @return a list of the indexes where the small string can be found in the
      * big string
      */
-    public static ArrayList<Integer> getIndexes(String bigString, String smallString) {
+    public static ArrayList<Integer> getIndexes(
+            String bigString, 
+            String smallString
+    ) {
         Pattern pattern = Pattern.compile(smallString);
         ArrayList<Integer> result = new ArrayList<>();
         Matcher matcher = pattern.matcher(bigString);
         matcher.matches();
         int index = 0;
+        
         while (matcher.find(index)) {
+
             index = matcher.start();
             index++;
             result.add(index);
+
         }
+
         return result;
+
     }
 
     /**
@@ -518,18 +579,28 @@ public class Util {
      * @throws NumberFormatException thrown if the double cannot be read as a
      * double
      */
-    public static double readDoubleAsString(String doubleAsString) throws NumberFormatException {
+    public static double readDoubleAsString(
+            String doubleAsString
+    ) throws NumberFormatException {
 
         BigDecimal temp;
         try {
+
             temp = new BigDecimal(doubleAsString);
+
         } catch (NumberFormatException e) {
+
             doubleAsString = doubleAsString.replaceAll("\\.", "");
             doubleAsString = doubleAsString.replaceAll(",", "\\.");
+
             try {
+
                 temp = new BigDecimal(doubleAsString);
+
             } catch (NumberFormatException ex) {
+
                 throw new NumberFormatException(doubleAsString + " cannot be read as a floating value!");
+
             }
         }
 
@@ -541,81 +612,33 @@ public class Util {
      * and 1 for true.
      *
      * @param booleanToConvert the boolean value to convert
+     * 
      * @return 0 for false and 1 for true
      */
-    public static int convertBooleanToInteger(Boolean booleanToConvert) {
+    public static int convertBooleanToInteger(
+            Boolean booleanToConvert
+    ) {
+
         return booleanToConvert ? 1 : 0;
+
     }
 
     /**
-     * Simple method to merge two character arrays.
+     * Returns a string in the form key(value).
      *
-     * @param array1 a character array
-     * @param array2 a character array
-     *
-     * @return a concatenation of array1 and array2
-     */
-    public static char[] mergeCharArrays(char[] array1, char[] array2) {
-        char[] result = new char[array1.length + array2.length];
-        System.arraycopy(array1, 0, result, 0, array1.length);
-        System.arraycopy(array2, 0, result, array1.length, array2.length);
-        return result;
-    }
-
-    /**
-     * Returns an array containing the unique characters of the given array.
-     *
-     * @param array the array
-     *
-     * @return the unique array
-     */
-    public static char[] makeUnique(char[] array) {
-
-        char[] arrayUnique = new char[array.length];
-        int index = 0;
-        char aa = array[index];
-        arrayUnique[index] = aa;
-        for (int i = 1; i < array.length; i++) {
-
-            aa = array[i];
-            boolean duplicate = false;
-
-            for (int j = 0; j < i; j++) {
-
-                char aaTemp = array[j];
-
-                if (aa == aaTemp) {
-
-                    duplicate = true;
-                    break;
-
-                }
-            }
-
-            if (!duplicate) {
-
-                arrayUnique[index] = aa;
-
-            }
-        }
-
-        System.arraycopy(arrayUnique, 0, arrayUnique, 0, index);
-        return arrayUnique;
-    }
-
-    /**
-     * Returns a string in the form value(attribute).
-     *
+     * @param key the key
      * @param value the value
-     * @param attribute the attribute
      *
      * @return a string in the form value(attribute)
      */
-    public static String toString(String value, String attribute) {
+    public static String keyValueToString(
+            String key, 
+            String value
+    ) {
 
-        StringBuilder sb = new StringBuilder(value.length() + attribute.length() + 2);
+        StringBuilder sb = new StringBuilder(key.length() + value.length() + 2);
 
-        sb.append(value).append("(").append(attribute).append(")");
+        sb.append(key).append("(").append(value).append(")");
 
         return sb.toString();
 

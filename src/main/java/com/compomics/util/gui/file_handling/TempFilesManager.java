@@ -1,6 +1,7 @@
 package com.compomics.util.gui.file_handling;
 
 import com.compomics.util.Util;
+import com.compomics.util.io.IoUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class TempFilesManager {
         for (File tempFolder : tempFolders) {
             try {
                 if (tempFolder.exists()) {
-                    boolean success = Util.deleteDir(tempFolder); // @TODO: what to do if the file could not be deleted?
+                    boolean success = IoUtil.deleteDir(tempFolder); // @TODO: what the file could not be deleted?
                 }
             } catch (Exception e) {
                 e.printStackTrace();

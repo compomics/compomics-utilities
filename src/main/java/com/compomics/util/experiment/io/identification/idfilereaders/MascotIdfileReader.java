@@ -31,11 +31,25 @@ import javax.xml.bind.JAXBException;
  */
 public class MascotIdfileReader implements IdfileReader {
 
+    /**
+     * The searched variable modifications.
+     */
     private ArrayList<String> varMods = new ArrayList<>();
+    /**
+     * The software version.
+     */
     private String softwareVersion;
-
+    /**
+     * The charges of the spectra.
+     */
     private ArrayList<Integer> charges = new ArrayList<>();
+    /**
+     * The qmatch field.
+     */
     private ArrayList<Integer> matches = new ArrayList<>();
+    /**
+     * The spectrum file name.
+     */
     private String fileName = null;
 
     private HashMap<Integer, SpectrumMatch> allMatches = new HashMap<>();
@@ -50,8 +64,9 @@ public class MascotIdfileReader implements IdfileReader {
      * Constructor for an Mascot dat result file reader.
      *
      * @param inputFile the Mascot dat file
-     * 
-     * @throws UnsupportedEncodingException Exception thrown if an error occurred when decoding a spectrum title.
+     *
+     * @throws UnsupportedEncodingException Exception thrown if an error
+     * occurred when decoding a spectrum title.
      */
     public MascotIdfileReader(
             File inputFile
@@ -64,8 +79,9 @@ public class MascotIdfileReader implements IdfileReader {
      *
      * @param inputFile the Mascot dat file
      * @param waitingHandler the waiting handler
-     * 
-     * @throws UnsupportedEncodingException Exception thrown if an error occurred when decoding a spectrum title.
+     *
+     * @throws UnsupportedEncodingException Exception thrown if an error
+     * occurred when decoding a spectrum title.
      */
     public MascotIdfileReader(
             File inputFile,
@@ -76,73 +92,73 @@ public class MascotIdfileReader implements IdfileReader {
         charges.add(-100000);
         matches.add(-1);
 
-        try (SimpleFileReader reader = SimpleFileReader.getFileReader(inputFile)) {
-        
-        String line, boundary;
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(inputFile)) {
 
-        // read first line
-        line = reader.readLine();
+            String line, boundary;
 
-        // second line should contain boundary information
-        line = reader.readLine();
-        int boundaryStart = line.indexOf("boundary=");
-        if (boundaryStart >= 0) {
-            boundary = line.substring(line.indexOf("=", boundaryStart) + 1);
-        } else {
-            throw new IllegalArgumentException("File format not parsable, no boundary provided.");
-        }
+            // read first line
+            line = reader.readLine();
 
-        // find first new file occurence
-        while ((line = reader.readLine()) != null) {
-            if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
-                break;
-            }
-        }
-        int xx = 0;
-        while ((line = reader.readLine()) != null) {
-            int nameIndex = line.indexOf("name=\"");
-            if (nameIndex < 0) {
-                throw new IllegalArgumentException("File format not parsable.");
-            }
-            String state = line.substring(line.indexOf("=\"", nameIndex) + 2, line.indexOf("\"", nameIndex + 6));
-            if (state.startsWith("query")) {
-                parseQuery(reader, boundary, state);
+            // second line should contain boundary information
+            line = reader.readLine();
+            int boundaryStart = line.indexOf("boundary=");
+            if (boundaryStart >= 0) {
+                boundary = line.substring(line.indexOf("=", boundaryStart) + 1);
             } else {
-                switch (state) {
-                    case "masses":
-                        parseMasses(reader, boundary);
-                        break;
-                    case "peptides":
-                        parsePeptides(reader, boundary, inputFile.getName());
-                        break;
-                    case "summary":
-                        parseSummary(reader, boundary);
-                        break;
+                throw new IllegalArgumentException("File format not parsable, no boundary provided.");
+            }
 
-                    case "parameters":
-                        parseParameters(reader, boundary);
-                        break;
-
-                    case "header":
-                        parseHeader(reader, boundary);
-                        break;
-
-                    case "index":
-                    case "enzyme":
-                    case "unimod":
-                    case "proteins":
-                        parse(reader, boundary);
-                        break;
-
-                    default:
-                        throw new IllegalArgumentException("File format not parsable name '" + state + "'.");
+            // find first new file occurence
+            while ((line = reader.readLine()) != null) {
+                if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
+                    break;
                 }
             }
+            int xx = 0;
+            while ((line = reader.readLine()) != null) {
+                int nameIndex = line.indexOf("name=\"");
+                if (nameIndex < 0) {
+                    throw new IllegalArgumentException("File format not parsable.");
+                }
+                String state = line.substring(line.indexOf("=\"", nameIndex) + 2, line.indexOf("\"", nameIndex + 6));
+                if (state.startsWith("query")) {
+                    parseQuery(reader, boundary, state);
+                } else {
+                    switch (state) {
+                        case "masses":
+                            parseMasses(reader, boundary);
+                            break;
+                        case "peptides":
+                            parsePeptides(reader, boundary, inputFile.getName());
+                            break;
+                        case "summary":
+                            parseSummary(reader, boundary);
+                            break;
 
-            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                break;
+                        case "parameters":
+                            parseParameters(reader, boundary);
+                            break;
+
+                        case "header":
+                            parseHeader(reader, boundary);
+                            break;
+
+                        case "index":
+                        case "enzyme":
+                        case "unimod":
+                        case "proteins":
+                            parse(reader, boundary);
+                            break;
+
+                        default:
+                            throw new IllegalArgumentException("File format not parsable name '" + state + "'.");
+                    }
+                }
+
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                    break;
+                }
             }
-        }
         }
     }
 
@@ -153,14 +169,23 @@ public class MascotIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
+
+        return getAllSpectrumMatches(
+                spectrumTitles,
+                waitingHandler,
+                searchParameters,
+                null,
+                false
+        );
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
@@ -247,7 +272,7 @@ public class MascotIdfileReader implements IdfileReader {
             SimpleFileReader reader,
             String boundary
     ) {
-        
+
         String mass = "";
         String line;
 
@@ -291,8 +316,9 @@ public class MascotIdfileReader implements IdfileReader {
      * @param reader the buffered reader
      * @param boundary the boundary
      * @param state the state
-     * 
-     * @throws UnsupportedEncodingException Exception thrown if an error occurred when decoding a spectrum title.
+     *
+     * @throws UnsupportedEncodingException Exception thrown if an error
+     * occurred when decoding a spectrum title.
      */
     private void parseQuery(
             SimpleFileReader reader,
@@ -315,13 +341,12 @@ public class MascotIdfileReader implements IdfileReader {
             if ("title".equals(parts[0])) {
 
                 int specNum = Integer.parseInt(state.substring(5, state.length()));
-                String specTitle = URLDecoder.decode(parts[1], "utf8");
+                String spectrumTitle = URLDecoder.decode(parts[1], "utf8");
                 SpectrumMatch spectrumMatch = allMatches.get(specNum);
 
                 if (spectrumMatch != null) {
 
-                    String spectrumKey = Spectrum.getSpectrumKey(spectrumMatch.getSpectrumKey(), specTitle);
-                    spectrumMatch.setSpectrumKey(spectrumKey);
+                    spectrumMatch.setSpectrumTitle(spectrumTitle);
 
                 }
             }
@@ -367,7 +392,7 @@ public class MascotIdfileReader implements IdfileReader {
             SimpleFileReader reader,
             String boundary
     ) {
-        
+
         String line;
         while ((line = reader.readLine()) != null) {
             if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
@@ -446,16 +471,18 @@ public class MascotIdfileReader implements IdfileReader {
             int specCharge = charges.get(spectrumNumber);
             double lThreshold = 10.0 * Math.log(matches.get(spectrumNumber)) / Math.log(10);
             double expectancy = (0.05 * Math.pow(10, ((lThreshold - (double) ionScore) / 10)));
-            SpectrumMatch currentMatch;
             int rank;
-            if (!allMatches.containsKey(spectrumNumber)) {
-                currentMatch = new SpectrumMatch(fileName);
-                currentMatch.setSpectrumNumber(spectrumNumber);
+
+            SpectrumMatch currentMatch = allMatches.get(spectrumNumber);
+
+            if (currentMatch == null) {
+
+                currentMatch = new SpectrumMatch(fileName, Integer.toString(spectrumNumber));
                 allMatches.put(spectrumNumber, currentMatch);
                 rank = 1;
+
             } else {
 
-                currentMatch = allMatches.get(spectrumNumber);
                 TreeMap<Double, ArrayList<PeptideAssumption>> assump = allMatches.get(spectrumNumber).getAllPeptideAssumptions(Advocate.mascot.getIndex());
 
                 if (assump.containsKey(expectancy)) {
@@ -487,7 +514,7 @@ public class MascotIdfileReader implements IdfileReader {
             SimpleFileReader reader,
             String boundary
     ) {
-        
+
         String line;
         while ((line = reader.readLine()) != null) {
             if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
@@ -516,10 +543,10 @@ public class MascotIdfileReader implements IdfileReader {
      * @param boundary the boundary
      */
     private void parse(
-            SimpleFileReader reader, 
+            SimpleFileReader reader,
             String boundary
     ) {
-        
+
         String line;
         while ((line = reader.readLine()) != null) {
             int lineLength = line.length();

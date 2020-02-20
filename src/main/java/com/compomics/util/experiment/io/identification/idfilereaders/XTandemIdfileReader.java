@@ -18,7 +18,6 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -97,14 +96,23 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
-        return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
+
+        return getAllSpectrumMatches(
+                spectrumTitles,
+                waitingHandler,
+                searchParameters,
+                null,
+                false
+        );
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
@@ -114,11 +122,26 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         // @TODO: use the waiting handler
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
         HashSet<String> fixedNonTerminalModifications = searchParameters.getModificationParameters().getFixedModifications().stream()
-                .map(modName -> modificationFactory.getModification(modName))
-                .filter(modification -> modification.getModificationType() == ModificationType.modaa)
-                .flatMap(mod -> mod.getPattern().getAminoAcidsAtTarget().stream()
-                .map(aa -> trimModificationName(String.join("@", Double.toString(mod.getMass()), aa.toString()))))
-                .collect(Collectors.toCollection(HashSet::new));
+                .map(
+                        modName -> modificationFactory.getModification(modName)
+                )
+                .filter(
+                        modification -> modification.getModificationType() == ModificationType.modaa
+                )
+                .flatMap(
+                        mod -> mod.getPattern().getAminoAcidsAtTarget().stream()
+                                .map(
+                                        aa -> trimModificationName(
+                                                String.join("@",
+                                                        Double.toString(mod.getMass()),
+                                                        aa.toString()
+                                                )
+                                        )
+                                )
+                )
+                .collect(
+                        Collectors.toCollection(HashSet::new)
+                );
 
         HashSet<String> fixedNTerminalModifications = new HashSet<>();
         HashSet<String> fixedCTerminalModifications = new HashSet<>();
@@ -187,8 +210,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             switch (parser.getAttributeValue("", "type").toLowerCase()) {
                                 case "model":
                                     int id = Integer.parseInt(parser.getAttributeValue("", "id"));
-                                    SpectrumMatch spectrumMatch = new SpectrumMatch(PSMFileName);
-                                    spectrumMatch.setSpectrumNumber(++specNumber);
+                                    SpectrumMatch spectrumMatch = new SpectrumMatch(PSMFileName, Integer.toString(id));
                                     allMatches.put(id, spectrumMatch);
                                     double expect = Double.parseDouble(parser.getAttributeValue("", "expect"));
 
@@ -360,8 +382,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             title = title.split("RTINSECONDS")[0].trim();
                         }
                         SpectrumMatch spectrumMatch = allMatches.get(id);
-                        String spectrumKey = Spectrum.getSpectrumKey(spectrumMatch.getSpectrumKey(), title);
-                        spectrumMatch.setSpectrumKey(spectrumKey);
+                        spectrumMatch.setSpectrumTitle(title);
                         content = new StringBuilder();
                         write = false;
                     } else if ("group".equalsIgnoreCase(parser.getLocalName())) {

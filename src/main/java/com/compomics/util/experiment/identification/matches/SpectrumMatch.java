@@ -182,6 +182,17 @@ public class SpectrumMatch extends IdentificationMatch {
         
         return spectrumtitle;
     }
+    
+    /**
+     * Sets the spectrum title.
+     * 
+     * @param spectrumTitle The spectrum title.
+     */
+    public void setSpectrumTitle(
+            String spectrumTitle 
+    ) {
+        this.spectrumtitle = spectrumTitle;
+    }
 
     @Override
     public long getKey() {

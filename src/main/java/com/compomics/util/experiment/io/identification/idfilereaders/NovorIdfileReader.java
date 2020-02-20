@@ -11,8 +11,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
-import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
@@ -43,10 +42,6 @@ public class NovorIdfileReader implements IdfileReader {
      * The Novor csv file.
      */
     private File novorCsvFile;
-    /**
-     * The spectrum factory used to retrieve spectrum titles.
-     */
-    private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -120,14 +115,23 @@ public class NovorIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
     ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
+        
+        return getAllSpectrumMatches(
+                spectrumTitles,
+                waitingHandler, 
+                searchParameters, 
+                null, 
+                true
+        );
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
@@ -175,7 +179,7 @@ public class NovorIdfileReader implements IdfileReader {
             }
 
             // get the spectrum file name
-            String spectrumFileName = Util.getFileName(inputFile);
+            String spectrumFileName = IoUtil.getFileName(inputFile);
 
             // get the variable modifications
             HashMap<Integer, String> variableModificationsMap = new HashMap<>();
@@ -247,8 +251,8 @@ public class NovorIdfileReader implements IdfileReader {
 
                 if (!line.trim().isEmpty()) { // @TODO: make this more robust?
 
-                    int id = Integer.valueOf(elements[idIndex]);
-                    int charge = Integer.valueOf(elements[chargeIndex]);
+                    int id = Integer.parseInt(elements[idIndex]);
+                    int charge = Integer.parseInt(elements[chargeIndex]);
                     String peptideSequenceWithMods = elements[peptideIndex];
 
                     // get the novor score
@@ -268,10 +272,7 @@ public class NovorIdfileReader implements IdfileReader {
                     aminoAcidScores.add(aminoAcidScoresAsList);
 
                     // get the name of the spectrum file
-                    String spectrumTitle = id + "";
-                    if (spectrumFactory.fileLoaded(spectrumFileName)) {
-                        spectrumTitle = spectrumFactory.getSpectrumTitle(spectrumFileName, id);
-                    }
+                    String spectrumTitle = spectrumTitles[id];
 
                     // set up the yet empty spectrum match, or add to the current match
                     if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {
@@ -281,10 +282,9 @@ public class NovorIdfileReader implements IdfileReader {
                             result.add(currentMatch);
                         }
 
-                        String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
-                        currentMatch = new SpectrumMatch(spectrumKey);
-                        currentMatch.setSpectrumNumber(id);
+                        currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
                         currentSpectrumTitle = spectrumTitle;
+                        
                     }
 
                     // get the modifications

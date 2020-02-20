@@ -125,7 +125,9 @@ public class IonFactory {
      *
      * @return the neutral losses expected in the dataset
      */
-    public static HashSet<String> getNeutralLosses(ModificationParameters modificationParameters) {
+    public static HashSet<String> getNeutralLosses(
+            ModificationParameters modificationParameters
+    ) {
 
         HashSet<String> neutralLosses = new HashSet<>(getDefaultNeutralLosses());
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
@@ -145,7 +147,9 @@ public class IonFactory {
      *
      * @return a hashset of the subtype indexes of the reporter ions to annotate
      */
-    public static HashSet<Integer> getReporterIons(ModificationParameters modificationParameters) {
+    public static HashSet<Integer> getReporterIons(
+            ModificationParameters modificationParameters
+    ) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
@@ -169,8 +173,19 @@ public class IonFactory {
      *
      * @return the expected fragment ions
      */
-    public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(Peptide peptide, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
-        return getFragmentIons(peptide, null, modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
+    public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(
+            Peptide peptide, 
+            ModificationParameters modificationParameters, 
+            SequenceProvider sequenceProvider, 
+            SequenceMatchingParameters modificationsSequenceMatchingParameters
+    ) {
+        return getFragmentIons(
+                peptide, 
+                null, 
+                modificationParameters, 
+                sequenceProvider, 
+                modificationsSequenceMatchingParameters
+        );
     }
 
     /**
@@ -189,7 +204,13 @@ public class IonFactory {
      *
      * @return the expected fragment ions
      */
-    public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(Peptide peptide, SpecificAnnotationParameters specificAnnotationSettings, ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+    public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(
+            Peptide peptide, 
+            SpecificAnnotationParameters specificAnnotationSettings, 
+            ModificationParameters modificationParameters, 
+            SequenceProvider sequenceProvider, 
+            SequenceMatchingParameters modificationsSequenceMatchingParameters
+    ) {
 
         HashMap<Ion.IonType, HashSet<Integer>> selectedIonTypes = null;
 
@@ -216,7 +237,11 @@ public class IonFactory {
         String[] variableModNames = peptide.getIndexedVariableModifications();
         Modification[] variableModifications = new Modification[variableModNames.length];
 
-        String[] fixedModNames = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
+        String[] fixedModNames = peptide.getFixedModifications(
+                modificationParameters, 
+                sequenceProvider, 
+                modificationsSequenceMatchingParameters
+        );
         Modification[] fixedModifications = new Modification[fixedModNames.length];
 
         for (int i = 0; i < variableModNames.length; i++) {
@@ -758,7 +783,11 @@ public class IonFactory {
      *
      * @return the expected fragment ions
      */
-    public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(Tag tag, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+    public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(
+            Tag tag, 
+            ModificationParameters modificationParameters, 
+            SequenceMatchingParameters modificationsSequenceMatchingParameters
+    ) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
@@ -1309,7 +1338,9 @@ public class IonFactory {
      *
      * @return the possible combinations
      */
-    private ArrayList<NeutralLoss[]> estimateNeutralLossesCombinations(HashSet<String> possibleNeutralLosses) {
+    private ArrayList<NeutralLoss[]> estimateNeutralLossesCombinations(
+            HashSet<String> possibleNeutralLosses
+    ) {
 
         String[] lossesNames = possibleNeutralLosses.stream().sorted().toArray(String[]::new);
 
@@ -1348,7 +1379,9 @@ public class IonFactory {
      *
      * @return the corresponding cache key
      */
-    private long getNeutralLossesKey(HashSet<String> possibleNeutralLosses) {
+    private long getNeutralLossesKey(
+            HashSet<String> possibleNeutralLosses
+    ) {
         return ExperimentObject.asLong(possibleNeutralLosses.stream()
                 .collect(Collectors.joining()));
     }
@@ -1360,7 +1393,9 @@ public class IonFactory {
      *
      * @return the sum of the masses
      */
-    public static double getLossesMass(NeutralLoss[] neutralLosses) {
+    public static double getLossesMass(
+            NeutralLoss[] neutralLosses
+    ) {
 
         return Arrays.stream(neutralLosses)
                 .mapToDouble(NeutralLoss::getMass)

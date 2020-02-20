@@ -3,6 +3,7 @@ package com.compomics.util.experiment.io.biology.protein;
 import com.compomics.util.Util;
 import com.compomics.util.experiment.identification.utils.ProteinUtils;
 import com.compomics.util.experiment.io.biology.protein.iterators.HeaderIterator;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.json.JsonMarshaller;
 import com.compomics.util.parameters.UtilitiesUserParameters;
 import com.compomics.util.waiting.WaitingHandler;
@@ -84,7 +85,17 @@ public class FastaSummary {
      * @param nTarget the number of target sequences
      * @param lastModified the last time the file was modified
      */
-    public FastaSummary(String name, String description, String version, File fastaFile, TreeMap<String, Integer> speciesOccurrence, HashMap<ProteinDatabase, Integer> databaseType, int nSequences, int nTarget, long lastModified) {
+    public FastaSummary(
+            String name, 
+            String description, 
+            String version, 
+            File fastaFile, 
+            TreeMap<String, Integer> speciesOccurrence, 
+            HashMap<ProteinDatabase, Integer> databaseType, 
+            int nSequences, 
+            int nTarget, 
+            long lastModified
+    ) {
 
         this.name = name;
         this.description = description;
@@ -111,8 +122,18 @@ public class FastaSummary {
      * @throws IOException exception thrown if an error occurred while iterating
      * the file
      */
-    public static FastaSummary getSummary(String fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler) throws IOException {
-        return getSummary(fastaFile, fastaParameters, false, waitingHandler);
+    public static FastaSummary getSummary(
+            String fastaFile, 
+            FastaParameters fastaParameters, 
+            WaitingHandler waitingHandler
+    ) throws IOException {
+        
+        return getSummary(
+                fastaFile, 
+                fastaParameters, 
+                false, 
+                waitingHandler
+        );
     }
 
     /**
@@ -130,7 +151,12 @@ public class FastaSummary {
      * @throws IOException exception thrown if an error occurred while iterating
      * the file
      */
-    public static FastaSummary getSummary(String fastaFile, FastaParameters fastaParameters, boolean alwaysCreateNew, WaitingHandler waitingHandler) throws IOException {
+    public static FastaSummary getSummary(
+            String fastaFile, 
+            FastaParameters fastaParameters, 
+            boolean alwaysCreateNew, 
+            WaitingHandler waitingHandler
+    ) throws IOException {
 
         FastaSummary fastaSummary = null;
 
@@ -179,7 +205,9 @@ public class FastaSummary {
      * @throws IOException exception thrown if an error occurred while reading
      * the file
      */
-    private static FastaSummary getSavedSummary(String fastaFile) throws IOException {
+    private static FastaSummary getSavedSummary(
+            String fastaFile
+    ) throws IOException {
 
         File savedFile = getSummaryFile(fastaFile);
 
@@ -204,7 +232,10 @@ public class FastaSummary {
      * @throws IOException exception thrown if an error occurred while writing
      * the file
      */
-    public static void saveSummary(String fastaFile, FastaSummary fastaSummary) throws IOException {
+    public static void saveSummary(
+            String fastaFile, 
+            FastaSummary fastaSummary
+    ) throws IOException {
 
         File destinationFile = getSummaryFile(fastaFile);
         File destinationFolder = destinationFile.getParentFile();
@@ -231,7 +262,9 @@ public class FastaSummary {
      *
      * @return the file used to store the summary file in the user folder
      */
-    private static File getSummaryFile(String fastaFile) {
+    private static File getSummaryFile(
+            String fastaFile
+    ) {
 
         UtilitiesUserParameters utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
 
@@ -256,7 +289,11 @@ public class FastaSummary {
      * @throws IOException exception thrown if an error occurred while iterating
      * the file
      */
-    private static FastaSummary parseSummary(String fastaFilePath, FastaParameters fastaParameters, WaitingHandler waitingHandler) throws IOException {
+    private static FastaSummary parseSummary(
+            String fastaFilePath, 
+            FastaParameters fastaParameters, 
+            WaitingHandler waitingHandler
+    ) throws IOException {
 
         File fastaFile = new File(fastaFilePath);
 
@@ -333,7 +370,17 @@ public class FastaSummary {
             }
         }
 
-        return new FastaSummary(Util.removeExtension(fastaFile.getName()), fastaFile.getAbsolutePath(), new Date(fastaFile.lastModified()).toString(), fastaFile, speciesOccurrence, databaseType, nSequences, nTarget, lastModified);
+        return new FastaSummary(
+                IoUtil.removeExtension(fastaFile.getName()), 
+                fastaFile.getAbsolutePath(), 
+                new Date(fastaFile.lastModified()).toString(), 
+                fastaFile, 
+                speciesOccurrence, 
+                databaseType, 
+                nSequences, 
+                nTarget, 
+                lastModified
+        );
 
     }
 
@@ -395,7 +442,9 @@ public class FastaSummary {
      *
      * @param version the database version
      */
-    public void setVersion(String version) {
+    public void setVersion(
+            String version
+    ) {
         this.version = version;
     }
 
@@ -413,7 +462,9 @@ public class FastaSummary {
      *
      * @param description the description for this database
      */
-    public void setDescription(String description) {
+    public void setDescription(
+            String description
+    ) {
         this.description = description;
     }
 

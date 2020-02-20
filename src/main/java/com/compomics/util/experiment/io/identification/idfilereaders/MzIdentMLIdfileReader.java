@@ -11,6 +11,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
@@ -157,7 +158,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
     ) throws IOException {
 
         this.mzIdentMLFile = mzIdentMLFile;
-        mzIdentMLFileName = Util.getFileName(mzIdentMLFile);
+        mzIdentMLFileName = IoUtil.getFileName(mzIdentMLFile);
 
         if (!useCustomParser) {
 
@@ -231,14 +232,23 @@ public class MzIdentMLIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
-        return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
+        
+        return getAllSpectrumMatches(
+                spectrumTitles, 
+                waitingHandler, 
+                searchParameters, 
+                null, 
+                true
+        );
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
@@ -323,15 +333,8 @@ public class MzIdentMLIdfileReader implements IdfileReader {
                     SpectraData spectraData = unmarshaller.unmarshal(SpectraData.class, spectrumIdentResult.getSpectraDataRef());
                     String spectrumFileName = new File(spectraData.getLocation()).getName();
 
-                    // set up the yet empty spectrum match
-                    String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
-                    SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
-
-                    // set spectrum index, used if title is not provided
-                    if (spectrumIndex != null) {
-                        int spectrumNumber = spectrumIndex + 1;
-                        currentMatch.setSpectrumNumber(spectrumNumber);
-                    }
+                    // set up the spectrum match
+                    SpectrumMatch currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
 
                     // iterate and add the spectrum matches
                     for (SpectrumIdentificationItem spectrumIdentItem : spectrumIdentResult.getSpectrumIdentificationItem()) {
@@ -1070,15 +1073,8 @@ public class MzIdentMLIdfileReader implements IdfileReader {
         // get the spectrum file name
         String spectrumFileName = spectrumFileNameMap.get(spectraDataRef);
 
-        // set up the yet empty spectrum match
-        String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, "temp");
-        SpectrumMatch currentMatch = new SpectrumMatch(spectrumKey);
-
-        // set spectrum index, used if title is not provided
-        if (spectrumIndex != null) {
-            int spectrumNumber = spectrumIndex + 1;
-            currentMatch.setSpectrumNumber(spectrumNumber);
-        }
+        // set up thespectrum match
+        SpectrumMatch currentMatch = new SpectrumMatch(spectrumFileName, "temp");
 
         parser.next();
         int type = parser.next();
@@ -1309,8 +1305,9 @@ public class MzIdentMLIdfileReader implements IdfileReader {
 
         // update the spectrum key with the correct spectrum title
         if (spectrumTitle != null) {
-            spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
-            currentMatch.setSpectrumKey(spectrumKey); // @TOOD: can spectrumID be used if spectrumTitle is missing...?
+            
+            currentMatch.setSpectrumTitle(spectrumTitle);
+            
         }
 
         result.add(currentMatch);

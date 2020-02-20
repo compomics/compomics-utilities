@@ -10,8 +10,8 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ArrayList;
 import javax.xml.bind.JAXBException;
-import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
  * This IdfileReader reads identifications from an Tide tsv results file.
@@ -44,10 +43,6 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
      * The Tide tsv file.
      */
     private File tideTsvFile;
-    /**
-     * The spectrum factory used to retrieve spectrum titles.
-     */
-    private SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -107,14 +102,23 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
+
+        return getAllSpectrumMatches(
+                spectrumTitles,
+                waitingHandler,
+                searchParameters,
+                null,
+                true
+        );
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
@@ -198,7 +202,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
             SpectrumMatch currentMatch = null;
 
             // get the name of the mgf file
-            String fileName = Util.getFileName(tideTsvFile);
+            String fileName = IoUtil.getFileName(tideTsvFile);
             String spectrumFileName = getMgfFileName(fileName);
 
             // get the psms
@@ -206,17 +210,17 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
 
                 String[] elements = line.split("\t");
 
-                if (!line.trim().isEmpty()) { // @TODO: make this more robust?
+                if (!line.trim().isEmpty()) {
 
-                    int scanNumber = Integer.valueOf(elements[scanNumberIndex]);
+                    int scanNumber = Integer.parseInt(elements[scanNumberIndex]);
                     String modifiedPeptideSequence = elements[sequenceIndex].toUpperCase();
-                    int charge = Integer.valueOf(elements[chargeIndex]);
+                    int charge = Integer.parseInt(elements[chargeIndex]);
 
                     int rank;
                     if (exactPValueIndex != -1) {
-                        rank = Integer.valueOf(elements[xcorrRank]);
+                        rank = Integer.parseInt(elements[xcorrRank]);
                     } else {
-                        rank = Integer.valueOf(elements[xcorrRank]);
+                        rank = Integer.parseInt(elements[xcorrRank]);
                     }
 
                     double tideEValue, rawScore;
@@ -234,10 +238,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                         }
                     }
 
-                    String spectrumTitle = scanNumber + "";
-                    if (spectrumFactory.fileLoaded(spectrumFileName)) {
-                        spectrumTitle = spectrumFactory.getSpectrumTitle(spectrumFileName, scanNumber);
-                    }
+                    String spectrumTitle = spectrumTitles[scanNumber - 1];
 
                     // set up the yet empty spectrum match, or add to the current match
                     if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {
@@ -247,10 +248,9 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                             result.add(currentMatch);
                         }
 
-                        String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
-                        currentMatch = new SpectrumMatch(spectrumKey);
-                        currentMatch.setSpectrumNumber(scanNumber);
+                        currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
                         currentSpectrumTitle = spectrumTitle;
+
                     }
 
                     // get the modifications
@@ -280,7 +280,14 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                     Peptide peptide = new Peptide(unmodifiedPeptideSequence, utilitiesModifications.toArray(new ModificationMatch[utilitiesModifications.size()]), true);
 
                     // create the peptide assumption
-                    PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.tide.getIndex(), charge, tideEValue, Util.getFileName(tideTsvFile));
+                    PeptideAssumption peptideAssumption = new PeptideAssumption(
+                            peptide,
+                            rank,
+                            Advocate.tide.getIndex(),
+                            charge,
+                            tideEValue,
+                            IoUtil.getFileName(tideTsvFile)
+                    );
                     peptideAssumption.setRawScore(rawScore);
 
                     if (expandAaCombinations && AminoAcidSequence.hasCombination(unmodifiedPeptideSequence)) {

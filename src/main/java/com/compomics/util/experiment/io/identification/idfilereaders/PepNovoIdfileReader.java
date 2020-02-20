@@ -13,16 +13,15 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.io.identification.IdfileReader;
-import static com.compomics.util.experiment.io.identification.idfilereaders.PNovoIdfileReader.getMgfFileName;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails;
+import com.compomics.util.io.IoUtil;
 import static com.compomics.util.io.IoUtil.ENCODING;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
@@ -78,11 +77,13 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         return getAllSpectrumMatches(
+                spectrumTitles,
                 waitingHandler,
                 searchParameters,
                 null,
@@ -92,6 +93,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
@@ -102,7 +104,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
             
-        String fileName = Util.getFileName(identificationFile);
+        String fileName = IoUtil.getFileName(identificationFile);
         String mgfFileName = getMgfFileName(fileName);
 
         ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
@@ -142,8 +144,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
                         // remove any html from the title
                         String decodedTitle = URLDecoder.decode(spectrumTitle, ENCODING);
-                        String spectrumKey = Spectrum.getSpectrumKey(mgfFileName, decodedTitle);
-                        currentMatch = new SpectrumMatch(spectrumKey);
+                        currentMatch = new SpectrumMatch(mgfFileName, decodedTitle);
 
                         while (true) {
                             line = reader.readLine();

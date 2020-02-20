@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.io.identification.idfilereaders;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
@@ -10,6 +9,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
@@ -54,7 +54,7 @@ public class AndromedaIdfileReader implements IdfileReader {
             File resultsFile
     ) {
         this.resultsFile = resultsFile;
-        fileName = Util.getFileName(resultsFile);
+        fileName = IoUtil.getFileName(resultsFile);
     }
 
     @Override
@@ -64,23 +64,29 @@ public class AndromedaIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
-
+        return getAllSpectrumMatches(
+                spectrumTitles,
+                waitingHandler, 
+                searchParameters, 
+                null, 
+                false
+        );
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            String[] spectrumTitles,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
     ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        
         String mgfFile = getMgfFileName(fileName);
 
         ArrayList<SpectrumMatch> result = new ArrayList<>();
@@ -108,13 +114,18 @@ public class AndromedaIdfileReader implements IdfileReader {
                     
                     if (spectrumMatch == null) {
                     
-                        String spectrumKey = Spectrum.getSpectrumKey(mgfFile, title);
-                        spectrumMatch = spectrumMatchesMap.get(spectrumKey);
+                        spectrumMatch = spectrumMatchesMap.get(title);
                         rank = 0; // the rank is here per charge
+                        
                         if (spectrumMatch == null) {
-                            spectrumMatch = new SpectrumMatch(spectrumKey);
+                        
+                            spectrumMatch = new SpectrumMatch(
+                                    mgfFile, 
+                                    title
+                            );
                             result.add(spectrumMatch);
-                            spectrumMatchesMap.put(spectrumKey, spectrumMatch);
+                            spectrumMatchesMap.put(title, spectrumMatch);
+                        
                         }
                     }
                     rank++;

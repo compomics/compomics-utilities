@@ -5,6 +5,7 @@ import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.mass_spectrometry.spectra.SpectrumUtils;
+import com.compomics.util.io.IoUtil;
 import static com.compomics.util.io.IoUtil.ENCODING;
 import com.compomics.util.threading.SimpleSemaphore;
 import java.io.File;
@@ -498,7 +499,7 @@ public class CmsFileReader implements SpectrumProvider {
 
         try {
 
-            CmsFileUtils.closeBuffer(mappedByteBuffer);
+            IoUtil.closeBuffer(mappedByteBuffer);
 
             raf.close();
 

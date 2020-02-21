@@ -17,14 +17,14 @@ public class Precursor extends ExperimentObject {
      * Empty default constructor
      */
     public Precursor() {
-        
+
         this.rt = Double.NaN;
         this.mz = Double.NaN;
         this.intensity = Double.NaN;
         this.possibleCharges = new int[0];
-    
+
     }
-    
+
     /**
      * The retention time when the precursor was isolated.
      */
@@ -50,8 +50,8 @@ public class Precursor extends ExperimentObject {
      * @param possibleCharges the possible charges
      */
     public Precursor(
-            double rt, 
-            double mz, 
+            double rt,
+            double mz,
             int[] possibleCharges
     ) {
         this.rt = rt;
@@ -70,9 +70,9 @@ public class Precursor extends ExperimentObject {
      * @param possibleCharges the possible charges
      */
     public Precursor(
-            double rt, 
-            double mz, 
-            double intensity, 
+            double rt,
+            double mz,
+            double intensity,
             int[] possibleCharges
     ) {
         this.rt = rt;
@@ -92,10 +92,10 @@ public class Precursor extends ExperimentObject {
      * @param rtMax the maximum of the RT window in seconds
      */
     public Precursor(
-            double mz, 
-            double intensity, 
-            int[] possibleCharges, 
-            double rtMin, 
+            double mz,
+            double intensity,
+            int[] possibleCharges,
+            double rtMin,
             double rtMax
     ) {
         this.rt = (rtMin + rtMax) / 2;
@@ -114,22 +114,22 @@ public class Precursor extends ExperimentObject {
         readDBMode();
         return rt / 60;
     }
-    
+
     /**
      * Returns the possible charges as a string.
      *
      * @return the possible charges as a string
      */
     public String getPossibleChargesAsString() {
-        
+
         readDBMode();
-        
+
         return Arrays.stream(possibleCharges)
                 .mapToObj(
                         charge -> Integer.toString(charge)
                 )
                 .collect(Collectors.joining(", "));
-        
+
     }
 
     /**
@@ -142,9 +142,64 @@ public class Precursor extends ExperimentObject {
     public double getMass(
             int chargeValue
     ) {
-        
+
         readDBMode();
         return mz * chargeValue - chargeValue * ElementaryIon.proton.getTheoreticMass();
-    
+
+    }
+
+    /**
+     * Returns a boolean indicating whether the precursor is identical to the
+     * other precursor. m/z, rt, and intensities values must have exact same
+     * double values. Charges must be identical and in the same order.
+     *
+     * @param otherPrecursor The other precursor.
+     *
+     * @return A boolean indicating whether the precursor is identical to the
+     * other precursor.
+     */
+    public boolean isSameAs(
+            Precursor otherPrecursor
+    ) {
+
+        if (possibleCharges.length != otherPrecursor.possibleCharges.length) {
+            return false;
+        }
+
+        for (int i = 0; i < possibleCharges.length; i++) {
+
+            if (possibleCharges[i] != otherPrecursor.possibleCharges[i]) {
+
+                return false;
+
+            }
+        }
+
+        if (Double.isNaN(mz) && !Double.isNaN(otherPrecursor.mz)
+                || !Double.isNaN(mz) && Double.isNaN(otherPrecursor.mz)
+                || !Double.isNaN(mz) && !Double.isNaN(otherPrecursor.mz) && mz != otherPrecursor.mz) {
+
+            return false;
+
+        }
+
+        if (Double.isNaN(intensity) && !Double.isNaN(otherPrecursor.intensity)
+                || !Double.isNaN(intensity) && Double.isNaN(otherPrecursor.intensity)
+                || !Double.isNaN(intensity) && !Double.isNaN(otherPrecursor.intensity) && intensity != otherPrecursor.intensity) {
+
+            return false;
+
+        }
+
+        if (Double.isNaN(rt) && !Double.isNaN(otherPrecursor.rt)
+                || !Double.isNaN(rt) && Double.isNaN(otherPrecursor.rt)
+                || !Double.isNaN(rt) && !Double.isNaN(otherPrecursor.rt) && rt != otherPrecursor.rt) {
+
+            return false;
+
+        }
+
+        return true;
+
     }
 }

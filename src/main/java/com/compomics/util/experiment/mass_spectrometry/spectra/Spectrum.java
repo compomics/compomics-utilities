@@ -39,7 +39,7 @@ public class Spectrum extends ExperimentObject {
 
     /**
      * Constructor.
-     * 
+     *
      * @param precursor The precursor.
      * @param mz The array of mz of the peaks.
      * @param intensities The array of intensities of the peaks.
@@ -140,21 +140,62 @@ public class Spectrum extends ExperimentObject {
         return precursor;
 
     }
-    
+
     /**
      * Returns the number of peaks.
-     * 
+     *
      * @return the number of peaks
      */
     public int getNPeaks() {
-        
+
         return mz.length;
-        
+
+    }
+
+    /**
+     * Returns a boolean indicating whether the spectrum is identical to the
+     * other spectrum. Precursors are compared using the isSameAs method. M/z
+     * and intensities must be in the same order with exact same double values.
+     *
+     * @param otherSpectrum The other spectrum.
+     *
+     * @return A boolean indicating whether the spectrum is identical to the
+     * other spectrum.
+     */
+    public boolean isSameAs(
+            Spectrum otherSpectrum
+    ) {
+
+        if (precursor == null && otherSpectrum.precursor != null
+                || precursor != null && otherSpectrum.precursor == null
+                || precursor != null && otherSpectrum.precursor != null && !precursor.isSameAs(otherSpectrum.precursor)) {
+
+            return false;
+
+        }
+
+        if (getNPeaks() != otherSpectrum.getNPeaks()) {
+
+            return false;
+
+        }
+
+        for (int i = 0; i < getNPeaks(); i++) {
+
+            if (mz[i] != otherSpectrum.mz[i]
+                    || intensity[i] != otherSpectrum.intensity[i]) {
+                return false;
+            }
+
+        }
+
+        return true;
+
     }
 
     @Override
     public String toString() {
-        
+
         return "{precursor: " + precursor.toString() + "}{Peaks: " + getPeakListAsString() + "}";
     }
 }

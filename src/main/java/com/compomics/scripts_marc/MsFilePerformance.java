@@ -4,10 +4,11 @@ import com.compomics.util.experiment.io.mass_spectrometry.MsFileHandler;
 import com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileReader;
 import com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfIndex;
 import com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfReader;
-import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.io.File;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
 /**
@@ -45,29 +46,63 @@ public class MsFilePerformance {
             }
 
             String fileName = file.getName();
-                    
+
             long mgfIndexStart = Instant.now().getEpochSecond();
             BufferedRandomAccessFile raf = new BufferedRandomAccessFile(file, "r", 1024 * 100);
             MgfIndex mgfIndex = MgfReader.getIndexMap(file, null);
             long mgfIndexEnd = Instant.now().getEpochSecond();
+            long mgfIndexingTime = mgfIndexEnd - mgfIndexStart;
 
             long cmsFileStart = Instant.now().getEpochSecond();
             MsFileHandler msFileHandler = new MsFileHandler();
-            msFileHandler.register(cmsFile);
+            msFileHandler.register(file);
             long cmsFileEnd = Instant.now().getEpochSecond();
-            
+            long cmsCreationTime = cmsFileEnd - cmsFileStart;
+
             CmsFileReader cmsFileReader = msFileHandler.getReader(fileName);
 
             ArrayList<String> mgfIndexTitles = mgfIndex.getSpectrumTitles();
-            
+
             if (mgfIndexTitles.size() != cmsFileReader.titles.length) {
 
                 throw new IllegalArgumentException("Invalid number of spectra.");
 
             }
+
+            long mgfRead = 0;
+            long cmsRead = 0;
+
+            for (int i = 0; i < 10; i++) {
+
+                Collections.shuffle(mgfIndexTitles);
+
+                for (String title : mgfIndexTitles) {
+
+                    long mgfReadStart = Instant.now().getEpochSecond();
+                    long index = mgfIndex.getIndex(title);
+                    Spectrum mgfSpectrum = MgfReader.getSpectrum(raf, index, fileName);
+                    long mgfReadEnd = Instant.now().getEpochSecond();
+
+                    mgfRead += mgfReadEnd - mgfReadStart;
+
+                    long cmsReadStart = Instant.now().getEpochSecond();
+                    Spectrum cmsSpectrum = msFileHandler.getSpectrum(fileName, title);
+                    long cmsReadEnd = Instant.now().getEpochSecond();
+
+                    cmsRead += cmsReadEnd - cmsReadStart;
+                    
+                    if (!mgfSpectrum.isSameAs(cmsSpectrum)) {
+                        
+                        throw new IllegalArgumentException("Spectra are not the same.");
+                        
+                    }
+                }
+            }
             
-            
-            
+            System.out.println("Mgf parsing: " + mgfIndexingTime + "s.");
+            System.out.println("Cms creation: " + cmsCreationTime + "s.");
+            System.out.println("Mgf reading: " + mgfRead + "s.");
+            System.out.println("Cms reading: " + cmsRead + "s.");
 
         } catch (Throwable t) {
             t.printStackTrace();

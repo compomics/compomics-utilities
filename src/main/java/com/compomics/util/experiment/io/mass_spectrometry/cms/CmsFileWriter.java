@@ -87,11 +87,11 @@ public class CmsFileWriter implements AutoCloseable {
             Spectrum spectrum
     ) throws IOException {
 
-        long index = raf.getFilePointer();
+        long index = raf.getFilePointer() - CmsFileWriter.HEADER_LENGTH;
 
         if (index > Integer.MAX_VALUE) {
 
-            throw new IOException("Buffer exceeds max size.");
+            throw new IOException("File exceeds max reader buffer size.");
 
         }
         

@@ -59,14 +59,17 @@ public class MsFileHandler implements SpectrumProvider {
             File msFile
     ) throws IOException {
 
-        register(msFile);
+        register(
+                msFile,
+                null
+        );
 
     }
 
     /**
      * Registers a mass spectrometry file and enables querying its spectra. If
      * the file is not a cms file, a cms file will be created in the cms folder
-     * if not null, or along the ms file.
+     * if not null, along the ms file otherwise.
      *
      * @param msFile The mass spectrometry file to register.
      * @param cmsFolder The folder where to save the cms files.

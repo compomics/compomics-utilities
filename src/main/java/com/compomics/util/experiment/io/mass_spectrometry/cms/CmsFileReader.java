@@ -121,7 +121,7 @@ public class CmsFileReader implements SpectrumProvider {
 
         }
 
-        precrursorMzMap = new HashMap<>(titles.length / 2);
+        precrursorMzMap = new HashMap<>(nTitles);
 
         long size = footerPosition - CmsFileWriter.HEADER_LENGTH;
 
@@ -182,7 +182,12 @@ public class CmsFileReader implements SpectrumProvider {
 
         }
 
-        Precursor precursor = new Precursor(precursorRt, precursorMz, precursorIntensity, charges);
+        Precursor precursor = new Precursor(
+                precursorRt, 
+                precursorMz, 
+                precursorIntensity, 
+                charges
+        );
 
         return new Spectrum(precursor, mz, intensity);
 

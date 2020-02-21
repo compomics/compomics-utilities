@@ -2787,18 +2787,19 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/compomics/util/experiment/identification/matches/IonMatch.html" title="class in com.compomics.util.experiment.identification.matches">com.compomics.util.experiment.identification.matches.IonMatch</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>5753142782728884464L</dd>
-</dl>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
 <ul class="blockList">
 <li class="blockList">
-<h4>peak</h4>
-<pre><a href="com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a> peak</pre>
-<div class="block">The matched peak.</div>
+<h4>peakMz</h4>
+<pre>double peakMz</pre>
+<div class="block">The matched peak m/z.</div>
+</li>
+<li class="blockList">
+<h4>peakIntensity</h4>
+<pre>double peakIntensity</pre>
+<div class="block">The matched peak intensity.</div>
 </li>
 <li class="blockList">
 <h4>ion</h4>
@@ -2807,7 +2808,7 @@
 </li>
 <li class="blockListLast">
 <h4>charge</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> charge</pre>
+<pre>int charge</pre>
 <div class="block">The inferred charge of the ion.</div>
 </li>
 </ul>
@@ -2952,19 +2953,19 @@
 <h3>Serialized Fields</h3>
 <ul class="blockList">
 <li class="blockList">
-<h4>spectrumKey</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> spectrumKey</pre>
-<div class="block">The key of the spectrum.</div>
-</li>
-<li class="blockList">
-<h4>spectrumNumber</h4>
-<pre>int spectrumNumber</pre>
-<div class="block">The number of the spectrum.</div>
-</li>
-<li class="blockList">
 <h4>key</h4>
 <pre>long key</pre>
 <div class="block">The key of the match.</div>
+</li>
+<li class="blockList">
+<h4>spectrumFile</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> spectrumFile</pre>
+<div class="block">The name of the file containing the spectrum.</div>
+</li>
+<li class="blockList">
+<h4>spectrumtitle</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> spectrumtitle</pre>
+<div class="block">The title of the spectrum.</div>
 </li>
 <li class="blockList">
 <h4>peptideAssumptionsMap</h4>
@@ -3477,10 +3478,6 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>-3739182405876385430L</dd>
-</dl>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -3730,15 +3727,10 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> softwareVersion</pre>
 <div class="block">The softwareVersion.</div>
 </li>
-<li class="blockList">
+<li class="blockListLast">
 <h4>tideTsvFile</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io">File</a> tideTsvFile</pre>
 <div class="block">The Tide tsv file.</div>
-</li>
-<li class="blockListLast">
-<h4>spectrumFactory</h4>
-<pre><a href="com/compomics/util/experiment/mass_spectrometry/SpectrumFactory.html" title="class in com.compomics.util.experiment.mass_spectrometry">SpectrumFactory</a> spectrumFactory</pre>
-<div class="block">The spectrum factory used to retrieve spectrum titles.</div>
 </li>
 </ul>
 </li>
@@ -3882,187 +3874,12 @@
 </ul>
 </li>
 <li class="blockList">
-<h2 title="Package">Package&nbsp;com.compomics.util.experiment.mass_spectrometry.indexes</h2>
-<ul class="blockList">
-<li class="blockList"><a name="com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex">
-<!--   -->
-</a>
-<h3>Class <a href="com/compomics/util/experiment/mass_spectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.mass_spectrometry.indexes">com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>-4447843223014568761L</dd>
-</dl>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>precursorTolerance</h4>
-<pre>double precursorTolerance</pre>
-<div class="block">The precursor mass tolerance.</div>
-</li>
-<li class="blockList">
-<h4>ppm</h4>
-<pre>boolean ppm</pre>
-<div class="block">Boolean indicating whether the precursor mass tolerance is in ppm.</div>
-</li>
-<li class="blockList">
-<h4>peaksMap</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; peaksMap</pre>
-<div class="block">Map of the precursors by bin and m/z.</div>
-</li>
-<li class="blockList">
-<h4>scalingFactor</h4>
-<pre>double scalingFactor</pre>
-<div class="block">The scaling factor used for the bins in ppm.</div>
-</li>
-<li class="blockList">
-<h4>binMax</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> binMax</pre>
-<div class="block">The highest bin in index.</div>
-</li>
-<li class="blockList">
-<h4>binMin</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang">Integer</a> binMin</pre>
-<div class="block">The lowest bin in index.</div>
-</li>
-<li class="blockList">
-<h4>totalIntensity</h4>
-<pre>double totalIntensity</pre>
-<div class="block">The total intensity above the intensity threshold.</div>
-</li>
-<li class="blockListLast">
-<h4>intensityLimit</h4>
-<pre>double intensityLimit</pre>
-<div class="block">The intensity limit used for the index.</div>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList">
-<h2 title="Package">Package&nbsp;com.compomics.util.experiment.mass_spectrometry.proteowizard.gui</h2>
-<ul class="blockList">
-<li class="blockList"><a name="com.compomics.util.experiment.mass_spectrometry.proteowizard.gui.MsConvertParametersDialog">
-<!--   -->
-</a>
-<h3>Class <a href="com/compomics/util/experiment/mass_spectrometry/proteowizard/gui/MsConvertParametersDialog.html" title="class in com.compomics.util.experiment.mass_spectrometry.proteowizard.gui">com.compomics.util.experiment.mass_spectrometry.proteowizard.gui.MsConvertParametersDialog</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JDialog.html?is-external=true" title="class or interface in javax.swing">JDialog</a> implements Serializable</h3>
-<ul class="blockList">
-<li class="blockList">
-<h3>Serialized Fields</h3>
-<ul class="blockList">
-<li class="blockList">
-<h4>canceled</h4>
-<pre>boolean canceled</pre>
-<div class="block">Boolean indicating whether the editing was canceled.</div>
-</li>
-<li class="blockList">
-<h4>filters</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; filters</pre>
-<div class="block">Map of the filters to use.</div>
-</li>
-<li class="blockList">
-<h4>filterIndexes</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; filterIndexes</pre>
-<div class="block">List of the indexes of the filters to use.</div>
-</li>
-<li class="blockList">
-<h4>lastSelectedFolder</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> lastSelectedFolder</pre>
-<div class="block">The selected folder.</div>
-</li>
-<li class="blockList">
-<h4>utilitiesUserParameters</h4>
-<pre><a href="com/compomics/util/parameters/UtilitiesUserParameters.html" title="class in com.compomics.util.parameters">UtilitiesUserParameters</a> utilitiesUserParameters</pre>
-<div class="block">The utilities preferences.</div>
-</li>
-<li class="blockList">
-<h4>addFilterMenu</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JMenu.html?is-external=true" title="class or interface in javax.swing">JMenu</a> addFilterMenu</pre>
-</li>
-<li class="blockList">
-<h4>backgourdPanel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> backgourdPanel</pre>
-</li>
-<li class="blockList">
-<h4>browseButton</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> browseButton</pre>
-</li>
-<li class="blockList">
-<h4>cancelButton</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> cancelButton</pre>
-</li>
-<li class="blockList">
-<h4>filterHelpLabel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> filterHelpLabel</pre>
-</li>
-<li class="blockList">
-<h4>filtersLbl</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> filtersLbl</pre>
-</li>
-<li class="blockList">
-<h4>filtersPopupMenu</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPopupMenu.html?is-external=true" title="class or interface in javax.swing">JPopupMenu</a> filtersPopupMenu</pre>
-</li>
-<li class="blockList">
-<h4>filtersTable</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.html?is-external=true" title="class or interface in javax.swing">JTable</a> filtersTable</pre>
-</li>
-<li class="blockList">
-<h4>filtersTableScrollPane</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JScrollPane.html?is-external=true" title="class or interface in javax.swing">JScrollPane</a> filtersTableScrollPane</pre>
-</li>
-<li class="blockList">
-<h4>folderHelpLabel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> folderHelpLabel</pre>
-</li>
-<li class="blockList">
-<h4>installationJTextField</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> installationJTextField</pre>
-</li>
-<li class="blockList">
-<h4>installationPanel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> installationPanel</pre>
-</li>
-<li class="blockList">
-<h4>msconvertParameters</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> msconvertParameters</pre>
-</li>
-<li class="blockList">
-<h4>okButton</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> okButton</pre>
-</li>
-<li class="blockList">
-<h4>outputFormatCmb</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; outputFormatCmb</pre>
-</li>
-<li class="blockList">
-<h4>outputFormatLbl</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> outputFormatLbl</pre>
-</li>
-<li class="blockListLast">
-<h4>removeFilterMenuItem</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JMenuItem.html?is-external=true" title="class or interface in javax.swing">JMenuItem</a> removeFilterMenuItem</pre>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="blockList">
 <h2 title="Package">Package&nbsp;com.compomics.util.experiment.mass_spectrometry.spectra</h2>
 <ul class="blockList">
 <li class="blockList"><a name="com.compomics.util.experiment.mass_spectrometry.spectra.Peak">
 <!--   -->
 </a>
 <h3>Class <a href="com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">com.compomics.util.experiment.mass_spectrometry.spectra.Peak</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>-7425947046833405676L</dd>
-</dl>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -4071,11 +3888,6 @@
 <h4>mz</h4>
 <pre>double mz</pre>
 <div class="block">The mass over charge ratio of the peak.</div>
-</li>
-<li class="blockList">
-<h4>rt</h4>
-<pre>double rt</pre>
-<div class="block">The retention time when the peak was recorded.</div>
 </li>
 <li class="blockListLast">
 <h4>intensity</h4>
@@ -4090,10 +3902,6 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/compomics/util/experiment/mass_spectrometry/spectra/Precursor.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">com.compomics.util.experiment.mass_spectrometry.spectra.Precursor</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>-2711244157697138296L</dd>
-</dl>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -4102,16 +3910,6 @@
 <h4>rt</h4>
 <pre>double rt</pre>
 <div class="block">The retention time when the precursor was isolated.</div>
-</li>
-<li class="blockList">
-<h4>rtMin</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> rtMin</pre>
-<div class="block">In case an retention time window is given, the minimum.</div>
-</li>
-<li class="blockList">
-<h4>rtMax</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang">Double</a> rtMax</pre>
-<div class="block">In case an retention time window is given, the maximum.</div>
 </li>
 <li class="blockList">
 <h4>mz</h4>
@@ -4125,7 +3923,7 @@
 </li>
 <li class="blockListLast">
 <h4>possibleCharges</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; possibleCharges</pre>
+<pre>int[] possibleCharges</pre>
 <div class="block">The charge of the precursor.</div>
 </li>
 </ul>
@@ -4136,127 +3934,24 @@
 <!--   -->
 </a>
 <h3>Class <a href="com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>7152424141470431489L</dd>
-</dl>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
 <ul class="blockList">
-<li class="blockList">
-<h4>spectrumTitle</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> spectrumTitle</pre>
-<div class="block">Spectrum title.</div>
-</li>
-<li class="blockList">
-<h4>fileName</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> fileName</pre>
-<div class="block">Spectrum file name.</div>
-</li>
-<li class="blockList">
-<h4>key</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> key</pre>
-<div class="block">Spectrum key.</div>
-</li>
-<li class="blockList">
-<h4>level</h4>
-<pre>int level</pre>
-<div class="block">The MS level.</div>
-</li>
 <li class="blockList">
 <h4>precursor</h4>
 <pre><a href="com/compomics/util/experiment/mass_spectrometry/spectra/Precursor.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Precursor</a> precursor</pre>
 <div class="block">The precursor if any.</div>
 </li>
 <li class="blockList">
-<h4>peakMap</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; peakMap</pre>
-<div class="block">mz indexed Peak map.</div>
-</li>
-<li class="blockList">
-<h4>intensityPeakMap</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; intensityPeakMap</pre>
-<div class="block">Intensity indexed Peak map.</div>
-</li>
-<li class="blockList">
-<h4>scanNumber</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> scanNumber</pre>
-<div class="block">Scan number or range.</div>
-</li>
-<li class="blockList">
-<h4>scanStartTime</h4>
-<pre>double scanStartTime</pre>
-<div class="block">The time point when the spectrum was recorded (scan start time in mzML
- files).</div>
-</li>
-<li class="blockList">
-<h4>jFreePeakList</h4>
-<pre>double[][] jFreePeakList</pre>
-<div class="block">The peak list as an array directly plottable by JFreeChart.</div>
-</li>
-<li class="blockList">
-<h4>mzValuesAsArraySorted</h4>
-<pre>double[] mzValuesAsArraySorted</pre>
-<div class="block">The mz values sorted in acceding order as array. Null until set by the
- getter.</div>
-</li>
-<li class="blockList">
-<h4>intensityValuesAsArray</h4>
-<pre>double[] intensityValuesAsArray</pre>
-<div class="block">The intensity values as array. Null until set by the getter.</div>
-</li>
-<li class="blockList">
-<h4>intensityValuesNormalizedAsArray</h4>
-<pre>double[] intensityValuesNormalizedAsArray</pre>
-<div class="block">The intensity values as array normalized against the most intense peak.
- Null until set by the getter.</div>
-</li>
-<li class="blockList">
-<h4>mzAndIntensityAsArray</h4>
-<pre>double[][] mzAndIntensityAsArray</pre>
-<div class="block">The mz and intensity values as array. Null until set by the getter.</div>
-</li>
-<li class="blockList">
-<h4>totalIntensity</h4>
-<pre>double totalIntensity</pre>
-<div class="block">The total intensity.</div>
-</li>
-<li class="blockList">
-<h4>maxIntensity</h4>
-<pre>double maxIntensity</pre>
-<div class="block">The maximal intensity.</div>
-</li>
-<li class="blockList">
-<h4>maxMz</h4>
-<pre>double maxMz</pre>
-<div class="block">The maximal m/z.</div>
-</li>
-<li class="blockList">
-<h4>minMz</h4>
-<pre>double minMz</pre>
-<div class="block">The minimal m/z.</div>
-</li>
-<li class="blockList">
-<h4>intensityLimit</h4>
-<pre>double intensityLimit</pre>
-<div class="block">Cache for the intensity limit.</div>
-</li>
-<li class="blockList">
-<h4>intensityLimitLevel</h4>
-<pre>double intensityLimitLevel</pre>
-<div class="block">Intensity level corresponding to the value in cache.</div>
-</li>
-<li class="blockList">
-<h4>intensityThresholdType</h4>
-<pre><a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.IntensityThresholdType.html" title="enum in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters.IntensityThresholdType</a> intensityThresholdType</pre>
-<div class="block">The type of intensity threshold.</div>
+<h4>mz</h4>
+<pre>double[] mz</pre>
+<div class="block">The array of the m/z of the peaks.</div>
 </li>
 <li class="blockListLast">
-<h4>binnedCumulativeFunction</h4>
-<pre><a href="com/compomics/util/experiment/mass_spectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.mass_spectrometry">SimpleNoiseDistribution</a> binnedCumulativeFunction</pre>
-<div class="block">The binned cumulative function of the distribution of the log of the
- peaks intensities.</div>
+<h4>intensity</h4>
+<pre>double[] intensity</pre>
+<div class="block">The array of the intensities of the peaks.</div>
 </li>
 </ul>
 </li>
@@ -7455,6 +7150,11 @@
 <div class="block">The protein sequence provider.</div>
 </li>
 <li class="blockList">
+<h4>spectrumProvider</h4>
+<pre><a href="com/compomics/util/experiment/mass_spectrometry/SpectrumProvider.html" title="interface in com.compomics.util.experiment.mass_spectrometry">SpectrumProvider</a> spectrumProvider</pre>
+<div class="block">The spectrum provider.</div>
+</li>
+<li class="blockList">
 <h4>modificationSequenceMatchingParameters</h4>
 <pre><a href="com/compomics/util/parameters/identification/advanced/SequenceMatchingParameters.html" title="class in com.compomics.util.parameters.identification.advanced">SequenceMatchingParameters</a> modificationSequenceMatchingParameters</pre>
 <div class="block">The modification sequence matching parameters.</div>
@@ -7465,13 +7165,13 @@
 <div class="block">The table tooltips.</div>
 </li>
 <li class="blockList">
-<h4>ptm</h4>
-<pre><a href="com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a> ptm</pre>
+<h4>modification</h4>
+<pre><a href="com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a> modification</pre>
 <div class="block">The PTM to analyze.</div>
 </li>
 <li class="blockList">
-<h4>nPTM</h4>
-<pre>int nPTM</pre>
+<h4>nModifications</h4>
+<pre>int nModifications</pre>
 <div class="block">Number of PTMs.</div>
 </li>
 <li class="blockList">
@@ -11948,6 +11648,116 @@
 <li class="blockListLast">
 <h4>versionTxt</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> versionTxt</pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="blockList">
+<h2 title="Package">Package&nbsp;com.compomics.util.gui.parameters.proteowizard</h2>
+<ul class="blockList">
+<li class="blockList"><a name="com.compomics.util.gui.parameters.proteowizard.MsConvertParametersDialog">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/gui/parameters/proteowizard/MsConvertParametersDialog.html" title="class in com.compomics.util.gui.parameters.proteowizard">com.compomics.util.gui.parameters.proteowizard.MsConvertParametersDialog</a> extends <a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JDialog.html?is-external=true" title="class or interface in javax.swing">JDialog</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>canceled</h4>
+<pre>boolean canceled</pre>
+<div class="block">Boolean indicating whether the editing was canceled.</div>
+</li>
+<li class="blockList">
+<h4>filters</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">K</a>,<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util">V</a>&gt; filters</pre>
+<div class="block">Map of the filters to use.</div>
+</li>
+<li class="blockList">
+<h4>filterIndexes</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">E</a>&gt; filterIndexes</pre>
+<div class="block">List of the indexes of the filters to use.</div>
+</li>
+<li class="blockList">
+<h4>lastSelectedFolder</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> lastSelectedFolder</pre>
+<div class="block">The selected folder.</div>
+</li>
+<li class="blockList">
+<h4>utilitiesUserParameters</h4>
+<pre><a href="com/compomics/util/parameters/UtilitiesUserParameters.html" title="class in com.compomics.util.parameters">UtilitiesUserParameters</a> utilitiesUserParameters</pre>
+<div class="block">The utilities preferences.</div>
+</li>
+<li class="blockList">
+<h4>addFilterMenu</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JMenu.html?is-external=true" title="class or interface in javax.swing">JMenu</a> addFilterMenu</pre>
+</li>
+<li class="blockList">
+<h4>backgourdPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> backgourdPanel</pre>
+</li>
+<li class="blockList">
+<h4>browseButton</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> browseButton</pre>
+</li>
+<li class="blockList">
+<h4>cancelButton</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> cancelButton</pre>
+</li>
+<li class="blockList">
+<h4>filterHelpLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> filterHelpLabel</pre>
+</li>
+<li class="blockList">
+<h4>filtersLbl</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> filtersLbl</pre>
+</li>
+<li class="blockList">
+<h4>filtersPopupMenu</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPopupMenu.html?is-external=true" title="class or interface in javax.swing">JPopupMenu</a> filtersPopupMenu</pre>
+</li>
+<li class="blockList">
+<h4>filtersTable</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.html?is-external=true" title="class or interface in javax.swing">JTable</a> filtersTable</pre>
+</li>
+<li class="blockList">
+<h4>filtersTableScrollPane</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JScrollPane.html?is-external=true" title="class or interface in javax.swing">JScrollPane</a> filtersTableScrollPane</pre>
+</li>
+<li class="blockList">
+<h4>folderHelpLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> folderHelpLabel</pre>
+</li>
+<li class="blockList">
+<h4>installationJTextField</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> installationJTextField</pre>
+</li>
+<li class="blockList">
+<h4>installationPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> installationPanel</pre>
+</li>
+<li class="blockList">
+<h4>msconvertParameters</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> msconvertParameters</pre>
+</li>
+<li class="blockList">
+<h4>okButton</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> okButton</pre>
+</li>
+<li class="blockList">
+<h4>outputFormatCmb</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; outputFormatCmb</pre>
+</li>
+<li class="blockList">
+<h4>outputFormatLbl</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> outputFormatLbl</pre>
+</li>
+<li class="blockListLast">
+<h4>removeFilterMenuItem</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JMenuItem.html?is-external=true" title="class or interface in javax.swing">JMenuItem</a> removeFilterMenuItem</pre>
 </li>
 </ul>
 </li>

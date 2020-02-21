@@ -40,16 +40,16 @@ public class TestIdfileReaderFactory extends TestCase {
             @Override
             public ArrayList<SpectrumMatch> getAllSpectrumMatches(
                     String[] spectrumTitles,
-                    WaitingHandler waitingHandler, 
+                    WaitingHandler waitingHandler,
                     SearchParameters searchParameters
             )
                     throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-                
+
                 return getAllSpectrumMatches(
                         spectrumTitles,
-                        waitingHandler, 
-                        searchParameters, 
-                        null, 
+                        waitingHandler,
+                        searchParameters,
+                        null,
                         true
                 );
             }
@@ -57,9 +57,9 @@ public class TestIdfileReaderFactory extends TestCase {
             @Override
             public ArrayList<SpectrumMatch> getAllSpectrumMatches(
                     String[] spectrumTitles,
-                    WaitingHandler waitingHandler, 
+                    WaitingHandler waitingHandler,
                     SearchParameters searchParameters,
-                    SequenceMatchingParameters sequenceMatchingPreferences, 
+                    SequenceMatchingParameters sequenceMatchingPreferences,
                     boolean expandAaCombinations
             )
                     throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
@@ -91,20 +91,31 @@ public class TestIdfileReaderFactory extends TestCase {
             }
         };
 
-        IdfileReaderFactory.registerIdFileReader(tifr.getClass(), tifr.getExtension());
+        // Make sure that an illegal argument exception is thrown.
+        boolean illegalArgumentException = false;
         try {
-            Assert.assertNull("Should have been unable to register TestIdfileReader in IdfileReaderFactory as "
+            IdfileReaderFactory.registerIdFileReader(tifr.getClass(), tifr.getExtension());
+        } catch (IllegalArgumentException e) {
+            illegalArgumentException = true;
+        }
+        try {
+            Assert.assertTrue(
+                    "Should have thrown an IllegalArgumentException.",
+                    illegalArgumentException
+            );
+            Assert.assertNull(
+                    "Should have been unable to register TestIdfileReader in IdfileReaderFactory as "
                     + "it lacks a constructor with a single parameter of type java.io.File!",
-                    IdfileReaderFactory.getInstance().getFileReader(new File("c:/test.crazyThingThatDoesNotExist")));
+                    IdfileReaderFactory.getInstance().getFileReader(new File("c:/test.crazyThingThatDoesNotExist"))
+            );
         } catch (Exception e) {
             fail("Exception thrown when attempting to obtain (non-existing) registered IdfileReader: " + e.getMessage());
         }
 
-        // Now register something more decent!
+        // Now register a working file reader.
         InnerIdfileReader ifr = new InnerIdfileReader(null);
         Class result = IdfileReaderFactory.registerIdFileReader(ifr.getClass(), ifr.getExtension());
         Assert.assertNull(result);
-        // See if it works!
         try {
             Assert.assertNotNull("Should have been able to register TestIdfileReader in IdfileReaderFactory but it was not found!",
                     IdfileReaderFactory.getInstance().getFileReader(new File("c:/test" + ifr.getExtension())));
@@ -116,11 +127,22 @@ public class TestIdfileReaderFactory extends TestCase {
         result = IdfileReaderFactory.registerIdFileReader(ifr.getClass(), ifr.getExtension());
         Assert.assertEquals("Should have had a preregistered test IdfileReader, but it was not found!", ifr.getClass(), result);
 
-        // Finally, try to register something else.
-        IdfileReaderFactory.registerIdFileReader(this.getClass(), ".schtuff");
+        // Finally, try to register something else and make sure that an IllegalArgumentException is thrown.
+        illegalArgumentException = false;
         try {
-            Assert.assertNull("Was able to register non-IdfileReader 'TestIdfileReaderFactory' in IdfileReaderFactory!",
-                    IdfileReaderFactory.getInstance().getFileReader(new File("c:/test.schtuff")));
+            IdfileReaderFactory.registerIdFileReader(this.getClass(), ".schtuff");
+        } catch (IllegalArgumentException e) {
+            illegalArgumentException = true;
+        }
+        try {
+            Assert.assertTrue(
+                    "Should have thrown an IllegalArgumentException.",
+                    illegalArgumentException
+            );
+            Assert.assertNull(
+                    "Was able to register non-IdfileReader 'TestIdfileReaderFactory' in IdfileReaderFactory!",
+                    IdfileReaderFactory.getInstance().getFileReader(new File("c:/test.schtuff"))
+            );
         } catch (Exception e) {
             fail("Exception thrown when attempting to obtain (non-existing) registered IdfileReader: " + e.getMessage());
         }
@@ -137,25 +159,25 @@ public class TestIdfileReaderFactory extends TestCase {
 
         @Override
         public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-                    String[] spectrumTitles,
-                WaitingHandler waitingHandler, 
+                String[] spectrumTitles,
+                WaitingHandler waitingHandler,
                 SearchParameters searchParameters
         )
                 throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
             return getAllSpectrumMatches(
                     spectrumTitles,
-                    waitingHandler, 
-                    searchParameters, 
-                    null, 
+                    waitingHandler,
+                    searchParameters,
+                    null,
                     true
             );
         }
 
         @Override
         public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-                    String[] spectrumTitles,
-                WaitingHandler waitingHandler, 
-                SearchParameters searchParameters, 
+                String[] spectrumTitles,
+                WaitingHandler waitingHandler,
+                SearchParameters searchParameters,
                 SequenceMatchingParameters sequenceMatchingPreferences,
                 boolean expandAaCombinations
         ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {

@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.mass_spectrometry.indexes;
 
-import com.compomics.util.db.object.DbObject;
-import com.compomics.util.experiment.personalization.UrParameter;
+import com.compomics.util.StreamUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -14,12 +13,20 @@ import org.apache.commons.math.util.FastMath;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class SpectrumIndex extends DbObject implements UrParameter {
+public class SpectrumIndex {
 
     /**
-     * Serial number used for serialization and object key.
+     * An m/z anchor to determine the bins in ppm.
      */
-    private static final long serialVersionUID = -4447843223014568761L;
+    private static final double MZ_ANCHOR = 1000;
+    /**
+     * The log of the m/z anchor.
+     */
+    private static final double MZ_ANCHOR_LOG = FastMath.log(MZ_ANCHOR);
+    /**
+     * Place holder for an empty array when no result is found.
+     */
+    private static final int[] EMPTY_ARRAY = new int[0];
     /**
      * The mass tolerance.
      */
@@ -40,14 +47,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * The mz array of the spectrum.
      */
     public final double[] intensityArray;
-    /**
-     * An m/z anchor to determine the bins in ppm.
-     */
-    private static final double MZ_ANCHOR = 1000;
-    /**
-     * The log of the m/z anchor.
-     */
-    private static final double MZ_ANCHOR_LOG = FastMath.log(MZ_ANCHOR);
     /**
      * The scaling factor used for the bins in ppm.
      */
@@ -156,8 +155,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public HashMap<Integer, ArrayList<Integer>> getPeaksMap() {
 
-        readDBMode();
-
         return peaksMap;
     }
 
@@ -167,8 +164,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return whether the precursor mass tolerance is in ppm
      */
     public boolean getPpm() {
-
-        readDBMode();
 
         return ppm;
     }
@@ -180,8 +175,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public double getPrecursorToleance() {
 
-        readDBMode();
-
         return tolerance;
     }
 
@@ -191,8 +184,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the scaling factor
      */
     public double getScalingFactor() {
-
-        readDBMode();
 
         return scalingFactor;
     }
@@ -205,8 +196,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the bin
      */
     public int getBin(double mz) {
-
-        readDBMode();
 
         return ppm ? getBinPpm(mz) : getBinAbsolute(mz);
 
@@ -224,8 +213,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
             double mz
     ) {
 
-        readDBMode();
-
         int bin = (int) (mz / tolerance);
 
         return bin;
@@ -242,8 +229,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     private int getBinPpm(
             double mz
     ) {
-
-        readDBMode();
 
         int bin = (int) ((FastMath.log(mz) - MZ_ANCHOR_LOG) / scalingFactor);
 
@@ -263,8 +248,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
             double queryMz
     ) {
 
-        readDBMode();
-
         int bin0;
         if (ppm) {
 
@@ -280,13 +263,14 @@ public class SpectrumIndex extends DbObject implements UrParameter {
         ArrayList<Integer> binContent2 = peaksMap.get(bin0);
         ArrayList<Integer> binContent3 = peaksMap.get(bin0 + 1);
 
-        return Stream.concat(
-                binContent1.stream(),
-                Stream.concat(
-                        binContent2.stream(),
-                        binContent3.stream()
-                )
-        )
+        Stream<Integer> stream = StreamUtil.concatenate(
+                binContent1,
+                binContent2,
+                binContent3
+        );
+
+        return stream == null ? EMPTY_ARRAY :
+                stream
                 .mapToInt(i -> i)
                 .filter(
                         i -> isBelowTolerance(queryMz, i)
@@ -295,12 +279,14 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     }
 
     /**
-     * Indicates whether the peak at the given index is matching the queried m/z.
-     * 
+     * Indicates whether the peak at the given index is matching the queried
+     * m/z.
+     *
      * @param queryMz The queried m/z.
      * @param index The index of the peak.
-     * 
-     * @return A boolean indicating whether the peak at the given index is matching the queried m/z.
+     *
+     * @return A boolean indicating whether the peak at the given index is
+     * matching the queried m/z.
      */
     private boolean isBelowTolerance(
             double queryMz,
@@ -321,8 +307,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public ArrayList<Integer> getBins() {
 
-        readDBMode();
-
         return new ArrayList<>(peaksMap.keySet());
 
     }
@@ -333,8 +317,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the bins in the map
      */
     public Set<Integer> getRawBins() {
-
-        readDBMode();
 
         return peaksMap.keySet();
 
@@ -352,8 +334,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
             int bin
     ) {
 
-        readDBMode();
-
         return peaksMap.get(bin);
 
     }
@@ -369,8 +349,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
             int bin
     ) {
 
-        readDBMode();
-
         return ppm ? FastMath.exp((scalingFactor * bin) + MZ_ANCHOR_LOG)
                 : tolerance * (0.5 + bin);
 
@@ -383,8 +361,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public Integer getBinMax() {
 
-        readDBMode();
-
         return binMax;
 
     }
@@ -396,8 +372,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      */
     public Integer getBinMin() {
 
-        readDBMode();
-
         return binMin;
 
     }
@@ -408,17 +382,8 @@ public class SpectrumIndex extends DbObject implements UrParameter {
      * @return the total intensity of the peaks above the intensity threshold
      */
     public double getTotalIntensity() {
-
-        readDBMode();
-
+        
         return totalIntensity;
-
-    }
-
-    @Override
-    public long getParameterKey() {
-
-        return serialVersionUID;
 
     }
 
@@ -430,8 +395,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     public void setBinMax(
             Integer binMax
     ) {
-
-        writeDBMode();
 
         this.binMax = binMax;
 
@@ -446,8 +409,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
             Integer binMin
     ) {
 
-        writeDBMode();
-
         this.binMin = binMin;
 
     }
@@ -460,8 +421,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     public void setPpm(
             boolean ppm
     ) {
-
-        writeDBMode();
 
         this.ppm = ppm;
 
@@ -476,8 +435,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
             double scalingFactor
     ) {
 
-        writeDBMode();
-
         this.scalingFactor = scalingFactor;
 
     }
@@ -490,8 +447,6 @@ public class SpectrumIndex extends DbObject implements UrParameter {
     public void setTotalIntensity(
             double totalIntensity
     ) {
-
-        writeDBMode();
 
         this.totalIntensity = totalIntensity;
 

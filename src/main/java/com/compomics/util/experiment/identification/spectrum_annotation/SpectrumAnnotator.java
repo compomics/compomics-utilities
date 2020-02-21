@@ -344,10 +344,6 @@ public abstract class SpectrumAnnotator {
             this.spectrumTitle = spectrumTitle;
             this.intensityLimit = intensityLimit;
 
-            // See whether the index was previously stored
-            spectrumIndex = new SpectrumIndex();
-            spectrumIndex = (SpectrumIndex) spectrum.getUrParam(spectrumIndex);
-
             // Create new index if needed
             if (spectrumIndex == null || spectrumIndex.intensityLimit != intensityLimit || spectrumIndex.tolerance != mzTolerance) {
 
@@ -358,8 +354,6 @@ public abstract class SpectrumAnnotator {
                         mzTolerance,
                         isPpm
                 );
-                spectrum.addUrParam(spectrumIndex);
-
             }
         }
     }

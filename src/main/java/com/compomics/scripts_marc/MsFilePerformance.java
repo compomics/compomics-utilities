@@ -27,9 +27,9 @@ public class MsFilePerformance {
 
         try {
 
-            File file = new File("C:\\Projects\\PeptideShaker\\test files\\1 mgf\\qExactive01819.mgf");
+            File mgfFile = new File("C:\\Projects\\PeptideShaker\\test files\\1 mgf\\qExactive01819.mgf");
             File indexFile = new File("C:\\Projects\\PeptideShaker\\test files\\1 mgf\\qExactive01819.mgf.cui");
-            File cmsFile = new File("C:\\Projects\\PeptideShaker\\test files\\1 mgf\\qExactive01819.mgf.cms");
+            File cmsFile = new File("C:\\Projects\\PeptideShaker\\test files\\1 mgf\\qExactive01819.cms");
 
             indexFile.delete();
             if (indexFile.exists()) {
@@ -45,11 +45,11 @@ public class MsFilePerformance {
 
             }
 
-            String fileName = file.getName();
+            String fileName = mgfFile.getName();
 
             long mgfIndexStart = Instant.now().getEpochSecond();
-            BufferedRandomAccessFile raf = new BufferedRandomAccessFile(file, "r", 1024 * 100);
-            MgfIndex mgfIndex = IndexedMgfReader.getMgfIndex(file, null);
+            BufferedRandomAccessFile raf = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
+            MgfIndex mgfIndex = IndexedMgfReader.getMgfIndex(mgfFile, null);
             long mgfIndexEnd = Instant.now().getEpochSecond();
             long mgfIndexingTime = mgfIndexEnd - mgfIndexStart;
 
@@ -57,7 +57,7 @@ public class MsFilePerformance {
 
             long cmsFileStart = Instant.now().getEpochSecond();
             MsFileHandler msFileHandler = new MsFileHandler();
-            msFileHandler.register(file);
+            msFileHandler.register(mgfFile);
             long cmsFileEnd = Instant.now().getEpochSecond();
             long cmsCreationTime = cmsFileEnd - cmsFileStart;
 
@@ -113,11 +113,15 @@ public class MsFilePerformance {
             }
             
             int nQueries = nLoops * mgfIndexTitles.size();
+            double mgfSizePerSpectrum = ((double) mgfFile.length()) / mgfIndexTitles.size();
+            double cmsSizePerSpectrum = ((double) cmsFile.length()) / mgfIndexTitles.size();
+            double mgfimePerQuery = 1000000.0 * ((double) mgfRead) / nQueries;
+            double cmsTimePerQuery = 1000000.0 * ((double) cmsRead) / nQueries;
             
-            System.out.println("Mgf parsing: " + mgfIndexingTime + "s.");
-            System.out.println("Cms creation: " + cmsCreationTime + "s.");
-            System.out.println("Mgf reading: " + mgfRead + "s (" + nQueries + " queries).");
-            System.out.println("Cms reading: " + cmsRead + "s (" + nQueries + " queries).");
+            System.out.println("Mgf parsing: " + mgfIndexingTime + " s, " + mgfSizePerSpectrum + " B per spectrum.");
+            System.out.println("Cms creation: " + cmsCreationTime + " s, " + cmsSizePerSpectrum + " B per spectrum.");
+            System.out.println("Mgf reading: " + mgfimePerQuery + " us per spectrum (" + nQueries + " queries in " + mgfRead + " s).");
+            System.out.println("Cms reading: " + cmsTimePerQuery + " us per spectrum (" + nQueries + " queries in " + cmsRead + " s).");
 
         } catch (Throwable t) {
             t.printStackTrace();

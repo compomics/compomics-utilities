@@ -78,23 +78,6 @@ public interface SpectrumProvider extends AutoCloseable {
             String spectrumTitle
     );
     
-    /**
-     * Returns the spectrum peaks above the intensity threshold given the given parameters.
-     * 
-     * @param fileName The name of the spectrum file.
-     * @param spectrumTitle The title of the spectrum.
-     * @param intensityThresholdType The type of intensity threshold.
-     * @param thresholdValue The threshold value.
-     * 
-     * @return The spectrum peaks above the intensity threshold given the given parameters.
-     */
-    public double[][] getPeaksAboveIntensityThreshold(
-            String fileName,
-            String spectrumTitle,
-            AnnotationParameters.IntensityThresholdType intensityThresholdType,
-            double thresholdValue
-    );
-    
     
     /**
      * Returns the minimum precursor m/z in a given file.

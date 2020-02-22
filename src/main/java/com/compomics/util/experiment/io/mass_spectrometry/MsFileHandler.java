@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.io.mass_spectrometry;
 
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileReader;
 import com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileUtils;
 import com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileWriter;
@@ -276,30 +275,6 @@ public class MsFileHandler implements SpectrumProvider {
         if (reader != null) {
 
             return reader.getPeaks(spectrumTitle);
-
-        }
-
-        return null;
-    }
-
-    @Override
-    public double[][] getPeaksAboveIntensityThreshold(
-            String fileName,
-            String spectrumTitle,
-            AnnotationParameters.IntensityThresholdType intensityThresholdType,
-            double thresholdValue
-    ) {
-
-        CmsFileReader reader = cmsFileReaderMap.get(fileName);
-
-        if (reader != null) {
-
-            return reader.getPeaksAboveIntensityThreshold(
-                    fileName,
-                    spectrumTitle,
-                    intensityThresholdType,
-                    thresholdValue
-            );
 
         }
 

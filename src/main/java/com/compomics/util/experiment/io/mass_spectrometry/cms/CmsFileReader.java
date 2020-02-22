@@ -17,6 +17,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -66,10 +67,10 @@ public class CmsFileReader implements SpectrumProvider {
     /**
      * The mapped byte buffer.
      */
-    private final MappedByteBuffer mappedByteBuffer;
+    private final MappedByteBuffer[] mappedByteBuffers;
 
     /**
-     * Constructor.
+     * Constructor allocating for single thread usage.
      *
      * @param file The file to read.
      *
@@ -79,6 +80,26 @@ public class CmsFileReader implements SpectrumProvider {
      */
     public CmsFileReader(
             File file
+    ) throws FileNotFoundException, IOException {
+
+        this(file, 1);
+
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param file The file to read.
+     * @param nThreads The number of threads that should be allowed to query
+     * this reader.
+     *
+     * @throws FileNotFoundException Exception thrown if the file was not found.
+     * @throws IOException Exception thrown if an error occurred while
+     * attempting to read the file.
+     */
+    public CmsFileReader(
+            File file,
+            int nThreads
     ) throws FileNotFoundException, IOException {
 
         raf = new RandomAccessFile(file, "r");
@@ -126,12 +147,20 @@ public class CmsFileReader implements SpectrumProvider {
         long size = footerPosition - CmsFileWriter.HEADER_LENGTH;
 
         fc = raf.getChannel();
-        mappedByteBuffer = fc.map(FileChannel.MapMode.READ_ONLY, CmsFileWriter.HEADER_LENGTH, size);
 
+        mappedByteBuffers = new MappedByteBuffer[nThreads];
+
+        for (int i = 0; i < mappedByteBuffers.length; i++) {
+
+            mappedByteBuffers[i] = fc.map(FileChannel.MapMode.READ_ONLY, CmsFileWriter.HEADER_LENGTH, size);
+
+        }
     }
 
     /**
-     * Returns the spectrum with the given title.
+     * Returns the spectrum with the given title. This method blocks other
+     * threads attempting to read. For multithreading please use the thread
+     * numbered methods.
      *
      * @param spectrumTitle The title of the spectrum.
      *
@@ -141,9 +170,31 @@ public class CmsFileReader implements SpectrumProvider {
             String spectrumTitle
     ) {
 
+        mutex.acquire();
+
+        Spectrum spectrum = getSpectrum(spectrumTitle, 0);
+
+        mutex.release();
+
+        return spectrum;
+    }
+
+    /**
+     * Returns the spectrum with the given title.
+     *
+     * @param spectrumTitle The title of the spectrum.
+     * @param threadNumber The index of the thread, zero is the first thread.
+     *
+     * @return The spectrum.
+     */
+    public Spectrum getSpectrum(
+            String spectrumTitle,
+            int threadNumber
+    ) {
+
         int index = indexMap.get(spectrumTitle);
 
-        mutex.acquire();
+        MappedByteBuffer mappedByteBuffer = mappedByteBuffers[threadNumber];
 
         mappedByteBuffer.position(index);
 
@@ -165,8 +216,6 @@ public class CmsFileReader implements SpectrumProvider {
 
         }
 
-        mutex.release();
-
         int uncompressedLength = nPeaks * 2 * Double.BYTES;
 
         byte[] uncompressedSpectrum = uncompress(compressedSpectrum, uncompressedLength);
@@ -183,9 +232,9 @@ public class CmsFileReader implements SpectrumProvider {
         }
 
         Precursor precursor = new Precursor(
-                precursorRt, 
-                precursorMz, 
-                precursorIntensity, 
+                precursorRt,
+                precursorMz,
+                precursorIntensity,
                 charges
         );
 
@@ -194,7 +243,9 @@ public class CmsFileReader implements SpectrumProvider {
     }
 
     /**
-     * Returns the precursor of the spectrum with the given title.
+     * Returns the precursor of the spectrum with the given title. This method
+     * blocks other threads attempting to read. For multithreading please use
+     * the thread numbered methods.
      *
      * @param spectrumTitle The title of the spectrum.
      *
@@ -204,9 +255,32 @@ public class CmsFileReader implements SpectrumProvider {
             String spectrumTitle
     ) {
 
+        mutex.acquire();
+
+        Precursor precursor = getPrecursor(spectrumTitle, 0);
+
+        mutex.release();
+
+        return precursor;
+
+    }
+
+    /**
+     * Returns the precursor of the spectrum with the given title.
+     *
+     * @param spectrumTitle The title of the spectrum.
+     * @param threadNumber The index of the thread.
+     *
+     * @return The precursor of the spectrum.
+     */
+    public Precursor getPrecursor(
+            String spectrumTitle,
+            int threadNumber
+    ) {
+
         int index = indexMap.get(spectrumTitle);
 
-        mutex.acquire();
+        MappedByteBuffer mappedByteBuffer = mappedByteBuffers[threadNumber];
 
         mappedByteBuffer.position(index);
 
@@ -226,14 +300,14 @@ public class CmsFileReader implements SpectrumProvider {
 
         }
 
-        mutex.release();
-
         return new Precursor(precursorRt, precursorMz, precursorIntensity, charges);
 
     }
 
     /**
      * Returns the m/z of the precursor of the spectrum with the given title.
+     * This method blocks other threads attempting to read. For multithreading
+     * please use the thread numbered methods.
      *
      * @param spectrumTitle The title of the spectrum.
      *
@@ -247,14 +321,9 @@ public class CmsFileReader implements SpectrumProvider {
 
         if (precursorMz == null) {
 
-            int index = indexMap.get(spectrumTitle);
-
             mutex.acquire();
 
-            mappedByteBuffer.position(index);
-
-            precursorMz = mappedByteBuffer.getDouble();
-            precrursorMzMap.put(spectrumTitle, precursorMz);
+            precursorMz = getPrecursorMz(spectrumTitle, 0);
 
             mutex.release();
 
@@ -265,7 +334,41 @@ public class CmsFileReader implements SpectrumProvider {
     }
 
     /**
+     * Returns the m/z of the precursor of the spectrum with the given title.
+     *
+     * @param spectrumTitle The title of the spectrum.
+     * @param threadNumber The index of the thread.
+     *
+     * @return The precursor m/z of the spectrum.
+     */
+    public double getPrecursorMz(
+            String spectrumTitle,
+            int threadNumber
+    ) {
+
+        Double precursorMz = precrursorMzMap.get(spectrumTitle);
+
+        if (precursorMz == null) {
+
+            int index = indexMap.get(spectrumTitle);
+
+            MappedByteBuffer mappedByteBuffer = mappedByteBuffers[threadNumber];
+
+            mappedByteBuffer.position(index);
+
+            precursorMz = mappedByteBuffer.getDouble();
+            precrursorMzMap.put(spectrumTitle, precursorMz);
+
+        }
+
+        return precursorMz;
+
+    }
+
+    /**
      * Returns the RT of the precursor of the spectrum with the given title.
+     * This method blocks other threads attempting to read. For multithreading
+     * please use the thread numbered methods.
      *
      * @param spectrumTitle The title of the spectrum.
      *
@@ -275,13 +378,9 @@ public class CmsFileReader implements SpectrumProvider {
             String spectrumTitle
     ) {
 
-        int index = indexMap.get(spectrumTitle);
-
         mutex.acquire();
 
-        mappedByteBuffer.position(index + Double.BYTES);
-
-        double precursorRt = mappedByteBuffer.getDouble();
+        double precursorRt = getPrecursorRt(spectrumTitle, 0);
 
         mutex.release();
 
@@ -290,7 +389,34 @@ public class CmsFileReader implements SpectrumProvider {
     }
 
     /**
-     * Returns the peaks of the spectrum with the given title.
+     * Returns the RT of the precursor of the spectrum with the given title.
+     *
+     * @param spectrumTitle The title of the spectrum.
+     * @param threadNumber The index of the thread.
+     *
+     * @return The precursor RT of the spectrum.
+     */
+    public double getPrecursorRt(
+            String spectrumTitle,
+            int threadNumber
+    ) {
+
+        int index = indexMap.get(spectrumTitle);
+
+        MappedByteBuffer mappedByteBuffer = mappedByteBuffers[threadNumber];
+
+        mappedByteBuffer.position(index + Double.BYTES);
+
+        double precursorRt = mappedByteBuffer.getDouble();
+
+        return precursorRt;
+
+    }
+
+    /**
+     * Returns the peaks of the spectrum with the given title. This method
+     * blocks other threads attempting to read. For multithreading please use
+     * the thread numbered methods.
      *
      * @param spectrumTitle The title of the spectrum.
      *
@@ -300,9 +426,32 @@ public class CmsFileReader implements SpectrumProvider {
             String spectrumTitle
     ) {
 
+        mutex.acquire();
+
+        double[][] peaks = getPeaks(spectrumTitle, 0);
+
+        mutex.release();
+
+        return peaks;
+
+    }
+
+    /**
+     * Returns the peaks of the spectrum with the given title.
+     *
+     * @param spectrumTitle The title of the spectrum.
+     * @param threadNumber The index of the thread.
+     *
+     * @return The peaks of the spectrum.
+     */
+    public double[][] getPeaks(
+            String spectrumTitle,
+            int threadNumber
+    ) {
+
         int index = indexMap.get(spectrumTitle);
 
-        mutex.acquire();
+        MappedByteBuffer mappedByteBuffer = mappedByteBuffers[threadNumber];
 
         mappedByteBuffer.position(index + 3 * Double.BYTES);
 
@@ -311,8 +460,6 @@ public class CmsFileReader implements SpectrumProvider {
 
         byte[] compressedSpectrum = new byte[compressedDataLength];
         mappedByteBuffer.get(compressedSpectrum);
-
-        mutex.release();
 
         int uncompressedLength = nPeaks * 2 * Double.BYTES;
 
@@ -331,26 +478,6 @@ public class CmsFileReader implements SpectrumProvider {
         return peaks;
 
     }
-    
-    /**
-     * Returns the peaks of the spectrum with the given title after filtering according to the given intensity threshold.
-     *
-     * @param spectrumTitle The title of the spectrum.
-     * @param intensityThresholdType The intensity threshold to use.
-     * @param thresholdValue The threshold value.
-     *
-     * @return The peaks of the spectrum.
-     */
-    public double[][] getPeaksAboveIntensityThreshold(
-            String spectrumTitle, 
-            AnnotationParameters.IntensityThresholdType intensityThresholdType,
-            double thresholdValue
-    ) {
-        
-        Spectrum spectrum = getSpectrum(spectrumTitle);
-        return SpectrumUtils.getPeaksAboveIntensityThreshold(spectrum, intensityThresholdType, maxMz);
-    
-    }
 
     /**
      * Uncompresses the given byte array.
@@ -360,7 +487,10 @@ public class CmsFileReader implements SpectrumProvider {
      *
      * @return The uncompressed array.
      */
-    public static byte[] uncompress(byte[] compressedByteArray, int uncompressedLength) {
+    public static byte[] uncompress(
+            byte[] compressedByteArray,
+            int uncompressedLength
+    ) {
 
         try {
 
@@ -428,21 +558,6 @@ public class CmsFileReader implements SpectrumProvider {
     }
 
     @Override
-    public double[][] getPeaksAboveIntensityThreshold(
-            String fileName, 
-            String spectrumTitle, 
-            AnnotationParameters.IntensityThresholdType intensityThresholdType,
-            double thresholdValue
-    ) {
-        
-        return getPeaksAboveIntensityThreshold(
-                spectrumTitle, 
-                intensityThresholdType, 
-                thresholdValue
-        );
-    }
-
-    @Override
     public double getMinPrecMz(String fileName) {
 
         return minMz;
@@ -504,7 +619,10 @@ public class CmsFileReader implements SpectrumProvider {
 
         try {
 
-            IoUtil.closeBuffer(mappedByteBuffer);
+            Arrays.stream(mappedByteBuffers)
+                    .forEach(
+                            mappedByteBuffer -> IoUtil.closeBuffer(mappedByteBuffer)
+                    );
 
             raf.close();
 

@@ -188,12 +188,12 @@ public class MsFileHandler implements SpectrumProvider {
             }
         }
     }
-    
+
     /**
      * Returns the cms file reader for the given ms file. Null if not set.
-     * 
+     *
      * @param fileName The name of the ms file.
-     * 
+     *
      * @return The cms file reader.
      */
     public CmsFileReader getReader(
@@ -210,13 +210,7 @@ public class MsFileHandler implements SpectrumProvider {
 
         CmsFileReader reader = cmsFileReaderMap.get(fileName);
 
-        if (reader != null) {
-
-            return reader.getSpectrum(spectrumTitle);
-
-        }
-
-        return null;
+        return reader == null ? null : reader.getSpectrum(spectrumTitle);
 
     }
 

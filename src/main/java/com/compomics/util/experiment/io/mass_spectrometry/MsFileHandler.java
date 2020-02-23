@@ -220,14 +220,9 @@ public class MsFileHandler implements SpectrumProvider {
     ) {
 
         CmsFileReader reader = cmsFileReaderMap.get(fileName);
-
-        if (reader != null) {
-
-            return reader.getPrecursor(spectrumTitle);
-
-        }
-
-        return null;
+        
+        return reader == null ? null : reader.getPrecursor(spectrumTitle);
+        
     }
 
     @Override
@@ -237,14 +232,9 @@ public class MsFileHandler implements SpectrumProvider {
     ) {
 
         CmsFileReader reader = cmsFileReaderMap.get(fileName);
-
-        if (reader != null) {
-
-            return reader.getPrecursorMz(spectrumTitle);
-
-        }
-
-        return Double.NaN;
+        
+        return reader == null ? Double.NaN : reader.getPrecursorMz(spectrumTitle);
+        
     }
 
     @Override
@@ -255,13 +245,8 @@ public class MsFileHandler implements SpectrumProvider {
 
         CmsFileReader reader = cmsFileReaderMap.get(fileName);
 
-        if (reader != null) {
-
-            return reader.getPrecursorRt(spectrumTitle);
-
-        }
-
-        return Double.NaN;
+        return reader == null ? Double.NaN : reader.getPrecursorRt(spectrumTitle);
+        
     }
 
     @Override
@@ -384,5 +369,14 @@ public class MsFileHandler implements SpectrumProvider {
                 reader -> reader.close()
         );
 
+    }
+
+    @Override
+    public String[] getSectrumTitles(String fileName) {
+
+        CmsFileReader reader = cmsFileReaderMap.get(fileName);
+        
+        return reader == null ? null : reader.titles;
+        
     }
 }

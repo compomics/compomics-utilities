@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.mass_spectrometry;
 
-import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import java.util.HashMap;
@@ -144,6 +143,17 @@ public interface SpectrumProvider extends AutoCloseable {
      * @return The spectrum file names.
      */
     public String[] getFileNames();
+    
+    /**
+     * Returns the spectrum titles for the given mass spectrometry file name.
+     * 
+     * @param fileName The mass spectrometry file name.
+     * 
+     * @return The spectrum titles as array.
+     */
+    public String[] getSectrumTitles(
+    String fileName
+    );
     
     /**
      * Returns the absolute path to the original mass spec file containing the spectra in a map indexed by file name.

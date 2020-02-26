@@ -442,8 +442,8 @@ public abstract class MatchFilter implements Filter {
      * generator providing identification features
      * @param identificationParameters the identification parameters
      * @param sequenceProvider the protein sequence provider
-     * @param spectrumProvider the spectrum provider
      * @param proteinDetailsProvider a provider for protein details
+     * @param spectrumProvider the spectrum provider
      *
      * @return a boolean indicating whether a match is validated by a given
      * filter
@@ -455,8 +455,8 @@ public abstract class MatchFilter implements Filter {
             IdentificationFeaturesGenerator identificationFeaturesGenerator,
             IdentificationParameters identificationParameters, 
             SequenceProvider sequenceProvider, 
-            SpectrumProvider spectrumProvider, 
-            ProteinDetailsProvider proteinDetailsProvider
+            ProteinDetailsProvider proteinDetailsProvider, 
+            SpectrumProvider spectrumProvider
     ) {
 
         if (exceptions.contains(matchKey)) {
@@ -486,9 +486,9 @@ public abstract class MatchFilter implements Filter {
                     geneMaps, 
                     identificationFeaturesGenerator, 
                     identificationParameters, 
-                    sequenceProvider, 
-                    spectrumProvider,
-                    proteinDetailsProvider
+                    sequenceProvider,
+                    proteinDetailsProvider, 
+                    spectrumProvider
             );
             
             if (!validated) {
@@ -517,8 +517,8 @@ public abstract class MatchFilter implements Filter {
      * generator where to get identification features
      * @param identificationParameters the identification parameters used
      * @param sequenceProvider the protein sequence provider
-     * @param spectrumProvider the spectrum provider
      * @param proteinDetailsProvider the protein details provider
+     * @param spectrumProvider the spectrum provider
      *
      * @return a boolean indicating whether the match designated by the protein
      * key validates the given item using the given comparator and value
@@ -533,9 +533,9 @@ public abstract class MatchFilter implements Filter {
             GeneMaps geneMaps, 
             IdentificationFeaturesGenerator identificationFeaturesGenerator,
             IdentificationParameters identificationParameters, 
-            SequenceProvider sequenceProvider, 
-            SpectrumProvider spectrumProvider,
-            ProteinDetailsProvider proteinDetailsProvider
+            SequenceProvider sequenceProvider,
+            ProteinDetailsProvider proteinDetailsProvider, 
+            SpectrumProvider spectrumProvider
     );
 
     @Override

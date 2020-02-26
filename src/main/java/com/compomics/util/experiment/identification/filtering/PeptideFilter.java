@@ -112,9 +112,9 @@ public class PeptideFilter extends MatchFilter {
             GeneMaps geneMaps, 
             IdentificationFeaturesGenerator identificationFeaturesGenerator,
             IdentificationParameters identificationParameters, 
-            SequenceProvider sequenceProvider, 
-            SpectrumProvider spectrumProvider, 
-            ProteinDetailsProvider proteinDetailsProvider
+            SequenceProvider sequenceProvider,
+            ProteinDetailsProvider proteinDetailsProvider,
+            SpectrumProvider spectrumProvider 
     ) {
 
         PeptideFilterItem filterItem = PeptideFilterItem.getItem(itemName);

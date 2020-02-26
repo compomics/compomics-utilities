@@ -108,8 +108,8 @@ public class AssumptionFilter extends MatchFilter {
             IdentificationFeaturesGenerator identificationFeaturesGenerator,
             IdentificationParameters identificationParameters,
             SequenceProvider sequenceProvider,
-            SpectrumProvider spectrumProvider,
-            ProteinDetailsProvider proteinDetailsProvider
+            ProteinDetailsProvider proteinDetailsProvider,
+            SpectrumProvider spectrumProvider 
     ) {
 
         SpectrumMatch spectrumMatch = identification.getSpectrumMatch(spectrumMatchKey);

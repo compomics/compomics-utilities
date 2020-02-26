@@ -106,8 +106,8 @@ public class ProteinFilter extends MatchFilter {
             IdentificationFeaturesGenerator identificationFeaturesGenerator,
             IdentificationParameters identificationParameters, 
             SequenceProvider sequenceProvider,
-            SpectrumProvider spectrumProvider, 
-            ProteinDetailsProvider proteinDetailsProvider
+            ProteinDetailsProvider proteinDetailsProvider,
+            SpectrumProvider spectrumProvider 
     ) {
 
         ProteinFilterItem filterItem = ProteinFilterItem.getItem(itemName);

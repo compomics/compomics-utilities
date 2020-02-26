@@ -117,9 +117,9 @@ public class PsmFilter extends MatchFilter {
             GeneMaps geneMaps, 
             IdentificationFeaturesGenerator identificationFeaturesGenerator,
             IdentificationParameters identificationParameters, 
-            SequenceProvider sequenceProvider, 
-            SpectrumProvider spectrumProvider, 
-            ProteinDetailsProvider proteinDetailsProvider
+            SequenceProvider sequenceProvider,
+            ProteinDetailsProvider proteinDetailsProvider,
+            SpectrumProvider spectrumProvider 
     ) {
 
         PsmFilterItem filterItem = PsmFilterItem.getItem(itemName);
@@ -135,9 +135,9 @@ public class PsmFilter extends MatchFilter {
                     geneMaps, 
                     identificationFeaturesGenerator, 
                     identificationParameters, 
-                    sequenceProvider, 
-                    spectrumProvider,
-                    proteinDetailsProvider
+                    sequenceProvider,
+                    proteinDetailsProvider, 
+                    spectrumProvider
             );
 
         }

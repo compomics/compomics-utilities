@@ -135,7 +135,7 @@ public class MsFileHandler implements SpectrumProvider {
      *
      * @return The path of the cms file.
      */
-    private String getCmsFilePath(
+    public static String getCmsFilePath(
             File msFile,
             File cmsFolder
     ) {
@@ -372,7 +372,7 @@ public class MsFileHandler implements SpectrumProvider {
     }
 
     @Override
-    public String[] getSectrumTitles(String fileName) {
+    public String[] getSpectrumTitles(String fileName) {
 
         CmsFileReader reader = cmsFileReaderMap.get(fileName);
         

@@ -151,7 +151,7 @@ public interface SpectrumProvider extends AutoCloseable {
      * 
      * @return The spectrum titles as array.
      */
-    public String[] getSectrumTitles(
+    public String[] getSpectrumTitles(
     String fileName
     );
     

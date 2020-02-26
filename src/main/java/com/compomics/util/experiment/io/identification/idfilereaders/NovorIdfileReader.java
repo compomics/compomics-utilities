@@ -10,7 +10,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.io.identification.IdfileReader;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
@@ -33,7 +33,7 @@ public class NovorIdfileReader implements IdfileReader {
     /**
      * The software name.
      */
-    private String softwareName = "Novor";
+    private final String softwareName = "Novor";
     /**
      * The softwareVersion.
      */
@@ -115,13 +115,14 @@ public class NovorIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    ) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
         
         return getAllSpectrumMatches(
-                spectrumTitles,
+                spectrumProvider,
                 waitingHandler, 
                 searchParameters, 
                 null, 
@@ -131,12 +132,13 @@ public class NovorIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    ) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
 //        int tagMapKeyLength = 0;
 //        if (sequenceMatchingPreferences != null) {
@@ -272,7 +274,7 @@ public class NovorIdfileReader implements IdfileReader {
                     aminoAcidScores.add(aminoAcidScoresAsList);
 
                     // get the name of the spectrum file
-                    String spectrumTitle = spectrumTitles[id];
+                    String spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[id];
 
                     // set up the yet empty spectrum match, or add to the current match
                     if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {

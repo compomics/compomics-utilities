@@ -13,6 +13,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.io.identification.IdfileReader;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails;
@@ -77,13 +78,14 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         return getAllSpectrumMatches(
-                spectrumTitles,
+                spectrumProvider,
                 waitingHandler,
                 searchParameters,
                 null,
@@ -93,12 +95,13 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (identificationFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");

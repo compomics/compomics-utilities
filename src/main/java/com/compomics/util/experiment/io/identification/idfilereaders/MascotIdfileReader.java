@@ -7,7 +7,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.io.identification.IdfileReader;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
@@ -169,13 +169,14 @@ public class MascotIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         return getAllSpectrumMatches(
-                spectrumTitles,
+                spectrumProvider,
                 waitingHandler,
                 searchParameters,
                 null,
@@ -185,12 +186,13 @@ public class MascotIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    ) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (waitingHandler != null) {
             waitingHandler.setSecondaryProgressCounterIndeterminate(false);

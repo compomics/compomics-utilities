@@ -11,6 +11,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.io.identification.IdfileReader;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.io.flat.SimpleFileReader;
@@ -96,13 +97,14 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
 
         return getAllSpectrumMatches(
-                spectrumTitles,
+                spectrumProvider,
                 waitingHandler,
                 searchParameters,
                 null,
@@ -112,12 +114,13 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
 
         // @TODO: use the waiting handler
         ModificationFactory modificationFactory = ModificationFactory.getInstance();

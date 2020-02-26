@@ -2,6 +2,7 @@ package com.compomics.util.experiment.io.identification;
 
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
@@ -48,8 +49,7 @@ public interface IdfileReader extends AutoCloseable {
      * important to close the file reader after creation. Using this method
      * secondary maps are not filled.
      *
-     * @param spectrumTitles The titles of the spectra in an array indexed by
-     * spectrum number.
+     * @param spectrumProvider A spectrum provider with the spectra of the file loaded.
      * @param waitingHandler The waiting handler displaying the progress (can be
      * null). The secondary progress methods will be called.
      * @param searchParameters The search parameters.
@@ -65,10 +65,11 @@ public interface IdfileReader extends AutoCloseable {
      * @throws XMLStreamException if an XMLStreamException occurs
      */
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XMLStreamException;
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XMLStreamException;
 
     /**
      * Retrieves all the spectrum matches from an identification file as a list
@@ -78,8 +79,7 @@ public interface IdfileReader extends AutoCloseable {
      * preferences. If the sequence matching preferences are null, the maps are
      * not filled.
      *
-     * @param spectrumTitles The titles of the spectra in an array indexed by
-     * spectrum number.
+     * @param spectrumProvider A spectrum provider with the spectra of the file loaded.
      * @param waitingHandler The waiting handler displaying the progress (can be
      * null). The secondary progress methods will be called.
      * @param searchParameters The search parameters.
@@ -100,12 +100,13 @@ public interface IdfileReader extends AutoCloseable {
      * @throws XMLStreamException if an XMLStreamException occurs
      */
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException, XMLStreamException;
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException, XMLStreamException;
 
     /**
      * Returns a boolean indicating whether the file contains de novo results as

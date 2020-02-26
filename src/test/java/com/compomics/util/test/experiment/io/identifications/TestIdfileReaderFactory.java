@@ -4,6 +4,7 @@ import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.io.identification.IdfileReaderFactory;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import junit.framework.Assert;
@@ -39,14 +40,14 @@ public class TestIdfileReaderFactory extends TestCase {
 
             @Override
             public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-                    String[] spectrumTitles,
+                    SpectrumProvider spectrumProvider,
                     WaitingHandler waitingHandler,
                     SearchParameters searchParameters
             )
                     throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
                 return getAllSpectrumMatches(
-                        spectrumTitles,
+                        spectrumProvider,
                         waitingHandler,
                         searchParameters,
                         null,
@@ -56,13 +57,14 @@ public class TestIdfileReaderFactory extends TestCase {
 
             @Override
             public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-                    String[] spectrumTitles,
+                    SpectrumProvider spectrumProvider,
                     WaitingHandler waitingHandler,
                     SearchParameters searchParameters,
                     SequenceMatchingParameters sequenceMatchingPreferences,
                     boolean expandAaCombinations
             )
                     throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+                
                 return null;
             }
 
@@ -159,13 +161,14 @@ public class TestIdfileReaderFactory extends TestCase {
 
         @Override
         public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-                String[] spectrumTitles,
+                SpectrumProvider spectrumProvider,
                 WaitingHandler waitingHandler,
                 SearchParameters searchParameters
         )
                 throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+            
             return getAllSpectrumMatches(
-                    spectrumTitles,
+                    spectrumProvider,
                     waitingHandler,
                     searchParameters,
                     null,
@@ -175,7 +178,7 @@ public class TestIdfileReaderFactory extends TestCase {
 
         @Override
         public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-                String[] spectrumTitles,
+                SpectrumProvider spectrumProvider,
                 WaitingHandler waitingHandler,
                 SearchParameters searchParameters,
                 SequenceMatchingParameters sequenceMatchingPreferences,

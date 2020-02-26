@@ -9,6 +9,7 @@ import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.io.IoUtil;
@@ -58,7 +59,12 @@ public class MzIdentMLIdfileReader implements IdfileReader {
      */
     public enum RawValueConversionType {
 
-        noConversion, baseTwoPowerMinusValue, baseTenPowerMinusValue, baseTenPowerPlusValue, baseNaturalLogPowerMinusValue, oneMinusValue;
+        noConversion, 
+        baseTwoPowerMinusValue, 
+        baseTenPowerMinusValue, 
+        baseTenPowerPlusValue, 
+        baseNaturalLogPowerMinusValue, 
+        oneMinusValue;
     }
 
     /**
@@ -139,8 +145,11 @@ public class MzIdentMLIdfileReader implements IdfileReader {
      */
     public MzIdentMLIdfileReader(
             File mzIdentMLFile
-    ) throws IOException {
+    ) 
+            throws IOException {
+        
         this(mzIdentMLFile, null);
+    
     }
 
     /**
@@ -232,13 +241,14 @@ public class MzIdentMLIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
         
         return getAllSpectrumMatches(
-                spectrumTitles, 
+                spectrumProvider, 
                 waitingHandler, 
                 searchParameters, 
                 null, 
@@ -248,12 +258,13 @@ public class MzIdentMLIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
 
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;
         this.expandAaCombinations = expandAaCombinations;

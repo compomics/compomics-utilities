@@ -504,7 +504,7 @@ public class CmsFileReader implements SpectrumProvider {
     }
 
     @Override
-    public String[] getSectrumTitles(String fileName) {
+    public String[] getSpectrumTitles(String fileName) {
         
         return titles;
         

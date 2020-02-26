@@ -170,6 +170,17 @@ public class SpectrumMatch extends IdentificationMatch {
         
         return spectrumFile;
     }
+    
+    /**
+     * Sets the spectrum file name.
+     * 
+     * @param spectrumFile The spectrum file name.
+     */
+    public void setSpectrumFile(
+            String spectrumFile 
+    ) {
+        this.spectrumFile = spectrumFile;
+    }
 
     /**
      * Returns the title of the spectrum.

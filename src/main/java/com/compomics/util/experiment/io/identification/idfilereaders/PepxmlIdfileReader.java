@@ -11,6 +11,7 @@ import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
@@ -96,14 +97,13 @@ public class PepxmlIdfileReader implements IdfileReader {
     /**
      * Parses the identification file.
      *
-     * @param waitingHandler waiting handler returning information about the
+     * @param waitingHandler A waiting handler returning information about the
      * progress and allowing canceling the parsing.
-     * @param expandAaCombinations if true the combinations of amino acids will
-     * be expanded
-     * @param overwriteExtension if true, the extension of the input file will
-     * be overwritten to mgf
-     * @param spectrumTitles The titles of the spectra in an array indexed by
-     * spectrum number.
+     * @param expandAaCombinations If true the combinations of amino acids will
+     * be expanded.
+     * @param overwriteExtension If true, the extension of the input file will
+     * be overwritten to mgf.
+     * @param spectrumProvider A spectrum provider with the spectra of the file loaded.
      *
      * @throws XmlPullParserException Exception thrown if an error occurred while parsing the xml file.
      * @throws IOException Exception thrown if an error occurred while reading the file.
@@ -112,7 +112,7 @@ public class PepxmlIdfileReader implements IdfileReader {
             WaitingHandler waitingHandler, 
             boolean expandAaCombinations, 
             boolean overwriteExtension,
-            String[] spectrumTitles
+            SpectrumProvider spectrumProvider
     ) throws XmlPullParserException, IOException {
 
         // Create the pull parser.
@@ -147,7 +147,11 @@ public class PepxmlIdfileReader implements IdfileReader {
                     parseSearchSummary(parser);
                 }
                 if (type == XmlPullParser.START_TAG && tagName.equals("spectrum_query")) {
-                    currentMatch = parseSpectrumQuery(parser, spectrumTitles);
+                    
+                    currentMatch = parseSpectrumQuery(
+                            parser, 
+                            spectrumProvider
+                    );
                     SpectrumMatch previousMatch = spectrumMatchesMap.get(currentMatch.getKey());
                     if (previousMatch != null) {
                         currentMatch = previousMatch;
@@ -476,9 +480,8 @@ public class PepxmlIdfileReader implements IdfileReader {
     /**
      * Parses a spectrum query.
      *
-     * @param parser the XML parser
-     * @param spectrumTitles The titles of the spectra in an array indexed by
-     * spectrum number.
+     * @param parser The XML parser.
+     * @param spectrumProvider A spectrum provider with the spectra of the file loaded.
      *
      * @return the spectrum match in this spectrum query
      *
@@ -487,7 +490,7 @@ public class PepxmlIdfileReader implements IdfileReader {
      */
     private SpectrumMatch parseSpectrumQuery(
             XmlPullParser parser,
-            String[] spectrumTitles
+            SpectrumProvider spectrumProvider
     ) throws XmlPullParserException, IOException {
 
         Integer index = null;
@@ -522,7 +525,7 @@ public class PepxmlIdfileReader implements IdfileReader {
         
         } else {
             
-            spectrumTitle = spectrumTitles[index];
+            spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[index];
             
         }
         
@@ -708,13 +711,14 @@ public class PepxmlIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler, 
             SearchParameters searchParameters
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
         
         return getAllSpectrumMatches(
-                spectrumTitles, 
+                spectrumProvider, 
                 waitingHandler, 
                 searchParameters, 
                 null, 
@@ -724,12 +728,13 @@ public class PepxmlIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler, 
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences, 
             boolean expandAaCombinations
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
         
         if (spectrumMatches == null) {
         
@@ -737,7 +742,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                     waitingHandler, 
                     expandAaCombinations, 
                     true, 
-                    spectrumTitles
+                    spectrumProvider
             );
         }
         

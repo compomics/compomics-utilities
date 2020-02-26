@@ -11,6 +11,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.parameters.identification.tool_specific.DirecTagParameters;
 import com.compomics.util.experiment.io.identification.IdfileReader;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
@@ -391,7 +392,7 @@ public class DirecTagIdfileReader implements IdfileReader {
     ) {
 
         ArrayList<SpectrumMatch> result = new ArrayList<>();
-        
+
         String spectrumFileName = IoUtil.getFileName(getInputFile());
 
         int spectrumCount = 0;
@@ -404,43 +405,43 @@ public class DirecTagIdfileReader implements IdfileReader {
         String line;
 
         while ((line = reader.readLine()) != null) {
-            
+
             if (line.startsWith("S")) {
-            
+
                 int sId = ++spectrumCount;
                 rank = 0;
-                
+
                 if (sIdColumnIndex != null) {
-                
+
                     line = line.substring(1).trim();
                     String[] components = line.split("\t");
                     String id = components[sIdColumnIndex];
                     sId = Integer.parseInt(id.substring(id.indexOf("=") + 1));
                     String chargeString = components[chargeColumnIndex];
                     lastCharge = Integer.parseInt(chargeString);
-                    
+
                 }
                 if (sId != lastId) {
-                    
+
                     if (currentMatch != null && currentMatch.getAllTagAssumptions().count() > 0) {
 
                         result.add(currentMatch);
                     }
-                    
+
                     String spectrumTitle = spectrumTitles[sId];
                     currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
                     lastId = sId;
-                    
+
                 }
-                
+
             } else if (line.startsWith("T")) {
-                
+
                 ++rank;
                 TagAssumption tagAssumption = getAssumptionFromLine(line, rank);
                 //@TODO: check with the developers if this is correct
                 tagAssumption.setIdentificationCharge(lastCharge);
                 currentMatch.addTagAssumption(Advocate.direcTag.getIndex(), tagAssumption);
-            
+
             }
         }
 
@@ -455,23 +456,23 @@ public class DirecTagIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         return getAllSpectrumMatches(
-                spectrumTitles,
-                waitingHandler, 
-                searchParameters, 
-                null, 
+                spectrumProvider,
+                waitingHandler,
+                searchParameters,
+                null,
                 false
         );
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            String[] spectrumTitles,
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
@@ -500,8 +501,10 @@ public class DirecTagIdfileReader implements IdfileReader {
 
                 setDynamicMods();
                 result = parseResults(
-                        reader, 
-                        spectrumTitles
+                        reader,
+                        spectrumProvider.getSpectrumTitles(
+                                getInputFile().getName()
+                        )
                 );
             }
         }

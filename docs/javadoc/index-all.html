@@ -665,14 +665,12 @@
 <dd>
 <div class="block">Add a mirrored spectrum (or chromatogram).</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html#addMissingPrecursorCharges-java.io.File-com.compomics.util.waiting.WaitingHandler-">addMissingPrecursorCharges(File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfReader</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileUtils.html#addMissingPrecursorCharges-java.io.File-com.compomics.util.waiting.WaitingHandler-">addMissingPrecursorCharges(File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileUtils.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfFileUtils</a></dt>
 <dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Add missing precursor charges.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html#addMissingSpectrumTitles-java.io.File-com.compomics.util.waiting.WaitingHandler-">addMissingSpectrumTitles(File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfReader</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileUtils.html#addMissingSpectrumTitles-java.io.File-com.compomics.util.waiting.WaitingHandler-">addMissingSpectrumTitles(File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileUtils.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfFileUtils</a></dt>
 <dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Adds missing spectrum titles.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/protein/AASequenceImpl.html#addModification-com.compomics.util.interfaces.Modification-">addModification(Modification)</a></span> - Method in class com.compomics.util.protein.<a href="com/compomics/util/protein/AASequenceImpl.html" title="class in com.compomics.util.protein">AASequenceImpl</a></dt>
@@ -2339,6 +2337,10 @@
 <div class="block">Reader for a Compomics Mass Spectrometry (cms) file.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html#CmsFileReader-java.io.File-">CmsFileReader(File)</a></span> - Constructor for class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFileReader</a></dt>
+<dd>
+<div class="block">Constructor allocating for single thread usage.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html#CmsFileReader-java.io.File-int-">CmsFileReader(File, int)</a></span> - Constructor for class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFileReader</a></dt>
 <dd>
 <div class="block">Constructor.</div>
 </dd>
@@ -9269,15 +9271,9 @@
 <dd>
 <div class="block">Returns at which indexes a small string can be found in a big string.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html#getIndexMap-java.io.File-">getIndexMap(File)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfReader</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/IndexedMgfReader.html#getIndexMap-java.io.File-">getIndexMap(File)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/IndexedMgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">IndexedMgfReader</a></dt>
 <dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Returns the index of all spectra in the given mgf file.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html#getIndexMap-java.io.File-com.compomics.util.waiting.WaitingHandler-">getIndexMap(File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfReader</a></dt>
-<dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
-<div class="block">Returns the index of all spectra in the given MGF file.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_sequences/digestion/PeptideDraft.html#getIndexOnProtein--">getIndexOnProtein()</a></span> - Method in class com.compomics.util.experiment.identification.protein_sequences.digestion.<a href="com/compomics/util/experiment/identification/protein_sequences/digestion/PeptideDraft.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">PeptideDraft</a></dt>
 <dd>
@@ -10659,6 +10655,10 @@
 <dd>
 <div class="block">Returns the spectrum file name.This method assumes that the PepNovo
  output file is the mgf file name + "tide-search.target.txt"</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/IndexedMgfReader.html#getMgfIndex-java.io.File-com.compomics.util.waiting.WaitingHandler-">getMgfIndex(File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/IndexedMgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">IndexedMgfReader</a></dt>
+<dd>
+<div class="block">Returns the index of all spectra in the given MGF file.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/UtilitiesUserParameters.html#getMgfMaxSize--">getMgfMaxSize()</a></span> - Method in class com.compomics.util.parameters.<a href="com/compomics/util/parameters/UtilitiesUserParameters.html" title="class in com.compomics.util.parameters">UtilitiesUserParameters</a></dt>
 <dd>
@@ -12098,22 +12098,10 @@
  Doubles for the masses as keys in the HashMap, and the intensities
  for each peak as Double value for that mass key.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html#getPeaksAboveIntensityThreshold-java.lang.String-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters.IntensityThresholdType-double-">getPeaksAboveIntensityThreshold(String, AnnotationParameters.IntensityThresholdType, double)</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFileReader</a></dt>
-<dd>
-<div class="block">Returns the peaks of the spectrum with the given title after filtering according to the given intensity threshold.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html#getPeaksAboveIntensityThreshold-java.lang.String-java.lang.String-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters.IntensityThresholdType-double-">getPeaksAboveIntensityThreshold(String, String, AnnotationParameters.IntensityThresholdType, double)</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFileReader</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileHandler.html#getPeaksAboveIntensityThreshold-java.lang.String-java.lang.String-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters.IntensityThresholdType-double-">getPeaksAboveIntensityThreshold(String, String, AnnotationParameters.IntensityThresholdType, double)</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileHandler.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileHandler</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/spectra/SpectrumUtils.html#getPeaksAboveIntensityThreshold-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters.IntensityThresholdType-double-">getPeaksAboveIntensityThreshold(Spectrum, AnnotationParameters.IntensityThresholdType, double)</a></span> - Static method in class com.compomics.util.experiment.mass_spectrometry.spectra.<a href="com/compomics/util/experiment/mass_spectrometry/spectra/SpectrumUtils.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">SpectrumUtils</a></dt>
 <dd>
 <div class="block">Returns the peaks above intensity threshold as an array of double (mz,
  intensity).</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/SpectrumProvider.html#getPeaksAboveIntensityThreshold-java.lang.String-java.lang.String-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters.IntensityThresholdType-double-">getPeaksAboveIntensityThreshold(String, String, AnnotationParameters.IntensityThresholdType, double)</a></span> - Method in interface com.compomics.util.experiment.mass_spectrometry.<a href="com/compomics/util/experiment/mass_spectrometry/SpectrumProvider.html" title="interface in com.compomics.util.experiment.mass_spectrometry">SpectrumProvider</a></dt>
-<dd>
-<div class="block">Returns the spectrum peaks above the intensity threshold given the given parameters.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/indexes/SpectrumIndex.html#getPeaksInBin-int-">getPeaksInBin(int)</a></span> - Method in class com.compomics.util.experiment.mass_spectrometry.indexes.<a href="com/compomics/util/experiment/mass_spectrometry/indexes/SpectrumIndex.html" title="class in com.compomics.util.experiment.mass_spectrometry.indexes">SpectrumIndex</a></dt>
 <dd>
@@ -12697,9 +12685,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html#getPrecursor-java.lang.String-java.lang.String-">getPrecursor(String, String)</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFileReader</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html#getPrecursor-uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile-java.lang.Long-java.lang.String-">getPrecursor(BufferedRandomAccessFile, Long, String)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfReader</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/IndexedMgfReader.html#getPrecursor-uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile-long-java.lang.String-">getPrecursor(BufferedRandomAccessFile, long, String)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/IndexedMgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">IndexedMgfReader</a></dt>
 <dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Returns the next precursor starting from the given index.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileHandler.html#getPrecursor-java.lang.String-java.lang.String-">getPrecursor(String, String)</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileHandler.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileHandler</a></dt>
@@ -13891,6 +13878,14 @@
 <dd>
 <div class="block">returns the list of sections to be included in the scheme.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html#getSectrumTitles-java.lang.String-">getSectrumTitles(String)</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFileReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileHandler.html#getSectrumTitles-java.lang.String-">getSectrumTitles(String)</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileHandler.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileHandler</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/SpectrumProvider.html#getSectrumTitles-java.lang.String-">getSectrumTitles(String)</a></span> - Method in interface com.compomics.util.experiment.mass_spectrometry.<a href="com/compomics/util/experiment/mass_spectrometry/SpectrumProvider.html" title="interface in com.compomics.util.experiment.mass_spectrometry">SpectrumProvider</a></dt>
+<dd>
+<div class="block">Returns the spectrum titles for the given mass spectrometry file name.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html#getSelect-int-">getSelect(int)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">Rank</a></dt>
 <dd>
 <div class="block">Returns the position of the i-th one</div>
@@ -14326,11 +14321,14 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html#getSpectrum-java.lang.String-java.lang.String-">getSpectrum(String, String)</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFileReader</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/IndexedMgfReader.html#getSpectrum-uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile-long-java.lang.String-">getSpectrum(BufferedRandomAccessFile, long, String)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/IndexedMgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">IndexedMgfReader</a></dt>
+<dd>
+<div class="block">Returns the next spectrum starting from the given index.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileIterator.html#getSpectrum--">getSpectrum()</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileIterator.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfFileIterator</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html#getSpectrum-uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile-long-java.lang.String-">getSpectrum(BufferedRandomAccessFile, long, String)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfReader</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfIndex.html#getSpectrum-uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile-long-java.lang.String-">getSpectrum(BufferedRandomAccessFile, long, String)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfIndex.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfIndex</a></dt>
 <dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Returns the next spectrum starting from the given index.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileHandler.html#getSpectrum-java.lang.String-java.lang.String-">getSpectrum(String, String)</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileHandler.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileHandler</a></dt>
@@ -16722,6 +16720,14 @@
 <dd>
 <div class="block">The index of the option.</div>
 </dd>
+<dt><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/IndexedMgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf"><span class="typeNameLink">IndexedMgfReader</span></a> - Class in <a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/package-summary.html">com.compomics.util.experiment.io.mass_spectrometry.mgf</a></dt>
+<dd>
+<div class="block">Reader for mgf files based on random access.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/IndexedMgfReader.html#IndexedMgfReader--">IndexedMgfReader()</a></span> - Constructor for class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/IndexedMgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">IndexedMgfReader</a></dt>
+<dd>
+<div class="block">General constructor for an mgf reader.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/MassIndexMap.html#indexes">indexes</a></span> - Variable in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/MassIndexMap.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MassIndexMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#indexStringLengths">indexStringLengths</a></span> - Variable in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
@@ -18036,6 +18042,16 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html#isSameAs-com.compomics.util.experiment.mass_spectrometry.spectra.Peak-">isSameAs(Peak)</a></span> - Method in class com.compomics.util.experiment.mass_spectrometry.spectra.<a href="com/compomics/util/experiment/mass_spectrometry/spectra/Peak.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Peak</a></dt>
 <dd>
 <div class="block">Returns true if the peak has the same mz and intensity.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/spectra/Precursor.html#isSameAs-com.compomics.util.experiment.mass_spectrometry.spectra.Precursor-">isSameAs(Precursor)</a></span> - Method in class com.compomics.util.experiment.mass_spectrometry.spectra.<a href="com/compomics/util/experiment/mass_spectrometry/spectra/Precursor.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Precursor</a></dt>
+<dd>
+<div class="block">Returns a boolean indicating whether the precursor is identical to the
+ other precursor.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html#isSameAs-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-">isSameAs(Spectrum)</a></span> - Method in class com.compomics.util.experiment.mass_spectrometry.spectra.<a href="com/compomics/util/experiment/mass_spectrometry/spectra/Spectrum.html" title="class in com.compomics.util.experiment.mass_spectrometry.spectra">Spectrum</a></dt>
+<dd>
+<div class="block">Returns a boolean indicating whether the spectrum is identical to the
+ other spectrum.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/units/UnitOfMeasurement.html#isSameAs-com.compomics.util.experiment.units.UnitOfMeasurement-">isSameAs(UnitOfMeasurement)</a></span> - Method in class com.compomics.util.experiment.units.<a href="com/compomics/util/experiment/units/UnitOfMeasurement.html" title="class in com.compomics.util.experiment.units">UnitOfMeasurement</a></dt>
 <dd>
@@ -19758,17 +19774,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfIndex.html#MgfIndex-java.util.ArrayList-java.util.HashMap-java.util.HashMap-java.util.HashMap-java.util.HashMap-java.lang.String-double-double-double-double-int-int-boolean-boolean-long-int-">MgfIndex(ArrayList&lt;String&gt;, HashMap&lt;String, Integer&gt;, HashMap&lt;String, Long&gt;, HashMap&lt;String, Integer&gt;, HashMap&lt;Integer, Double&gt;, String, double, double, double, double, int, int, boolean, boolean, long, int)</a></span> - Constructor for class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfIndex.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfIndex</a></dt>
 <dd>
 <div class="block">Constructor.</div>
-</dd>
-<dt><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf"><span class="typeNameLink">MgfReader</span></a> - Class in <a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/package-summary.html">com.compomics.util.experiment.io.mass_spectrometry.mgf</a></dt>
-<dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span>
-<div class="block"><span class="deprecationComment">for testing only</span></div>
-</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html#MgfReader--">MgfReader()</a></span> - Constructor for class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfReader</a></dt>
-<dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
-<div class="block">General constructor for an mgf reader.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/scores/PhosphoRS.html#MIN_DEPTH">MIN_DEPTH</a></span> - Static variable in class com.compomics.util.experiment.identification.modification.scores.<a href="com/compomics/util/experiment/identification/modification/scores/PhosphoRS.html" title="class in com.compomics.util.experiment.identification.modification.scores">PhosphoRS</a></dt>
 <dd>
@@ -23258,9 +23263,8 @@
 <dd>
 <div class="block">Removes characters from a string.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html#removeDuplicateSpectrumTitles-java.io.File-com.compomics.util.waiting.WaitingHandler-">removeDuplicateSpectrumTitles(File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfReader</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileUtils.html#removeDuplicateSpectrumTitles-java.io.File-com.compomics.util.waiting.WaitingHandler-">removeDuplicateSpectrumTitles(File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileUtils.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfFileUtils</a></dt>
 <dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Removes duplicate spectrum titles (the first occurrence is kept).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/atoms/AtomChainDialog.html#removeElementsPanel-int-">removeElementsPanel(int)</a></span> - Method in class com.compomics.util.gui.atoms.<a href="com/compomics/util/gui/atoms/AtomChainDialog.html" title="class in com.compomics.util.gui.atoms">AtomChainDialog</a></dt>
@@ -23384,18 +23388,16 @@
 <dd>
 <div class="block">Removes a modification from the list of variable modifications.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html#removeZeroes-java.io.File-com.compomics.util.waiting.WaitingHandler-">removeZeroes(File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfReader</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileUtils.html#removeZeroes-java.io.File-com.compomics.util.waiting.WaitingHandler-">removeZeroes(File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileUtils.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfFileUtils</a></dt>
 <dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Removes zero intensity peaks.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/ftp/FTP.html#rename-java.lang.String-java.lang.String-">rename(String, String)</a></span> - Method in class com.compomics.util.io.ftp.<a href="com/compomics/util/io/ftp/FTP.html" title="class in com.compomics.util.io.ftp">FTP</a></dt>
 <dd>
 <div class="block">Rename a file on the remote server.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html#renameDuplicateSpectrumTitles-java.io.File-com.compomics.util.waiting.WaitingHandler-">renameDuplicateSpectrumTitles(File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfReader</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileUtils.html#renameDuplicateSpectrumTitles-java.io.File-com.compomics.util.waiting.WaitingHandler-">renameDuplicateSpectrumTitles(File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileUtils.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfFileUtils</a></dt>
 <dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Renames duplicate spectrum titles.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/parameters/identification/search/SequenceDbDetailsDialog.html#renameFastaFileName-java.io.File-">renameFastaFileName(File)</a></span> - Method in class com.compomics.util.gui.parameters.identification.search.<a href="com/compomics/util/gui/parameters/identification/search/SequenceDbDetailsDialog.html" title="class in com.compomics.util.gui.parameters.identification.search">SequenceDbDetailsDialog</a></dt>
@@ -28333,9 +28335,8 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html#splitFile-java.io.File-int-com.compomics.util.waiting.WaitingHandler-">splitFile(File, int, WaitingHandler)</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfReader</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileUtils.html#splitFile-java.io.File-int-com.compomics.util.waiting.WaitingHandler-">splitFile(File, int, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileUtils.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfFileUtils</a></dt>
 <dd>
-<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 <div class="block">Splits an mgf file into smaller ones and returns the indexes of the
  generated files.</div>
 </dd>

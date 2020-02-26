@@ -136,7 +136,7 @@ public class MsFilePerformance {
                 mgfIteration += mgfIterationEnd - mgfIterationStart;
                 
                 long cmsIterationStart = Instant.now().getEpochSecond();
-                Arrays.stream(msFileHandler.getSectrumTitles(fileName))
+                Arrays.stream(msFileHandler.getSpectrumTitles(fileName))
                         .forEach(
                                 spectrumTitle -> msFileHandler.getSpectrum(fileName, spectrumTitle)
                         );
@@ -145,7 +145,7 @@ public class MsFilePerformance {
                 cmsIteration += cmsIterationEnd - cmsIterationStart;
                 
                 long cmsIterationParallelStart = Instant.now().getEpochSecond();
-                Arrays.stream(msFileHandler.getSectrumTitles(fileName))
+                Arrays.stream(msFileHandler.getSpectrumTitles(fileName))
                         .parallel()
                         .forEach(
                                 spectrumTitle -> msFileHandler.getSpectrum(fileName, spectrumTitle)

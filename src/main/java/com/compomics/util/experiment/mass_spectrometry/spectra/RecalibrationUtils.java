@@ -3,6 +3,8 @@ package com.compomics.util.experiment.mass_spectrometry.spectra;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 /**
  * Utility functions for spectrum recalibration.
@@ -10,88 +12,105 @@ import java.util.HashMap;
  * @author Marc Vaudel
  */
 public class RecalibrationUtils {
- 
 
     /**
      * Returns a recalibrated precursor.
      *
      * @param precursor The precursor to recalibrate.
-     * @param mzCorrection the m/z correction to apply
-     * @param rtCorrection the retention time correction to apply
-     * 
-     * @return a new recalibrated precursor
+     * @param mzCorrection The m/z correction to apply.
+     * @param rtCorrection The retention time correction to apply.
+     *
+     * @return A new precursor with recalibrated mz and rt.
      */
     public static Precursor getRecalibratedPrecursor(
             Precursor precursor,
-            double mzCorrection, 
+            double mzCorrection,
             double rtCorrection
     ) {
-        
+
         return new Precursor(
-                precursor.rt - rtCorrection, 
-                precursor.mz - mzCorrection, 
-                precursor.intensity, 
+                precursor.rt - rtCorrection,
+                precursor.mz - mzCorrection,
+                precursor.intensity,
                 precursor.possibleCharges
         );
     }
-    
 
     /**
      * Returns a recalibrated peak list.
      *
-     * @param mzCorrections the m/z corrections to apply
-     * @param peakMap the original peak map
+     * @param mzCorrections The corrections to apply.
+     * @param originalMz The original m/z array.
      *
-     * @return the recalibrated list of peaks indexed by m/z
+     * @return A new array of recalibrated m/z.
      */
-    public static HashMap<Double, Peak> getRecalibratedPeakList(
-            HashMap<Double, Double> mzCorrections,
-    HashMap<Double, Peak> peakMap) {
+    public static double[] getRecalibratedMz(
+            TreeMap<Double, Double> mzCorrections,
+            double[] originalMz
+    ) {
 
-        HashMap<Double, Peak> result = new HashMap<>(peakMap.size());
-        ArrayList<Double> keys = new ArrayList<>(mzCorrections.keySet());
-        Collections.sort(keys);
+        double[] result = new double[originalMz.length];
 
-        for (Peak peak : peakMap.values()) {
+        for (int i = 0; i < originalMz.length; i++) {
 
-            double fragmentMz = peak.mz;
-            double key1 = keys.get(0);
-            double correction = 0.0;
-
-            if (fragmentMz <= key1) {
-                correction = mzCorrections.get(key1);
-            } else {
-
-                key1 = keys.get(keys.size() - 1);
-
-                if (fragmentMz >= key1) {
-                    correction = mzCorrections.get(key1);
-                } else {
-
-                    for (int i = 0; i < keys.size() - 1; i++) {
-
-                        key1 = keys.get(i);
-
-                        if (key1 == fragmentMz) {
-                            correction = mzCorrections.get(key1);
-                            break;
-                        }
-
-                        double key2 = keys.get(i + 1);
-
-                        if (key1 < fragmentMz && fragmentMz < key2) {
-                            double y1 = mzCorrections.get(key1);
-                            double y2 = mzCorrections.get(key2);
-                            correction = y1 + ((fragmentMz - key1) * (y2 - y1) / (key2 - key1));
-                            break;
-                        }
-                    }
-                }
-            }
-
-            result.put(peak.mz - correction, new Peak(peak.mz - correction, peak.intensity));
+            double fragmentMz = originalMz[i];
+            double correction = getCorrection(fragmentMz, mzCorrections);
+            
+            result[i] = fragmentMz - correction;
         }
 
         return result;
+    }
+
+    /**
+     * Returns the correction to use for the given fragment m/z.
+     * 
+     * @param fragmentMz the fragment m/z.
+     * @param mzCorrections The binned m/z corrections.
+     * 
+     * @return The correction to use for the given fragment m/z.
+     */
+    private static double getCorrection(double fragmentMz, TreeMap<Double, Double> mzCorrections) {
+
+        Entry<Double, Double> entry = mzCorrections.firstEntry();
+
+        if (fragmentMz <= entry.getKey() || mzCorrections.size() == 1) {
+
+            return entry.getValue();
+
+        } else {
+
+            entry = mzCorrections.lastEntry();
+
+            if (fragmentMz >= entry.getKey()) {
+
+                return entry.getValue();
+
+            } else {
+
+                ArrayList<Entry<Double, Double>> entryList = new ArrayList<>(mzCorrections.entrySet());
+
+                for (int i = 0; i < entryList.size() - 1; i++) {
+
+                    Entry<Double, Double> entry1 = entryList.get(i);
+
+                    if (entry1.getKey() == fragmentMz) {
+
+                        return entry1.getKey();
+                    }
+
+                    Entry<Double, Double> entry2 = entryList.get(i + 1);
+
+                    if (entry1.getKey() < fragmentMz && fragmentMz < entry2.getKey()) {
+
+                        return entry1.getValue() + ((fragmentMz - entry1.getKey()) * (entry2.getValue() - entry1.getValue()) / (entry2.getKey() - entry1.getKey()));
+
+                    }
+                }
+            }
+        }
+        
+        throw new IllegalArgumentException("Could not find correction for fragment m/z.");
+
     }
 }

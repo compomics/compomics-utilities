@@ -87,7 +87,7 @@ public class IdentificationFeaturesGenerator {
     /**
      * Map of the distributions of precursor mass errors.
      */
-    private HashMap<String, NonSymmetricalNormalDistribution> massErrorDistribution = null;
+    private final HashMap<String, NonSymmetricalNormalDistribution> massErrorDistribution = new HashMap<>(1);
 
     /**
      * Empty default constructor.
@@ -132,21 +132,15 @@ public class IdentificationFeaturesGenerator {
     /**
      * Sets a mass error distribution in the massErrorDistribution map.
      *
-     * @param spectrumFile the spectrum file of interest
-     * @param precursorMzDeviations list of precursor mass errors
+     * @param spectrumFile The spectrum file of interest.
+     * @param precursorMzDeviations The sorted array of precursor mass errors.
      */
     public void setMassErrorDistribution(
             String spectrumFile,
-            ArrayList<Double> precursorMzDeviations
+            double[] precursorMzDeviations
     ) {
 
-        if (massErrorDistribution == null) {
-
-            massErrorDistribution = new HashMap<>(1);
-
-        }
-
-        NonSymmetricalNormalDistribution distribution = NonSymmetricalNormalDistribution.getRobustNonSymmetricalNormalDistributionFromSortedList(precursorMzDeviations);
+        NonSymmetricalNormalDistribution distribution = NonSymmetricalNormalDistribution.getRobustNonSymmetricalNormalDistributionFromSortedArray(precursorMzDeviations);
         massErrorDistribution.put(spectrumFile, distribution);
 
     }
@@ -187,7 +181,7 @@ public class IdentificationFeaturesGenerator {
         HashSet<Long> spectrumMatchesKeys = identification.getSpectrumIdentification().get(spectrumFile);
         SearchParameters searchParameters = identificationParameters.getSearchParameters();
 
-        ArrayList<Double> precursorMzDeviations = spectrumMatchesKeys.stream()
+        double[] precursorMzDeviations = spectrumMatchesKeys.stream()
                 .map(
                         key -> identification.getSpectrumMatch(key)
                 )
@@ -197,7 +191,7 @@ public class IdentificationFeaturesGenerator {
                                 .getMatchValidationLevel()
                                 .isValidated()
                 )
-                .map(
+                .mapToDouble(
                         spectrumMatch -> spectrumMatch.getBestPeptideAssumption()
                                 .getDeltaMass(
                                         spectrumProvider.getPrecursorMz(
@@ -210,9 +204,7 @@ public class IdentificationFeaturesGenerator {
                                 )
                 )
                 .sorted()
-                .collect(
-                        Collectors.toCollection(ArrayList::new)
-                );
+                .toArray();
 
         setMassErrorDistribution(spectrumFile, precursorMzDeviations);
 

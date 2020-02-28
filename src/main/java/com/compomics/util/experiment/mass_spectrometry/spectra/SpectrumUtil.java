@@ -4,7 +4,6 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Annotati
 import com.compomics.util.experiment.mass_spectrometry.SimpleNoiseDistribution;
 import com.compomics.util.math.BasicMathFunctions;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.stream.IntStream;
 
 /**
@@ -12,7 +11,7 @@ import java.util.stream.IntStream;
  *
  * @author Marc Vaudel
  */
-public class SpectrumUtils {
+public class SpectrumUtil {
 
     /**
      * Returns the limit in intensity according to the given threshold.
@@ -167,47 +166,5 @@ public class SpectrumUtils {
                         intensity -> intensity >= intensityThreshold
                 )
                 .count();
-    }
-    
-    /**
-     * Scales the intensities using the reference intensity.
-     * 
-     * @param intensities The intensities to scale.
-     * @param refIntensity The reference intensity.
-     * 
-     * @return The scaled intensities.
-     */
-    public static double[] scaleIntensities(
-            double[] intensities,
-            double refIntensity
-    ) {
-        
-        return Arrays.stream(intensities)
-                .map(
-                        intensity -> intensity / refIntensity
-                )
-                .toArray();
-        
-    }
-    
-    /**
-     * Scales the given intensities using the maximum intensity.
-     * 
-     * @param intensities The intensities to scale.
-     * 
-     * @return The given intensities scaled using the maximum intensity.
-     */
-    public static double[] scaleIntensitiesToMax(
-            double[] intensities
-    ) {
-        
-        double maxIntensity = Arrays.stream(intensities)
-                .max()
-                .orElse(1.0);
-        
-        return scaleIntensities(
-                intensities, 
-                maxIntensity
-        );
     }
 }

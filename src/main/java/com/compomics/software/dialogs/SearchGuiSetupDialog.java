@@ -4,7 +4,7 @@ import static com.compomics.software.autoupdater.DownloadLatestZipFromRepo.downl
 import com.compomics.software.autoupdater.GUIFileDAO;
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.gui.file_handling.FileChooserUtils;
+import com.compomics.util.gui.file_handling.FileChooserUtil;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.awt.Toolkit;
@@ -352,7 +352,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
-        File selectedFile = FileChooserUtils.getUserSelectedFile(
+        File selectedFile = FileChooserUtil.getUserSelectedFile(
                 this, 
                 ".jar", 
                 "SearchGUI jar file (.jar)", 
@@ -537,7 +537,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
                 }
             }
 
-            final File downloadFolder = FileChooserUtils.getUserSelectedFolder(
+            final File downloadFolder = FileChooserUtil.getUserSelectedFolder(
                     this, 
                     "Select SearchGUI Folder", 
                     installPath, 

@@ -181,8 +181,8 @@ public class Identification extends ExperimentObject {
     ) throws InterruptedException {
 
         objectsDB.loadObjects(
-                className, 
-                waitingHandler, 
+                className,
+                waitingHandler,
                 displayProgress
         );
 
@@ -207,8 +207,8 @@ public class Identification extends ExperimentObject {
     ) throws InterruptedException {
 
         objectsDB.loadObjects(
-                keyList, 
-                waitingHandler, 
+                keyList,
+                waitingHandler,
                 displayProgress
         );
 
@@ -292,8 +292,8 @@ public class Identification extends ExperimentObject {
     ) {
 
         return objectsDB.retrieveObjects(
-                keyList, 
-                waitingHandler, 
+                keyList,
+                waitingHandler,
                 displayProgress
         );
     }
@@ -310,14 +310,14 @@ public class Identification extends ExperimentObject {
      * @return list of objects
      */
     public ArrayList<Object> retrieveObjects(
-            Class className, 
-            WaitingHandler waitingHandler, 
+            Class className,
+            WaitingHandler waitingHandler,
             boolean displayProgress
     ) {
 
         return objectsDB.retrieveObjects(
-                className, 
-                waitingHandler, 
+                className,
+                waitingHandler,
                 displayProgress
         );
 
@@ -430,8 +430,8 @@ public class Identification extends ExperimentObject {
     ) {
 
         objectsDB.removeObjects(
-                keys, 
-                waitingHandler, 
+                keys,
+                waitingHandler,
                 displayProgress
         );
 
@@ -805,7 +805,9 @@ public class Identification extends ExperimentObject {
      * @return the fractions
      */
     public ArrayList<String> getFractions() {
+        
         return identificationKeys.fractions;
+    
     }
 
     /**

@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class FileChooserUtils {
+public class FileChooserUtil {
 
     /**
      * Returns the file selected by the user, or null if no file was selected.

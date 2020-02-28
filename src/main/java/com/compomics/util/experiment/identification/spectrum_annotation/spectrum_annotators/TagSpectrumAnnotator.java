@@ -17,7 +17,7 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
-import com.compomics.util.experiment.mass_spectrometry.spectra.SpectrumUtils;
+import com.compomics.util.experiment.mass_spectrometry.spectra.SpectrumUtil;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -362,7 +362,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
         if (spectrum != null) {
 
             double intensityLimit = useIntensityFilter
-                    ? SpectrumUtils.getIntensityLimit(
+                    ? SpectrumUtil.getIntensityLimit(
                             spectrum,
                             annotationSettings.getIntensityThresholdType(),
                             annotationSettings.getAnnotationIntensityLimit()

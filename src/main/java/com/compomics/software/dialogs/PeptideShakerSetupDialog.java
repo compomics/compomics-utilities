@@ -3,7 +3,7 @@ package com.compomics.software.dialogs;
 import static com.compomics.software.autoupdater.DownloadLatestZipFromRepo.downloadLatestZipFromRepo;
 import com.compomics.software.autoupdater.GUIFileDAO;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.gui.file_handling.FileChooserUtils;
+import com.compomics.util.gui.file_handling.FileChooserUtil;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.awt.Toolkit;
@@ -346,7 +346,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
-        File selectedFile = FileChooserUtils.getUserSelectedFile(
+        File selectedFile = FileChooserUtil.getUserSelectedFile(
                 this, 
                 ".jar", 
                 "PeptideShaker jar file (.jar)", 
@@ -510,7 +510,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
                 }
             }
 
-            final File downloadFolder = FileChooserUtils.getUserSelectedFolder(this, "Select PeptideShaker Folder", installPath, "PeptideShaker Folder", "Select", false);
+            final File downloadFolder = FileChooserUtil.getUserSelectedFolder(this, "Select PeptideShaker Folder", installPath, "PeptideShaker Folder", "Select", false);
 
             if (downloadFolder != null) {
 

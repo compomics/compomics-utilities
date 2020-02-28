@@ -1,6 +1,6 @@
 package com.compomics.util;
 
-import java.util.Collection;
+import java.util.Arrays;
 
 /**
  * Utility functions to work with arrays.
@@ -123,4 +123,44 @@ public class ArrayUtil {
         return arrayUnique;
     }
 
+    
+    /**
+     * Scales the values using the reference value.
+     * 
+     * @param values The values to scale.
+     * @param refIntensity The reference value.
+     * 
+     * @return The scaled values.
+     */
+    public static double[] scaleValues(
+            double[] values,
+            double refIntensity
+    ) {
+        
+        return Arrays.stream(values)
+                .map(
+                        value -> value / refIntensity
+                )
+                .toArray();
+    }
+    
+    /**
+     * Scales the given values using the maximum value.
+     * 
+     * @param values The values to scale.
+     * 
+     * @return The given values scaled using the maximum value.
+     */
+    public static double[] scaleToMax(
+            double[] values
+    ) {
+        
+        double maxValue = Arrays.stream(values)
+                .max()
+                .orElse(1.0);
+        
+        return scaleValues(values, 
+                maxValue
+        );
+    }
 }

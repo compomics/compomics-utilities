@@ -20,7 +20,7 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Specific
 import com.compomics.util.experiment.identification.spectrum_annotation.SpectrumAnnotator;
 import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
-import com.compomics.util.experiment.mass_spectrometry.spectra.SpectrumUtils;
+import com.compomics.util.experiment.mass_spectrometry.spectra.SpectrumUtil;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
@@ -321,7 +321,7 @@ public class PhosphoRS {
 
                 }
 
-                int[] windowIndexes = SpectrumUtils.getWindowIndexes(
+                int[] windowIndexes = SpectrumUtil.getWindowIndexes(
                         filteredSpectrum,
                         maxMz,
                         tempMax
@@ -372,7 +372,7 @@ public class PhosphoRS {
                         for (int depth = 1; depth <= intensityThresholds.size(); depth++) {
 
                             double intensityThreshold = intensityThresholds.get(depth);
-                            int nPeaks = SpectrumUtils.getNPeaksAboveThreshold(
+                            int nPeaks = SpectrumUtil.getNPeaksAboveThreshold(
                                     filteredSpectrum,
                                     windowStartIndex,
                                     windowEndIndex,
@@ -531,7 +531,7 @@ public class PhosphoRS {
                         for (int depth = 1; depth <= intensityThresholds.size(); depth++) {
 
                             double intensityThreshold = intensityThresholds.get(depth);
-                            int nPeaks = SpectrumUtils.getNPeaksAboveThreshold(
+                            int nPeaks = SpectrumUtil.getNPeaksAboveThreshold(
                                     filteredSpectrum,
                                     windowStartIndex,
                                     windowEndIndex,

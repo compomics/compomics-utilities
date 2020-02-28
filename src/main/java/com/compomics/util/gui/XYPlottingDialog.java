@@ -3,7 +3,7 @@ package com.compomics.util.gui;
 import com.compomics.util.Util;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.gui.export.graphics.ExportGraphicsDialog;
-import com.compomics.util.gui.file_handling.FileChooserUtils;
+import com.compomics.util.gui.file_handling.FileChooserUtil;
 import com.compomics.util.gui.tablemodels.SelfUpdatingTableModel;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.math.statistics.distributions.NormalKernelDensityEstimator;
@@ -1381,7 +1381,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void exportSelectedValuesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportSelectedValuesMenuItemActionPerformed
-        final File selectedFile = FileChooserUtils.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export Selected Values", lastSelectedFolder.getLastSelectedFolder(), "table_to_file.txt", false);
+        final File selectedFile = FileChooserUtil.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export Selected Values", lastSelectedFolder.getLastSelectedFolder(), "table_to_file.txt", false);
         final XYPlottingDialog finalRef = this;
 
         if (selectedFile != null) {

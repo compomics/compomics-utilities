@@ -7,7 +7,7 @@ import com.compomics.util.experiment.identification.filtering.PeptideAssumptionF
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.io.biology.protein.FastaParameters;
-import com.compomics.util.gui.file_handling.FileChooserUtils;
+import com.compomics.util.gui.file_handling.FileChooserUtil;
 import com.compomics.util.gui.parameters.identification.advanced.AnnotationParametersDialog;
 import com.compomics.util.gui.parameters.identification.advanced.FractionParametersDialog;
 import com.compomics.util.gui.parameters.identification.advanced.GeneParametersDialog;
@@ -1203,7 +1203,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void exportLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportLabelMouseReleased
-        File selectedFile = FileChooserUtils.getUserSelectedFile(this, ".par", "Identification settings file (.par)", "Export Identification Settings", lastSelectedFolder.getLastSelectedFolder(), null, false);
+        File selectedFile = FileChooserUtil.getUserSelectedFile(this, ".par", "Identification settings file (.par)", "Export Identification Settings", lastSelectedFolder.getLastSelectedFolder(), null, false);
 
         if (selectedFile != null) {
             try {
@@ -1240,7 +1240,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void importLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_importLabelMouseReleased
-        File selectedFile = FileChooserUtils.getUserSelectedFile(this, ".par", "Identification settings file (.par)", "Import Identification Settings File", lastSelectedFolder.getLastSelectedFolder(), null, true);
+        File selectedFile = FileChooserUtil.getUserSelectedFile(this, ".par", "Identification settings file (.par)", "Import Identification Settings File", lastSelectedFolder.getLastSelectedFolder(), null, true);
 
         if (selectedFile != null) {
 

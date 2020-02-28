@@ -4,6 +4,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 /**
  * Placeholder for the keys of the objects in the identification.

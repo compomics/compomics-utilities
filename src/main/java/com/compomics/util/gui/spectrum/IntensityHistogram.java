@@ -55,15 +55,22 @@ public class IntensityHistogram extends JPanel {
 
         // the annotated intensities
         double[] annotatedPeakIntensities = Arrays.stream(annotations)
-                .mapToDouble(ionMatch -> ionMatch.peakIntensity)
+                .mapToDouble(
+                        ionMatch -> ionMatch.peakIntensity
+                )
                 .toArray();
         HashSet<Double> annotatedPeakIntensitiesSet = Arrays.stream(annotatedPeakIntensities)
-                .boxed().collect(Collectors.toCollection(HashSet::new));
+                .boxed()
+                .collect(
+                        Collectors.toCollection(HashSet::new)
+                );
 
         // the non annotated intensities above threshold
         double[] nonAnnotatedPeakIntensities
                 = Arrays.stream(currentSpectrum.intensity)
-                        .filter(intensity -> intensity > intensityThreshold && !annotatedPeakIntensitiesSet.contains(intensity))
+                        .filter(
+                                intensity -> intensity > intensityThreshold && !annotatedPeakIntensitiesSet.contains(intensity)
+                        )
                         .toArray();
 
         // create the peak histograms
@@ -73,11 +80,31 @@ public class IntensityHistogram extends JPanel {
 
             HistogramDataset dataset = new HistogramDataset();
             dataset.setType(HistogramType.RELATIVE_FREQUENCY); // @TODO: use SCALE_AREA_TO_1 instead??
-            dataset.addSeries("Not Annotated", nonAnnotatedPeakIntensities, bins, 0, currentSpectrum.getMaxIntensity());
-            dataset.addSeries("Annotated", annotatedPeakIntensities, bins, 0, currentSpectrum.getMaxIntensity());
+            dataset.addSeries(
+                    "Not Annotated", 
+                    nonAnnotatedPeakIntensities, 
+                    bins, 
+                    0, 
+                    currentSpectrum.getMaxIntensity()
+            );
+            dataset.addSeries(
+                    "Annotated", 
+                    annotatedPeakIntensities, 
+                    bins, 
+                    0, 
+                    currentSpectrum.getMaxIntensity()
+            );
 
-            JFreeChart chart = ChartFactory.createHistogram(null, null, null,
-                    dataset, PlotOrientation.VERTICAL, false, true, false);
+            JFreeChart chart = ChartFactory.createHistogram(
+                    null, 
+                    null, 
+                    null,
+                    dataset, 
+                    PlotOrientation.VERTICAL, 
+                    false, 
+                    true, 
+                    false
+            );
 
             chartPanel = new ChartPanel(chart);
             chartPanel.setBorder(null);

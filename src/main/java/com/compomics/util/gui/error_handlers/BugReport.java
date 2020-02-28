@@ -2,7 +2,7 @@ package com.compomics.util.gui.error_handlers;
 
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.gui.file_handling.FileChooserUtils;
+import com.compomics.util.gui.file_handling.FileChooserUtil;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.file.LastSelectedFolder;
 import java.io.*;
@@ -403,7 +403,7 @@ public class BugReport extends javax.swing.JDialog {
      */
     private void saveJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveJButtonActionPerformed
 
-        File finalOutputFile = FileChooserUtils.getUserSelectedFile(this, ".txt", "Text File (*.txt)", "Select Destination File", getLastSelectedFolder(), toolName + " " + toolVersion + " log.txt", false);
+        File finalOutputFile = FileChooserUtil.getUserSelectedFile(this, ".txt", "Text File (*.txt)", "Select Destination File", getLastSelectedFolder(), toolName + " " + toolVersion + " log.txt", false);
 
         if (finalOutputFile != null) {
 

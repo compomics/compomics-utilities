@@ -1,8 +1,6 @@
 package com.compomics.util.experiment.mass_spectrometry.spectra;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 

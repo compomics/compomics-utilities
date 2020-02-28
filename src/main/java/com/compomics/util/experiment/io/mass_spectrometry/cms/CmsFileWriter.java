@@ -42,6 +42,10 @@ public class CmsFileWriter implements AutoCloseable {
      */
     private double maxMz = 0.0;
     /**
+     * The maximal precursor intensity.
+     */
+    private double maxInt = 0.0;
+    /**
      * The maximal precursor RT.
      */
     private double maxRt = 0.0;
@@ -148,6 +152,14 @@ public class CmsFileWriter implements AutoCloseable {
             maxMz = precursorMz;
 
         }
+        
+
+        if (maxInt < precursorIntensity) {
+
+            maxInt = precursorIntensity;
+
+        }
+        
         if (maxRt < precursorRt) {
 
             maxRt = precursorRt;
@@ -233,7 +245,9 @@ public class CmsFileWriter implements AutoCloseable {
         long footerPosition = raf.getFilePointer();
 
         String titleString = titles.stream()
-                .collect(Collectors.joining(CmsFileUtils.TITLE_SEPARATOR));
+                .collect(
+                        Collectors.joining(CmsFileUtils.TITLE_SEPARATOR)
+                );
         String indexString = indexes.stream()
                 .map(
                         index -> index.toString()
@@ -254,6 +268,7 @@ public class CmsFileWriter implements AutoCloseable {
                 .putLong(footerPosition)
                 .putDouble(minMz)
                 .putDouble(maxMz)
+                .putDouble(maxInt)
                 .putDouble(maxRt);
 
         raf.write(buffer.array());

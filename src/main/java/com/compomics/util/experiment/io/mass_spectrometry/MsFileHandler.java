@@ -84,6 +84,7 @@ public class MsFileHandler implements SpectrumProvider {
         String fileName = msFile.getName();
 
         orderedFileNames = Stream.concat(Arrays.stream(orderedFileNames), Stream.of(fileName))
+                .distinct()
                 .sorted()
                 .toArray(String[]::new);
 
@@ -106,7 +107,7 @@ public class MsFileHandler implements SpectrumProvider {
 
             } catch (Exception e) {
 
-                // Not a compatible file, delete and make new one
+                // Not a compatible file, delete and make new one.
                 if (!cmsFile.delete()) {
 
                     throw new IOException("File " + cmsFile + " could not be read as cms file or deleted. Please move or delete the file manually.");
@@ -295,6 +296,20 @@ public class MsFileHandler implements SpectrumProvider {
     }
 
     @Override
+    public double getMaxPrecInt(String fileName) {
+
+        CmsFileReader reader = cmsFileReaderMap.get(fileName);
+
+        if (reader != null) {
+
+            return reader.getMaxPrecInt();
+
+        }
+
+        return Double.NaN;
+    }
+
+    @Override
     public double getMaxPrecRT(String fileName) {
 
         CmsFileReader reader = cmsFileReaderMap.get(fileName);
@@ -325,6 +340,17 @@ public class MsFileHandler implements SpectrumProvider {
         return cmsFileReaderMap.values().stream()
                 .mapToDouble(
                         reader -> reader.getMaxPrecMz()
+                )
+                .max()
+                .orElse(Double.NaN);
+    }
+
+    @Override
+    public double getMaxPrecInt() {
+
+        return cmsFileReaderMap.values().stream()
+                .mapToDouble(
+                        reader -> reader.getMaxPrecInt()
                 )
                 .max()
                 .orElse(Double.NaN);

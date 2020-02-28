@@ -34,6 +34,10 @@ public class CmsFileReader implements SpectrumProvider {
      */
     private final double maxMz;
     /**
+     * The maximal precursor intensity.
+     */
+    private final double maxInt;
+    /**
      * The maximal precursor RT.
      */
     private final double maxRt;
@@ -114,6 +118,7 @@ public class CmsFileReader implements SpectrumProvider {
 
         minMz = raf.readDouble();
         maxMz = raf.readDouble();
+        maxInt = raf.readDouble();
         maxRt = raf.readDouble();
 
         raf.seek(footerPosition);
@@ -205,7 +210,6 @@ public class CmsFileReader implements SpectrumProvider {
         Precursor precursor = new Precursor(
                 precursorRt,
                 precursorMz,
-                precursorIntensity,
                 charges
         );
 
@@ -247,8 +251,15 @@ public class CmsFileReader implements SpectrumProvider {
         }
 
         mutex.release();
+        
+        Precursor precursor = new Precursor(
+                precursorRt, 
+                precursorMz, 
+                precursorIntensity, 
+                charges
+        );
 
-        return new Precursor(precursorRt, precursorMz, precursorIntensity, charges);
+        return precursor;
 
     }
 
@@ -445,6 +456,13 @@ public class CmsFileReader implements SpectrumProvider {
     }
 
     @Override
+    public double getMaxPrecInt(String fileName) {
+
+        return maxInt;
+
+    }
+
+    @Override
     public double getMaxPrecRT(String fileName) {
 
         return maxRt;
@@ -462,6 +480,13 @@ public class CmsFileReader implements SpectrumProvider {
     public double getMaxPrecMz() {
 
         return maxMz;
+
+    }
+
+    @Override
+    public double getMaxPrecInt() {
+
+        return maxInt;
 
     }
 

@@ -1,6 +1,5 @@
 package com.compomics.util.gui.file_handling;
 
-import com.compomics.util.Util;
 import com.compomics.util.io.IoUtil;
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 public class TempFilesManager {
 
     /**
-     * List of the temp folders created during this instance.
+     * List of the temp folders created using this manager.
      */
     private static final ArrayList<File> tempFolders = new ArrayList<File>();
 

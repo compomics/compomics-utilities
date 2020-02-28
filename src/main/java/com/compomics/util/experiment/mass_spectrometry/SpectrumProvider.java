@@ -103,6 +103,18 @@ public interface SpectrumProvider extends AutoCloseable {
     
     
     /**
+     * Returns the maximum precursor intensity in a given file.
+     * 
+     * @param fileName The name of the spectrum file.
+     * 
+     * @return The maximum precursor intensity in a given file.
+     */
+    public double getMaxPrecInt(
+            String fileName
+    );
+    
+    
+    /**
      * Returns the maximum precursor RT in a given file.
      * 
      * @param fileName The name of the spectrum file.
@@ -128,6 +140,14 @@ public interface SpectrumProvider extends AutoCloseable {
      * @return The maximum precursor m/z among all files.
      */
     public double getMaxPrecMz();
+    
+    
+    /**
+     * Returns the maximum precursor intensity among all files.
+     * 
+     * @return The maximum precursor intensity among all files.
+     */
+    public double getMaxPrecInt();
     
     
     /**

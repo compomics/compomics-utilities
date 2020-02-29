@@ -24,7 +24,7 @@ public class CmsFileWriter implements AutoCloseable {
     /**
      * The length of the file header.
      */
-    public static final int HEADER_LENGTH = MAGIC_NUMBER.length + Long.BYTES + 3 * Double.BYTES;
+    public static final int HEADER_LENGTH = MAGIC_NUMBER.length + Long.BYTES + 4 * Double.BYTES;
     /**
      * The random access file to write to.
      */

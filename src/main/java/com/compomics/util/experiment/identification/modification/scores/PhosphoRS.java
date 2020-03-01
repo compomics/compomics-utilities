@@ -323,7 +323,7 @@ public class PhosphoRS {
 
                 int[] windowIndexes = SpectrumUtil.getWindowIndexes(
                         filteredSpectrum,
-                        maxMz,
+                        minMz,
                         tempMax
                 );
                 int windowStartIndex = windowIndexes[0];
@@ -371,7 +371,7 @@ public class PhosphoRS {
 
                         for (int depth = 1; depth <= intensityThresholds.size(); depth++) {
 
-                            double intensityThreshold = intensityThresholds.get(depth);
+                            double intensityThreshold = intensityThresholds.get(depth - 1);
                             int nPeaks = SpectrumUtil.getNPeaksAboveThreshold(
                                     filteredSpectrum,
                                     windowStartIndex,
@@ -530,7 +530,7 @@ public class PhosphoRS {
 
                         for (int depth = 1; depth <= intensityThresholds.size(); depth++) {
 
-                            double intensityThreshold = intensityThresholds.get(depth);
+                            double intensityThreshold = intensityThresholds.get(depth - 1);
                             int nPeaks = SpectrumUtil.getNPeaksAboveThreshold(
                                     filteredSpectrum,
                                     windowStartIndex,
@@ -566,7 +566,7 @@ public class PhosphoRS {
                             if (bigP < bestP) {
 
                                 bestP = bigP;
-                                bestI = depth;
+                                bestI = depth - 1;
                             }
                         }
 

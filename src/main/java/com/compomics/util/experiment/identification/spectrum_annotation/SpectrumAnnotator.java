@@ -204,7 +204,19 @@ public abstract class SpectrumAnnotator {
         int[] matchedPeaksIndexes = spectrumIndex.getMatchingPeaks(fragmentMz);
 
         if (matchedPeaksIndexes.length == 0) {
+
             return null;
+
+        }
+        if (matchedPeaksIndexes.length == 1) {
+
+            return new IonMatch(
+                    spectrumMz[matchedPeaksIndexes[0]],
+                    spectrumIntensity[matchedPeaksIndexes[0]],
+                    theoreticIon,
+                    inspectedCharge
+            );
+
         }
 
         // Select the most accurate or most intense according to the annotation settings
@@ -343,18 +355,13 @@ public abstract class SpectrumAnnotator {
             this.spectrumFile = spectrumFile;
             this.spectrumTitle = spectrumTitle;
             this.intensityLimit = intensityLimit;
-
-            // Create new index if needed
-            if (spectrumIndex == null || spectrumIndex.intensityLimit != intensityLimit || spectrumIndex.tolerance != mzTolerance) {
-
-                spectrumIndex = new SpectrumIndex(
-                        spectrum.mz,
-                        spectrum.intensity,
-                        intensityLimit,
-                        mzTolerance,
-                        isPpm
-                );
-            }
+            this.spectrumIndex = new SpectrumIndex(
+                    spectrum.mz,
+                    spectrum.intensity,
+                    intensityLimit,
+                    mzTolerance,
+                    isPpm
+            );
         }
     }
 
@@ -951,7 +958,7 @@ public abstract class SpectrumAnnotator {
         HashMap<Integer, ArrayList<Ion>> result = new HashMap<>();
 
         HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationSettings.getIonTypes();
-        
+
         for (Ion.IonType ionType : ionTypes.keySet()) {
 
             HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
@@ -1009,37 +1016,37 @@ public abstract class SpectrumAnnotator {
      * @return a list of all the ion matches
      */
     public static ArrayList<IonMatch> matchReporterIon(
-            Ion theoreticIon, 
-            int charge, 
-            Spectrum spectrum, 
+            Ion theoreticIon,
+            int charge,
+            Spectrum spectrum,
             double massTolerance
     ) {
-    
+
         ArrayList<IonMatch> result = new ArrayList<>(1);
-        
+
         double targetMass = theoreticIon.getTheoreticMz(charge);
-        
-        for (int i = 0 ; i < spectrum.getNPeaks() ; i++) {
-            
+
+        for (int i = 0; i < spectrum.getNPeaks(); i++) {
+
             double mz = spectrum.mz[i];
             double intensity = spectrum.intensity[i];
-            
+
             if (Math.abs(mz - targetMass) <= massTolerance) {
-                
+
                 result.add(
                         new IonMatch(
                                 mz,
-                                intensity, 
-                                theoreticIon, 
+                                intensity,
+                                theoreticIon,
                                 charge
                         )
                 );
             }
-            
+
             if (mz > targetMass + massTolerance) {
                 break;
             }
-            
+
         }
         return result;
     }

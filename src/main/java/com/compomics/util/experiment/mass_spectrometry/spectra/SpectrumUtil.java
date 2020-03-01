@@ -116,7 +116,7 @@ public class SpectrumUtil {
             double mzMax
     ) {
         
-        int windowStart = -1;
+        int windowStart = 0;
         
         for (int i = 0 ; i < spectrum.getNPeaks() ; i++) {
             

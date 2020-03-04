@@ -403,7 +403,7 @@ public class ModificationtableContent {
         );
         spectrumAnnotator.setPeptide(
                 noModPeptide,
-                specificAnnotationParameters.getPrecursorCharge(),
+                peptideAssumption.getIdentificationCharge(),
                 modificationParameters,
                 sequenceProvider,
                 modificationSequenceMatchingParameters,

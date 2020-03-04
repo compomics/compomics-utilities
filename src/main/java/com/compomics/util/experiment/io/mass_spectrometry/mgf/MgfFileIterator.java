@@ -54,7 +54,7 @@ public class MgfFileIterator implements MsFileIterator {
         double rt = -1.0;
         double rt1 = -1.0;
         double rt2 = -1.0;
-        int[] precursorCharges = null;
+        int[] precursorCharges = new int[0];
         String spectrumTitle = "";
         ArrayList<Double> mzList = new ArrayList<>(0);
         ArrayList<Double> intensityList = new ArrayList<>(0);

@@ -172,11 +172,11 @@ public class AnnotationParameters extends DbObject {
     ) {
         readDBMode();
 
-        SpecificAnnotationParameters specificAnnotationParameters = new SpecificAnnotationParameters(
-                spectrumFile,
-                spectrumTitle,
-                spectrumIdentificationAssumption
-        );
+        int precursorCharge = spectrumIdentificationAssumption.getIdentificationCharge();
+        
+        SpecificAnnotationParameters specificAnnotationParameters = new SpecificAnnotationParameters();
+        
+        specificAnnotationParameters.setPrecursorCharge(precursorCharge);
         specificAnnotationParameters.setNeutralLossesAuto(neutralLossesAuto);
 
         if (neutralLossesAuto) {
@@ -203,7 +203,6 @@ public class AnnotationParameters extends DbObject {
 
         }
         
-        int precursorCharge = spectrumIdentificationAssumption.getIdentificationCharge();
         int max = precursorCharge == 1 ? 2 : precursorCharge;
         HashSet<Integer> charges = IntStream.range(1, max)
                 .mapToObj(
@@ -230,6 +229,7 @@ public class AnnotationParameters extends DbObject {
         specificAnnotationParameters.setSelectedIonsMap((HashMap<Ion.IonType, HashSet<Integer>>) selectedIonsMap.clone());
         specificAnnotationParameters.setFragmentIonAccuracy(fragmentIonAccuracy);
         specificAnnotationParameters.setFragmentIonPpm(fragmentIonPpm);
+        
         return specificAnnotationParameters;
 
     }

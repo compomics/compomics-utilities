@@ -107,6 +107,19 @@ public class MsFileHandler implements SpectrumProvider {
 
             } catch (Exception e) {
 
+                try {
+
+                    if (reader != null) {
+
+                        reader.close();
+
+                    }
+
+                } catch (Throwable t) {
+
+                    // ignore
+                }
+
                 // Not a compatible file, delete and make new one.
                 if (!cmsFile.delete()) {
 
@@ -221,9 +234,9 @@ public class MsFileHandler implements SpectrumProvider {
     ) {
 
         CmsFileReader reader = cmsFileReaderMap.get(fileName);
-        
+
         return reader == null ? null : reader.getPrecursor(spectrumTitle);
-        
+
     }
 
     @Override
@@ -233,9 +246,9 @@ public class MsFileHandler implements SpectrumProvider {
     ) {
 
         CmsFileReader reader = cmsFileReaderMap.get(fileName);
-        
+
         return reader == null ? Double.NaN : reader.getPrecursorMz(spectrumTitle);
-        
+
     }
 
     @Override
@@ -247,7 +260,7 @@ public class MsFileHandler implements SpectrumProvider {
         CmsFileReader reader = cmsFileReaderMap.get(fileName);
 
         return reader == null ? Double.NaN : reader.getPrecursorRt(spectrumTitle);
-        
+
     }
 
     @Override
@@ -401,8 +414,8 @@ public class MsFileHandler implements SpectrumProvider {
     public String[] getSpectrumTitles(String fileName) {
 
         CmsFileReader reader = cmsFileReaderMap.get(fileName);
-        
+
         return reader == null ? null : reader.titles;
-        
+
     }
 }

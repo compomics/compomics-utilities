@@ -2,7 +2,6 @@ package com.compomics.util.experiment.identification.spectrum_annotation;
 
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -18,23 +17,12 @@ public class SpecificAnnotationParameters {
      * Empty default constructor
      */
     public SpecificAnnotationParameters() {
-        spectrumFile = null;
-        spectrumTitle = null;
-        spectrumIdentificationAssumption = null;
     }
 
     /**
-     * The file of the currently annotated spectrum.
+     * The precursor charge.
      */
-    private final String spectrumFile;
-    /**
-     * The title of the currently annotated spectrum.
-     */
-    private final String spectrumTitle;
-    /**
-     * The currently annotated spectrumIdentificationAssumption.
-     */
-    private final SpectrumIdentificationAssumption spectrumIdentificationAssumption;
+    private int precursorCharge;
     /**
      * The types of ions to annotate.
      */
@@ -62,50 +50,14 @@ public class SpecificAnnotationParameters {
     private boolean fragmentIonPpm = false;
 
     /**
-     * Constructor.
+     * Sets the precursor charge.
      *
-     * @param spectrumFile The key of the spectrum to annotate.
-     * @param spectrumTitle The title of the spectrum to annotate.
-     * @param spectrumIdentificationAssumption the spectrum identification
-     * assumption to annotate with
+     * @param precursorCharge The precursor charge.
      */
-    public SpecificAnnotationParameters(
-            String spectrumFile,
-            String spectrumTitle,
-            SpectrumIdentificationAssumption spectrumIdentificationAssumption
+    public void setPrecursorCharge(
+            int precursorCharge
     ) {
-
-        this.spectrumFile = spectrumFile;
-        this.spectrumTitle = spectrumTitle;
-        this.spectrumIdentificationAssumption = spectrumIdentificationAssumption;
-
-    }
-
-    /**
-     * Returns the file of the spectrum to annotate.
-     *
-     * @return The file of the spectrum to annotate.
-     */
-    public String getSpectrumFile() {
-        return spectrumFile;
-    }
-
-    /**
-     * Returns the title of the spectrum to annotate.
-     *
-     * @return The title of the spectrum to annotate.
-     */
-    public String getSpectrumTitle() {
-        return spectrumTitle;
-    }
-
-    /**
-     * Returns the spectrum identification assumption to annotate with.
-     *
-     * @return the spectrum identification assumption to annotate with
-     */
-    public SpectrumIdentificationAssumption getSpectrumIdentificationAssumption() {
-        return spectrumIdentificationAssumption;
+        this.precursorCharge = precursorCharge;
     }
 
     /**
@@ -114,7 +66,7 @@ public class SpecificAnnotationParameters {
      * @return the charge of the precursor
      */
     public int getPrecursorCharge() {
-        return spectrumIdentificationAssumption.getIdentificationCharge();
+        return precursorCharge;
     }
 
     /**
@@ -345,11 +297,9 @@ public class SpecificAnnotationParameters {
 
     @Override
     public SpecificAnnotationParameters clone() {
-        SpecificAnnotationParameters clone = new SpecificAnnotationParameters(
-                spectrumFile,
-                spectrumTitle,
-                spectrumIdentificationAssumption
-        );
+
+        SpecificAnnotationParameters clone = new SpecificAnnotationParameters();
+        clone.setPrecursorCharge(precursorCharge);
         clone.setFragmentIonAccuracy(getFragmentIonAccuracy());
         clone.setFragmentIonPpm(isFragmentIonPpm());
         clone.setNeutralLossesAuto(isNeutralLossesAuto());

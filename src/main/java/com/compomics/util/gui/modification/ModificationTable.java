@@ -121,6 +121,7 @@ public class ModificationTable extends JTable {
      * displays bar charts
      * @param modificationParameters the modification parameters
      * @param sequenceProvider a provider for the protein sequences
+     * @param spectrumProvider a provider of spectra
      * @param modificationSequenceMatchingParameters the sequence matching
      * preferences for modification to peptide mapping
      */
@@ -549,16 +550,16 @@ public class ModificationTable extends JTable {
         ArrayList<JSparklinesDataSeries> sparkLineDataSeriesAll = new ArrayList<>();
         ArrayList<Double> data;
         int[] histogram;
-        String modification = "";
+        String tempModification = "";
         String shortName = this.modification.getShortName();
 
         for (int modCpt = 0; modCpt <= nModifications; modCpt++) {
 
             if (modCpt > 0) {
                 if (modCpt == 1) {
-                    modification = " <" + shortName + ">";
+                    tempModification = " <" + shortName + ">";
                 } else {
-                    modification = " <" + modCpt + shortName + ">";
+                    tempModification = " <" + modCpt + shortName + ">";
                 }
             }
 
@@ -592,7 +593,7 @@ public class ModificationTable extends JTable {
             Ion genericIon = Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, fragmentIonType, new NeutralLoss[0]);
             Color areaColor = SpectrumPanel.determineFragmentIonColor(genericIon, false);
             areaColor = new Color((int) (colorCoef * areaColor.getRed()), (int) (colorCoef * areaColor.getGreen()), (int) (colorCoef * areaColor.getBlue()));
-            String tooltip = "<html>" + PeptideFragmentIon.getSubTypeAsString(fragmentIonType) + "<sub>" + aa + "</sub>" + modification + "</html>";
+            String tooltip = "<html>" + PeptideFragmentIon.getSubTypeAsString(fragmentIonType) + "<sub>" + aa + "</sub>" + tempModification + "</html>";
 
             // create a JSparklineDataSeries  
             JSparklinesDataSeries sparklineDataseries = new JSparklinesDataSeries(data, areaColor, tooltip);
@@ -752,17 +753,17 @@ public class ModificationTable extends JTable {
         // set the column renderers
         for (int modCpt = 0; modCpt <= nModifications; modCpt++) {
 
-            String modification = "";
+            String tempModification = "";
 
             if (modCpt > 0) {
 
                 if (modCpt == 1) {
 
-                    modification = " <" + shortName + ">";
+                    tempModification = " <" + shortName + ">";
 
                 } else {
 
-                    modification = " <" + modCpt + shortName + ">";
+                    tempModification = " <" + modCpt + shortName + ">";
 
                 }
             }
@@ -771,7 +772,7 @@ public class ModificationTable extends JTable {
 
                 try {
 
-                    getColumn("a" + modification).setCellRenderer(
+                    getColumn("a" + tempModification).setCellRenderer(
                             new JSparklinesBarChartTableCellRenderer(
                                     PlotOrientation.HORIZONTAL,
                                     tableContent.getMaxIntensity(),
@@ -781,7 +782,7 @@ public class ModificationTable extends JTable {
                                     )
                             )
                     );
-                    ((JSparklinesBarChartTableCellRenderer) getColumn("a" + modification).getCellRenderer()).setMinimumChartValue(0);
+                    ((JSparklinesBarChartTableCellRenderer) getColumn("a" + tempModification).getCellRenderer()).setMinimumChartValue(0);
 
                 } catch (IllegalArgumentException e) {
                     // do nothing
@@ -792,7 +793,7 @@ public class ModificationTable extends JTable {
 
                 try {
 
-                    getColumn("b" + modification).setCellRenderer(
+                    getColumn("b" + tempModification).setCellRenderer(
                             new JSparklinesBarChartTableCellRenderer(
                                     PlotOrientation.HORIZONTAL,
                                     tableContent.getMaxIntensity(),
@@ -802,7 +803,7 @@ public class ModificationTable extends JTable {
                                     )
                             )
                     );
-                    ((JSparklinesBarChartTableCellRenderer) getColumn("b" + modification).getCellRenderer()).setMinimumChartValue(0);
+                    ((JSparklinesBarChartTableCellRenderer) getColumn("b" + tempModification).getCellRenderer()).setMinimumChartValue(0);
 
                 } catch (IllegalArgumentException e) {
                     // do nothing
@@ -813,7 +814,7 @@ public class ModificationTable extends JTable {
 
                 try {
 
-                    getColumn("c" + modification).setCellRenderer(
+                    getColumn("c" + tempModification).setCellRenderer(
                             new JSparklinesBarChartTableCellRenderer(
                                     PlotOrientation.HORIZONTAL,
                                     tableContent.getMaxIntensity(),
@@ -823,7 +824,7 @@ public class ModificationTable extends JTable {
                                     )
                             )
                     );
-                    ((JSparklinesBarChartTableCellRenderer) getColumn("c" + modification).getCellRenderer()).setMinimumChartValue(0);
+                    ((JSparklinesBarChartTableCellRenderer) getColumn("c" + tempModification).getCellRenderer()).setMinimumChartValue(0);
 
                 } catch (IllegalArgumentException e) {
                     // do nothing
@@ -834,7 +835,7 @@ public class ModificationTable extends JTable {
 
                 try {
 
-                    getColumn("x" + modification).setCellRenderer(
+                    getColumn("x" + tempModification).setCellRenderer(
                             new JSparklinesBarChartTableCellRenderer(
                                     PlotOrientation.HORIZONTAL,
                                     tableContent.getMaxIntensity(),
@@ -844,7 +845,7 @@ public class ModificationTable extends JTable {
                                     )
                             )
                     );
-                    ((JSparklinesBarChartTableCellRenderer) getColumn("x" + modification).getCellRenderer()).setMinimumChartValue(0);
+                    ((JSparklinesBarChartTableCellRenderer) getColumn("x" + tempModification).getCellRenderer()).setMinimumChartValue(0);
 
                 } catch (IllegalArgumentException e) {
                     // do nothing
@@ -855,7 +856,7 @@ public class ModificationTable extends JTable {
 
                 try {
 
-                    getColumn("y" + modification).setCellRenderer(
+                    getColumn("y" + tempModification).setCellRenderer(
                             new JSparklinesBarChartTableCellRenderer(
                                     PlotOrientation.HORIZONTAL,
                                     tableContent.getMaxIntensity(),
@@ -865,7 +866,7 @@ public class ModificationTable extends JTable {
                                     )
                             )
                     );
-                    ((JSparklinesBarChartTableCellRenderer) getColumn("y" + modification).getCellRenderer()).setMinimumChartValue(0);
+                    ((JSparklinesBarChartTableCellRenderer) getColumn("y" + tempModification).getCellRenderer()).setMinimumChartValue(0);
 
                 } catch (IllegalArgumentException e) {
                     // do nothing
@@ -876,7 +877,7 @@ public class ModificationTable extends JTable {
 
                 try {
 
-                    getColumn("z" + modification).setCellRenderer(
+                    getColumn("z" + tempModification).setCellRenderer(
                             new JSparklinesBarChartTableCellRenderer(
                                     PlotOrientation.HORIZONTAL,
                                     tableContent.getMaxIntensity(),
@@ -886,7 +887,7 @@ public class ModificationTable extends JTable {
                                     )
                             )
                     );
-                    ((JSparklinesBarChartTableCellRenderer) getColumn("z" + modification).getCellRenderer()).setMinimumChartValue(0);
+                    ((JSparklinesBarChartTableCellRenderer) getColumn("z" + tempModification).getCellRenderer()).setMinimumChartValue(0);
 
                 } catch (IllegalArgumentException e) {
                     // do nothing

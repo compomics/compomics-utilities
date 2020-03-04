@@ -83,7 +83,7 @@ public class SpectrumIndex {
      *
      * @param mz array of the mz of the fragment ions
      * @param intensity array of the intensity of the fragment ions
-     * @param intenstiyLimit a lower limit for the intensity of the peaks to
+     * @param intensityLimit a lower limit for the intensity of the peaks to
      * index
      * @param tolerance the tolerance to use
      * @param ppm boolean indicating whether the tolerance is in ppm
@@ -91,12 +91,12 @@ public class SpectrumIndex {
     public SpectrumIndex(
             double[] mz,
             double[] intensity,
-            double intenstiyLimit,
+            double intensityLimit,
             double tolerance,
             boolean ppm
     ) {
 
-        this.intensityLimit = intenstiyLimit;
+        this.intensityLimit = intensityLimit;
         this.mzArray = mz;
         this.intensityArray = intensity;
         this.tolerance = tolerance;
@@ -114,7 +114,7 @@ public class SpectrumIndex {
 
             double peakInt = intensity[i];
 
-            if (peakInt >= intenstiyLimit) {
+            if (peakInt >= intensityLimit) {
 
                 totalIntensity += peakInt;
 

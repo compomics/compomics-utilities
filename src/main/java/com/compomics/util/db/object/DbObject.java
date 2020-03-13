@@ -1,7 +1,7 @@
 package com.compomics.util.db.object;
 
 
-import org.zoodb.api.impl.ZooPC;
+//import org.zoodb.api.impl.ZooPC;
 
 /**
  * All classes that are stored in the backend need a unique identifier,
@@ -9,7 +9,7 @@ import org.zoodb.api.impl.ZooPC;
  * 
  * @author Dominik Kopczynski
  */
-public class DbObject extends ZooPC {
+public class DbObject {
     
     /**
      * Unique identifier.
@@ -32,7 +32,7 @@ public class DbObject extends ZooPC {
      */
     public long getId(){
         
-        readDBMode();
+        //readDBMode();
         
         return id;
     
@@ -45,7 +45,7 @@ public class DbObject extends ZooPC {
      */
     public void setId(long id){
         
-        writeDBMode();
+        //writeDBMode();
         
         this.id = id;
     
@@ -58,7 +58,7 @@ public class DbObject extends ZooPC {
      */
     public boolean getFirstLevel(){
         
-        readDBMode();
+        //readDBMode();
         
         return firstLevel;
     
@@ -71,7 +71,7 @@ public class DbObject extends ZooPC {
      */
     public void setFirstLevel(boolean firstLevel){
         
-        readDBMode();
+        //readDBMode();
         
         this.firstLevel = firstLevel;
     
@@ -81,6 +81,7 @@ public class DbObject extends ZooPC {
      * Sets the ZooDB to read mode
      */
     public void readDBMode(){
+        /*
         try {
             ObjectsDB.increaseRWCounter();
             zooActivateRead();
@@ -88,6 +89,7 @@ public class DbObject extends ZooPC {
         finally {
             ObjectsDB.decreaseRWCounter();
         }
+        */
     }
     
     
@@ -96,6 +98,7 @@ public class DbObject extends ZooPC {
      * Sets the ZooDB to write mode
      */
     public void writeDBMode(){
+        /*
         try {
             ObjectsDB.increaseRWCounter();
             zooActivateWrite();
@@ -103,6 +106,7 @@ public class DbObject extends ZooPC {
         finally {
             ObjectsDB.decreaseRWCounter();
         }
+        */
     }
             
 }

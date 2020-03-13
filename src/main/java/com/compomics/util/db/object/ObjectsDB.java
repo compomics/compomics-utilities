@@ -3,20 +3,12 @@ package com.compomics.util.db.object;
 import static com.compomics.util.db.object.DbMutex.dbMutex;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map.Entry;
+import java.util.*;
+import org.nustaq.serialization.FSTConfiguration;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
-import org.zoodb.internal.util.SynchronizedROCollection;
-import java.util.concurrent.atomic.*;
 
-import org.zoodb.jdo.ZooJdoHelper;
-import org.zoodb.tools.ZooHelper;
+
+import java.sql.*;
 
 /**
  * A database which can easily be used to store objects.
@@ -47,13 +39,13 @@ public class ObjectsDB {
     /**
      * Database persistence manager.
      */
-    private PersistenceManager pm = null;
+    private Connection connection = null;
+    /**
+     * Configuration for fast serialization.
+     */
+    private static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
     /**
      * HashMap to map hash IDs of entries into DB ids.
-     */
-    private final HashMap<Long, Long> idMap = new HashMap<>();
-    /**
-     * Boolean indicating if the connection is active.
      */
     private static boolean connectionActive = false;
     /**
@@ -64,15 +56,6 @@ public class ObjectsDB {
      * The current number of added objects.
      */
     private int currentAdded = 0;
-    /**
-     * The access counter.
-     */
-    public volatile static AtomicInteger ACCESSCOUNTER = new AtomicInteger(0);
-    /**
-     * The commit counter.
-     */
-    private volatile static AtomicBoolean COMMITBLOCKER = new AtomicBoolean(false);
-
     /**
      * Empty default constructor.
      */
@@ -119,61 +102,31 @@ public class ObjectsDB {
 
             }
         }
-
-        File dbFile = getDbFile();
-
-        if (dbFile.exists() && overwrite) {
-
-            ZooHelper.removeDb(dbFile.getAbsolutePath());
-
-        }
+        
 
         establishConnection();
         objectsCache = new ObjectsCache(this);
 
     }
 
-    /**
-     * Function for increasing the counter of processes accessing objects from
-     * the db.
-     */
-    public static void increaseRWCounter() {
-        while (COMMITBLOCKER.get()) {
-            // YOU SHALL NOT PASS
-            // until commit is done
-        }
-        ACCESSCOUNTER.incrementAndGet();
-    }
-
-    /**
-     * Function for decreasing the counter of processes accessing objects from
-     * the db.
-     */
-    public static void decreaseRWCounter() {
-        ACCESSCOUNTER.decrementAndGet();
-    }
 
     /**
      * Committing all changes into the database.
      */
     public void commit() {
-
-        COMMITBLOCKER.set(true);
-
-        while (ACCESSCOUNTER.get() != 0) {
-            // YOU SHALL NOT PASS
-            // while processes are potentially accessing the database
-        }
-
         try {
-            pm.currentTransaction().commit();
-            pm.currentTransaction().begin();
-            currentAdded = 0;
-        } finally {
-            COMMITBLOCKER.set(false);
+            dbMutex.acquire();
+            connection.commit();
+        } 
+        catch(Exception e){
+
+        }
+        finally {
+            dbMutex.release();
         }
 
     }
+
 
     /**
      * Getter for the current number of added objects.
@@ -184,14 +137,6 @@ public class ObjectsDB {
         return currentAdded;
     }
 
-    /**
-     * Getter for the id map mapping the hashed keys into zoo db ids.
-     *
-     * @return the id map
-     */
-    public HashMap<Long, Long> getIdMap() {
-        return idMap;
-    }
 
     /**
      * Getter for the database file.
@@ -216,8 +161,8 @@ public class ObjectsDB {
      *
      * @return the persistence manager
      */
-    public PersistenceManager getDB() {
-        return pm;
+    public Connection getDB() {
+        return connection;
     }
 
     /**
@@ -256,7 +201,6 @@ public class ObjectsDB {
      */
     public void insertObject(long objectKey, Object object) {
 
-        dbMutex.acquire();
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Inserting single object " + object.getClass().getSimpleName() + ", key: " + objectKey);
@@ -270,30 +214,7 @@ public class ObjectsDB {
 
         ((DbObject) object).setId(objectKey);
         ((DbObject) object).setFirstLevel(true);
-
-        if (!idMap.containsKey(objectKey)) {
-
-            idMap.put(objectKey, 0l);
-            String simpleName = object.getClass().getSimpleName();
-
-            if (!classCounter.containsKey(simpleName)) {
-
-                classCounter.put(simpleName, new HashSet<>());
-
-            }
-
-            classCounter.get(simpleName).add(objectKey);
-
-        } else {
-
-            throw new IllegalArgumentException("error double insertion: " + objectKey);
-
-        }
-
-        currentAdded += 1;
         objectsCache.addObject(objectKey, object);
-
-        dbMutex.release();
     }
 
     /**
@@ -611,6 +532,7 @@ public class ObjectsDB {
     public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
 
         ArrayList<Object> retrievingObjects = new ArrayList<>();
+        HashMap<Long, Object> objectsNotInCache = new HashMap<>();
 
         dbMutex.acquire();
 
@@ -618,37 +540,34 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
         }
 
-        HashMap<Long, Object> objectsNotInCache = new HashMap<>();
 
-        for (long longKey : classCounter.get(className.getSimpleName())) {
+        try {
+            dbMutex.acquire();
+            
+            for (long longKey : classCounter.get(className.getSimpleName())) {
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                    return retrievingObjects;
+                }
 
-            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-
-                return retrievingObjects;
-
-            }
-
-            Long zooid = idMap.get(longKey);
-
-            if (zooid != null) {
 
                 Object obj = objectsCache.getObject(longKey);
-
                 if (obj == null) {
-
                     obj = pm.getObjectById(zooid);
                     objectsNotInCache.put(longKey, obj);
-
                 }
 
                 retrievingObjects.add(obj);
-
             }
+
+            objectsCache.addObjects(objectsNotInCache);
+
         }
-
-        objectsCache.addObjects(objectsNotInCache);
-
-        dbMutex.release();
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        finally {
+            dbMutex.release();
+        }
 
         return retrievingObjects;
     }
@@ -670,33 +589,25 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " removing " + keys.size() + " objects");
         }
 
-        for (long key : keys) {
+        try {
+            dbMutex.acquire();
+            PreparedStatement pstmt = connection.prepareStatement("delete data where id = ?;");
+            for (long key : keys) {
 
-            if (waitingHandler.isRunCanceled()) {
-                break;
-            }
+                if (waitingHandler.isRunCanceled())  break;
 
-            Long zooid = idMap.get(key);
-
-            if (zooid != null) {
-
-                String className = objectsCache.removeObject(key);
-
-                if (zooid != 0) {
-
-                    Object obj = pm.getObjectById((zooid));
-                    pm.deletePersistent(obj);
-                    className = obj.getClass().getSimpleName();
-
-                }
-
-                classCounter.get(className).remove(key);
-                idMap.remove(key);
+                objectsCache.removeObject(key);
+                pstmt.setLong(1, key);
+                pstmt.executeQuery();
 
             }
         }
-
-        dbMutex.release();
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        finally {
+            dbMutex.release();
+        }
 
     }
 
@@ -713,26 +624,20 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " removing object: " + key);
         }
 
-        Long zooid = idMap.get(key);
-
-        if (zooid != null) {
-
-            String className = objectsCache.removeObject(key);
-
-            if (zooid != 0) {
-
-                Object obj = pm.getObjectById(zooid);
-                pm.deletePersistent(obj);
-                className = obj.getClass().getSimpleName();
-
-            }
-
-            classCounter.get(className).remove(key);
-            idMap.remove(key);
-
+        
+        try {
+            objectsCache.removeObject(key);
+            dbMutex.acquire();
+            PreparedStatement pstmt = connection.prepareStatement("delete data where id = ?;");
+            pstmt.setLong(1, key);
+            pstmt.executeQuery();
         }
-
-        dbMutex.release();
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        finally {
+            dbMutex.release();
+        }
 
     }
 
@@ -768,8 +673,27 @@ public class ObjectsDB {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Checking db content,  key: " + objectKey);
         }
+        
+        if (objectsCache.inCache(objectKey)) return true;
+        
+        boolean result = false;
+        try {
+            dbMutex.acquire();
+            PreparedStatement pstmt = connection.prepareStatement("select count(id) cnt from data where id = ?;");
+            pstmt.setLong(1, objectKey);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()){
+                result = rs.getLong("id") == 1;
+            }
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        finally {
+            dbMutex.release();
+        }
 
-        return idMap.containsKey(objectKey);
+        return result;
     }
 
     /**
@@ -800,8 +724,6 @@ public class ObjectsDB {
 
         objectsCache.saveCache(waitingHandler, true);
 
-        pm.currentTransaction().commit();
-
         dbMutex.release();
 
     }
@@ -820,7 +742,6 @@ public class ObjectsDB {
         }
 
         connectionActive = true;
-        pm.currentTransaction().begin();
 
         dbMutex.release();
 
@@ -854,22 +775,13 @@ public class ObjectsDB {
         objectsCache.clearCache();
 
         connectionActive = false;
-        pm.currentTransaction().commit();
-
-        if (pm.currentTransaction().isActive()) {
-
-            pm.currentTransaction().rollback();
-
+        try {
+            connection.close();
         }
-
-        pm.close();
-        pm.getPersistenceManagerFactory().close();
-
-        if (clearing) {
-
-            idMap.clear();
-
+        catch(Exception ex){
+            ex.printStackTrace();
         }
+        
 
         dbMutex.release();
 
@@ -892,7 +804,6 @@ public class ObjectsDB {
     public void establishConnection(boolean loading) {
 
         dbMutex.acquire();
-
         File dbFile = getDbFile();
 
         if (debugInteractions) {
@@ -901,10 +812,20 @@ public class ObjectsDB {
 
         }
 
-        pm = ZooJdoHelper.openOrCreateDB(dbFile.getAbsolutePath());
-        pm.currentTransaction().setRetainValues(true);
-        pm.currentTransaction().begin();
+        try {
+            // Connect with the database
+            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
+            connection.setAutoCommit(false);
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+
+
         connectionActive = true;
+
+        /*
 
         if (loading) {
 
@@ -935,6 +856,7 @@ public class ObjectsDB {
             }
         }
 
+        */
         dbMutex.release();
 
     }

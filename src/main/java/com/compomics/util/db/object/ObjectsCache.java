@@ -2,10 +2,13 @@ package com.compomics.util.db.object;
 
 import static com.compomics.util.db.object.DbMutex.loadObjectMutex;
 import com.compomics.util.waiting.WaitingHandler;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
-import javax.jdo.PersistenceManager;
+import java.util.Map.Entry;
+import org.nustaq.serialization.FSTConfiguration;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
@@ -19,6 +22,26 @@ import javax.jdo.PersistenceManager;
  */
 public class ObjectsCache {
 
+    public class ObjectsCacheElement {
+        public Object object;
+        public boolean inDB;
+        public boolean edited;
+        
+        
+        
+        public ObjectsCacheElement(Object object){
+            this(object, false, false);
+        }
+        
+        public ObjectsCacheElement(Object object, boolean inDB, boolean edited){
+            this.object = object;
+            this.inDB = inDB;
+            this.edited = edited;
+        }
+    }
+    
+    
+    
     /**
      * Empty default constructor
      */
@@ -32,7 +55,7 @@ public class ObjectsCache {
     /**
      * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */
-    private final HashMap<Long, Object> loadedObjects = new HashMap<>();
+    private final HashMap<Long, ObjectsCacheElement> loadedObjects = new HashMap<>();
     /**
      * Linked list to manage a queue for old entries.
      */
@@ -49,11 +72,7 @@ public class ObjectsCache {
      * Number of objects that should at least be kept.
      */
     private final int keepObjectsThreshold = 10000;
-    /**
-     * If number number of registered objects exceeds value, commit to db should
-     * be triggered.
-     */
-    private final int numToCommit = 10000;
+    static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
 
     /**
      * Constructor.
@@ -110,21 +129,15 @@ public class ObjectsCache {
      * @return the object of interest, null if not present in the cache
      */
     public Object getObject(Long objectKey) {
-
         Object object = null;
 
-        loadObjectMutex.acquire();
-
         if (loadedObjects.containsKey(objectKey)) {
-
-            object = loadedObjects.get(objectKey);
-
+            object = loadedObjects.get(objectKey).object;
         }
-
-        loadObjectMutex.release();
 
         return object;
     }
+    
 
     /**
      * Removes an object from the cache.
@@ -137,17 +150,14 @@ public class ObjectsCache {
 
         String className = null;
 
-        loadObjectMutex.acquire();
-
         if (!readOnly) {
             if (loadedObjects.containsKey(objectKey)) {
-                className = loadedObjects.get(objectKey).getClass().getSimpleName();
+                className = loadedObjects.get(objectKey).object.getClass().getSimpleName();
                 loadedObjects.remove(objectKey);
                 objectQueue.removeFirstOccurrence(objectKey);
             }
         }
 
-        loadObjectMutex.release();
 
         return className;
     }
@@ -162,25 +172,13 @@ public class ObjectsCache {
      */
     public void addObject(Long objectKey, Object object) {
 
-        loadObjectMutex.acquire();
-
         if (!readOnly) {
-
             if (!loadedObjects.containsKey(objectKey)) {
-
-                loadedObjects.put(objectKey, object);
+                loadedObjects.put(objectKey, new ObjectsCacheElement(object));
                 objectQueue.add(objectKey);
-
-                if (objectsDB.getCurrentAdded() > numToCommit) {
-                    objectsDB.commit();
-                }
             }
-
             updateCache();
-
         }
-
-        loadObjectMutex.release();
 
     }
 
@@ -197,13 +195,10 @@ public class ObjectsCache {
         loadObjectMutex.acquire();
 
         if (!readOnly) {
-
-            loadedObjects.putAll(objects);
-            objectQueue.addAll(objects.keySet());
-
-            if (objectsDB.getCurrentAdded() > numToCommit) {
-                objectsDB.commit();
+            for (Entry<Long, Object>kv : objects.entrySet()){
+               loadedObjects.put(kv.getKey(), new ObjectsCacheElement(kv.getValue()));
             }
+            objectQueue.addAll(objects.keySet());
 
             updateCache();
         }
@@ -246,10 +241,18 @@ public class ObjectsCache {
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) {
 
         if (!readOnly) {
-
+            Connection connection = objectsDB.getDB();
             ListIterator<Long> listIterator = objectQueue.listIterator();
-            PersistenceManager pm = objectsDB.getDB();
-
+            PreparedStatement psInsert = null, psUpdate = null;
+            try {
+                psInsert = connection.prepareStatement("INSERT INTO data (id, class, data) VALUES (?, ?, ?);");
+                psUpdate = connection.prepareStatement("UPDATE data SET data = ? WHERE id = ?;");
+    
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            
             for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i) {
 
                 if (waitingHandler != null) {
@@ -264,14 +267,25 @@ public class ObjectsCache {
                 }
 
                 long key = clearEntries ? objectQueue.pollFirst() : listIterator.next();
-
-                Object obj = loadedObjects.get(key);
-
-                if (!((DbObject) obj).jdoZooIsPersistent()) {
-
-                    pm.makePersistent(obj);
-                    objectsDB.getIdMap().put(key, ((DbObject) obj).jdoZooGetOid());
-                    
+                ObjectsCacheElement obj = loadedObjects.get(key);
+                
+                byte barray[] = conf.asByteArray(obj.object);
+                DbObject a = (DbObject)obj.object;
+                try {
+                    if (obj.inDB){
+                        psUpdate.setBytes(1, barray);
+                        psUpdate.setLong(2, ((DbObject)obj.object).getId());
+                        psUpdate.addBatch();
+                    }
+                    else {
+                        psInsert.setLong(1, ((DbObject)obj.object).getId());
+                        psInsert.setString(2, obj.object.getClass().getSimpleName());
+                        psInsert.setBytes(3, barray);
+                        psInsert.addBatch();
+                    }
+                }
+                catch (Exception e){
+                    e.printStackTrace();
                 }
                     
                 if (clearEntries) {
@@ -280,7 +294,18 @@ public class ObjectsCache {
 
             }
 
-            objectsDB.commit();
+            try {
+                loadObjectMutex.acquire();
+                psInsert.executeBatch();
+                psUpdate.executeBatch();
+                connection.commit();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            finally {
+                loadObjectMutex.release();
+            }
 
         }
 
@@ -297,12 +322,6 @@ public class ObjectsCache {
 
             int toRemove = loadedObjects.size() >> 2;
             saveObjects(toRemove, null, true);
-
-            // turning on the garbage collector from time to time
-            // helps to keep the memory clean. Performance becomes
-            // better, the mass for cleaning is lower
-            System.gc();
-
         }
     }
 
@@ -328,21 +347,13 @@ public class ObjectsCache {
 
         loadObjectMutex.acquire();
 
-        // save in batches to enable progress display
-        int numSaveIterations = (int) Math.ceil(((double) loadedObjects.size()) / numToCommit); // @TODO: optimize batch size?
 
         if (waitingHandler != null) {
             waitingHandler.resetSecondaryProgressCounter();
             waitingHandler.setMaxSecondaryProgressCounter(loadedObjects.size() + 1); // @TODO: can this number get bigger than the max integer value? 
         }
 
-        for (int i = 0; i < numSaveIterations; i++) {
-            if (loadedObjects.size() > numToCommit) {
-                saveObjects(numToCommit, waitingHandler, emptyCache);
-            } else {
-                saveObjects(loadedObjects.size(), waitingHandler, emptyCache);
-            }
-        }
+        saveObjects(loadedObjects.size(), waitingHandler, emptyCache);
 
         if (waitingHandler != null) {
 

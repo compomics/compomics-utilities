@@ -19,9 +19,10 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 /**
- * Reader for a Compomics Mass Spectrometry (cms) file.
+ * Reader for Compomics Mass Spectrometry (cms) files.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class CmsFileReader implements SpectrumProvider {
 
@@ -73,15 +74,13 @@ public class CmsFileReader implements SpectrumProvider {
     /**
      * Constructor allocating for single thread usage.
      *
-     * @param file The file to read.
+     * @param file the file to read
      *
-     * @throws FileNotFoundException Exception thrown if the file was not found.
-     * @throws IOException Exception thrown if an error occurred while
-     * attempting to read the file.
+     * @throws FileNotFoundException thrown if the file was not found
+     * @throws IOException thrown if an error occurred while attempting to read
+     * the file
      */
-    public CmsFileReader(
-            File file
-    ) throws FileNotFoundException, IOException {
+    public CmsFileReader(File file) throws FileNotFoundException, IOException {
 
         this(file, 1);
 
@@ -90,81 +89,81 @@ public class CmsFileReader implements SpectrumProvider {
     /**
      * Constructor.
      *
-     * @param file The file to read.
-     * @param nThreads The number of threads that should be allowed to query
-     * this reader.
+     * @param file the file to read
+     * @param nThreads number of threads that should be allowed to query this
+     * reader
      *
-     * @throws FileNotFoundException Exception thrown if the file was not found.
-     * @throws IOException Exception thrown if an error occurred while
-     * attempting to read the file.
+     * @throws FileNotFoundException thrown if the file was not found
+     * @throws IOException thrown if an error occurred while attempting to read
+     * the file
      */
-    public CmsFileReader(
-            File file,
-            int nThreads
-    ) throws FileNotFoundException, IOException {
+    public CmsFileReader(File file, int nThreads) throws FileNotFoundException, IOException {
 
         raf = new RandomAccessFile(file, "r");
 
-        byte[] fileMagicNumber = new byte[CmsFileUtils.MAGIC_NUMBER.length];
-        raf.read(fileMagicNumber);
+        try {
+            byte[] fileMagicNumber = new byte[CmsFileUtils.MAGIC_NUMBER.length];
+            raf.read(fileMagicNumber);
 
-        if (!Arrays.equals(CmsFileUtils.MAGIC_NUMBER, fileMagicNumber)) {
+            if (!Arrays.equals(CmsFileUtils.MAGIC_NUMBER, fileMagicNumber)) {
 
-            throw new IOException("File format of " + file + " not supported.");
+                raf.close();
+                throw new IOException("File format of " + file + " not supported.");
 
+            }
+
+            long footerPosition = raf.readLong();
+
+            minMz = raf.readDouble();
+            maxMz = raf.readDouble();
+            maxInt = raf.readDouble();
+            maxRt = raf.readDouble();
+
+            raf.seek(footerPosition);
+            int length = raf.readInt();
+            int uncompressedLength = raf.readInt();
+
+            byte[] compressedTitles = new byte[length];
+            raf.read(compressedTitles);
+
+            byte[] titlesByteArray = uncompress(compressedTitles, uncompressedLength);
+            String titlesIndexString = new String(titlesByteArray, 0, titlesByteArray.length, ENCODING);
+            String[] titlesIndexStringSplit = titlesIndexString.split(CmsFileUtils.TITLE_SEPARATOR);
+
+            int nTitles = titlesIndexStringSplit.length / 2;
+            indexMap = new HashMap<>(nTitles);
+            titles = new String[nTitles];
+
+            for (int i = 0; i < nTitles; i++) {
+
+                String title = titlesIndexStringSplit[i];
+                int index = Integer.parseInt(titlesIndexStringSplit[i + nTitles]);
+                indexMap.put(title, index);
+                titles[i] = title;
+
+            }
+
+            precrursorMzMap = new HashMap<>(nTitles);
+
+            long size = footerPosition - CmsFileWriter.HEADER_LENGTH;
+
+            fc = raf.getChannel();
+
+            mappedByteBuffer = fc.map(FileChannel.MapMode.READ_ONLY, CmsFileWriter.HEADER_LENGTH, size);
+
+        } finally {
+            raf.close();
         }
-
-        long footerPosition = raf.readLong();
-
-        minMz = raf.readDouble();
-        maxMz = raf.readDouble();
-        maxInt = raf.readDouble();
-        maxRt = raf.readDouble();
-
-        raf.seek(footerPosition);
-        int length = raf.readInt();
-        int uncompressedLength = raf.readInt();
-
-        byte[] compressedTitles = new byte[length];
-        raf.read(compressedTitles);
-
-        byte[] titlesByteArray = uncompress(compressedTitles, uncompressedLength);
-        String titlesIndexString = new String(titlesByteArray, 0, titlesByteArray.length, ENCODING);
-        String[] titlesIndexStringSplit = titlesIndexString.split(CmsFileUtils.TITLE_SEPARATOR);
-
-        int nTitles = titlesIndexStringSplit.length / 2;
-        indexMap = new HashMap<>(nTitles);
-        titles = new String[nTitles];
-
-        for (int i = 0; i < nTitles; i++) {
-
-            String title = titlesIndexStringSplit[i];
-            int index = Integer.parseInt(titlesIndexStringSplit[i + nTitles]);
-            indexMap.put(title, index);
-            titles[i] = title;
-
-        }
-
-        precrursorMzMap = new HashMap<>(nTitles);
-
-        long size = footerPosition - CmsFileWriter.HEADER_LENGTH;
-
-        fc = raf.getChannel();
-
-        mappedByteBuffer = fc.map(FileChannel.MapMode.READ_ONLY, CmsFileWriter.HEADER_LENGTH, size);
-
     }
 
     /**
      * Returns the spectrum with the given title.
      *
-     * @param spectrumTitle The title of the spectrum.
+     * @param spectrumTitle title of the spectrum
      *
-     * @return The spectrum.
+     * @return the spectrum
      */
-    public Spectrum getSpectrum(
-            String spectrumTitle
-    ) {
+    public Spectrum getSpectrum(String spectrumTitle) {
 
         int index = indexMap.get(spectrumTitle);
 
@@ -220,13 +219,11 @@ public class CmsFileReader implements SpectrumProvider {
     /**
      * Returns the precursor of the spectrum with the given title.
      *
-     * @param spectrumTitle The title of the spectrum.
+     * @param spectrumTitle title of the spectrum
      *
-     * @return The precursor of the spectrum.
+     * @return the precursor of the spectrum
      */
-    public Precursor getPrecursor(
-            String spectrumTitle
-    ) {
+    public Precursor getPrecursor(String spectrumTitle) {
 
         int index = indexMap.get(spectrumTitle);
 
@@ -251,11 +248,11 @@ public class CmsFileReader implements SpectrumProvider {
         }
 
         mutex.release();
-        
+
         Precursor precursor = new Precursor(
-                precursorRt, 
-                precursorMz, 
-                precursorIntensity, 
+                precursorRt,
+                precursorMz,
+                precursorIntensity,
                 charges
         );
 
@@ -266,13 +263,11 @@ public class CmsFileReader implements SpectrumProvider {
     /**
      * Returns the m/z of the precursor of the spectrum with the given title.
      *
-     * @param spectrumTitle The title of the spectrum.
+     * @param spectrumTitle the title of the spectrum
      *
-     * @return The precursor m/z of the spectrum.
+     * @return the precursor m/z of the spectrum
      */
-    public double getPrecursorMz(
-            String spectrumTitle
-    ) {
+    public double getPrecursorMz(String spectrumTitle) {
 
         Double precursorMz = precrursorMzMap.get(spectrumTitle);
 
@@ -298,13 +293,11 @@ public class CmsFileReader implements SpectrumProvider {
     /**
      * Returns the RT of the precursor of the spectrum with the given title.
      *
-     * @param spectrumTitle The title of the spectrum.
+     * @param spectrumTitle the title of the spectrum
      *
-     * @return The precursor RT of the spectrum.
+     * @return the precursor RT of the spectrum
      */
-    public double getPrecursorRt(
-            String spectrumTitle
-    ) {
+    public double getPrecursorRt(String spectrumTitle) {
 
         int index = indexMap.get(spectrumTitle);
 
@@ -323,13 +316,11 @@ public class CmsFileReader implements SpectrumProvider {
     /**
      * Returns the peaks of the spectrum with the given title.
      *
-     * @param spectrumTitle The title of the spectrum.
+     * @param spectrumTitle the title of the spectrum
      *
-     * @return The peaks of the spectrum.
+     * @return the peaks of the spectrum
      */
-    public double[][] getPeaks(
-            String spectrumTitle
-    ) {
+    public double[][] getPeaks(String spectrumTitle) {
 
         int index = indexMap.get(spectrumTitle);
 
@@ -366,15 +357,14 @@ public class CmsFileReader implements SpectrumProvider {
     /**
      * Uncompresses the given byte array.
      *
-     * @param compressedByteArray The compressed byte array.
-     * @param uncompressedLength The uncompressed length.
+     * @param compressedByteArray the compressed byte array
+     * @param uncompressedLength the uncompressed length
      *
-     * @return The uncompressed array.
+     * @return the uncompressed array
      */
     public static byte[] uncompress(
             byte[] compressedByteArray,
-            int uncompressedLength
-    ) {
+            int uncompressedLength) {
 
         try {
 
@@ -530,9 +520,9 @@ public class CmsFileReader implements SpectrumProvider {
 
     @Override
     public String[] getSpectrumTitles(String fileName) {
-        
+
         return titles;
-        
+
     }
 
 }

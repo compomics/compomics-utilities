@@ -12,7 +12,6 @@ import com.compomics.util.experiment.identification.spectrum_annotation.Spectrum
 import com.compomics.util.experiment.identification.matches.IonMatch;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.identification.utils.ModificationUtils;
@@ -512,9 +511,9 @@ public class PeptideSpectrumAnnotator extends SpectrumAnnotator {
                 specificAnnotationSettings
         );
 
-        HashMap<Ion.IonType, HashSet<Integer>> sepectedIonTypes = specificAnnotationSettings.getIonTypes();
+        HashMap<Ion.IonType, HashSet<Integer>> selectedIonTypes = specificAnnotationSettings.getIonTypes();
 
-        return sepectedIonTypes.entrySet().stream()
+        return selectedIonTypes.entrySet().stream()
                 .filter(
                         entry1 -> theoreticalFragmentIons.containsKey(entry1.getKey().index)
                 )

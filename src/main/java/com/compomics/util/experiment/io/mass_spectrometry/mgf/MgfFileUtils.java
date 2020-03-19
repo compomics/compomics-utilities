@@ -22,7 +22,7 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 public class MgfFileUtils {
 
     /**
-     * The file extension for cms files.
+     * The file extension for mgf files.
      */
     public static final String[] EXTENSIONS = new String[]{".mgf", ".mgf.gz"};
 

@@ -186,9 +186,9 @@ public class MsFileHandler implements SpectrumProvider {
             File cmsFile
     ) throws IOException {
 
-        try ( MsFileIterator iterator = MsFileIterator.getMsFileIterator(msFile)) {
+        try (MsFileIterator iterator = MsFileIterator.getMsFileIterator(msFile)) {
 
-            try ( CmsFileWriter writer = new CmsFileWriter(cmsFile)) {
+            try (CmsFileWriter writer = new CmsFileWriter(cmsFile)) {
 
                 String spectrumTitle;
                 while ((spectrumTitle = iterator.next()) != null) {

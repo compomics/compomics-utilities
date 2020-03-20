@@ -6,6 +6,7 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.IoUtil;
 import static com.compomics.util.io.IoUtil.ENCODING;
 import com.compomics.util.threading.SimpleSemaphore;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -75,14 +76,15 @@ public class CmsFileReader implements SpectrumProvider {
      * Constructor allocating for single thread usage.
      *
      * @param file the file to read
+     * @param waitingHandler the waiting handler
      *
      * @throws FileNotFoundException thrown if the file was not found
      * @throws IOException thrown if an error occurred while attempting to read
      * the file
      */
-    public CmsFileReader(File file) throws FileNotFoundException, IOException {
+    public CmsFileReader(File file, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
-        this(file, 1);
+        this(file, 1, waitingHandler);
 
     }
 
@@ -92,13 +94,16 @@ public class CmsFileReader implements SpectrumProvider {
      * @param file the file to read
      * @param nThreads number of threads that should be allowed to query this
      * reader
+     * @param waitingHandler the waiting handler
      *
      * @throws FileNotFoundException thrown if the file was not found
      * @throws IOException thrown if an error occurred while attempting to read
      * the file
      */
-    public CmsFileReader(File file, int nThreads) throws FileNotFoundException, IOException {
+    public CmsFileReader(File file, int nThreads, WaitingHandler waitingHandler) throws FileNotFoundException, IOException {
 
+        // @TODO: use the waiting handler
+        
         raf = new RandomAccessFile(file, "r");
 
         try {
@@ -209,6 +214,7 @@ public class CmsFileReader implements SpectrumProvider {
         Precursor precursor = new Precursor(
                 precursorRt,
                 precursorMz,
+                precursorIntensity,
                 charges
         );
 

@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.io.identification.idfilereaders;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
@@ -10,8 +9,6 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
@@ -1076,7 +1073,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
         }
 
         // see if we can find the spectrum index
-        Integer spectrumIndex = null;
+        Integer spectrumIndex = null; // @TODO: why is the index not used?
         if (spectrumId != null && spectrumId.startsWith("index=")) { // @TODO: support more index types
             spectrumIndex = Integer.valueOf(spectrumId.substring(spectrumId.indexOf("=") + 1));
         }
@@ -1084,8 +1081,8 @@ public class MzIdentMLIdfileReader implements IdfileReader {
         // get the spectrum file name
         String spectrumFileName = spectrumFileNameMap.get(spectraDataRef);
 
-        // set up thespectrum match
-        SpectrumMatch currentMatch = new SpectrumMatch(spectrumFileName, "temp");
+        // set up the spectrum match
+        SpectrumMatch currentMatch = new SpectrumMatch(spectrumFileName, spectrumId);
 
         parser.next();
         int type = parser.next();

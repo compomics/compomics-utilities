@@ -2,6 +2,7 @@ package com.compomics.util.experiment.io.mass_spectrometry.cms;
 
 import com.compomics.util.experiment.io.mass_spectrometry.MsFileIterator;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
 
@@ -25,15 +26,16 @@ public class CmsFileIterator implements MsFileIterator {
      * Constructor.
      *
      * @param file The file to iterate.
+     * @param waitingHandler The waiting handler.
      *
      * @throws IOException Exception thrown if an error occurred while reading
      * the file.
      */
     public CmsFileIterator(
-            File file
+            File file, WaitingHandler waitingHandler
     ) throws IOException {
 
-        this.reader = new CmsFileReader(file);
+        this.reader = new CmsFileReader(file, waitingHandler);
 
     }
 

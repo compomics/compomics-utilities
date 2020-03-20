@@ -59,7 +59,7 @@ public class MsFilePerformance {
 
             long cmsFileStart = Instant.now().getEpochSecond();
             MsFileHandler msFileHandler = new MsFileHandler();
-            msFileHandler.register(mgfFile);
+            msFileHandler.register(mgfFile, null);
             long cmsFileEnd = Instant.now().getEpochSecond();
             long cmsCreationTime = cmsFileEnd - cmsFileStart;
 
@@ -124,7 +124,7 @@ public class MsFilePerformance {
                 cmsReadParallel += cmsReadParallelEnd - cmsReadParallelStart;
                 
                 long mgfIterationStart = Instant.now().getEpochSecond();
-                MgfFileIterator mgfFileIterator = new MgfFileIterator(mgfFile);
+                MgfFileIterator mgfFileIterator = new MgfFileIterator(mgfFile, null);
                 String title;
                 while ((title = mgfFileIterator.next()) != null) {
                     

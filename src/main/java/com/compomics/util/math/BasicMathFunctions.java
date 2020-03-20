@@ -1,7 +1,6 @@
 package com.compomics.util.math;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import org.apache.commons.math.util.FastMath;
@@ -10,14 +9,9 @@ import org.apache.commons.math.util.FastMath;
  * Class used to perform basic mathematical functions.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class BasicMathFunctions {
-
-    /**
-     * Empty default constructor
-     */
-    public BasicMathFunctions() {
-    }
 
     /**
      * Cache for the base used for the log.
@@ -33,14 +27,21 @@ public class BasicMathFunctions {
     private static final HashMap<Integer, Long> factorialsCache = new HashMap<Integer, Long>();
 
     /**
+     * Empty default constructor.
+     */
+    public BasicMathFunctions() {
+    }
+
+    /**
      * Returns n! as a long. Returns null if the capacity of a long is not
-     * sufficient (ie n higher than 20).
+     * sufficient (i.e. n higher than 20).
      *
      * @param n a given integer
      *
      * @return the corresponding factorial
      */
     public static Long factorial(Integer n) {
+
         if (n == 0) {
             return 0L;
         } else if (n == 1) {
@@ -52,10 +53,12 @@ public class BasicMathFunctions {
             }
             return result;
         } else if (n > 20) {
-            throw new IllegalArgumentException("Factorial only implemented for n <= 20. Reached the maximal capacoty of an integer.");
+            throw new IllegalArgumentException(
+                    "Factorial only implemented for n <= 20. Reached the maximal capacoty of an integer.");
         } else if (n < 1) {
             throw new ArithmeticException("Attempting to calculate the factorial of a negative number.");
         }
+
         throw new UnsupportedOperationException("Factorial not implemented for n=" + n + ".");
     }
 
@@ -68,7 +71,9 @@ public class BasicMathFunctions {
      * @return the corresponding factorial
      */
     private static synchronized Long estimateFactorial(Integer n) {
+
         Long result = factorialsCache.get(n);
+
         if (result == null) {
             synchronized (BasicMathFunctions.class) {
                 result = factorialsCache.get(n);
@@ -78,6 +83,7 @@ public class BasicMathFunctions {
                 }
             }
         }
+
         return result;
     }
 
@@ -90,16 +96,20 @@ public class BasicMathFunctions {
      * @return the corresponding factorial
      */
     public static Long factorial(Integer n, Integer k) {
+
         if (n < k) {
             throw new ArithmeticException("n < k in n!/k!.");
         }
         if (n.equals(k)) {
             return (long) 1;
         } else {
+
             if (n < 20) {
                 return factorial(n) / factorial(k);
             }
+
             Long nMinusOne = factorial(n - 1, k);
+
             if (nMinusOne == null || nMinusOne > Long.MAX_VALUE / n) {
                 return null;
             } else {
@@ -119,16 +129,20 @@ public class BasicMathFunctions {
      * @return the number of k-combinations in a set of n elements
      */
     public static Long getCombination(int k, int n) {
+
         if (k == 0) {
             return (long) 1;
         } else if (k < n) {
+
             Long kInN = factorial(n, k);
             Long nMinK = factorial(n - k);
+
             if (kInN == null || nMinK == null) {
                 return null;
             } else {
                 return kInN / kInN;
             }
+
         } else if (k == n) {
             return (long) 1;
         } else {
@@ -137,38 +151,49 @@ public class BasicMathFunctions {
     }
 
     /**
-     * Method to estimate the median.
+     * Method to estimate the median for an unsorted list.
      *
-     * @param values array of double
-     * 
+     * @param input array of double
+     *
      * @return median of the input
      */
-    public static double median(double[] values) {
-        Arrays.sort(values);
-        return medianSorted(values);
+    public static double median(double[] input) {
+
+        ArrayList<Double> tempValues = new ArrayList<>(input.length);
+
+        for (double tempValue : input) {
+            tempValues.add(tempValue);
+        }
+
+        Collections.sort(tempValues);
+
+        return medianSorted(tempValues);
     }
 
     /**
-     * Method to estimate the median.
+     * Method to estimate the median for a sorted list.
      *
-     * @param values array of double
-     * 
+     * @param input array of double
+     *
      * @return median of the input
      */
-    public static double medianSorted(double[] values) {
-        int length = values.length;
-        if (values.length == 1) {
-            return values[0];
+    public static double medianSorted(double[] input) {
+
+        int length = input.length;
+
+        if (input.length == 1) {
+            return input[0];
         }
+
         if (length % 2 == 1) {
-            return values[(length - 1) / 2];
+            return input[(length - 1) / 2];
         } else {
-            return (values[length / 2] + values[(length) / 2 - 1]) / 2;
+            return (input[length / 2] + input[(length) / 2 - 1]) / 2;
         }
     }
 
     /**
-     * Method to estimate the median.
+     * Method to estimate the median of an unsorted list.
      *
      * @param input ArrayList of double
      * @return median of the input
@@ -188,8 +213,10 @@ public class BasicMathFunctions {
     }
 
     /**
-     * Returns the desired percentile in a given array of double. If the
-     * percentile is between two values a linear interpolation is done.
+     * Returns the desired percentile in a given array of unsorted double
+     * values. If the percentile is between two values a linear interpolation is
+     * done. Note: When calculating multiple percentiles on the same list, it is
+     * advised to sort it and use percentileSorted.
      *
      * @param input the input array
      * @param percentile the desired percentile. 0.01 returns the first
@@ -198,16 +225,22 @@ public class BasicMathFunctions {
      * @return the desired percentile
      */
     public static double percentile(double[] input, double percentile) {
-        
-        Arrays.sort(input);
-    
-        return percentileSorted(input, percentile);
-    
+
+        ArrayList<Double> tempValues = new ArrayList<>(input.length);
+
+        for (double tempValue : input) {
+            tempValues.add(tempValue);
+        }
+
+        Collections.sort(tempValues);
+
+        return percentileSorted(tempValues, percentile);
     }
 
     /**
-     * Returns the desired percentile in a given array of double. If the
-     * percentile is between two values a linear interpolation is done.
+     * Returns the desired percentile in an array of sorted double values. If
+     * the percentile is between two values a linear interpolation is done. The
+     * list must be sorted prior to submission.
      *
      * @param input the input array
      * @param percentile the desired percentile. 0.01 returns the first
@@ -216,37 +249,40 @@ public class BasicMathFunctions {
      * @return the desired percentile
      */
     public static double percentileSorted(double[] input, double percentile) {
-        
+
         if (percentile < 0 || percentile > 1) {
-            throw new IllegalArgumentException("Incorrect input for percentile: " + percentile + ". Input must be between 0 and 1.");
+            throw new IllegalArgumentException(
+                    "Incorrect input for percentile: "
+                    + percentile + ". Input must be between 0 and 1.");
         }
-        
-        Arrays.sort(input);
+
         int length = input.length;
+
         if (length == 0) {
-            throw new IllegalArgumentException("Attempting to estimate the percentile of an empty list.");
+            throw new IllegalArgumentException(
+                    "Attempting to estimate the percentile of an empty list.");
         }
         if (length == 1) {
             return input[0];
         }
+
         double indexDouble = percentile * (length - 1);
         int index = (int) (indexDouble);
         double valueAtIndex = input[index];
         double rest = indexDouble - index;
+
         if (index == input.length - 1 || rest == 0) {
             return valueAtIndex;
         }
-        
+
         return valueAtIndex + rest * (input[index + 1] - valueAtIndex);
-    
     }
-        
 
     /**
-     * Returns the desired percentile in a given list of double. If the
-     * percentile is between two values a linear interpolation is done. Note:
-     * When calculating multiple percentiles on the same list, it is advised to
-     * sort it and use percentileSorted.
+     * Returns the desired percentile in a list of unsorted double values. If
+     * the percentile is between two values a linear interpolation is done.
+     * Note: When calculating multiple percentiles on the same list, it is
+     * advised to sort it and use percentileSorted.
      *
      * @param input the input list
      * @param percentile the desired percentile. 0.01 returns the first
@@ -255,20 +291,26 @@ public class BasicMathFunctions {
      * @return the desired percentile
      */
     public static double percentile(ArrayList<Double> input, double percentile) {
+
         if (input == null) {
-            throw new IllegalArgumentException("Attempting to estimate the percentile of a null object.");
+            throw new IllegalArgumentException(
+                    "Attempting to estimate the percentile of a null object.");
         }
+
         int length = input.size();
+
         if (length == 0) {
-            throw new IllegalArgumentException("Attempting to estimate the percentile of an empty list.");
+            throw new IllegalArgumentException(
+                    "Attempting to estimate the percentile of an empty list.");
         }
+
         ArrayList<Double> sortedInput = new ArrayList<>(input);
         Collections.sort(sortedInput);
         return percentileSorted(sortedInput, percentile);
     }
 
     /**
-     * Returns the desired percentile in a given list of double. If the
+     * Returns the desired percentile in a list of sorted double values. If the
      * percentile is between two values a linear interpolation is done. The list
      * must be sorted prior to submission.
      *
@@ -279,46 +321,39 @@ public class BasicMathFunctions {
      * @return the desired percentile
      */
     public static double percentileSorted(ArrayList<Double> input, double percentile) {
-    
+
         if (percentile < 0 || percentile > 1) {
-        
-            throw new IllegalArgumentException("Incorrect input for percentile: " + percentile + ". Input must be between 0 and 1.");
-        
+            throw new IllegalArgumentException(
+                    "Incorrect input for percentile: "
+                    + percentile + ". Input must be between 0 and 1.");
         }
-        
+
         if (input == null) {
-        
-            throw new IllegalArgumentException("Attempting to estimate the percentile of a null object.");
-        
+            throw new IllegalArgumentException(
+                    "Attempting to estimate the percentile of a null object.");
         }
-        
+
         int length = input.size();
-        
+
         if (length == 0) {
-        
-            throw new IllegalArgumentException("Attempting to estimate the percentile of an empty list.");
-        
+            throw new IllegalArgumentException(
+                    "Attempting to estimate the percentile of an empty list.");
         }
-        
+
         if (length == 1) {
-        
             return input.get(0);
-        
         }
-        
+
         double indexDouble = percentile * (length - 1);
         int index = (int) (indexDouble);
         double valueAtIndex = input.get(index);
         double rest = indexDouble - index;
-        
+
         if (index == input.size() - 1 || rest == 0) {
-        
             return valueAtIndex;
-        
         }
-        
+
         return valueAtIndex + rest * (input.get(index + 1) - valueAtIndex);
-    
     }
 
     /**
@@ -328,11 +363,14 @@ public class BasicMathFunctions {
      * @return the mad of the input
      */
     public static double mad(double[] ratios) {
+
         double[] deviations = new double[ratios.length];
         double med = median(ratios);
+
         for (int i = 0; i < ratios.length; i++) {
             deviations[i] = Math.abs(ratios[i] - med);
         }
+
         return median(deviations);
     }
 
@@ -343,11 +381,14 @@ public class BasicMathFunctions {
      * @return the mad of the input
      */
     public static double mad(ArrayList<Double> ratios) {
+
         double[] deviations = new double[ratios.size()];
         double med = median(ratios);
+
         for (int i = 0; i < ratios.size(); i++) {
             deviations[i] = Math.abs(ratios.get(i) - med);
         }
+
         return median(deviations);
     }
 
@@ -360,12 +401,14 @@ public class BasicMathFunctions {
      * @return the log value of the input in the desired base.
      */
     public static double log(double input, double base) {
+
         if (base <= 0) {
             throw new IllegalArgumentException("Attempting to comupute logarithm of base " + base + ".");
         } else if (base != logBase) {
             logBase = base;
             logBaseValue = FastMath.log(base);
         }
+
         return FastMath.log(input) / logBaseValue;
     }
 
@@ -377,16 +420,21 @@ public class BasicMathFunctions {
      * @return the corresponding standard deviation
      */
     public static double std(ArrayList<Double> input) {
+
         if (input == null || input.size() < 2) {
             return 0;
         }
+
         double result = 0;
         double mean = mean(input);
+
         for (Double x : input) {
             result += Math.pow(x - mean, 2);
         }
+
         result = result / (input.size() - 1);
         result = Math.sqrt(result);
+
         return result;
     }
 
@@ -407,10 +455,13 @@ public class BasicMathFunctions {
      * @return the corresponding mean
      */
     public static double sum(ArrayList<Double> input) {
+
         double result = 0;
+
         for (Double x : input) {
             result += x;
         }
+
         return result;
     }
 
@@ -423,15 +474,20 @@ public class BasicMathFunctions {
      * @return the Pearson correlation factor
      */
     public static double getCorrelation(ArrayList<Double> series1, ArrayList<Double> series2) {
+
         if (series1.size() != series2.size()) {
             throw new IllegalArgumentException("Series must be of same size for correlation analysis (series 1: " + series1.size() + " elements, series 1: " + series2.size() + " elements).");
         }
+
         int n = series1.size();
+
         if (n <= 1) {
             throw new IllegalArgumentException("At least two values are required for the estimation of correlation factors (" + n + " elements).");
         }
+
         double std1 = std(series1);
         double std2 = std(series2);
+
         if (std1 == 0 && std2 == 0) {
             return 1;
         }
@@ -441,14 +497,18 @@ public class BasicMathFunctions {
         if (std2 == 0) {
             std2 = std1;
         }
+
         double mean1 = mean(series1);
         double mean2 = mean(series2);
         double corr = 0;
+
         for (int i = 0; i < n; i++) {
             corr += (series1.get(i) - mean1) * (series2.get(i) - mean2);
         }
+
         corr = corr / (std1 * std2);
         corr = corr / (n - 1);
+
         return corr;
     }
 
@@ -463,15 +523,23 @@ public class BasicMathFunctions {
      * @return a robust version of the Pearson correlation factor
      */
     public static double getRobustCorrelation(ArrayList<Double> series1, ArrayList<Double> series2) {
+
         if (series1.size() != series2.size()) {
-            throw new IllegalArgumentException("Series must be of same size for correlation analysis (series 1: " + series1.size() + " elements, series 1: " + series2.size() + " elements).");
+            throw new IllegalArgumentException(
+                    "Series must be of same size for correlation analysis (series 1: "
+                    + series1.size() + " elements, series 1: " + series2.size() + " elements).");
         }
+
         int n = series1.size();
+
         if (n <= 1) {
-            throw new IllegalArgumentException("At least two values are required for the estimation of correlation factors (" + n + " elements).");
+            throw new IllegalArgumentException(
+                    "At least two values are required for the estimation of correlation factors (" + n + " elements).");
         }
+
         double std1 = (percentile(series1, 0.841) - percentile(series1, 0.159)) / 2;
         double std2 = (percentile(series2, 0.841) - percentile(series2, 0.159)) / 2;
+
         if (std1 == 0 && std2 == 0) {
             return 1;
         }
@@ -481,14 +549,18 @@ public class BasicMathFunctions {
         if (std2 == 0) {
             std2 = std1;
         }
+
         double mean1 = median(series1);
         double mean2 = median(series2);
         double corr = 0;
+
         for (int i = 0; i < n; i++) {
             corr += (series1.get(i) - mean1) * (series2.get(i) - mean2);
         }
+
         corr = corr / (std1 * std2);
         corr = corr / (n - 1);
+
         return corr;
     }
 
@@ -529,13 +601,16 @@ public class BasicMathFunctions {
      * @return a random integer
      */
     public static int getRandomInteger(int min, int max) {
+
         double randomDouble = min + (Math.random() * (max - min));
+
         if (randomDouble > max) {
             return max;
         }
         if (randomDouble < min) {
             return min;
         }
+
         return (int) Math.round(randomDouble);
     }
 
@@ -550,10 +625,13 @@ public class BasicMathFunctions {
      * @return a list of n random indexes between min and max included
      */
     public static ArrayList<Integer> getRandomIndexes(int n, int min, int max) {
+
         ArrayList<Integer> result = new ArrayList<>(n);
+
         for (int i = 0; i < n; i++) {
             result.add(getRandomInteger(min, max));
         }
+
         return result;
     }
 }

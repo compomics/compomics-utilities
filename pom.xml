@@ -495,7 +495,13 @@
         <dependency>
             <groupId>uk.ac.ebi.jmzml</groupId>
             <artifactId>jmzml</artifactId>
-            <version>1.6.8</version>
+            <version>1.7.11</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>psidev.psi.tools</groupId>
+            <artifactId>xxindex</artifactId>
+            <version>0.23</version>
         </dependency>
 
         <dependency>

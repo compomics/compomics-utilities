@@ -22,7 +22,7 @@ public class Ms2Exporter {
     private final SimpleFileWriter writer;
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public Ms2Exporter() {
         writer = null;

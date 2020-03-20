@@ -7,6 +7,7 @@ import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.IoUtil;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -46,41 +47,43 @@ public class MsFileHandler implements SpectrumProvider {
     }
 
     /**
-     * Registers a mass spectrometry file and enables querying its spectra. If
-     * the file is not a cms file, a cms file will be created along the ms file.
+     * Registers a mass spectrometry file and enables querying its spectra.If
+     * the file is not a cms file, a cms file will be created along with the ms
+     * file.
      *
      * @param msFile The mass spectrometry file to register.
-     *
-     * @throws IOException Exception thrown if an error occurs while reading or
-     * writing a file.
-     */
-    public void register(
-            File msFile
-    ) throws IOException {
-
-        register(
-                msFile,
-                null
-        );
-
-    }
-
-    /**
-     * Registers a mass spectrometry file and enables querying its spectra. If
-     * the file is not a cms file, a cms file will be created in the cms folder
-     * if not null, along the ms file otherwise.
-     *
-     * @param msFile The mass spectrometry file to register.
-     * @param cmsFolder The folder where to save the cms files.
+     * @param waitingHandler The waiting handler.
      *
      * @throws IOException Exception thrown if an error occurs while reading or
      * writing a file.
      */
     public void register(
             File msFile,
-            File cmsFolder
+            WaitingHandler waitingHandler
+    ) throws IOException {
+        register(msFile, null, waitingHandler);
+    }
+
+    /**
+     * Registers a mass spectrometry file and enables querying its spectra.If
+     * the file is not a cms file, a cms file will be created in the cms folder
+     * if not null, along the ms file otherwise.
+     *
+     * @param msFile The mass spectrometry file to register.
+     * @param cmsFolder The folder where to save the cms files.
+     * @param waitingHandler The waiting handler.
+     *
+     * @throws IOException Exception thrown if an error occurs while reading or
+     * writing a file.
+     */
+    public void register(
+            File msFile,
+            File cmsFolder,
+            WaitingHandler waitingHandler
     ) throws IOException {
 
+        // @TODO: use the waiting handler!
+        
         String fileName = msFile.getName();
 
         orderedFileNames = Stream.concat(Arrays.stream(orderedFileNames), Stream.of(fileName))
@@ -103,7 +106,7 @@ public class MsFileHandler implements SpectrumProvider {
 
             try {
 
-                reader = new CmsFileReader(cmsFile);
+                reader = new CmsFileReader(cmsFile, waitingHandler);
 
             } catch (Exception e) {
 
@@ -131,8 +134,8 @@ public class MsFileHandler implements SpectrumProvider {
 
         if (reader == null) {
 
-            writeCmsFile(msFile, cmsFile);
-            reader = new CmsFileReader(cmsFile);
+            writeCmsFile(msFile, cmsFile, waitingHandler);
+            reader = new CmsFileReader(cmsFile, waitingHandler);
 
         }
 
@@ -177,16 +180,18 @@ public class MsFileHandler implements SpectrumProvider {
      *
      * @param msFile The mass spectrometry file.
      * @param cmsFile The cms file.
+     * @param waitingHandler The waiting handler.
      *
      * @throws IOException Exception thrown if an error occurred while reading
      * or writing a file.
      */
     private void writeCmsFile(
             File msFile,
-            File cmsFile
+            File cmsFile,
+            WaitingHandler waitingHandler
     ) throws IOException {
 
-        try (MsFileIterator iterator = MsFileIterator.getMsFileIterator(msFile)) {
+        try (MsFileIterator iterator = MsFileIterator.getMsFileIterator(msFile, waitingHandler)) {
 
             try (CmsFileWriter writer = new CmsFileWriter(cmsFile)) {
 

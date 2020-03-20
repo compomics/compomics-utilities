@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import com.compomics.util.experiment.io.mass_spectrometry.MsFileIterator;
+import com.compomics.util.waiting.WaitingHandler;
 
 /**
  * An iterator of the spectra in an mgf file.
@@ -15,12 +16,6 @@ import com.compomics.util.experiment.io.mass_spectrometry.MsFileIterator;
  * @author Marc Vaudel
  */
 public class MgfFileIterator implements MsFileIterator {
-    /**
-     * Empty default constructor
-     */
-    public MgfFileIterator() {
-        reader = null;
-    }
 
     /**
      * The reader going through the file.
@@ -32,14 +27,22 @@ public class MgfFileIterator implements MsFileIterator {
     private Spectrum spectrum = null;
 
     /**
+     * Empty default constructor.
+     */
+    public MgfFileIterator() {
+        reader = null;
+    }
+
+    /**
      * Constructor.
      *
      * @param mgfFile the file to go through
+     * @param waitingHandler the waiting handler
      */
-    public MgfFileIterator(
-            File mgfFile
-    ) {
+    public MgfFileIterator(File mgfFile, WaitingHandler waitingHandler) {
 
+        // @TODO: use the waiting handler
+        
         reader = SimpleFileReader.getFileReader(mgfFile);
 
     }
@@ -179,7 +182,7 @@ public class MgfFileIterator implements MsFileIterator {
                 return spectrumTitle;
 
             } else if (spectrumBlock && !line.equals("")) {
-                
+
                 try {
 
                     String values[] = line.split("\\s+");

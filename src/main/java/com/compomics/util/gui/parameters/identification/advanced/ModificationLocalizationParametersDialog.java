@@ -433,15 +433,15 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**
-     * Enable/disable the subsettings setting.
+     * Enable/disable the subsettings.
      *
      * @param evt
      */
     private void scoreCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scoreCmbActionPerformed
         if (scoreCmb.getSelectedItem() != ModificationLocalizationScore.None) {
             neutralLossesCmb.setEnabled(true);
-            thresholdTxt.setEnabled(false);
-            thresholdTxt.setEditable(false);
+            thresholdTxt.setEnabled(true);
+            thresholdTxt.setEditable(true);
         } else {
             neutralLossesCmb.setEnabled(false);
             thresholdTxt.setEnabled(false);

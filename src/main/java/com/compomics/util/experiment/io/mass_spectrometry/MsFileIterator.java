@@ -4,7 +4,10 @@ import com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileIterator;
 import com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileUtils;
 import com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfFileIterator;
 import com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfFileUtils;
+import com.compomics.util.experiment.io.mass_spectrometry.mzml.MzmlFileIterator;
+import com.compomics.util.experiment.io.mass_spectrometry.mzml.MzmlFileUtils;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -14,6 +17,7 @@ import java.util.stream.Stream;
  * Interface for mass spectrometry file readers.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public interface MsFileIterator extends AutoCloseable {
 
@@ -32,7 +36,7 @@ public interface MsFileIterator extends AutoCloseable {
      * to the next() method.
      */
     public Spectrum getSpectrum();
-    
+
     @Override
     public void close();
 
@@ -41,31 +45,38 @@ public interface MsFileIterator extends AutoCloseable {
      * extension.
      *
      * @param file The mass spectrometry file.
+     * @param waitingHandler The waiting handler.
      *
      * @return The file reader.
-     * 
-     * @throws java.io.IOException Exception thrown if an error occurred while reading the file.
+     *
+     * @throws java.io.IOException Exception thrown if an error occurred while
+     * reading the file.
      */
-    public static MsFileIterator getMsFileIterator(File file) throws IOException {
+    public static MsFileIterator getMsFileIterator(File file, WaitingHandler waitingHandler) throws IOException {
 
         String fileName = file.getName();
 
         if (Arrays.stream(MgfFileUtils.EXTENSIONS).anyMatch(
-                extension -> fileName.endsWith(extension)
-        )) {
+                extension -> fileName.toLowerCase().endsWith(extension))) {
 
-            return new MgfFileIterator(file);
+            return new MgfFileIterator(file, waitingHandler);
 
-        } else if (fileName.endsWith(CmsFileUtils.EXTENSION)) {
+        } else if (Arrays.stream(MzmlFileUtils.EXTENSIONS).anyMatch(
+                extension -> fileName.toLowerCase().endsWith(extension))) {
 
-            return new CmsFileIterator(file);
+            return new MzmlFileIterator(file, waitingHandler);
+
+        } else if (fileName.toLowerCase().endsWith(CmsFileUtils.EXTENSION)) {
+
+            return new CmsFileIterator(file, waitingHandler);
 
         }
 
-        String supportedExtensions = String.join(",",
-                getSupportedExtensions());
+        String supportedExtensions = String.join(",", getSupportedExtensions());
 
-        throw new UnsupportedOperationException("Mass spectrometry file extension not recognized. Supported: " + supportedExtensions);
+        throw new UnsupportedOperationException(
+                "Mass spectrometry file extension not recognized. "
+                + "Supported: " + supportedExtensions);
 
     }
 
@@ -78,9 +89,10 @@ public interface MsFileIterator extends AutoCloseable {
 
         String[] cmsExtensions = new String[]{CmsFileUtils.EXTENSION};
 
-        return Stream.concat(Arrays.stream(MgfFileUtils.EXTENSIONS), Arrays.stream(cmsExtensions))
+        return Stream.concat(
+                Stream.concat(Arrays.stream(MgfFileUtils.EXTENSIONS), Arrays.stream(MzmlFileUtils.EXTENSIONS)),
+                Arrays.stream(cmsExtensions))
                 .toArray(String[]::new);
 
     }
-
 }

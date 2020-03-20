@@ -60,7 +60,7 @@ public class CmsFileTest extends TestCase {
             
         }
         
-        try (CmsFileReader reader = new CmsFileReader(cmsFile)) {
+        try (CmsFileReader reader = new CmsFileReader(cmsFile, null)) {
             
             Spectrum cmsSpectrum1 = reader.getSpectrum(title1);
             

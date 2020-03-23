@@ -53,8 +53,10 @@ public class MzmlFileIterator implements MsFileIterator {
 
         mzmlUnmarshaler = new MzMLUnmarshaller(mzmlFile);
 
-        iterator = mzmlUnmarshaler.unmarshalCollectionFromXpath(MzMLElement.Spectrum.getXpath(),
-                uk.ac.ebi.jmzml.model.mzml.Spectrum.class);
+        iterator = mzmlUnmarshaler.unmarshalCollectionFromXpath(
+                MzMLElement.Spectrum.getXpath(),
+                uk.ac.ebi.jmzml.model.mzml.Spectrum.class
+        );
     }
 
     @Override

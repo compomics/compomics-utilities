@@ -56,12 +56,17 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
      * @param parent the parent frame
      * @param msConvertParameters initial parameters, ignored if null
      */
-    public MsConvertParametersDialog(java.awt.Frame parent, MsConvertParameters msConvertParameters) {
+    public MsConvertParametersDialog(
+            java.awt.Frame parent, 
+            MsConvertParameters msConvertParameters
+    ) {
+
         super(parent, true);
         initComponents();
         setUpGUI(msConvertParameters);
         setLocationRelativeTo(parent);
         setVisible(true);
+
     }
 
     /**
@@ -70,15 +75,23 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
      * @param msConvertParameters parameters to display on the interface,
      * ignored if null
      */
-    private void setUpGUI(MsConvertParameters msConvertParameters) {
+    private void setUpGUI(
+            MsConvertParameters msConvertParameters
+    ) {
+
         filtersTableScrollPane.getViewport().setOpaque(false);
         filtersTable.getTableHeader().setReorderingAllowed(false);
+
         if (msConvertParameters != null) {
+
             outputFormatCmb.setSelectedItem(msConvertParameters.getMsFormat());
             filters = (HashMap<Integer, String>) msConvertParameters.getFiltersMap().clone();
+
         } else {
+
             outputFormatCmb.setSelectedItem(ProteoWizardMsFormat.mzML);
             filters = new HashMap<>(2);
+
         }
 
         filterIndexes = new ArrayList<>(filters.keySet());
@@ -100,12 +113,14 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
             JMenuItem tempFilterMenuItem = new javax.swing.JMenuItem(tempFilter.name);
 
             tempFilterMenuItem.addActionListener(new java.awt.event.ActionListener() {
+                
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     if (!filters.containsKey(tempFilter.number)) {
                         filters.put(tempFilter.number, "");
                         updateTable();
                     }
                 }
+                
             });
 
             addFilterMenu.add(tempFilterMenuItem);
@@ -116,17 +131,27 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
 
         if (utilitiesUserParameters.getProteoWizardPath() == null) {
-            int option = JOptionPane.showConfirmDialog(this, "Cannot find ProteoWizard. Do you want to download it now?", "Download ProteoWizard?", JOptionPane.YES_NO_OPTION);
+            
+            int option = JOptionPane.showConfirmDialog(
+                    this, 
+                    "Cannot find ProteoWizard. Do you want to download it now?", 
+                    "Download ProteoWizard?", 
+                    JOptionPane.YES_NO_OPTION
+            );
 
             if (option == JOptionPane.YES_OPTION) {
+                
                 openWebPage();
+            
             }
         }
 
         // display the current path
         if (utilitiesUserParameters != null) {
+            
             installationJTextField.setText(utilitiesUserParameters.getProteoWizardPath());
             lastSelectedFolder = utilitiesUserParameters.getProteoWizardPath();
+        
         }
     }
 
@@ -381,26 +406,44 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
         boolean formatCheck = true;
+        
+        ProteoWizardMsFormat selectedFormat = (ProteoWizardMsFormat) outputFormatCmb.getSelectedItem();
 
-        if (((ProteoWizardMsFormat) outputFormatCmb.getSelectedItem()) != ProteoWizardMsFormat.mgf) {
-            int value = JOptionPane.showConfirmDialog(this, "Mgf is the only format compatible with SearchGUI. Proceed anyway?",
-                    "Output Format Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-//            int value = JOptionPane.showConfirmDialog(this, "Mgf is the only format compatible with PeptideShaker. Proceed anyway?", 
-//                    "Output Format Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (selectedFormat != ProteoWizardMsFormat.mgf && selectedFormat != ProteoWizardMsFormat.mzML) {
+            
+            int value = JOptionPane.showConfirmDialog(
+                    this, 
+                    "MzML and mgf are the only format compatible with SearchGUI. Proceed anyway?",
+                    "Output Format Warning", 
+                    JOptionPane.YES_NO_OPTION, 
+                    JOptionPane.WARNING_MESSAGE
+            );
 
             if (value == JOptionPane.NO_OPTION) {
+                
                 formatCheck = false;
+            
             }
         }
 
         if (formatCheck) {
+            
             utilitiesUserParameters.setProteoWizardPath(installationJTextField.getText());
+            
             try {
+            
                 UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
                 dispose();
+            
             } catch (Exception e) {
+            
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "An error occurred while saving the preferences.", "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(
+                        this, 
+                        "An error occurred while saving the preferences.", 
+                        "Error", 
+                        JOptionPane.WARNING_MESSAGE
+                );
             }
         }
     }//GEN-LAST:event_okButtonActionPerformed
@@ -411,13 +454,19 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void removeFilterMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeFilterMenuItemMouseReleased
+        
         int row = filtersTable.getSelectedRow();
+
         if (row >= 0) {
+
             String itemName = filtersTable.getValueAt(row, 1).toString();
             ProteoWizardFilter proteoWizardFilter = ProteoWizardFilter.getFilter(itemName);
+
             if (proteoWizardFilter != null) {
+
                 filters.remove(proteoWizardFilter.number);
                 updateTable();
+
             }
         }
     }//GEN-LAST:event_removeFilterMenuItemMouseReleased
@@ -428,13 +477,19 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void filtersTableMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_filtersTableMouseReleased
+
         if (evt != null && filtersTable.rowAtPoint(evt.getPoint()) != -1) {
+
             int row = filtersTable.rowAtPoint(evt.getPoint());
             filtersTable.setRowSelectionInterval(row, row);
+
         }
+
         if (evt != null && evt.getButton() == MouseEvent.BUTTON3) {
+
             removeFilterMenuItem.setVisible(filtersTable.getSelectedRow() != -1);
             filtersPopupMenu.show(filtersTable, evt.getX(), evt.getY());
+
         }
     }//GEN-LAST:event_filtersTableMouseReleased
 
@@ -490,18 +545,35 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
-        File selectedFile = FileChooserUtil.getUserSelectedFolder(this, "ProteoWizard Installation Folder", lastSelectedFolder, "ProteoWizard installation folder", "OK", true);
+        File selectedFile = FileChooserUtil.getUserSelectedFolder(
+                this, 
+                "ProteoWizard Installation Folder", 
+                lastSelectedFolder, 
+                "ProteoWizard installation folder", 
+                "OK", 
+                true
+        );
 
         if (selectedFile != null) {
+            
             // check if it is a valid folder
             if (!(new File(selectedFile, "msconvert.exe").exists() || new File(selectedFile, "msconvert").exists())) {
-                JOptionPane.showMessageDialog(this, "The selected folder is not a valid ProteoWizard folder!", "Wrong Folder Selected", JOptionPane.WARNING_MESSAGE);
+
+                JOptionPane.showMessageDialog(
+                        this, 
+                        "The selected folder is not a valid ProteoWizard folder.", 
+                        "Wrong Folder Selected", 
+                        JOptionPane.WARNING_MESSAGE
+                );
                 okButton.setEnabled(false);
+
             } else {
+
                 // assumed to be valid folder
                 lastSelectedFolder = selectedFile.getPath();
                 installationJTextField.setText(lastSelectedFolder);
                 okButton.setEnabled(true);
+
             }
         }
     }//GEN-LAST:event_browseButtonActionPerformed
@@ -541,12 +613,18 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
      * @return the parameters as created by the user
      */
     public MsConvertParameters getMsConvertParameters() {
+
         MsConvertParameters msConvertParameters = new MsConvertParameters();
         msConvertParameters.setMsFormat((ProteoWizardMsFormat) outputFormatCmb.getSelectedItem());
+
         for (Integer filterIndex : filters.keySet()) {
+
             msConvertParameters.addFilter(filterIndex, filters.get(filterIndex));
+
         }
+
         return msConvertParameters;
+
     }
 
     /**
@@ -643,8 +721,12 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
      * Opens the ProteoWizard web page.
      */
     private void openWebPage() {
+        
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+        
         BareBonesBrowserLaunch.openURL("http://proteowizard.sourceforge.net");
+        
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    
     }
 }

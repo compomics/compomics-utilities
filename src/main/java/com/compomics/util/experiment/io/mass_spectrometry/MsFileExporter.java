@@ -150,6 +150,8 @@ public class MsFileExporter {
             }
         }
 
+        writer.close();
+        
         waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 
     }

@@ -16,6 +16,7 @@ import java.util.stream.IntStream;
  * This class writes ms files in various formats.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class MsFileExporter {
 
@@ -36,7 +37,8 @@ public class MsFileExporter {
      * @param destinationFile The file where to write.
      * @param format The format to write in.
      * @param searchParameters The search parameters.
-     * @param waitingHandler The waiting handler to use to inform on progress and allow cancelling.
+     * @param waitingHandler The waiting handler to use to inform on progress
+     * and allow cancelling.
      */
     public static void writeMsFile(
             SpectrumProvider spectrumProvider,
@@ -75,7 +77,8 @@ public class MsFileExporter {
      * @param fileName The name of the file to export.
      * @param destinationFile The file where to write.
      * @param searchParameters The search parameters.
-     * @param waitingHandler The waiting handler to use to inform on progress and allow cancelling.
+     * @param waitingHandler The waiting handler to use to inform on progress
+     * and allow cancelling.
      */
     public static void writeAplFile(
             SpectrumProvider spectrumProvider,
@@ -95,7 +98,7 @@ public class MsFileExporter {
                     fileName + " not loaded."
             );
         }
-        
+
         waitingHandler.setSecondaryProgressCounterIndeterminate(false);
         waitingHandler.setMaxSecondaryProgressCounter(spectrumTitles.length);
 
@@ -117,9 +120,9 @@ public class MsFileExporter {
             if (charges.length == 1) {
 
                 writer.writeSpectrum(
-                        spectrumTitle, 
-                        spectrum, 
-                        andromedaParameters.getFragmentationMethod(), 
+                        spectrumTitle,
+                        spectrum,
+                        andromedaParameters.getFragmentationMethod(),
                         charges[0]
                 );
 
@@ -130,25 +133,25 @@ public class MsFileExporter {
                     String tempTitle = String.join("_", spectrumTitle, Integer.toString(charge));
 
                     writer.writeSpectrum(
-                            tempTitle, 
-                            spectrum, 
-                            andromedaParameters.getFragmentationMethod(), 
+                            tempTitle,
+                            spectrum,
+                            andromedaParameters.getFragmentationMethod(),
                             charges[0]
                     );
                 }
             }
-            
+
             waitingHandler.increaseSecondaryProgressCounter();
-            
+
             if (waitingHandler.isRunCanceled()) {
-             
+
                 break;
-            
+
             }
         }
-        
+
         waitingHandler.setSecondaryProgressCounterIndeterminate(true);
-        
+
     }
 
     /**
@@ -157,7 +160,8 @@ public class MsFileExporter {
      * @param spectrumProvider The spectrum provider to use to get the spectra.
      * @param fileName The name of the file to export.
      * @param destinationFile The file where to write.
-     * @param waitingHandler The waiting handler to use to inform on progress and allow cancelling.
+     * @param waitingHandler The waiting handler to use to inform on progress
+     * and allow cancelling.
      */
     public static void writeMgfFile(
             SpectrumProvider spectrumProvider,
@@ -174,7 +178,7 @@ public class MsFileExporter {
                     fileName + " not loaded."
             );
         }
-        
+
         waitingHandler.setSecondaryProgressCounterIndeterminate(false);
         waitingHandler.setMaxSecondaryProgressCounter(spectrumTitles.length);
 
@@ -185,18 +189,20 @@ public class MsFileExporter {
             Spectrum spectrum = spectrumProvider.getSpectrum(fileName, spectrumTitle);
 
             writer.writeSpectrum(spectrumTitle, spectrum);
-            
+
             waitingHandler.increaseSecondaryProgressCounter();
-            
+
             if (waitingHandler.isRunCanceled()) {
-             
+
                 break;
-            
+
             }
         }
-        
+
+        writer.close();
+
         waitingHandler.setSecondaryProgressCounterIndeterminate(true);
-        
+
     }
 
     /**
@@ -205,7 +211,8 @@ public class MsFileExporter {
      * @param spectrumProvider The spectrum provider to use to get the spectra.
      * @param fileName The name of the file to export.
      * @param destinationFile The file where to write.
-     * @param waitingHandler The waiting handler to use to inform on progress and allow cancelling.
+     * @param waitingHandler The waiting handler to use to inform on progress
+     * and allow cancelling.
      */
     public static void writeMs2File(
             SpectrumProvider spectrumProvider,
@@ -222,7 +229,7 @@ public class MsFileExporter {
                     fileName + " not loaded."
             );
         }
-        
+
         waitingHandler.setSecondaryProgressCounterIndeterminate(false);
         waitingHandler.setMaxSecondaryProgressCounter(spectrumTitles.length);
 
@@ -235,17 +242,17 @@ public class MsFileExporter {
             String spectrumTitle = spectrumTitles[i];
             Spectrum spectrum = spectrumProvider.getSpectrum(fileName, spectrumTitle);
             writer.writeSpectrum(spectrum, i);
-            
+
             waitingHandler.increaseSecondaryProgressCounter();
-            
+
             if (waitingHandler.isRunCanceled()) {
-             
+
                 break;
-            
+
             }
         }
-        
+
         waitingHandler.setSecondaryProgressCounterIndeterminate(true);
-        
+
     }
 }

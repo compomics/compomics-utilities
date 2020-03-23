@@ -12935,6 +12935,14 @@
 <dd>
 <div class="block">Returns the progress bar for updates from external processes.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/readers/SimpleGzReader.html#getProgressInPercent--">getProgressInPercent()</a></span> - Method in class com.compomics.util.io.flat.readers.<a href="com/compomics/util/io/flat/readers/SimpleGzReader.html" title="class in com.compomics.util.io.flat.readers">SimpleGzReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/readers/SimpleTextReader.html#getProgressInPercent--">getProgressInPercent()</a></span> - Method in class com.compomics.util.io.flat.readers.<a href="com/compomics/util/io/flat/readers/SimpleTextReader.html" title="class in com.compomics.util.io.flat.readers">SimpleTextReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileReader.html#getProgressInPercent--">getProgressInPercent()</a></span> - Method in interface com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileReader.html" title="interface in com.compomics.util.io.flat">SimpleFileReader</a></dt>
+<dd>
+<div class="block">Returns the progress reading the file in percent.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/pride/PrideWebService.html#getProjectCount-java.lang.String-com.compomics.util.pride.prideobjects.webservice.query.PrideFilter...-">getProjectCount(String, PrideFilter...)</a></span> - Static method in class com.compomics.util.pride.<a href="com/compomics/util/pride/PrideWebService.html" title="class in com.compomics.util.pride">PrideWebService</a></dt>
 <dd>
 <div class="block">Returns a project count for the given criteria and filters.</div>
@@ -19750,10 +19758,6 @@
 <dt><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileIterator.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf"><span class="typeNameLink">MgfFileIterator</span></a> - Class in <a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/package-summary.html">com.compomics.util.experiment.io.mass_spectrometry.mgf</a></dt>
 <dd>
 <div class="block">An iterator of the spectra in an mgf file.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileIterator.html#MgfFileIterator--">MgfFileIterator()</a></span> - Constructor for class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileIterator.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfFileIterator</a></dt>
-<dd>
-<div class="block">Empty default constructor.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileIterator.html#MgfFileIterator-java.io.File-com.compomics.util.waiting.WaitingHandler-">MgfFileIterator(File, WaitingHandler)</a></span> - Constructor for class com.compomics.util.experiment.io.mass_spectrometry.mgf.<a href="com/compomics/util/experiment/io/mass_spectrometry/mgf/MgfFileIterator.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mgf">MgfFileIterator</a></dt>
 <dd>
@@ -30854,7 +30858,7 @@ the order they are declared.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/json/adapter/FileAdapter.html#write-com.google.gson.stream.JsonWriter-java.lang.Object-">write(JsonWriter, Object)</a></span> - Method in class com.compomics.util.io.json.adapter.<a href="com/compomics/util/io/json/adapter/FileAdapter.html" title="class in com.compomics.util.io.json.adapter">FileAdapter</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html#writeAplFile-com.compomics.util.experiment.mass_spectrometry.SpectrumProvider-java.lang.String-java.io.File-com.compomics.util.parameters.identification.search.SearchParameters-">writeAplFile(SpectrumProvider, String, File, SearchParameters)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileExporter</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html#writeAplFile-com.compomics.util.experiment.mass_spectrometry.SpectrumProvider-java.lang.String-java.io.File-com.compomics.util.parameters.identification.search.SearchParameters-com.compomics.util.waiting.WaitingHandler-">writeAplFile(SpectrumProvider, String, File, SearchParameters, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileExporter</a></dt>
 <dd>
 <div class="block">Writes the spectra of a file in the Andromeda peak list (apl) format.</div>
 </dd>
@@ -30926,11 +30930,11 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/writers/TextWriter.html#writeMainTitle-java.lang.String-com.compomics.util.io.export.WorkbookStyle-">writeMainTitle(String, WorkbookStyle)</a></span> - Method in class com.compomics.util.io.export.writers.<a href="com/compomics/util/io/export/writers/TextWriter.html" title="class in com.compomics.util.io.export.writers">TextWriter</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html#writeMgfFile-com.compomics.util.experiment.mass_spectrometry.SpectrumProvider-java.lang.String-java.io.File-">writeMgfFile(SpectrumProvider, String, File)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileExporter</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html#writeMgfFile-com.compomics.util.experiment.mass_spectrometry.SpectrumProvider-java.lang.String-java.io.File-com.compomics.util.waiting.WaitingHandler-">writeMgfFile(SpectrumProvider, String, File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileExporter</a></dt>
 <dd>
 <div class="block">Writes the spectra of a file in the Mascot Generic File (mgf) format.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html#writeMs2File-com.compomics.util.experiment.mass_spectrometry.SpectrumProvider-java.lang.String-java.io.File-">writeMs2File(SpectrumProvider, String, File)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileExporter</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html#writeMs2File-com.compomics.util.experiment.mass_spectrometry.SpectrumProvider-java.lang.String-java.io.File-com.compomics.util.waiting.WaitingHandler-">writeMs2File(SpectrumProvider, String, File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileExporter</a></dt>
 <dd>
 <div class="block">Writes the spectra of a file in the ms2 format.</div>
 </dd>
@@ -30939,7 +30943,7 @@ the order they are declared.</div>
 <div class="block">Creates the MS Amanda enzyme settings file corresponding to the enzymes
  loaded in the factory to the given file.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html#writeMsFile-com.compomics.util.experiment.mass_spectrometry.SpectrumProvider-java.lang.String-java.io.File-com.compomics.util.experiment.io.mass_spectrometry.MsFileExporter.Format-com.compomics.util.parameters.identification.search.SearchParameters-">writeMsFile(SpectrumProvider, String, File, MsFileExporter.Format, SearchParameters)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileExporter</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html#writeMsFile-com.compomics.util.experiment.mass_spectrometry.SpectrumProvider-java.lang.String-java.io.File-com.compomics.util.experiment.io.mass_spectrometry.MsFileExporter.Format-com.compomics.util.parameters.identification.search.SearchParameters-com.compomics.util.waiting.WaitingHandler-">writeMsFile(SpectrumProvider, String, File, MsFileExporter.Format, SearchParameters, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileExporter</a></dt>
 <dd>
 <div class="block">Writes the spectra of a file in the given format.</div>
 </dd>

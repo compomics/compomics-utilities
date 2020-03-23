@@ -81,8 +81,6 @@ public class MsFileHandler implements SpectrumProvider {
             File cmsFolder,
             WaitingHandler waitingHandler
     ) throws IOException {
-
-        // @TODO: use the waiting handler!
         
         String fileName = msFile.getName();
 
@@ -134,8 +132,15 @@ public class MsFileHandler implements SpectrumProvider {
 
         if (reader == null) {
 
-            writeCmsFile(msFile, cmsFile, waitingHandler);
-            reader = new CmsFileReader(cmsFile, waitingHandler);
+            writeCmsFile(
+                    msFile, 
+                    cmsFile, 
+                    waitingHandler
+            );
+            reader = new CmsFileReader(
+                    cmsFile, 
+                    waitingHandler
+            );
 
         }
 

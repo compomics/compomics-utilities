@@ -22,16 +22,14 @@ public class MgfFileIterator implements MsFileIterator {
      */
     private final SimpleFileReader reader;
     /**
+     * The waiting handler used to provide progress feedback and cancel the
+     * process.
+     */
+    private final WaitingHandler waitingHandler;
+    /**
      * The spectrum read in the last call of the next method.
      */
     private Spectrum spectrum = null;
-
-    /**
-     * Empty default constructor.
-     */
-    public MgfFileIterator() {
-        reader = null;
-    }
 
     /**
      * Constructor.
@@ -41,9 +39,12 @@ public class MgfFileIterator implements MsFileIterator {
      */
     public MgfFileIterator(File mgfFile, WaitingHandler waitingHandler) {
 
-        // @TODO: use the waiting handler
-        
         reader = SimpleFileReader.getFileReader(mgfFile);
+
+        this.waitingHandler = waitingHandler;
+
+        waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+        waitingHandler.setMaxSecondaryProgressCounter(100);
 
     }
 
@@ -64,7 +65,7 @@ public class MgfFileIterator implements MsFileIterator {
         boolean spectrumBlock = false;
 
         String line;
-        while ((line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null && !waitingHandler.isRunCanceled()) {
 
             // fix for lines ending with \r
             if (line.endsWith("\r")) {
@@ -179,6 +180,10 @@ public class MgfFileIterator implements MsFileIterator {
 
                 spectrumBlock = false;
 
+                // Update progress
+                double progress = reader.getProgressInPercent();
+                waitingHandler.setSecondaryProgressCounter((int) progress);
+
                 return spectrumTitle;
 
             } else if (spectrumBlock && !line.equals("")) {
@@ -261,6 +266,7 @@ public class MgfFileIterator implements MsFileIterator {
     @Override
     public void close() {
 
+        waitingHandler.setSecondaryProgressCounterIndeterminate(true);
         reader.close();
 
     }

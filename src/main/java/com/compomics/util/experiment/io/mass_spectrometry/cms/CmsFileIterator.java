@@ -18,6 +18,11 @@ public class CmsFileIterator implements MsFileIterator {
      */
     private final CmsFileReader reader;
     /**
+     * The waiting handler used to provide progress feedback and cancel the
+     * process.
+     */
+    private final WaitingHandler waitingHandler;
+    /**
      * The index of the current spectrum.
      */
     private int i = -1;
@@ -37,12 +42,21 @@ public class CmsFileIterator implements MsFileIterator {
 
         this.reader = new CmsFileReader(file, waitingHandler);
 
+        this.waitingHandler = waitingHandler;
+        
+        waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+        waitingHandler.setMaxSecondaryProgressCounter(100);
+
     }
 
     @Override
     public String next() {
 
         i++;
+
+        // Update progress
+        double progress = 100.0 * ((double) i) / reader.titles.length;
+        waitingHandler.setSecondaryProgressCounter((int) progress);
 
         if (i == reader.titles.length) {
 
@@ -64,6 +78,7 @@ public class CmsFileIterator implements MsFileIterator {
     @Override
     public void close() {
 
+        waitingHandler.setSecondaryProgressCounterIndeterminate(true);
         reader.close();
 
     }

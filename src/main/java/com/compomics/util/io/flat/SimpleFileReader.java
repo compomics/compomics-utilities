@@ -46,6 +46,13 @@ public interface SimpleFileReader extends AutoCloseable {
      * @return The underlying reader.
      */
     public Reader getReader();
+    
+    /**
+     * Returns the progress reading the file in percent.
+     * 
+     * @return The progress reading the file in percent.
+     */
+    public double getProgressInPercent();
 
     @Override
     public void close();

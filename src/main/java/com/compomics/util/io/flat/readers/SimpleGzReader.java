@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.zip.GZIPInputStream;
+import org.apache.commons.io.input.CountingInputStream;
 
 /**
  * Simple wrapper for a gz file reader.
@@ -22,6 +23,14 @@ public class SimpleGzReader implements SimpleFileReader {
      * The buffered reader.
      */
     private final BufferedReader br;
+    /**
+     * A stream counting the bytes read.
+     */
+    private final CountingInputStream countingInputStream;
+    /**
+     * The length of the file in bytes.
+     */
+    private final long fileLength;
 
     /**
      * Constructor.
@@ -33,12 +42,15 @@ public class SimpleGzReader implements SimpleFileReader {
     ) {
 
         try {
-
+            
             InputStream fileStream = new FileInputStream(file);
-            InputStream gzipStream = new GZIPInputStream(fileStream);
-            Reader decoder = new InputStreamReader(gzipStream, ENCODING);
-
-            br = new BufferedReader(decoder);
+            countingInputStream = new CountingInputStream(fileStream);
+            InputStream gzipStream = new GZIPInputStream(countingInputStream);
+            Reader reader = new InputStreamReader(gzipStream, ENCODING);
+            
+            br = new BufferedReader(reader);
+            
+            fileLength = file.length();
 
         } catch (IOException e) {
 
@@ -75,6 +87,13 @@ public class SimpleGzReader implements SimpleFileReader {
     public Reader getReader() {
         
         return br;
+        
+    }
+
+    @Override
+    public double getProgressInPercent() {
+        
+        return 100.0 * ((double) countingInputStream.getByteCount()) / fileLength;
         
     }
 }

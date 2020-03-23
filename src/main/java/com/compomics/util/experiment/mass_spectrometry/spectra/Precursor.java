@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.mass_spectrometry.spectra;
 
+import com.compomics.util.experiment.biology.ions.Charge;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.Arrays;
@@ -126,7 +127,7 @@ public class Precursor extends ExperimentObject {
 
         return Arrays.stream(possibleCharges)
                 .mapToObj(
-                        charge -> Integer.toString(charge)
+                        charge -> Charge.toString(charge)
                 )
                 .collect(Collectors.joining(", "));
 

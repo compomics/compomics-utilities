@@ -7,7 +7,6 @@ import com.compomics.util.experiment.biology.atoms.Atom;
 import com.compomics.util.experiment.biology.ions.Charge;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.identification.spectrum_annotation.IonMatchKeysCache;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
 
@@ -358,7 +357,7 @@ public class IonMatch extends ExperimentObject {
                 }
 
                 // add charge
-                result.append(Charge.getChargeAsFormattedString(charge));
+                result.append(Charge.toString(charge));
 
                 // add any neutral losses
                 if (html) {
@@ -396,7 +395,7 @@ public class IonMatch extends ExperimentObject {
                 }
 
                 // add charge
-                result.append(Charge.getChargeAsFormattedString(charge));
+                result.append(Charge.toString(charge));
 
                 // add any neutral losses
                 if (html) {
@@ -425,7 +424,7 @@ public class IonMatch extends ExperimentObject {
                 result.append(ion.getSubTypeAsString()).append("-");
 
                 // add charge
-                result.append(Charge.getChargeAsFormattedString(charge));
+                result.append(Charge.toString(charge));
 
                 // add any neutral losses
                 String neutralLoss = ion.getNeutralLossesAsString();

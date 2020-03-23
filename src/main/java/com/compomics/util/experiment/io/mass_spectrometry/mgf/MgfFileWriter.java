@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.io.mass_spectrometry.mgf;
 
+import com.compomics.util.experiment.biology.ions.Charge;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.flat.SimpleFileWriter;
@@ -14,6 +15,7 @@ import java.util.stream.IntStream;
  * This class writes spectrum files in Mascot Generic File (mgf) format.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class MgfFileWriter implements AutoCloseable {
 
@@ -123,16 +125,24 @@ public class MgfFileWriter implements AutoCloseable {
 
         Precursor precursor = spectrum.precursor;
 
-        result.append("PEPMASS=").append(precursor.mz).append("\t").append(precursor.intensity).append(lineBreak);
-
         result.append("RTINSECONDS=").append(precursor.rt).append(lineBreak);
+
+        result.append("PEPMASS=").append(precursor.mz);
+
+        if (precursor.intensity > 0) {
+
+            result.append(" ").append(precursor.intensity);
+
+        }
+
+        result.append(lineBreak);
 
         if (precursor.possibleCharges.length > 0) {
             result.append("CHARGE=");
             result.append(
                     Arrays.stream(precursor.possibleCharges)
                             .sorted()
-                            .mapToObj(charge -> String.valueOf(charge))
+                            .mapToObj(charge -> Charge.toString(charge))
                             .collect(Collectors.joining(" and "))
             );
             result.append(lineBreak);

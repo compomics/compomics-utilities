@@ -58,21 +58,26 @@ public class MzmlFileIterator implements MsFileIterator {
      */
     public MzmlFileIterator(File mzmlFile, WaitingHandler waitingHandler) {
 
-        this.waitingHandler = waitingHandler; // @TODO: use the waiting handler
-        
-        // turn off all the logs. to speed up the process
+        this.waitingHandler = waitingHandler;
+
+        // turn off all the logs to speed up the parsing
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-        
+
         ch.qos.logback.classic.Logger logger = loggerContext.getLogger("psidev.psi.tools.xxindex.FastXmlElementExtractor");
         logger.setLevel(Level.toLevel("ERROR"));
-        
+
         logger = loggerContext.getLogger("psidev.psi.tools.xxindex.index");
         logger.setLevel(Level.toLevel("ERROR"));
-        
+
         logger = loggerContext.getLogger("uk.ac.ebi.jmzml");
         logger.setLevel(Level.toLevel("ERROR"));
-        
+
         mzmlUnmarshaler = new MzMLUnmarshaller(mzmlFile);
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(mzmlUnmarshaler.getSpectrumIDs().size());
+        }
 
         iterator = mzmlUnmarshaler.unmarshalCollectionFromXpath(
                 MzMLElement.Spectrum.getXpath(),
@@ -107,6 +112,10 @@ public class MzmlFileIterator implements MsFileIterator {
                         ms2Spectrum = true;
                         break;
                     }
+                }
+
+                if (waitingHandler != null) {
+                    waitingHandler.increaseSecondaryProgressCounter();
                 }
             }
 

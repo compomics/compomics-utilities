@@ -48,7 +48,7 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
         String parametersReport = "<br><b><u>Extracted Search Parameters</u></b><br>";
 
         // unmarshal the mzid file
-        MzIdentMLUnmarshaller unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile);
+        MzIdentMLUnmarshaller unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile); // @TODO: implement our own parser
         //MzIdentMLUnmarshaller unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile, true); // @TODO: figure out when to use in memory processing
 
         if (waitingHandler != null && waitingHandler.isRunCanceled()) {

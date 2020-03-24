@@ -1,5 +1,7 @@
 package com.compomics.util.experiment.io.mass_spectrometry.mzml;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 import java.io.File;
 import com.compomics.util.experiment.io.mass_spectrometry.MsFileIterator;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
@@ -8,6 +10,7 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.slf4j.LoggerFactory;
 import uk.ac.ebi.jmzml.MzMLElement;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
@@ -29,6 +32,11 @@ public class MzmlFileIterator implements MsFileIterator {
      */
     private Iterator<uk.ac.ebi.jmzml.model.mzml.Spectrum> iterator;
     /**
+     * The waiting handler used to provide progress feedback and cancel the
+     * process.
+     */
+    private final WaitingHandler waitingHandler;
+    /**
      * The spectrum read in the last call of the next method.
      */
     private Spectrum spectrum = null;
@@ -39,6 +47,7 @@ public class MzmlFileIterator implements MsFileIterator {
     public MzmlFileIterator() {
         mzmlUnmarshaler = null;
         iterator = null;
+        waitingHandler = null;
     }
 
     /**
@@ -49,8 +58,20 @@ public class MzmlFileIterator implements MsFileIterator {
      */
     public MzmlFileIterator(File mzmlFile, WaitingHandler waitingHandler) {
 
-        // @TODO: use the waiting handler
-
+        this.waitingHandler = waitingHandler; // @TODO: use the waiting handler
+        
+        // turn off all the logs. to speed up the process
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        
+        ch.qos.logback.classic.Logger logger = loggerContext.getLogger("psidev.psi.tools.xxindex.FastXmlElementExtractor");
+        logger.setLevel(Level.toLevel("ERROR"));
+        
+        logger = loggerContext.getLogger("psidev.psi.tools.xxindex.index");
+        logger.setLevel(Level.toLevel("ERROR"));
+        
+        logger = loggerContext.getLogger("uk.ac.ebi.jmzml");
+        logger.setLevel(Level.toLevel("ERROR"));
+        
         mzmlUnmarshaler = new MzMLUnmarshaller(mzmlFile);
 
         iterator = mzmlUnmarshaler.unmarshalCollectionFromXpath(
@@ -113,7 +134,7 @@ public class MzmlFileIterator implements MsFileIterator {
                 }
 
                 // get the precursor m/z, charge and intensity
-                ArrayList<Integer> possibleChargesAsArray = new ArrayList<>(); // @TODO: can there be more then one..?
+                ArrayList<Integer> possibleChargesAsArray = new ArrayList<>(); // @TODO: can there be more than one..?
                 double precursorMz = -1.0;
                 double precursorIntensity = -1.0; // @TODO: how to handle missing values?
 

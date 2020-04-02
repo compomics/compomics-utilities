@@ -252,10 +252,15 @@ public enum IdentificationParametersCLIParams {
     ANDROMEDA_FRAG_METHOD("andromeda_frag_method", "Andromeda fragmentation method, HCD, CID or EDT, default is 'CID'.", false, true),
     ANDROMEDA_MAX_MODS("andromeda_max_mods", "Andromeda maximum number of modifications, default is '5'.", false, true),
     ANDROMEDA_MIN_PEP_LENGTH("andromeda_min_pep_length", "Andromeda minimum peptide length when using no enzyme, default is '8'.", false, true),
-    ANDROMEDA_MAX_PEP_LENGTH("andromeda_max_pep_length", "Andromeda maximum peptide length when using no enzyme, default is '25'.", false, true),
+    ANDROMEDA_MAX_PEP_LENGTH("andromeda_max_pep_length", "Andromeda maximum peptide length when using no enzyme, default is '30'.", false, true),
     ANDROMEDA_EQUAL_IL("andromeda_equal_il", "Andromeda whether I and L should be considered indistinguishable, 1: true, 0: false, default is '0'.", false, true),
     ANDROMEDA_MAX_PSMS("andromeda_max_psms", "Andromeda maximum number of spectrum matches spectrum, default is '10'.", false, true),
     ANDROMEDA_DECOY_MODE("andromeda_decoy_mode", "Andromeda decoy mode, none or decoy, default is 'none'.", false, true),
+    //////////////////////////////////
+    // MetaMorpheus specific parameters
+    //////////////////////////////////
+    METAMORPHEUS_MIN_PEP_LENGTH("meta_morpheus_min_pep_length", "MetaMorpheus minimum peptide length, default is '8'.", false, true),
+    METAMORPHEUS_MAX_PEP_LENGTH("meta_morpheus_max_pep_length", "MetaMorpheus maximum peptide length, default is '30'.", false, true),
     //////////////////////////////////
     // DirecTag specific parameters
     //////////////////////////////////
@@ -646,6 +651,10 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.id) + " " + IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id) + " " + IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANDROMEDA_DECOY_MODE.id) + " " + IdentificationParametersCLIParams.ANDROMEDA_DECOY_MODE.description + "\n";
+        
+        output += "\n\nMetaMorpheus advanced parameters:\n\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.METAMORPHEUS_MIN_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.METAMORPHEUS_MIN_PEP_LENGTH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.METAMORPHEUS_MAX_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.METAMORPHEUS_MAX_PEP_LENGTH.description + "\n";
         
         output += "\n\nNovor:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id) + " " + IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.description + "\n";

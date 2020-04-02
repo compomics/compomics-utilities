@@ -43,7 +43,7 @@ public class ModificationFactory {
      * The name of the Modification factory back-up file. The version number
      * follows the one of utilities.
      */
-    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.0-beta.json";
+    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.1-beta.json";
     /**
      * A map linking indexes with modifications.
      */
@@ -1167,6 +1167,18 @@ public class ModificationFactory {
         modification = new Modification(ModificationType.modaa, modificationName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
         modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00210", "L-cysteine sulfenic acid", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Oxidation of N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "Oxidation of N";
+        modification = new Modification(ModificationType.modaa, modificationName, "ox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:35", "Oxidation", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:01688", "3-hydroxy-L-asparagine", null));
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
 
@@ -3705,6 +3717,7 @@ public class ModificationFactory {
         modification = new Modification(ModificationType.modaa, modificationName, "cit", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:7", "Deamidated", null));
         modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00400", "deamidated residue", null));
+        modification.addNeutralLoss(NeutralLoss.HCNO);
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
 
@@ -3750,6 +3763,230 @@ public class ModificationFactory {
         modificationName = "Heme B of H";
         modification = new Modification(ModificationType.modaa, modificationName, "heme", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:390", "Heme", null));
+        // @TODO: add PSI-MOD mapping?
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Carboxylation of K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "Carboxylation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "carb", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:299", "Carboxy", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00123", "N6-carboxy-L-lysine", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Carboxylation of D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "Carboxylation of D";
+        modification = new Modification(ModificationType.modaa, modificationName, "carb", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:299", "Carboxy", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00309", "L-beta-carboxyaspartic acid", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Carboxylation of E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "Carboxylation of E";
+        modification = new Modification(ModificationType.modaa, modificationName, "carb", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:299", "Carboxy", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00041", "L-gamma-carboxyglutamic acid", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Nitrosylation of Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Nitrosylation of Y";
+        modification = new Modification(ModificationType.modaa, modificationName, "nitro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:354", "Nitro", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:01352", "nitrated L-tyrosine", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Nitrosylation of C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "Nitrosylation of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "nitro", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:275", "Nitrosyl", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00235", "S-nitrosyl-L-cysteine", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Butyrylation of K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "Butyrylation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "buty", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1289", "Butyryl", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:01781", "N6-butanoyl-L-lysine", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Crotonylation of K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "Crotonylation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "croto", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1363", "Crotonyl", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:01892", "N6-crotonyl-L-lysine", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Glutarylation of K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "Glutarylation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "glur", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1848", "Gluratylation", null));
+        // @TODO: add PSI-MOD mapping?
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Malonylation of K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "Malonylation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "malo", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:747", "Malonyl", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:01893", "N6-malonyl-L-lysine", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Succinylation of K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "Succinylation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "suc", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:64", "Succinyl", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:01819", "N6-succinyl-L-lysine", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // ADP-ribosylation of S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 15);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 21);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 13);
+        atomChainAdded.append(new AtomImpl(Atom.P, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "ADP-ribosylation of S";
+        modification = new Modification(ModificationType.modaa, modificationName, "adp", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:213", "ADP-Ribosyl", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00242", "O-(ADP-ribosyl)-L-serine", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Pyridoxal phosphate of K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.P, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "Pyridoxal phosphate of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "pyri", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:46", "PyridoxalPhosphate", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00128", "N6-pyridoxal phosphate-L-lysine", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Biotinylation of K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 10);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 14);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "Biotinylation of K";
+        modification = new Modification(ModificationType.modaa, modificationName, "biot", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:3", "Biotin", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00126", "N6-biotinyl-L-lysine", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Oxidation to Kynurenine of W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "Oxidation to Kynurenine of W";
+        modification = new Modification(ModificationType.modaa, modificationName, "kynu", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:351", "kynurenin", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00462", "L-kynurenine", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Quinone of Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Quinone of Y";
+        modification = new Modification(ModificationType.modaa, modificationName, "quin", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:392", "Quinone", null));
+        // @TODO: add PSI-MOD mapping?
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Quinone of W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "Quinone of W";
+        modification = new Modification(ModificationType.modaa, modificationName, "quin", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:392", "Quinone", null));
         // @TODO: add PSI-MOD mapping?
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);

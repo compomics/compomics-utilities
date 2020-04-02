@@ -38,6 +38,7 @@ import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.parameters.identification.advanced.ModificationLocalizationParameters;
 import com.compomics.util.parameters.identification.advanced.ProteinInferenceParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -123,7 +124,7 @@ public class IdentificationParametersInputBean {
                     return false;
                 }
             }
-        }    
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.DIGESTION.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIGESTION.id);
             ArrayList<String> possibleValues = new ArrayList<>(Specificity.values().length);
@@ -1293,6 +1294,18 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.METAMORPHEUS_MIN_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.METAMORPHEUS_MIN_PEP_LENGTH.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.METAMORPHEUS_MIN_PEP_LENGTH.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.METAMORPHEUS_MAX_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.METAMORPHEUS_MAX_PEP_LENGTH.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.METAMORPHEUS_MAX_PEP_LENGTH.id, arg, false)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id);
             if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id, arg, 1, 20)) {
@@ -2357,9 +2370,9 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TERMINI.id);
             Integer option = new Integer(arg);
             msgfParameters.setNumberTolerableTermini(option);
-        } else {            
+        } else {
             // Infer this setting from the general settings
-            if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme){
+            if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
                 Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // Only the first enzyme will be used.
                 String enzymeName = enzyme.getName();
                 Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
@@ -2375,7 +2388,7 @@ public class IdentificationParametersInputBean {
                     default:
                         throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
                 }
-            }else if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.unSpecific) {  
+            } else if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.unSpecific) {
                 msgfParameters.setNumberTolerableTermini(0);
             }
         }
@@ -2441,8 +2454,8 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_TERMINI.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setMinTerminiCleavages(option);
-        } else {           
-            if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme){
+        } else {
+            if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
                 // Infer this setting from the general settings
                 Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // Only the first enzyme will be used.
                 String enzymeName = enzyme.getName();
@@ -2459,7 +2472,7 @@ public class IdentificationParametersInputBean {
                     default:
                         throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
                 }
-            }else{
+            } else {
                 myriMatchParameters.setMinTerminiCleavages(0);
             }
 
@@ -2678,12 +2691,12 @@ public class IdentificationParametersInputBean {
                     default:
                         throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
                 }
-            }else if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.wholeProtein) {
+            } else if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.wholeProtein) {
                 cometParameters.setEnzymeType(2);
             } else {
                 cometParameters.setEnzymeType(1);
             }
-            
+
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id);
@@ -3039,6 +3052,29 @@ public class IdentificationParametersInputBean {
             } else if (arg.equalsIgnoreCase("reverse")) {
                 andromedaParameters.setDecoyMode(AndromedaParameters.AndromedaDecoyMode.reverse);
             }
+        }
+
+        ///////////////////////////////////
+        // MetaMorpheus parameters
+        ///////////////////////////////////
+        MetaMorpheusParameters metaMorpheusParameters;
+        algorithmIndex = Advocate.metaMorpheus.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            metaMorpheusParameters = new MetaMorpheusParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, metaMorpheusParameters);
+        } else {
+            metaMorpheusParameters = (MetaMorpheusParameters) identificationAlgorithmParameter;
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.METAMORPHEUS_MIN_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.METAMORPHEUS_MIN_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setMinPeptideLength(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.METAMORPHEUS_MAX_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.METAMORPHEUS_MAX_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setMaxPeptideLength(option);
         }
 
         ///////////////////////////////////
@@ -3642,7 +3678,7 @@ public class IdentificationParametersInputBean {
             Double value = new Double(arg);
             fractionSettings.setProteinConfidenceMwPlots(value);
         }
-        
+
         //////////////////////////////////
         // Fasta parameters
         //////////////////////////////////
@@ -3685,14 +3721,14 @@ public class IdentificationParametersInputBean {
                 default:
                     throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.FASTA_DECOY_SUFFIX.id + ": " + arg + ". 0 or 1 expected.");
             }
-            
+
             fastaPreferences.setDecoySuffix(value);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.FASTA_DECOY_FILE_TAG.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FASTA_DECOY_FILE_TAG.id);
             fastaPreferences.setTargetDecoyFileNameSuffix(arg);
         }
-        
+
     }
 
     /**

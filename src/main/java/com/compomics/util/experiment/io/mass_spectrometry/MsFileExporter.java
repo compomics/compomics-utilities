@@ -104,7 +104,7 @@ public class MsFileExporter {
 
         AplFileWriter writer = new AplFileWriter(destinationFile);
 
-        for (String spectrumTitle : spectrumTitles) {
+        for (String spectrumTitle : spectrumTitles) { // @TODO: has to be done in ascending mass order!
 
             Spectrum spectrum = spectrumProvider.getSpectrum(fileName, spectrumTitle);
 

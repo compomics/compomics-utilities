@@ -2,8 +2,6 @@ package com.compomics.util.experiment.io.mass_spectrometry.cms;
 
 import static com.compomics.util.io.IoUtil.ENCODING;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
-import java.nio.MappedByteBuffer;
 
 /**
  * Utils to store ms files.

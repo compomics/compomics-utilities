@@ -95,7 +95,7 @@ public class CmsFileWriter implements AutoCloseable {
 
         if (index > Integer.MAX_VALUE) {
 
-            throw new IOException("File exceeds max reader buffer size.");
+            throw new IOException("File exceeds memory mapped reader max buffer size.");
 
         }
         

@@ -7,17 +7,29 @@ package com.compomics.util.experiment.io.mass_spectrometry.cms;
  */
 public class TempByteArray {
 
-        public final byte[] array;
-        public final int length;
+    /**
+     * The byte array.
+     */
+    public final byte[] array;
+    /**
+     * The length used.
+     */
+    public final int length;
 
-        public TempByteArray(
-                byte[] array,
-                int length
-        ) {
+    /**
+     * Constructor.
+     *
+     * @param array The array.
+     * @param length The length used.
+     */
+    public TempByteArray(
+            byte[] array,
+            int length
+    ) {
 
-            this.array = array;
-            this.length = length;
+        this.array = array;
+        this.length = length;
 
-        }
+    }
 
 }

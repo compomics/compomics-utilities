@@ -45,6 +45,10 @@ public class NeutralLoss extends ExperimentObject {
      */
     public static final NeutralLoss C3H9N = new NeutralLoss("C3H9N", AtomChain.getAtomChain("C(3)H(9)N"), false);
     /**
+     * HCNO loss.
+     */
+    public static final NeutralLoss HCNO = new NeutralLoss("HCNO", AtomChain.getAtomChain("HCNO"), false);
+    /**
      * The composition of the ion.
      */
     private AtomChain composition;

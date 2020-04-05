@@ -2,23 +2,20 @@ package com.compomics.util.gui.parameters.identification.algorithm;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
-import com.compomics.util.parameters.identification.tool_specific.AndromedaParameters;
-import com.compomics.util.parameters.identification.tool_specific.AndromedaParameters.AndromedaDecoyMode;
-import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
 import com.compomics.util.gui.GuiUtilities;
 import java.awt.Color;
 import java.awt.Dialog;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialog;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters;
 
 /**
- * Dialog for the Andromeda specific settings.
+ * Dialog for the MetaMorpheus specific settings. (Note: Work in progress!)
  *
  * @author Harald Barsnes
  */
-public class AndromedaParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
+public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
 
     /**
      * Boolean indicating whether the used canceled the editing.
@@ -30,39 +27,39 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
     private boolean editable;
 
     /**
-     * Creates a new AndromedaParametersDialog with a frame as owner.
+     * Creates a new MetaMorpheusParametersDialog with a frame as owner.
      *
      * @param parentFrame the parent frame
-     * @param andromedaParameters the Andromeda parameters
+     * @param metaMorpheusParameters the MetaMorpheus parameters
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public AndromedaParametersDialog(java.awt.Frame parentFrame, AndromedaParameters andromedaParameters, boolean editable) {
+    public MetaMorpheusParametersDialog(java.awt.Frame parentFrame, MetaMorpheusParameters metaMorpheusParameters, boolean editable) {
         super(parentFrame, true);
         this.editable = editable;
         initComponents();
         setUpGUI();
-        populateGUI(andromedaParameters);
+        populateGUI(metaMorpheusParameters);
         validateInput(false);
         setLocationRelativeTo(parentFrame);
         setVisible(true);
     }
 
     /**
-     * Creates a new AndromedaParametersDialog with a dialog as owner.
+     * Creates a new MetaMorpheusParametersDialog with a dialog as owner.
      *
      * @param owner the dialog owner
      * @param parentFrame the parent frame
-     * @param andromedaParameters the Andromeda parameters
+     * @param metaMorpheusParameters the MetaMorpheus parameters
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public AndromedaParametersDialog(Dialog owner, java.awt.Frame parentFrame, AndromedaParameters andromedaParameters, boolean editable) {
+    public MetaMorpheusParametersDialog(Dialog owner, java.awt.Frame parentFrame, MetaMorpheusParameters metaMorpheusParameters, boolean editable) {
         super(owner, true);
         this.editable = editable;
         initComponents();
         setUpGUI();
-        populateGUI(andromedaParameters);
+        populateGUI(metaMorpheusParameters);
         validateInput(false);
         setLocationRelativeTo(owner);
         setVisible(true);
@@ -81,12 +78,11 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
         ammoniaLossCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         waterLossCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         equalILCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        decoyModeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
-        minPepLengthNoEnzymeTxt.setEditable(editable);
-        minPepLengthNoEnzymeTxt.setEnabled(editable);
-        maxPepLengthNoEnzymeTxt.setEditable(editable);
-        maxPepLengthNoEnzymeTxt.setEnabled(editable);
+        minPepLengthTxt.setEditable(editable);
+        minPepLengthTxt.setEnabled(editable);
+        maxPepLengthTxt.setEditable(editable);
+        maxPepLengthTxt.setEnabled(editable);
         maxPeptideMassTxt.setEditable(editable);
         maxPeptideMassTxt.setEnabled(editable);
         numberMatchesTxt.setEditable(editable);
@@ -107,71 +103,70 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
         topPeaksTxt.setEnabled(editable);
         topPeaksWindowTxt.setEditable(editable);
         topPeaksWindowTxt.setEnabled(editable);
-        decoyModeCmb.setEnabled(editable);
     }
 
     /**
      * Populates the GUI using the given settings.
      *
-     * @param andromedaParameters the parameters to display
+     * @param metaMorpheusParameters the parameters to display
      */
-    private void populateGUI(AndromedaParameters andromedaParameters) {
+    private void populateGUI(MetaMorpheusParameters metaMorpheusParameters) {
 
-        minPepLengthNoEnzymeTxt.setText(andromedaParameters.getMinPeptideLengthNoEnzyme() + "");
-        maxPepLengthNoEnzymeTxt.setText(andromedaParameters.getMaxPeptideLengthNoEnzyme() + "");
-        maxPeptideMassTxt.setText(andromedaParameters.getMaxPeptideMass() + "");
-        numberMatchesTxt.setText(andromedaParameters.getNumberOfCandidates() + "");
-        maxPtmsTxt.setText(andromedaParameters.getMaxNumberOfModifications() + "");
-
-        if (andromedaParameters.getFragmentationMethod() == FragmentationMethod.CID) {
-            fragMethodCmb.setSelectedIndex(0);
-        } else if (andromedaParameters.getFragmentationMethod() == FragmentationMethod.HCD) {
-            fragMethodCmb.setSelectedIndex(1);
-        } else if (andromedaParameters.getFragmentationMethod() == FragmentationMethod.ETD) {
-            fragMethodCmb.setSelectedIndex(2);
-        }
-
-        if (andromedaParameters.isIncludeWater()) {
-            waterLossCombo.setSelectedIndex(0);
-        } else {
-            waterLossCombo.setSelectedIndex(1);
-        }
-        if (andromedaParameters.isIncludeAmmonia()) {
-            ammoniaLossCmb.setSelectedIndex(0);
-        } else {
-            ammoniaLossCmb.setSelectedIndex(1);
-        }
-        if (andromedaParameters.isDependentLosses()) {
-            neutralLossesCmb.setSelectedIndex(0);
-        } else {
-            neutralLossesCmb.setSelectedIndex(1);
-        }
-        if (andromedaParameters.isEqualIL()) {
-            equalILCombo.setSelectedIndex(0);
-        } else {
-            equalILCombo.setSelectedIndex(1);
-        }
-        if (andromedaParameters.isFragmentAll()) {
-            fragmentAllCmb.setSelectedIndex(0);
-        } else {
-            fragmentAllCmb.setSelectedIndex(1);
-        }
-        if (andromedaParameters.isEmpiricalCorrection()) {
-            empiricalCorrectionCombo.setSelectedIndex(0);
-        } else {
-            empiricalCorrectionCombo.setSelectedIndex(1);
-        }
-        if (andromedaParameters.isHigherCharge()) {
-            higherChargeCombo.setSelectedIndex(0);
-        } else {
-            higherChargeCombo.setSelectedIndex(1);
-        }
-
-        decoyModeCmb.setSelectedItem(andromedaParameters.getDecoyMode());
-
-        maxCombinationsTxt.setText(andromedaParameters.getMaxCombinations() + "");
-        topPeaksTxt.setText(andromedaParameters.getTopPeaks() + "");
-        topPeaksWindowTxt.setText(andromedaParameters.getTopPeaksWindow() + "");
+        minPepLengthTxt.setText(metaMorpheusParameters.getMinPeptideLength() + "");
+        maxPepLengthTxt.setText(metaMorpheusParameters.getMaxPeptideLength() + "");
+//        maxPeptideMassTxt.setText(metaMorpheusParameters.getMaxPeptideMass() + "");
+//        numberMatchesTxt.setText(metaMorpheusParameters.getNumberOfCandidates() + "");
+//        maxPtmsTxt.setText(metaMorpheusParameters.getMaxNumberOfModifications() + "");
+//
+//        if (metaMorpheusParameters.getFragmentationMethod() == FragmentationMethod.CID) {
+//            fragMethodCmb.setSelectedIndex(0);
+//        } else if (metaMorpheusParameters.getFragmentationMethod() == FragmentationMethod.HCD) {
+//            fragMethodCmb.setSelectedIndex(1);
+//        } else if (metaMorpheusParameters.getFragmentationMethod() == FragmentationMethod.ETD) {
+//            fragMethodCmb.setSelectedIndex(2);
+//        }
+//
+//        if (metaMorpheusParameters.isIncludeWater()) {
+//            waterLossCombo.setSelectedIndex(0);
+//        } else {
+//            waterLossCombo.setSelectedIndex(1);
+//        }
+//        if (metaMorpheusParameters.isIncludeAmmonia()) {
+//            ammoniaLossCmb.setSelectedIndex(0);
+//        } else {
+//            ammoniaLossCmb.setSelectedIndex(1);
+//        }
+//        if (metaMorpheusParameters.isDependentLosses()) {
+//            neutralLossesCmb.setSelectedIndex(0);
+//        } else {
+//            neutralLossesCmb.setSelectedIndex(1);
+//        }
+//        if (metaMorpheusParameters.isEqualIL()) {
+//            equalILCombo.setSelectedIndex(0);
+//        } else {
+//            equalILCombo.setSelectedIndex(1);
+//        }
+//        if (metaMorpheusParameters.isFragmentAll()) {
+//            fragmentAllCmb.setSelectedIndex(0);
+//        } else {
+//            fragmentAllCmb.setSelectedIndex(1);
+//        }
+//        if (metaMorpheusParameters.isEmpiricalCorrection()) {
+//            empiricalCorrectionCombo.setSelectedIndex(0);
+//        } else {
+//            empiricalCorrectionCombo.setSelectedIndex(1);
+//        }
+//        if (metaMorpheusParameters.isHigherCharge()) {
+//            higherChargeCombo.setSelectedIndex(0);
+//        } else {
+//            higherChargeCombo.setSelectedIndex(1);
+//        }
+//
+//        decoyModeCmb.setSelectedItem(metaMorpheusParameters.getDecoyMode());
+//
+//        maxCombinationsTxt.setText(metaMorpheusParameters.getMaxCombinations() + "");
+//        topPeaksTxt.setText(metaMorpheusParameters.getTopPeaks() + "");
+//        topPeaksWindowTxt.setText(metaMorpheusParameters.getTopPeaksWindow() + "");
     }
 
     @Override
@@ -185,65 +180,63 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
     }
 
     /**
-     * Returns the user selection as Andromeda parameters object.
+     * Returns the user selection as MetaMorpheus parameters object.
      *
      * @return the user selection
      */
-    public AndromedaParameters getInput() {
+    public MetaMorpheusParameters getInput() {
 
-        AndromedaParameters result = new AndromedaParameters();
+        MetaMorpheusParameters result = new MetaMorpheusParameters();
 
-        String input = minPepLengthNoEnzymeTxt.getText().trim();
+        String input = minPepLengthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPeptideLengthNoEnzyme(new Integer(input));
+            result.setMinPeptideLength(new Integer(input));
         }
-        input = maxPepLengthNoEnzymeTxt.getText().trim();
+        input = maxPepLengthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxPeptideLengthNoEnzyme(new Integer(input));
+            result.setMaxPeptideLength(new Integer(input));
         }
-        input = maxPeptideMassTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setMaxPeptideMass(new Double(input));
-        }
-        input = numberMatchesTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setNumberOfCandidates(new Integer(input));
-        }
-        input = maxPtmsTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setMaxNumberOfModifications(new Integer(input));
-        }
-
-        if (fragMethodCmb.getSelectedIndex() == 0) {
-            result.setFragmentationMethod(FragmentationMethod.CID);
-        } else if (fragMethodCmb.getSelectedIndex() == 1) {
-            result.setFragmentationMethod(FragmentationMethod.HCD);
-        } else {
-            result.setFragmentationMethod(FragmentationMethod.ETD);
-        }
-
-        result.setIncludeWater(waterLossCombo.getSelectedIndex() == 0);
-        result.setIncludeAmmonia(ammoniaLossCmb.getSelectedIndex() == 0);
-        result.setDependentLosses(neutralLossesCmb.getSelectedIndex() == 0);
-        result.setEqualIL(equalILCombo.getSelectedIndex() == 0);
-        result.setFragmentAll(fragmentAllCmb.getSelectedIndex() == 0);
-        result.setEmpiricalCorrection(empiricalCorrectionCombo.getSelectedIndex() == 0);
-        result.setHigherCharge(higherChargeCombo.getSelectedIndex() == 0);
-
-        input = maxCombinationsTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setMaxCombinations(new Integer(input));
-        }
-        input = topPeaksTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setTopPeaks(new Integer(input));
-        }
-        input = topPeaksWindowTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setTopPeaksWindow(new Integer(input));
-        }
-
-        result.setDecoyMode((AndromedaDecoyMode) decoyModeCmb.getSelectedItem());
+//        input = maxPeptideMassTxt.getText().trim();
+//        if (!input.equals("")) {
+//            result.setMaxPeptideMass(new Double(input));
+//        }
+//        input = numberMatchesTxt.getText().trim();
+//        if (!input.equals("")) {
+//            result.setNumberOfCandidates(new Integer(input));
+//        }
+//        input = maxPtmsTxt.getText().trim();
+//        if (!input.equals("")) {
+//            result.setMaxNumberOfModifications(new Integer(input));
+//        }
+//
+//        if (fragMethodCmb.getSelectedIndex() == 0) {
+//            result.setFragmentationMethod(FragmentationMethod.CID);
+//        } else if (fragMethodCmb.getSelectedIndex() == 1) {
+//            result.setFragmentationMethod(FragmentationMethod.HCD);
+//        } else {
+//            result.setFragmentationMethod(FragmentationMethod.ETD);
+//        }
+//
+//        result.setIncludeWater(waterLossCombo.getSelectedIndex() == 0);
+//        result.setIncludeAmmonia(ammoniaLossCmb.getSelectedIndex() == 0);
+//        result.setDependentLosses(neutralLossesCmb.getSelectedIndex() == 0);
+//        result.setEqualIL(equalILCombo.getSelectedIndex() == 0);
+//        result.setFragmentAll(fragmentAllCmb.getSelectedIndex() == 0);
+//        result.setEmpiricalCorrection(empiricalCorrectionCombo.getSelectedIndex() == 0);
+//        result.setHigherCharge(higherChargeCombo.getSelectedIndex() == 0);
+//
+//        input = maxCombinationsTxt.getText().trim();
+//        if (!input.equals("")) {
+//            result.setMaxCombinations(new Integer(input));
+//        }
+//        input = topPeaksTxt.getText().trim();
+//        if (!input.equals("")) {
+//            result.setTopPeaks(new Integer(input));
+//        }
+//        input = topPeaksWindowTxt.getText().trim();
+//        if (!input.equals("")) {
+//            result.setTopPeaksWindow(new Integer(input));
+//        }
 
         return result;
     }
@@ -261,10 +254,10 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
         settingsPanel = new javax.swing.JPanel();
         settingsScrollPane = new javax.swing.JScrollPane();
         settingsInnerPanel = new javax.swing.JPanel();
-        peptideLengthNoEnzymeLabel = new javax.swing.JLabel();
-        minPepLengthNoEnzymeTxt = new javax.swing.JTextField();
-        peptideLengthNoEnzymeDividerLabel = new javax.swing.JLabel();
-        maxPepLengthNoEnzymeTxt = new javax.swing.JTextField();
+        peptideLengthLabel = new javax.swing.JLabel();
+        minPepLengthTxt = new javax.swing.JTextField();
+        peptideLengthDividerLabel = new javax.swing.JLabel();
+        maxPepLengthTxt = new javax.swing.JTextField();
         maxPeptideMassLabel = new javax.swing.JLabel();
         maxPeptideMassTxt = new javax.swing.JTextField();
         numberMatchesLabel = new javax.swing.JLabel();
@@ -293,15 +286,13 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
         waterLossCombo = new javax.swing.JComboBox();
         equalILLabel = new javax.swing.JLabel();
         equalILCombo = new javax.swing.JComboBox();
-        decoyModeLabel = new javax.swing.JLabel();
-        decoyModeCmb = new javax.swing.JComboBox();
         openDialogHelpJButton = new javax.swing.JButton();
         advancedSettingsWarningLabel = new javax.swing.JLabel();
         okButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Andromeda Advanced Settings");
+        setTitle("MetaMorpheus Advanced Settings");
         setMinimumSize(new java.awt.Dimension(400, 400));
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
@@ -314,31 +305,33 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
 
         settingsInnerPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        peptideLengthNoEnzymeLabel.setText("Peptide Length No Enzyme");
+        peptideLengthLabel.setText("Peptide Length");
 
-        minPepLengthNoEnzymeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minPepLengthNoEnzymeTxt.setText("8");
-        minPepLengthNoEnzymeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+        minPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        minPepLengthTxt.setText("8");
+        minPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                minPepLengthNoEnzymeTxtKeyReleased(evt);
+                minPepLengthTxtKeyReleased(evt);
             }
         });
 
-        peptideLengthNoEnzymeDividerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        peptideLengthNoEnzymeDividerLabel.setText("-");
+        peptideLengthDividerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        peptideLengthDividerLabel.setText("-");
 
-        maxPepLengthNoEnzymeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxPepLengthNoEnzymeTxt.setText("30");
-        maxPepLengthNoEnzymeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+        maxPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        maxPepLengthTxt.setText("30");
+        maxPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                maxPepLengthNoEnzymeTxtKeyReleased(evt);
+                maxPepLengthTxtKeyReleased(evt);
             }
         });
 
         maxPeptideMassLabel.setText("Max Peptide Mass");
+        maxPeptideMassLabel.setEnabled(false);
 
         maxPeptideMassTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         maxPeptideMassTxt.setText("4600");
+        maxPeptideMassTxt.setEnabled(false);
         maxPeptideMassTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 maxPeptideMassTxtKeyReleased(evt);
@@ -346,9 +339,11 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
         });
 
         numberMatchesLabel.setText("Number of Spectrum Matches");
+        numberMatchesLabel.setEnabled(false);
 
         numberMatchesTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         numberMatchesTxt.setText("10");
+        numberMatchesTxt.setEnabled(false);
         numberMatchesTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 numberMatchesTxtKeyReleased(evt);
@@ -356,17 +351,23 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
         });
 
         fragMethodLabel.setText("Fragmentation Method");
+        fragMethodLabel.setEnabled(false);
 
         fragMethodCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "CID", "HCD", "ETD" }));
+        fragMethodCmb.setEnabled(false);
 
         ammoniaLossLabel.setText("Ammonia Loss");
+        ammoniaLossLabel.setEnabled(false);
 
         ammoniaLossCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        ammoniaLossCmb.setEnabled(false);
 
         maxPtmsLabel.setText("Max Variable PTMs");
+        maxPtmsLabel.setEnabled(false);
 
         maxPtmsTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         maxPtmsTxt.setText("5");
+        maxPtmsTxt.setEnabled(false);
         maxPtmsTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 maxPtmsTxtKeyReleased(evt);
@@ -374,17 +375,23 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
         });
 
         empiricalCorrectionLabel.setText("Empirical Correction");
+        empiricalCorrectionLabel.setEnabled(false);
 
         empiricalCorrectionCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        empiricalCorrectionCombo.setEnabled(false);
 
         higherChargeLabel.setText("Higher Charge");
+        higherChargeLabel.setEnabled(false);
 
         higherChargeCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        higherChargeCombo.setEnabled(false);
 
         topPeaksLabel.setText("Top Peaks");
+        topPeaksLabel.setEnabled(false);
 
         topPeaksTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         topPeaksTxt.setText("8");
+        topPeaksTxt.setEnabled(false);
         topPeaksTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 topPeaksTxtKeyReleased(evt);
@@ -392,17 +399,23 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
         });
 
         neutralLossesLabel.setText("Sequence Dependent Neutral Loss");
+        neutralLossesLabel.setEnabled(false);
 
         neutralLossesCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        neutralLossesCmb.setEnabled(false);
 
         fragmentAllLabel.setText("Fragment All");
+        fragmentAllLabel.setEnabled(false);
 
         fragmentAllCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        fragmentAllCmb.setEnabled(false);
 
         maxCombinationsLabel.setText("Max Combinations");
+        maxCombinationsLabel.setEnabled(false);
 
         maxCombinationsTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         maxCombinationsTxt.setText("250");
+        maxCombinationsTxt.setEnabled(false);
         maxCombinationsTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 maxCombinationsTxtKeyReleased(evt);
@@ -410,9 +423,11 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
         });
 
         topPeaksWindowLabel.setText("Top Peaks Windows");
+        topPeaksWindowLabel.setEnabled(false);
 
         topPeaksWindowTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         topPeaksWindowTxt.setText("100");
+        topPeaksWindowTxt.setEnabled(false);
         topPeaksWindowTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 topPeaksWindowTxtKeyReleased(evt);
@@ -420,30 +435,30 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
         });
 
         waterLossLabel.setText("Water Loss");
+        waterLossLabel.setEnabled(false);
 
         waterLossCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        waterLossCombo.setEnabled(false);
 
         equalILLabel.setText("Equal I and L");
+        equalILLabel.setEnabled(false);
 
         equalILCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         equalILCombo.setSelectedIndex(1);
-
-        decoyModeLabel.setText("Decoy Mode");
-
-        decoyModeCmb.setModel(new DefaultComboBoxModel(AndromedaDecoyMode.values()));
+        equalILCombo.setEnabled(false);
 
         javax.swing.GroupLayout settingsInnerPanelLayout = new javax.swing.GroupLayout(settingsInnerPanel);
         settingsInnerPanel.setLayout(settingsInnerPanelLayout);
         settingsInnerPanelLayout.setHorizontalGroup(
             settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsInnerPanelLayout.createSequentialGroup()
-                .addComponent(peptideLengthNoEnzymeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(peptideLengthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21)
-                .addComponent(minPepLengthNoEnzymeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+                .addComponent(minPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(peptideLengthNoEnzymeDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(peptideLengthDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
-                .addComponent(maxPepLengthNoEnzymeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE))
+                .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE))
             .addGroup(settingsInnerPanelLayout.createSequentialGroup()
                 .addComponent(maxPeptideMassLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21)
@@ -493,22 +508,18 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
                     .addComponent(topPeaksLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(topPeaksTxt)
-                    .addComponent(topPeaksWindowTxt)
-                    .addComponent(maxCombinationsTxt)))
-            .addGroup(settingsInnerPanelLayout.createSequentialGroup()
-                .addComponent(decoyModeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(decoyModeCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(topPeaksTxt, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(maxCombinationsTxt)
+                    .addComponent(topPeaksWindowTxt)))
         );
         settingsInnerPanelLayout.setVerticalGroup(
             settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsInnerPanelLayout.createSequentialGroup()
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(minPepLengthNoEnzymeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(maxPepLengthNoEnzymeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(peptideLengthNoEnzymeDividerLabel)
-                    .addComponent(peptideLengthNoEnzymeLabel))
+                    .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(peptideLengthDividerLabel)
+                    .addComponent(peptideLengthLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxPeptideMassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -565,10 +576,6 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(topPeaksWindowTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(topPeaksWindowLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(decoyModeLabel)
-                    .addComponent(decoyModeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -587,8 +594,8 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(settingsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(settingsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         openDialogHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
@@ -610,7 +617,7 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
             }
         });
 
-        advancedSettingsWarningLabel.setText("Click to open the Andromeda help page.");
+        advancedSettingsWarningLabel.setText("Click to open the MetaMorpheus help page.");
 
         okButton.setText("OK");
         okButton.addActionListener(new java.awt.event.ActionListener() {
@@ -633,13 +640,13 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
+                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(openDialogHelpJButton)
                         .addGap(18, 18, 18)
                         .addComponent(advancedSettingsWarningLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(closeButton)))
@@ -649,7 +656,7 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE)
+                .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 548, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
@@ -713,13 +720,13 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
     }//GEN-LAST:event_openDialogHelpJButtonMouseExited
 
     /**
-     * Open the Andromeda help page.
+     * Open the MetaMorpheus help page.
      *
      * @param evt
      */
     private void openDialogHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openDialogHelpJButtonActionPerformed
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://coxdocs.org/doku.php?id=maxquant:andromeda:start");
+        BareBonesBrowserLaunch.openURL("https://github.com/smith-chem-wisc/MetaMorpheus/wiki");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_openDialogHelpJButtonActionPerformed
 
@@ -746,18 +753,18 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
      *
      * @param evt
      */
-    private void minPepLengthNoEnzymeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPepLengthNoEnzymeTxtKeyReleased
+    private void minPepLengthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPepLengthTxtKeyReleased
         validateInput(false);
-    }//GEN-LAST:event_minPepLengthNoEnzymeTxtKeyReleased
+    }//GEN-LAST:event_minPepLengthTxtKeyReleased
 
     /**
      * Validate the input.
      *
      * @param evt
      */
-    private void maxPepLengthNoEnzymeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPepLengthNoEnzymeTxtKeyReleased
+    private void maxPepLengthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPepLengthTxtKeyReleased
         validateInput(false);
-    }//GEN-LAST:event_maxPepLengthNoEnzymeTxtKeyReleased
+    }//GEN-LAST:event_maxPepLengthTxtKeyReleased
 
     /**
      * Validate the input.
@@ -805,19 +812,19 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
 
         boolean valid = true;
 
-        valid = GuiUtilities.validateIntegerInput(this, peptideLengthNoEnzymeLabel, minPepLengthNoEnzymeTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, peptideLengthNoEnzymeLabel, maxPepLengthNoEnzymeTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
-        valid = GuiUtilities.validateDoubleInput(this, maxPeptideMassLabel, maxPeptideMassTxt, "maximum peptide mass", "Peptide Mass Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number of Spectrum Matches Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "maximum number of variable PTMs", "Variable PTMs Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, maxCombinationsLabel, maxCombinationsTxt, "maximum combinations", "Max Combinations Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, topPeaksLabel, topPeaksTxt, "top peaks", "Top Peaks Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, topPeaksWindowLabel, topPeaksWindowTxt, "top peaks window", "Top Peaks Window Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, minPepLengthTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, maxPepLengthTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
+//        valid = GuiUtilities.validateDoubleInput(this, maxPeptideMassLabel, maxPeptideMassTxt, "maximum peptide mass", "Peptide Mass Error", true, showMessage, valid);
+//        valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number of Spectrum Matches Error", true, showMessage, valid);
+//        valid = GuiUtilities.validateIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "maximum number of variable PTMs", "Variable PTMs Error", true, showMessage, valid);
+//        valid = GuiUtilities.validateIntegerInput(this, maxCombinationsLabel, maxCombinationsTxt, "maximum combinations", "Max Combinations Error", true, showMessage, valid);
+//        valid = GuiUtilities.validateIntegerInput(this, topPeaksLabel, topPeaksTxt, "top peaks", "Top Peaks Error", true, showMessage, valid);
+//        valid = GuiUtilities.validateIntegerInput(this, topPeaksWindowLabel, topPeaksWindowTxt, "top peaks window", "Top Peaks Window Error", true, showMessage, valid);
 
         // peptide length: the low value should be lower than the high value
         try {
-            double lowValue = Double.parseDouble(minPepLengthNoEnzymeTxt.getText().trim());
-            double highValue = Double.parseDouble(maxPepLengthNoEnzymeTxt.getText().trim());
+            double lowValue = Double.parseDouble(minPepLengthTxt.getText().trim());
+            double highValue = Double.parseDouble(maxPepLengthTxt.getText().trim());
 
             if (lowValue > highValue) {
                 if (showMessage && valid) {
@@ -825,8 +832,8 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
                             "Peptide Length Error", JOptionPane.WARNING_MESSAGE);
                 }
                 valid = false;
-                peptideLengthNoEnzymeLabel.setForeground(Color.RED);
-                peptideLengthNoEnzymeLabel.setToolTipText("Please select a valid range (upper <= higher)");
+                peptideLengthLabel.setForeground(Color.RED);
+                peptideLengthLabel.setToolTipText("Please select a valid range (upper <= higher)");
             }
         } catch (NumberFormatException e) {
             // ignore, handled above
@@ -842,8 +849,6 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
     private javax.swing.JLabel ammoniaLossLabel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton closeButton;
-    private javax.swing.JComboBox decoyModeCmb;
-    private javax.swing.JLabel decoyModeLabel;
     private javax.swing.JComboBox empiricalCorrectionCombo;
     private javax.swing.JLabel empiricalCorrectionLabel;
     private javax.swing.JComboBox equalILCombo;
@@ -856,20 +861,20 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
     private javax.swing.JLabel higherChargeLabel;
     private javax.swing.JLabel maxCombinationsLabel;
     private javax.swing.JTextField maxCombinationsTxt;
-    private javax.swing.JTextField maxPepLengthNoEnzymeTxt;
+    private javax.swing.JTextField maxPepLengthTxt;
     private javax.swing.JLabel maxPeptideMassLabel;
     private javax.swing.JTextField maxPeptideMassTxt;
     private javax.swing.JLabel maxPtmsLabel;
     private javax.swing.JTextField maxPtmsTxt;
-    private javax.swing.JTextField minPepLengthNoEnzymeTxt;
+    private javax.swing.JTextField minPepLengthTxt;
     private javax.swing.JComboBox neutralLossesCmb;
     private javax.swing.JLabel neutralLossesLabel;
     private javax.swing.JLabel numberMatchesLabel;
     private javax.swing.JTextField numberMatchesTxt;
     private javax.swing.JButton okButton;
     private javax.swing.JButton openDialogHelpJButton;
-    private javax.swing.JLabel peptideLengthNoEnzymeDividerLabel;
-    private javax.swing.JLabel peptideLengthNoEnzymeLabel;
+    private javax.swing.JLabel peptideLengthDividerLabel;
+    private javax.swing.JLabel peptideLengthLabel;
     private javax.swing.JPanel settingsInnerPanel;
     private javax.swing.JPanel settingsPanel;
     private javax.swing.JScrollPane settingsScrollPane;

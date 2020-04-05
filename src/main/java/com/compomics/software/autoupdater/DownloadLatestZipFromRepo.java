@@ -1,7 +1,6 @@
 package com.compomics.software.autoupdater;
 
 import com.compomics.software.settings.UtilitiesPathParameters;
-import com.compomics.util.Util;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.parameters.UtilitiesUserParameters;
 import com.compomics.util.waiting.WaitingHandler;

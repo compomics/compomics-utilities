@@ -21,27 +21,10 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.List;
 import javax.xml.bind.JAXBException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
-import uk.ac.ebi.jmzidml.model.mzidml.AnalysisData;
-import uk.ac.ebi.jmzidml.model.mzidml.AnalysisSoftware;
-import uk.ac.ebi.jmzidml.model.mzidml.AnalysisSoftwareList;
-import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
-import uk.ac.ebi.jmzidml.model.mzidml.DataCollection;
-import uk.ac.ebi.jmzidml.model.mzidml.Modification;
-import uk.ac.ebi.jmzidml.model.mzidml.ModificationParams;
-import uk.ac.ebi.jmzidml.model.mzidml.Param;
-import uk.ac.ebi.jmzidml.model.mzidml.SearchModification;
-import uk.ac.ebi.jmzidml.model.mzidml.SpecificityRules;
-import uk.ac.ebi.jmzidml.model.mzidml.SpectraData;
-import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
-import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationList;
-import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationProtocol;
-import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
-import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 
 /**
  * This IdfileReader reads identifications from an mzIdentML result file.
@@ -56,11 +39,11 @@ public class MzIdentMLIdfileReader implements IdfileReader {
      */
     public enum RawValueConversionType {
 
-        noConversion, 
-        baseTwoPowerMinusValue, 
-        baseTenPowerMinusValue, 
-        baseTenPowerPlusValue, 
-        baseNaturalLogPowerMinusValue, 
+        noConversion,
+        baseTwoPowerMinusValue,
+        baseTenPowerMinusValue,
+        baseTenPowerPlusValue,
+        baseNaturalLogPowerMinusValue,
         oneMinusValue;
     }
 
@@ -80,14 +63,6 @@ public class MzIdentMLIdfileReader implements IdfileReader {
      * The name of the mzIdentML file.
      */
     private String mzIdentMLFileName;
-    /**
-     * The mzIdentML unmarshaller.
-     */
-    private MzIdentMLUnmarshaller unmarshaller;
-    /**
-     * The names of the fixed modifications.
-     */
-    private ArrayList<SearchModification> fixedModifications;
     /**
      * A temporary peptide map used by the custom parser only. Key: peptide
      * id/ref, element: the peptide object.
@@ -117,11 +92,6 @@ public class MzIdentMLIdfileReader implements IdfileReader {
      */
     private boolean expandAaCombinations;
     /**
-     * Set if the custom parser are to be used. If false, the jmzidentml parser
-     * is used.
-     */
-    private boolean useCustomParser = true;
-    /**
      * Boolean indicating whether the mzId file contains de novo tags.
      */
     private boolean hasDenovoTags = false;
@@ -142,11 +112,11 @@ public class MzIdentMLIdfileReader implements IdfileReader {
      */
     public MzIdentMLIdfileReader(
             File mzIdentMLFile
-    ) 
+    )
             throws IOException {
-        
+
         this(mzIdentMLFile, null);
-    
+
     }
 
     /**
@@ -166,69 +136,6 @@ public class MzIdentMLIdfileReader implements IdfileReader {
         this.mzIdentMLFile = mzIdentMLFile;
         mzIdentMLFileName = IoUtil.getFileName(mzIdentMLFile);
 
-        if (!useCustomParser) {
-
-            if (mzIdentMLFile.length() < 10485760) {
-                unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile, true);
-            } else {
-                unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile);
-            }
-
-            // get the software versions
-            AnalysisSoftwareList analysisSoftwareList = unmarshaller.unmarshal(AnalysisSoftwareList.class);
-
-            for (AnalysisSoftware software : analysisSoftwareList.getAnalysisSoftware()) {
-
-                Param softwareNameObject = software.getSoftwareName();
-
-                String softwareName = softwareNameObject.getCvParam().getName();
-                if (softwareName == null) {
-                    softwareName = softwareNameObject.getUserParam().getName();
-                }
-
-                String version = software.getVersion();
-
-                if (softwareName != null && version != null) {
-
-                    // only keep known software
-                    if (Advocate.getAdvocate(softwareName) != null) {
-
-                        ArrayList<String> versions = tempSoftwareVersions.get(softwareName);
-
-                        if (versions == null) {
-
-                            versions = new ArrayList<>();
-                            versions.add(version);
-                            tempSoftwareVersions.put(softwareName, versions);
-
-                        } else if (!versions.contains(version)) {
-
-                            versions.add(version);
-
-                        }
-                    }
-                }
-            }
-
-            softwareVersions.putAll(tempSoftwareVersions);
-
-            // get the list of fixed modifications
-            fixedModifications = new ArrayList<>();
-            SpectrumIdentificationProtocol spectrumIdentificationProtocol = unmarshaller.unmarshal(SpectrumIdentificationProtocol.class);
-            ModificationParams modifications = spectrumIdentificationProtocol.getModificationParams();
-
-            if (modifications != null) {
-
-                for (SearchModification tempMod : modifications.getSearchModification()) {
-
-                    if (tempMod.isFixedMod()) {
-
-                        fixedModifications.add(tempMod);
-
-                    }
-                }
-            }
-        }
     }
 
     @Override
@@ -241,14 +148,14 @@ public class MzIdentMLIdfileReader implements IdfileReader {
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) 
+    )
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
-        
+
         return getAllSpectrumMatches(
-                spectrumProvider, 
-                waitingHandler, 
-                searchParameters, 
-                null, 
+                spectrumProvider,
+                waitingHandler,
+                searchParameters,
+                null,
                 true
         );
     }
@@ -260,271 +167,35 @@ public class MzIdentMLIdfileReader implements IdfileReader {
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) 
+    )
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
 
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;
         this.expandAaCombinations = expandAaCombinations;
 
-        ArrayList<SpectrumMatch> result = new ArrayList<>();
+        // set the waiting handler max value
+        if (waitingHandler != null) {
 
-        if (useCustomParser) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 
-            // set the waiting handler max value
-            if (waitingHandler != null) {
+            try (SimpleFileReader reader = SimpleFileReader.getFileReader(mzIdentMLFile)) {
 
-                waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+                int lineCounter = 0;
+                String line = reader.readLine();
 
-                try ( SimpleFileReader reader = SimpleFileReader.getFileReader(mzIdentMLFile)) {
-
-                    int lineCounter = 0;
-                    String line = reader.readLine();
-
-                    while (line != null) {
-                        line = reader.readLine();
-                        lineCounter++;
-                    }
-
-                    waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-                    waitingHandler.setMaxSecondaryProgressCounter(lineCounter);
-
+                while (line != null) {
+                    line = reader.readLine();
+                    lineCounter++;
                 }
-            }
 
-            return parseFile(waitingHandler);
-
-        } else {
-
-            DataCollection dataCollection = unmarshaller.unmarshal(DataCollection.class);
-            AnalysisData analysisData = dataCollection.getAnalysisData();
-
-            // Get the list of SpectrumIdentification elements
-            List<SpectrumIdentificationList> spectrumIdList = analysisData.getSpectrumIdentificationList();
-
-            int spectrumIdentificationResultSize = 0;
-            // find the number of psms to parse
-            for (SpectrumIdentificationList spectrumIdElements : spectrumIdList) {
-                spectrumIdentificationResultSize += spectrumIdElements.getSpectrumIdentificationResult().size();
-            }
-
-            // set the waiting handler max value
-            if (waitingHandler != null) {
                 waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-                waitingHandler.setMaxSecondaryProgressCounter(spectrumIdentificationResultSize);
-            }
+                waitingHandler.setMaxSecondaryProgressCounter(lineCounter);
 
-            // Reset the software versions to keep only the advocates which were used for scoring
-            softwareVersions.clear();
-
-            // get the psms
-            for (SpectrumIdentificationList spectrumIdElements : spectrumIdList) {
-                for (SpectrumIdentificationResult spectrumIdentResult : spectrumIdElements.getSpectrumIdentificationResult()) {
-
-                    // get the spectrum title
-                    String spectrumTitle = null;
-                    for (CvParam cvParam : spectrumIdentResult.getCvParam()) {
-                        if (cvParam.getAccession().equalsIgnoreCase("MS:1000796") || cvParam.getName().equalsIgnoreCase("spectrum title")) {
-                            spectrumTitle = cvParam.getValue();
-                            // remove any html from the title
-                            spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
-                        }
-                    }
-
-                    // see if we can find the spectrum index
-                    String spectrumId = spectrumIdentResult.getSpectrumID();
-                    Integer spectrumIndex = null;
-                    if (spectrumId != null && spectrumId.startsWith("index=")) {
-                        spectrumIndex = Integer.valueOf(spectrumId.substring(spectrumId.indexOf("=") + 1));
-                    }
-
-                    // get the spectrum file name
-                    SpectraData spectraData = unmarshaller.unmarshal(SpectraData.class, spectrumIdentResult.getSpectraDataRef());
-                    String spectrumFileName = new File(spectraData.getLocation()).getName();
-
-                    // set up the spectrum match
-                    SpectrumMatch currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
-
-                    // iterate and add the spectrum matches
-                    for (SpectrumIdentificationItem spectrumIdentItem : spectrumIdentResult.getSpectrumIdentificationItem()) {
-
-                        int rank = spectrumIdentItem.getRank();
-                        String peptideReference = spectrumIdentItem.getPeptideRef();
-
-                        // get the peptide
-                        uk.ac.ebi.jmzidml.model.mzidml.Peptide mzIdentMLPeptide = unmarshaller.unmarshal(uk.ac.ebi.jmzidml.model.mzidml.Peptide.class, peptideReference);
-                        String peptideSequence = mzIdentMLPeptide.getPeptideSequence();
-
-                        // get the modifications
-                        ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<>();
-                        for (Modification modification : mzIdentMLPeptide.getModification()) {
-
-                            String accession = modification.getCvParam().get(0).getAccession(); // note: only the first cv term is used
-                            int location = modification.getLocation();
-                            double monoMassDelta = modification.getMonoisotopicMassDelta();
-
-                            boolean fixed = false;
-                            for (SearchModification searchFixedModification : fixedModifications) {
-                                if (accession.equals(searchFixedModification.getCvParam().get(0).getAccession()) || searchFixedModification.getMassDelta() == monoMassDelta) {
-                                    boolean allRules = true;
-                                    List<SpecificityRules> specificityRules = searchFixedModification.getSpecificityRules();
-                                    if (specificityRules != null && !specificityRules.isEmpty()) {
-                                        for (SpecificityRules specificityRule : specificityRules) {
-                                            for (CvParam cvParam : specificityRule.getCvParam()) {
-                                                if (cvParam.getAccession().equals("MS:1001189") || cvParam.getAccession().equals("MS:1002057")) {
-                                                    if (location != 0) {
-                                                        allRules = false;
-                                                        break;
-                                                    }
-                                                } else if (cvParam.getAccession().equals("MS:1001190") || cvParam.getAccession().equals("MS:1002058")) {
-                                                    if (location != peptideSequence.length() + 1) {
-                                                        allRules = false;
-                                                        break;
-                                                    }
-                                                } else if (cvParam.getAccession().equals("MS:1001875")) {
-                                                    // can we use this?
-                                                } else if (cvParam.getAccession().equals("MS:1001876")) {
-                                                    // not a specificity rule but the scoring of the specificity
-                                                } else {
-                                                    throw new IllegalArgumentException("Specificity rule " + cvParam.getAccession() + " not recognized.");
-                                                }
-                                            }
-                                            if (!allRules) {
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    if (allRules) {
-                                        List<String> residues = searchFixedModification.getResidues();
-                                        if (residues == null || residues.isEmpty()) {
-                                            fixed = true;
-                                            break;
-                                        } else {
-                                            String aaAtLocation;
-                                            if (location == 0) {
-                                                aaAtLocation = peptideSequence.charAt(0) + "";
-                                            } else if (location == peptideSequence.length() + 1) {
-                                                aaAtLocation = peptideSequence.charAt(location - 2) + "";
-                                            } else {
-                                                aaAtLocation = peptideSequence.charAt(location - 1) + "";
-                                            }
-                                            for (String residue : residues) {
-                                                if (residue.equals(aaAtLocation) || residue.equals(".")) {
-                                                    fixed = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                if (fixed) {
-                                    break;
-                                }
-                            }
-
-                            if (!fixed) {
-
-                                if (location == 0) {
-                                    location = 1; // n-term
-                                } else if (location == peptideSequence.length() + 1) {
-                                    location -= 1; // c-term
-                                }
-
-                                utilitiesModifications.add(new ModificationMatch(monoMassDelta + "@" + peptideSequence.charAt(location - 1), location));
-                            }
-                        }
-
-                        // create the peptide
-                        Peptide peptide = new Peptide(peptideSequence, utilitiesModifications.toArray(new ModificationMatch[utilitiesModifications.size()]), true);
-
-                        // get the e-value and advocate
-                        HashMap<String, Double> scoreMap = getAccessionToEValue(spectrumIdentItem);
-                        EValueObject tempEValue = getEValue(scoreMap, spectrumIdentItem.getId());
-                        Advocate advocate = tempEValue.getAdvocate();
-                        Double eValue = tempEValue.getEValue();
-                        Double rawScore = tempEValue.getRawScore();
-
-                        // create the peptide assumption
-                        PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocate.getIndex(), spectrumIdentItem.getChargeState(), eValue, mzIdentMLFileName);
-
-                        if (rawScore != null) {
-                            peptideAssumption.setRawScore(rawScore);
-                        }
-
-                        if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
-
-                            ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
-
-                            for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-
-                                ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
-                                        .map(modificationMatch -> modificationMatch.clone())
-                                        .toArray(ModificationMatch[]::new);
-
-                                Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
-
-                                PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
-                                if (rawScore != null) {
-                                    newAssumption.setRawScore(rawScore);
-                                }
-
-                                currentMatch.addPeptideAssumption(advocate.getIndex(), newAssumption);
-                            }
-                        } else {
-                            currentMatch.addPeptideAssumption(advocate.getIndex(), peptideAssumption);
-                        }
-
-                        if (waitingHandler != null) {
-                            if (waitingHandler.isRunCanceled()) {
-                                break;
-                            }
-                        }
-                    }
-
-                    if (waitingHandler != null) {
-                        if (waitingHandler.isRunCanceled()) {
-                            break;
-                        }
-                        waitingHandler.increaseSecondaryProgressCounter();
-                    }
-
-                    result.add(currentMatch);
-                }
-
-                if (waitingHandler != null) {
-                    if (waitingHandler.isRunCanceled()) {
-                        break;
-                    }
-                }
             }
         }
 
-        return result;
-    }
+        return parseFile(waitingHandler);
 
-    /**
-     * Makes a score accession to score value map for the given
-     * spectrumIdentificationItem.
-     *
-     * @param spectrumIdentItem the spectrum identification item
-     *
-     * @return a map of the score accession to score value of the given scores
-     */
-    private HashMap<String, Double> getAccessionToEValue(
-            SpectrumIdentificationItem spectrumIdentItem
-    ) {
-        HashMap<String, Double> result = new HashMap<>();
-        for (CvParam cvParam : spectrumIdentItem.getCvParam()) {
-            String accession = cvParam.getAccession();
-            if (cvParam.getValue() != null) {
-                try {
-                    Double eValue = new Double(cvParam.getValue());
-                    result.put(accession, eValue);
-                } catch (NumberFormatException e) {
-                    // ignore, not a number
-                }
-            }
-        }
-        return result;
     }
 
     /**
@@ -548,8 +219,6 @@ public class MzIdentMLIdfileReader implements IdfileReader {
     @Override
     public void close() throws IOException {
         mzIdentMLFile = null;
-        unmarshaller = null;
-        //unmarshaller.close(); // @TODO: close method is missing?
     }
 
     @Override
@@ -594,7 +263,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
         XmlPullParser parser = factory.newPullParser();
 
         // create a reader for the input file
-        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(mzIdentMLFile)) {
+        try (SimpleFileReader reader = SimpleFileReader.getFileReader(mzIdentMLFile)) {
 
             // set the XML Pull Parser to read from this reader
             parser.setInput(reader.getReader());
@@ -1313,9 +982,9 @@ public class MzIdentMLIdfileReader implements IdfileReader {
 
         // update the spectrum key with the correct spectrum title
         if (spectrumTitle != null) {
-            
+
             currentMatch.setSpectrumTitle(spectrumTitle);
-            
+
         }
 
         result.add(currentMatch);

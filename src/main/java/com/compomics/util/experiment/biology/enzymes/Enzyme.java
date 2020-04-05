@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.biology.enzymes;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
@@ -18,13 +17,6 @@ import java.util.stream.Collectors;
  */
 public class Enzyme extends ExperimentObject {
 
-    /**
-     * Empty default constructor
-     */
-    public Enzyme() {
-        name = "";
-    }
-    
     /*
      * The enzyme name.
      */
@@ -49,6 +41,13 @@ public class Enzyme extends ExperimentObject {
      * The CV term associated to this enzyme.
      */
     private CvTerm cvTerm;
+
+    /**
+     * Empty default constructor.
+     */
+    public Enzyme() {
+        name = "";
+    }
 
     /**
      * Constructor for an Enzyme.
@@ -576,52 +575,52 @@ public class Enzyme extends ExperimentObject {
                             .sorted()
                             .map(aa -> aa.toString())
                             .collect(Collectors.joining()));
-            
+
             if (!getAminoAcidAfter().isEmpty()) {
-                
-            description.append(" and ");
-            
+
+                description.append(" and ");
+
             }
         }
-        
+
         if (!getAminoAcidAfter().isEmpty()) {
-            
+
             description.append("before ");
             description.append(
                     getAminoAcidAfter().stream()
                             .sorted()
                             .map(aa -> aa.toString())
                             .collect(Collectors.joining()));
-            
+
         }
-        
+
         if (!getRestrictionBefore().isEmpty()) {
-            
+
             description.append(" not preceeded by ");
             description.append(
                     getRestrictionBefore().stream()
                             .sorted()
                             .map(aa -> aa.toString())
                             .collect(Collectors.joining()));
-            
+
             if (!getRestrictionAfter().isEmpty()) {
-                
-            description.append(" and ");
-                
+
+                description.append(" and ");
+
             }
         }
-        
+
         if (!getRestrictionAfter().isEmpty()) {
-            
+
             description.append(" not followed by ");
             description.append(
                     getRestrictionAfter().stream()
                             .sorted()
                             .map(aa -> aa.toString())
                             .collect(Collectors.joining()));
-            
+
         }
-        
+
         return description.toString();
     }
 

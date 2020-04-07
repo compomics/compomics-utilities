@@ -1,7 +1,6 @@
 package com.compomics.util.io;
 
 import com.compomics.util.waiting.WaitingHandler;
-import java.awt.Component;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,8 +15,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import org.apache.commons.codec.binary.Base64;
 
 /**

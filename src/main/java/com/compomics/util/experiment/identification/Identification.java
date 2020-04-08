@@ -135,21 +135,6 @@ public class Identification extends ExperimentObject {
     }
 
     /**
-     * Returns an iterator of all objects of a given class
-     *
-     * @param className the class name of a given class
-     * @param filters filters for the class
-     *
-     * @return the iterator
-     */
-    public Iterator<?> getIterator(
-            Class className,
-            String filters
-    ) {
-        return objectsDB.getObjectsIterator(className, filters);
-    }
-
-    /**
      * Returns the keys of the objects of the given class,
      *
      * @param className the class
@@ -159,7 +144,35 @@ public class Identification extends ExperimentObject {
     public HashSet<Long> getClassObjects(
             Class className
     ) {
-        return objectsDB.getClassObjects(className);
+        return objectsDB.getClassObjectIDs(className);
+    }
+
+    /**
+     * Updating the objects in the database
+     *
+     * @param objectKey the object key
+     * @param object the object to update
+     */
+    public void updateObject(
+            long objectKey,
+            Object object
+    ) {
+        objectsDB.updateObject(objectKey, object);
+    }
+
+    /**
+     * Returns the keys of the objects of the given class,
+     *
+     * @param className the class
+     * @param filters the filter rules
+     *
+     * @return the keys of the objects
+     */
+    public HashSet<Long> getClassObjects(
+            Class className,
+            String filters
+    ) {
+        return objectsDB.getClassObjectIDs(className, filters);
     }
 
     /**

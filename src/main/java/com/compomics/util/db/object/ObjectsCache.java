@@ -30,7 +30,7 @@ public class ObjectsCache {
         
         
         public ObjectsCacheElement(Object object){
-            this(object, false, false);
+            this(object, false, true);
         }
         
         public ObjectsCacheElement(Object object, boolean inDB, boolean edited){
@@ -171,11 +171,30 @@ public class ObjectsCache {
      * @param object the object to store in the cache
      */
     public void addObject(Long objectKey, Object object) {
+        addObject(objectKey, object, false, false);
+    }
+
+    /**
+     * Adds an object to the cache. The object must not necessarily be in the
+     * database. If an object is already present with the same identifiers, it
+     * will be silently overwritten.
+     *
+     * @param objectKey the key of the object
+     * @param object the object to store in the cache
+     * @param inDB the database state
+     * @param edited the edited state
+     */
+    public void addObject(Long objectKey, Object object, boolean inDB, boolean edited) {
 
         if (!readOnly) {
             if (!loadedObjects.containsKey(objectKey)) {
-                loadedObjects.put(objectKey, new ObjectsCacheElement(object));
+                loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
                 objectQueue.add(objectKey);
+            }
+            else {
+                loadedObjects.get(objectKey).object = object;
+                loadedObjects.get(objectKey).inDB = inDB;
+                loadedObjects.get(objectKey).edited = edited;
             }
             updateCache();
         }
@@ -191,14 +210,37 @@ public class ObjectsCache {
      *
      */
     public void addObjects(HashMap<Long, Object> objects) {
+        addObjects(objects, false, false);
+    }
+
+    /**
+     * Adds an object to the cache. The object must not necessarily be in the
+     * database. If an object is already present with the same identifiers, it
+     * will be silently overwritten.
+     *
+     * @param objects the key / objects to store in the cache
+     * @param inDB their database state
+     * @param edited their editing state
+     *
+     */
+    public void addObjects(HashMap<Long, Object> objects, boolean inDB, boolean edited) {
 
         loadObjectMutex.acquire();
 
         if (!readOnly) {
             for (Entry<Long, Object>kv : objects.entrySet()){
-               loadedObjects.put(kv.getKey(), new ObjectsCacheElement(kv.getValue()));
+                long objectKey = kv.getKey();
+                Object object = kv.getValue();
+                if (!loadedObjects.containsKey(objectKey)) {
+                    loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
+                    objectQueue.add(objectKey);
+                }
+                else {
+                    loadedObjects.get(objectKey).object = object;
+                    loadedObjects.get(objectKey).inDB = inDB;
+                    loadedObjects.get(objectKey).edited = edited;
+                }
             }
-            objectQueue.addAll(objects.keySet());
 
             updateCache();
         }
@@ -256,21 +298,20 @@ public class ObjectsCache {
             for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i) {
 
                 if (waitingHandler != null) {
-
                     waitingHandler.increaseSecondaryProgressCounter();
 
                     if (waitingHandler.isRunCanceled()) {
-
                         break;
-
                     }
                 }
 
                 long key = clearEntries ? objectQueue.pollFirst() : listIterator.next();
                 ObjectsCacheElement obj = loadedObjects.get(key);
+                if (!obj.edited) continue;
+                
+                obj.edited = false;
                 
                 byte barray[] = conf.asByteArray(obj.object);
-                DbObject a = (DbObject)obj.object;
                 try {
                     if (obj.inDB){
                         psUpdate.setBytes(1, barray);
@@ -283,6 +324,7 @@ public class ObjectsCache {
                         psInsert.setBytes(3, barray);
                         psInsert.addBatch();
                     }
+                    obj.inDB = true;
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -345,9 +387,6 @@ public class ObjectsCache {
      */
     public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) {
 
-        loadObjectMutex.acquire();
-
-
         if (waitingHandler != null) {
             waitingHandler.resetSecondaryProgressCounter();
             waitingHandler.setMaxSecondaryProgressCounter(loadedObjects.size() + 1); // @TODO: can this number get bigger than the max integer value? 
@@ -360,8 +399,6 @@ public class ObjectsCache {
             waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 
         }
-
-        loadObjectMutex.release();
 
     }
 

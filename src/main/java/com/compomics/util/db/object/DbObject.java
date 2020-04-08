@@ -1,5 +1,7 @@
 package com.compomics.util.db.object;
 
+import java.io.Serializable;
+
 
 //import org.zoodb.api.impl.ZooPC;
 
@@ -9,7 +11,7 @@ package com.compomics.util.db.object;
  * 
  * @author Dominik Kopczynski
  */
-public class DbObject {
+public class DbObject implements Serializable {
     
     /**
      * Unique identifier.

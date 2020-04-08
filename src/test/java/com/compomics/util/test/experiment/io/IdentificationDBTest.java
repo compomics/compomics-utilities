@@ -17,7 +17,10 @@ import junit.framework.Assert;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -32,12 +35,14 @@ public class IdentificationDBTest extends TestCase {
     public void testDB() throws SQLException, IOException, ClassNotFoundException, SQLException, ClassNotFoundException, InterruptedException {
 
         String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
-        path = path.substring(1, path.indexOf("/target/"));
+        path = path.substring(0, path.indexOf("/target/"));
         path += "/src/test/resources/experiment/identificationDB";
+        
         File dbFolder = new File(path);
         if (!dbFolder.exists()) {
             dbFolder.mkdir();
         }
+        
 
         try {
             ObjectsDB objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", true);
@@ -79,10 +84,13 @@ public class IdentificationDBTest extends TestCase {
             identification.addObject(ProjectParameters.key, projectParameters);
 
 
+            System.out.println(ProjectParameters.key);
 
             // closing and reopening database
             identification.getObjectsDB().dumpToDB();
             identification.close();
+            
+            
             objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", false);
             identification = new Identification(objectsDB);
 

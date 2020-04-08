@@ -24,11 +24,6 @@ public abstract class MatchesIterator {
      */
     public MatchesIterator() {
     }
-
-    /**
-     * Iterator for spectrum matches
-     */
-    private Iterator<?> iterator = null;
     /**
      * the identification
      */
@@ -99,21 +94,8 @@ public abstract class MatchesIterator {
             
         } else {
             
-            if (filters == null) {
-                
-                longKeys = new ArrayList<>(identification.getClassObjects(className));
-                
-            } else {
-                
-                iterator = identification.getIterator(className, filters);
-                longKeys = new ArrayList<>(identification.getNumber(className));
-                
-                while (iterator.hasNext()) {
-                    
-                    longKeys.add(((DbObject) iterator.next()).getId());
-                    
-                }
-            }
+            longKeys = new ArrayList<>(identification.getClassObjects(className, filters));
+             
             
             num = longKeys.size();
             

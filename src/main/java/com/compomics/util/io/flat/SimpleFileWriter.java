@@ -31,11 +31,11 @@ public class SimpleFileWriter implements AutoCloseable {
     /**
      * Constructor.
      *
-     * @param file the file to write to
-     * @param gz boolean indicating whether the output should be gzipped
+     * @param file The file to write to.
+     * @param gz Boolean indicating whether the output should be gzipped.
      */
     public SimpleFileWriter(
-            File file, 
+            File file,
             boolean gz
     ) {
 
@@ -65,7 +65,7 @@ public class SimpleFileWriter implements AutoCloseable {
      * Writes a new line using the give elements. Elements are separated using
      * the separator in the properties class.
      *
-     * @param elements line elements
+     * @param elements The line elements to write.
      */
     public void writeLine(
             String... elements
@@ -79,7 +79,7 @@ public class SimpleFileWriter implements AutoCloseable {
     /**
      * Writes a new line.
      *
-     * @param line the line to write
+     * @param line The line to write.
      */
     public void writeLine(
             String line
@@ -103,14 +103,27 @@ public class SimpleFileWriter implements AutoCloseable {
     }
 
     /**
-     * Writes some text.
+     * Writes text.
      *
-     * @param text the text to write
-     * @param newLine boolean indicating whether an end of line should be
-     * appended
+     * @param text The text to write.
      */
     public void write(
-            String text, 
+            String text
+    ) {
+
+        write(text, false);
+
+    }
+
+    /**
+     * Writes text.
+     *
+     * @param text The text to write.
+     * @param newLine Boolean indicating whether an end of line should be
+     * appended.
+     */
+    public void write(
+            String text,
             boolean newLine
     ) {
 
@@ -145,6 +158,17 @@ public class SimpleFileWriter implements AutoCloseable {
             throw new RuntimeException(e);
 
         }
+
+    }
+
+    /**
+     * Returns the underlying buffered writer.
+     *
+     * @return The underlying buffered writer.
+     */
+    public BufferedWriter getWriter() {
+
+        return bw;
 
     }
 

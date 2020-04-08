@@ -18,11 +18,13 @@ Any value defined here will override the pom.xml file value but is only applicab
     </properties>
     <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
         <word>Da</word>
+        <word>deconvolution</word>
         <word>deserialization</word>
         <word>deserializing</word>
         <word>Ensembl</word>
         <word>huffman</word>
         <word>immonium</word>
+        <word>isoforms</word>
         <word>json</word>
         <word>Maven</word>
         <word>mzml</word>

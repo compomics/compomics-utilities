@@ -3,15 +3,23 @@ package com.compomics.util.gui.parameters.identification.algorithm;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.gui.GuiUtilities;
-import java.awt.Color;
 import java.awt.Dialog;
-import javax.swing.JOptionPane;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingConstants;
 import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialog;
 import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusDecoyType;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusDissociationType;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusFragmentationTerminusType;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusInitiatorMethionineBehaviorType;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusMassDiffAcceptorType;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusSearchType;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusToleranceType;
+import java.awt.Color;
+import javax.swing.JOptionPane;
 
 /**
- * Dialog for the MetaMorpheus specific settings. (Note: Work in progress!)
+ * Dialog for the MetaMorpheus specific parameters.
  *
  * @author Harald Barsnes
  */
@@ -27,38 +35,38 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
     private boolean editable;
 
     /**
-     * Creates a new MetaMorpheusParametersDialog with a frame as owner.
+     * Creates new form MetaMorpheusDialog with a frame as owner.
      *
-     * @param parentFrame the parent frame
+     * @param parent the parent frame
      * @param metaMorpheusParameters the MetaMorpheus parameters
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public MetaMorpheusParametersDialog(java.awt.Frame parentFrame, MetaMorpheusParameters metaMorpheusParameters, boolean editable) {
-        super(parentFrame, true);
+    public MetaMorpheusParametersDialog(java.awt.Frame parent, MetaMorpheusParameters metaMorpheusParameters, boolean editable) {
+        super(parent, true);
         this.editable = editable;
         initComponents();
-        setUpGUI();
+        setUpGui();
         populateGUI(metaMorpheusParameters);
         validateInput(false);
-        setLocationRelativeTo(parentFrame);
+        setLocationRelativeTo(parent);
         setVisible(true);
     }
 
     /**
-     * Creates a new MetaMorpheusParametersDialog with a dialog as owner.
+     * Creates new form MetaMorpheusDialog with a dialog as owner.
      *
      * @param owner the dialog owner
-     * @param parentFrame the parent frame
+     * @param parent the parent frame
      * @param metaMorpheusParameters the MetaMorpheus parameters
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public MetaMorpheusParametersDialog(Dialog owner, java.awt.Frame parentFrame, MetaMorpheusParameters metaMorpheusParameters, boolean editable) {
+    public MetaMorpheusParametersDialog(Dialog owner, java.awt.Frame parent, MetaMorpheusParameters metaMorpheusParameters, boolean editable) {
         super(owner, true);
         this.editable = editable;
         initComponents();
-        setUpGUI();
+        setUpGui();
         populateGUI(metaMorpheusParameters);
         validateInput(false);
         setLocationRelativeTo(owner);
@@ -68,41 +76,76 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
     /**
      * Sets up the GUI.
      */
-    private void setUpGUI() {
+    private void setUpGui() {
 
-        neutralLossesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        fragMethodCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        fragmentAllCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        empiricalCorrectionCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        higherChargeCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        ammoniaLossCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        waterLossCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        equalILCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        searchTypeCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        dissociationTypeCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        intitiatorMethBehaviorCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        useDeltaScoreCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        massDiffAcceptorTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        writeMzidCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        writePepXmlCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        useProvidedPrecCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        doPrecDeconvCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        deconvMassToleranceTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        trimMs1Cmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        trimMsMsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        normalizePeaksAcrossAllWindowsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        modifiedPeptidesAreDifferentCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        excludeOneHitWondersCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        fragmentationTerminusCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        searchTargetComboBox.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        decoyTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
+        searchTypeCombo.setEnabled(editable);
+        numberOfPartitionsTxt.setEditable(editable);
+        numberOfPartitionsTxt.setEnabled(editable);
+        dissociationTypeCombo.setEnabled(editable);
+        maxNumModPeptideTxt.setEditable(editable);
+        maxNumModPeptideTxt.setEnabled(editable);
+        intitiatorMethBehaviorCombo.setEnabled(editable);
+        scoreCutoffTxt.setEditable(editable);
+        scoreCutoffTxt.setEnabled(editable);
+        useDeltaScoreCmb.setEnabled(editable);
+        massDiffAcceptorTypeCmb.setEnabled(editable);
         minPepLengthTxt.setEditable(editable);
         minPepLengthTxt.setEnabled(editable);
         maxPepLengthTxt.setEditable(editable);
         maxPepLengthTxt.setEnabled(editable);
-        maxPeptideMassTxt.setEditable(editable);
-        maxPeptideMassTxt.setEnabled(editable);
-        numberMatchesTxt.setEditable(editable);
-        numberMatchesTxt.setEnabled(editable);
-        maxPtmsTxt.setEditable(editable);
-        maxPtmsTxt.setEnabled(editable);
-        fragMethodCmb.setEnabled(editable);
-        waterLossCombo.setEnabled(editable);
-        ammoniaLossCmb.setEnabled(editable);
-        neutralLossesCmb.setEnabled(editable);
-        equalILCombo.setEnabled(editable);
-        fragmentAllCmb.setEnabled(editable);
-        empiricalCorrectionCombo.setEnabled(editable);
-        higherChargeCombo.setEnabled(editable);
-        maxCombinationsTxt.setEditable(editable);
-        maxCombinationsTxt.setEnabled(editable);
-        topPeaksTxt.setEditable(editable);
-        topPeaksTxt.setEnabled(editable);
-        topPeaksWindowTxt.setEditable(editable);
-        topPeaksWindowTxt.setEnabled(editable);
+        writeMzidCmb.setEnabled(editable);
+        writePepXmlCmb.setEnabled(editable);
+        useProvidedPrecCmb.setEnabled(editable);
+        doPrecDeconvCmb.setEnabled(editable);
+        deconvIntRatioTxt.setEditable(editable);
+        deconvIntRatioTxt.setEnabled(editable);
+        deconvMassToleranceTxt.setEditable(editable);
+        deconvMassToleranceTxt.setEnabled(editable);
+        deconvMassToleranceTypeCmb.setEnabled(editable);
+        trimMs1Cmb.setEnabled(editable);
+        trimMsMsCmb.setEnabled(editable);
+        numPeaksPerWindowTxt.setEditable(editable);
+        numPeaksPerWindowTxt.setEnabled(editable);
+        minAllowedIntensityRatioToBasePeakTxt.setEditable(editable);
+        minAllowedIntensityRatioToBasePeakTxt.setEnabled(editable);
+        windowWidthThompsonTxt.setEditable(editable);
+        windowWidthThompsonTxt.setEnabled(editable);
+        numberOfWindowsTxt.setEditable(editable);
+        numberOfWindowsTxt.setEnabled(editable);
+        normalizePeaksAcrossAllWindowsCmb.setEnabled(editable);
+        modifiedPeptidesAreDifferentCmb.setEnabled(editable);
+        excludeOneHitWondersCmb.setEnabled(editable);
+        fragmentationTerminusCmb.setEnabled(editable);
+        maxFragmentSizeTxt.setEditable(editable);
+        maxFragmentSizeTxt.setEnabled(editable);
+        searchTargetComboBox.setEnabled(editable);
+        decoyTypeCmb.setEnabled(editable);
+        maxModIsoformsTxt.setEditable(editable);
+        maxModIsoformsTxt.setEnabled(editable);
+        minVariantDepthTxt.setEditable(editable);
+        minVariantDepthTxt.setEnabled(editable);
+        maxHetroVariantsTxt.setEditable(editable);
+        maxHetroVariantsTxt.setEnabled(editable);
+
     }
 
     /**
@@ -112,61 +155,106 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
      */
     private void populateGUI(MetaMorpheusParameters metaMorpheusParameters) {
 
+        searchTypeCombo.setSelectedItem(metaMorpheusParameters.getSearchType());
+        numberOfPartitionsTxt.setText(metaMorpheusParameters.getTotalPartitions() + "");
+        dissociationTypeCombo.setSelectedItem(metaMorpheusParameters.getDissociationType());
+        maxNumModPeptideTxt.setText(metaMorpheusParameters.getMaxModsForPeptide() + "");
+        intitiatorMethBehaviorCombo.setSelectedItem(metaMorpheusParameters.getInitiatorMethionineBehavior());
+        scoreCutoffTxt.setText(metaMorpheusParameters.getScoreCutoff() + "");
+
+        if (metaMorpheusParameters.getUseDeltaScore()) {
+            useDeltaScoreCmb.setSelectedIndex(0);
+        } else {
+            useDeltaScoreCmb.setSelectedIndex(1);
+        }
+
+        massDiffAcceptorTypeCmb.setSelectedItem(metaMorpheusParameters.getMassDiffAcceptorType());
         minPepLengthTxt.setText(metaMorpheusParameters.getMinPeptideLength() + "");
         maxPepLengthTxt.setText(metaMorpheusParameters.getMaxPeptideLength() + "");
-//        maxPeptideMassTxt.setText(metaMorpheusParameters.getMaxPeptideMass() + "");
-//        numberMatchesTxt.setText(metaMorpheusParameters.getNumberOfCandidates() + "");
-//        maxPtmsTxt.setText(metaMorpheusParameters.getMaxNumberOfModifications() + "");
-//
-//        if (metaMorpheusParameters.getFragmentationMethod() == FragmentationMethod.CID) {
-//            fragMethodCmb.setSelectedIndex(0);
-//        } else if (metaMorpheusParameters.getFragmentationMethod() == FragmentationMethod.HCD) {
-//            fragMethodCmb.setSelectedIndex(1);
-//        } else if (metaMorpheusParameters.getFragmentationMethod() == FragmentationMethod.ETD) {
-//            fragMethodCmb.setSelectedIndex(2);
-//        }
-//
-//        if (metaMorpheusParameters.isIncludeWater()) {
-//            waterLossCombo.setSelectedIndex(0);
-//        } else {
-//            waterLossCombo.setSelectedIndex(1);
-//        }
-//        if (metaMorpheusParameters.isIncludeAmmonia()) {
-//            ammoniaLossCmb.setSelectedIndex(0);
-//        } else {
-//            ammoniaLossCmb.setSelectedIndex(1);
-//        }
-//        if (metaMorpheusParameters.isDependentLosses()) {
-//            neutralLossesCmb.setSelectedIndex(0);
-//        } else {
-//            neutralLossesCmb.setSelectedIndex(1);
-//        }
-//        if (metaMorpheusParameters.isEqualIL()) {
-//            equalILCombo.setSelectedIndex(0);
-//        } else {
-//            equalILCombo.setSelectedIndex(1);
-//        }
-//        if (metaMorpheusParameters.isFragmentAll()) {
-//            fragmentAllCmb.setSelectedIndex(0);
-//        } else {
-//            fragmentAllCmb.setSelectedIndex(1);
-//        }
-//        if (metaMorpheusParameters.isEmpiricalCorrection()) {
-//            empiricalCorrectionCombo.setSelectedIndex(0);
-//        } else {
-//            empiricalCorrectionCombo.setSelectedIndex(1);
-//        }
-//        if (metaMorpheusParameters.isHigherCharge()) {
-//            higherChargeCombo.setSelectedIndex(0);
-//        } else {
-//            higherChargeCombo.setSelectedIndex(1);
-//        }
-//
-//        decoyModeCmb.setSelectedItem(metaMorpheusParameters.getDecoyMode());
-//
-//        maxCombinationsTxt.setText(metaMorpheusParameters.getMaxCombinations() + "");
-//        topPeaksTxt.setText(metaMorpheusParameters.getTopPeaks() + "");
-//        topPeaksWindowTxt.setText(metaMorpheusParameters.getTopPeaksWindow() + "");
+
+        if (metaMorpheusParameters.getWriteMzId()) {
+            writeMzidCmb.setSelectedIndex(0);
+        } else {
+            writeMzidCmb.setSelectedIndex(1);
+        }
+
+        if (metaMorpheusParameters.getWritePepXml()) {
+            writePepXmlCmb.setSelectedIndex(0);
+        } else {
+            writePepXmlCmb.setSelectedIndex(1);
+        }
+
+        if (metaMorpheusParameters.getUseProvidedPrecursorInfo()) {
+            useProvidedPrecCmb.setSelectedIndex(0);
+        } else {
+            useProvidedPrecCmb.setSelectedIndex(1);
+        }
+
+        if (metaMorpheusParameters.getDoPrecursorDeconvolution()) {
+            doPrecDeconvCmb.setSelectedIndex(0);
+        } else {
+            doPrecDeconvCmb.setSelectedIndex(1);
+        }
+
+        deconvIntRatioTxt.setText(metaMorpheusParameters.getDeconvolutionIntensityRatio() + "");
+        deconvMassToleranceTxt.setText(metaMorpheusParameters.getDeconvolutionMassTolerance() + "");
+        deconvMassToleranceTypeCmb.setSelectedItem(metaMorpheusParameters.getDeconvolutionMassToleranceType());
+
+        if (metaMorpheusParameters.getTrimMs1Peaks()) {
+            trimMs1Cmb.setSelectedIndex(0);
+        } else {
+            trimMs1Cmb.setSelectedIndex(1);
+        }
+
+        if (metaMorpheusParameters.getTrimMsMsPeaks()) {
+            trimMsMsCmb.setSelectedIndex(0);
+        } else {
+            trimMsMsCmb.setSelectedIndex(1);
+        }
+
+        numPeaksPerWindowTxt.setText(metaMorpheusParameters.getNumberOfPeaksToKeepPerWindow() + "");
+        minAllowedIntensityRatioToBasePeakTxt.setText(metaMorpheusParameters.getMinAllowedIntensityRatioToBasePeak() + "");
+
+        if (metaMorpheusParameters.getWindowWidthThomsons() != null) {
+            windowWidthThompsonTxt.setText(metaMorpheusParameters.getWindowWidthThomsons() + "");
+        }
+
+        if (metaMorpheusParameters.getNumberOfWindows() != null) {
+            numberOfWindowsTxt.setText(metaMorpheusParameters.getNumberOfWindows() + "");
+        }
+
+        if (metaMorpheusParameters.getNormalizePeaksAcrossAllWindows()) {
+            normalizePeaksAcrossAllWindowsCmb.setSelectedIndex(0);
+        } else {
+            normalizePeaksAcrossAllWindowsCmb.setSelectedIndex(1);
+        }
+
+        if (metaMorpheusParameters.getModPeptidesAreDifferent()) {
+            modifiedPeptidesAreDifferentCmb.setSelectedIndex(0);
+        } else {
+            modifiedPeptidesAreDifferentCmb.setSelectedIndex(1);
+        }
+
+        if (metaMorpheusParameters.getNoOneHitWonders()) {
+            excludeOneHitWondersCmb.setSelectedIndex(0);
+        } else {
+            excludeOneHitWondersCmb.setSelectedIndex(1);
+        }
+
+        fragmentationTerminusCmb.setSelectedItem(metaMorpheusParameters.getFragmentationTerminus());
+        maxFragmentSizeTxt.setText(metaMorpheusParameters.getMaxFragmentSize() + "");
+
+        if (metaMorpheusParameters.getSearchTarget()) {
+            searchTargetComboBox.setSelectedIndex(0);
+        } else {
+            searchTargetComboBox.setSelectedIndex(1);
+        }
+
+        decoyTypeCmb.setSelectedItem(metaMorpheusParameters.getDecoyType());
+        maxModIsoformsTxt.setText(metaMorpheusParameters.getMaxModificationIsoforms() + "");
+        minVariantDepthTxt.setText(metaMorpheusParameters.getMinVariantDepth() + "");
+        maxHetroVariantsTxt.setText(metaMorpheusParameters.getMaxHeterozygousVariants() + "");
+
     }
 
     @Override
@@ -186,59 +274,62 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
      */
     public MetaMorpheusParameters getInput() {
 
-        MetaMorpheusParameters result = new MetaMorpheusParameters();
+        MetaMorpheusParameters tempMetaMorpheusParameters = new MetaMorpheusParameters();
 
-        String input = minPepLengthTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setMinPeptideLength(new Integer(input));
-        }
+        tempMetaMorpheusParameters.setSearchType((MetaMorpheusSearchType) searchTypeCombo.getSelectedItem());
+        String input = numberOfPartitionsTxt.getText().trim();
+        tempMetaMorpheusParameters.setTotalPartitions(Integer.valueOf(input));
+        tempMetaMorpheusParameters.setDissociationType((MetaMorpheusDissociationType) dissociationTypeCombo.getSelectedItem());
+        input = maxNumModPeptideTxt.getText().trim();
+        tempMetaMorpheusParameters.setMaxModsForPeptide(Integer.valueOf(input));
+        tempMetaMorpheusParameters.setInitiatorMethionineBehavior((MetaMorpheusInitiatorMethionineBehaviorType) intitiatorMethBehaviorCombo.getSelectedItem());
+        input = scoreCutoffTxt.getText().trim();
+        tempMetaMorpheusParameters.setScoreCutoff(Double.valueOf(input));
+        tempMetaMorpheusParameters.setUseDeltaScore(useDeltaScoreCmb.getSelectedIndex() == 0);
+        tempMetaMorpheusParameters.setMassDiffAcceptorType((MetaMorpheusMassDiffAcceptorType) massDiffAcceptorTypeCmb.getSelectedItem());
+        input = minPepLengthTxt.getText().trim();
+        tempMetaMorpheusParameters.setMinPeptideLength(Integer.valueOf(input));
         input = maxPepLengthTxt.getText().trim();
+        tempMetaMorpheusParameters.setMaxPeptideLength(Integer.valueOf(input));
+        tempMetaMorpheusParameters.setWriteMzId(writeMzidCmb.getSelectedIndex() == 0);
+        tempMetaMorpheusParameters.setWritePepXml(writePepXmlCmb.getSelectedIndex() == 0);
+        tempMetaMorpheusParameters.setUseProvidedPrecursorInfo(useProvidedPrecCmb.getSelectedIndex() == 0);
+        tempMetaMorpheusParameters.setDoPrecursorDeconvolution(doPrecDeconvCmb.getSelectedIndex() == 0);
+        input = deconvIntRatioTxt.getText().trim();
+        tempMetaMorpheusParameters.setDeconvolutionIntensityRatio(Double.valueOf(input));
+        input = deconvMassToleranceTxt.getText().trim();
+        tempMetaMorpheusParameters.setDeconvolutionMassTolerance(Double.valueOf(input));
+        tempMetaMorpheusParameters.setDeconvolutionMassToleranceType((MetaMorpheusToleranceType) deconvMassToleranceTypeCmb.getSelectedItem());
+        tempMetaMorpheusParameters.setTrimMs1Peaks(trimMs1Cmb.getSelectedIndex() == 0);
+        tempMetaMorpheusParameters.setTrimMsMsPeaks(trimMsMsCmb.getSelectedIndex() == 0);
+        input = numPeaksPerWindowTxt.getText().trim();
+        tempMetaMorpheusParameters.setNumberOfPeaksToKeepPerWindow(Integer.valueOf(input));
+        input = minAllowedIntensityRatioToBasePeakTxt.getText().trim();
+        tempMetaMorpheusParameters.setMinAllowedIntensityRatioToBasePeak(Double.valueOf(input));
+        input = windowWidthThompsonTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxPeptideLength(new Integer(input));
+            tempMetaMorpheusParameters.setWindowWidthThomsons(new Double(input));
         }
-//        input = maxPeptideMassTxt.getText().trim();
-//        if (!input.equals("")) {
-//            result.setMaxPeptideMass(new Double(input));
-//        }
-//        input = numberMatchesTxt.getText().trim();
-//        if (!input.equals("")) {
-//            result.setNumberOfCandidates(new Integer(input));
-//        }
-//        input = maxPtmsTxt.getText().trim();
-//        if (!input.equals("")) {
-//            result.setMaxNumberOfModifications(new Integer(input));
-//        }
-//
-//        if (fragMethodCmb.getSelectedIndex() == 0) {
-//            result.setFragmentationMethod(FragmentationMethod.CID);
-//        } else if (fragMethodCmb.getSelectedIndex() == 1) {
-//            result.setFragmentationMethod(FragmentationMethod.HCD);
-//        } else {
-//            result.setFragmentationMethod(FragmentationMethod.ETD);
-//        }
-//
-//        result.setIncludeWater(waterLossCombo.getSelectedIndex() == 0);
-//        result.setIncludeAmmonia(ammoniaLossCmb.getSelectedIndex() == 0);
-//        result.setDependentLosses(neutralLossesCmb.getSelectedIndex() == 0);
-//        result.setEqualIL(equalILCombo.getSelectedIndex() == 0);
-//        result.setFragmentAll(fragmentAllCmb.getSelectedIndex() == 0);
-//        result.setEmpiricalCorrection(empiricalCorrectionCombo.getSelectedIndex() == 0);
-//        result.setHigherCharge(higherChargeCombo.getSelectedIndex() == 0);
-//
-//        input = maxCombinationsTxt.getText().trim();
-//        if (!input.equals("")) {
-//            result.setMaxCombinations(new Integer(input));
-//        }
-//        input = topPeaksTxt.getText().trim();
-//        if (!input.equals("")) {
-//            result.setTopPeaks(new Integer(input));
-//        }
-//        input = topPeaksWindowTxt.getText().trim();
-//        if (!input.equals("")) {
-//            result.setTopPeaksWindow(new Integer(input));
-//        }
+        input = numberOfWindowsTxt.getText().trim();
+        if (!input.equals("")) {
+            tempMetaMorpheusParameters.setNumberOfWindows(new Integer(input));
+        }
+        tempMetaMorpheusParameters.setNormalizePeaksAcrossAllWindows(normalizePeaksAcrossAllWindowsCmb.getSelectedIndex() == 0);
+        tempMetaMorpheusParameters.setModPeptidesAreDifferent(modifiedPeptidesAreDifferentCmb.getSelectedIndex() == 0);
+        tempMetaMorpheusParameters.setNoOneHitWonders(excludeOneHitWondersCmb.getSelectedIndex() == 0);
+        tempMetaMorpheusParameters.setFragmentationTerminus((MetaMorpheusFragmentationTerminusType) fragmentationTerminusCmb.getSelectedItem());
+        input = maxFragmentSizeTxt.getText().trim();
+        tempMetaMorpheusParameters.setMaxFragmentSize(Double.valueOf(input));
+        tempMetaMorpheusParameters.setSearchTarget(searchTargetComboBox.getSelectedIndex() == 0);
+        tempMetaMorpheusParameters.setDecoyType((MetaMorpheusDecoyType) decoyTypeCmb.getSelectedItem());
+        input = maxModIsoformsTxt.getText().trim();
+        tempMetaMorpheusParameters.setMaxModificationIsoforms(Integer.valueOf(input));
+        input = minVariantDepthTxt.getText().trim();
+        tempMetaMorpheusParameters.setMinVariantDepth(Integer.valueOf(input));
+        input = maxHetroVariantsTxt.getText().trim();
+        tempMetaMorpheusParameters.setMaxHeterozygousVariants(Integer.valueOf(input));
 
-        return result;
+        return tempMetaMorpheusParameters;
     }
 
     /**
@@ -251,352 +342,96 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
     private void initComponents() {
 
         backgroundPanel = new javax.swing.JPanel();
-        settingsPanel = new javax.swing.JPanel();
-        settingsScrollPane = new javax.swing.JScrollPane();
-        settingsInnerPanel = new javax.swing.JPanel();
-        peptideLengthLabel = new javax.swing.JLabel();
+        openDialogHelpJButton = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
+        closeButton = new javax.swing.JButton();
+        advancedSettingsWarningLabel = new javax.swing.JLabel();
+        tabbedPane = new javax.swing.JTabbedPane();
+        searchPanel = new javax.swing.JPanel();
+        searchTypeLabel = new javax.swing.JLabel();
+        searchTypeCombo = new javax.swing.JComboBox();
+        numberOfPartitionsLbl = new javax.swing.JLabel();
+        numberOfPartitionsTxt = new javax.swing.JTextField();
+        dissociationTypeLbl = new javax.swing.JLabel();
+        dissociationTypeCombo = new javax.swing.JComboBox();
+        maxNumModPeptideLbl = new javax.swing.JLabel();
+        maxNumModPeptideTxt = new javax.swing.JTextField();
+        intitiatorMethBehaviorLabel = new javax.swing.JLabel();
+        intitiatorMethBehaviorCombo = new javax.swing.JComboBox();
+        scoreCutoffLabel = new javax.swing.JLabel();
+        scoreCutoffTxt = new javax.swing.JTextField();
+        useDeltaScoreLbl = new javax.swing.JLabel();
+        useDeltaScoreCmb = new javax.swing.JComboBox();
+        massDiffAcceptorTypeLbl = new javax.swing.JLabel();
+        massDiffAcceptorTypeCmb = new javax.swing.JComboBox();
+        peptideLengthJLabel = new javax.swing.JLabel();
         minPepLengthTxt = new javax.swing.JTextField();
         peptideLengthDividerLabel = new javax.swing.JLabel();
         maxPepLengthTxt = new javax.swing.JTextField();
-        maxPeptideMassLabel = new javax.swing.JLabel();
-        maxPeptideMassTxt = new javax.swing.JTextField();
-        numberMatchesLabel = new javax.swing.JLabel();
-        numberMatchesTxt = new javax.swing.JTextField();
-        fragMethodLabel = new javax.swing.JLabel();
-        fragMethodCmb = new javax.swing.JComboBox();
-        ammoniaLossLabel = new javax.swing.JLabel();
-        ammoniaLossCmb = new javax.swing.JComboBox();
-        maxPtmsLabel = new javax.swing.JLabel();
-        maxPtmsTxt = new javax.swing.JTextField();
-        empiricalCorrectionLabel = new javax.swing.JLabel();
-        empiricalCorrectionCombo = new javax.swing.JComboBox();
-        higherChargeLabel = new javax.swing.JLabel();
-        higherChargeCombo = new javax.swing.JComboBox();
-        topPeaksLabel = new javax.swing.JLabel();
-        topPeaksTxt = new javax.swing.JTextField();
-        neutralLossesLabel = new javax.swing.JLabel();
-        neutralLossesCmb = new javax.swing.JComboBox();
-        fragmentAllLabel = new javax.swing.JLabel();
-        fragmentAllCmb = new javax.swing.JComboBox();
-        maxCombinationsLabel = new javax.swing.JLabel();
-        maxCombinationsTxt = new javax.swing.JTextField();
-        topPeaksWindowLabel = new javax.swing.JLabel();
-        topPeaksWindowTxt = new javax.swing.JTextField();
-        waterLossLabel = new javax.swing.JLabel();
-        waterLossCombo = new javax.swing.JComboBox();
-        equalILLabel = new javax.swing.JLabel();
-        equalILCombo = new javax.swing.JComboBox();
-        openDialogHelpJButton = new javax.swing.JButton();
-        advancedSettingsWarningLabel = new javax.swing.JLabel();
-        okButton = new javax.swing.JButton();
-        closeButton = new javax.swing.JButton();
+        outputPanel = new javax.swing.JPanel();
+        writeMzidLbl = new javax.swing.JLabel();
+        writeMzidCmb = new javax.swing.JComboBox();
+        writePepXmlLbl = new javax.swing.JLabel();
+        writePepXmlCmb = new javax.swing.JComboBox();
+        deisotopingPanel = new javax.swing.JPanel();
+        useProvidedPrecLabel = new javax.swing.JLabel();
+        useProvidedPrecCmb = new javax.swing.JComboBox();
+        doPrecDeconvLbl = new javax.swing.JLabel();
+        doPrecDeconvCmb = new javax.swing.JComboBox();
+        deconvIntRatioLbl = new javax.swing.JLabel();
+        deconvIntRatioTxt = new javax.swing.JTextField();
+        deconvMassToleranceLbl = new javax.swing.JLabel();
+        deconvMassToleranceTxt = new javax.swing.JTextField();
+        deconvMassToleranceTypeLbl = new javax.swing.JLabel();
+        deconvMassToleranceTypeCmb = new javax.swing.JComboBox();
+        peakTrimmingPanel = new javax.swing.JPanel();
+        trimMs1Lbl = new javax.swing.JLabel();
+        trimMs1Cmb = new javax.swing.JComboBox();
+        trimMsMsLbl = new javax.swing.JLabel();
+        trimMsMsCmb = new javax.swing.JComboBox();
+        numPeaksPerWindowLbl = new javax.swing.JLabel();
+        numPeaksPerWindowTxt = new javax.swing.JTextField();
+        minAllowedIntensityRatioToBasePeakLbl = new javax.swing.JLabel();
+        minAllowedIntensityRatioToBasePeakTxt = new javax.swing.JTextField();
+        windowWidthThompsonLbl = new javax.swing.JLabel();
+        windowWidthThompsonTxt = new javax.swing.JTextField();
+        numberOfWindowsLbl = new javax.swing.JLabel();
+        numberOfWindowsTxt = new javax.swing.JTextField();
+        normalizePeaksAcrossAllWindowsLbl = new javax.swing.JLabel();
+        normalizePeaksAcrossAllWindowsCmb = new javax.swing.JComboBox();
+        proteinGroupingPanel = new javax.swing.JPanel();
+        modifiedPeptidesAreDifferentLbl = new javax.swing.JLabel();
+        modifiedPeptidesAreDifferentCmb = new javax.swing.JComboBox();
+        excludeOneHitWondersLbl = new javax.swing.JLabel();
+        excludeOneHitWondersCmb = new javax.swing.JComboBox();
+        inSilicoDigestionPanel = new javax.swing.JPanel();
+        fragmentationTerminusLbl = new javax.swing.JLabel();
+        fragmentationTerminusCmb = new javax.swing.JComboBox();
+        maxFragmentSizeLbl = new javax.swing.JLabel();
+        maxFragmentSizeTxt = new javax.swing.JTextField();
+        searchTargetLabel = new javax.swing.JLabel();
+        searchTargetComboBox = new javax.swing.JComboBox();
+        decoyTypeLbl = new javax.swing.JLabel();
+        decoyTypeCmb = new javax.swing.JComboBox();
+        maxModIsoformsLbl = new javax.swing.JLabel();
+        maxModIsoformsTxt = new javax.swing.JTextField();
+        minVariantDepthLabel = new javax.swing.JLabel();
+        minVariantDepthTxt = new javax.swing.JTextField();
+        maxHetroVariantsLbl = new javax.swing.JLabel();
+        maxHetroVariantsTxt = new javax.swing.JTextField();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("MetaMorpheus Advanced Settings");
-        setMinimumSize(new java.awt.Dimension(400, 400));
+        setMinimumSize(new java.awt.Dimension(600, 500));
+        setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
-
-        settingsPanel.setBackground(new java.awt.Color(230, 230, 230));
-        settingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Search Settings"));
-        settingsPanel.setPreferredSize(new java.awt.Dimension(518, 143));
-
-        settingsScrollPane.setBorder(null);
-
-        settingsInnerPanel.setBackground(new java.awt.Color(230, 230, 230));
-
-        peptideLengthLabel.setText("Peptide Length");
-
-        minPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minPepLengthTxt.setText("8");
-        minPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                minPepLengthTxtKeyReleased(evt);
-            }
-        });
-
-        peptideLengthDividerLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        peptideLengthDividerLabel.setText("-");
-
-        maxPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxPepLengthTxt.setText("30");
-        maxPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                maxPepLengthTxtKeyReleased(evt);
-            }
-        });
-
-        maxPeptideMassLabel.setText("Max Peptide Mass");
-        maxPeptideMassLabel.setEnabled(false);
-
-        maxPeptideMassTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxPeptideMassTxt.setText("4600");
-        maxPeptideMassTxt.setEnabled(false);
-        maxPeptideMassTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                maxPeptideMassTxtKeyReleased(evt);
-            }
-        });
-
-        numberMatchesLabel.setText("Number of Spectrum Matches");
-        numberMatchesLabel.setEnabled(false);
-
-        numberMatchesTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        numberMatchesTxt.setText("10");
-        numberMatchesTxt.setEnabled(false);
-        numberMatchesTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                numberMatchesTxtKeyReleased(evt);
-            }
-        });
-
-        fragMethodLabel.setText("Fragmentation Method");
-        fragMethodLabel.setEnabled(false);
-
-        fragMethodCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "CID", "HCD", "ETD" }));
-        fragMethodCmb.setEnabled(false);
-
-        ammoniaLossLabel.setText("Ammonia Loss");
-        ammoniaLossLabel.setEnabled(false);
-
-        ammoniaLossCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-        ammoniaLossCmb.setEnabled(false);
-
-        maxPtmsLabel.setText("Max Variable PTMs");
-        maxPtmsLabel.setEnabled(false);
-
-        maxPtmsTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxPtmsTxt.setText("5");
-        maxPtmsTxt.setEnabled(false);
-        maxPtmsTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                maxPtmsTxtKeyReleased(evt);
-            }
-        });
-
-        empiricalCorrectionLabel.setText("Empirical Correction");
-        empiricalCorrectionLabel.setEnabled(false);
-
-        empiricalCorrectionCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-        empiricalCorrectionCombo.setEnabled(false);
-
-        higherChargeLabel.setText("Higher Charge");
-        higherChargeLabel.setEnabled(false);
-
-        higherChargeCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-        higherChargeCombo.setEnabled(false);
-
-        topPeaksLabel.setText("Top Peaks");
-        topPeaksLabel.setEnabled(false);
-
-        topPeaksTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        topPeaksTxt.setText("8");
-        topPeaksTxt.setEnabled(false);
-        topPeaksTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                topPeaksTxtKeyReleased(evt);
-            }
-        });
-
-        neutralLossesLabel.setText("Sequence Dependent Neutral Loss");
-        neutralLossesLabel.setEnabled(false);
-
-        neutralLossesCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-        neutralLossesCmb.setEnabled(false);
-
-        fragmentAllLabel.setText("Fragment All");
-        fragmentAllLabel.setEnabled(false);
-
-        fragmentAllCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-        fragmentAllCmb.setEnabled(false);
-
-        maxCombinationsLabel.setText("Max Combinations");
-        maxCombinationsLabel.setEnabled(false);
-
-        maxCombinationsTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxCombinationsTxt.setText("250");
-        maxCombinationsTxt.setEnabled(false);
-        maxCombinationsTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                maxCombinationsTxtKeyReleased(evt);
-            }
-        });
-
-        topPeaksWindowLabel.setText("Top Peaks Windows");
-        topPeaksWindowLabel.setEnabled(false);
-
-        topPeaksWindowTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        topPeaksWindowTxt.setText("100");
-        topPeaksWindowTxt.setEnabled(false);
-        topPeaksWindowTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                topPeaksWindowTxtKeyReleased(evt);
-            }
-        });
-
-        waterLossLabel.setText("Water Loss");
-        waterLossLabel.setEnabled(false);
-
-        waterLossCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-        waterLossCombo.setEnabled(false);
-
-        equalILLabel.setText("Equal I and L");
-        equalILLabel.setEnabled(false);
-
-        equalILCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-        equalILCombo.setSelectedIndex(1);
-        equalILCombo.setEnabled(false);
-
-        javax.swing.GroupLayout settingsInnerPanelLayout = new javax.swing.GroupLayout(settingsInnerPanel);
-        settingsInnerPanel.setLayout(settingsInnerPanelLayout);
-        settingsInnerPanelLayout.setHorizontalGroup(
-            settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(settingsInnerPanelLayout.createSequentialGroup()
-                .addComponent(peptideLengthLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(minPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(peptideLengthDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(7, 7, 7)
-                .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE))
-            .addGroup(settingsInnerPanelLayout.createSequentialGroup()
-                .addComponent(maxPeptideMassLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(maxPeptideMassTxt))
-            .addGroup(settingsInnerPanelLayout.createSequentialGroup()
-                .addComponent(numberMatchesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(numberMatchesTxt))
-            .addGroup(settingsInnerPanelLayout.createSequentialGroup()
-                .addComponent(neutralLossesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(neutralLossesCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(settingsInnerPanelLayout.createSequentialGroup()
-                .addComponent(ammoniaLossLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(ammoniaLossCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(settingsInnerPanelLayout.createSequentialGroup()
-                .addComponent(waterLossLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(waterLossCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, settingsInnerPanelLayout.createSequentialGroup()
-                .addComponent(equalILLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(equalILCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(settingsInnerPanelLayout.createSequentialGroup()
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(maxPtmsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fragMethodLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fragMethodCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(maxPtmsTxt)))
-            .addGroup(settingsInnerPanelLayout.createSequentialGroup()
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(fragmentAllLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(empiricalCorrectionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(higherChargeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(empiricalCorrectionCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(higherChargeCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fragmentAllCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-            .addGroup(settingsInnerPanelLayout.createSequentialGroup()
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(topPeaksWindowLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(maxCombinationsLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(topPeaksLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(topPeaksTxt, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(maxCombinationsTxt)
-                    .addComponent(topPeaksWindowTxt)))
-        );
-        settingsInnerPanelLayout.setVerticalGroup(
-            settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(settingsInnerPanelLayout.createSequentialGroup()
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(peptideLengthDividerLabel)
-                    .addComponent(peptideLengthLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(maxPeptideMassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(maxPeptideMassLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(numberMatchesLabel)
-                    .addComponent(numberMatchesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(maxPtmsLabel)
-                    .addComponent(maxPtmsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fragMethodLabel)
-                    .addComponent(fragMethodCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(waterLossLabel)
-                    .addComponent(waterLossCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ammoniaLossLabel)
-                    .addComponent(ammoniaLossCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(neutralLossesLabel)
-                    .addComponent(neutralLossesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(equalILCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(equalILLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fragmentAllLabel)
-                    .addComponent(fragmentAllCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(empiricalCorrectionLabel)
-                    .addComponent(empiricalCorrectionCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(higherChargeLabel)
-                    .addComponent(higherChargeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(maxCombinationsLabel)
-                    .addComponent(maxCombinationsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(topPeaksLabel)
-                    .addComponent(topPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(topPeaksWindowTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(topPeaksWindowLabel))
-                .addContainerGap())
-        );
-
-        settingsScrollPane.setViewportView(settingsInnerPanel);
-
-        javax.swing.GroupLayout settingsPanelLayout = new javax.swing.GroupLayout(settingsPanel);
-        settingsPanel.setLayout(settingsPanelLayout);
-        settingsPanelLayout.setHorizontalGroup(
-            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(settingsScrollPane)
-                .addContainerGap())
-        );
-        settingsPanelLayout.setVerticalGroup(
-            settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(settingsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(settingsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         openDialogHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
         openDialogHelpJButton.setToolTipText("Help");
@@ -617,8 +452,6 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
             }
         });
 
-        advancedSettingsWarningLabel.setText("Click to open the MetaMorpheus help page.");
-
         okButton.setText("OK");
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -633,6 +466,589 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
             }
         });
 
+        advancedSettingsWarningLabel.setText("Click to open the MetaMorpheus help page.");
+
+        tabbedPane.setBackground(new java.awt.Color(230, 230, 230));
+        tabbedPane.setOpaque(true);
+        tabbedPane.setPreferredSize(new java.awt.Dimension(616, 180));
+
+        searchPanel.setBackground(new java.awt.Color(230, 230, 230));
+        searchPanel.setPreferredSize(new java.awt.Dimension(518, 143));
+
+        searchTypeLabel.setText("Search Type");
+
+        searchTypeCombo.setModel(new DefaultComboBoxModel(MetaMorpheusSearchType.values()));
+
+        numberOfPartitionsLbl.setText("Number of Partitions");
+
+        numberOfPartitionsTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        numberOfPartitionsTxt.setText("1");
+        numberOfPartitionsTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                numberOfPartitionsTxtKeyReleased(evt);
+            }
+        });
+
+        dissociationTypeLbl.setText("Dissociation Type");
+
+        dissociationTypeCombo.setModel(new DefaultComboBoxModel(MetaMorpheusParameters.MetaMorpheusDissociationType.values()));
+
+        maxNumModPeptideLbl.setText("Maximum Number of Modifications per Peptide");
+
+        maxNumModPeptideTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        maxNumModPeptideTxt.setText("2");
+        maxNumModPeptideTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                maxNumModPeptideTxtKeyReleased(evt);
+            }
+        });
+
+        intitiatorMethBehaviorLabel.setText("Initiator Methionine Behavior");
+
+        intitiatorMethBehaviorCombo.setModel(new DefaultComboBoxModel(MetaMorpheusParameters.MetaMorpheusInitiatorMethionineBehaviorType.values()));
+
+        scoreCutoffLabel.setText("Score Cut-off");
+
+        scoreCutoffTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        scoreCutoffTxt.setText("5.0");
+        scoreCutoffTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                scoreCutoffTxtKeyReleased(evt);
+            }
+        });
+
+        useDeltaScoreLbl.setText("Use Delta Score");
+
+        useDeltaScoreCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        useDeltaScoreCmb.setSelectedIndex(1);
+
+        massDiffAcceptorTypeLbl.setText("Mass Difference Acceptor Type");
+
+        massDiffAcceptorTypeCmb.setModel(new DefaultComboBoxModel(MetaMorpheusParameters.MetaMorpheusMassDiffAcceptorType.values()));
+
+        peptideLengthJLabel.setText("Peptide Length (min - max)");
+
+        minPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        minPepLengthTxt.setText("8");
+        minPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                minPepLengthTxtKeyReleased(evt);
+            }
+        });
+
+        peptideLengthDividerLabel.setText("-");
+
+        maxPepLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        maxPepLengthTxt.setText("30");
+        maxPepLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                maxPepLengthTxtKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
+        searchPanel.setLayout(searchPanelLayout);
+        searchPanelLayout.setHorizontalGroup(
+            searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(searchPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(searchTypeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchPanelLayout.createSequentialGroup()
+                        .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(peptideLengthJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dissociationTypeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(maxNumModPeptideLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(intitiatorMethBehaviorLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(numberOfPartitionsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(massDiffAcceptorTypeLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(useDeltaScoreLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(scoreCutoffLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(massDiffAcceptorTypeCmb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(useDeltaScoreCmb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(scoreCutoffTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(intitiatorMethBehaviorCombo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(maxNumModPeptideTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(numberOfPartitionsTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchTypeCombo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dissociationTypeCombo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchPanelLayout.createSequentialGroup()
+                        .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(peptideLengthDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(25, 25, 25))
+        );
+
+        searchPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {dissociationTypeCombo, intitiatorMethBehaviorCombo, massDiffAcceptorTypeCmb, maxNumModPeptideTxt, numberOfPartitionsTxt, scoreCutoffTxt, searchTypeCombo, useDeltaScoreCmb});
+
+        searchPanelLayout.setVerticalGroup(
+            searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(searchPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchTypeLabel)
+                    .addComponent(searchTypeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(numberOfPartitionsLbl)
+                    .addComponent(numberOfPartitionsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dissociationTypeLbl)
+                    .addComponent(dissociationTypeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(maxNumModPeptideLbl)
+                    .addComponent(maxNumModPeptideTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(intitiatorMethBehaviorLabel)
+                    .addComponent(intitiatorMethBehaviorCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(scoreCutoffLabel)
+                    .addComponent(scoreCutoffTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(useDeltaScoreLbl)
+                    .addComponent(useDeltaScoreCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(massDiffAcceptorTypeLbl)
+                    .addComponent(massDiffAcceptorTypeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(peptideLengthJLabel)
+                    .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(peptideLengthDividerLabel))
+                .addContainerGap())
+        );
+
+        tabbedPane.addTab("Search", searchPanel);
+
+        outputPanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        writeMzidLbl.setText("Write mzIdentML");
+
+        writeMzidCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        writePepXmlLbl.setText("Write pepXML");
+
+        writePepXmlCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        writePepXmlCmb.setSelectedIndex(1);
+
+        javax.swing.GroupLayout outputPanelLayout = new javax.swing.GroupLayout(outputPanel);
+        outputPanel.setLayout(outputPanelLayout);
+        outputPanelLayout.setHorizontalGroup(
+            outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(outputPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(writeMzidLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(writePepXmlLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(writeMzidCmb, 0, 185, Short.MAX_VALUE)
+                    .addComponent(writePepXmlCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
+        );
+        outputPanelLayout.setVerticalGroup(
+            outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, outputPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(writeMzidLbl)
+                    .addComponent(writeMzidCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(outputPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(writePepXmlLbl)
+                    .addComponent(writePepXmlCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("Output", outputPanel);
+
+        deisotopingPanel.setBackground(new java.awt.Color(230, 230, 230));
+        deisotopingPanel.setPreferredSize(new java.awt.Dimension(518, 143));
+
+        useProvidedPrecLabel.setText("Use Provided Precursor Info");
+
+        useProvidedPrecCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        doPrecDeconvLbl.setText("Do Precursor Deconvolution");
+
+        doPrecDeconvCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        deconvIntRatioLbl.setText("Deconvolution Intensity Ratio");
+
+        deconvIntRatioTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        deconvIntRatioTxt.setText("3.0");
+        deconvIntRatioTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                deconvIntRatioTxtKeyReleased(evt);
+            }
+        });
+
+        deconvMassToleranceLbl.setText("Deconvolution Mass Tolerance");
+
+        deconvMassToleranceTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        deconvMassToleranceTxt.setText("4.0");
+        deconvMassToleranceTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                deconvMassToleranceTxtKeyReleased(evt);
+            }
+        });
+
+        deconvMassToleranceTypeLbl.setText("Deconvolution Mass Tolerance Type");
+
+        deconvMassToleranceTypeCmb.setModel(new DefaultComboBoxModel(MetaMorpheusToleranceType.values()));
+
+        javax.swing.GroupLayout deisotopingPanelLayout = new javax.swing.GroupLayout(deisotopingPanel);
+        deisotopingPanel.setLayout(deisotopingPanelLayout);
+        deisotopingPanelLayout.setHorizontalGroup(
+            deisotopingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(deisotopingPanelLayout.createSequentialGroup()
+                .addGroup(deisotopingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(deisotopingPanelLayout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(deisotopingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(useProvidedPrecLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(deconvIntRatioLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(doPrecDeconvLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(deconvMassToleranceLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, deisotopingPanelLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(deconvMassToleranceTypeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(deisotopingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(useProvidedPrecCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 185, Short.MAX_VALUE)
+                    .addComponent(doPrecDeconvCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deconvIntRatioTxt, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(deconvMassToleranceTxt, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(deconvMassToleranceTypeCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
+        );
+        deisotopingPanelLayout.setVerticalGroup(
+            deisotopingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, deisotopingPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(deisotopingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(useProvidedPrecLabel)
+                    .addComponent(useProvidedPrecCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(deisotopingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(doPrecDeconvLbl)
+                    .addComponent(doPrecDeconvCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(deisotopingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(deconvIntRatioLbl)
+                    .addComponent(deconvIntRatioTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(deisotopingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(deconvMassToleranceLbl)
+                    .addComponent(deconvMassToleranceTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(deisotopingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(deconvMassToleranceTypeLbl)
+                    .addComponent(deconvMassToleranceTypeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(99, 99, 99))
+        );
+
+        tabbedPane.addTab("Deisotoping", deisotopingPanel);
+
+        peakTrimmingPanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        trimMs1Lbl.setText("Trim MS1 Peaks");
+
+        trimMs1Cmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        trimMs1Cmb.setSelectedIndex(1);
+
+        trimMsMsLbl.setText("Trim MSMS Peaks");
+
+        trimMsMsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        numPeaksPerWindowLbl.setText("Number of Peaks to Keep per Window");
+
+        numPeaksPerWindowTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        numPeaksPerWindowTxt.setText("200");
+        numPeaksPerWindowTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                numPeaksPerWindowTxtKeyReleased(evt);
+            }
+        });
+
+        minAllowedIntensityRatioToBasePeakLbl.setText("Minimum Allowed Intensity Ratio to Base Peak ");
+
+        minAllowedIntensityRatioToBasePeakTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        minAllowedIntensityRatioToBasePeakTxt.setText("0.01");
+        minAllowedIntensityRatioToBasePeakTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                minAllowedIntensityRatioToBasePeakTxtKeyReleased(evt);
+            }
+        });
+
+        windowWidthThompsonLbl.setText("Window Width in Thomson");
+
+        windowWidthThompsonTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        windowWidthThompsonTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                windowWidthThompsonTxtKeyReleased(evt);
+            }
+        });
+
+        numberOfWindowsLbl.setText("Number of Windows");
+
+        numberOfWindowsTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        numberOfWindowsTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                numberOfWindowsTxtKeyReleased(evt);
+            }
+        });
+
+        normalizePeaksAcrossAllWindowsLbl.setText("Normalize Peaks Accross All Windows");
+
+        normalizePeaksAcrossAllWindowsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        normalizePeaksAcrossAllWindowsCmb.setSelectedIndex(1);
+
+        javax.swing.GroupLayout peakTrimmingPanelLayout = new javax.swing.GroupLayout(peakTrimmingPanel);
+        peakTrimmingPanel.setLayout(peakTrimmingPanelLayout);
+        peakTrimmingPanelLayout.setHorizontalGroup(
+            peakTrimmingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, peakTrimmingPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(peakTrimmingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(peakTrimmingPanelLayout.createSequentialGroup()
+                        .addComponent(normalizePeaksAcrossAllWindowsLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(38, 38, 38))
+                    .addGroup(peakTrimmingPanelLayout.createSequentialGroup()
+                        .addComponent(numberOfWindowsLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(51, 51, 51))
+                    .addGroup(peakTrimmingPanelLayout.createSequentialGroup()
+                        .addGroup(peakTrimmingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(windowWidthThompsonLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(trimMs1Lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(trimMsMsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(numPeaksPerWindowLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(minAllowedIntensityRatioToBasePeakLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(peakTrimmingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(trimMs1Cmb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(trimMsMsCmb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numPeaksPerWindowTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(minAllowedIntensityRatioToBasePeakTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(windowWidthThompsonTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numberOfWindowsTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(normalizePeaksAcrossAllWindowsCmb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25))
+        );
+
+        peakTrimmingPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {minAllowedIntensityRatioToBasePeakTxt, numPeaksPerWindowTxt, numberOfWindowsTxt, windowWidthThompsonTxt});
+
+        peakTrimmingPanelLayout.setVerticalGroup(
+            peakTrimmingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(peakTrimmingPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(peakTrimmingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(trimMs1Lbl)
+                    .addComponent(trimMs1Cmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(peakTrimmingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(trimMsMsLbl)
+                    .addComponent(trimMsMsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(peakTrimmingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(numPeaksPerWindowLbl)
+                    .addComponent(numPeaksPerWindowTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(peakTrimmingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(minAllowedIntensityRatioToBasePeakLbl)
+                    .addComponent(minAllowedIntensityRatioToBasePeakTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(peakTrimmingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(windowWidthThompsonLbl)
+                    .addComponent(windowWidthThompsonTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(peakTrimmingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(numberOfWindowsLbl)
+                    .addComponent(numberOfWindowsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(peakTrimmingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(normalizePeaksAcrossAllWindowsLbl)
+                    .addComponent(normalizePeaksAcrossAllWindowsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("Peak Trimming", peakTrimmingPanel);
+
+        proteinGroupingPanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        modifiedPeptidesAreDifferentLbl.setText("Modified Peptides Are Different");
+
+        modifiedPeptidesAreDifferentCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        modifiedPeptidesAreDifferentCmb.setSelectedIndex(1);
+
+        excludeOneHitWondersLbl.setText("Exlude One Hit Wonders");
+
+        excludeOneHitWondersCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        excludeOneHitWondersCmb.setSelectedIndex(1);
+
+        javax.swing.GroupLayout proteinGroupingPanelLayout = new javax.swing.GroupLayout(proteinGroupingPanel);
+        proteinGroupingPanel.setLayout(proteinGroupingPanelLayout);
+        proteinGroupingPanelLayout.setHorizontalGroup(
+            proteinGroupingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(proteinGroupingPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(proteinGroupingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(modifiedPeptidesAreDifferentLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(excludeOneHitWondersLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGroup(proteinGroupingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(modifiedPeptidesAreDifferentCmb, 0, 185, Short.MAX_VALUE)
+                    .addComponent(excludeOneHitWondersCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
+        );
+        proteinGroupingPanelLayout.setVerticalGroup(
+            proteinGroupingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, proteinGroupingPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(proteinGroupingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(modifiedPeptidesAreDifferentLbl)
+                    .addComponent(modifiedPeptidesAreDifferentCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(proteinGroupingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(excludeOneHitWondersLbl)
+                    .addComponent(excludeOneHitWondersCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("Protein Grouping", proteinGroupingPanel);
+
+        inSilicoDigestionPanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        fragmentationTerminusLbl.setText("Fragmentation Terminus");
+
+        fragmentationTerminusCmb.setModel(new DefaultComboBoxModel(MetaMorpheusParameters.MetaMorpheusFragmentationTerminusType.values()));
+
+        maxFragmentSizeLbl.setText("Max Fragment Size");
+
+        maxFragmentSizeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        maxFragmentSizeTxt.setText("30000");
+        maxFragmentSizeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                maxFragmentSizeTxtKeyReleased(evt);
+            }
+        });
+
+        searchTargetLabel.setText("Search Target");
+
+        searchTargetComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        decoyTypeLbl.setText("Decoy Type");
+
+        decoyTypeCmb.setModel(new DefaultComboBoxModel(MetaMorpheusParameters.MetaMorpheusDecoyType.values()));
+
+        maxModIsoformsLbl.setText("Max Modification Isoforms");
+
+        maxModIsoformsTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        maxModIsoformsTxt.setText("1024");
+        maxModIsoformsTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                maxModIsoformsTxtKeyReleased(evt);
+            }
+        });
+
+        minVariantDepthLabel.setText("Minimum Variant Depth");
+
+        minVariantDepthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        minVariantDepthTxt.setText("1");
+        minVariantDepthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                minVariantDepthTxtKeyReleased(evt);
+            }
+        });
+
+        maxHetroVariantsLbl.setText("Maximum Heterozygous Variants");
+
+        maxHetroVariantsTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        maxHetroVariantsTxt.setText("4");
+        maxHetroVariantsTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                maxHetroVariantsTxtKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout inSilicoDigestionPanelLayout = new javax.swing.GroupLayout(inSilicoDigestionPanel);
+        inSilicoDigestionPanel.setLayout(inSilicoDigestionPanelLayout);
+        inSilicoDigestionPanelLayout.setHorizontalGroup(
+            inSilicoDigestionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inSilicoDigestionPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(inSilicoDigestionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(searchTargetLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxFragmentSizeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fragmentationTerminusLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(minVariantDepthLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxModIsoformsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(decoyTypeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxHetroVariantsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(inSilicoDigestionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(fragmentationTerminusCmb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxFragmentSizeTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchTargetComboBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(decoyTypeCmb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxModIsoformsTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(minVariantDepthTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxHetroVariantsTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25))
+        );
+        inSilicoDigestionPanelLayout.setVerticalGroup(
+            inSilicoDigestionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inSilicoDigestionPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(inSilicoDigestionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fragmentationTerminusLbl)
+                    .addComponent(fragmentationTerminusCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(inSilicoDigestionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(maxFragmentSizeLbl)
+                    .addComponent(maxFragmentSizeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(inSilicoDigestionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchTargetComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchTargetLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(inSilicoDigestionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(decoyTypeLbl)
+                    .addComponent(decoyTypeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(inSilicoDigestionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(maxModIsoformsLbl)
+                    .addComponent(maxModIsoformsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(inSilicoDigestionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(minVariantDepthLabel)
+                    .addComponent(minVariantDepthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(inSilicoDigestionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(maxHetroVariantsLbl)
+                    .addComponent(maxHetroVariantsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("In Silico Digestion", inSilicoDigestionPanel);
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -640,13 +1056,14 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE)
+                    .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
+                    .addComponent(jSeparator1)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(openDialogHelpJButton)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(advancedSettingsWarningLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(closeButton)))
@@ -656,7 +1073,9 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(settingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 548, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
@@ -681,17 +1100,7 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Close the dialog without saving the settings.
-     *
-     * @param evt
-     */
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        cancelled = true;
-        dispose();
-    }//GEN-LAST:event_closeButtonActionPerformed
-
-    /**
-     * Save the settings and then close the dialog.
+     * Save the settings and close the dialog.
      *
      * @param evt
      */
@@ -700,6 +1109,16 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
             dispose();
         }
     }//GEN-LAST:event_okButtonActionPerformed
+
+    /**
+     * Close the without saving.
+     *
+     * @param evt
+     */
+    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
+        cancelled = true;
+        dispose();
+    }//GEN-LAST:event_closeButtonActionPerformed
 
     /**
      * Change the cursor to a hand cursor.
@@ -735,27 +1154,9 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
      *
      * @param evt
      */
-    private void topPeaksWindowTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_topPeaksWindowTxtKeyReleased
+    private void maxFragmentSizeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxFragmentSizeTxtKeyReleased
         validateInput(false);
-    }//GEN-LAST:event_topPeaksWindowTxtKeyReleased
-
-    /**
-     * Validate the input.
-     *
-     * @param evt
-     */
-    private void maxPtmsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPtmsTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_maxPtmsTxtKeyReleased
-
-    /**
-     * Validate the input.
-     *
-     * @param evt
-     */
-    private void minPepLengthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPepLengthTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_minPepLengthTxtKeyReleased
+    }//GEN-LAST:event_maxFragmentSizeTxtKeyReleased
 
     /**
      * Validate the input.
@@ -771,39 +1172,129 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
      *
      * @param evt
      */
-    private void maxPeptideMassTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPeptideMassTxtKeyReleased
+    private void minPepLengthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPepLengthTxtKeyReleased
         validateInput(false);
-    }//GEN-LAST:event_maxPeptideMassTxtKeyReleased
+    }//GEN-LAST:event_minPepLengthTxtKeyReleased
 
     /**
      * Validate the input.
      *
      * @param evt
      */
-    private void topPeaksTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_topPeaksTxtKeyReleased
+    private void numPeaksPerWindowTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numPeaksPerWindowTxtKeyReleased
         validateInput(false);
-    }//GEN-LAST:event_topPeaksTxtKeyReleased
+    }//GEN-LAST:event_numPeaksPerWindowTxtKeyReleased
 
     /**
      * Validate the input.
      *
      * @param evt
      */
-    private void maxCombinationsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxCombinationsTxtKeyReleased
+    private void deconvIntRatioTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_deconvIntRatioTxtKeyReleased
         validateInput(false);
-    }//GEN-LAST:event_maxCombinationsTxtKeyReleased
+    }//GEN-LAST:event_deconvIntRatioTxtKeyReleased
 
     /**
      * Validate the input.
      *
      * @param evt
      */
-    private void numberMatchesTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numberMatchesTxtKeyReleased
+    private void deconvMassToleranceTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_deconvMassToleranceTxtKeyReleased
         validateInput(false);
-    }//GEN-LAST:event_numberMatchesTxtKeyReleased
+    }//GEN-LAST:event_deconvMassToleranceTxtKeyReleased
 
     /**
-     * Inspects the parameter validity.
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void maxNumModPeptideTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxNumModPeptideTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_maxNumModPeptideTxtKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void numberOfPartitionsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numberOfPartitionsTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_numberOfPartitionsTxtKeyReleased
+
+    /**
+     * Close the without saving.
+     *
+     * @param evt
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        closeButtonActionPerformed(null);
+    }//GEN-LAST:event_formWindowClosing
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void minAllowedIntensityRatioToBasePeakTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minAllowedIntensityRatioToBasePeakTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_minAllowedIntensityRatioToBasePeakTxtKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void windowWidthThompsonTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_windowWidthThompsonTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_windowWidthThompsonTxtKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void numberOfWindowsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numberOfWindowsTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_numberOfWindowsTxtKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void maxModIsoformsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxModIsoformsTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_maxModIsoformsTxtKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void maxHetroVariantsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxHetroVariantsTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_maxHetroVariantsTxtKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void scoreCutoffTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_scoreCutoffTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_scoreCutoffTxtKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void minVariantDepthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minVariantDepthTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_minVariantDepthTxtKeyReleased
+
+    /**
+     * Inspects the parameters validity.
      *
      * @param showMessage if true an error messages are shown to the users
      * @return a boolean indicating if the parameters are valid
@@ -812,14 +1303,27 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
 
         boolean valid = true;
 
-        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, minPepLengthTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, peptideLengthLabel, maxPepLengthTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
-//        valid = GuiUtilities.validateDoubleInput(this, maxPeptideMassLabel, maxPeptideMassTxt, "maximum peptide mass", "Peptide Mass Error", true, showMessage, valid);
-//        valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number of Spectrum Matches Error", true, showMessage, valid);
-//        valid = GuiUtilities.validateIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "maximum number of variable PTMs", "Variable PTMs Error", true, showMessage, valid);
-//        valid = GuiUtilities.validateIntegerInput(this, maxCombinationsLabel, maxCombinationsTxt, "maximum combinations", "Max Combinations Error", true, showMessage, valid);
-//        valid = GuiUtilities.validateIntegerInput(this, topPeaksLabel, topPeaksTxt, "top peaks", "Top Peaks Error", true, showMessage, valid);
-//        valid = GuiUtilities.validateIntegerInput(this, topPeaksWindowLabel, topPeaksWindowTxt, "top peaks window", "Top Peaks Window Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, numberOfPartitionsLbl, numberOfPartitionsTxt, "number of partitions", "Number of Partitions Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, maxNumModPeptideLbl, maxNumModPeptideTxt, "number of modifictions per peptide", "Number of Modifications Error", false, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, scoreCutoffLabel, scoreCutoffTxt, "score cut-off", "Score Cut-off Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, peptideLengthJLabel, minPepLengthTxt, "minimim peptide length", "Peptide Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, peptideLengthJLabel, maxPepLengthTxt, "maximum peptide length", "Peptide Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, deconvIntRatioLbl, deconvIntRatioTxt, "deconvolution intensity ratio", "Deconvolution Itensity Ratio Error", true, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, deconvMassToleranceLbl, deconvMassToleranceTxt, "deconvolution mass tolerance", "Deconvolution Mass Tolerance Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, numPeaksPerWindowLbl, numPeaksPerWindowTxt, "number of peaks per window", "Number of Peaks per Window Error", true, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, minAllowedIntensityRatioToBasePeakLbl, minAllowedIntensityRatioToBasePeakTxt, "minimum allowed intensity ratio", "Minimum Intensity Ratio Error", true, showMessage, valid);
+
+        if (!windowWidthThompsonTxt.getText().isEmpty()) {
+            valid = GuiUtilities.validateDoubleInput(this, windowWidthThompsonLbl, windowWidthThompsonTxt, "window with in Thompson", "Window Thompson Width Error", true, showMessage, valid);
+        }
+        if (!numberOfWindowsTxt.getText().isEmpty()) {
+            valid = GuiUtilities.validateIntegerInput(this, numberOfWindowsLbl, numberOfWindowsTxt, "number of windows", "Number of Windows Error", true, showMessage, valid);
+        }
+
+        valid = GuiUtilities.validateDoubleInput(this, maxFragmentSizeLbl, maxFragmentSizeTxt, "maximum fragment size", "Maximum Fragment Size Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, maxModIsoformsLbl, maxModIsoformsTxt, "maximum modification isoforms", "Maximum Modification Isoforms Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, minVariantDepthLabel, minVariantDepthTxt, "minimum variant depth", "Minimum Variant Depth Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, maxHetroVariantsLbl, maxHetroVariantsTxt, "maximum hetrozygous variants", "Maximum Hetrozygous Variants Error", true, showMessage, valid);
 
         // peptide length: the low value should be lower than the high value
         try {
@@ -832,58 +1336,97 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
                             "Peptide Length Error", JOptionPane.WARNING_MESSAGE);
                 }
                 valid = false;
-                peptideLengthLabel.setForeground(Color.RED);
-                peptideLengthLabel.setToolTipText("Please select a valid range (upper <= higher)");
+                peptideLengthJLabel.setForeground(Color.RED);
+                peptideLengthJLabel.setToolTipText("Please select a valid range (upper <= higher)");
             }
         } catch (NumberFormatException e) {
             // ignore, handled above
         }
 
         okButton.setEnabled(valid);
+
         return valid;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel advancedSettingsWarningLabel;
-    private javax.swing.JComboBox ammoniaLossCmb;
-    private javax.swing.JLabel ammoniaLossLabel;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton closeButton;
-    private javax.swing.JComboBox empiricalCorrectionCombo;
-    private javax.swing.JLabel empiricalCorrectionLabel;
-    private javax.swing.JComboBox equalILCombo;
-    private javax.swing.JLabel equalILLabel;
-    private javax.swing.JComboBox fragMethodCmb;
-    private javax.swing.JLabel fragMethodLabel;
-    private javax.swing.JComboBox fragmentAllCmb;
-    private javax.swing.JLabel fragmentAllLabel;
-    private javax.swing.JComboBox higherChargeCombo;
-    private javax.swing.JLabel higherChargeLabel;
-    private javax.swing.JLabel maxCombinationsLabel;
-    private javax.swing.JTextField maxCombinationsTxt;
+    private javax.swing.JLabel deconvIntRatioLbl;
+    private javax.swing.JTextField deconvIntRatioTxt;
+    private javax.swing.JLabel deconvMassToleranceLbl;
+    private javax.swing.JTextField deconvMassToleranceTxt;
+    private javax.swing.JComboBox deconvMassToleranceTypeCmb;
+    private javax.swing.JLabel deconvMassToleranceTypeLbl;
+    private javax.swing.JComboBox decoyTypeCmb;
+    private javax.swing.JLabel decoyTypeLbl;
+    private javax.swing.JPanel deisotopingPanel;
+    private javax.swing.JComboBox dissociationTypeCombo;
+    private javax.swing.JLabel dissociationTypeLbl;
+    private javax.swing.JComboBox doPrecDeconvCmb;
+    private javax.swing.JLabel doPrecDeconvLbl;
+    private javax.swing.JComboBox excludeOneHitWondersCmb;
+    private javax.swing.JLabel excludeOneHitWondersLbl;
+    private javax.swing.JComboBox fragmentationTerminusCmb;
+    private javax.swing.JLabel fragmentationTerminusLbl;
+    private javax.swing.JPanel inSilicoDigestionPanel;
+    private javax.swing.JComboBox intitiatorMethBehaviorCombo;
+    private javax.swing.JLabel intitiatorMethBehaviorLabel;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JComboBox massDiffAcceptorTypeCmb;
+    private javax.swing.JLabel massDiffAcceptorTypeLbl;
+    private javax.swing.JLabel maxFragmentSizeLbl;
+    private javax.swing.JTextField maxFragmentSizeTxt;
+    private javax.swing.JLabel maxHetroVariantsLbl;
+    private javax.swing.JTextField maxHetroVariantsTxt;
+    private javax.swing.JLabel maxModIsoformsLbl;
+    private javax.swing.JTextField maxModIsoformsTxt;
+    private javax.swing.JLabel maxNumModPeptideLbl;
+    private javax.swing.JTextField maxNumModPeptideTxt;
     private javax.swing.JTextField maxPepLengthTxt;
-    private javax.swing.JLabel maxPeptideMassLabel;
-    private javax.swing.JTextField maxPeptideMassTxt;
-    private javax.swing.JLabel maxPtmsLabel;
-    private javax.swing.JTextField maxPtmsTxt;
+    private javax.swing.JLabel minAllowedIntensityRatioToBasePeakLbl;
+    private javax.swing.JTextField minAllowedIntensityRatioToBasePeakTxt;
     private javax.swing.JTextField minPepLengthTxt;
-    private javax.swing.JComboBox neutralLossesCmb;
-    private javax.swing.JLabel neutralLossesLabel;
-    private javax.swing.JLabel numberMatchesLabel;
-    private javax.swing.JTextField numberMatchesTxt;
+    private javax.swing.JLabel minVariantDepthLabel;
+    private javax.swing.JTextField minVariantDepthTxt;
+    private javax.swing.JComboBox modifiedPeptidesAreDifferentCmb;
+    private javax.swing.JLabel modifiedPeptidesAreDifferentLbl;
+    private javax.swing.JComboBox normalizePeaksAcrossAllWindowsCmb;
+    private javax.swing.JLabel normalizePeaksAcrossAllWindowsLbl;
+    private javax.swing.JLabel numPeaksPerWindowLbl;
+    private javax.swing.JTextField numPeaksPerWindowTxt;
+    private javax.swing.JLabel numberOfPartitionsLbl;
+    private javax.swing.JTextField numberOfPartitionsTxt;
+    private javax.swing.JLabel numberOfWindowsLbl;
+    private javax.swing.JTextField numberOfWindowsTxt;
     private javax.swing.JButton okButton;
     private javax.swing.JButton openDialogHelpJButton;
+    private javax.swing.JPanel outputPanel;
+    private javax.swing.JPanel peakTrimmingPanel;
     private javax.swing.JLabel peptideLengthDividerLabel;
-    private javax.swing.JLabel peptideLengthLabel;
-    private javax.swing.JPanel settingsInnerPanel;
-    private javax.swing.JPanel settingsPanel;
-    private javax.swing.JScrollPane settingsScrollPane;
-    private javax.swing.JLabel topPeaksLabel;
-    private javax.swing.JTextField topPeaksTxt;
-    private javax.swing.JLabel topPeaksWindowLabel;
-    private javax.swing.JTextField topPeaksWindowTxt;
-    private javax.swing.JComboBox waterLossCombo;
-    private javax.swing.JLabel waterLossLabel;
+    private javax.swing.JLabel peptideLengthJLabel;
+    private javax.swing.JPanel proteinGroupingPanel;
+    private javax.swing.JLabel scoreCutoffLabel;
+    private javax.swing.JTextField scoreCutoffTxt;
+    private javax.swing.JPanel searchPanel;
+    private javax.swing.JComboBox searchTargetComboBox;
+    private javax.swing.JLabel searchTargetLabel;
+    private javax.swing.JComboBox searchTypeCombo;
+    private javax.swing.JLabel searchTypeLabel;
+    private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JComboBox trimMs1Cmb;
+    private javax.swing.JLabel trimMs1Lbl;
+    private javax.swing.JComboBox trimMsMsCmb;
+    private javax.swing.JLabel trimMsMsLbl;
+    private javax.swing.JComboBox useDeltaScoreCmb;
+    private javax.swing.JLabel useDeltaScoreLbl;
+    private javax.swing.JComboBox useProvidedPrecCmb;
+    private javax.swing.JLabel useProvidedPrecLabel;
+    private javax.swing.JLabel windowWidthThompsonLbl;
+    private javax.swing.JTextField windowWidthThompsonTxt;
+    private javax.swing.JComboBox writeMzidCmb;
+    private javax.swing.JLabel writeMzidLbl;
+    private javax.swing.JComboBox writePepXmlCmb;
+    private javax.swing.JLabel writePepXmlLbl;
     // End of variables declaration//GEN-END:variables
-
 }

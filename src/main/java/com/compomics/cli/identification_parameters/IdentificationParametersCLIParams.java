@@ -20,7 +20,6 @@ public enum IdentificationParametersCLIParams {
     // IMPORTANT: Any change here must be reported in the wiki: 
     // https://github.com/compomics/compomics-utilities/wiki/IdentificationParametersCLI
     //////////////////////////////////////////////////////////////////////////////////////////
-    
     //////////////////////////////////
     // General parameters
     //////////////////////////////////
@@ -48,7 +47,7 @@ public enum IdentificationParametersCLIParams {
     MIN_CHARGE("min_charge", "Minimal charge to search for, default is '2'.", false, true),
     MAX_CHARGE("max_charge", "Maximal charge to search for, default is '4'.", false, true),
     FI("fi", "Type of forward ion searched, default is 'b'. If more than one ion should be used, please provide them as comma separated list with quotes, e.g. \"a, b\".", false, true),
-    RI("ri", "Type of rewind ion searched, default is 'y'. If more than one ion should be used, please provide them as comma separated list with quotes, e.g. \"y, z\".", false, true),    
+    RI("ri", "Type of rewind ion searched, default is 'y'. If more than one ion should be used, please provide them as comma separated list with quotes, e.g. \"y, z\".", false, true),
     MIN_ISOTOPE("min_isotope", "Minimal precursor isotope, default is '0'.", false, true),
     MAX_ISOTOPE("max_isotope", "Maximal precursor isotope, default is '1'.", false, true),
     //////////////////////////////////
@@ -146,7 +145,7 @@ public enum IdentificationParametersCLIParams {
     OMSSA_PREC_PER_SPECTRUM("omssa_prec_per_spectrum", "OMSSA minimum number of precursors per spectrum, integer, default is '1'.", false, true),
     OMSSA_SCALE_PREC("omssa_scale_prec", "OMSSA scale precursor mass option, 1: true, 0: false, default is '1'.", false, true),
     OMSSA_SEQUENCES_IN_MEMORY("omssa_memory", "OMSSA map sequences in memory option, 1: true, 0: false, default is '1'.", false, true),
-    OMSSA_METHIONINE("omssa_methionine", "OMSSA N-terminal methionine cleavage option, 1: true, 0: false, default is '1'.", false, true),  
+    OMSSA_METHIONINE("omssa_methionine", "OMSSA N-terminal methionine cleavage option, 1: true, 0: false, default is '1'.", false, true),
     // TODO: MINIMUM PRECURSOR CHARGE FOR MULTIPLY CHARGED FRAGMENTS
     OMSSA_NEUTRON("omssa_neutron", "Mass after which OMSSA should consider neutron exact mass, default is '1446.94'.", false, true),
     OMSSA_SINGLE_WINDOW_WIDTH("omssa_single_window_wd", "OMSSA single charge window width in Da, integer, default is '27'.", false, true),
@@ -163,7 +162,7 @@ public enum IdentificationParametersCLIParams {
     OMSSA_MAX_FRAG_SERIES("omssa_max_frag_series", "OMSSA maximum fragment per series option, integer, default is '100'.", false, true),
     OMSSA_CORRELATION_CORRECTION("omssa_corr", "OMSSA use correlation correction score option, 1: true, 0: false, default is '1'.", false, true),
     OMSSA_CONSECUTIVE_ION_PROBABILITY("omssa_consecutive_p", "OMSSA consecutive ion probability, default is '0.5'.", false, true),
-    OMSSA_HITLIST_LENGTH_CHARGE("omssa_hitlist_charge", "OMSSA number of hits per spectrum per charge, default is '30'.", false, true),      
+    OMSSA_HITLIST_LENGTH_CHARGE("omssa_hitlist_charge", "OMSSA number of hits per spectrum per charge, default is '30'.", false, true),
     OMSSA_ITERATIVE_SEQUENCE_EVALUE("omssa_it_sequence_evalue", "OMSSA e-value cutoff to consider a sequence in the iterative search 0.0 means all, default is '0.0'.", false, true),
     OMSSA_ITERATIVE_SPECTRUM_EVALUE("omssa_it_spectrum_evalue", "OMSSA e-value cutoff to consider a spectrum in the iterative search 0.0 means all, default is '0.01'.", false, true),
     OMSSA_ITERATIVE_REPLACE_EVALUE("omssa_it_replace_evalue", "OMSSA e-value cutoff to replace a hit in the iterative search 0.0 means keep best, default is '0.0'.", false, true),
@@ -171,7 +170,7 @@ public enum IdentificationParametersCLIParams {
     OMSSA_MAX_PEP_LENGTH("omssa_max_pep_length", "OMSSA maximum peptide length (OMSSA semi-tryptic or no enzyme searches only).", false, true),
     OMSSA_MAX_EVALUE("omssa_max_evalue", "OMSSA maximal evalue considered, default is '100'.", false, true),
     OMSSA_HITLIST_LENGTH("omssa_hitlist_length", "OMSSA hitlist length, 0 means all, default is '10'.", false, true),
-    OMSSA_FORMAT("omssa_format", "OMSSA output format. 0: omx, 1: csv, 2: pepXML, default is 'omx'.", false, true),        
+    OMSSA_FORMAT("omssa_format", "OMSSA output format. 0: omx, 1: csv, 2: pepXML, default is 'omx'.", false, true),
     //////////////////////////////////
     // Comet specific parameters
     //////////////////////////////////
@@ -189,9 +188,9 @@ public enum IdentificationParametersCLIParams {
     COMET_MAX_PEP_LENGTH("comet_max_pep_length", "Comet maximum peptide length, default is '30'.", false, true),
     COMET_MAX_FRAGMENT_CHARGE("comet_max_frag_charge", "Comet maximum fragment charge [1-5], default is '3'.", false, true),
     COMET_REMOVE_METH("comet_remove_meth", "Comet remove methionine, 1: true, 0: false, default is '0'.", false, true),
-    COMET_BATCH_SIZE("comet_batch_size", "Comet spectrum batch size, '0' means load and search all spectra at once, default is '0'.", false, true),    
-    COMET_PTMS("comet_num_ptms", "Comet max number of variable PTMs per peptide, default is '10'.", false, true),  
-    COMET_REQ_PTMS("comet_req_ptms", "Comet require at least one variable PTM per peptide, 1: true, 0: false, default is '0'.", false, true),  
+    COMET_BATCH_SIZE("comet_batch_size", "Comet spectrum batch size, '0' means load and search all spectra at once, default is '0'.", false, true),
+    COMET_PTMS("comet_num_ptms", "Comet max number of variable PTMs per peptide, default is '10'.", false, true),
+    COMET_REQ_PTMS("comet_req_ptms", "Comet require at least one variable PTM per peptide, 1: true, 0: false, default is '0'.", false, true),
     COMET_THEORETICAL_FRAGMENT_IONS("comet_theoretical_fragment_ions", "Comet theoretical_fragment_ions option, it is the correlation score type, 1: true, 0: false, default is '1'.", false, true),
     COMET_FRAGMENT_BIN_OFFSET("comet_frag_bin_offset", "Comet fragment bin offset, default is '0.01'.", false, true),
     COMET_NUM_MATCHES("comet_num_matches", "Comet maximum number of spectrum matches, default is '10'.", false, true),
@@ -259,8 +258,39 @@ public enum IdentificationParametersCLIParams {
     //////////////////////////////////
     // MetaMorpheus specific parameters
     //////////////////////////////////
-    METAMORPHEUS_MIN_PEP_LENGTH("meta_morpheus_min_pep_length", "MetaMorpheus minimum peptide length, default is '8'.", false, true),
-    METAMORPHEUS_MAX_PEP_LENGTH("meta_morpheus_max_pep_length", "MetaMorpheus maximum peptide length, default is '30'.", false, true),
+    META_MORPHEUS_MIN_PEP_LENGTH("meta_morpheus_min_pep_length", "MetaMorpheus minimum peptide length, default is '8'.", false, true),
+    META_MORPHEUS_MAX_PEP_LENGTH("meta_morpheus_max_pep_length", "MetaMorpheus maximum peptide length, default is '30'.", false, true),
+    META_MORPHEUS_SEARCH_TYPE("meta_morpheus_search_type", "MetaMorpheus search type, Classic, Modern or NonSpecific, default is 'Classic'.", false, true),
+    META_MORPHEUS_NUM_PARTITIONS("meta_morpheus_num_partitions", "MetaMorpheus number of partitions when indexing, default is '1'.", false, true),
+    META_MORPHEUS_DISSOCIATION_TYPE("meta_morpheus_dissociation_type", "MetaMorpheus dissociation type, HCD, CID, ECD or ETD, default is 'HCD'.", false, true),
+    META_MORPHEUS_MAX_MODS_FOR_PEPTIDE("meta_morpheus_max_mods_for_peptide", "MetaMorpheus maximum modifications per peptide, default is '2'.", false, true),
+    META_MORPHEUS_INITIATOR_METHIONINE_BEHAVIOR("meta_morpheus_meth", "MetaMorpheus initiator methionine behavior, Undefined, Retain, Cleave or Variable, default is 'Variable'.", false, true),
+    META_MORPHEUS_SCORE_CUTOFF("meta_morpheus_score_cutoff", "MetaMorpheus score cutoff, default is '5.0'.", false, true),
+    META_MORPHEUS_USE_DELTA_SCORE("meta_morpheus_use_delta_score", "MetaMorpheus use delta score, 1: true, 0: false, default is '0'.", false, true),
+    META_MORPHEUS_FRAGMENTATION_TERMINUS("meta_morpheus_frag_term", "MetaMorpheus fragmentation terminus, Both, N or C, default is 'Both'.", false, true),
+    META_MORPHEUS_MAX_FRAGMENTATION_SIZE("meta_morpheus_max_frag_size", "MetaMorpheus maximum fragmentation size, default is '30000'.", false, true),
+    META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE("meta_morpheus_mass_diff_acceptor_type", "MetaMorpheus mass difference acceptor type, Exact, OneMM, TwoMM, ThreeMM, PlusOrMinusThreeMM, ModOpen or Open, default is 'OneMM'.", false, true),
+    META_MORPHEUS_WRITE_MZID("meta_morpheus_write_mzid", "MetaMorpheus write mzid, 1: true, 0: false, default is '1'.", false, true),
+    META_MORPHEUS_WRITE_PEPXML("meta_morpheus_write_pepxml", "MetaMorpheus write pepxml, 1: true, 0: false, default is '0'.", false, true),
+    META_MORPHEUS_USE_PROVIDED_PRECURSOR("meta_morpheus_use_provided_prec", "MetaMorpheus use provided precursor info, 1: true, 0: false, default is '1'.", false, true),
+    META_MORPHEUS_DO_PREC_DECONVOLUTION("meta_morpheus_do_prec_deconv", "MetaMorpheus do precursor deconvolution, 1: true, 0: false, default is '1'.", false, true),
+    META_MORPHEUS_DECONVOLUTION_INT_RATIO("meta_morpheus_deconv_int_ratio", "MetaMorpheus deconvolution intensity ratio, default is '3.0'.", false, true),
+    META_MORPHEUS_DECONVOLUTION_MASS_TOL("meta_morpheus_deconv_mass_tol", "MetaMorpheus deoconvolution mass tolerance, default is '4.0'.", false, true),
+    META_MORPHEUS_DECONVOLUTION_MASS_TOL_TYPE("meta_morpheus_deconv_mass_tol_type", "MetaMorpheus deoconvolution mass tolerance type, PPM or Absolute, default is 'PPM'.", false, true),
+    META_MORPHEUS_TRIM_MS1_PEAKS("meta_morpheus_trim_ms1", "MetaMorpheus trim MS1 peaks, 1: true, 0: false, default is '0'.", false, true),
+    META_MORPHEUS_TRIM_MSMS_PEAKS("meta_morpheus_trim_msms", "MetaMorpheus trim MSMS peaks, 1: true, 0: false, default is '1'.", false, true),
+    META_MORPHEUS_NUM_PEAKS_PER_WINDOWS("meta_morpheus_num_peaks_per_window", "MetaMorpheus number of peaks per window, default is '200'.", false, true),
+    META_MORPHEUS_MIN_ALLOWED_INT_RATIO_TO_BASE_PEAK("meta_morpheus_min_allowed_int_ratio_to_base_peak", "MetaMorpheus minium allowed intensity ratio to base peak, default is '0.01'.", false, true),
+    META_MORPHEUS_WINDOW_WITH_THOMPSON("meta_morpheus_window_with_thompson", "MetaMorpheus window width in Thompson.", false, true),
+    META_MORPHEUS_NUM_WINDOWS("meta_morpheus_num_windows", "MetaMorpheus number of windows", false, true),
+    META_MORPHEUS_NORMALIZE_PEAKS_ACROSS_ALL_WINDOWS("meta_morpheus_norm_across_all_windows", "MetaMorpheus normalize peaks across all windows, 1: true, 0: false, default is '0'.", false, true),
+    META_MORPHEUS_MOD_PEPTIDES_ARE_DIFFERENT("meta_morpheus_mod_peptides_are_different", "MetaMorpheus modified peptides are different, 1: true, 0: false, default is '0'.", false, true),
+    META_MORPHEUS_NO_ONE_HIT_WONDERS("meta_morpheus_no_one_hit_wonders", "MetaMorpheus exclude one hit wonders, 1: true, 0: false, default is '0'.", false, true),
+    META_MORPHEUS_SEARCH_TARGET("meta_morpheus_search_target", "MetaMorpheus search target sequences, 1: true, 0: false, default is '1'.", false, true),
+    META_MORPHEUS_DECOY_TYPE("meta_morpheus_decoy_type", "MetaMorpheus decoy type, None, Reverse or Slide, default is 'None'.", false, true),
+    META_MORPHEUS_MAX_MOD_ISOFORMS("meta_morpheus_max_mod_isoforms", "MetaMorpheus maximum modified isoforms, default is '1024'.", false, true),
+    META_MORPHEUS_MIN_VARIANT_DEPTH("meta_morpheus_min_variant_depth", "MetaMorpheus minimum variant depth, default is '1'.", false, true),
+    META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS("meta_morpheus_max_hetrozygous_var", "MetaMorpheus maximum hetrozygous variants, default is '4'.", false, true),
     //////////////////////////////////
     // DirecTag specific parameters
     //////////////////////////////////
@@ -314,13 +344,13 @@ public enum IdentificationParametersCLIParams {
     // Spectrum annotation
     //////////////////////////////////
     ANNOTATION_LEVEL("annotation_level", "The intensity threshold to consider for annotation, e.g. using percentiles, 0.75 means that the 25% most intense peaks will be annotated, default is 0.75.", false, true),
-    ANNOTATION_LEVEL_TYPE("annotation_level_type", "The type of the intensity threshold. (valid values: "+AnnotationParameters.IntensityThresholdType.getCommandLineOptions()+", default is "+AnnotationParameters.IntensityThresholdType.percentile+").", false, true),
+    ANNOTATION_LEVEL_TYPE("annotation_level_type", "The type of the intensity threshold. (valid values: " + AnnotationParameters.IntensityThresholdType.getCommandLineOptions() + ", default is " + AnnotationParameters.IntensityThresholdType.percentile + ").", false, true),
     ANNOTATION_MZ_TOLERANCE("annotation_mz_tolerance", "The m/z tolerance to annotate peaks, default is equal to the search settings MS2 tolerance.", false, true),
     ANNOTATION_HIGH_RESOLUTION("annotation_high_resolution", "If true the most accurate peak will be selected within the m/z tolerance. (1: true, 0: false, default is '1')", false, true),
     //////////////////////////////////
     // Sequence matching
     //////////////////////////////////
-    SEQUENCE_MATCHING_TYPE("sequence_matching_type", "The peptide to protein sequence matching type. (" + SequenceMatchingParameters.MatchingType.getCommandLineOptions() 
+    SEQUENCE_MATCHING_TYPE("sequence_matching_type", "The peptide to protein sequence matching type. (" + SequenceMatchingParameters.MatchingType.getCommandLineOptions()
             + ", default is " + SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids + ")", false, true),
     SEQUENCE_MATCHING_X("sequence_matching_x", "The maximum share of X's in a sequence, 0.25 means 25% of X's, default is 0.25.", false, true),
     //////////////////////////////////
@@ -339,7 +369,7 @@ public enum IdentificationParametersCLIParams {
     PTM_SCORE("ptm_score", "The PTM probabilistic score to use for modification localization (" + ModificationLocalizationScore.getCommandLineOptions() + ", default is '1').", false, true),
     PTM_THRESHOLD("ptm_threshold", "The threshold to use for the modification localizatoin score. Default is 95.", false, true),
     SCORE_NEUTRAL_LOSSES("score_neutral_losses", "Include neutral losses in spectrum annotation of the PTM score (1: true, 0: false, default is '0').", false, true),
-    PTM_SEQUENCE_MATCHING_TYPE("ptm_sequence_matching_type", "The modification to peptide sequence matching type. (" + SequenceMatchingParameters.MatchingType.getCommandLineOptions() 
+    PTM_SEQUENCE_MATCHING_TYPE("ptm_sequence_matching_type", "The modification to peptide sequence matching type. (" + SequenceMatchingParameters.MatchingType.getCommandLineOptions()
             + ", default is " + SequenceMatchingParameters.MatchingType.aminoAcid + ")", false, true),
     PTM_ALIGNMENT("ptm_alignment", "Align peptide ambiguously localized PTMs on confident sites (1: true, 0: false, default is '1').", false, true),
     //////////////////////////////////
@@ -394,7 +424,8 @@ public enum IdentificationParametersCLIParams {
      * @param id the id
      * @param description the description
      * @param mandatory is the parameter mandatory
-     * @param hasArgument boolean indicating whether this command line option needs an argument
+     * @param hasArgument boolean indicating whether this command line option
+     * needs an argument
      */
     private IdentificationParametersCLIParams(String id, String description, boolean mandatory, boolean hasArgument) {
         this.id = id;
@@ -402,7 +433,7 @@ public enum IdentificationParametersCLIParams {
         this.mandatory = mandatory;
         this.hasArgument = hasArgument;
     }
-    
+
     /**
      * Creates the options for the command line interface based on the possible
      * values.
@@ -516,7 +547,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES_MODIFICATIONS.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MAX_NEUTRAL_LOSSES_MODIFICATIONS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MIN_PEPTIDE_LENGTH.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_MAX_PEPTIDE_LENGTH.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MAX_PEPTIDE_LENGTH.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS   .description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.MS_AMANDA_OUTPUT_FORMAT.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_OUTPUT_FORMAT.description + "\n";
 
@@ -570,7 +601,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.OMSSA_MAX_EVALUE.id) + " " + IdentificationParametersCLIParams.OMSSA_MAX_EVALUE.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH.id) + " " + IdentificationParametersCLIParams.OMSSA_HITLIST_LENGTH.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.OMSSA_FORMAT.id) + " " + IdentificationParametersCLIParams.OMSSA_FORMAT.description + "\n";
-        
+
         output += "\n\nComet advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_MIN_PEAKS.id) + " " + IdentificationParametersCLIParams.COMET_MIN_PEAKS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.COMET_MIN_PEAK_INTENSITY.id) + " " + IdentificationParametersCLIParams.COMET_MIN_PEAK_INTENSITY.description + "\n";
@@ -632,7 +663,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_PROGRESS_INDICATOR.id) + " " + IdentificationParametersCLIParams.TIDE_PROGRESS_INDICATOR.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_CONCAT.id) + " " + IdentificationParametersCLIParams.TIDE_CONCAT.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.TIDE_STORE_SPECTRA.id) + " " + IdentificationParametersCLIParams.TIDE_STORE_SPECTRA.description + "\n";
-        
+
         output += "\n\nAndromeda advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id) + " " + IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANDROMEDA_MAX_COMBINATIONS.id) + " " + IdentificationParametersCLIParams.ANDROMEDA_MAX_COMBINATIONS.description + "\n";
@@ -651,10 +682,42 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.id) + " " + IdentificationParametersCLIParams.ANDROMEDA_EQUAL_IL.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.id) + " " + IdentificationParametersCLIParams.ANDROMEDA_MAX_PSMS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANDROMEDA_DECOY_MODE.id) + " " + IdentificationParametersCLIParams.ANDROMEDA_DECOY_MODE.description + "\n";
-        
+
         output += "\n\nMetaMorpheus advanced parameters:\n\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.METAMORPHEUS_MIN_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.METAMORPHEUS_MIN_PEP_LENGTH.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.METAMORPHEUS_MAX_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.METAMORPHEUS_MAX_PEP_LENGTH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_MIN_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MIN_PEP_LENGTH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_MAX_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MAX_PEP_LENGTH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TYPE.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TYPE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_NUM_PARTITIONS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_NUM_PARTITIONS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_DISSOCIATION_TYPE.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_DISSOCIATION_TYPE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_MAX_MODS_FOR_PEPTIDE.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MAX_MODS_FOR_PEPTIDE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_INITIATOR_METHIONINE_BEHAVIOR.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_INITIATOR_METHIONINE_BEHAVIOR.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_SCORE_CUTOFF.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_SCORE_CUTOFF.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_USE_DELTA_SCORE.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_USE_DELTA_SCORE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_MAX_FRAGMENTATION_SIZE.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MAX_FRAGMENTATION_SIZE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_WRITE_MZID.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_WRITE_MZID.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_WRITE_PEPXML.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_WRITE_PEPXML.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_USE_PROVIDED_PRECURSOR.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_USE_PROVIDED_PRECURSOR.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_DO_PREC_DECONVOLUTION.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_DO_PREC_DECONVOLUTION.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_INT_RATIO.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_INT_RATIO.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL_TYPE.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL_TYPE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MSMS_PEAKS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MSMS_PEAKS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_NUM_PEAKS_PER_WINDOWS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_NUM_PEAKS_PER_WINDOWS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INT_RATIO_TO_BASE_PEAK.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INT_RATIO_TO_BASE_PEAK.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_WINDOW_WITH_THOMPSON.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_WINDOW_WITH_THOMPSON.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_NUM_WINDOWS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_NUM_WINDOWS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_NORMALIZE_PEAKS_ACROSS_ALL_WINDOWS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_NORMALIZE_PEAKS_ACROSS_ALL_WINDOWS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_MOD_PEPTIDES_ARE_DIFFERENT.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MOD_PEPTIDES_ARE_DIFFERENT.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_NO_ONE_HIT_WONDERS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_NO_ONE_HIT_WONDERS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TARGET.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TARGET.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_DECOY_TYPE.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_DECOY_TYPE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_MAX_MOD_ISOFORMS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MAX_MOD_ISOFORMS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_MIN_VARIANT_DEPTH.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MIN_VARIANT_DEPTH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.description + "\n";
+
         
         output += "\n\nNovor:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id) + " " + IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.description + "\n";
@@ -671,8 +734,8 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PEPNOVO_ESTIMATE_CHARGE.id) + " " + IdentificationParametersCLIParams.PEPNOVO_ESTIMATE_CHARGE.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id) + " " + IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.id) + " " + IdentificationParametersCLIParams.PEPNOVO_DISCARD_SPECTRA.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id) + " " + IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.description + "\n";        
-        
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.id) + " " + IdentificationParametersCLIParams.PEPNOVO_GENERATE_BLAST.description + "\n";
+
         output += "\n\nDirectTag advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.id) + " " + IdentificationParametersCLIParams.DIRECTAG_TAG_LENGTH.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.id) + " " + IdentificationParametersCLIParams.DIRECTAG_MAX_DYNAMIC_MODS.description + "\n";
@@ -693,8 +756,8 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.id) + " " + IdentificationParametersCLIParams.DIRECTAG_MZ_FIDELITY_SCORE_WEIGHT.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.id) + " " + IdentificationParametersCLIParams.DIRECTAG_COMPLEMENT_SCORE_WEIGHT.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.id) + " " + IdentificationParametersCLIParams.DIRECTAG_ADJUST_PRECURSOR_MASS.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id) + " " + IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.description + "\n";        
-        
+        output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.id) + " " + IdentificationParametersCLIParams.DIRECTAG_USE_CHARGE_STATE_FROM_MS.description + "\n";
+
         output += "\n\nSpectrum Annotation:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANNOTATION_LEVEL_TYPE.id) + " " + IdentificationParametersCLIParams.ANNOTATION_LEVEL_TYPE.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.ANNOTATION_LEVEL.id) + " " + IdentificationParametersCLIParams.ANNOTATION_LEVEL.description + "\n";
@@ -741,7 +804,7 @@ public enum IdentificationParametersCLIParams {
 
         output += "\n\nFraction Analysis:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.id) + " " + IdentificationParametersCLIParams.PROTEIN_FRACTION_MW_CONFIDENCE.description + "\n";
-        
+
         output += "\n\nDatabase Processing:\n\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.FASTA_TARGET_DECOY.id) + " " + IdentificationParametersCLIParams.FASTA_TARGET_DECOY.description + "\n";
         output += "-" + String.format(CommandLineUtils.formatter, IdentificationParametersCLIParams.FASTA_DECOY_TAG.id) + " " + IdentificationParametersCLIParams.FASTA_DECOY_TAG.description + "\n";

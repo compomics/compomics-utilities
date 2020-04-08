@@ -3036,28 +3036,28 @@ public class ModificationFactory {
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
 
-        // Amidation of the peptide C-term
+        // Amidation of peptide C-term
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         aminoAcidPattern = new AminoAcidPattern();
-        modificationName = "Amidation of the peptide C-term";
+        modificationName = "Amidation of peptide C-term";
         modification = new Modification(ModificationType.modc_peptide, modificationName, "am", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:2", "Amidated", null));
         modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00883", "C1-amidated residue", null));
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
 
-        // Amidation of the protein C-term
+        // Amidation of protein C-term
         atomChainAdded = new AtomChain();
         atomChainAdded.append(new AtomImpl(Atom.H, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);
         aminoAcidPattern = new AminoAcidPattern();
-        modificationName = "Amidation of the protein C-term";
+        modificationName = "Amidation of protein C-term";
         modification = new Modification(ModificationType.modc_protein, modificationName, "am", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:2", "Amidated", null));
         modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00883", "C1-amidated residue", null));

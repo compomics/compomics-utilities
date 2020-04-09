@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.mass_spectrometry.proteowizard;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -134,29 +135,31 @@ public enum ProteoWizardMsFormat {
      * @param outputFormat get output formats, null return both
      * @return the list formats
      */
-    public static Vector<ProteoWizardMsFormat> getDataFormats(Boolean raw, Boolean outputFormat) {
+    public static ProteoWizardMsFormat[] getDataFormats(Boolean raw, Boolean outputFormat) {
 
-        Vector<ProteoWizardMsFormat> rawFormats = new Vector<>();
+        ArrayList<ProteoWizardMsFormat> rawFormats = new ArrayList<>();
 
         for (ProteoWizardMsFormat format : ProteoWizardMsFormat.values()) {
-            
+
             boolean rawFilter = true;
             boolean outputFilter = true;
-            
+
             if (raw != null) {
                 rawFilter = format.rawFormat == raw;
             }
-            
+
             if (outputFormat != null) {
                 outputFilter = format.outputFormat == outputFormat;
             }
-            
+
             if (rawFilter && outputFilter) {
                 rawFormats.add(format);
             }
         }
 
-        return rawFormats;
+        return rawFormats.toArray(
+                new ProteoWizardMsFormat[rawFormats.size()]
+        );
     }
 
     /**

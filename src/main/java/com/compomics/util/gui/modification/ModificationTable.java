@@ -10,10 +10,10 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.modification.ModificationtableContent;
-import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
@@ -60,6 +60,10 @@ public class ModificationTable extends JTable {
      */
     private final SequenceProvider sequenceProvider;
     /**
+     * The spectrum provider.
+     */
+    private final SpectrumProvider spectrumProvider;
+    /**
      * The modification sequence matching parameters.
      */
     private final SequenceMatchingParameters modificationSequenceMatchingParameters;
@@ -70,11 +74,11 @@ public class ModificationTable extends JTable {
     /**
      * The PTM to analyze.
      */
-    private final Modification ptm;
+    private final Modification modification;
     /**
      * Number of PTMs.
      */
-    private int nPTM;
+    private int nModifications;
     /**
      * If true, area charts are used, false results in bar charts.
      */
@@ -100,8 +104,9 @@ public class ModificationTable extends JTable {
         identification = null;
         modificationParameters = null;
         sequenceProvider = null;
+        spectrumProvider = null;
         modificationSequenceMatchingParameters = null;
-        ptm = null;
+        modification = null;
         modificationSites = null;
     }
 
@@ -111,33 +116,44 @@ public class ModificationTable extends JTable {
      * @param identification the identification object
      * @param annotationParameters the annotation parameters
      * @param peptideMatch the peptide match
-     * @param ptm the ptm
+     * @param modification the modification
      * @param areaChart if true an area chart version will be used, false
      * displays bar charts
      * @param modificationParameters the modification parameters
      * @param sequenceProvider a provider for the protein sequences
+     * @param spectrumProvider a provider of spectra
      * @param modificationSequenceMatchingParameters the sequence matching
      * preferences for modification to peptide mapping
      */
-    public ModificationTable(Identification identification, AnnotationParameters annotationParameters, PeptideMatch peptideMatch, Modification ptm, boolean areaChart,
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
+    public ModificationTable(
+            Identification identification,
+            AnnotationParameters annotationParameters,
+            PeptideMatch peptideMatch,
+            Modification modification,
+            boolean areaChart,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
+            SpectrumProvider spectrumProvider,
+            SequenceMatchingParameters modificationSequenceMatchingParameters
+    ) {
 
         this.identification = identification;
         this.annotationParameters = annotationParameters;
-        this.ptm = ptm;
-        this.nPTM = 0;
+        this.modification = modification;
+        this.nModifications = 0;
         this.peptideMatch = peptideMatch;
         this.areaChart = areaChart;
         this.modificationParameters = modificationParameters;
         this.sequenceProvider = sequenceProvider;
+        this.spectrumProvider = spectrumProvider;
         this.modificationSequenceMatchingParameters = modificationSequenceMatchingParameters;
 
         modificationSites = new ArrayList<>();
 
         for (ModificationMatch modMatch : peptideMatch.getPeptide().getVariableModifications()) {
-            if (modMatch.getModification().equals(ptm.getName())) {
+            if (modMatch.getModification().equals(modification.getName())) {
                 modificationSites.add(modMatch.getSite());
-                nPTM++;
+                nModifications++;
             }
         }
 
@@ -154,6 +170,7 @@ public class ModificationTable extends JTable {
         }
     }
 
+    @Override
     protected JTableHeader createDefaultTableHeader() {
         return new JTableHeader(columnModel) {
 
@@ -320,16 +337,28 @@ public class ModificationTable extends JTable {
 
         ModificationtableContent tempContent;
         ModificationtableContent tableContent = new ModificationtableContent();
-        SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
         Peptide peptide = peptideMatch.getPeptide();
 
         for (long spectrumMatchKey : peptideMatch.getSpectrumMatchesKeys()) {
 
             SpectrumMatch spectrumMatch = identification.getSpectrumMatch(spectrumMatchKey);
-            String spectrumKey = spectrumMatch.getSpectrumKey();
-            Spectrum spectrum = spectrumFactory.getSpectrum(spectrumKey);
-            tempContent = ModificationtableContent.getModificationTableContent(spectrumMatch.getBestPeptideAssumption(), ptm, nPTM, spectrum, annotationParameters,
-                    modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
+            Spectrum spectrum = spectrumProvider.getSpectrum(
+                    spectrumMatch.getSpectrumFile(),
+                    spectrumMatch.getSpectrumTitle()
+            );
+            tempContent = ModificationtableContent.getModificationTableContent(
+                    spectrumMatch.getBestPeptideAssumption(),
+                    modification,
+                    nModifications,
+                    spectrumMatch.getSpectrumFile(),
+                    spectrumMatch.getSpectrumTitle(),
+                    spectrum,
+                    annotationParameters,
+                    modificationParameters,
+                    sequenceProvider,
+                    modificationSequenceMatchingParameters
+            );
+
             tempContent.normalize();
             tableContent.addAll(tempContent);
 
@@ -340,74 +369,163 @@ public class ModificationTable extends JTable {
         for (int aa = 0; aa < peptide.getSequence().length(); aa++) {
 
             int column = 1;
+
             if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.A_ION)) {
-                addAreaChart(tableContent, PeptideFragmentIon.A_ION, aa + 1, column);
+
+                addAreaChart(
+                        tableContent,
+                        PeptideFragmentIon.A_ION,
+                        aa + 1,
+                        column
+                );
                 column++;
+
             }
             if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.B_ION)) {
-                addAreaChart(tableContent, PeptideFragmentIon.B_ION, aa + 1, column);
+
+                addAreaChart(
+                        tableContent,
+                        PeptideFragmentIon.B_ION,
+                        aa + 1,
+                        column
+                );
                 column++;
+
             }
             if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.C_ION)) {
-                addAreaChart(tableContent, PeptideFragmentIon.C_ION, aa + 1, column);
+
+                addAreaChart(
+                        tableContent,
+                        PeptideFragmentIon.C_ION,
+                        aa + 1,
+                        column
+                );
                 column++;
+
             }
 
             column++;
             if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.X_ION)) {
-                addAreaChart(tableContent, PeptideFragmentIon.X_ION, peptide.getSequence().length() - aa, column);
+
+                addAreaChart(
+                        tableContent,
+                        PeptideFragmentIon.X_ION,
+                        peptide.getSequence().length() - aa,
+                        column
+                );
                 column++;
             }
             if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.Y_ION)) {
-                addAreaChart(tableContent, PeptideFragmentIon.Y_ION, peptide.getSequence().length() - aa, column);
+
+                addAreaChart(
+                        tableContent,
+                        PeptideFragmentIon.Y_ION,
+                        peptide.getSequence().length() - aa,
+                        column
+                );
                 column++;
             }
             if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.Z_ION)) {
-                addAreaChart(tableContent, PeptideFragmentIon.Z_ION, peptide.getSequence().length() - aa, column);
+
+                addAreaChart(
+                        tableContent,
+                        PeptideFragmentIon.Z_ION,
+                        peptide.getSequence().length() - aa,
+                        column
+                );
                 column++;
+
             }
         }
 
         // set the column renderers
         if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.A_ION)) {
+
             try {
-                getColumn("a").setCellRenderer(new JSparklinesTableCellRenderer(JSparklinesTableCellRenderer.PlotType.lineChart, PlotOrientation.VERTICAL, maxAreaChartValue));
+
+                getColumn("a").setCellRenderer(
+                        new JSparklinesTableCellRenderer(
+                                JSparklinesTableCellRenderer.PlotType.lineChart,
+                                PlotOrientation.VERTICAL,
+                                maxAreaChartValue
+                        )
+                );
+
             } catch (IllegalArgumentException e) {
                 // do nothing
             }
         }
         if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.B_ION)) {
+
             try {
-                getColumn("b").setCellRenderer(new JSparklinesTableCellRenderer(JSparklinesTableCellRenderer.PlotType.lineChart, PlotOrientation.VERTICAL, maxAreaChartValue));
+
+                getColumn("b").setCellRenderer(
+                        new JSparklinesTableCellRenderer(
+                                JSparklinesTableCellRenderer.PlotType.lineChart,
+                                PlotOrientation.VERTICAL,
+                                maxAreaChartValue
+                        )
+                );
             } catch (IllegalArgumentException e) {
                 // do nothing
             }
         }
         if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.C_ION)) {
+
             try {
-                getColumn("c").setCellRenderer(new JSparklinesTableCellRenderer(JSparklinesTableCellRenderer.PlotType.lineChart, PlotOrientation.VERTICAL, maxAreaChartValue));
+
+                getColumn("c").setCellRenderer(
+                        new JSparklinesTableCellRenderer(
+                                JSparklinesTableCellRenderer.PlotType.lineChart,
+                                PlotOrientation.VERTICAL,
+                                maxAreaChartValue
+                        )
+                );
             } catch (IllegalArgumentException e) {
                 // do nothing
             }
         }
 
         if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.X_ION)) {
+
             try {
-                getColumn("x").setCellRenderer(new JSparklinesTableCellRenderer(JSparklinesTableCellRenderer.PlotType.lineChart, PlotOrientation.VERTICAL, maxAreaChartValue));
+
+                getColumn("x").setCellRenderer(
+                        new JSparklinesTableCellRenderer(
+                                JSparklinesTableCellRenderer.PlotType.lineChart,
+                                PlotOrientation.VERTICAL,
+                                maxAreaChartValue
+                        )
+                );
             } catch (IllegalArgumentException e) {
                 // do nothing
             }
         }
         if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.Y_ION)) {
+
             try {
-                getColumn("y").setCellRenderer(new JSparklinesTableCellRenderer(JSparklinesTableCellRenderer.PlotType.lineChart, PlotOrientation.VERTICAL, maxAreaChartValue));
+
+                getColumn("y").setCellRenderer(
+                        new JSparklinesTableCellRenderer(
+                                JSparklinesTableCellRenderer.PlotType.lineChart,
+                                PlotOrientation.VERTICAL,
+                                maxAreaChartValue
+                        )
+                );
             } catch (IllegalArgumentException e) {
                 // do nothing
             }
         }
         if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.Z_ION)) {
             try {
-                getColumn("z").setCellRenderer(new JSparklinesTableCellRenderer(JSparklinesTableCellRenderer.PlotType.lineChart, PlotOrientation.VERTICAL, maxAreaChartValue));
+
+                getColumn("z").setCellRenderer(
+                        new JSparklinesTableCellRenderer(
+                                JSparklinesTableCellRenderer.PlotType.lineChart,
+                                PlotOrientation.VERTICAL,
+                                maxAreaChartValue
+                        )
+                );
             } catch (IllegalArgumentException e) {
                 // do nothing
             }
@@ -422,21 +540,26 @@ public class ModificationTable extends JTable {
      * @param aa
      * @param column
      */
-    private void addAreaChart(ModificationtableContent tableContent, int fragmentIonType, int aa, int column) {
+    private void addAreaChart(
+            ModificationtableContent tableContent,
+            int fragmentIonType,
+            int aa,
+            int column
+    ) {
 
         ArrayList<JSparklinesDataSeries> sparkLineDataSeriesAll = new ArrayList<>();
         ArrayList<Double> data;
         int[] histogram;
-        String modification = "";
-        String shortName = ptm.getShortName();
+        String tempModification = "";
+        String shortName = this.modification.getShortName();
 
-        for (int modCpt = 0; modCpt <= nPTM; modCpt++) {
+        for (int modCpt = 0; modCpt <= nModifications; modCpt++) {
 
             if (modCpt > 0) {
                 if (modCpt == 1) {
-                    modification = " <" + shortName + ">";
+                    tempModification = " <" + shortName + ">";
                 } else {
-                    modification = " <" + modCpt + shortName + ">";
+                    tempModification = " <" + modCpt + shortName + ">";
                 }
             }
 
@@ -461,16 +584,16 @@ public class ModificationTable extends JTable {
 
             // find area color
             double colorCoef;
-            if (nPTM == 0) {
+            if (nModifications == 0) {
                 colorCoef = 1;
             } else {
-                colorCoef = 1.0 - ((1.0 * modCpt) / nPTM);
+                colorCoef = 1.0 - ((1.0 * modCpt) / nModifications);
             }
 
             Ion genericIon = Ion.getGenericIon(Ion.IonType.PEPTIDE_FRAGMENT_ION, fragmentIonType, new NeutralLoss[0]);
             Color areaColor = SpectrumPanel.determineFragmentIonColor(genericIon, false);
             areaColor = new Color((int) (colorCoef * areaColor.getRed()), (int) (colorCoef * areaColor.getGreen()), (int) (colorCoef * areaColor.getBlue()));
-            String tooltip = "<html>" + PeptideFragmentIon.getSubTypeAsString(fragmentIonType) + "<sub>" + aa + "</sub>" + modification + "</html>";
+            String tooltip = "<html>" + PeptideFragmentIon.getSubTypeAsString(fragmentIonType) + "<sub>" + aa + "</sub>" + tempModification + "</html>";
 
             // create a JSparklineDataSeries  
             JSparklinesDataSeries sparklineDataseries = new JSparklinesDataSeries(data, areaColor, tooltip);
@@ -491,17 +614,29 @@ public class ModificationTable extends JTable {
 
         ModificationtableContent tempContent;
         ModificationtableContent tableContent = new ModificationtableContent();
-        SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
-        String shortName = ptm.getShortName();
+
+        String shortName = modification.getShortName();
         Peptide peptide = peptideMatch.getPeptide();
 
         for (long spectrumMatchKey : peptideMatch.getSpectrumMatchesKeys()) {
 
             SpectrumMatch spectrumMatch = identification.getSpectrumMatch(spectrumMatchKey);
-            String spectrumKey = spectrumMatch.getSpectrumKey();
-            Spectrum spectrum = spectrumFactory.getSpectrum(spectrumKey);
-            tempContent = ModificationtableContent.getModificationTableContent(spectrumMatch.getBestPeptideAssumption(), ptm, nPTM, spectrum, annotationParameters,
-                    modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
+            Spectrum spectrum = spectrumProvider.getSpectrum(
+                    spectrumMatch.getSpectrumFile(),
+                    spectrumMatch.getSpectrumTitle()
+            );
+            tempContent = ModificationtableContent.getModificationTableContent(
+                    spectrumMatch.getBestPeptideAssumption(),
+                    modification,
+                    nModifications,
+                    spectrumMatch.getSpectrumFile(),
+                    spectrumMatch.getSpectrumTitle(),
+                    spectrum,
+                    annotationParameters,
+                    modificationParameters,
+                    sequenceProvider,
+                    modificationSequenceMatchingParameters
+            );
             tempContent.normalize();
             tableContent.addAll(tempContent);
 
@@ -511,25 +646,51 @@ public class ModificationTable extends JTable {
 
             int column = 1;
 
-            for (int modCpt = 0; modCpt <= nPTM; modCpt++) {
+            for (int modCpt = 0; modCpt <= nModifications; modCpt++) {
 
                 if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.A_ION)) {
 
-                    setValueAt(tableContent.getQuantile(modCpt, PeptideFragmentIon.A_ION, aa + 1, 0.75), aa, column);
+                    setValueAt(
+                            tableContent.getQuantile(
+                                    modCpt,
+                                    PeptideFragmentIon.A_ION,
+                                    aa + 1, 0.75
+                            ),
+                            aa,
+                            column
+                    );
                     column++;
 
                 }
 
                 if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.B_ION)) {
 
-                    setValueAt(tableContent.getQuantile(modCpt, PeptideFragmentIon.B_ION, aa + 1, 0.75), aa, column);
+                    setValueAt(
+                            tableContent.getQuantile(
+                                    modCpt,
+                                    PeptideFragmentIon.B_ION,
+                                    aa + 1,
+                                    0.75
+                            ),
+                            aa,
+                            column
+                    );
                     column++;
 
                 }
 
                 if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.C_ION)) {
 
-                    setValueAt(tableContent.getQuantile(modCpt, PeptideFragmentIon.C_ION, aa + 1, 0.75), aa, column);
+                    setValueAt(
+                            tableContent.getQuantile(
+                                    modCpt,
+                                    PeptideFragmentIon.C_ION,
+                                    aa + 1,
+                                    0.75
+                            ),
+                            aa,
+                            column
+                    );
                     column++;
 
                 }
@@ -537,25 +698,52 @@ public class ModificationTable extends JTable {
 
             column++;
 
-            for (int modCpt = 0; modCpt <= nPTM; modCpt++) {
+            for (int modCpt = 0; modCpt <= nModifications; modCpt++) {
 
                 if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.X_ION)) {
 
-                    setValueAt(tableContent.getQuantile(modCpt, PeptideFragmentIon.X_ION, aa + 1, 0.75), aa, column);
+                    setValueAt(
+                            tableContent.getQuantile(
+                                    modCpt,
+                                    PeptideFragmentIon.X_ION,
+                                    aa + 1,
+                                    0.75
+                            ),
+                            aa,
+                            column
+                    );
                     column++;
 
                 }
 
                 if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.Y_ION)) {
 
-                    setValueAt(tableContent.getQuantile(modCpt, PeptideFragmentIon.Y_ION, aa + 1, 0.75), aa, column);
+                    setValueAt(
+                            tableContent.getQuantile(
+                                    modCpt,
+                                    PeptideFragmentIon.Y_ION,
+                                    aa + 1,
+                                    0.75
+                            ),
+                            aa,
+                            column
+                    );
                     column++;
 
                 }
 
                 if (annotationParameters.getFragmentIonTypes().contains(PeptideFragmentIon.Z_ION)) {
 
-                    setValueAt(tableContent.getQuantile(modCpt, PeptideFragmentIon.Z_ION, aa + 1, 0.75), aa, column);
+                    setValueAt(
+                            tableContent.getQuantile(
+                                    modCpt,
+                                    PeptideFragmentIon.Z_ION,
+                                    aa + 1,
+                                    0.75
+                            ),
+                            aa,
+                            column
+                    );
                     column++;
 
                 }
@@ -563,19 +751,19 @@ public class ModificationTable extends JTable {
         }
 
         // set the column renderers
-        for (int modCpt = 0; modCpt <= nPTM; modCpt++) {
+        for (int modCpt = 0; modCpt <= nModifications; modCpt++) {
 
-            String modification = "";
+            String tempModification = "";
 
             if (modCpt > 0) {
 
                 if (modCpt == 1) {
 
-                    modification = " <" + shortName + ">";
+                    tempModification = " <" + shortName + ">";
 
                 } else {
 
-                    modification = " <" + modCpt + shortName + ">";
+                    tempModification = " <" + modCpt + shortName + ">";
 
                 }
             }
@@ -584,9 +772,17 @@ public class ModificationTable extends JTable {
 
                 try {
 
-                    getColumn("a" + modification).setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, tableContent.getMaxIntensity(),
-                            SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.A_ION), false)));
-                    ((JSparklinesBarChartTableCellRenderer) getColumn("a" + modification).getCellRenderer()).setMinimumChartValue(0);
+                    getColumn("a" + tempModification).setCellRenderer(
+                            new JSparklinesBarChartTableCellRenderer(
+                                    PlotOrientation.HORIZONTAL,
+                                    tableContent.getMaxIntensity(),
+                                    SpectrumPanel.determineFragmentIonColor(
+                                            new PeptideFragmentIon(PeptideFragmentIon.A_ION),
+                                            false
+                                    )
+                            )
+                    );
+                    ((JSparklinesBarChartTableCellRenderer) getColumn("a" + tempModification).getCellRenderer()).setMinimumChartValue(0);
 
                 } catch (IllegalArgumentException e) {
                     // do nothing
@@ -597,9 +793,17 @@ public class ModificationTable extends JTable {
 
                 try {
 
-                    getColumn("b" + modification).setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, tableContent.getMaxIntensity(),
-                            SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.B_ION), false)));
-                    ((JSparklinesBarChartTableCellRenderer) getColumn("b" + modification).getCellRenderer()).setMinimumChartValue(0);
+                    getColumn("b" + tempModification).setCellRenderer(
+                            new JSparklinesBarChartTableCellRenderer(
+                                    PlotOrientation.HORIZONTAL,
+                                    tableContent.getMaxIntensity(),
+                                    SpectrumPanel.determineFragmentIonColor(
+                                            new PeptideFragmentIon(PeptideFragmentIon.B_ION),
+                                            false
+                                    )
+                            )
+                    );
+                    ((JSparklinesBarChartTableCellRenderer) getColumn("b" + tempModification).getCellRenderer()).setMinimumChartValue(0);
 
                 } catch (IllegalArgumentException e) {
                     // do nothing
@@ -610,9 +814,17 @@ public class ModificationTable extends JTable {
 
                 try {
 
-                    getColumn("c" + modification).setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, tableContent.getMaxIntensity(),
-                            SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.C_ION), false)));
-                    ((JSparklinesBarChartTableCellRenderer) getColumn("c" + modification).getCellRenderer()).setMinimumChartValue(0);
+                    getColumn("c" + tempModification).setCellRenderer(
+                            new JSparklinesBarChartTableCellRenderer(
+                                    PlotOrientation.HORIZONTAL,
+                                    tableContent.getMaxIntensity(),
+                                    SpectrumPanel.determineFragmentIonColor(
+                                            new PeptideFragmentIon(PeptideFragmentIon.C_ION),
+                                            false
+                                    )
+                            )
+                    );
+                    ((JSparklinesBarChartTableCellRenderer) getColumn("c" + tempModification).getCellRenderer()).setMinimumChartValue(0);
 
                 } catch (IllegalArgumentException e) {
                     // do nothing
@@ -623,9 +835,17 @@ public class ModificationTable extends JTable {
 
                 try {
 
-                    getColumn("x" + modification).setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, tableContent.getMaxIntensity(),
-                            SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.X_ION), false)));
-                    ((JSparklinesBarChartTableCellRenderer) getColumn("x" + modification).getCellRenderer()).setMinimumChartValue(0);
+                    getColumn("x" + tempModification).setCellRenderer(
+                            new JSparklinesBarChartTableCellRenderer(
+                                    PlotOrientation.HORIZONTAL,
+                                    tableContent.getMaxIntensity(),
+                                    SpectrumPanel.determineFragmentIonColor(
+                                            new PeptideFragmentIon(PeptideFragmentIon.X_ION),
+                                            false
+                                    )
+                            )
+                    );
+                    ((JSparklinesBarChartTableCellRenderer) getColumn("x" + tempModification).getCellRenderer()).setMinimumChartValue(0);
 
                 } catch (IllegalArgumentException e) {
                     // do nothing
@@ -636,9 +856,17 @@ public class ModificationTable extends JTable {
 
                 try {
 
-                    getColumn("y" + modification).setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, tableContent.getMaxIntensity(),
-                            SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.Y_ION), false)));
-                    ((JSparklinesBarChartTableCellRenderer) getColumn("y" + modification).getCellRenderer()).setMinimumChartValue(0);
+                    getColumn("y" + tempModification).setCellRenderer(
+                            new JSparklinesBarChartTableCellRenderer(
+                                    PlotOrientation.HORIZONTAL,
+                                    tableContent.getMaxIntensity(),
+                                    SpectrumPanel.determineFragmentIonColor(
+                                            new PeptideFragmentIon(PeptideFragmentIon.Y_ION),
+                                            false
+                                    )
+                            )
+                    );
+                    ((JSparklinesBarChartTableCellRenderer) getColumn("y" + tempModification).getCellRenderer()).setMinimumChartValue(0);
 
                 } catch (IllegalArgumentException e) {
                     // do nothing
@@ -649,9 +877,17 @@ public class ModificationTable extends JTable {
 
                 try {
 
-                    getColumn("z" + modification).setCellRenderer(new JSparklinesBarChartTableCellRenderer(PlotOrientation.HORIZONTAL, tableContent.getMaxIntensity(),
-                            SpectrumPanel.determineFragmentIonColor(new PeptideFragmentIon(PeptideFragmentIon.Z_ION), false)));
-                    ((JSparklinesBarChartTableCellRenderer) getColumn("z" + modification).getCellRenderer()).setMinimumChartValue(0);
+                    getColumn("z" + tempModification).setCellRenderer(
+                            new JSparklinesBarChartTableCellRenderer(
+                                    PlotOrientation.HORIZONTAL,
+                                    tableContent.getMaxIntensity(),
+                                    SpectrumPanel.determineFragmentIonColor(
+                                            new PeptideFragmentIon(PeptideFragmentIon.Z_ION),
+                                            false
+                                    )
+                            )
+                    );
+                    ((JSparklinesBarChartTableCellRenderer) getColumn("z" + tempModification).getCellRenderer()).setMinimumChartValue(0);
 
                 } catch (IllegalArgumentException e) {
                     // do nothing

@@ -27,12 +27,16 @@ public class HistogramUtils {
      *
      * @return the median
      */
-    public static Double getMedianValue(HashMap<Double, Integer> histogram) {
-        long nValues = 0;
-        for (Integer value : histogram.values()) {
-            nValues += value;
-        }
+    public static double getMedianValue(
+            HashMap<Double, Integer> histogram
+    ) {
+        
+        int nValues = histogram.values().stream()
+                .mapToInt(a -> a)
+                .sum();
+        
         return getMedianValue(histogram, nValues);
+    
     }
 
     /**
@@ -43,7 +47,10 @@ public class HistogramUtils {
      *
      * @return the median
      */
-    public static Double getMedianValue(HashMap<Double, Integer> histogram, long nValues) {
+    public static double getMedianValue(
+            HashMap<Double, Integer> histogram, 
+            int nValues
+    ) {
 
         ArrayList<Double> values = new ArrayList<>(histogram.keySet());
         Collections.sort(values);
@@ -52,15 +59,24 @@ public class HistogramUtils {
         Double previousValue = 0.0;
 
         for (Double value : values) {
-            Integer currentOccurence = histogram.get(value);
+            
+            int currentOccurence = histogram.get(value);
             currentSum += currentOccurence;
+            
             if (2 * currentSum >= nValues) {
+            
                 if (2 * (previousSum + 1) > nValues && previousSum > 0) {
+                
                     return (previousValue + value) / 2;
+                
                 }
+                
                 return value;
+            
             }
+            
             previousValue = value;
+        
         }
 
         throw new IllegalArgumentException("Reached the end of the histogram before reaching the median.");
@@ -73,24 +89,36 @@ public class HistogramUtils {
      *
      * @return the merged histogram
      */
-    public static HashMap<Double, Integer> mergeHistograms(Collection<HashMap<Double, Integer>> histograms) {
+    public static HashMap<Double, Integer> mergeHistograms(
+            Collection<HashMap<Double, Integer>> histograms
+    ) {
 
         HashMap<Double, Integer> result = new HashMap<>();
 
         for (HashMap<Double, Integer> histogram : histograms) {
+    
             for (Double value : histogram.keySet()) {
+            
                 Integer histogramValue = histogram.get(value);
                 Integer resultValue = result.get(value);
+                
                 if (resultValue == null) {
+
                     result.put(value, histogramValue);
+
                 } else if (Integer.MAX_VALUE - histogramValue < resultValue) {
+
                     throw new IllegalArgumentException("Reached the maximal capacity of an integer in a histogram bin.");
+
                 } else {
+
                     result.put(value, resultValue + histogramValue);
+
                 }
             }
         }
 
         return result;
+
     }
 }

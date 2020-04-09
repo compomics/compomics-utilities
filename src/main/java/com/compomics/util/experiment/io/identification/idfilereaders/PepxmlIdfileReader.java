@@ -11,8 +11,9 @@ import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
@@ -57,10 +58,6 @@ public class PepxmlIdfileReader implements IdfileReader {
      */
     private String spectrumFileName;
     /**
-     * The spectrum factory used to retrieve spectrum titles.
-     */
-    private final SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
-    /**
      * Stores the mass differences of the fixed modifications. The key is the
      * amino acid residue as a single upper case character and the element is
      * the list of the mass differences of the masses targeting that residue.
@@ -100,12 +97,13 @@ public class PepxmlIdfileReader implements IdfileReader {
     /**
      * Parses the identification file.
      *
-     * @param waitingHandler waiting handler returning information about the
+     * @param waitingHandler A waiting handler returning information about the
      * progress and allowing canceling the parsing.
-     * @param expandAaCombinations if true the combinations of amino acids will
-     * be expanded
-     * @param overwriteExtension if true, the extension of the input file will
-     * be overwritten to mgf
+     * @param expandAaCombinations If true the combinations of amino acids will
+     * be expanded.
+     * @param overwriteExtension If true, the extension of the input file will
+     * be overwritten to mgf.
+     * @param spectrumProvider A spectrum provider with the spectra of the file loaded.
      *
      * @throws XmlPullParserException Exception thrown if an error occurred while parsing the xml file.
      * @throws IOException Exception thrown if an error occurred while reading the file.
@@ -113,7 +111,8 @@ public class PepxmlIdfileReader implements IdfileReader {
     private void parseFile(
             WaitingHandler waitingHandler, 
             boolean expandAaCombinations, 
-            boolean overwriteExtension
+            boolean overwriteExtension,
+            SpectrumProvider spectrumProvider
     ) throws XmlPullParserException, IOException {
 
         // Create the pull parser.
@@ -140,17 +139,19 @@ public class PepxmlIdfileReader implements IdfileReader {
             while ((type = parser.next()) != XmlPullParser.END_DOCUMENT) {
                 String tagName = parser.getName();
                 if (type == XmlPullParser.START_TAG && tagName.equals("msms_run_summary")) {
+                    
                     parseRunSummary(parser, overwriteExtension);
-                    if (waitingHandler != null && spectrumFactory.fileLoaded(spectrumFileName)) {
-                        waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-                        waitingHandler.setMaxSecondaryProgressCounter(spectrumFactory.getNSpectra(spectrumFileName));
-                    }
+                    
                 }
                 if (type == XmlPullParser.START_TAG && tagName.equals("search_summary")) {
                     parseSearchSummary(parser);
                 }
                 if (type == XmlPullParser.START_TAG && tagName.equals("spectrum_query")) {
-                    currentMatch = parseSpectrumQuery(parser);
+                    
+                    currentMatch = parseSpectrumQuery(
+                            parser, 
+                            spectrumProvider
+                    );
                     SpectrumMatch previousMatch = spectrumMatchesMap.get(currentMatch.getKey());
                     if (previousMatch != null) {
                         currentMatch = previousMatch;
@@ -248,10 +249,6 @@ public class PepxmlIdfileReader implements IdfileReader {
                         currentMatch = null;
                         currentCharge = null;
 
-                    }
-
-                    if (waitingHandler != null && spectrumFactory.fileLoaded(spectrumFileName)) {
-                        waitingHandler.increaseSecondaryProgressCounter();
                     }
                 }
                 
@@ -483,7 +480,8 @@ public class PepxmlIdfileReader implements IdfileReader {
     /**
      * Parses a spectrum query.
      *
-     * @param parser the XML parser
+     * @param parser The XML parser.
+     * @param spectrumProvider A spectrum provider with the spectra of the file loaded.
      *
      * @return the spectrum match in this spectrum query
      *
@@ -491,7 +489,8 @@ public class PepxmlIdfileReader implements IdfileReader {
      * @throws IOException Exception thrown if an error occurred while reading the file.
      */
     private SpectrumMatch parseSpectrumQuery(
-            XmlPullParser parser
+            XmlPullParser parser,
+            SpectrumProvider spectrumProvider
     ) throws XmlPullParserException, IOException {
 
         Integer index = null;
@@ -521,16 +520,16 @@ public class PepxmlIdfileReader implements IdfileReader {
         String spectrumTitle;
 
         if (spectrumNativeID != null) {
+            
             spectrumTitle = spectrumNativeID;
+        
         } else {
-            spectrumTitle = index + "";
-            if (spectrumFactory.fileLoaded(spectrumFileName)) {
-                spectrumTitle = spectrumFactory.getSpectrumTitle(spectrumFileName, index);
-            }
+            
+            spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[index];
+            
         }
-        String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
-        SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumKey);
-        spectrumMatch.setSpectrumNumber(index);
+        
+        SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
 
         return spectrumMatch;
     }
@@ -566,7 +565,8 @@ public class PepxmlIdfileReader implements IdfileReader {
         }
 
         File spectrumFile = new File(path);
-        spectrumFileName = Util.getFileName(spectrumFile);
+        spectrumFileName = IoUtil.getFileName(spectrumFile);
+        
     }
 
     /**
@@ -711,25 +711,41 @@ public class PepxmlIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler, 
             SearchParameters searchParameters
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
-        return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
+        
+        return getAllSpectrumMatches(
+                spectrumProvider, 
+                waitingHandler, 
+                searchParameters, 
+                null, 
+                true
+        );
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler, 
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences, 
             boolean expandAaCombinations
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
         
         if (spectrumMatches == null) {
         
-            parseFile(waitingHandler, expandAaCombinations, true);
-        
+            parseFile(
+                    waitingHandler, 
+                    expandAaCombinations, 
+                    true, 
+                    spectrumProvider
+            );
         }
+        
         return spectrumMatches;
     }
 

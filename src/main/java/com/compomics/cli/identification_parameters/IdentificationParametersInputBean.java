@@ -38,6 +38,14 @@ import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.parameters.identification.advanced.ModificationLocalizationParameters;
 import com.compomics.util.parameters.identification.advanced.ProteinInferenceParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusDecoyType;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusDissociationType;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusFragmentationTerminusType;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusInitiatorMethionineBehaviorType;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusMassDiffAcceptorType;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusSearchType;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusToleranceType;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,9 +73,13 @@ public class IdentificationParametersInputBean {
      * @return true if the startup was valid
      */
     public static boolean isValidStartup(CommandLine aLine, boolean checkMandatoryParameters) {
+
         if (aLine.getOptions().length == 0) {
             return false;
         }
+        //////////////////////////////////
+        // Shared parameters
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.MODS.id)) {
             return true;
         }
@@ -123,7 +135,7 @@ public class IdentificationParametersInputBean {
                     return false;
                 }
             }
-        }    
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.DIGESTION.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIGESTION.id);
             ArrayList<String> possibleValues = new ArrayList<>(Specificity.values().length);
@@ -215,6 +227,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        //////////////////////////////////
+        // OMSSA
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id);
             if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.OMSSA_REMOVE_PREC.id, arg)) {
@@ -432,6 +447,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        //////////////////////////////////
+        // X! Tandem
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id);
             if (!CommandParameter.isPositiveDouble(IdentificationParametersCLIParams.XTANDEM_DYNAMIC_RANGE.id, arg, false)) {
@@ -583,6 +601,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        //////////////////////////////////
+        // MS-GF+
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_DECOY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_DECOY.id);
             if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MSGF_DECOY.id, arg)) {
@@ -653,6 +674,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        //////////////////////////////////
+        // MS Amanda
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id);
             if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_DECOY.id, arg)) {
@@ -746,6 +770,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        //////////////////////////////////
+        // MyriMatch
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id);
             if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.MYRIMATCH_MIN_PEP_LENGTH.id, arg, false)) {
@@ -834,6 +861,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        //////////////////////////////////
+        // Comet
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id);
             if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.COMET_NUM_MATCHES.id, arg, false)) {
@@ -967,6 +997,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        //////////////////////////////////
+        // Tide
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_PTMS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_PTMS.id);
             if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.TIDE_PTMS.id, arg, true)) {
@@ -1186,6 +1219,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        //////////////////////////////////
+        // Andromeda
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id);
             if (!CommandParameter.isPositiveDouble(IdentificationParametersCLIParams.ANDROMEDA_MAX_PEPTIDE_MASS.id, arg, true)) {
@@ -1293,6 +1329,234 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        //////////////////////////////////
+        // MetaMorpheus
+        //////////////////////////////////
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MIN_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MIN_PEP_LENGTH.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.META_MORPHEUS_MIN_PEP_LENGTH.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MAX_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MAX_PEP_LENGTH.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.META_MORPHEUS_MAX_PEP_LENGTH.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TYPE.id);
+            List<String> supportedInput = new ArrayList<>();
+            for (MetaMorpheusParameters.MetaMorpheusSearchType searchType : MetaMorpheusParameters.MetaMorpheusSearchType.values()) {
+                supportedInput.add(searchType.toString());
+            }
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TYPE.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_NUM_PARTITIONS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_NUM_PARTITIONS.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.META_MORPHEUS_NUM_PARTITIONS.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_DISSOCIATION_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_DISSOCIATION_TYPE.id);
+            List<String> supportedInput = new ArrayList<>();
+            for (MetaMorpheusParameters.MetaMorpheusDissociationType searchType : MetaMorpheusParameters.MetaMorpheusDissociationType.values()) {
+                supportedInput.add(searchType.toString());
+            }
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_DISSOCIATION_TYPE.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MAX_MODS_FOR_PEPTIDE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MAX_MODS_FOR_PEPTIDE.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.META_MORPHEUS_MAX_MODS_FOR_PEPTIDE.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_INITIATOR_METHIONINE_BEHAVIOR.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_INITIATOR_METHIONINE_BEHAVIOR.id);
+            List<String> supportedInput = new ArrayList<>();
+            for (MetaMorpheusParameters.MetaMorpheusInitiatorMethionineBehaviorType searchType : MetaMorpheusParameters.MetaMorpheusInitiatorMethionineBehaviorType.values()) {
+                supportedInput.add(searchType.toString());
+            }
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_INITIATOR_METHIONINE_BEHAVIOR.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_SCORE_CUTOFF.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_SCORE_CUTOFF.id);
+            if (!CommandParameter.isPositiveDouble(IdentificationParametersCLIParams.META_MORPHEUS_SCORE_CUTOFF.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_USE_DELTA_SCORE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_USE_DELTA_SCORE.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_USE_DELTA_SCORE.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MAX_FRAGMENTATION_SIZE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MAX_FRAGMENTATION_SIZE.id);
+            if (!CommandParameter.isPositiveDouble(IdentificationParametersCLIParams.META_MORPHEUS_MAX_FRAGMENTATION_SIZE.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id);
+            List<String> supportedInput = new ArrayList<>();
+            for (MetaMorpheusParameters.MetaMorpheusMassDiffAcceptorType searchType : MetaMorpheusParameters.MetaMorpheusMassDiffAcceptorType.values()) {
+                supportedInput.add(searchType.toString());
+            }
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_WRITE_MZID.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_WRITE_MZID.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_WRITE_MZID.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_WRITE_PEPXML.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_WRITE_PEPXML.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_WRITE_PEPXML.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_USE_PROVIDED_PRECURSOR.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_USE_PROVIDED_PRECURSOR.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_USE_PROVIDED_PRECURSOR.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_USE_PROVIDED_PRECURSOR.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_USE_PROVIDED_PRECURSOR.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_USE_PROVIDED_PRECURSOR.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_INT_RATIO.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_INT_RATIO.id);
+            if (!CommandParameter.isPositiveDouble(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_INT_RATIO.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL.id);
+            if (!CommandParameter.isPositiveDouble(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id);
+            List<String> supportedInput = new ArrayList<>();
+            for (MetaMorpheusParameters.MetaMorpheusToleranceType searchType : MetaMorpheusParameters.MetaMorpheusToleranceType.values()) {
+                supportedInput.add(searchType.toString());
+            }
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MSMS_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MSMS_PEAKS.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MSMS_PEAKS.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_NUM_PEAKS_PER_WINDOWS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_NUM_PEAKS_PER_WINDOWS.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.META_MORPHEUS_NUM_PEAKS_PER_WINDOWS.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INT_RATIO_TO_BASE_PEAK.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INT_RATIO_TO_BASE_PEAK.id);
+            if (!CommandParameter.isPositiveDouble(IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INT_RATIO_TO_BASE_PEAK.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_WINDOW_WITH_THOMPSON.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_WINDOW_WITH_THOMPSON.id);
+            if (!CommandParameter.isPositiveDouble(IdentificationParametersCLIParams.META_MORPHEUS_WINDOW_WITH_THOMPSON.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_NUM_WINDOWS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_NUM_WINDOWS.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.META_MORPHEUS_NUM_WINDOWS.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_NORMALIZE_PEAKS_ACROSS_ALL_WINDOWS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_NORMALIZE_PEAKS_ACROSS_ALL_WINDOWS.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_NORMALIZE_PEAKS_ACROSS_ALL_WINDOWS.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MOD_PEPTIDES_ARE_DIFFERENT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MOD_PEPTIDES_ARE_DIFFERENT.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_MOD_PEPTIDES_ARE_DIFFERENT.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_NO_ONE_HIT_WONDERS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_NO_ONE_HIT_WONDERS.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_NO_ONE_HIT_WONDERS.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TARGET.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TARGET.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TARGET.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_DECOY_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_DECOY_TYPE.id);
+            List<String> supportedInput = new ArrayList<>();
+            for (MetaMorpheusParameters.MetaMorpheusDecoyType searchType : MetaMorpheusParameters.MetaMorpheusDecoyType.values()) {
+                supportedInput.add(searchType.toString());
+            }
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_DECOY_TYPE.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MAX_MOD_ISOFORMS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MAX_MOD_ISOFORMS.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.META_MORPHEUS_MAX_MOD_ISOFORMS.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MIN_VARIANT_DEPTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MIN_VARIANT_DEPTH.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.META_MORPHEUS_MIN_VARIANT_DEPTH.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.id, arg, false)) {
+                return false;
+            }
+        }
+        //////////////////////////////////
+        // Pepnovo
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id);
             if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id, arg, 1, 20)) {
@@ -1330,6 +1594,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        //////////////////////////////////
+        // DirecTag
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id);
             if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.DIRECTAG_TIC_CUTOFF_PERCENTAGE.id, arg, 0, 100)) {
@@ -1447,6 +1714,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        //////////////////////////////////
+        // Pnovo
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id);
             if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id, arg, false)) {
@@ -1472,6 +1742,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        //////////////////////////////////
+        // Novor
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id);
             List<String> supportedInput = Arrays.asList("HCD", "CID");
@@ -1486,6 +1759,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        //////////////////////////////////
+        // More general paramters
+        //////////////////////////////////
         if (aLine.hasOption(IdentificationParametersCLIParams.ANNOTATION_LEVEL.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.ANNOTATION_LEVEL.id);
             if (!CommandParameter.inDoubleRange(IdentificationParametersCLIParams.ANNOTATION_LEVEL.id, arg, 0.0, 1.0)) {
@@ -1710,6 +1986,7 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -2357,9 +2634,9 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TERMINI.id);
             Integer option = new Integer(arg);
             msgfParameters.setNumberTolerableTermini(option);
-        } else {            
+        } else {
             // Infer this setting from the general settings
-            if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme){
+            if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
                 Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // Only the first enzyme will be used.
                 String enzymeName = enzyme.getName();
                 Specificity specificity = digestionPreferences.getSpecificity(enzymeName);
@@ -2375,7 +2652,7 @@ public class IdentificationParametersInputBean {
                     default:
                         throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
                 }
-            }else if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.unSpecific) {  
+            } else if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.unSpecific) {
                 msgfParameters.setNumberTolerableTermini(0);
             }
         }
@@ -2441,8 +2718,8 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MYRIMATCH_TERMINI.id);
             Integer option = new Integer(arg);
             myriMatchParameters.setMinTerminiCleavages(option);
-        } else {           
-            if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme){
+        } else {
+            if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
                 // Infer this setting from the general settings
                 Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // Only the first enzyme will be used.
                 String enzymeName = enzyme.getName();
@@ -2459,7 +2736,7 @@ public class IdentificationParametersInputBean {
                     default:
                         throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
                 }
-            }else{
+            } else {
                 myriMatchParameters.setMinTerminiCleavages(0);
             }
 
@@ -2678,12 +2955,12 @@ public class IdentificationParametersInputBean {
                     default:
                         throw new UnsupportedOperationException("Specificity " + specificity + " not supported.");
                 }
-            }else if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.wholeProtein) {
+            } else if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.wholeProtein) {
                 cometParameters.setEnzymeType(2);
             } else {
                 cometParameters.setEnzymeType(1);
             }
-            
+
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_ISOTOPE_CORRECTION.id);
@@ -3039,6 +3316,205 @@ public class IdentificationParametersInputBean {
             } else if (arg.equalsIgnoreCase("reverse")) {
                 andromedaParameters.setDecoyMode(AndromedaParameters.AndromedaDecoyMode.reverse);
             }
+        }
+
+        ///////////////////////////////////
+        // MetaMorpheus parameters
+        ///////////////////////////////////
+        MetaMorpheusParameters metaMorpheusParameters;
+        algorithmIndex = Advocate.metaMorpheus.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            metaMorpheusParameters = new MetaMorpheusParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, metaMorpheusParameters);
+        } else {
+            metaMorpheusParameters = (MetaMorpheusParameters) identificationAlgorithmParameter;
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MIN_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MIN_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setMinPeptideLength(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MAX_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MAX_PEP_LENGTH.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setMaxPeptideLength(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TYPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TYPE.id);
+            for (MetaMorpheusSearchType type : MetaMorpheusSearchType.values()) {
+                if (arg.equalsIgnoreCase(type.toString())) {
+                    metaMorpheusParameters.setSearchType(type);
+                }
+            }
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_NUM_PARTITIONS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_NUM_PARTITIONS.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setTotalPartitions(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_DISSOCIATION_TYPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_DISSOCIATION_TYPE.id);
+            for (MetaMorpheusDissociationType type : MetaMorpheusDissociationType.values()) {
+                if (arg.equalsIgnoreCase(type.toString())) {
+                    metaMorpheusParameters.setDissociationType(type);
+                }
+            }
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MAX_MODS_FOR_PEPTIDE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MAX_MODS_FOR_PEPTIDE.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setMaxModsForPeptide(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_INITIATOR_METHIONINE_BEHAVIOR.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_INITIATOR_METHIONINE_BEHAVIOR.id);
+            for (MetaMorpheusInitiatorMethionineBehaviorType type : MetaMorpheusInitiatorMethionineBehaviorType.values()) {
+                if (arg.equalsIgnoreCase(type.toString())) {
+                    metaMorpheusParameters.setInitiatorMethionineBehavior(type);
+                }
+            }
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_SCORE_CUTOFF.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_SCORE_CUTOFF.id);
+            Double option = new Double(arg);
+            metaMorpheusParameters.setScoreCutoff(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_USE_DELTA_SCORE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_USE_DELTA_SCORE.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setUseDeltaScore(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id);
+            for (MetaMorpheusFragmentationTerminusType type : MetaMorpheusFragmentationTerminusType.values()) {
+                if (arg.equalsIgnoreCase(type.toString())) {
+                    metaMorpheusParameters.setFragmentationTerminus(type);
+                }
+            }
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MAX_FRAGMENTATION_SIZE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MAX_FRAGMENTATION_SIZE.id);
+            Double option = new Double(arg);
+            metaMorpheusParameters.setMaxFragmentSize(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id);
+            for (MetaMorpheusMassDiffAcceptorType type : MetaMorpheusMassDiffAcceptorType.values()) {
+                if (arg.equalsIgnoreCase(type.toString())) {
+                    metaMorpheusParameters.setMassDiffAcceptorType(type);
+                }
+            }
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_WRITE_MZID.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_WRITE_MZID.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setWriteMzId(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_WRITE_PEPXML.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_WRITE_PEPXML.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setWritePepXml(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_USE_PROVIDED_PRECURSOR.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_USE_PROVIDED_PRECURSOR.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setUseProvidedPrecursorInfo(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_DO_PREC_DECONVOLUTION.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_DO_PREC_DECONVOLUTION.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setDoPrecursorDeconvolution(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_INT_RATIO.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_INT_RATIO.id);
+            Double option = new Double(arg);
+            metaMorpheusParameters.setDeconvolutionIntensityRatio(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL.id);
+            Double option = new Double(arg);
+            metaMorpheusParameters.setDeconvolutionMassTolerance(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL_TYPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL_TYPE.id);
+            for (MetaMorpheusToleranceType type : MetaMorpheusToleranceType.values()) {
+                if (arg.equalsIgnoreCase(type.toString())) {
+                    metaMorpheusParameters.setDeconvolutionMassToleranceType(type);
+                }
+            }
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setTrimMs1Peaks(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MSMS_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MSMS_PEAKS.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setTrimMsMsPeaks(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_NUM_PEAKS_PER_WINDOWS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_NUM_PEAKS_PER_WINDOWS.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setNumberOfPeaksToKeepPerWindow(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INT_RATIO_TO_BASE_PEAK.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INT_RATIO_TO_BASE_PEAK.id);
+            Double option = new Double(arg);
+            metaMorpheusParameters.setMinAllowedIntensityRatioToBasePeak(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_WINDOW_WITH_THOMPSON.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_WINDOW_WITH_THOMPSON.id);
+            Double option = new Double(arg);
+            metaMorpheusParameters.setWindowWidthThomsons(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_NUM_WINDOWS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_NUM_WINDOWS.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setNumberOfWindows(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_NORMALIZE_PEAKS_ACROSS_ALL_WINDOWS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_NORMALIZE_PEAKS_ACROSS_ALL_WINDOWS.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setNormalizePeaksAcrossAllWindows(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MOD_PEPTIDES_ARE_DIFFERENT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MOD_PEPTIDES_ARE_DIFFERENT.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setModPeptidesAreDifferent(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_NO_ONE_HIT_WONDERS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_NO_ONE_HIT_WONDERS.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setNoOneHitWonders(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TARGET.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_SEARCH_TARGET.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setSearchTarget(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_DECOY_TYPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_DECOY_TYPE.id);
+            for (MetaMorpheusDecoyType type : MetaMorpheusDecoyType.values()) {
+                if (arg.equalsIgnoreCase(type.toString())) {
+                    metaMorpheusParameters.setDecoyType(type);
+                }
+            }
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MAX_MOD_ISOFORMS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MAX_MOD_ISOFORMS.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setMaxModificationIsoforms(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MIN_VARIANT_DEPTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MIN_VARIANT_DEPTH.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setMinVariantDepth(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setMaxHeterozygousVariants(option);
         }
 
         ///////////////////////////////////
@@ -3642,7 +4118,7 @@ public class IdentificationParametersInputBean {
             Double value = new Double(arg);
             fractionSettings.setProteinConfidenceMwPlots(value);
         }
-        
+
         //////////////////////////////////
         // Fasta parameters
         //////////////////////////////////
@@ -3685,14 +4161,14 @@ public class IdentificationParametersInputBean {
                 default:
                     throw new IllegalArgumentException("Incorrect value for parameter " + IdentificationParametersCLIParams.FASTA_DECOY_SUFFIX.id + ": " + arg + ". 0 or 1 expected.");
             }
-            
+
             fastaPreferences.setDecoySuffix(value);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.FASTA_DECOY_FILE_TAG.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.FASTA_DECOY_FILE_TAG.id);
             fastaPreferences.setTargetDecoyFileNameSuffix(arg);
         }
-        
+
     }
 
     /**

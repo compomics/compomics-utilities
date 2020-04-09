@@ -36,19 +36,19 @@ public class AtomChain {
     }
 
     /**
-     * Returns an atom chain from the input as string. Atoms are
-     * represented by their canonical short name, e.g. C for Carbon, Na for
-     * Sodium. The occurrence of a given atom is to be written in parentheses,
-     * e.g. C(3)PO is parsed as three C's, one P and one O. No negative values
-     * are allowed. The isotope is to be written prior to the atom, e.g.
-     * 13C(2)18OP is parsed as two 13C atoms, one 18O, and one P.
+     * Returns an atom chain from the input as string. Atoms are represented by
+     * their canonical short name, e.g. C for Carbon, Na for Sodium. The
+     * occurrence of a given atom is to be written in parentheses, e.g. C(3)PO
+     * is parsed as three C's, one P and one O. No negative values are allowed.
+     * The isotope is to be written prior to the atom, e.g. 13C(2)18OP is parsed
+     * as two 13C atoms, one 18O, and one P.
      *
      * @param atomChainAsString the atomic chain as a string
-     * 
+     *
      * @return the atom chain represented in the given string
      */
     public static AtomChain getAtomChain(String atomChainAsString) {
-        
+
         AtomChain atomChain = new AtomChain();
 
         char[] atomChainAsStringCharArray = atomChainAsString.toCharArray();
@@ -56,7 +56,8 @@ public class AtomChain {
             char character = atomChainAsStringCharArray[i];
             if (character != ' ') {
                 if (character == '-') {
-                    throw new IllegalArgumentException("Negative isotope found in " + atomChainAsString + ". Please use the atom number, e.g. 13 for 13C.");
+                    throw new IllegalArgumentException("Negative isotope found in " 
+                            + atomChainAsString + ". Please use the atom number, e.g. 13 for 13C.");
                 }
                 Integer isotopeNumber = 0;
                 int charAsInt = Character.getNumericValue(character);
@@ -65,7 +66,9 @@ public class AtomChain {
                     isotopeNumber = 10 * isotopeNumber + charAsInt;
                     i++;
                     if (i == atomChainAsStringCharArray.length) {
-                        throw new IllegalArgumentException("Reached the end of the atom chain while parsing isotope number in " + atomChainAsString + ".");
+                        throw new IllegalArgumentException(
+                                "Reached the end of the atom chain while parsing "
+                                        + "isotope number in " + atomChainAsString + ".");
                     }
                     character = atomChainAsStringCharArray[i];
                     charAsInt = Character.getNumericValue(character);
@@ -90,16 +93,24 @@ public class AtomChain {
                         i++;
                         i++;
                         if (i == atomChainAsStringCharArray.length) {
-                            throw new IllegalArgumentException("Reached the end of the atom chain while parsing occurrence of " + atomName + " in " + atomChainAsString + ".");
+                            throw new IllegalArgumentException(
+                                    "Reached the end of the atom chain while "
+                                            + "parsing occurrence of " + atomName 
+                                            + " in " + atomChainAsString + ".");
                         }
                         character = atomChainAsStringCharArray[i];
                         if (character == '-') {
-                            throw new IllegalArgumentException("Negative occurrence found for " + atomName + " in " + atomChainAsString + ".");
+                            throw new IllegalArgumentException(
+                                    "Negative occurrence found for " 
+                                            + atomName + " in " + atomChainAsString + ".");
                         }
                         while (character != ')') {
                             charAsInt = Character.getNumericValue(character);
                             if (charAsInt < 0 || charAsInt > 9) {
-                                throw new IllegalArgumentException("Encountered unexpected character " + character + " while parsing occurrence of " + atomName + " in " + atomChainAsString + ".");
+                                throw new IllegalArgumentException(
+                                        "Encountered unexpected character " + character 
+                                                + " while parsing occurrence of " 
+                                                + atomName + " in " + atomChainAsString + ".");
                             }
                             if (occurrence == null) {
                                 occurrence = charAsInt;
@@ -108,7 +119,10 @@ public class AtomChain {
                             }
                             i++;
                             if (i == atomChainAsStringCharArray.length) {
-                                throw new IllegalArgumentException("Reached the end of the atom chain while parsing occurrence of " + atomName + " in " + atomChainAsString + ".");
+                                throw new IllegalArgumentException(
+                                        "Reached the end of the atom chain while "
+                                                + "parsing occurrence of " + atomName 
+                                                + " in " + atomChainAsString + ".");
                             }
                             character = atomChainAsStringCharArray[i];
                         }
@@ -122,7 +136,10 @@ public class AtomChain {
                 if (isotopeNumber != 0) {
                     isotopeNumber = atomImpl.getIsotopeNumber(isotopeNumber);
                     if (isotopeNumber == null) {
-                        throw new UnsupportedOperationException("An error occurred while parsing atom chain " + atomChainAsString + "Isotope " + isotopeNumber + " not supported for atom " + atom + ".");
+                        throw new UnsupportedOperationException(
+                                "An error occurred while parsing atom chain " 
+                                        + atomChainAsString + "Isotope " 
+                                        + isotopeNumber + " not supported for atom " + atom + ".");
                     }
                     atomImpl.setIsotope(isotopeNumber);
                 }
@@ -200,61 +217,84 @@ public class AtomChain {
     }
 
     /**
-     * Sets the string value from the stringValue1 attribute, sets it from the
+     * Sets the string value from the stringValue attribute, sets it from the
      * composition if not set.
-     * 
-     * @param includeSpaces boolean indicating whether spaces should be included between atoms.
+     *
+     * @param includeSpaces boolean indicating whether spaces should be included
+     * between atoms
+     * @param includeBrackets boolean indicating whether brackets are included
+     * for the number of occurrences of each atom
+     * @param alwaysIncludeNumber boolean indicating whether the number is shown
+     * even when there is only one occurrence of an atom
+     * @param isotopeCurlyBrackets if true, the isotopes are indicated as curly
+     * brackets after the atom, e.g. carbon 13 is written as C{13}, if false,
+     * the isotopes are indicated as a number before the atom, e.g. carbon 13 is
+     * written as 13C
+     * @param alwaysRecreate if true, the string value will be recreated even if
+     * it already exists (use in order to not overwrite the standard format)
      *
      * @return the string value
      */
-    private synchronized String getStringValue(boolean includeSpaces) {
+    public synchronized String getStringValue(boolean includeSpaces, boolean includeBrackets,
+            boolean alwaysIncludeNumber, boolean isotopeCurlyBrackets, boolean alwaysRecreate) {
 
-        if (stringValue == null) {
-            HashMap<String, Integer> composition = new HashMap<>(atomChain.size());
-            HashMap<String, HashMap<Integer, String>> isotopeMap = new HashMap<>(atomChain.size());
-
-            for (AtomImpl atomImpl : atomChain) {
-                String atomImplName = atomImpl.toString();
-                Integer occurrence = composition.get(atomImplName);
-                if (occurrence == null) {
-                    occurrence = 0;
-                }
-                composition.put(atomImplName, occurrence + 1);
-                String atomSymbol = atomImpl.getAtomSymbol();
-                HashMap<Integer, String> atomIsotopes = isotopeMap.get(atomSymbol);
-                if (atomIsotopes == null) {
-                    atomIsotopes = new HashMap<>(1);
-                    isotopeMap.put(atomSymbol, atomIsotopes);
-                }
-                Integer isotope = atomImpl.getIsotope();
-                atomIsotopes.put(isotope, atomImplName);
-            }
-
-            StringBuilder compositionAsString = new StringBuilder(composition.size());
-
-            ArrayList<String> atomNames = new ArrayList<>(isotopeMap.keySet());
-            Collections.sort(atomNames);
-
-            for (String atomLetter : atomNames) {
-                HashMap<Integer, String> atomIsotopes = isotopeMap.get(atomLetter);
-                ArrayList<Integer> isotopes = new ArrayList<>(atomIsotopes.keySet());
-                Collections.sort(isotopes);
-                for (Integer isotope : isotopes) {
-                    String atomName = atomIsotopes.get(isotope);
-                    if (includeSpaces && compositionAsString.length() > 0) {
-                        compositionAsString.append(" ");
-                    }
-                    compositionAsString.append(atomName);
-                    Integer occurrence = composition.get(atomName);
-                    if (occurrence > 1) {
-                        compositionAsString.append("(").append(occurrence).append(")");
-                    }
-                }
-            }
-
-            stringValue = compositionAsString.toString();
+        if (stringValue != null && !alwaysRecreate) {
+            return stringValue;
         }
-        return stringValue;
+
+        HashMap<String, Integer> composition = new HashMap<>(atomChain.size());
+        HashMap<String, HashMap<Integer, String>> isotopeMap = new HashMap<>(atomChain.size());
+
+        for (AtomImpl atomImpl : atomChain) {
+            String atomImplName = atomImpl.toString(isotopeCurlyBrackets);
+            Integer occurrence = composition.get(atomImplName);
+            if (occurrence == null) {
+                occurrence = 0;
+            }
+            composition.put(atomImplName, occurrence + 1);
+            String atomSymbol = atomImpl.getAtomSymbol();
+            HashMap<Integer, String> atomIsotopes = isotopeMap.get(atomSymbol);
+            if (atomIsotopes == null) {
+                atomIsotopes = new HashMap<>(1);
+                isotopeMap.put(atomSymbol, atomIsotopes);
+            }
+            Integer isotope = atomImpl.getIsotope();
+            atomIsotopes.put(isotope, atomImplName);
+        }
+
+        StringBuilder compositionAsString = new StringBuilder(composition.size());
+
+        ArrayList<String> atomNames = new ArrayList<>(isotopeMap.keySet());
+        Collections.sort(atomNames);
+
+        for (String atomLetter : atomNames) {
+            HashMap<Integer, String> atomIsotopes = isotopeMap.get(atomLetter);
+            ArrayList<Integer> isotopes = new ArrayList<>(atomIsotopes.keySet());
+            Collections.sort(isotopes);
+            for (Integer isotope : isotopes) {
+                String atomName = atomIsotopes.get(isotope);
+                if (includeSpaces && compositionAsString.length() > 0) {
+                    compositionAsString.append(" ");
+                }
+                compositionAsString.append(atomName);
+                Integer occurrence = composition.get(atomName);
+                if (occurrence > 1 || alwaysIncludeNumber) {
+                    if (includeBrackets) {
+                        compositionAsString.append("(").append(occurrence).append(")");
+                    } else {
+                        compositionAsString.append(occurrence);
+                    }
+                }
+            }
+        }
+
+        String tempStringValue = compositionAsString.toString();
+
+        if (!alwaysRecreate) {
+            stringValue = tempStringValue;
+        }
+
+        return tempStringValue;
     }
 
     /**
@@ -329,7 +369,7 @@ public class AtomChain {
     @Override
     public String toString() {
         if (stringValue == null) {
-            return getStringValue(false);
+            return getStringValue(false, true, false, false, false);
         }
         return stringValue;
     }

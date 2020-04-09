@@ -13,7 +13,7 @@ import com.compomics.util.experiment.io.biology.protein.iterators.FastaIterator;
 import com.compomics.util.gui.JOptionEditorPane;
 import com.compomics.util.gui.protein.FastaParametersDialog;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
-import com.compomics.util.io.IoUtils;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.file.LastSelectedFolder;
 import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.awt.Dialog;
@@ -592,7 +592,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
             if (success) {
 
-                IoUtils.copyFile(file, renamedFile);
+                IoUtil.copyFile(file, renamedFile);
 
             }
 

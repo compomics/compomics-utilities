@@ -9,8 +9,8 @@ import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
@@ -107,19 +107,30 @@ public class MsAmandaIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, searchParameters, null, true);
+    ) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        
+        return getAllSpectrumMatches(
+                spectrumProvider,
+                waitingHandler, 
+                searchParameters, 
+                null, 
+                true
+        );
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    ) 
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         ArrayList<SpectrumMatch> result = new ArrayList<>();
 
@@ -230,9 +241,9 @@ public class MsAmandaIdfileReader implements IdfileReader {
                             result.add(currentMatch);
                         }
 
-                        String spectrumKey = Spectrum.getSpectrumKey(fileName, spectrumTitle);
-                        currentMatch = new SpectrumMatch(spectrumKey);
+                        currentMatch = new SpectrumMatch(fileName, spectrumTitle);
                         currentSpectrumTitle = spectrumTitle;
+                        
                     }
 
                     // get the modifications
@@ -286,7 +297,14 @@ public class MsAmandaIdfileReader implements IdfileReader {
                     Peptide peptide = new Peptide(peptideSequence, utilitiesModifications.toArray(new ModificationMatch[utilitiesModifications.size()]), true);
 
                     // create the peptide assumption
-                    PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.msAmanda.getIndex(), charge, msAmandaTransformedScore, Util.getFileName(msAmandaCsvFile));
+                    PeptideAssumption peptideAssumption = new PeptideAssumption(
+                            peptide, 
+                            rank, 
+                            Advocate.msAmanda.getIndex(), 
+                            charge, 
+                            msAmandaTransformedScore, 
+                            IoUtil.getFileName(msAmandaCsvFile)
+                    );
                     peptideAssumption.setRawScore(msAmandaRawScore);
 
                     if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
@@ -301,7 +319,14 @@ public class MsAmandaIdfileReader implements IdfileReader {
 
                             Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
 
-                            PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
+                            PeptideAssumption newAssumption = new PeptideAssumption(
+                                    newPeptide, 
+                                    peptideAssumption.getRank(), 
+                                    peptideAssumption.getAdvocate(), 
+                                    peptideAssumption.getIdentificationCharge(), 
+                                    peptideAssumption.getScore(), 
+                                    peptideAssumption.getIdentificationFile()
+                            );
                             newAssumption.setRawScore(msAmandaRawScore);
                             currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), newAssumption);
 

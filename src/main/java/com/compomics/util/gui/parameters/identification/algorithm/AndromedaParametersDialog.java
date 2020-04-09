@@ -21,12 +21,6 @@ import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialo
 public class AndromedaParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
 
     /**
-     * Empty default constructor
-     */
-    public AndromedaParametersDialog() {
-    }
-
-    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
@@ -36,7 +30,7 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
     private boolean editable;
 
     /**
-     * Creates a new TideSettingsDialog with a frame as owner.
+     * Creates a new AndromedaParametersDialog with a frame as owner.
      *
      * @param parentFrame the parent frame
      * @param andromedaParameters the Andromeda parameters
@@ -55,7 +49,7 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
     }
 
     /**
-     * Creates a new TideSettingsDialog with a dialog as owner.
+     * Creates a new AndromedaParametersDialog with a dialog as owner.
      *
      * @param owner the dialog owner
      * @param parentFrame the parent frame
@@ -220,12 +214,16 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
             result.setMaxNumberOfModifications(new Integer(input));
         }
 
-        if (fragMethodCmb.getSelectedIndex() == 0) {
-            result.setFragmentationMethod(FragmentationMethod.CID);
-        } else if (fragMethodCmb.getSelectedIndex() == 1) {
-            result.setFragmentationMethod(FragmentationMethod.HCD);
-        } else {
-            result.setFragmentationMethod(FragmentationMethod.ETD);
+        switch (fragMethodCmb.getSelectedIndex()) {
+            case 0:
+                result.setFragmentationMethod(FragmentationMethod.CID);
+                break;
+            case 1:
+                result.setFragmentationMethod(FragmentationMethod.HCD);
+                break;
+            default:
+                result.setFragmentationMethod(FragmentationMethod.ETD);
+                break;
         }
 
         result.setIncludeWater(waterLossCombo.getSelectedIndex() == 0);
@@ -812,7 +810,7 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
         boolean valid = true;
 
         valid = GuiUtilities.validateIntegerInput(this, peptideLengthNoEnzymeLabel, minPepLengthNoEnzymeTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, peptideLengthNoEnzymeLabel, maxPepLengthNoEnzymeTxt, "minimum peptide length", "Peptide Length Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, peptideLengthNoEnzymeLabel, maxPepLengthNoEnzymeTxt, "maximum peptide length", "Peptide Length Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, maxPeptideMassLabel, maxPeptideMassTxt, "maximum peptide mass", "Peptide Mass Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, numberMatchesLabel, numberMatchesTxt, "number of spectrum matches", "Number of Spectrum Matches Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, maxPtmsLabel, maxPtmsTxt, "maximum number of variable PTMs", "Variable PTMs Error", true, showMessage, valid);

@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.gui.error_handlers.HelpDialog;
+import com.compomics.util.gui.file_handling.FileChooserUtil;
 import com.compomics.util.pride.CvTerm;
 import java.awt.Color;
 import java.awt.Frame;
@@ -144,7 +145,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         defaultModificationsTable.getColumn("Unimod").setMinWidth(100);
         userModificationsTable.getColumn("Unimod").setMaxWidth(100);
         userModificationsTable.getColumn("Unimod").setMinWidth(100);
-        
+
         defaultModificationsTable.getColumn("PSI-MOD").setMaxWidth(100);
         defaultModificationsTable.getColumn("PSI-MOD").setMinWidth(100);
         userModificationsTable.getColumn("PSI-MOD").setMaxWidth(100);
@@ -1076,7 +1077,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void exportDefaultModsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportDefaultModsLabelMouseReleased
 
         // get the file to send the output to
-        final File selectedFile = Util.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export...", "user.home", "default modifications.txt", false);
+        final File selectedFile = FileChooserUtil.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export...", "user.home", "default modifications.txt", false);
 
         if (selectedFile != null) {
             try {
@@ -1117,7 +1118,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void exportUserModsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportUserModsLabelMouseReleased
 
         // get the file to send the output to
-        final File selectedFile = Util.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export...", "user.home", "user modifications.txt", false);
+        final File selectedFile = FileChooserUtil.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export...", "user.home", "user modifications.txt", false);
 
         if (selectedFile != null) {
             try {
@@ -1377,16 +1378,14 @@ public class ModificationsDialog extends javax.swing.JDialog {
      * @return the OLS web link
      */
     public String getOlsAccessionLink(String modAccession) {
-        
+
         String modAccessionInLink = modAccession.replaceAll(":", "_");
-        
+
         String accessionNumberWithLink = "<html><a href=\"https://www.ebi.ac.uk/ols/ontologies/mod/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2F" + modAccessionInLink + "\""
                 + "\"><font color=\"" + selectedRowHtmlTagFontColor + "\">"
                 + modAccession + "</font></a></html>";
         return accessionNumberWithLink;
-        
-        
-        
+
         // https://www.ebi.ac.uk/ols/ontologies/mod/terms?iri=http%3A%2F%2Fpurl.obolibrary.org%2Fobo%2FMOD_00394
     }
 

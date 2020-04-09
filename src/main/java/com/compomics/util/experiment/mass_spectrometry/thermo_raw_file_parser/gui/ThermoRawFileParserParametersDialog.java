@@ -26,7 +26,10 @@ public class ThermoRawFileParserParametersDialog extends javax.swing.JDialog {
      * @param parent the parent frame
      * @param thermoRawFileParserParameters initial parameters, ignored if null
      */
-    public ThermoRawFileParserParametersDialog(java.awt.Frame parent, ThermoRawFileParserParameters thermoRawFileParserParameters) {
+    public ThermoRawFileParserParametersDialog(
+            java.awt.Frame parent, 
+            ThermoRawFileParserParameters thermoRawFileParserParameters
+    ) {
         super(parent, true);
         initComponents();
         setUpGUI();
@@ -41,7 +44,10 @@ public class ThermoRawFileParserParametersDialog extends javax.swing.JDialog {
      * @param parent the parent dialog
      * @param thermoRawFileParserParameters initial parameters, ignored if null
      */
-    public ThermoRawFileParserParametersDialog(Dialog parent, ThermoRawFileParserParameters thermoRawFileParserParameters) {
+    public ThermoRawFileParserParametersDialog(
+            Dialog parent, 
+            ThermoRawFileParserParameters thermoRawFileParserParameters
+    ) {
         super(parent, true);
         initComponents();
         setUpGUI();
@@ -63,7 +69,9 @@ public class ThermoRawFileParserParametersDialog extends javax.swing.JDialog {
      *
      * @param thermoRawFileParserParameters the parameters to display
      */
-    private void populateGUI(ThermoRawFileParserParameters thermoRawFileParserParameters) {
+    private void populateGUI(
+            ThermoRawFileParserParameters thermoRawFileParserParameters
+    ) {
 
         outputFormatCmb.setSelectedItem(thermoRawFileParserParameters.getOutputFormat());
 
@@ -246,9 +254,14 @@ public class ThermoRawFileParserParametersDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
         boolean formatCheck = true;
+        
+        ThermoRawFileParserOutputFormat selectedFormat = ((ThermoRawFileParserOutputFormat) outputFormatCmb.getSelectedItem());
 
-        if (((ThermoRawFileParserOutputFormat) outputFormatCmb.getSelectedItem()) != ThermoRawFileParserOutputFormat.mgf) {
-            int value = JOptionPane.showConfirmDialog(this, "Mgf is the only format compatible with SearchGUI. Proceed anyway?",
+        if (selectedFormat != ThermoRawFileParserOutputFormat.mgf
+                && selectedFormat != ThermoRawFileParserOutputFormat.mzML
+                && selectedFormat != ThermoRawFileParserOutputFormat.mzMLIndexed) {
+            
+            int value = JOptionPane.showConfirmDialog(this, "This format is not compatible with SearchGUI. Proceed anyway?",
                     "Output Format Warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
             if (value == JOptionPane.NO_OPTION) {

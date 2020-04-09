@@ -45,6 +45,10 @@ public class NeutralLoss extends ExperimentObject {
      */
     public static final NeutralLoss C3H9N = new NeutralLoss("C3H9N", AtomChain.getAtomChain("C(3)H(9)N"), false);
     /**
+     * HCNO loss.
+     */
+    public static final NeutralLoss HCNO = new NeutralLoss("HCNO", AtomChain.getAtomChain("HCNO"), false);
+    /**
      * The composition of the ion.
      */
     private AtomChain composition;
@@ -74,7 +78,12 @@ public class NeutralLoss extends ExperimentObject {
      * @param fixed is the neutral loss fixed or not
      * @param aminoAcids the amino acids that are likely to induce this loss
      */
-    public NeutralLoss(String name, AtomChain composition, boolean fixed, char[] aminoAcids) {
+    public NeutralLoss(
+            String name, 
+            AtomChain composition, 
+            boolean fixed, 
+            char[] aminoAcids
+    ) {
         this(name, composition, fixed, aminoAcids, true);
     }
     
@@ -96,7 +105,11 @@ public class NeutralLoss extends ExperimentObject {
      * @param composition the atomic composition of the neutral loss
      * @param fixed is the neutral loss fixed or not
      */
-    public NeutralLoss(String name, AtomChain composition, boolean fixed) {
+    public NeutralLoss(
+            String name, 
+            AtomChain composition, 
+            boolean fixed
+    ) {
         this(name, composition, fixed, null, true);
     }
 
@@ -109,7 +122,13 @@ public class NeutralLoss extends ExperimentObject {
      * @param aminoAcids the amino acids that are likely to induce this loss
      * @param save if true, the neutral loss will be added to the factory
      */
-    public NeutralLoss(String name, AtomChain composition, boolean fixed, char[] aminoAcids, boolean save) {
+    public NeutralLoss(
+            String name, 
+            AtomChain composition, 
+            boolean fixed, 
+            char[] aminoAcids, 
+            boolean save
+    ) {
         this.name = name;
         this.composition = composition;
         this.fixed = fixed;
@@ -125,7 +144,9 @@ public class NeutralLoss extends ExperimentObject {
      *
      * @param neutralLoss the neutral loss to add
      */
-    public static void addNeutralLoss(NeutralLoss neutralLoss) {
+    public static void addNeutralLoss(
+            NeutralLoss neutralLoss
+    ) {
         neutralLosses.put(neutralLoss.name, neutralLoss);
     }
 
@@ -137,7 +158,9 @@ public class NeutralLoss extends ExperimentObject {
      *
      * @return the neutral loss
      */
-    public static NeutralLoss getNeutralLoss(String name) {
+    public static NeutralLoss getNeutralLoss(
+            String name
+    ) {
         return neutralLosses.get(name);
     }
 
@@ -147,7 +170,9 @@ public class NeutralLoss extends ExperimentObject {
      *
      * @param name the name of the neutral loss to remove
      */
-    public static void removeNeutralLoss(String name) {
+    public static void removeNeutralLoss(
+            String name
+    ) {
             neutralLosses.remove(name);
     }
 
@@ -181,7 +206,9 @@ public class NeutralLoss extends ExperimentObject {
      *
      * @param fixed a boolean indicating whether the loss is fixed or not
      */
-    public void setFixed(boolean fixed) {
+    public void setFixed(
+            boolean fixed
+    ) {
         writeDBMode();
         this.fixed = fixed;
     }
@@ -201,7 +228,9 @@ public class NeutralLoss extends ExperimentObject {
      *
      * @param composition the composition of the neutral loss
      */
-    public void setComposition(AtomChain composition) {
+    public void setComposition(
+            AtomChain composition
+    ) {
         writeDBMode();
         this.composition = composition;
     }
@@ -226,7 +255,9 @@ public class NeutralLoss extends ExperimentObject {
      * @return boolean indicating whether the other neutral loss is the same as
      * the one considered
      */
-    public boolean isSameAs(NeutralLoss anotherNeutralLoss) {
+    public boolean isSameAs(
+            NeutralLoss anotherNeutralLoss
+    ) {
         readDBMode();
         return anotherNeutralLoss.name.equals(name);
     }

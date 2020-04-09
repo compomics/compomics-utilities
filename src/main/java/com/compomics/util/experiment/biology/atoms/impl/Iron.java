@@ -14,7 +14,9 @@ public class Iron extends Atom {
      * Constructor.
      */
     public Iron() {
+
         monoisotopicMass = 55.9349363;
+
         isotopeMap = new HashMap<Integer, Double>(13);
         isotopeMap.put(-11, 45.01458);
         isotopeMap.put(-10, 46.00081);
@@ -44,11 +46,13 @@ public class Iron extends Atom {
         isotopeMap.put(14, 69.96146);
         isotopeMap.put(15, 70.96672);
         isotopeMap.put(16, 71.96962);
-        representativeComposition = new HashMap<Integer, Double>(3);
+
+        representativeComposition = new HashMap<Integer, Double>(4);
         representativeComposition.put(-2, 0.05845);
         representativeComposition.put(0, 0.91754);
         representativeComposition.put(1, 0.02119);
         representativeComposition.put(2, 0.00282);
+
         this.name = "Ion";
         this.letter = "Fe";
     }

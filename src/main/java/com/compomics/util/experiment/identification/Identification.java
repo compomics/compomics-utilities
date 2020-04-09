@@ -1,3 +1,4 @@
+
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.db.object.ObjectsDB;
@@ -135,6 +136,23 @@ public class Identification extends ExperimentObject {
     }
 
     /**
+     * Returns an iterator of all objects of a given class
+     *
+     * @param className the class name of a given class
+     * @param filters filters for the class
+     *
+     * @return the iterator
+     */
+    /*
+    public Iterator<?> getIterator(
+            Class className,
+            String filters
+    ) {
+        return objectsDB.getObjectsIterator(className, filters);
+    }
+    */
+
+    /**
      * Returns the keys of the objects of the given class,
      *
      * @param className the class
@@ -148,23 +166,9 @@ public class Identification extends ExperimentObject {
     }
 
     /**
-     * Updating the objects in the database
-     *
-     * @param objectKey the object key
-     * @param object the object to update
-     */
-    public void updateObject(
-            long objectKey,
-            Object object
-    ) {
-        objectsDB.updateObject(objectKey, object);
-    }
-
-    /**
      * Returns the keys of the objects of the given class,
      *
      * @param className the class
-     * @param filters the filter rules
      *
      * @return the keys of the objects
      */
@@ -193,7 +197,11 @@ public class Identification extends ExperimentObject {
             boolean displayProgress
     ) throws InterruptedException {
 
-        objectsDB.loadObjects(className, waitingHandler, displayProgress);
+        objectsDB.loadObjects(
+                className,
+                waitingHandler,
+                displayProgress
+        );
 
     }
 
@@ -215,7 +223,11 @@ public class Identification extends ExperimentObject {
             boolean displayProgress
     ) throws InterruptedException {
 
-        objectsDB.loadObjects(keyList, waitingHandler, displayProgress);
+        objectsDB.loadObjects(
+                keyList,
+                waitingHandler,
+                displayProgress
+        );
 
     }
 
@@ -296,7 +308,11 @@ public class Identification extends ExperimentObject {
             boolean displayProgress
     ) {
 
-        return objectsDB.retrieveObjects(keyList, waitingHandler, displayProgress);
+        return objectsDB.retrieveObjects(
+                keyList,
+                waitingHandler,
+                displayProgress
+        );
     }
 
     /**
@@ -310,9 +326,17 @@ public class Identification extends ExperimentObject {
      *
      * @return list of objects
      */
-    public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
+    public ArrayList<Object> retrieveObjects(
+            Class className,
+            WaitingHandler waitingHandler,
+            boolean displayProgress
+    ) {
 
-        return objectsDB.retrieveObjects(className, waitingHandler, displayProgress);
+        return objectsDB.retrieveObjects(
+                className,
+                waitingHandler,
+                displayProgress
+        );
 
     }
 
@@ -422,7 +446,11 @@ public class Identification extends ExperimentObject {
             boolean displayProgress
     ) {
 
-        objectsDB.removeObjects(keys, waitingHandler, displayProgress);
+        objectsDB.removeObjects(
+                keys,
+                waitingHandler,
+                displayProgress
+        );
 
     }
 
@@ -507,7 +535,7 @@ public class Identification extends ExperimentObject {
             long key = entry.getKey();
             SpectrumMatch spectrumMatch = (SpectrumMatch) entry.getValue();
 
-            String fileName = Spectrum.getSpectrumFile(spectrumMatch.getSpectrumKey());
+            String fileName = spectrumMatch.getSpectrumFile();
 
             HashSet<Long> fileKeys = identificationKeys.spectrumIdentification.get(fileName);
 
@@ -638,11 +666,24 @@ public class Identification extends ExperimentObject {
             long peptideKey
     ) {
 
-        return getPeptideMatch(peptideKey).getPeptide().getProteinMapping().navigableKeySet().stream()
-                .filter(accession -> identificationKeys.proteinMap.containsKey(accession))
-                .flatMap(accession -> identificationKeys.proteinMap.get(accession).stream())
-                .filter(proteinKey -> getProteinMatch(proteinKey).containsPeptide(peptideKey))
-                .collect(Collectors.toCollection(TreeSet::new));
+        return getPeptideMatch(peptideKey)
+                .getPeptide()
+                .getProteinMapping()
+                .navigableKeySet()
+                .stream()
+                .filter(
+                        accession -> identificationKeys.proteinMap.containsKey(accession)
+                )
+                .flatMap(
+                        accession -> identificationKeys.proteinMap.get(accession).stream()
+                )
+                .filter(
+                        proteinKey -> getProteinMatch(proteinKey)
+                                .containsPeptide(peptideKey)
+                )
+                .collect(
+                        Collectors.toCollection(TreeSet::new)
+                );
     }
 
     /**
@@ -781,7 +822,9 @@ public class Identification extends ExperimentObject {
      * @return the fractions
      */
     public ArrayList<String> getFractions() {
+        
         return identificationKeys.fractions;
+    
     }
 
     /**

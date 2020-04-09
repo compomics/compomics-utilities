@@ -29,7 +29,7 @@ public class SnrScore {
      * Log10 value of the lowest limit of a double.
      */
     private static final double limitLog10 = -FastMath.log10(Double.MIN_VALUE);
-    
+
     /**
      * Constructor.
      */
@@ -40,6 +40,8 @@ public class SnrScore {
      * Returns the score.
      *
      * @param peptide the peptide of interest
+     * @param spectrumFile the file of the spectrum
+     * @param spectrumTitle the title of the spectrum
      * @param spectrum the spectrum of interest
      * @param annotationSettings the general spectrum annotation settings
      * @param specificAnnotationSettings the annotation settings specific to
@@ -52,11 +54,37 @@ public class SnrScore {
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator, 
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
-        ArrayList<IonMatch> ionMatches = Lists.newArrayList(peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, 
-                    modificationParameters, sequenceProvider, modificationSequenceMatchingParameters, false));
-        return getScore(peptide, spectrum, ionMatches);
+    public double getScore(
+            Peptide peptide,
+            String spectrumFile,
+            String spectrumTitle,
+            Spectrum spectrum,
+            AnnotationParameters annotationSettings,
+            SpecificAnnotationParameters specificAnnotationSettings,
+            PeptideSpectrumAnnotator peptideSpectrumAnnotator,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
+            SequenceMatchingParameters modificationSequenceMatchingParameters
+    ) {
+        ArrayList<IonMatch> ionMatches = Lists.newArrayList(
+                peptideSpectrumAnnotator.getSpectrumAnnotation(
+                        annotationSettings,
+                        specificAnnotationSettings,
+                        spectrumFile,
+                        spectrumTitle,
+                        spectrum,
+                        peptide,
+                        modificationParameters,
+                        sequenceProvider,
+                        modificationSequenceMatchingParameters,
+                        false
+                )
+        );
+        return getScore(
+                peptide,
+                spectrum,
+                ionMatches
+        );
     }
 
     /**
@@ -68,18 +96,36 @@ public class SnrScore {
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, Spectrum spectrum, ArrayList<IonMatch> ionMatchesList) {
+    public double getScore(
+            Peptide peptide,
+            Spectrum spectrum,
+            ArrayList<IonMatch> ionMatchesList
+    ) {
+
         HashMap<Double, ArrayList<IonMatch>> ionMatches = new HashMap<>(ionMatchesList.size());
+
         for (IonMatch ionMatch : ionMatchesList) {
-            double mz = ionMatch.peak.mz;
+
+            double mz = ionMatch.peakMz;
             ArrayList<IonMatch> peakMatches = ionMatches.get(mz);
+
             if (peakMatches == null) {
+
                 peakMatches = new ArrayList<>(1);
                 ionMatches.put(mz, peakMatches);
+
             }
+
             peakMatches.add(ionMatch);
+
         }
-        return getScore(peptide, spectrum, ionMatches);
+
+        return getScore(
+                peptide,
+                spectrum,
+                ionMatches
+        );
+
     }
 
     /**
@@ -92,12 +138,16 @@ public class SnrScore {
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, Spectrum spectrum, HashMap<Double, ArrayList<IonMatch>> ionMatches) {
+    public double getScore(
+            Peptide peptide,
+            Spectrum spectrum,
+            HashMap<Double, ArrayList<IonMatch>> ionMatches
+    ) {
 
         char[] sequence = peptide.getSequence().toCharArray();
-        
-        SimpleNoiseDistribution binnedCumulativeFunction = spectrum.getIntensityLogDistribution();
-        
+
+        SimpleNoiseDistribution binnedCumulativeFunction = new SimpleNoiseDistribution(spectrum.intensity);
+
         double pFragmentIonMinusLog = 0.0;
         double pAnnotatedMinusLog = 0.0;
 
@@ -105,7 +155,7 @@ public class SnrScore {
 
             ArrayList<IonMatch> peakMatches = ionMatches.get(mz);
 
-            double intensity = peakMatches.get(0).peak.intensity;
+            double intensity = peakMatches.get(0).peakIntensity;
             double pMinusLog = -binnedCumulativeFunction.getBinnedCumulativeProbabilityLog(intensity);
 
             for (IonMatch ionMatch : peakMatches) {
@@ -133,12 +183,12 @@ public class SnrScore {
         }
 
         double pTotalMinusLog = 0.0;
-        double[] intensities = spectrum.getIntensityValuesAsArray();
 
-        for (double intensity : intensities) {
+        for (double intensity : spectrum.intensity) {
 
             double pMinusLog = -binnedCumulativeFunction.getBinnedCumulativeProbabilityLog(intensity);
             pTotalMinusLog += pMinusLog;
+
         }
 
         double pNotAnnotatedMinusLog = pTotalMinusLog - pAnnotatedMinusLog;

@@ -13,6 +13,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails;
+import com.compomics.util.io.IoUtil;
 import junit.framework.Assert;
 
 import java.io.File;
@@ -52,8 +53,7 @@ public class IdentificationDBTest extends TestCase {
             String spectrumFile = "spectrum_file";
             String spectrumTitle = "spectrum_title";
             String projectParametersTitle = "project_parameters_title";
-            String spectrumKey = Spectrum.getSpectrumKey(spectrumFile, spectrumTitle);
-            long spectrumMatchKey = ExperimentObject.asLong(spectrumKey);
+            long spectrumMatchKey = SpectrumMatch.getKey(spectrumFile, spectrumTitle);
             String peptideSequence = "PEPTIDE";
             String proteinAccession = "test_protein";
 
@@ -62,7 +62,7 @@ public class IdentificationDBTest extends TestCase {
             testProteins.put("test protein2", new int[]{1259});
 
             Peptide peptide = new Peptide(peptideSequence);
-            SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumKey);
+            SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumFile, spectrumTitle);
             testSpectrumMatch.addPeptideAssumption(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), 2, 0.1, "no file"));
             identification.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);
 
@@ -172,7 +172,7 @@ public class IdentificationDBTest extends TestCase {
             identification.close();
                 
         } finally {
-            Util.deleteDir(dbFolder);
+            IoUtil.deleteDir(dbFolder);
         }
     }
 }

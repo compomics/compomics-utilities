@@ -65,7 +65,9 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      *
      * @param rank the rank of the PeptideAssumptio
      */
-    public void setRank(int rank) {
+    public void setRank(
+            int rank
+    ) {
         writeDBMode();
         this.rank = rank;
     }
@@ -80,7 +82,14 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
         return advocate;
     }
     
-    public void setAdvocate(int advocate){
+    /**
+     * Sets the advocate id.
+     * 
+     * @param advocate The advocate id.
+     */
+    public void setAdvocate(
+            int advocate
+    ){
         writeDBMode();
         this.advocate = advocate;
     }
@@ -101,7 +110,9 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      *
      * @param score the score
      */
-    public void setScore(double score) {
+    public void setScore(
+            double score
+    ) {
         writeDBMode();
         this.score = score;
     }
@@ -116,7 +127,14 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
         return identificationFile;
     }
     
-    public void setIdentificationFile(String identificationFile){
+    /**
+     * Sets the identification file.
+     * 
+     * @param identificationFile The identification file.
+     */
+    public void setIdentificationFile(
+            String identificationFile
+    ){
         writeDBMode();
         this.identificationFile = identificationFile;
     }
@@ -136,7 +154,9 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      *
      * @param identificationCharge the identification charge
      */
-    public void setIdentificationCharge(int identificationCharge) {
+    public void setIdentificationCharge(
+            int identificationCharge
+    ) {
         writeDBMode();
         this.identificationCharge = identificationCharge;
     }
@@ -172,11 +192,22 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * 
      * @return the precursor mass error (in ppm or Da)
      */
-    public double getDeltaMass(double measuredMZ, boolean ppm, int minIsotope, int maxIsotope) {
+    public double getDeltaMass(
+            double measuredMZ, 
+            boolean ppm, 
+            int minIsotope, 
+            int maxIsotope
+    ) {
         
         readDBMode();
         
-        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getError(ppm, minIsotope, maxIsotope);
+        IonMatch ionMatch = getPrecursorMatch(measuredMZ, 0.0);
+        
+        return ionMatch.getError(
+                ppm, 
+                minIsotope, 
+                maxIsotope
+        );
     }
 
     /**
@@ -188,21 +219,46 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * 
      * @return the precursor isotope number according to the number of protons
      */
-    public int getIsotopeNumber(double measuredMZ, int minIsotope, int maxIsotope) {
+    public int getIsotopeNumber(
+            double measuredMZ, 
+            int minIsotope, 
+            int maxIsotope
+    ) {
+        
         readDBMode();
-        return getPrecursorMatch(new Peak(measuredMZ, 0, 0)).getIsotopeNumber(minIsotope, maxIsotope);
+        
+        IonMatch ionMatch = getPrecursorMatch(measuredMZ, 0.0);
+        
+        return ionMatch.getIsotopeNumber(
+                minIsotope, 
+                maxIsotope
+        );
+        
     }
 
     /**
      * Returns the ion match.
      *
-     * @param precursorPeak the precursor peak
+     * @param precursorMz The precursor measured m/z.
+     * @param precursorIntensity The precursor measured intensity.
      * 
      * @return the ion match
      */
-    public IonMatch getPrecursorMatch(Peak precursorPeak) {
+    public IonMatch getPrecursorMatch(
+            double precursorMz,
+            double precursorIntensity
+    ) {
+    
         readDBMode();
-        return new IonMatch(precursorPeak, new PrecursorIon(getTheoreticMass()), getIdentificationCharge());
+        
+        return new IonMatch(
+                precursorMz,
+                precursorIntensity, 
+                new PrecursorIon(
+                        getTheoreticMass()
+                ), 
+                getIdentificationCharge()
+        );
     }
 
     /**
@@ -211,8 +267,11 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the raw score as provided by the identification algorithm
      */
     public double getRawScore() {
+        
         readDBMode();
+        
         return rawScore;
+    
     }
 
     /**
@@ -220,9 +279,14 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      *
      * @param rawScore the raw score as provided by the identification algorithm
      */
-    public void setRawScore(double rawScore) {
+    public void setRawScore(
+            double rawScore
+    ) {
+    
         writeDBMode();
+        
         this.rawScore = rawScore;
+    
     }
 
     /**
@@ -244,8 +308,13 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      *
      * @param aminoAcidScores the amino acid scores
      */
-    public void setAminoAcidScores(ArrayList<double[]> aminoAcidScores) {
+    public void setAminoAcidScores(
+            ArrayList<double[]> aminoAcidScores
+    ) {
+    
         writeDBMode();
+        
         this.aminoAcidScores = aminoAcidScores;
+    
     }
 }

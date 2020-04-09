@@ -47,7 +47,11 @@ public class NeutralLossesMap {
      * @param yStart the amino acid position where the neutral loss should start
      * being accounted starting from the C-terminus (first is 1)
      */
-    public void addNeutralLoss(NeutralLoss neutralLoss, int bStart, int yStart) {
+    public void addNeutralLoss(
+            NeutralLoss neutralLoss, 
+            int bStart, 
+            int yStart
+    ) {
         
         addNeutralLoss(neutralLoss.name, bStart, yStart);
         accountedNeutralLosses = null;
@@ -64,7 +68,11 @@ public class NeutralLossesMap {
      * @param yStart the amino acid position where the neutral loss should start
      * being accounted starting from the C-terminus (first is 1)
      */
-    public void addNeutralLoss(String neutralLossName, int bStart, int yStart) {
+    public void addNeutralLoss(
+            String neutralLossName, 
+            int bStart, 
+            int yStart
+    ) {
     
         Integer position = forwardBoundaries.get(neutralLossName);
         
@@ -146,7 +154,9 @@ public class NeutralLossesMap {
      * 
      * @return the first amino acid where to account for the neutral loss
      */
-    public Integer getForwardStart(String neutralLossName) {
+    public Integer getForwardStart(
+            String neutralLossName
+    ) {
         
         return forwardBoundaries.get(neutralLossName);
         
@@ -160,7 +170,9 @@ public class NeutralLossesMap {
      * 
      * @return the first amino acid where to account for the neutral loss
      */
-    public int getRewindStart(String neutralLossName) {
+    public int getRewindStart(
+            String neutralLossName
+    ) {
         
         Integer start = rewindBoundaries.get(neutralLossName);
         
@@ -182,7 +194,9 @@ public class NeutralLossesMap {
      * 
      * @return a boolean indicating whether a loss is implemented in the mapping
      */
-    public boolean containsLoss(String neutralLossName) {
+    public boolean containsLoss(
+            String neutralLossName
+    ) {
         
         return forwardBoundaries.containsKey(neutralLossName);
     
@@ -193,11 +207,13 @@ public class NeutralLossesMap {
         
         NeutralLossesMap result = new NeutralLossesMap();
         
-        for (String neutralLossName : getAccountedNeutralLosses()) {
-        
-            result.addNeutralLoss(neutralLossName, getForwardStart(neutralLossName), getRewindStart(neutralLossName));
-        
-        }
+        getAccountedNeutralLosses().forEach(
+                neutralLossName -> result.addNeutralLoss(
+                        neutralLossName, 
+                        getForwardStart(neutralLossName), 
+                        getRewindStart(neutralLossName)
+                )
+        );
         
         return result;
     

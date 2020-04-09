@@ -12,6 +12,7 @@ import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.identification.filtering.items.PeptideFilterItem;
 import com.compomics.util.experiment.identification.peptide_shaker.PSParameter;
 import com.compomics.util.experiment.identification.peptide_shaker.PSModificationScores;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,7 +44,9 @@ public class PeptideFilter extends MatchFilter {
      *
      * @param name the name of the filter
      */
-    public PeptideFilter(String name) {
+    public PeptideFilter(
+            String name
+    ) {
 
         this.name = name;
         this.filterType = FilterType.PEPTIDE;
@@ -56,7 +59,10 @@ public class PeptideFilter extends MatchFilter {
      * @param name the name of the filter
      * @param description the description of the filter
      */
-    public PeptideFilter(String name, String description) {
+    public PeptideFilter(
+            String name, 
+            String description
+    ) {
 
         this.name = name;
         this.description = description;
@@ -74,7 +80,13 @@ public class PeptideFilter extends MatchFilter {
      * @param reportPassed a report for when the filter is passed
      * @param reportFailed a report for when the filter is not passed
      */
-    public PeptideFilter(String name, String description, String condition, String reportPassed, String reportFailed) {
+    public PeptideFilter(
+            String name, 
+            String description, 
+            String condition, 
+            String reportPassed, 
+            String reportFailed
+    ) {
 
         this.name = name;
         this.description = description;
@@ -91,8 +103,19 @@ public class PeptideFilter extends MatchFilter {
     }
 
     @Override
-    public boolean isValidated(String itemName, FilterItemComparator filterItemComparator, Object value, long matchKey, Identification identification, GeneMaps geneMaps, IdentificationFeaturesGenerator identificationFeaturesGenerator,
-            IdentificationParameters identificationParameters, SequenceProvider sequenceProvider, ProteinDetailsProvider proteinDetailsProvider) {
+    public boolean isValidated(
+            String itemName, 
+            FilterItemComparator filterItemComparator, 
+            Object value, 
+            long matchKey, 
+            Identification identification, 
+            GeneMaps geneMaps, 
+            IdentificationFeaturesGenerator identificationFeaturesGenerator,
+            IdentificationParameters identificationParameters, 
+            SequenceProvider sequenceProvider,
+            ProteinDetailsProvider proteinDetailsProvider,
+            SpectrumProvider spectrumProvider 
+    ) {
 
         PeptideFilterItem filterItem = PeptideFilterItem.getItem(itemName);
 
@@ -118,12 +141,17 @@ public class PeptideFilter extends MatchFilter {
                         .getProteinMapping()
                         .keySet()
                         .stream()
-                        .map(accession -> proteinDetailsProvider.getDescription(accession))
+                        .map(
+                                accession -> proteinDetailsProvider.getDescription(accession)
+                        )
                         .collect(Collectors.toList()));
 
             case sequence:
                 peptideMatch = identification.getPeptideMatch(matchKey);
-                return filterItemComparator.passes(input, peptideMatch.getPeptide().getSequence());
+                return filterItemComparator.passes(
+                        input, 
+                        peptideMatch.getPeptide().getSequence()
+                );
 
             case modification:
                 peptideMatch = identification.getPeptideMatch(matchKey);

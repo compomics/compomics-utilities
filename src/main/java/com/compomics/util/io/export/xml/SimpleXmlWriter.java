@@ -9,7 +9,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class SimpleXmlWriter {
+public class SimpleXmlWriter implements AutoCloseable {
 
     /**
      * Empty default constructor
@@ -41,7 +41,9 @@ public class SimpleXmlWriter {
      *
      * @param bw the buffered writer to use.
      */
-    public SimpleXmlWriter(BufferedWriter bw) {
+    public SimpleXmlWriter(
+            BufferedWriter bw
+    ) {
         this.bw = bw;
     }
 
@@ -203,12 +205,7 @@ public class SimpleXmlWriter {
         indentCounter--;
     }
 
-    /**
-     * Closes the buffered writer.
-     *
-     * @throws java.io.IOException Exception thrown whenever an error occurred
-     * while closing the file.
-     */
+    @Override
     public void close() throws IOException {
         bw.close();
     }

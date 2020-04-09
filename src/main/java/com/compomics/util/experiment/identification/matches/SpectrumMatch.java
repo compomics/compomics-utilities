@@ -19,17 +19,17 @@ import java.util.stream.Stream;
 public class SpectrumMatch extends IdentificationMatch {
 
     /**
-     * The key of the spectrum.
-     */
-    private String spectrumKey;
-    /**
-     * The number of the spectrum.
-     */
-    private int spectrumNumber;
-    /**
      * The key of the match.
      */
     private long key;
+    /**
+     * The name of the file containing the spectrum.
+     */
+    private String spectrumFile;
+    /**
+     * The title of the spectrum.
+     */
+    private String spectrumtitle;
     /**
      * Map of the identification algorithm peptide assumptions: advocate number &gt;
      * score &gt; assumptions.
@@ -82,31 +82,33 @@ public class SpectrumMatch extends IdentificationMatch {
     /**
      * Constructor for the spectrum match.
      *
-     * @param spectrumKey the key of the spectrum
+     * @param spectrumFile The name of the file containing the spectrum.
+     * @param spectrumTitle The title of the spectrum.
      */
-    public SpectrumMatch(String spectrumKey) {
+    public SpectrumMatch(
+            String spectrumFile,
+            String spectrumTitle
+    ) {
         
-        this.spectrumKey = spectrumKey;
-        this.key = ExperimentObject.asLong(spectrumKey);
+        this.spectrumFile = spectrumFile;
+        this.spectrumtitle = spectrumTitle;
+        this.key = getKey(spectrumFile, spectrumTitle);
         
     }
     
     /**
-     * Returns the spectrum number.
+     * Returns a key to use for the spectrum match based on the file where the spectrum was found and its title.
      * 
-     * @return the spectrum number
-     */
-    public int getSpectrumNumber() {
-        return spectrumNumber;
-    }
-
-    /**
-     * Sets the spectrum number.
+     * @param spectrumFile The name of the file containing the spectrum.
+     * @param spectrumTitle The title of the spectrum.
      * 
-     * @param spectrumNumber the spectrum number
+     * @return The key as long.
      */
-    public void setSpectrumNumber(int spectrumNumber) {
-        this.spectrumNumber = spectrumNumber;
+    public static long getKey(
+            String spectrumFile,
+            String spectrumTitle
+    ) {
+        return ExperimentObject.asLong(String.join("", spectrumFile, spectrumTitle));
     }
     
     /**
@@ -158,15 +160,49 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
-     * Returns the key of the spectrum corresponding to this match.
+     * Returns the name of the file where this spectrum was found.
      * 
-     * @return the key of the spectrum
+     * @return The name of the file where this spectrum was found.
      */
-    public String getSpectrumKey() {
+    public String getSpectrumFile() {
         
         readDBMode();
         
-        return spectrumKey;
+        return spectrumFile;
+    }
+    
+    /**
+     * Sets the spectrum file name.
+     * 
+     * @param spectrumFile The spectrum file name.
+     */
+    public void setSpectrumFile(
+            String spectrumFile 
+    ) {
+        this.spectrumFile = spectrumFile;
+    }
+
+    /**
+     * Returns the title of the spectrum.
+     * 
+     * @return The title of the spectrum.
+     */
+    public String getSpectrumTitle() {
+        
+        readDBMode();
+        
+        return spectrumtitle;
+    }
+    
+    /**
+     * Sets the spectrum title.
+     * 
+     * @param spectrumTitle The spectrum title.
+     */
+    public void setSpectrumTitle(
+            String spectrumTitle 
+    ) {
+        this.spectrumtitle = spectrumTitle;
     }
 
     @Override
@@ -335,21 +371,6 @@ public class SpectrumMatch extends IdentificationMatch {
         
         
         return MatchType.Spectrum;
-    }
-
-    /**
-     * Sets the match key. The key of the PSM should always be the same as the
-     * spectrum key it links to.
-     *
-     * @param spectrumKey the key of the spectrum match
-     */
-    public void setSpectrumKey(String spectrumKey) {
-        
-        writeDBMode();
-        
-        this.spectrumKey = spectrumKey;
-        this.key = ExperimentObject.asLong(spectrumKey);
-        
     }
 
     /**

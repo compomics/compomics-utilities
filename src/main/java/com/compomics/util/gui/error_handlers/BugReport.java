@@ -2,7 +2,8 @@ package com.compomics.util.gui.error_handlers;
 
 import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
-import com.compomics.util.io.IoUtils;
+import com.compomics.util.gui.file_handling.FileChooserUtil;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.file.LastSelectedFolder;
 import java.io.*;
 import java.util.Date;
@@ -22,23 +23,23 @@ public class BugReport extends javax.swing.JDialog {
     /**
      * The folder to open in the file selection dialog.
      */
-    private LastSelectedFolder lastSelectedFolder;
+    private final LastSelectedFolder lastSelectedFolder;
     /**
      * The specific key for bug reports.
      */
-    public static final String lastSelectedFolderKey = "bug_report";
+    public static final String LAST_SELECTED_FOLDER_KEY = "bug_report";
     /**
      * The name of the tool to get the bug report for, e.g., "PeptideShaker".
      */
-    private String toolName;
+    private final String toolName;
     /**
      * The GitHub name of the tool, e.g., "peptide-shaker".
      */
-    private String gitHubProjectName;
+    private final String gitHubProjectName;
     /**
      * The version number of the tool the log files belongs to.
      */
-    private String toolVersion;
+    private final String toolVersion;
     /**
      * The name of the Google Group.
      */
@@ -178,7 +179,7 @@ public class BugReport extends javax.swing.JDialog {
     private String getLastSelectedFolder() {
         String result = null;
         if (lastSelectedFolder != null) {
-            result = lastSelectedFolder.getLastSelectedFolder(lastSelectedFolderKey);
+            result = lastSelectedFolder.getLastSelectedFolder(LAST_SELECTED_FOLDER_KEY);
             if (result == null) {
                 result = lastSelectedFolder.getLastSelectedFolder();
             }
@@ -402,13 +403,13 @@ public class BugReport extends javax.swing.JDialog {
      */
     private void saveJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveJButtonActionPerformed
 
-        File finalOutputFile = Util.getUserSelectedFile(this, ".txt", "Text File (*.txt)", "Select Destination File", getLastSelectedFolder(), toolName + " " + toolVersion + " log.txt", false);
+        File finalOutputFile = FileChooserUtil.getUserSelectedFile(this, ".txt", "Text File (*.txt)", "Select Destination File", getLastSelectedFolder(), toolName + " " + toolVersion + " log.txt", false);
 
         if (finalOutputFile != null) {
 
             try {
                 if (logFile.exists()) {
-                    IoUtils.copyFile(logFile, finalOutputFile);
+                    IoUtil.copyFile(logFile, finalOutputFile);
                 }
 
                 if (!finalOutputFile.exists()) {

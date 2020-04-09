@@ -13,6 +13,7 @@ import com.compomics.util.experiment.identification.filtering.items.ProteinFilte
 import com.compomics.util.experiment.identification.peptide_shaker.PSParameter;
 import com.compomics.util.experiment.identification.peptide_shaker.PSModificationScores;
 import com.compomics.util.experiment.identification.validation.MatchValidationLevel;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,7 +43,9 @@ public class ProteinFilter extends MatchFilter {
      *
      * @param name the name of the filter
      */
-    public ProteinFilter(String name) {
+    public ProteinFilter(
+            String name
+    ) {
         this.name = name;
         this.filterType = FilterType.PROTEIN;
     }
@@ -53,7 +56,10 @@ public class ProteinFilter extends MatchFilter {
      * @param name the name of the filter
      * @param description the description of the filter
      */
-    public ProteinFilter(String name, String description) {
+    public ProteinFilter(
+            String name, 
+            String description
+    ) {
         this.name = name;
         this.description = description;
         this.filterType = FilterType.PROTEIN;
@@ -69,7 +75,13 @@ public class ProteinFilter extends MatchFilter {
      * @param reportPassed a report for when the filter is passed
      * @param reportFailed a report for when the filter is not passed
      */
-    public ProteinFilter(String name, String description, String condition, String reportPassed, String reportFailed) {
+    public ProteinFilter(
+            String name, 
+            String description, 
+            String condition, 
+            String reportPassed, 
+            String reportFailed
+    ) {
         this.name = name;
         this.description = description;
         this.condition = condition;
@@ -84,8 +96,19 @@ public class ProteinFilter extends MatchFilter {
     }
 
     @Override
-    public boolean isValidated(String itemName, FilterItemComparator filterItemComparator, Object value, long matchKey, Identification identification, GeneMaps geneMaps, IdentificationFeaturesGenerator identificationFeaturesGenerator,
-            IdentificationParameters identificationParameters, SequenceProvider sequenceProvider, ProteinDetailsProvider proteinDetailsProvider) {
+    public boolean isValidated(
+            String itemName, 
+            FilterItemComparator filterItemComparator, 
+            Object value, 
+            long matchKey, 
+            Identification identification, 
+            GeneMaps geneMaps, 
+            IdentificationFeaturesGenerator identificationFeaturesGenerator,
+            IdentificationParameters identificationParameters, 
+            SequenceProvider sequenceProvider,
+            ProteinDetailsProvider proteinDetailsProvider,
+            SpectrumProvider spectrumProvider 
+    ) {
 
         ProteinFilterItem filterItem = ProteinFilterItem.getItem(itemName);
         if (filterItem == null) {

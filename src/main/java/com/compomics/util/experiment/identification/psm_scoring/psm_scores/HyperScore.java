@@ -75,7 +75,9 @@ public class HyperScore {
      * Returns the hyperscore.
      *
      * @param peptide the peptide of interest
-     * @param spectrum the spectrum of interest
+     * @param spectrumFile the file of the spectrum
+     * @param spectrumTitle the title of the spectrum
+     * @param spectrum the spectrum
      * @param annotationSettings the general spectrum annotation settings
      * @param specificAnnotationSettings the annotation settings specific to
      * this PSM
@@ -87,10 +89,39 @@ public class HyperScore {
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, PeptideSpectrumAnnotator peptideSpectrumAnnotator, 
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
-        ArrayList<IonMatch> ionMatches = Lists.newArrayList(peptideSpectrumAnnotator.getSpectrumAnnotation(annotationSettings, specificAnnotationSettings, spectrum, peptide, modificationParameters, sequenceProvider, modificationSequenceMatchingParameters));
-        return getScore(peptide, specificAnnotationSettings.getPrecursorCharge(), spectrum, ionMatches);
+    public double getScore(
+            Peptide peptide, 
+            String spectrumFile,
+            String spectrumTitle,
+            Spectrum spectrum, 
+            AnnotationParameters annotationSettings, 
+            SpecificAnnotationParameters specificAnnotationSettings, 
+            PeptideSpectrumAnnotator peptideSpectrumAnnotator, 
+            ModificationParameters modificationParameters, 
+            SequenceProvider sequenceProvider, 
+            SequenceMatchingParameters modificationSequenceMatchingParameters
+    ) {
+        
+        ArrayList<IonMatch> ionMatches = 
+                Lists.newArrayList(
+                        peptideSpectrumAnnotator.getSpectrumAnnotation(
+                                annotationSettings, 
+                                specificAnnotationSettings, 
+                                spectrumFile,
+                                spectrumTitle,
+                                spectrum, 
+                                peptide, 
+                                modificationParameters, 
+                                sequenceProvider, 
+                                modificationSequenceMatchingParameters
+                        )
+                );
+        return getScore(
+                peptide, 
+                specificAnnotationSettings.getPrecursorCharge(), 
+                spectrum, 
+                ionMatches
+        );
     }
 
     /**
@@ -103,17 +134,21 @@ public class HyperScore {
      *
      * @return the score of the match
      */
-    public double getScore(Peptide peptide, int charge, Spectrum spectrum, ArrayList<IonMatch> ionMatches) {
+    public double getScore(
+            Peptide peptide, 
+            int charge, 
+            Spectrum spectrum, 
+            ArrayList<IonMatch> ionMatches
+    ) {
 
         boolean peakMatched = false;
         Double coveredIntensity = 0.0;
         HashSet<Double> coveredMz = new HashSet<>(2);
         for (IonMatch ionMatch : ionMatches) {
             Ion ion = ionMatch.ion;
-            Peak peak = ionMatch.peak;
-            if (!coveredMz.contains(peak.mz)) {
-                coveredIntensity += peak.intensity;
-                coveredMz.add(peak.mz);
+            if (!coveredMz.contains(ionMatch.peakMz)) {
+                coveredIntensity += ionMatch.peakIntensity;
+                coveredMz.add(ionMatch.peakMz);
             }
             if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
                 PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
@@ -134,15 +169,14 @@ public class HyperScore {
         HashSet<Integer> ionsRewind = new HashSet<>(1);
         HashSet<Double> accountedFor = new HashSet<>(ionMatches.size());
         for (IonMatch ionMatch : ionMatches) {
-            Peak peakI = ionMatch.peak;
-            Double mz = peakI.mz;
+            double mz = ionMatch.peakMz;
             Ion ion = ionMatch.ion;
             if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION && !ion.hasNeutralLosses() && !accountedFor.contains(mz)) {
                 PeptideFragmentIon peptideFragmentIon = (PeptideFragmentIon) ion;
                 int number = peptideFragmentIon.getNumber();
                 if (number > 1) {
                     accountedFor.add(mz);
-                    Double x0I = peakI.intensity / consideredIntensity;
+                    double x0I = ionMatch.peakIntensity / consideredIntensity;
                     xCorr += x0I;
                     if (ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION && !ion.hasNeutralLosses()) {
                         if (ion.getSubType() == PeptideFragmentIon.X_ION

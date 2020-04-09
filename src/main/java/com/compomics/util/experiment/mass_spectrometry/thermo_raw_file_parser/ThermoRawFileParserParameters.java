@@ -10,7 +10,7 @@ public class ThermoRawFileParserParameters {
     /**
      * The format to convert to.
      */
-    private ThermoRawFileParserOutputFormat outputFormat = ThermoRawFileParserOutputFormat.mgf;
+    private ThermoRawFileParserOutputFormat outputFormat = ThermoRawFileParserOutputFormat.mzML;
     /**
      * If peak picking is to be run or not.
      */

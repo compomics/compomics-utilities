@@ -2,6 +2,7 @@ package com.compomics.util.experiment.io.identification;
 
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import org.xmlpull.v1.XmlPullParserException;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public interface IdfileReader {
+public interface IdfileReader extends AutoCloseable {
 
     /**
      * Returns the names and versions of the software used to generate the
@@ -39,21 +40,19 @@ public interface IdfileReader {
      */
     public String getExtension();
 
-    /**
-     * Closes the file reader.
-     *
-     * @throws IOException if an IOException occurs
-     */
+    @Override
     public void close() throws IOException;
 
     /**
-     * Retrieves all the spectrum matches from an identification file as a
-     * list of spectrum matches, one spectrum match per spectrum. It is very important to close the file reader after
-     * creation. Using this method secondary maps are not filled.
+     * Retrieves all the spectrum matches from an identification file as a list
+     * of spectrum matches, one spectrum match per spectrum. It is very
+     * important to close the file reader after creation. Using this method
+     * secondary maps are not filled.
      *
-     * @param waitingHandler a waiting handler displaying the progress (can be
+     * @param spectrumProvider A spectrum provider with the spectra of the file loaded.
+     * @param waitingHandler The waiting handler displaying the progress (can be
      * null). The secondary progress methods will be called.
-     * @param searchParameters the search parameters
+     * @param searchParameters The search parameters.
      *
      * @return a list of spectrum matches
      *
@@ -66,26 +65,29 @@ public interface IdfileReader {
      * @throws XMLStreamException if an XMLStreamException occurs
      */
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            WaitingHandler waitingHandler, 
+            SpectrumProvider spectrumProvider,
+            WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XMLStreamException;
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XMLStreamException;
 
     /**
-     * Retrieves all the spectrum matches from an identification file as a
-     * list of spectrum matches, one spectrum match per spectrum. It is very
-     * important to close the file reader after creation. Secondary peptide and
-     * tag maps are filled according to the file content and the sequence
-     * matching preferences. If the sequence matching preferences are null, the
-     * maps are not filled.
+     * Retrieves all the spectrum matches from an identification file as a list
+     * of spectrum matches, one spectrum match per spectrum.It is very important
+     * to close the file reader after creation. Secondary peptide and tag maps
+     * are filled according to the file content and the sequence matching
+     * preferences. If the sequence matching preferences are null, the maps are
+     * not filled.
      *
-     * @param waitingHandler a waiting handler displaying the progress (can be
+     * @param spectrumProvider A spectrum provider with the spectra of the file loaded.
+     * @param waitingHandler The waiting handler displaying the progress (can be
      * null). The secondary progress methods will be called.
-     * @param searchParameters the search parameters
-     * @param sequenceMatchingPreferences the sequence matching preferences to
-     * use for the creation of the secondary maps
-     * @param expandAaCombinations if true, a peptide assumption (not
+     * @param searchParameters The search parameters.
+     * @param sequenceMatchingPreferences The sequence matching preferences to
+     * use for the creation of the secondary maps.
+     * @param expandAaCombinations If true, a peptide assumption (not
      * implemented for tag assumptions) will be created for all possible amino
-     * acid combination for peptide sequences containing an ambiguity like an X
+     * acid combination for peptide sequences containing an ambiguity like an X.
      *
      * @return the spectrum matches
      *
@@ -98,11 +100,13 @@ public interface IdfileReader {
      * @throws XMLStreamException if an XMLStreamException occurs
      */
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
-            WaitingHandler waitingHandler, 
-            SearchParameters searchParameters, 
-            SequenceMatchingParameters sequenceMatchingPreferences, 
+            SpectrumProvider spectrumProvider,
+            WaitingHandler waitingHandler,
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException, XMLStreamException;
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XmlPullParserException, XMLStreamException;
 
     /**
      * Returns a boolean indicating whether the file contains de novo results as

@@ -16,22 +16,13 @@ public class Peak extends ExperimentObject {
      */
     public Peak() {
         mz = 0;
-        rt = 0;
         intensity = 0;
     }
 
     /**
-     * The version UID for Serialization/Deserialization compatibility
-     */
-    static final long serialVersionUID = -7425947046833405676L;
-    /**
      * The mass over charge ratio of the peak.
      */
     public final double mz;
-    /**
-     * The retention time when the peak was recorded.
-     */
-    public final double rt;
     /**
      * The intensity of the peak.
      */
@@ -43,21 +34,12 @@ public class Peak extends ExperimentObject {
      * @param mz the mz value of the peak
      * @param intensity the intensity of the peak
      */
-    public Peak(double mz, double intensity) {
-        this(mz, intensity, -1.0);
-    }
-
-    /**
-     * Constructor for a peak.
-     *
-     * @param mz the mz value of the peak
-     * @param intensity the intensity of the peak
-     * @param rt the retention time when the peak was recorded
-     */
-    public Peak(double mz, double intensity, double rt) {
+    public Peak(
+            double mz, 
+            double intensity
+    ) {
         this.mz = mz;
         this.intensity = intensity;
-        this.rt = rt;
     }
 
     /**
@@ -68,7 +50,7 @@ public class Peak extends ExperimentObject {
      */
     public boolean isSameAs(Peak aPeak) {
         readDBMode();
-        return mz == aPeak.mz && intensity == aPeak.intensity && rt == aPeak.rt;
+        return mz == aPeak.mz && intensity == aPeak.intensity;
     }
 
     @Override
@@ -76,7 +58,6 @@ public class Peak extends ExperimentObject {
         readDBMode();
         int hash = 3;
         hash = 97 * hash + (int) (Double.doubleToLongBits(this.mz) ^ (Double.doubleToLongBits(this.mz) >>> 32));
-        hash = 97 * hash + (int) (Double.doubleToLongBits(this.rt) ^ (Double.doubleToLongBits(this.rt) >>> 32));
         hash = 97 * hash + (int) (Double.doubleToLongBits(this.intensity) ^ (Double.doubleToLongBits(this.intensity) >>> 32));
         return hash;
     }
@@ -92,9 +73,6 @@ public class Peak extends ExperimentObject {
         }
         final Peak other = (Peak) obj;
         if (Double.doubleToLongBits(this.mz) != Double.doubleToLongBits(other.mz)) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.rt) != Double.doubleToLongBits(other.rt)) {
             return false;
         }
         if (Double.doubleToLongBits(this.intensity) != Double.doubleToLongBits(other.intensity)) {

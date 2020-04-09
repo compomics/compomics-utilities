@@ -17,6 +17,7 @@ import com.compomics.util.experiment.identification.filtering.PeptideAssumptionF
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.io.biology.protein.FastaParameters;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
 import java.io.File;
 import java.io.IOException;
@@ -114,7 +115,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      *
      * @param searchParameters the search parameters
      */
-    public IdentificationParameters(SearchParameters searchParameters) {
+    public IdentificationParameters(
+            SearchParameters searchParameters
+    ) {
 
         this.searchParameters = searchParameters;
         setParametersFromSearch(searchParameters);
@@ -258,7 +261,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @param annotationParameters the annotation parameters used for
      * identification
      */
-    public void setAnnotationParameters(AnnotationParameters annotationParameters) {
+    public void setAnnotationParameters(
+            AnnotationParameters annotationParameters
+    ) {
         writeDBMode();
 
         this.annotationParameters = annotationParameters;
@@ -282,7 +287,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      *
      * @param peptideAssumptionFilter the filter used when importing PSMs
      */
-    public void setPeptideAssumptionFilter(PeptideAssumptionFilter peptideAssumptionFilter) {
+    public void setPeptideAssumptionFilter(
+            PeptideAssumptionFilter peptideAssumptionFilter
+    ) {
         writeDBMode();
 
         this.peptideAssumptionFilter = peptideAssumptionFilter;
@@ -306,7 +313,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @param psmScoringParameters the scoring preferences used when scoring
      * PSMs
      */
-    public void setPsmScoringParameters(PsmScoringParameters psmScoringParameters) {
+    public void setPsmScoringParameters(
+            PsmScoringParameters psmScoringParameters
+    ) {
         writeDBMode();
 
         this.psmScoringParameters = psmScoringParameters;
@@ -331,7 +340,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @param modificationLocalizationParameters the modification localization
      * parameters
      */
-    public void setModificationLocalizationParameters(ModificationLocalizationParameters modificationLocalizationParameters) {
+    public void setModificationLocalizationParameters(
+            ModificationLocalizationParameters modificationLocalizationParameters
+    ) {
 
         writeDBMode();
         this.modificationLocalizationParameters = modificationLocalizationParameters;
@@ -355,7 +366,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      *
      * @param sequenceMatchingParameters the sequence matching preferences
      */
-    public void setSequenceMatchingParameters(SequenceMatchingParameters sequenceMatchingParameters) {
+    public void setSequenceMatchingParameters(
+            SequenceMatchingParameters sequenceMatchingParameters
+    ) {
         writeDBMode();
 
         this.sequenceMatchingParameters = sequenceMatchingParameters;
@@ -379,7 +392,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      *
      * @param peptideVariantsParameters the peptide variant parameters
      */
-    public void setPeptideVariantsParameters(PeptideVariantsParameters peptideVariantsParameters) {
+    public void setPeptideVariantsParameters(
+            PeptideVariantsParameters peptideVariantsParameters
+    ) {
         writeDBMode();
 
         this.peptideVariantsParameters = peptideVariantsParameters;
@@ -404,7 +419,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @param idValidationParameters the identification matches validation
      * parameters
      */
-    public void setIdValidationParameters(IdMatchValidationParameters idValidationParameters) {
+    public void setIdValidationParameters(
+            IdMatchValidationParameters idValidationParameters
+    ) {
         writeDBMode();
 
         this.idValidationParameters = idValidationParameters;
@@ -428,7 +445,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      *
      * @param proteinInferenceParameters the protein inference parameters
      */
-    public void setProteinInferenceParameters(ProteinInferenceParameters proteinInferenceParameters) {
+    public void setProteinInferenceParameters(
+            ProteinInferenceParameters proteinInferenceParameters
+    ) {
         writeDBMode();
 
         this.proteinInferenceParameters = proteinInferenceParameters;
@@ -452,7 +471,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      *
      * @param geneParameters the gene parameters
      */
-    public void setGeneParameters(GeneParameters geneParameters) {
+    public void setGeneParameters(
+            GeneParameters geneParameters
+    ) {
         writeDBMode();
 
         this.geneParameters = geneParameters;
@@ -476,7 +497,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      *
      * @param fractionParameters the fraction parameters
      */
-    public void setFractionParameters(FractionParameters fractionParameters) {
+    public void setFractionParameters(
+            FractionParameters fractionParameters
+    ) {
         writeDBMode();
 
         this.fractionParameters = fractionParameters;
@@ -500,7 +523,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      *
      * @param fastaParameters the FASTA processing parameters
      */
-    public void setFastaParameters(FastaParameters fastaParameters) {
+    public void setFastaParameters(
+            FastaParameters fastaParameters
+    ) {
         writeDBMode();
 
         this.fastaParameters = fastaParameters;
@@ -517,7 +542,9 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      *
      * @throws IOException if an error occurs while reading the file
      */
-    public static IdentificationParameters getIdentificationParameters(File identificationParametersFile) throws IOException {
+    public static IdentificationParameters getIdentificationParameters(
+            File identificationParametersFile
+    ) throws IOException {
 
         Object savedObject;
 
@@ -554,7 +581,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
 
             SearchParameters searchParameters = (SearchParameters) savedObject;
             identificationParameters = new IdentificationParameters(searchParameters);
-            identificationParameters.setName(Util.removeExtension(identificationParametersFile.getName()));
+            identificationParameters.setName(IoUtil.removeExtension(identificationParametersFile.getName()));
 
         } else if (savedObject instanceof IdentificationParameters) {
 

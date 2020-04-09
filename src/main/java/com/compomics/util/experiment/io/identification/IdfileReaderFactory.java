@@ -12,12 +12,13 @@ import org.apache.log4j.Logger;
  * This factory will provide the appropriate identification file reader for each
  * type of file. Null when the format is not supported.
  *
+ * @author Lennart Martens
  * @author Marc Vaudel
  */
 public class IdfileReaderFactory {
 
     /**
-     * Class specific log4j logger for Enzyme instances.
+     * Class specific log4j logger for IdfileReaderFactory instances.
      */
     static Logger logger = Logger.getLogger(IdfileReaderFactory.class);
     /**
@@ -34,16 +35,16 @@ public class IdfileReaderFactory {
      * the Java service loader
      */
     static {
-        
+
         ServiceLoader<IdfileReader> ifdrServiceLoader = ServiceLoader.load(IdfileReader.class);
         Iterator<IdfileReader> idfrIterator = ifdrServiceLoader.iterator();
 
         while (idfrIterator.hasNext()) {
-        
+
             IdfileReader idfileReader = idfrIterator.next();
             logger.info("Found IdfileReader '" + idfileReader.getClass().getCanonicalName() + "' in Java service loader.");
             IdfileReaderFactory.registerIdFileReader(idfileReader.getClass(), idfileReader.getExtension());
-        
+
         }
     }
 
@@ -75,22 +76,23 @@ public class IdfileReaderFactory {
      * can read from. Note that the collection of IdfileReaders is keyed by this
      * extension, and similar to the java.util.HashMap syntax, a Class is
      * therefore returned if the extension provided already had an associated
-     * Class.
+     * Class. If the class is not a valid IdfileReader an exception is thrown.
      *
      * @param aReader Class of the IdfileReader to register.
      * @param aExtension String with the extension of the file that this
      * IdfileReader implementation can read.
+     * 
      * @return Class with the Class that was already previously registered for
      * this extension, or 'null' if the extension was not yet registered at all.
      */
     public static Class registerIdFileReader(Class aReader, String aExtension) {
 
         Class result = null;
-        // See if we have the right type of class!
+        // See if we have the right type of class.
 
         if (IdfileReader.class.isAssignableFrom(aReader)) {
 
-            // Now verify the presence of a correct constructor!
+            // Now verify the presence of a correct constructor.
             try {
 
                 aReader.getConstructor(File.class);
@@ -105,14 +107,13 @@ public class IdfileReaderFactory {
 
             } catch (NoSuchMethodException nsme) {
 
-                logger.warn("Unable to find required constructor with single java.io.File parameter in IdfileReader implementation '" + aReader.getCanonicalName() + "'! IdfileReader is ignored!");
-                nsme.printStackTrace();
+                throw new IllegalArgumentException("Unable to find required constructor with single java.io.File parameter in IdfileReader implementation '" + aReader.getCanonicalName() + ".");
 
             }
 
         } else {
 
-            logger.warn("Was expecting an implementation of '" + IdfileReader.class.getCanonicalName() + "', but got class '" + aReader.getCanonicalName() + "' instead! Ignoring IdfileReader!");
+            throw new IllegalArgumentException("Was expecting an implementation of '" + IdfileReader.class.getCanonicalName() + "', but got class '" + aReader.getCanonicalName() + "'.");
 
         }
 
@@ -126,7 +127,7 @@ public class IdfileReaderFactory {
      * reader after creation.
      *
      * @param aFile the file to parse
-     * 
+     *
      * @return an adapted file reader
      */
     public IdfileReader getFileReader(File aFile) {
@@ -137,7 +138,7 @@ public class IdfileReaderFactory {
 
         // Get file name of the idfile to process.
         String name = aFile.getName().toLowerCase();
-        
+
         // Iterator registered IdfileReaders, see who likes this file. First come, first served.
         // @TODO: May want to make this more sophisticated, possibly like the DBLoaders in DBToolkit, 
         //        that get the actual file to read some lines prior to making up their mind; thus constitutes 

@@ -295,7 +295,7 @@ public class EnzymeFactory {
      */
     private static ArrayList<Enzyme> getDefaultEnzymes() {
         
-        // note that enzyme names cannot contain comma as this is used by
+        // NOTE: enzyme names cannot contain comma as this is used by
         // some of the search engines to separate multiple enzymes!
         ArrayList<Enzyme> enzymes = new ArrayList<>();
 

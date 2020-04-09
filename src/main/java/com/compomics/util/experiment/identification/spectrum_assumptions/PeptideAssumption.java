@@ -29,7 +29,14 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * class)
      * @param identificationFile the identification file
      */
-    public PeptideAssumption(Peptide peptide, int rank, int advocate, int identificationCharge, double score, String identificationFile) {
+    public PeptideAssumption(
+            Peptide peptide, 
+            int rank, 
+            int advocate, 
+            int identificationCharge, 
+            double score, 
+            String identificationFile
+    ) {
         this.peptide = peptide;
         super.rank = rank;
         super.advocate = advocate;
@@ -49,7 +56,13 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @param score the score (whether the score is ascending or descending can
      * be known from the SearchEngine class)
      */
-    public PeptideAssumption(Peptide peptide, int rank, int advocate, int identificationCharge, double score) {
+    public PeptideAssumption(
+            Peptide peptide, 
+            int rank, 
+            int advocate, 
+            int identificationCharge, 
+            double score
+    ) {
         this.peptide = peptide;
         super.rank = rank;
         super.advocate = advocate;
@@ -65,7 +78,10 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @param identificationCharge the charge used by the search engine for
      * identification
      */
-    public PeptideAssumption(Peptide peptide, int identificationCharge) {
+    public PeptideAssumption(
+            Peptide peptide, 
+            int identificationCharge
+    ) {
         this.peptide = peptide;
         super.identificationCharge = identificationCharge;
     }

@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.io.identification.idfilereaders;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.parameters.identification.search.SearchParameters;
@@ -10,9 +9,11 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.io.identification.IdfileReader;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import static com.compomics.util.io.IoUtils.ENCODING;
+import com.compomics.util.io.IoUtil;
+import static com.compomics.util.io.IoUtil.ENCODING;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
@@ -55,25 +56,36 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        
+        return getAllSpectrumMatches(
+                spectrumProvider, 
+                waitingHandler, 
+                searchParameters, 
+                null, 
+                false
+        );
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (identificationFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
             
-        String fileName = Util.getFileName(identificationFile);
+        String fileName = IoUtil.getFileName(identificationFile);
         String mgfFileName = getMgfFileName(fileName);
 
         ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
@@ -100,8 +112,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
                     // remove any html from the title
                     String decodedTitle = URLDecoder.decode(spectrumTitle, ENCODING);
                     
-                    String spectrumKey = Spectrum.getSpectrumKey(mgfFileName, decodedTitle);
-                    currentMatch = new SpectrumMatch(spectrumKey);
+                    currentMatch = new SpectrumMatch(mgfFileName, decodedTitle);
 
                 } else if (line.charAt(0) == 'P') {
 

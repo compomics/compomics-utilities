@@ -40,8 +40,12 @@ public class MsConvertParameters {
      *
      * @param msFormat the format to convert to
      */
-    public void setMsFormat(ProteoWizardMsFormat msFormat) {
+    public void setMsFormat(
+            ProteoWizardMsFormat msFormat
+    ) {
+    
         this.msFormat = msFormat;
+
     }
 
     /**
@@ -61,8 +65,13 @@ public class MsConvertParameters {
      * @param value the value of the filter according to the filter
      * specifications.
      */
-    public void addFilter(Integer msConvertFilterIndex, String value) {
+    public void addFilter(
+            Integer msConvertFilterIndex, 
+            String value
+    ) {
+    
         filters.put(msConvertFilterIndex, value);
+    
     }
 
     /**
@@ -72,8 +81,12 @@ public class MsConvertParameters {
      *
      * @return the value set by the user
      */
-    public String getValue(Integer msConvertFilterIndex) {
+    public String getValue(
+            int msConvertFilterIndex
+    ) {
+
         return filters.get(msConvertFilterIndex);
+
     }
 
     /**
@@ -82,6 +95,8 @@ public class MsConvertParameters {
      * @return the filters map
      */
     public HashMap<Integer, String> getFiltersMap() {
+
         return filters;
+
     }
 }

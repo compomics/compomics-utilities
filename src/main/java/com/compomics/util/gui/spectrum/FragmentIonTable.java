@@ -705,7 +705,7 @@ public class FragmentIonTable extends JTable {
                     if (ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
 
                         int currentCharge = ionMatch.charge;
-                        double peakIntensity = ionMatch.peak.intensity;
+                        double peakIntensity = ionMatch.peakIntensity;
 
                         if (allAnnotations.size() > 1) {
                             peakIntensity /= totalIntensity;

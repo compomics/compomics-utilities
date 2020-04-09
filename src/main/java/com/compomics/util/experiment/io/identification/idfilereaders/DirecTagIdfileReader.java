@@ -11,8 +11,9 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.parameters.identification.tool_specific.DirecTagParameters;
 import com.compomics.util.experiment.io.identification.IdfileReader;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.experiment.mass_spectrometry.SpectrumFactory;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
@@ -85,10 +86,6 @@ public class DirecTagIdfileReader implements IdfileReader {
      * The file inspected.
      */
     private File tagFile;
-    /**
-     * The spectrum factory used to retrieve spectrum titles.
-     */
-    private final SpectrumFactory spectrumFactory = SpectrumFactory.getInstance();
     /**
      * The mass to add to the C-terminal gap so that is corresponds to a peptide
      * fragment.
@@ -390,60 +387,61 @@ public class DirecTagIdfileReader implements IdfileReader {
      * Parses the results section.
      */
     private ArrayList<SpectrumMatch> parseResults(
-            SimpleFileReader reader
+            SimpleFileReader reader,
+            String[] spectrumTitles
     ) {
 
         ArrayList<SpectrumMatch> result = new ArrayList<>();
-        
-        String spectrumFileName = Util.getFileName(getInputFile());
+
+        String spectrumFileName = IoUtil.getFileName(getInputFile());
 
         int spectrumCount = 0;
         Integer sIdColumnIndex = spectrumLineContent.get("ID");
         Integer chargeColumnIndex = spectrumLineContent.get("Charge");
 
-        Integer lastId = null, lastCharge = null;
+        int lastId = -1, lastCharge = -1;
         int rank = 0;
         SpectrumMatch currentMatch = null;
         String line;
 
         while ((line = reader.readLine()) != null) {
-            
+
             if (line.startsWith("S")) {
-            
-                Integer sId = ++spectrumCount;
+
+                int sId = ++spectrumCount;
                 rank = 0;
-                
+
                 if (sIdColumnIndex != null) {
-                
+
                     line = line.substring(1).trim();
                     String[] components = line.split("\t");
                     String id = components[sIdColumnIndex];
-                    sId = new Integer(id.substring(id.indexOf("=") + 1));
+                    sId = Integer.parseInt(id.substring(id.indexOf("=") + 1));
                     String chargeString = components[chargeColumnIndex];
-                    lastCharge = new Integer(chargeString);
-                    
+                    lastCharge = Integer.parseInt(chargeString);
+
                 }
-                if (!sId.equals(lastId)) {
+                if (sId != lastId) {
+
                     if (currentMatch != null && currentMatch.getAllTagAssumptions().count() > 0) {
 
                         result.add(currentMatch);
                     }
-                    int utilitiesId = sId + 1; // first spectrum is 1 in utilities
-                    String spectrumTitle = utilitiesId + "";
-                    if (spectrumFactory.fileLoaded(spectrumFileName)) {
-                        spectrumTitle = spectrumFactory.getSpectrumTitle(spectrumFileName, utilitiesId);
-                    }
-                    String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
-                    currentMatch = new SpectrumMatch(spectrumKey);
-                    currentMatch.setSpectrumNumber(utilitiesId);
+
+                    String spectrumTitle = spectrumTitles[sId];
+                    currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
                     lastId = sId;
+
                 }
+
             } else if (line.startsWith("T")) {
+
                 ++rank;
                 TagAssumption tagAssumption = getAssumptionFromLine(line, rank);
                 //@TODO: check with the developers if this is correct
                 tagAssumption.setIdentificationCharge(lastCharge);
                 currentMatch.addTagAssumption(Advocate.direcTag.getIndex(), tagAssumption);
+
             }
         }
 
@@ -458,15 +456,23 @@ public class DirecTagIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
     ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
+        return getAllSpectrumMatches(
+                spectrumProvider,
+                waitingHandler,
+                searchParameters,
+                null,
+                false
+        );
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
@@ -494,8 +500,12 @@ public class DirecTagIdfileReader implements IdfileReader {
             if (!endOfFile) {
 
                 setDynamicMods();
-                result = parseResults(reader);
-
+                result = parseResults(
+                        reader,
+                        spectrumProvider.getSpectrumTitles(
+                                getInputFile().getName()
+                        )
+                );
             }
         }
         return result;

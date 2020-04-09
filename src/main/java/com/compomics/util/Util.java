@@ -1,26 +1,18 @@
 package com.compomics.util;
 
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
-import com.compomics.util.waiting.WaitingHandler;
 import java.awt.Color;
-import java.awt.Component;
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  * Includes general help methods that are used by the other classes.
@@ -53,47 +45,75 @@ public class Util {
      *
      * @return a version without forbidden characters
      */
-    public static String removeSubString(String string, String subString) {
+    public static String removeSubString(
+            String string,
+            String subString
+    ) {
+
         String result;
         String[] split = string.split(subString);
+
         if (split.length > 1) {
+
             StringBuilder stringBuilder = new StringBuilder(string.length());
+
             for (String splitPart : split) {
+
                 stringBuilder.append(splitPart);
+
             }
+
             result = stringBuilder.toString();
+
         } else {
+
             result = string;
+
         }
+
         return result;
+
     }
 
     /**
      * Function for sending event requests to Google analytics.
      *
-     * @param UA tracking ID
+     * @param ua tracking ID
      * @param action the action
      * @param label the label
+     *
      * @return true if the update was successful
      */
-    public static boolean sendGAUpdate(String UA, String action, String label) {
+    public static boolean sendGAUpdate(
+            String ua,
+            String action,
+            String label
+    ) {
+
         // the plain java way
         boolean returnVal = true;
-        String COLLECT_URL = "https://www.google-analytics.com/collect";
-        String POST = "v=1&tid=" + UA + "&cid=35119a79-1a05-49d7-b876-bb88420f825b&uid=asuueffeqqss&t=event&ec=usage&ea=" + action + "&el=" + label;
+        String collect_url = "https://www.google-analytics.com/collect";
+        String post = "v=1&tid=" + ua + "&cid=35119a79-1a05-49d7-b876-bb88420f825b&uid=asuueffeqqss&t=event&ec=usage&ea=" + action + "&el=" + label;
+
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(COLLECT_URL).openConnection();
+
+            HttpURLConnection connection = (HttpURLConnection) new URL(collect_url).openConnection();
             connection.setRequestMethod("POST");
             connection.setConnectTimeout(3000);
             connection.setReadTimeout(1000);
             connection.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes(POST);
+            wr.writeBytes(post);
             connection.getResponseCode();
+
         } catch (IOException ex) {
+
             returnVal = false;
+
         }
+
         return returnVal;
+
     }
 
     /**
@@ -106,10 +126,14 @@ public class Util {
         java.util.Properties p = new java.util.Properties();
 
         try {
+
             InputStream is = Util.class.getClassLoader().getResourceAsStream("compomics-utilities.properties");
             p.load(is);
+
         } catch (IOException e) {
+
             e.printStackTrace();
+
         }
 
         return p.getProperty("compomics-utilities.version");
@@ -123,7 +147,10 @@ public class Util {
      *
      * @return a version without forbidden characters
      */
-    public static String removeCharacters(String string, char forbiddenCharacter) {
+    public static String removeCharacters(
+            String string,
+            char forbiddenCharacter
+    ) {
 
         StringBuilder sb = new StringBuilder(string.length());
 
@@ -154,7 +181,10 @@ public class Util {
      *
      * @return a version without forbidden characters
      */
-    public static String removeCharacters(String string, String[] forbiddenCharacters) {
+    public static String removeCharacters(
+            String string,
+            String[] forbiddenCharacters
+    ) {
 
         String result = string;
 
@@ -169,6 +199,7 @@ public class Util {
 
             }
         }
+
         return result;
     }
 
@@ -178,7 +209,9 @@ public class Util {
      * @param string the string of interest
      * @return a version without forbidden characters
      */
-    public static String removeForbiddenCharacters(String string) {
+    public static String removeForbiddenCharacters(
+            String string
+    ) {
         return removeCharacters(string, FORBIDDEN_CHARACTERS);
     }
 
@@ -189,13 +222,21 @@ public class Util {
      * @return a boolean indicating whether a string contains characters
      * forbidden in file names
      */
-    public static boolean containsForbiddenCharacter(String string) {
+    public static boolean containsForbiddenCharacter(
+            String string
+    ) {
+
         for (String forbiddenCharacter : FORBIDDEN_CHARACTERS) {
+
             if (string.contains(forbiddenCharacter)) {
+
                 return true;
+
             }
         }
+
         return false;
+
     }
 
     /**
@@ -207,14 +248,20 @@ public class Util {
      *
      * @return a string equal to string with a replaced by b
      */
-    public static String replaceAll(String string, char a, char b) {
+    public static String replaceAll(
+            String string,
+            char a,
+            char b
+    ) {
 
         char[] stringArray = string.toCharArray();
 
         for (int i = 0; i < stringArray.length; i++) {
 
             if (stringArray[i] == a) {
+
                 stringArray[i] = b;
+
             }
         }
 
@@ -228,8 +275,13 @@ public class Util {
      * @param places number of decimal places wanted
      * @return double - the new double
      */
-    public static double roundDouble(double d, int places) {
+    public static double roundDouble(
+            double d,
+            int places
+    ) {
+
         return Math.round(d * Math.pow(10, (double) places)) / Math.pow(10, (double) places);
+
     }
 
     /**
@@ -240,45 +292,11 @@ public class Util {
      *
      * @return double - the new double
      */
-    public static double floorDouble(double d, int places) {
+    public static double floorDouble(
+            double d,
+            int places
+    ) {
         return (new BigDecimal(String.valueOf(d)).setScale(places, BigDecimal.ROUND_FLOOR)).doubleValue();
-    }
-
-    /**
-     * Deletes all files and subdirectories under dir. Returns true if all
-     * deletions were successful. If a deletion fails, the method stops
-     * attempting to delete and returns false.
-     *
-     * @param dir the directory to delete
-     *
-     * @return rue if all deletions were successful
-     */
-    public static boolean emptyDir(File dir) {
-        if (dir.isDirectory()) {
-            for (File child : dir.listFiles()) {
-                boolean success = deleteDir(child);
-                if (!success) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Deletes all files and subdirectories under dir and dir itself. Returns
-     * true if all deletions were successful. If a deletion fails, the method
-     * stops attempting to delete and returns false.
-     *
-     * @param dir the directory to delete
-     * @return rue if all deletions were successful
-     */
-    public static boolean deleteDir(File dir) {
-        boolean empty = emptyDir(dir);
-        if (!empty) {
-            return false;
-        }
-        return dir.delete();
     }
 
     /**
@@ -287,9 +305,13 @@ public class Util {
      *
      * @param theoreticalMzValue the theoretical mass
      * @param massError the mass error
+     *
      * @return the mass error as a ppm value relative to the theoretical mass
      */
-    public static double getPpmError(double theoreticalMzValue, double massError) {
+    public static double getPpmError(
+            double theoreticalMzValue,
+            double massError
+    ) {
         double ppmValue = (massError / theoreticalMzValue) * 1000000;
         return ppmValue;
     }
@@ -301,7 +323,9 @@ public class Util {
      *
      * @return the color in hex format
      */
-    public static String color2Hex(int colorRGB) {
+    public static String color2Hex(
+            int colorRGB
+    ) {
         return Integer.toHexString(colorRGB & 0x00ffffff);
     }
 
@@ -312,7 +336,9 @@ public class Util {
      *
      * @return the color in hex format
      */
-    public static String color2Hex(Color color) {
+    public static String color2Hex(
+            Color color
+    ) {
         return color2Hex(color.getRGB());
     }
 
@@ -323,394 +349,10 @@ public class Util {
      *
      * @return the color object
      */
-    public static Color getColor(int colorRGB) {
+    public static Color getColor(
+            int colorRGB
+    ) {
         return new Color((colorRGB >> 16) & 0xFF, (colorRGB >> 8) & 0xFF, colorRGB & 0xFF);
-    }
-
-    /**
-     * An OS independent getName alternative. Useful if the path is provided as
-     * a hardcoded string and opened in a different OS.
-     *
-     * @param filePath the file path as a string
-     * @return the file name, or the complete path of no file name is detected
-     */
-    public static String getFileName(String filePath) {
-
-        String tempFileName = filePath;
-
-        int slash1 = tempFileName.lastIndexOf("/");
-        int slash2 = tempFileName.lastIndexOf("\\");
-
-        int lastSlashIndex = Math.max(slash1, slash2);
-
-        if (lastSlashIndex != -1) {
-            tempFileName = tempFileName.substring(lastSlashIndex + 1);
-        }
-
-        return tempFileName;
-    }
-
-    /**
-     * An OS independent getName alternative. Useful if the path is provided as
-     * a hardcoded string and opened in a different OS.
-     *
-     * @param file the file
-     * @return the file name, or the complete path of no file name is detected
-     */
-    public static String getFileName(File file) {
-        return getFileName(file.getAbsolutePath());
-    }
-
-    /**
-     * Returns the extensions of a file.
-     *
-     * @param file the file
-     * @return the extension of a file
-     */
-    public static String getExtension(File file) {
-        String fileName = getFileName(file.getAbsolutePath());
-        return fileName.substring(fileName.lastIndexOf("."));
-    }
-
-    /**
-     * Appends a suffix to a file name before the file extension.
-     *
-     * @param fileName the file name
-     * @param suffix the suffix to add
-     * @return the file name with suffix
-     */
-    public static String appendSuffix(String fileName, String suffix) {
-        String tempName;
-        String extension;
-        int extensionIndex = fileName.lastIndexOf(".");
-        if (extensionIndex > -1) {
-            tempName = fileName.substring(0, fileName.lastIndexOf("."));
-            extension = fileName.substring(fileName.lastIndexOf("."));
-        } else {
-            tempName = fileName;
-            extension = "";
-        }
-        return tempName + suffix + extension;
-    }
-
-    /**
-     * Removes the extension from a file name or path.
-     *
-     * @param fileName the file name
-     * @return the file name without extension
-     */
-    public static String removeExtension(String fileName) {
-        int poinIndex = fileName.lastIndexOf(".");
-        if (poinIndex > -1) {
-            return fileName.substring(0, poinIndex);
-        } else {
-            return fileName;
-        }
-    }
-
-    /**
-     * Returns the file selected by the user, or null if no file was selected.
-     * Note that the last selected folder value is not updated during this
-     * method, and the code calling this method therefore has to take care of
-     * this if wanted.
-     *
-     * @param parent the parent dialog or frame
-     * @param aFileEnding the file type, e.g., .txt
-     * @param aFileFormatDescription the file format description, e.g., (Mascot
-     * Generic Format) *.mgf
-     * @param aDialogTitle the title for the dialog
-     * @param lastSelectedFolder the last selected folder
-     * @param aSuggestedFileName the suggested file name, can be null
-     * @param openDialog if true an open dialog is shown, false results in a
-     * save dialog
-     * @return the file selected by the user, or null if no file was selected
-     */
-    public static File getUserSelectedFile(Component parent, String aFileEnding, String aFileFormatDescription, String aDialogTitle, String lastSelectedFolder, String aSuggestedFileName, boolean openDialog) {
-
-        final String fileEnding = aFileEnding;
-        final String fileFormatDescription = aFileFormatDescription;
-        final JFileChooser fileChooser = new JFileChooser(lastSelectedFolder);
-
-        fileChooser.setDialogTitle(aDialogTitle);
-        fileChooser.setMultiSelectionEnabled(false);
-
-        javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter() {
-            @Override
-            public boolean accept(File myFile) {
-                return myFile.getName().toLowerCase().endsWith(fileEnding) || myFile.isDirectory();
-            }
-
-            @Override
-            public String getDescription() {
-                return fileFormatDescription;
-            }
-        };
-
-        fileChooser.setFileFilter(filter);
-
-        int returnVal;
-
-        if (openDialog) {
-            returnVal = fileChooser.showOpenDialog(parent);
-        } else {
-            if (aSuggestedFileName != null) {
-                fileChooser.setSelectedFile(new File(lastSelectedFolder, aSuggestedFileName));
-            }
-            returnVal = fileChooser.showSaveDialog(parent);
-        }
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-            String selectedFile = fileChooser.getSelectedFile().getPath();
-
-            if (!openDialog && !selectedFile.endsWith(fileEnding)) {
-                selectedFile += fileEnding;
-            }
-
-            File newFile = new File(selectedFile);
-            int outcome = JOptionPane.YES_OPTION;
-
-            if (!openDialog && newFile.exists()) {
-                outcome = JOptionPane.showConfirmDialog(parent,
-                        "Should " + selectedFile + " be overwritten?", "Selected File Already Exists",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            } else if (openDialog && !newFile.exists()) {
-                JOptionPane.showMessageDialog(parent, "The file \'" + newFile.getAbsolutePath() + "\' does not exist!",
-                        "File Not Found.", JOptionPane.ERROR_MESSAGE);
-                return null;
-            }
-
-            if (outcome != JOptionPane.YES_OPTION) {
-                return null;
-            } else {
-                return newFile;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns the file selected by the user, or null if no file was selected.
-     * Note that the last selected folder value is not updated during this
-     * method, and the code calling this method therefore has to take care of
-     * this if wanted.
-     *
-     * @param parent the parent dialog or frame
-     * @param fileEndings the file types, e.g., .txt
-     * @param fileFormatDescriptions the file format description, e.g., (Mascot
-     * Generic Format) *.mgf
-     * @param aDialogTitle the title for the dialog
-     * @param lastSelectedFolder the last selected folder
-     * @param aSuggestedFileName the suggested file name, can be null
-     * @param openDialog if true an open dialog is shown, false results in a
-     * save dialog
-     * @param formatSelectedByUser if true the user will have to select the
-     * format by himself, otherwise all formats will be available
-     * @param showAllFilesOption if true, the 'All files' filter option will be
-     * included
-     * @param defaultFilterIndex the index of the filter selected by default
-     *
-     * @return the file selected and the file filter used, null if the selection
-     * was canceled.
-     */
-    public static FileAndFileFilter getUserSelectedFile(Component parent, String[] fileEndings, String[] fileFormatDescriptions,
-            String aDialogTitle, String lastSelectedFolder, String aSuggestedFileName, boolean openDialog, boolean formatSelectedByUser, boolean showAllFilesOption, int defaultFilterIndex) {
-
-        JFileChooser fileChooser = new JFileChooser(lastSelectedFolder);
-
-        fileChooser.setDialogTitle(aDialogTitle);
-        fileChooser.setMultiSelectionEnabled(false);
-
-        // see if we should hide the All option
-        fileChooser.setAcceptAllFileFilterUsed(showAllFilesOption);
-
-        if (formatSelectedByUser) {
-            for (int i = 0; i < fileEndings.length; i++) {
-                final String fileEnding = fileEndings[i];
-                String description = "";
-                if (i < fileFormatDescriptions.length && fileFormatDescriptions[i] != null) {
-                    description = fileFormatDescriptions[i];
-                }
-                final String filterDescription = description;
-                javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter() {
-                    @Override
-                    public boolean accept(File myFile) {
-                        return myFile.getName().toLowerCase().endsWith(fileEnding) || myFile.isDirectory();
-                    }
-
-                    @Override
-                    public String getDescription() {
-                        return filterDescription;
-                    }
-                };
-                fileChooser.addChoosableFileFilter(filter);
-
-                if (i == defaultFilterIndex) {
-                    fileChooser.setFileFilter(filter);
-                }
-            }
-        } else {
-            final String[] filterExtensionList = fileEndings.clone();
-            String description = "";
-            for (int i = 0; i < fileEndings.length; i++) {
-                if (i < fileFormatDescriptions.length && fileFormatDescriptions[i] != null) {
-                    if (!description.equals("")) {
-                        description += ", ";
-                    }
-                    description += fileFormatDescriptions[i];
-                } else {
-                    if (!description.equals("")) {
-                        description += ", ";
-                    }
-                    description += "Unkown";
-                }
-            }
-            final String filterDescription = description;
-            javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter() {
-                @Override
-                public boolean accept(File myFile) {
-                    if (myFile.isDirectory()) {
-                        return true;
-                    }
-                    for (String fileEnding : filterExtensionList) {
-                        if (myFile.getName().toLowerCase().endsWith(fileEnding)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-
-                @Override
-                public String getDescription() {
-                    return filterDescription;
-                }
-            };
-            fileChooser.setFileFilter(filter);
-        }
-
-        int returnVal;
-
-        if (openDialog) {
-            returnVal = fileChooser.showOpenDialog(parent);
-        } else {
-            if (aSuggestedFileName != null) {
-                fileChooser.setSelectedFile(new File(lastSelectedFolder, aSuggestedFileName));
-            }
-            returnVal = fileChooser.showSaveDialog(parent);
-        }
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-            String selectedFile = fileChooser.getSelectedFile().getPath();
-            String fileFormatDescription = fileChooser.getFileFilter().getDescription();
-            String wantedFileEnding = null;
-
-            for (int i = 0; i < fileFormatDescriptions.length && wantedFileEnding == null; i++) {
-                if (fileFormatDescriptions[i].equalsIgnoreCase(fileFormatDescription)) {
-                    wantedFileEnding = fileEndings[i];
-                }
-            }
-
-            // make sure the file has the correct file ending
-            if (!openDialog && !selectedFile.endsWith(wantedFileEnding)) {
-                selectedFile += wantedFileEnding;
-            }
-
-            File newFile = new File(selectedFile);
-            int outcome = JOptionPane.YES_OPTION;
-
-            if (!openDialog && newFile.exists()) {
-                outcome = JOptionPane.showConfirmDialog(parent,
-                        "Should " + selectedFile + " be overwritten?", "Selected File Already Exists",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            } else if (openDialog && !newFile.exists()) {
-                JOptionPane.showMessageDialog(parent, "The file\'" + newFile.getAbsolutePath() + "\' " + "does not exist!",
-                        "File Not Found.", JOptionPane.ERROR_MESSAGE);
-                return null;
-            }
-
-            if (outcome != JOptionPane.YES_OPTION) {
-                return null;
-            } else {
-                return new FileAndFileFilter(newFile, fileChooser.getFileFilter());
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns the folder selected by the user, or null if no folder was
-     * selected. Note that the last selected folder value is not updated during
-     * this method, and the code calling this method therefore has to take care
-     * of this if wanted.
-     *
-     * @param parent the parent dialog or frame
-     * @param aDialogTitle the title for the dialog
-     * @param lastSelectedFolder the last selected folder
-     * @param aFolderDescription the folder description, e.g., CPS Folder
-     * @param approveButtonText the text on the approve button
-     * @param openDialog if true the folder has to exist, if false the user will
-     * be asked if he/she wants to create the folder is missing
-     *
-     * @return the file selected by the user, or null if no file was selected
-     */
-    public static File getUserSelectedFolder(Component parent, String aDialogTitle, String lastSelectedFolder, String aFolderDescription, String approveButtonText, boolean openDialog) {
-
-        final JFileChooser fileChooser = new JFileChooser(lastSelectedFolder);
-        final String folderDescription = aFolderDescription;
-
-        fileChooser.setDialogTitle(aDialogTitle);
-        fileChooser.setMultiSelectionEnabled(false);
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-        javax.swing.filechooser.FileFilter filter = new javax.swing.filechooser.FileFilter() {
-            @Override
-            public boolean accept(File myFile) {
-                return myFile.isDirectory();
-            }
-
-            @Override
-            public String getDescription() {
-                return folderDescription;
-            }
-        };
-
-        fileChooser.setFileFilter(filter);
-
-        int returnVal = fileChooser.showDialog(parent, approveButtonText);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-            File selectedFolder = fileChooser.getSelectedFile();
-
-            if (!selectedFolder.exists()) {
-                if (openDialog) {
-                    JOptionPane.showMessageDialog(parent, "The folder \'" + selectedFolder.getAbsolutePath() + "\' does not exist.\n"
-                            + "Please choose an existing folder.", "Folder Error", JOptionPane.ERROR_MESSAGE);
-                    return null;
-                } else {
-                    int value = JOptionPane.showConfirmDialog(parent, "The folder \'" + selectedFolder.getAbsolutePath() + "\' does not exist.\n"
-                            + "Do you want to create it?", "Create Folder?", JOptionPane.YES_NO_OPTION);
-                    if (value == JOptionPane.NO_OPTION) {
-                        return null;
-                    } else { // yes option selected
-                        boolean success = selectedFolder.mkdir();
-
-                        if (!success) {
-                            JOptionPane.showMessageDialog(parent, "Failed to create the folder. Please create it manually and then select it.",
-                                    "File Error", JOptionPane.INFORMATION_MESSAGE);
-                            return null;
-                        }
-                    }
-                }
-            }
-
-            return selectedFolder;
-        }
-
-        return null;
     }
 
     /**
@@ -723,7 +365,12 @@ public class Util {
      *
      * @return the table as a separated text file
      */
-    public static String tableToText(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml) {
+    public static String tableToText(
+            JTable table,
+            String separator,
+            ProgressDialogX progressDialog,
+            boolean removeHtml
+    ) {
 
         StringBuilder tableAsString = new StringBuilder();
 
@@ -775,7 +422,13 @@ public class Util {
      *
      * @throws IOException if a problem occurs when writing to the file
      */
-    public static void tableToFile(JTable table, String separator, ProgressDialogX progressDialog, boolean removeHtml, BufferedWriter writer) throws IOException {
+    public static void tableToFile(
+            JTable table,
+            String separator,
+            ProgressDialogX progressDialog,
+            boolean removeHtml,
+            BufferedWriter writer
+    ) throws IOException {
 
         for (int i = 0; i < table.getColumnCount(); i++) {
             writer.write(table.getColumnName(i) + separator);
@@ -835,26 +488,37 @@ public class Util {
      *
      * @return a boolean indicating whether list1 has the same content as list2
      */
-    public static boolean sameLists(ArrayList<?> list1, ArrayList<?> list2) {
+    public static boolean sameLists(
+            ArrayList<?> list1,
+            ArrayList<?> list2
+    ) {
 
         if (list1.size() != list2.size()) {
             return false;
         }
 
         HashMap<Object, Long> list1Occurrence = list1.stream()
-                .collect(Collectors.groupingBy(
-                        a -> a,
-                        HashMap::new,
-                        Collectors.counting()));
+                .collect(
+                        Collectors.groupingBy(
+                                a -> a,
+                                HashMap::new,
+                                Collectors.counting()
+                        )
+                );
 
         HashMap<Object, Long> list2Occurrence = list2.stream()
-                .collect(Collectors.groupingBy(
-                        a -> a,
-                        HashMap::new,
-                        Collectors.counting()));
+                .collect(
+                        Collectors.groupingBy(
+                                a -> a,
+                                HashMap::new,
+                                Collectors.counting()
+                        )
+                );
 
         return list1Occurrence.entrySet().stream()
-                .allMatch(entry -> list2Occurrence.containsKey(entry.getKey()) && list2Occurrence.get(entry.getKey()).equals(entry.getValue()));
+                .allMatch(
+                        entry -> list2Occurrence.containsKey(entry.getKey()) && list2Occurrence.get(entry.getKey()).equals(entry.getValue())
+                );
     }
 
     /**
@@ -865,7 +529,10 @@ public class Util {
      *
      * @return the occurrence of a character in a string
      */
-    public static int getOccurrence(String input, char character) {
+    public static int getOccurrence(
+            String input,
+            char character
+    ) {
 
         return (int) input.chars()
                 .filter(aa -> aa == character)
@@ -881,18 +548,26 @@ public class Util {
      * @return a list of the indexes where the small string can be found in the
      * big string
      */
-    public static ArrayList<Integer> getIndexes(String bigString, String smallString) {
+    public static ArrayList<Integer> getIndexes(
+            String bigString, 
+            String smallString
+    ) {
         Pattern pattern = Pattern.compile(smallString);
         ArrayList<Integer> result = new ArrayList<>();
         Matcher matcher = pattern.matcher(bigString);
         matcher.matches();
         int index = 0;
+        
         while (matcher.find(index)) {
+
             index = matcher.start();
             index++;
             result.add(index);
+
         }
+
         return result;
+
     }
 
     /**
@@ -904,18 +579,28 @@ public class Util {
      * @throws NumberFormatException thrown if the double cannot be read as a
      * double
      */
-    public static double readDoubleAsString(String doubleAsString) throws NumberFormatException {
+    public static double readDoubleAsString(
+            String doubleAsString
+    ) throws NumberFormatException {
 
         BigDecimal temp;
         try {
+
             temp = new BigDecimal(doubleAsString);
+
         } catch (NumberFormatException e) {
+
             doubleAsString = doubleAsString.replaceAll("\\.", "");
             doubleAsString = doubleAsString.replaceAll(",", "\\.");
+
             try {
+
                 temp = new BigDecimal(doubleAsString);
+
             } catch (NumberFormatException ex) {
+
                 throw new NumberFormatException(doubleAsString + " cannot be read as a floating value!");
+
             }
         }
 
@@ -923,220 +608,37 @@ public class Util {
     }
 
     /**
-     * Save a file from a URL.
-     *
-     * @param saveFile the file to save to
-     * @param targetUrlAsString the target URL as a string
-     * @param fileSizeInBytes the file size in bytes
-     * @param userName the user name
-     * @param password the password
-     * @param waitingHandler the waiting handler
-     * @return the saved file
-     *
-     * @throws MalformedURLException thrown if an MalformedURLException occurs
-     * @throws IOException thrown if an IOException occurs
-     * @throws FileNotFoundException thrown if a FileNotFoundException occurs
-     */
-    public static File saveUrl(File saveFile, String targetUrlAsString, int fileSizeInBytes, String userName, String password, WaitingHandler waitingHandler)
-            throws MalformedURLException, IOException, FileNotFoundException {
-
-        BufferedInputStream in = null;
-        FileOutputStream fout = null;
-
-        try {
-            boolean urlExists = checkIfURLExists(targetUrlAsString, userName, password);
-
-            if (!urlExists) {
-                if (targetUrlAsString.endsWith(".gz")) {
-                    targetUrlAsString = targetUrlAsString.substring(0, targetUrlAsString.length() - 3);
-                    saveFile = new File(saveFile.getAbsolutePath().substring(0, saveFile.getAbsolutePath().length() - 3));
-                }
-            }
-
-            URL targetUrl = new URL(targetUrlAsString);
-            URLConnection urlConnection = targetUrl.openConnection();
-
-            if (password != null) {
-                String userpass = userName + ":" + password;
-                String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
-                urlConnection.setRequestProperty("Authorization", basicAuth);
-            }
-
-            int contentLength = urlConnection.getContentLength();
-
-            if (contentLength != -1) {
-                waitingHandler.resetPrimaryProgressCounter();
-                waitingHandler.setMaxPrimaryProgressCounter(contentLength);
-            } else if (fileSizeInBytes != -1) {
-                waitingHandler.resetPrimaryProgressCounter();
-                contentLength = fileSizeInBytes;
-                waitingHandler.setMaxPrimaryProgressCounter(contentLength);
-            } else {
-                waitingHandler.setPrimaryProgressCounterIndeterminate(true);
-            }
-
-            in = new BufferedInputStream(urlConnection.getInputStream());
-            fout = new FileOutputStream(saveFile);
-            long start = System.currentTimeMillis();
-
-            final byte data[] = new byte[1024];
-            int count;
-            while ((count = in.read(data, 0, 1024)) != -1 && !waitingHandler.isRunCanceled()) {
-                fout.write(data, 0, count);
-
-                if (contentLength != -1) {
-                    long now = System.currentTimeMillis();
-                    if ((now - start) > 100) {
-                        waitingHandler.setPrimaryProgressCounter((int) saveFile.length());
-                        start = System.currentTimeMillis();
-                    }
-                }
-            }
-        } finally {
-            if (in != null) {
-                in.close();
-            }
-            if (fout != null) {
-                fout.close();
-            }
-        }
-
-        return saveFile;
-    }
-
-    /**
-     * Check if a given URL exists.
-     *
-     * @param targetUrlAsString the URL to check
-     * @param userName the user name
-     * @param password the password
-     *
-     * @return true of it exists
-     */
-    public static boolean checkIfURLExists(String targetUrlAsString, String userName, String password) {
-
-        try {
-            URL targetUrl = new URL(targetUrlAsString);
-            URLConnection urlConnection = targetUrl.openConnection();
-
-            if (password != null) {
-                String userpass = userName + ":" + password;
-                String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
-                urlConnection.setRequestProperty("Authorization", basicAuth);
-            }
-
-            InputStream inputStream = urlConnection.getInputStream();
-            inputStream.close();
-            return true;
-        } catch (FileNotFoundException e) {
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * Returns the size of the file located at the given URL.
-     *
-     * @param url the url of the file
-     *
-     * @return the size of the file
-     */
-    public static int getFileSize(URL url) {
-        HttpURLConnection conn = null;
-        try {
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("HEAD");
-            conn.getInputStream();
-            return conn.getContentLength();
-        } catch (IOException e) {
-            return -1;
-        } finally {
-            conn.disconnect();
-        }
-    }
-
-    /**
      * Converts a boolean value to the corresponding integer value, 0 for false
      * and 1 for true.
      *
      * @param booleanToConvert the boolean value to convert
+     * 
      * @return 0 for false and 1 for true
      */
-    public static Integer convertBooleanToInteger(Boolean booleanToConvert) {
+    public static int convertBooleanToInteger(
+            Boolean booleanToConvert
+    ) {
+
         return booleanToConvert ? 1 : 0;
+
     }
 
     /**
-     * Simple method to merge two character arrays.
+     * Returns a string in the form key(value).
      *
-     * @param array1 a character array
-     * @param array2 a character array
-     *
-     * @return a concatenation of array1 and array2
-     */
-    public static char[] mergeCharArrays(char[] array1, char[] array2) {
-        char[] result = new char[array1.length + array2.length];
-        System.arraycopy(array1, 0, result, 0, array1.length);
-        System.arraycopy(array2, 0, result, array1.length, array2.length);
-        return result;
-    }
-
-    /**
-     * Returns an array containing the unique characters of the given array.
-     *
-     * @param array the array
-     *
-     * @return the unique array
-     */
-    public static char[] makeUnique(char[] array) {
-
-        char[] arrayUnique = new char[array.length];
-        int index = 0;
-        char aa = array[index];
-        arrayUnique[index] = aa;
-        for (int i = 1; i < array.length; i++) {
-
-            aa = array[i];
-            boolean duplicate = false;
-
-            for (int j = 0; j < i; j++) {
-
-                char aaTemp = array[j];
-
-                if (aa == aaTemp) {
-
-                    duplicate = true;
-                    break;
-
-                }
-            }
-
-            if (!duplicate) {
-
-                arrayUnique[index] = aa;
-
-            }
-        }
-
-        System.arraycopy(arrayUnique, 0, arrayUnique, 0, index);
-        return arrayUnique;
-    }
-
-    /**
-     * Returns a string in the form value(attribute).
-     *
+     * @param key the key
      * @param value the value
-     * @param attribute the attribute
      *
      * @return a string in the form value(attribute)
      */
-    public static String toString(String value, String attribute) {
+    public static String keyValueToString(
+            String key, 
+            String value
+    ) {
 
-        StringBuilder sb = new StringBuilder(value.length() + attribute.length() + 2);
+        StringBuilder sb = new StringBuilder(key.length() + value.length() + 2);
 
-        sb.append(value).append("(").append(attribute).append(")");
+        sb.append(key).append("(").append(value).append(")");
 
         return sb.toString();
 

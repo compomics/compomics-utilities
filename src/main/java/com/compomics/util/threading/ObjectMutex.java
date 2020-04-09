@@ -1,7 +1,6 @@
 package com.compomics.util.threading;
 
-import java.util.HashMap;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This mutex can be used to manage threads editing experiment objects using
@@ -12,14 +11,13 @@ import java.util.concurrent.Semaphore;
 public class ObjectMutex {
 
     /**
-     * Master mutex.
+     * The mutex for the mutex map.
      */
-    private final Semaphore masterMutex = new Semaphore(1);
-
+    private final SimpleSemaphore masterMutex = new SimpleSemaphore(1);
     /**
      * Map of mutexes for the different objects.
      */
-    private final HashMap<Long, Semaphore> mutexMap = new HashMap<>();
+    private final ConcurrentHashMap<Long, SimpleSemaphore> mutexMap = new ConcurrentHashMap<>();
 
     /**
      * Constructor.
@@ -29,49 +27,46 @@ public class ObjectMutex {
     }
 
     /**
-     * Acquire function for the given key. If a thread gets interrupted an exception is thrown as runtime exception.
-     * 
+     * Acquire function for the given key. If a thread gets interrupted an
+     * exception is thrown as runtime exception.
+     *
      * @param key the object key
      */
-    public void acquire(long key) {
-        
-        try {
+    public void acquire(
+            long key
+    ) {
 
-        Semaphore objectMutex = mutexMap.get(key);
+        SimpleSemaphore objectMutex = mutexMap.get(key);
 
         if (objectMutex == null) {
-
+            
             masterMutex.acquire();
 
             objectMutex = mutexMap.get(key);
 
             if (objectMutex == null) {
-                
-                objectMutex = new Semaphore(1);
-                mutexMap.put(key, masterMutex);
+
+                objectMutex = new SimpleSemaphore(1);
+                mutexMap.put(key, objectMutex);
 
             }
-            
+
             masterMutex.release();
-            
+
         }
-        
+
         objectMutex.acquire();
-        
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } 
-        
+
     }
-    
+
     /**
      * Release function for the given key.
-     * 
+     *
      * @param key the object key
      */
     public void release(long key) {
-        
-        Semaphore objectMutex = mutexMap.get(key);
+
+        SimpleSemaphore objectMutex = mutexMap.get(key);
         objectMutex.release();
 
     }

@@ -1,6 +1,6 @@
 package com.compomics.util.io.compression;
 
-import static com.compomics.util.io.IoUtils.ENCODING;
+import static com.compomics.util.io.IoUtil.ENCODING;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;

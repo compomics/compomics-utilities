@@ -1,8 +1,10 @@
 package com.compomics.util.experiment.mass_spectrometry.spectra;
 
+import com.compomics.util.experiment.biology.ions.Charge;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * This class models a precursor.
@@ -16,36 +18,30 @@ public class Precursor extends ExperimentObject {
      * Empty default constructor
      */
     public Precursor() {
+
+        this.rt = Double.NaN;
+        this.mz = Double.NaN;
+        this.intensity = Double.NaN;
+        this.possibleCharges = new int[0];
+
     }
 
     /**
-     * The version UID for serialization/deserialization compatibility.
-     */
-    static final long serialVersionUID = -2711244157697138296L;
-    /**
      * The retention time when the precursor was isolated.
      */
-    private double rt;
-    /**
-     * In case an retention time window is given, the minimum.
-     */
-    private Double rtMin;
-    /**
-     * In case an retention time window is given, the maximum.
-     */
-    private Double rtMax;
+    public final double rt;
     /**
      * The measured m/z of the precursor.
      */
-    private double mz;
+    public final double mz;
     /**
      * The measured intensity of the precursor.
      */
-    private double intensity = 0;
+    public final double intensity;
     /**
      * The charge of the precursor.
      */
-    private ArrayList<Integer> possibleCharges = new ArrayList<>(1);
+    public final int[] possibleCharges;
 
     /**
      * Constructor for the precursor.
@@ -54,12 +50,16 @@ public class Precursor extends ExperimentObject {
      * @param mz the m/z
      * @param possibleCharges the possible charges
      */
-    public Precursor(double rt, double mz, ArrayList<Integer> possibleCharges) {
+    public Precursor(
+            double rt,
+            double mz,
+            int[] possibleCharges
+    ) {
         this.rt = rt;
-        rtMin = rt;
-        rtMax = rt;
         this.mz = mz;
-        this.possibleCharges.addAll(possibleCharges);
+        this.intensity = Double.NaN;
+        this.possibleCharges = new int[possibleCharges.length];
+        System.arraycopy(possibleCharges, 0, this.possibleCharges, 0, possibleCharges.length);
     }
 
     /**
@@ -69,16 +69,18 @@ public class Precursor extends ExperimentObject {
      * @param mz the m/z
      * @param intensity the intensity
      * @param possibleCharges the possible charges
-     * @param rtMin the minimum of the RT window
-     * @param rtMax the maximum of the RT window
      */
-    public Precursor(double rt, double mz, double intensity, ArrayList<Integer> possibleCharges, double rtMin, double rtMax) {
+    public Precursor(
+            double rt,
+            double mz,
+            double intensity,
+            int[] possibleCharges
+    ) {
         this.rt = rt;
-        this.rtMin = rtMin;
-        this.rtMax = rtMax;
         this.mz = mz;
         this.intensity = intensity;
-        this.possibleCharges.addAll(possibleCharges);
+        this.possibleCharges = new int[possibleCharges.length];
+        System.arraycopy(possibleCharges, 0, this.possibleCharges, 0, possibleCharges.length);
     }
 
     /**
@@ -90,40 +92,18 @@ public class Precursor extends ExperimentObject {
      * @param rtMin the minimum of the RT window in seconds
      * @param rtMax the maximum of the RT window in seconds
      */
-    public Precursor(double mz, double intensity, ArrayList<Integer> possibleCharges, double rtMin, double rtMax) {
+    public Precursor(
+            double mz,
+            double intensity,
+            int[] possibleCharges,
+            double rtMin,
+            double rtMax
+    ) {
         this.rt = (rtMin + rtMax) / 2;
-        this.rtMin = rtMin;
-        this.rtMax = rtMax;
         this.mz = mz;
         this.intensity = intensity;
-        this.possibleCharges.addAll(possibleCharges);
-    }
-
-    /**
-     * Constructor for the precursor.
-     *
-     * @param rt the retention time in seconds
-     * @param mz the m/z
-     * @param intensity the intensity
-     * @param possibleCharges the possible charges
-     */
-    public Precursor(double rt, double mz, double intensity, ArrayList<Integer> possibleCharges) {
-        this.rt = rt;
-        rtMin = rt;
-        rtMax = rt;
-        this.mz = mz;
-        this.intensity = intensity;
-        this.possibleCharges.addAll(possibleCharges);
-    }
-
-    /**
-     * Getter for the retention time in seconds.
-     *
-     * @return precursor retention time in seconds
-     */
-    public double getRt() {
-        readDBMode();
-        return rt;
+        this.possibleCharges = new int[possibleCharges.length];
+        System.arraycopy(possibleCharges, 0, this.possibleCharges, 0, possibleCharges.length);
     }
 
     /**
@@ -137,107 +117,20 @@ public class Precursor extends ExperimentObject {
     }
 
     /**
-     * Returns a boolean indicating whether the retention time window was
-     * implemented.
-     *
-     * @return a boolean indicating whether the retention time window was
-     * implemented
-     */
-    public boolean hasRTWindow() {
-        readDBMode();
-        return rtMin != null && rtMax != null && rtMin != -1 && rtMax != -1 && !rtMin.equals(rtMax);
-    }
-
-    /**
-     * Returns an array containing the min and max of the RT window.
-     *
-     * @return an array containing the min and max of the RT window
-     */
-    public double[] getRtWindow() {
-        readDBMode();
-        if (rtMin == null) {
-            rtMin = rt;
-        }
-        if (rtMax == null) {
-            rtMax = rt;
-        }
-        return new double[]{rtMin, rtMax};
-    }
-
-    /**
-     * Getter for the m/z.
-     *
-     * @return precursor m/z
-     */
-    public double getMz() {
-        readDBMode();
-        return mz;
-    }
-
-    /**
-     * Getter for the intensity.
-     *
-     * @return precursor intensity
-     */
-    public double getIntensity() {
-        readDBMode();
-        return intensity;
-    }
-
-    /**
-     * Getter for the possible charges.
-     *
-     * @return the possible charges
-     */
-    public ArrayList<Integer> getPossibleCharges() {
-        readDBMode();
-        return possibleCharges;
-    }
-    
-    /**
      * Returns the possible charges as a string.
      *
      * @return the possible charges as a string
      */
     public String getPossibleChargesAsString() {
-        readDBMode();
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-        for (Integer charge : possibleCharges) {
-            if (first) {
-                first = false;
-            } else {
-                result.append(", ");
-            }
-            result.append(charge.toString());
-        }
-        return result.toString();
-    }
 
-    /**
-     * Returns a recalibrated precursor.
-     *
-     * @param mzCorrection the m/z correction to apply
-     * @param rtCorrection the retention time correction to apply
-     * @return a new recalibrated precursor
-     */
-    public Precursor getRecalibratedPrecursor(double mzCorrection, double rtCorrection) {
         readDBMode();
-        return new Precursor(rt - rtCorrection, mz - mzCorrection, intensity, possibleCharges);
-    }
 
-    /**
-     * Returns the mass of the precursor with the given charge plus a single
-     * proton.
-     *
-     * @param chargeValue the value of the charge plus a single proton
-     *
-     * @return the mass of the precursor with the given charge plus a single
-     * proton
-     */
-    public double getMassPlusProton(int chargeValue) {
-        readDBMode();
-        return getMass(chargeValue) + ElementaryIon.proton.getTheoreticMass();
+        return Arrays.stream(possibleCharges)
+                .mapToObj(
+                        charge -> Charge.toString(charge)
+                )
+                .collect(Collectors.joining(", "));
+
     }
 
     /**
@@ -247,8 +140,67 @@ public class Precursor extends ExperimentObject {
      *
      * @return the mass of the precursor with the given charge
      */
-    public double getMass(int chargeValue) {
+    public double getMass(
+            int chargeValue
+    ) {
+
         readDBMode();
         return mz * chargeValue - chargeValue * ElementaryIon.proton.getTheoreticMass();
+
+    }
+
+    /**
+     * Returns a boolean indicating whether the precursor is identical to the
+     * other precursor. m/z, rt, and intensities values must have exact same
+     * double values. Charges must be identical and in the same order.
+     *
+     * @param otherPrecursor The other precursor.
+     *
+     * @return A boolean indicating whether the precursor is identical to the
+     * other precursor.
+     */
+    public boolean isSameAs(
+            Precursor otherPrecursor
+    ) {
+
+        if (possibleCharges.length != otherPrecursor.possibleCharges.length) {
+            return false;
+        }
+
+        for (int i = 0; i < possibleCharges.length; i++) {
+
+            if (possibleCharges[i] != otherPrecursor.possibleCharges[i]) {
+
+                return false;
+
+            }
+        }
+
+        if (Double.isNaN(mz) && !Double.isNaN(otherPrecursor.mz)
+                || !Double.isNaN(mz) && Double.isNaN(otherPrecursor.mz)
+                || !Double.isNaN(mz) && !Double.isNaN(otherPrecursor.mz) && mz != otherPrecursor.mz) {
+
+            return false;
+
+        }
+
+        if (Double.isNaN(intensity) && !Double.isNaN(otherPrecursor.intensity)
+                || !Double.isNaN(intensity) && Double.isNaN(otherPrecursor.intensity)
+                || !Double.isNaN(intensity) && !Double.isNaN(otherPrecursor.intensity) && intensity != otherPrecursor.intensity) {
+
+            return false;
+
+        }
+
+        if (Double.isNaN(rt) && !Double.isNaN(otherPrecursor.rt)
+                || !Double.isNaN(rt) && Double.isNaN(otherPrecursor.rt)
+                || !Double.isNaN(rt) && !Double.isNaN(otherPrecursor.rt) && rt != otherPrecursor.rt) {
+
+            return false;
+
+        }
+
+        return true;
+
     }
 }

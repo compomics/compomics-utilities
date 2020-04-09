@@ -17,10 +17,13 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import com.compomics.util.experiment.identification.spectrum_annotation.SpecificAnnotationParameters;
 import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
+import com.compomics.util.experiment.mass_spectrometry.spectra.SpectrumUtil;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Annotates a spectrum with information from a tag.
@@ -59,7 +62,13 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * parameters to use for modifications
      * @param precursorCharge the new precursor charge
      */
-    public void setTag(Tag newTag, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters, int precursorCharge) {
+    public void setTag(
+            Tag newTag,
+            ModificationParameters modificationParameters,
+            SequenceMatchingParameters modificationsSequenceMatchingParameters,
+            int precursorCharge
+    ) {
+
         if (this.tag == null || !this.tag.isSameAs(newTag, SequenceMatchingParameters.defaultStringMatching) || this.precursorCharge != precursorCharge) {
 
             // Set new values
@@ -74,8 +83,8 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
 
     /**
      * Returns the possible neutral losses expected by default for a given tag.
-     * /!\ this method will work only if the modification found in the tag are in the
-     * factory.
+     * /!\ this method will work only if the modification found in the tag are
+     * in the factory.
      *
      * @param tag the tag of interest
      * @param modificationParameters the modification parameters the
@@ -85,7 +94,11 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      *
      * @return the expected possible neutral losses
      */
-    public static NeutralLossesMap getDefaultLosses(Tag tag, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+    public static NeutralLossesMap getDefaultLosses(
+            Tag tag,
+            ModificationParameters modificationParameters,
+            SequenceMatchingParameters modificationsSequenceMatchingParameters
+    ) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
         NeutralLossesMap neutralLossesMap = new NeutralLossesMap();
@@ -95,134 +108,164 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
         int aaMax = 0;
 
         int offset = 0;
-        
+
         for (TagComponent component : tag.getContent()) {
-            
+
             if (component instanceof AminoAcidSequence) {
+
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) component;
+
                 for (int i = 0; i < aminoAcidSequence.length(); i++) {
+
                     if (aminoAcidSequence.charAt(i) == 'D'
                             || aminoAcidSequence.charAt(i) == 'E'
                             || aminoAcidSequence.charAt(i) == 'S'
                             || aminoAcidSequence.charAt(i) == 'T') {
+
                         int index = i + offset;
                         aaMin = Math.min(index, aaMin);
                         aaMax = Math.max(index, aaMax);
+
                     }
                 }
+
                 offset += aminoAcidSequence.length();
-            
+
             } else if (component instanceof MassGap) {
-            
+
                 offset++;
-            
+
             } else {
-            
+
                 throw new UnsupportedOperationException("Spectrum annotator not implemented for " + component.getClass() + ".");
-            
+
             }
         }
-        
+
         if (aaMin < tagLength) {
-        
-            neutralLossesMap.addNeutralLoss(NeutralLoss.H2O, aaMin + 1, tagLength - aaMax);
-        
+
+            neutralLossesMap.addNeutralLoss(
+                    NeutralLoss.H2O,
+                    aaMin + 1,
+                    tagLength - aaMax
+            );
         }
 
         aaMin = tagLength;
         aaMax = 0;
 
         offset = 0;
-        
+
         for (TagComponent component : tag.getContent()) {
-            
+
             if (component instanceof AminoAcidSequence) {
-            
+
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) component;
-                
+
                 for (int i = 0; i < aminoAcidSequence.length(); i++) {
-                
+
                     if (aminoAcidSequence.charAt(i) == 'K'
                             || aminoAcidSequence.charAt(i) == 'N'
                             || aminoAcidSequence.charAt(i) == 'Q'
                             || aminoAcidSequence.charAt(i) == 'R') {
-                    
+
                         int index = i + offset;
                         aaMin = Math.min(index, aaMin);
                         aaMax = Math.max(index, aaMax);
-                
+
                     }
                 }
-                
+
                 offset += aminoAcidSequence.length();
-            
+
             } else if (component instanceof MassGap) {
-            
+
                 offset++;
-            
+
             } else {
-            
+
                 throw new UnsupportedOperationException("Spectrum annotator not implemented for " + component.getClass() + ".");
-            
+
             }
         }
-        
+
         if (aaMin < tagLength) {
-        
-            neutralLossesMap.addNeutralLoss(NeutralLoss.NH3, aaMin + 1, tagLength - aaMax);
-        
+
+            neutralLossesMap.addNeutralLoss(
+                    NeutralLoss.NH3,
+                    aaMin + 1,
+                    tagLength - aaMax
+            );
         }
 
         ArrayList<TagComponent> tagComponents = tag.getContent();
         offset = 0;
-        
-        for (int i = 0 ; i < tagComponents.size() ; i++) {
-            
+
+        for (int i = 0; i < tagComponents.size(); i++) {
+
             TagComponent component = tagComponents.get(i);
-        
+
             if (component instanceof AminoAcidSequence) {
-                
+
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) component;
-                String[] fixedModifications = aminoAcidSequence.getFixedModifications(i == 0, i == tagComponents.size() - 1, modificationParameters, modificationsSequenceMatchingParameters);
+                String[] fixedModifications = aminoAcidSequence.getFixedModifications(
+                        i == 0,
+                        i == tagComponents.size() - 1,
+                        modificationParameters,
+                        modificationsSequenceMatchingParameters
+                );
+
                 String[] variableModifications = aminoAcidSequence.getIndexedVariableModifications();
-            
+
                 for (int j = 0; j <= aminoAcidSequence.length() + 1; j++) {
-                    
+
                     String fixedModification = fixedModifications[j];
-                    
+
                     if (fixedModification != null) {
-                        
+
                         Modification modification = modificationFactory.getModification(fixedModification);
-                        int site = ModificationUtils.getSite(j, aminoAcidSequence.length());
-                        
+                        int site = ModificationUtils.getSite(
+                                j,
+                                aminoAcidSequence.length()
+                        );
+
                         for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
-                            
-                            neutralLossesMap.addNeutralLoss(neutralLoss, site, tag.getLengthInAminoAcid() - site + 1);
-                        
+
+                            neutralLossesMap.addNeutralLoss(
+                                    neutralLoss,
+                                    site,
+                                    tag.getLengthInAminoAcid() - site + 1
+                            );
                         }
                     }
-                    
+
                     String variableModification = variableModifications[j];
-                    
+
                     if (variableModification != null) {
-                        
+
                         Modification modification = modificationFactory.getModification(variableModification);
-                        int site = ModificationUtils.getSite(j, aminoAcidSequence.length());
-                        
+                        int site = ModificationUtils.getSite(
+                                j,
+                                aminoAcidSequence.length()
+                        );
+
                         for (NeutralLoss neutralLoss : modification.getNeutralLosses()) {
-                            
-                            neutralLossesMap.addNeutralLoss(neutralLoss, site, tag.getLengthInAminoAcid() - site + 1);
-                        
+
+                            neutralLossesMap.addNeutralLoss(
+                                    neutralLoss,
+                                    site,
+                                    tag.getLengthInAminoAcid() - site + 1
+                            );
                         }
                     }
                 }
-                
+
                 offset += aminoAcidSequence.length();
-            
+
             } else {
-            
+
                 offset++;
-            
+
             }
         }
 
@@ -230,7 +273,8 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     /**
-     * Returns the spectrum annotations of a spectrum in a list of IonMatches using an intensity filter.
+     * Returns the spectrum annotations of a spectrum in a list of IonMatches
+     * using an intensity filter.
      *
      * Note that, except for +1 precursors, fragments ions will be expected to
      * have a charge strictly smaller than the precursor ion charge.
@@ -241,15 +285,36 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @param modificationsSequenceMatchingParameters the sequence matching
      * parameters to use for modifications
      * @param specificAnnotationSettings the specific annotation settings
+     * @param spectrumFile the file of the spectrum to annotate
+     * @param spectrumTitle the title of the spectrum to annotate
      * @param spectrum the spectrum to match
      * @param tag the tag of interest
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public IonMatch[] getSpectrumAnnotation(AnnotationParameters annotationSettings, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters, SpecificAnnotationParameters specificAnnotationSettings, 
-            Spectrum spectrum, Tag tag) {
-        return getSpectrumAnnotation(annotationSettings, modificationParameters, modificationsSequenceMatchingParameters, specificAnnotationSettings, spectrum, tag, true);
+    public IonMatch[] getSpectrumAnnotation(
+            AnnotationParameters annotationSettings,
+            ModificationParameters modificationParameters,
+            SequenceMatchingParameters modificationsSequenceMatchingParameters,
+            SpecificAnnotationParameters specificAnnotationSettings,
+            String spectrumFile,
+            String spectrumTitle,
+            Spectrum spectrum,
+            Tag tag
+    ) {
+
+        return getSpectrumAnnotation(
+                annotationSettings,
+                modificationParameters,
+                modificationsSequenceMatchingParameters,
+                specificAnnotationSettings,
+                spectrumFile,
+                spectrumTitle,
+                spectrum,
+                tag,
+                true
+        );
     }
 
     /**
@@ -264,58 +329,119 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
      * @param modificationsSequenceMatchingParameters the sequence matching
      * parameters to use for modifications
      * @param specificAnnotationSettings the specific annotation settings
-     * @param spectrum the spectrum to match
+     * @param spectrumFile the file of the spectrum to annotate
+     * @param spectrumTitle the title of the spectrum to annotate
+     * @param spectrum the spectrum to annotate
      * @param tag the tag of interest
-     * @param useIntensityFilter boolean indicating whether intensity filters should be used
+     * @param useIntensityFilter boolean indicating whether intensity filters
+     * should be used
      *
      * @return an ArrayList of IonMatch containing the ion matches with the
      * given settings
      */
-    public IonMatch[] getSpectrumAnnotation(AnnotationParameters annotationSettings, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters, SpecificAnnotationParameters specificAnnotationSettings, 
-            Spectrum spectrum, Tag tag, boolean useIntensityFilter) {
+    public IonMatch[] getSpectrumAnnotation(
+            AnnotationParameters annotationSettings,
+            ModificationParameters modificationParameters,
+            SequenceMatchingParameters modificationsSequenceMatchingParameters,
+            SpecificAnnotationParameters specificAnnotationSettings,
+            String spectrumFile,
+            String spectrumTitle,
+            Spectrum spectrum,
+            Tag tag,
+            boolean useIntensityFilter
+    ) {
 
         ArrayList<IonMatch> annotationList = new ArrayList<>(0);
 
-        setMassTolerance(specificAnnotationSettings.getFragmentIonAccuracy(), specificAnnotationSettings.isFragmentIonPpm(), annotationSettings.getTiesResolution());
-        if (spectrum != null) {
-            double intensityLimit = useIntensityFilter ? spectrum.getIntensityLimit(annotationSettings.getIntensityThresholdType(), annotationSettings.getAnnotationIntensityLimit()) : 0.0;
-            setSpectrum(spectrum, intensityLimit);
-        }
-        setTag(tag, modificationParameters, modificationsSequenceMatchingParameters, specificAnnotationSettings.getPrecursorCharge());
+        setMassTolerance(
+                specificAnnotationSettings.getFragmentIonAccuracy(),
+                specificAnnotationSettings.isFragmentIonPpm(),
+                annotationSettings.getTiesResolution()
+        );
 
-        ArrayList<Integer> precursorCharges = new ArrayList<>();
+        if (spectrum != null) {
+
+            double intensityLimit = useIntensityFilter
+                    ? SpectrumUtil.getIntensityLimit(
+                            spectrum,
+                            annotationSettings.getIntensityThresholdType(),
+                            annotationSettings.getAnnotationIntensityLimit()
+                    )
+                    : 0.0;
+            setSpectrum(
+                    spectrumFile,
+                    spectrumTitle,
+                    spectrum,
+                    intensityLimit
+            );
+        }
+
+        setTag(
+                tag,
+                modificationParameters,
+                modificationsSequenceMatchingParameters,
+                specificAnnotationSettings.getPrecursorCharge()
+        );
 
         // we have to keep the precursor charges separate from the fragment ion charges
-        for (int i = 1; i <= precursorCharge; i++) {
-            precursorCharges.add(i);
-        }
+        HashSet<Integer> precursorCharges = IntStream.rangeClosed(1, precursorCharge)
+                .mapToObj(a -> a)
+                .collect(
+                        Collectors.toCollection(
+                                HashSet::new
+                        )
+                );
 
         HashMap<Ion.IonType, HashSet<Integer>> ionTypes = specificAnnotationSettings.getIonTypes();
+
         if (theoreticalFragmentIons != null) {
+
             for (Ion.IonType ionType : ionTypes.keySet()) {
+
                 HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
+
                 if (ionMap != null) {
+
                     HashSet<Integer> subtypes = ionTypes.get(ionType);
+
                     for (int subType : subtypes) {
+
                         ArrayList<Ion> ions = ionMap.get(subType);
+
                         if (ions != null) {
+
                             for (Ion ion : ions) {
 
                                 if (lossesValidated(specificAnnotationSettings.getNeutralLossesMap(), ion)) {
 
-                                    ArrayList<Integer> tempCharges;
+                                    HashSet<Integer> tempCharges;
+
                                     // have to treat precursor charges separately, as to not increase the max charge for the other ions
                                     if (ionType == Ion.IonType.PRECURSOR_ION) {
+
                                         tempCharges = precursorCharges;
+
                                     } else {
+
                                         tempCharges = specificAnnotationSettings.getSelectedCharges();
+
                                     }
 
                                     for (int charge : tempCharges) {
+
                                         if (chargeValidated(ion, charge, precursorCharge)) {
-                                            IonMatch ionMatch = matchInSpectrum(ion, charge);
+
+                                            IonMatch ionMatch = matchInSpectrum(
+                                                    spectrum.mz,
+                                                    spectrum.intensity,
+                                                    ion,
+                                                    charge
+                                            );
+
                                             if (ionMatch != null) {
+
                                                 annotationList.add(ionMatch);
+
                                             }
                                         }
                                     }
@@ -331,8 +457,28 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
     }
 
     @Override
-    public IonMatch[] getCurrentAnnotation(Spectrum spectrum, AnnotationParameters annotationSettings, SpecificAnnotationParameters specificAnnotationSettings, 
-            ModificationParameters modificationParameters, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters, boolean useIntensityFilter) {
-        return getSpectrumAnnotation(annotationSettings, modificationParameters, modificationsSequenceMatchingParameters, specificAnnotationSettings, spectrum, tag, useIntensityFilter);
+    public IonMatch[] getCurrentAnnotation(
+            String spectrumFile,
+            String spectrumTitle,
+            Spectrum spectrum,
+            AnnotationParameters annotationSettings,
+            SpecificAnnotationParameters specificAnnotationSettings,
+            ModificationParameters modificationParameters,
+            SequenceProvider sequenceProvider,
+            SequenceMatchingParameters modificationsSequenceMatchingParameters,
+            boolean useIntensityFilter
+    ) {
+
+        return getSpectrumAnnotation(
+                annotationSettings,
+                modificationParameters,
+                modificationsSequenceMatchingParameters,
+                specificAnnotationSettings,
+                spectrumFile,
+                spectrumTitle,
+                spectrum,
+                tag,
+                useIntensityFilter
+        );
     }
 }

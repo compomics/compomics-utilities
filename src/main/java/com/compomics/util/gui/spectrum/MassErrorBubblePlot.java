@@ -8,6 +8,9 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -95,8 +98,19 @@ public class MassErrorBubblePlot extends JPanel {
             ArrayList<Spectrum> currentSpectra,
             double massTolerance,
             boolean fragmentIonLabels,
-            boolean addMarkers) {
-        this(dataIndexes, annotations, currentSpectra, massTolerance, 1, fragmentIonLabels, addMarkers, false);
+            boolean addMarkers
+    ) {
+        
+        this(
+                dataIndexes, 
+                annotations, 
+                currentSpectra, 
+                massTolerance, 
+                1, 
+                fragmentIonLabels, 
+                addMarkers, 
+                false
+        );
     }
 
     /**
@@ -120,8 +134,18 @@ public class MassErrorBubblePlot extends JPanel {
             double massTolerance,
             boolean fragmentIonLabels,
             boolean addMarkers,
-            boolean useRelativeError) {
-        this(dataIndexes, annotations, currentSpectra, massTolerance, 1, fragmentIonLabels, addMarkers, useRelativeError);
+            boolean useRelativeError
+    ) {
+        this(
+                dataIndexes, 
+                annotations, 
+                currentSpectra, 
+                massTolerance, 
+                1, 
+                fragmentIonLabels, 
+                addMarkers, 
+                useRelativeError
+        );
     }
 
     /**
@@ -147,16 +171,23 @@ public class MassErrorBubblePlot extends JPanel {
             double bubbleScale,
             boolean fragmentIonLabels,
             boolean addMarkers,
-            boolean useRelativeError) {
+            boolean useRelativeError
+    ) {
         super();
 
         setOpaque(false);
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
+        setLayout(
+                new javax.swing.BoxLayout(
+                        this, 
+                        javax.swing.BoxLayout.LINE_AXIS
+                )
+        );
 
         currentlyUsedIonMatches = new IonMatch[0];
 
         DefaultXYZDataset xyzDataset = new DefaultXYZDataset();
         HashMap<IonMatch, ArrayList<XYZDataPoint>> fragmentIonDataset = new HashMap<>();
+        
         double maxError = 0.0;
 
         for (int j = 0; j < annotations.size(); j++) {
@@ -176,8 +207,8 @@ public class MassErrorBubblePlot extends JPanel {
 
                     IonMatch ionMatch = (IonMatch) currentlyUsedIonMatches[i];
 
-                    if (ionMatch.peak.intensity > maxAnnotatedIntensity) {
-                        maxAnnotatedIntensity = ionMatch.peak.intensity;
+                    if (ionMatch.peakIntensity > maxAnnotatedIntensity) {
+                        maxAnnotatedIntensity = ionMatch.peakIntensity;
                     }
                 }
 
@@ -203,10 +234,21 @@ public class MassErrorBubblePlot extends JPanel {
 
                         if (fragmentIonDataset.get(ionMatch) != null) {
                             fragmentIonDataset.get(ionMatch).add(
-                                    new XYZDataPoint(ionMatch.peak.mz, error, (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
+                                    new XYZDataPoint(
+                                            ionMatch.peakMz, 
+                                            error, 
+                                            (ionMatch.peakIntensity / totalIntensity) * bubbleScale
+                                    )
+                            );
                         } else {
-                            ArrayList<XYZDataPoint> temp = new ArrayList<>();
-                            temp.add(new XYZDataPoint(ionMatch.peak.mz, error, (ionMatch.peak.intensity / totalIntensity) * bubbleScale));
+                            ArrayList<XYZDataPoint> temp = new ArrayList<>(1);
+                            temp.add(
+                                    new XYZDataPoint(
+                                            ionMatch.peakMz, 
+                                            error, 
+                                            (ionMatch.peakIntensity / totalIntensity) * bubbleScale
+                                    )
+                            );
                             fragmentIonDataset.put(ionMatch, temp);
                         }
 
@@ -244,16 +286,27 @@ public class MassErrorBubblePlot extends JPanel {
                             maxError = Math.abs(error);
                         }
 
-                        dataXYZ[0][i] = ionMatch.peak.mz;
+                        dataXYZ[0][i] = ionMatch.peakMz;
                         dataXYZ[1][i] = error;
-                        dataXYZ[2][i] = (ionMatch.peak.intensity / totalIntensity) * bubbleScale;
+                        dataXYZ[2][i] = (ionMatch.peakIntensity / totalIntensity) * bubbleScale;
 
                         if (fragmentIonDataset.get(ionMatch) != null) {
                             fragmentIonDataset.get(ionMatch).add(
-                                    new XYZDataPoint(ionMatch.peak.mz, error, ionMatch.peak.intensity / totalIntensity));
+                                    new XYZDataPoint(
+                                            ionMatch.peakMz, 
+                                            error, 
+                                            ionMatch.peakIntensity / totalIntensity
+                                    )
+                            );
                         } else {
-                            ArrayList<XYZDataPoint> temp = new ArrayList<>();
-                            temp.add(new XYZDataPoint(ionMatch.peak.mz, error, ionMatch.peak.intensity / totalIntensity));
+                            ArrayList<XYZDataPoint> temp = new ArrayList<>(1);
+                            temp.add(
+                                    new XYZDataPoint(
+                                            ionMatch.peakMz, 
+                                            error, 
+                                            ionMatch.peakIntensity / totalIntensity
+                                    )
+                            );
                             fragmentIonDataset.put(ionMatch, temp);
                         }
                     }
@@ -271,7 +324,16 @@ public class MassErrorBubblePlot extends JPanel {
             yAxisLabel = "m/z error (Da)";
         }
 
-        JFreeChart chart = ChartFactory.createBubbleChart(null, "m/z", yAxisLabel, xyzDataset, PlotOrientation.VERTICAL, !fragmentIonLabels, true, false);
+        JFreeChart chart = ChartFactory.createBubbleChart(
+                null, 
+                "m/z", 
+                yAxisLabel, 
+                xyzDataset, 
+                PlotOrientation.VERTICAL, 
+                !fragmentIonLabels, 
+                true, 
+                false
+        );
 
         if (chart.getLegend() != null) {
             chart.getLegend().setPosition(RectangleEdge.RIGHT);
@@ -305,7 +367,7 @@ public class MassErrorBubblePlot extends JPanel {
 
         plot.setRangeGridlinePaint(Color.black);
         plot.setDomainGridlinePaint(Color.black);
-        
+
         // make semi see through
         plot.setForegroundAlpha(0.5f);
 
@@ -327,7 +389,11 @@ public class MassErrorBubblePlot extends JPanel {
      * @param showMarkers if true interval markers for the fragment ions will be
      * added
      */
-    public static void addFragmentIonTypeMarkers(HashMap<IonMatch, ArrayList<XYZDataPoint>> data, JFreeChart chart, boolean showMarkers) {
+    public static void addFragmentIonTypeMarkers(
+            HashMap<IonMatch, ArrayList<XYZDataPoint>> data, 
+            JFreeChart chart, 
+            boolean showMarkers
+    ) {
 
         int horizontalFontPadding = 13;
 
@@ -344,7 +410,11 @@ public class MassErrorBubblePlot extends JPanel {
             double currentXValue = currentDataPoint.getX();
 
             // create the interval marker
-            IntervalMarker intervalMarker = new IntervalMarker(currentXValue - 5, currentXValue + 5, defaultMarkerColor);
+            IntervalMarker intervalMarker = new IntervalMarker(
+                    currentXValue - 5, 
+                    currentXValue + 5, 
+                    defaultMarkerColor
+            );
 
             IonMatch ionMatch = fragmentIonType;
             String tempKey = ionMatch.getPeakAnnotation();
@@ -373,42 +443,122 @@ public class MassErrorBubblePlot extends JPanel {
             // set the horizontal location of the markers label
             // this is need so that not all labels appear on top of each other
             if (tempKey.startsWith("y")) {
-                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding, 0, horizontalFontPadding, 0));
+                
+                intervalMarker.setLabelOffset(
+                        new RectangleInsets(
+                                horizontalFontPadding, 
+                                0, 
+                                horizontalFontPadding, 
+                                0
+                        )
+                );
             }
 
             if (tempKey.lastIndexOf("H2O") != -1) {
-                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 2, 0, horizontalFontPadding * 2, 0));
+                
+                intervalMarker.setLabelOffset(
+                        new RectangleInsets(
+                                horizontalFontPadding * 2, 
+                                0, 
+                                horizontalFontPadding * 2, 
+                                0
+                        )
+                );
             }
 
             if (tempKey.lastIndexOf("NH3") != -1) {
-                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 3, 0, horizontalFontPadding * 3, 0));
+                
+                intervalMarker.setLabelOffset(
+                        new RectangleInsets(
+                                horizontalFontPadding * 3, 
+                                0, 
+                                horizontalFontPadding * 3, 
+                                0
+                        )
+                );
             }
 
             if (tempKey.lastIndexOf("Prec") != -1) {
-                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 4, 0, horizontalFontPadding * 4, 0));
+                
+                intervalMarker.setLabelOffset(
+                        new RectangleInsets(
+                                horizontalFontPadding * 4, 
+                                0, 
+                                horizontalFontPadding * 4, 
+                                0
+                        )
+                );
 
                 if (tempKey.lastIndexOf("H2O") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 5, 0, horizontalFontPadding * 5, 0));
+                    
+                    intervalMarker.setLabelOffset(
+                            new RectangleInsets(
+                                    horizontalFontPadding * 5, 
+                                    0, 
+                                    horizontalFontPadding * 5, 
+                                    0
+                            )
+                    );
                 }
 
                 if (tempKey.lastIndexOf("NH3") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 6, 0, horizontalFontPadding * 6, 0));
+                    
+                    intervalMarker.setLabelOffset(
+                            new RectangleInsets(
+                                    horizontalFontPadding * 6, 
+                                    0, 
+                                    horizontalFontPadding * 6, 
+                                    0
+                            )
+                    );
                 }
             }
 
             if (tempKey.startsWith("i")) {
-                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 5, 0, horizontalFontPadding * 5, 0));
+                
+                intervalMarker.setLabelOffset(
+                        new RectangleInsets(
+                                horizontalFontPadding * 5, 
+                                0, 
+                                horizontalFontPadding * 5, 
+                                0
+                        )
+                );
             }
 
             if (tempKey.lastIndexOf("++") != -1) {
-                intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 7, 0, horizontalFontPadding * 7, 0));
+                
+                intervalMarker.setLabelOffset(
+                        new RectangleInsets(
+                                horizontalFontPadding * 7, 
+                                0, 
+                                horizontalFontPadding * 7, 
+                                0
+                        )
+                );
 
                 if (tempKey.lastIndexOf("H2O") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 8, 0, horizontalFontPadding * 8, 0));
+                    
+                    intervalMarker.setLabelOffset(
+                            new RectangleInsets(
+                                    horizontalFontPadding * 8, 
+                                    0, 
+                                    horizontalFontPadding * 8, 
+                                    0
+                            )
+                    );
                 }
 
                 if (tempKey.lastIndexOf("NH3") != -1) {
-                    intervalMarker.setLabelOffset(new RectangleInsets(horizontalFontPadding * 9, 0, horizontalFontPadding * 9, 0));
+                    
+                    intervalMarker.setLabelOffset(
+                            new RectangleInsets(
+                                    horizontalFontPadding * 9, 
+                                    0, 
+                                    horizontalFontPadding * 9, 
+                                    0
+                            )
+                    );
                 }
             }
 
@@ -430,42 +580,44 @@ public class MassErrorBubblePlot extends JPanel {
      * Adds the provided data series to an XYZ data set.
      *
      * @param data the data to add
+     * 
      * @return the created data set
      */
-    public DefaultXYZDataset addXYZDataSeries(HashMap<IonMatch, ArrayList<XYZDataPoint>> data) {
+    public DefaultXYZDataset addXYZDataSeries(
+            HashMap<IonMatch, ArrayList<XYZDataPoint>> data
+    ) {
 
         // sort the keys
-        ArrayList<String> sortedKeys = new ArrayList<>();
-        HashMap<String, IonMatch> ionNameTypeMap = new HashMap<>();
+        TreeMap<String, IonMatch> ionNameTypeMap = new TreeMap<>();
 
         Iterator<IonMatch> iterator = data.keySet().iterator();
 
         while (iterator.hasNext()) {
+            
             IonMatch ionMatch = iterator.next();
             ionNameTypeMap.put(ionMatch.getPeakAnnotation(), ionMatch);
-            sortedKeys.add(ionMatch.getPeakAnnotation());
+        
         }
-
-        java.util.Collections.sort(sortedKeys);
 
         DefaultXYZDataset dataset = new DefaultXYZDataset();
 
-        for (int j = 0; j < sortedKeys.size(); j++) {
-
-            IonMatch ionMatch = ionNameTypeMap.get(sortedKeys.get(j));
+        for (IonMatch ionMatch : ionNameTypeMap.values()) {
 
             ArrayList<XYZDataPoint> currentData = data.get(ionMatch);
 
             double[][] tempXYZData = new double[3][currentData.size()];
 
             for (int i = 0; i < currentData.size(); i++) {
+                
                 tempXYZData[0][i] = currentData.get(i).getX();
                 tempXYZData[1][i] = currentData.get(i).getY();
                 tempXYZData[2][i] = currentData.get(i).getZ();
+            
             }
 
             dataset.addSeries(ionMatch.getPeakAnnotation(), tempXYZData);
             dataSeriesfragmentIonColors.add(SpectrumPanel.determineFragmentIonColor(ionMatch.ion, false));
+            
         }
 
         return dataset;

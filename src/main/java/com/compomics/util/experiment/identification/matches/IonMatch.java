@@ -7,7 +7,6 @@ import com.compomics.util.experiment.biology.atoms.Atom;
 import com.compomics.util.experiment.biology.ions.Charge;
 import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.identification.spectrum_annotation.IonMatchKeysCache;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.CvTerm;
 
@@ -23,15 +22,15 @@ public class IonMatch extends ExperimentObject {
      */
     public IonMatch() {
     }
-
+    
     /**
-     * The version UID for serialization/deserialization compatibility.
+     * The matched peak m/z.
      */
-    static final long serialVersionUID = 5753142782728884464L;
+    public double peakMz;
     /**
-     * The matched peak.
+     * The matched peak intensity.
      */
-    public Peak peak;
+    public double peakIntensity;
     /**
      * The matching ion.
      */
@@ -39,18 +38,25 @@ public class IonMatch extends ExperimentObject {
     /**
      * The inferred charge of the ion.
      */
-    public Integer charge;
-    
+    public int charge;
+
     /**
-     * Constructor for an ion peak.
+     * Constructor for an ion match.
      *
-     * @param aPeak the matched peak
-     * @param anIon the corresponding type of ion
-     * @param charge the inferred charge of the ion
+     * @param peakMz The matched peak m/z.
+     * @param peakIntensity The matched peak intensity.
+     * @param ion The theoretic ion.
+     * @param charge The inferred charge of the ion.
      */
-    public IonMatch(Peak aPeak, Ion anIon, Integer charge) {
-        peak = aPeak;
-        ion = anIon;
+    public IonMatch(
+            double peakMz,
+            double peakIntensity,
+            Ion ion,
+            int charge
+    ) {
+        this.peakMz = peakMz;
+        this.peakIntensity = peakIntensity;
+        this.ion = ion;
         this.charge = charge;
     }
 
@@ -62,7 +68,7 @@ public class IonMatch extends ExperimentObject {
     public double getAbsoluteError() {
         readDBMode();
         double theoreticMz = ion.getTheoreticMz(charge);
-        return peak.mz - theoreticMz;
+        return peakMz - theoreticMz;
     }
 
     /**
@@ -73,10 +79,13 @@ public class IonMatch extends ExperimentObject {
      *
      * @return the absolute matching error
      */
-    public double getAbsoluteError(int minIsotope, int maxIsotope) {
+    public double getAbsoluteError(
+            int minIsotope,
+            int maxIsotope
+    ) {
         readDBMode();
         double theoreticMz = ion.getTheoreticMz(charge);
-        double measuredMz = peak.mz;
+        double measuredMz = peakMz;
         measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge;
         return measuredMz - theoreticMz;
     }
@@ -89,8 +98,7 @@ public class IonMatch extends ExperimentObject {
     public double getRelativeError() {
         readDBMode();
         double theoreticMz = ion.getTheoreticMz(charge);
-        double measuredMz = peak.mz;
-        return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;
+        return ((peakMz - theoreticMz) * 1000000) / theoreticMz;
     }
 
     /**
@@ -101,10 +109,13 @@ public class IonMatch extends ExperimentObject {
      *
      * @return the relative matching error
      */
-    public double getRelativeError(int minIsotope, int maxIsotope) {
+    public double getRelativeError(
+            int minIsotope,
+            int maxIsotope
+    ) {
         readDBMode();
         double theoreticMz = ion.getTheoreticMz(charge);
-        double measuredMz = peak.mz;
+        double measuredMz = peakMz;
         measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge;
         return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;
     }
@@ -120,9 +131,12 @@ public class IonMatch extends ExperimentObject {
      * @return the distance in number of neutrons between the experimental mass
      * and theoretic mass
      */
-    public int getIsotopeNumber(int minIsotope, int maxIsotope) {
+    public int getIsotopeNumber(
+            int minIsotope,
+            int maxIsotope
+    ) {
         readDBMode();
-        double experimentalMass = peak.mz * charge - charge * ElementaryIon.proton.getTheoreticMass();
+        double experimentalMass = peakMz * charge - charge * ElementaryIon.proton.getTheoreticMass();
         double result = (experimentalMass - ion.getTheoreticMass()) / Atom.C.getDifferenceToMonoisotopic(1);
         return Math.min(Math.max((int) Math.round(result), minIsotope), maxIsotope);
     }
@@ -137,13 +151,14 @@ public class IonMatch extends ExperimentObject {
      *
      * @return the match m/z error
      */
-    public double getError(boolean isPpm, int minIsotope, int maxIsotope) {
-        readDBMode();
-        if (isPpm) {
-            return getRelativeError(minIsotope, maxIsotope);
-        } else {
-            return getAbsoluteError(minIsotope, maxIsotope);
-        }
+    public double getError(
+            boolean isPpm,
+            int minIsotope,
+            int maxIsotope
+    ) {
+
+        return isPpm ? getRelativeError(minIsotope, maxIsotope) : getAbsoluteError(minIsotope, maxIsotope);
+
     }
 
     /**
@@ -154,13 +169,13 @@ public class IonMatch extends ExperimentObject {
      *
      * @return the match m/z error
      */
-    public double getError(boolean isPpm) {
+    public double getError(
+            boolean isPpm
+    ) {
         readDBMode();
-        if (isPpm) {
-            return getRelativeError();
-        } else {
-            return getAbsoluteError();
-        }
+
+        return isPpm ? getRelativeError() : getAbsoluteError();
+
     }
 
     /**
@@ -170,7 +185,11 @@ public class IonMatch extends ExperimentObject {
      */
     public String getPeakAnnotation() {
         readDBMode();
-        return getPeakAnnotation(false, ion, charge);
+        return getPeakAnnotation(
+                false,
+                ion,
+                charge
+        );
     }
 
     /**
@@ -178,10 +197,18 @@ public class IonMatch extends ExperimentObject {
      *
      * @param ion the given ion
      * @param charge the given charge
+     *
      * @return the annotation to use for the given ion match
      */
-    public static String getPeakAnnotation(Ion ion, int charge) {
-        return getPeakAnnotation(false, ion, charge);
+    public static String getPeakAnnotation(
+            Ion ion,
+            int charge
+    ) {
+        return getPeakAnnotation(
+                false,
+                ion,
+                charge
+        );
     }
 
     /**
@@ -193,8 +220,15 @@ public class IonMatch extends ExperimentObject {
      *
      * @return the key for the ion match
      */
-    public static String getMatchKey(Ion ion, int charge) {
-        return getMatchKey(ion, charge, null);
+    public static String getMatchKey(
+            Ion ion,
+            int charge
+    ) {
+        return getMatchKey(
+                ion,
+                charge,
+                null
+        );
     }
 
     /**
@@ -208,26 +242,50 @@ public class IonMatch extends ExperimentObject {
      *
      * @return the key for the ion match
      */
-    public static String getMatchKey(Ion ion, int charge, IonMatchKeysCache ionMatchKeysCache) {
+    public static String getMatchKey(
+            Ion ion,
+            int charge,
+            IonMatchKeysCache ionMatchKeysCache
+    ) {
+
         if (ionMatchKeysCache != null) {
+
             return ionMatchKeysCache.getMatchKey(ion, charge);
+
         }
+
         Ion.IonType ionType = ion.getType();
         int ionTypeIndex = ionType.index;
         int ionSubType = ion.getSubType();
         int fragmentIonNumber;
+
         if (ionType == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+
             PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ion);
             fragmentIonNumber = fragmentIon.getNumber();
+
         } else if (ionType == Ion.IonType.TAG_FRAGMENT_ION) {
+
             TagFragmentIon tagFragmentIon = ((TagFragmentIon) ion);
             fragmentIonNumber = tagFragmentIon.getNumber();
+
         } else {
+
             fragmentIonNumber = 0;
+
         }
+
         String neutralLossesAsString = ion.getNeutralLossesAsString();
-        String key = getMatchKey(ionTypeIndex, ionSubType, fragmentIonNumber, neutralLossesAsString, charge);
+        String key = getMatchKey(
+                ionTypeIndex,
+                ionSubType,
+                fragmentIonNumber,
+                neutralLossesAsString,
+                charge
+        );
+
         return key;
+
     }
 
     /**
@@ -241,10 +299,29 @@ public class IonMatch extends ExperimentObject {
      *
      * @return the key for the ion match
      */
-    public static String getMatchKey(int ionTypeIndex, int ionSubType, int fragmentIonNumber, String neutralLossesAsString, int charge) {
+    public static String getMatchKey(
+            int ionTypeIndex,
+            int ionSubType,
+            int fragmentIonNumber,
+            String neutralLossesAsString,
+            int charge
+    ) {
+
         StringBuilder stringBuilder = new StringBuilder(8);
-        stringBuilder.append(ionTypeIndex).append("_").append(ionSubType).append("_").append(fragmentIonNumber).append("_").append(neutralLossesAsString).append("_").append(charge);
+
+        stringBuilder
+                .append(ionTypeIndex)
+                .append("_")
+                .append(ionSubType)
+                .append("_")
+                .append(fragmentIonNumber)
+                .append("_")
+                .append(neutralLossesAsString)
+                .append("_")
+                .append(charge);
+
         return stringBuilder.toString();
+
     }
 
     /**
@@ -253,9 +330,14 @@ public class IonMatch extends ExperimentObject {
      * @param html if true, returns the annotation as HTML with subscripts tags
      * @param ion the given ion
      * @param charge the given charge
+     *
      * @return the annotation to use for the given ion match
      */
-    public static String getPeakAnnotation(boolean html, Ion ion, int charge) {
+    public static String getPeakAnnotation(
+            boolean html,
+            Ion ion,
+            int charge
+    ) {
 
         StringBuilder result = new StringBuilder();
 
@@ -275,7 +357,7 @@ public class IonMatch extends ExperimentObject {
                 }
 
                 // add charge
-                result.append(Charge.getChargeAsFormattedString(charge));
+                result.append(Charge.toString(charge));
 
                 // add any neutral losses
                 if (html) {
@@ -295,6 +377,7 @@ public class IonMatch extends ExperimentObject {
                     result.append("</html>");
                 }
                 return result.toString();
+
             case TAG_FRAGMENT_ION:
                 TagFragmentIon tagFragmentIon = (TagFragmentIon) ion;
 
@@ -312,7 +395,7 @@ public class IonMatch extends ExperimentObject {
                 }
 
                 // add charge
-                result.append(Charge.getChargeAsFormattedString(charge));
+                result.append(Charge.toString(charge));
 
                 // add any neutral losses
                 if (html) {
@@ -333,6 +416,7 @@ public class IonMatch extends ExperimentObject {
                     result.append("</html>");
                 }
                 return result.toString();
+
             case PRECURSOR_ION:
                 if (html) {
                     result.append("<html>");
@@ -340,7 +424,7 @@ public class IonMatch extends ExperimentObject {
                 result.append(ion.getSubTypeAsString()).append("-");
 
                 // add charge
-                result.append(Charge.getChargeAsFormattedString(charge));
+                result.append(Charge.toString(charge));
 
                 // add any neutral losses
                 String neutralLoss = ion.getNeutralLossesAsString();
@@ -359,6 +443,7 @@ public class IonMatch extends ExperimentObject {
                     result.append("</html>");
                 }
                 return result.toString();
+
             default:
                 if (html) {
                     result.append("<html>");
@@ -368,6 +453,7 @@ public class IonMatch extends ExperimentObject {
                     result.append("</html>");
                 }
                 return result.toString();
+
         }
     }
 
@@ -377,9 +463,15 @@ public class IonMatch extends ExperimentObject {
      * @param html if true, returns the annotation as HTML with subscripts tags
      * @return the annotation to use for the given ion match
      */
-    public String getPeakAnnotation(boolean html) {
+    public String getPeakAnnotation(
+            boolean html
+    ) {
         readDBMode();
-        return getPeakAnnotation(html, ion, charge);
+        return getPeakAnnotation(
+                html,
+                ion,
+                charge
+        );
     }
 
     /**
@@ -389,7 +481,12 @@ public class IonMatch extends ExperimentObject {
      */
     public CvTerm getMZPrideCvTerm() {
         readDBMode();
-        return new CvTerm("PRIDE", "PRIDE:0000188", "product ion m/z", peak.mz + "");
+        return new CvTerm(
+                "PRIDE",
+                "PRIDE:0000188",
+                "product ion m/z",
+                Double.toString(peakMz)
+        );
     }
 
     /**
@@ -399,7 +496,12 @@ public class IonMatch extends ExperimentObject {
      */
     public CvTerm getIntensityPrideCvTerm() {
         readDBMode();
-        return new CvTerm("PRIDE", "PRIDE:0000189", "product ion intensity", peak.intensity + "");
+        return new CvTerm(
+                "PRIDE", 
+                "PRIDE:0000189", 
+                "product ion intensity", 
+                Double.toString(peakIntensity)
+        );
     }
 
     /**
@@ -410,9 +512,22 @@ public class IonMatch extends ExperimentObject {
      *
      * @return the pride CV term for the ion match error
      */
-    public CvTerm getIonMassErrorPrideCvTerm(int minIsotope, int maxIsotope) {
+    public CvTerm getIonMassErrorPrideCvTerm(
+            int minIsotope, 
+            int maxIsotope
+    ) {
         readDBMode();
-        return new CvTerm("PRIDE", "PRIDE:0000190", "product ion mass error", getAbsoluteError(minIsotope, maxIsotope) + "");
+        return new CvTerm(
+                "PRIDE", 
+                "PRIDE:0000190", 
+                "product ion mass error", 
+                Double.toString(
+                        getAbsoluteError(
+                                minIsotope, 
+                                maxIsotope
+                        )
+                )
+        );
     }
 
     /**
@@ -422,7 +537,12 @@ public class IonMatch extends ExperimentObject {
      */
     public CvTerm getChargePrideCvTerm() {
         readDBMode();
-        return new CvTerm("PRIDE", "PRIDE:0000204", "product ion charge", charge + "");
+        return new CvTerm(
+                "PRIDE", 
+                "PRIDE:0000204", 
+                "product ion charge", 
+                Integer.toString(charge)
+        );
     }
 
     /**
@@ -430,9 +550,21 @@ public class IonMatch extends ExperimentObject {
      */
     public enum MzErrorType {
 
-        Absolute("Absolute", "Absolute error", "m/z"),
-        RelativePpm("Relative (ppm)", "Relative error in ppm", "ppm"),
-        Statistical("Statistical", "Probability to reach this error according to the error distribution", "%p");
+        Absolute(
+                "Absolute", 
+                "Absolute error", 
+                "m/z"
+        ),
+        RelativePpm(
+                "Relative (ppm)", 
+                "Relative error in ppm", 
+                "ppm"
+        ),
+        Statistical(
+                "Statistical", 
+                "Probability to reach this error according to the error distribution", 
+                "%p"
+        );
         /**
          * The name of the error type.
          */
@@ -453,7 +585,11 @@ public class IonMatch extends ExperimentObject {
          * @param description the description of the error type
          * @param unit the unit to use
          */
-        private MzErrorType(String name, String description, String unit) {
+        private MzErrorType(
+                String name, 
+                String description, 
+                String unit
+        ) {
             this.name = name;
             this.description = description;
             this.unit = unit;
@@ -467,12 +603,20 @@ public class IonMatch extends ExperimentObject {
          *
          * @return the corresponding error type
          */
-        public static MzErrorType getMzErrorType(int index) {
+        public static MzErrorType getMzErrorType(
+                int index
+        ) {
+        
             MzErrorType[] values = MzErrorType.values();
+            
             if (index >= 0 && index < values.length) {
+            
                 return values[index];
+            
             }
+            
             return null;
+        
         }
     }
 }

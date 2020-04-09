@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import junit.framework.TestCase;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,15 +21,26 @@ public class PepNovoIdfileReaderTest extends TestCase {
 
     @Before
     public void setUp() throws ClassNotFoundException, IOException, InterruptedException {
-        idfileReader = new PepNovoIdfileReader(new File("src/test/resources/experiment/test.mgf.out"));
+        idfileReader = new PepNovoIdfileReader(
+                new File("src/test/resources/experiment/test.mgf.out")
+        );
     }
 
     @Test
     public void testGetAllSpectrumMatches() throws Exception {
-        ArrayList<SpectrumMatch> allSpectrumMatches = idfileReader.getAllSpectrumMatches(null, null);
+        ArrayList<SpectrumMatch> allSpectrumMatches = idfileReader.getAllSpectrumMatches(null, null, null);
+//        Assert.assertEquals(
+//                "Incorrect numbre of spectrum matches.", 
+//                allSpectrumMatches.size(), 
+//                4
+//        );
         for (SpectrumMatch sm : allSpectrumMatches) {
-            if (sm.getSpectrumKey().contains("Scan 835")) {
-                assertEquals("test.mgf_cus_7: Scan 835 (rt=12.4589) [NQIGDKEK]", sm.getSpectrumKey());
+            if (sm.getSpectrumTitle().contains("Scan 835")) {
+                assertEquals(
+                        "Incorrect title parsing for scan 835",
+                        "7: Scan 835 (rt=12.4589) [NQIGDKEK]",
+                        sm.getSpectrumTitle()
+                );
             }
         }
     }

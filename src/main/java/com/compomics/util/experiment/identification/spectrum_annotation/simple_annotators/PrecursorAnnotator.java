@@ -50,28 +50,50 @@ public class PrecursorAnnotator {
     private NeutralLoss[] neutralLosses = null;
 
     /**
-     * Constructor. Fixed modifications must be indexed as provided by the peptide class.
+     * Constructor. Fixed modifications must be indexed as provided by the
+     * peptide class.
      *
      * @param peptide the peptide of interest.
      * @param fixedModifications the fixed modifications
      */
-    public PrecursorAnnotator(Peptide peptide, String[] fixedModifications) {
+    public PrecursorAnnotator(
+            Peptide peptide,
+            String[] fixedModifications
+    ) {
 
         precursorMass = peptide.getMass();
 
         HashSet<String> fixedModificationLosses = Arrays.stream(fixedModifications)
-                .filter(modName -> modName != null)
-                .map(modName -> modificationFactory.getModification(modName))
-                .flatMap(modification -> modification.getNeutralLosses().stream())
-                .map(neutralLoss -> neutralLoss.name)
-                .collect(Collectors.toCollection(HashSet::new));
+                .filter(
+                        modName -> modName != null
+                )
+                .map(
+                        modName -> modificationFactory.getModification(modName)
+                )
+                .flatMap(
+                        modification -> modification.getNeutralLosses().stream()
+                )
+                .map(
+                        neutralLoss -> neutralLoss.name
+                )
+                .collect(
+                        Collectors.toCollection(HashSet::new)
+                );
 
         ModificationMatch[] variableModifications = peptide.getVariableModifications();
         HashSet<String> variableModificationLosses = Arrays.stream(variableModifications)
-                .map(modificationMatch -> modificationFactory.getModification(modificationMatch.getModification()))
-                .flatMap(modification -> modification.getNeutralLosses().stream())
-                .map(neutralLoss -> neutralLoss.name)
-                .collect(Collectors.toCollection(HashSet::new));
+                .map(
+                        modificationMatch -> modificationFactory.getModification(modificationMatch.getModification())
+                )
+                .flatMap(
+                        modification -> modification.getNeutralLosses().stream()
+                )
+                .map(
+                        neutralLoss -> neutralLoss.name
+                )
+                .collect(
+                        Collectors.toCollection(HashSet::new)
+                );
 
         HashSet<String> modificationLosses = new HashSet<>(fixedModificationLosses);
         modificationLosses.addAll(variableModificationLosses);
@@ -81,15 +103,18 @@ public class PrecursorAnnotator {
             int nNeutralLosses = modificationLosses.size() + 2;
             neutralLosses = new NeutralLoss[nNeutralLosses];
             neutralLossesMasses = new double[nNeutralLosses];
-            int cpt = 0;
-            neutralLosses[cpt] = NeutralLoss.H2O;
-            neutralLossesMasses[cpt++] = NeutralLoss.H2O.getMass();
-            neutralLosses[cpt] = NeutralLoss.NH3;
-            neutralLossesMasses[cpt++] = NeutralLoss.NH3.getMass();
+            int count = 0;
+            neutralLosses[count] = NeutralLoss.H2O;
+            neutralLossesMasses[count++] = NeutralLoss.H2O.getMass();
+            neutralLosses[count] = NeutralLoss.NH3;
+            neutralLossesMasses[count++] = NeutralLoss.NH3.getMass();
+
             for (String modificationLoss : modificationLosses) {
+
                 NeutralLoss neutralLoss = NeutralLoss.getNeutralLoss(modificationLoss);
-                neutralLosses[cpt] = neutralLoss;
-                neutralLossesMasses[cpt++] = neutralLoss.getMass();
+                neutralLosses[count] = neutralLoss;
+                neutralLossesMasses[count++] = neutralLoss.getMass();
+
             }
 
         } else {
@@ -98,7 +123,6 @@ public class PrecursorAnnotator {
             neutralLossesMasses = new double[]{NeutralLoss.H2O.getMass(), NeutralLoss.NH3.getMass()};
 
         }
-
     }
 
     /**
@@ -110,7 +134,11 @@ public class PrecursorAnnotator {
      *
      * @return the ions matched in the given spectrum at the given charge
      */
-    public ArrayList<IonMatch> getIonMatches(SpectrumIndex spectrumIndex, int peptideCharge, int isotopeMax) {
+    public ArrayList<IonMatch> getIonMatches(
+            SpectrumIndex spectrumIndex,
+            int peptideCharge,
+            int isotopeMax
+    ) {
 
         ArrayList<IonMatch> results = new ArrayList<>(0);
 
@@ -122,10 +150,23 @@ public class PrecursorAnnotator {
 
             double mz = mass / peptideCharge;
 
-            ArrayList<Peak> peaks = spectrumIndex.getMatchingPeaks(mz);
-            for (Peak peak : peaks) {
+            int[] indexes = spectrumIndex.getMatchingPeaks(mz);
+
+            if (indexes.length > 0) {
+
                 Ion ion = new PrecursorIon(precursorMass, null);
-                results.add(new IonMatch(peak, ion, peptideCharge));
+
+                for (int index : indexes) {
+
+                    results.add(
+                            new IonMatch(
+                                    spectrumIndex.mzArray[index],
+                                    spectrumIndex.intensityArray[index],
+                                    ion,
+                                    peptideCharge
+                            )
+                    );
+                }
             }
 
             for (int i = 0; i < neutralLosses.length; i++) {
@@ -134,16 +175,23 @@ public class PrecursorAnnotator {
 
                 double massWithLoss1 = mass - neutralLoss1.getMass();
                 mz = massWithLoss1 / peptideCharge;
-                peaks = spectrumIndex.getMatchingPeaks(mz);
+                indexes = spectrumIndex.getMatchingPeaks(mz);
 
-                if (!peaks.isEmpty()) {
+                if (indexes.length > 0) {
 
                     NeutralLoss[] ionLosses = {neutralLoss1};
+                    Ion ion = new PrecursorIon(massWithLoss1, ionLosses);
 
-                    for (Peak peak : peaks) {
+                    for (int index : indexes) {
 
-                        Ion ion = new PrecursorIon(massWithLoss1, ionLosses);
-                        results.add(new IonMatch(peak, ion, peptideCharge));
+                        results.add(
+                                new IonMatch(
+                                        spectrumIndex.mzArray[index],
+                                        spectrumIndex.intensityArray[index],
+                                        ion,
+                                        peptideCharge
+                                )
+                        );
                     }
                 }
 
@@ -152,16 +200,23 @@ public class PrecursorAnnotator {
                     NeutralLoss neutralLoss2 = neutralLosses[j];
                     double massWithLoss2 = massWithLoss1 - neutralLoss2.getMass();
                     mz = massWithLoss1 / peptideCharge;
-                    peaks = spectrumIndex.getMatchingPeaks(mz);
+                    indexes = spectrumIndex.getMatchingPeaks(mz);
 
-                    if (!peaks.isEmpty()) {
+                    if (indexes.length > 0) {
 
                         NeutralLoss[] ionLosses = {neutralLoss1, neutralLoss2};
+                        Ion ion = new PrecursorIon(massWithLoss2, ionLosses);
 
-                        for (Peak peak : peaks) {
+                        for (int index : indexes) {
 
-                            Ion ion = new PrecursorIon(massWithLoss2, ionLosses);
-                            results.add(new IonMatch(peak, ion, peptideCharge));
+                            results.add(
+                                    new IonMatch(
+                                            spectrumIndex.mzArray[index],
+                                            spectrumIndex.intensityArray[index],
+                                            ion,
+                                            peptideCharge
+                                    )
+                            );
                         }
                     }
                 }

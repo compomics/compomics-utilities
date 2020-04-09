@@ -1,8 +1,8 @@
 package com.compomics.software.settings.gui;
 
-import com.compomics.util.Util;
 import com.compomics.software.settings.PathKey;
 import com.compomics.software.settings.UtilitiesPathParameters;
+import com.compomics.util.gui.file_handling.FileChooserUtil;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
@@ -70,24 +70,36 @@ public class PathParametersDialog extends javax.swing.JDialog {
      * @param toolName the tool name
      * @param keyToPathMap the initial path settings
      */
-    public PathParametersDialog(java.awt.Frame parent, String toolName, HashMap<PathKey, String> keyToPathMap) {
+    public PathParametersDialog(
+            java.awt.Frame parent, 
+            String toolName, 
+            HashMap<PathKey, String> keyToPathMap
+    ) {
+    
         super(parent, true);
 
         this.toolName = toolName;
         this.originalKeyToPathMap = keyToPathMap;
         this.keyToPathMap = (HashMap<PathKey, String>) keyToPathMap.clone();
         nameToKey = new HashMap<>(keyToPathMap.size());
+        
         for (PathKey key : keyToPathMap.keySet()) {
+        
             nameToKey.put(key.getId(), key);
+        
         }
+        
         ArrayList<String> names = new ArrayList<>(nameToKey.keySet());
         Collections.sort(names);
         keyList = new ArrayList<>(names.size());
         pathsToolTips = new ArrayList<>(names.size());
+        
         for (String name : names) {
+        
             PathKey pathKey = nameToKey.get(name);
             keyList.add(pathKey);
             pathsToolTips.add(pathKey.getDescription());
+        
         }
 
         initComponents();
@@ -428,7 +440,7 @@ public class PathParametersDialog extends javax.swing.JDialog {
         int selectedRow = pathTable.getSelectedRow();
         String name = (String) pathTable.getValueAt(selectedRow, 1);
         PathKey pathKey = nameToKey.get(name);
-        File selectedFile = Util.getUserSelectedFolder(this, "Select " + pathKey.getId() + " Folder", keyToPathMap.get(pathKey), pathKey.getId() + " Folder", "Select", false);
+        File selectedFile = FileChooserUtil.getUserSelectedFolder(this, "Select " + pathKey.getId() + " Folder", keyToPathMap.get(pathKey), pathKey.getId() + " Folder", "Select", false);
         if (selectedFile != null) {
             keyToPathMap.put(pathKey, selectedFile.getAbsolutePath());
             ((DefaultTableModel) pathTable.getModel()).fireTableDataChanged();
@@ -439,7 +451,7 @@ public class PathParametersDialog extends javax.swing.JDialog {
      * Sets a default path.
      */
     private void setDefaultPath() {
-        File selectedFile = Util.getUserSelectedFolder(this, "Select Default Folder", null, "Default Folder", "Select", false);
+        File selectedFile = FileChooserUtil.getUserSelectedFolder(this, "Select Default Folder", null, "Default Folder", "Select", false);
         if (selectedFile != null) {
             for (PathKey pathKey : keyToPathMap.keySet()) {
                 keyToPathMap.put(pathKey, selectedFile.getAbsolutePath());

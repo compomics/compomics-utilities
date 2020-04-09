@@ -1,7 +1,7 @@
 package com.compomics.software.dialogs;
 
-import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.gui.file_handling.FileChooserUtil;
 import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -272,7 +272,7 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
      */
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
-        File selectedFile = Util.getUserSelectedFile(this, ".jar", "Reporter jar file (.jar)", "Select Reporter Jar File", lastSelectedFolder, null, true);
+        File selectedFile = FileChooserUtil.getUserSelectedFile(this, ".jar", "Reporter jar file (.jar)", "Select Reporter Jar File", lastSelectedFolder, null, true);
 
         if (selectedFile != null) {
             if (!selectedFile.getName().endsWith(".jar")) {

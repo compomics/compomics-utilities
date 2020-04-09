@@ -1,6 +1,7 @@
 package com.compomics.software.cli;
 
 import com.compomics.util.Util;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.File;
 import java.util.ArrayList;
@@ -8,8 +9,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Convenience methods for the validation of command line parameters.
@@ -290,7 +289,7 @@ public class CommandParameter {
             return false;
         }
         if (formats != null) {
-            String extension = Util.getExtension(input);
+            String extension = IoUtil.getExtension(input);
             if (!formats.contains(extension)) {
                 ArrayList<String> sortedFormats = new ArrayList<>(formats);
                 Collections.sort(sortedFormats);

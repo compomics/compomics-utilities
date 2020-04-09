@@ -9,7 +9,9 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.io.identification.IdfileReader;
+import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.BufferedReader;
@@ -108,7 +110,7 @@ public class OnyaseIdfileReader implements IdfileReader {
     ) throws IOException {
         
         this.resultsFile = resultsFile;
-        fileName = Util.getFileName(resultsFile);
+        fileName = IoUtil.getFileName(resultsFile);
         
         InputStream fileStream = new FileInputStream(resultsFile);
         InputStream gzipStream = new GZIPInputStream(fileStream);
@@ -155,26 +157,37 @@ public class OnyaseIdfileReader implements IdfileReader {
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler, 
             SearchParameters searchParameters
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        return getAllSpectrumMatches(waitingHandler, searchParameters, null, false);
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+        
+        return getAllSpectrumMatches(
+                spectrumProvider,
+                waitingHandler, 
+                searchParameters, 
+                null, 
+                false
+        );
     }
 
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler, 
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences, 
             boolean expandAaCombinations
-    ) throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+    ) 
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         // @TODO: use the waitingHandler
         
         HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<>();
 
-        String spectrumFileName = Util.getFileName(mgfFile);
-        String resultFileName = Util.getFileName(resultsFile);
+        String spectrumFileName = IoUtil.getFileName(mgfFile);
+        String resultFileName = IoUtil.getFileName(resultsFile);
 
         InputStream fileStream = new FileInputStream(resultsFile);
         InputStream gzipStream = new GZIPInputStream(fileStream);
@@ -191,13 +204,12 @@ public class OnyaseIdfileReader implements IdfileReader {
                 String[] lineSplit = line.split(separatorString);
                 String spectrumTitle = lineSplit[0];
                 spectrumTitle = URLDecoder.decode(spectrumTitle, encoding);
-                String spectrumKey = Spectrum.getSpectrumKey(spectrumFileName, spectrumTitle);
-                SpectrumMatch spectrumMatch = spectrumMatchesMap.get(spectrumKey);
+                SpectrumMatch spectrumMatch = spectrumMatchesMap.get(spectrumTitle);
                 
                 if (spectrumMatch == null) {
                 
-                    spectrumMatch = new SpectrumMatch(spectrumKey);
-                    spectrumMatchesMap.put(spectrumKey, spectrumMatch);
+                    spectrumMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
+                    spectrumMatchesMap.put(spectrumTitle, spectrumMatch);
                 
                 }
                 

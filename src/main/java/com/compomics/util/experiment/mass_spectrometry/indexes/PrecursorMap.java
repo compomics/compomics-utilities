@@ -67,7 +67,7 @@ public class PrecursorMap {
         for (String spectrumTitle : precursors.keySet()) {
             Precursor precursor = precursors.get(spectrumTitle);
             PrecursorWithTitle precursorWithTitle = new PrecursorWithTitle(precursor, spectrumTitle);
-            double mz = precursor.getMz();
+            double mz = precursor.mz;
             if (minMz == null || mz < minMz) {
                 minMz = mz;
             }

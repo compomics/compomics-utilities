@@ -134,12 +134,19 @@ public class SequenceFragmentationPanel extends JPanel {
      * the PeptideFragmentIon static fields
      * @param rewindIon the rewind ion type (for instance Y ion) as indexed by
      * the PeptideFragmentIon static fields
-     * 
+     *
      * @see java.awt.GraphicsEnvironment#isHeadless
      * @see javax.swing.JComponent#getDefaultLocale
      */
-    public SequenceFragmentationPanel(String aSequence, IonMatch[] aIonMatches, boolean boolModifiedSequence,
-            boolean aHighlightModifications, ModificationParameters modificationProfile, int forwardIon, int rewindIon) {
+    public SequenceFragmentationPanel(
+            String aSequence,
+            IonMatch[] aIonMatches,
+            boolean boolModifiedSequence,
+            boolean aHighlightModifications,
+            ModificationParameters modificationProfile,
+            int forwardIon,
+            int rewindIon
+    ) {
         super();
 
         this.forwardIon = forwardIon;
@@ -179,14 +186,21 @@ public class SequenceFragmentationPanel extends JPanel {
      * the PeptideFragmentIon static fields
      * @param rewindIon the rewind ion type (for instance Y ion) as indexed by
      * the PeptideFragmentIon static fields
-     * 
+     *
      * @throws java.awt.HeadlessException if GraphicsEnvironment.isHeadless()
      * returns true.
      * @see java.awt.GraphicsEnvironment#isHeadless
      * @see javax.swing.JComponent#getDefaultLocale
      */
-    public SequenceFragmentationPanel(String taggedModifiedSequence, IonMatch[] aIonMatches,
-            boolean aHighlightModifications, ModificationParameters modificationProfile, int forwardIon, int rewindIon) throws HeadlessException {
+    public SequenceFragmentationPanel(
+            String taggedModifiedSequence,
+            IonMatch[] aIonMatches,
+            boolean aHighlightModifications,
+            ModificationParameters modificationProfile,
+            int forwardIon,
+            int rewindIon
+    ) throws HeadlessException {
+
         super();
 
         this.forwardIon = forwardIon;
@@ -212,22 +226,26 @@ public class SequenceFragmentationPanel extends JPanel {
             }
         });
     }
-    
+
     /**
      * Set the font to use for the peptide sequence.
-     * 
-     * @param peptideSequenceFont the font to use 
+     *
+     * @param peptideSequenceFont the font to use
      */
-    public void setPeptideSequenceFont(Font peptideSequenceFont) {
+    public void setPeptideSequenceFont(
+            Font peptideSequenceFont
+    ) {
         this.iPeptideSequenceFont = peptideSequenceFont;
     }
-    
+
     /**
      * Set the color for the font of the peptide sequence.
-     * 
+     *
      * @param fontColor the font color
      */
-    public void setFontColor(Color fontColor) {
+    public void setFontColor(
+            Color fontColor
+    ) {
         this.fontColor = fontColor;
     }
 
@@ -242,7 +260,9 @@ public class SequenceFragmentationPanel extends JPanel {
      * @param g the specified Graphics window
      * @see java.awt.Component#update(java.awt.Graphics)
      */
-    public void paint(Graphics g) {
+    public void paint(
+            Graphics g
+    ) {
         super.paint(g);
 
         Graphics2D g2 = (Graphics2D) g;
@@ -281,9 +301,9 @@ public class SequenceFragmentationPanel extends JPanel {
             if (modified) {
 
                 int colorRBG = modificationProfile.getColor(modification); // note that this mapping works on the short name while the proper mapping is on the long name...
-                
+
                 Color color = Util.getColor(colorRBG);
-                
+
                 g2.setColor(color);
 
                 String ptmName = modification.substring(1, modification.length() - 1); // remove the start and end tags
@@ -505,34 +525,53 @@ public class SequenceFragmentationPanel extends JPanel {
 
         // Dig up the most intense matched ion.
         double lMaxIntensity = Arrays.stream(iIonMatches)
-                .mapToDouble(ionMatch -> ionMatch.peak.intensity)
+                .mapToDouble(
+                        ionMatch -> ionMatch.peakIntensity
+                )
                 .max()
                 .orElse(0.0);
 
         Arrays.stream(iIonMatches)
-                .filter(ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION)
-                .forEach(lMatch -> {
-                    double lRatio = lMatch.peak.intensity / lMaxIntensity;
-                    PeptideFragmentIon lFragmentIon = (PeptideFragmentIon) lMatch.ion;
-                    if (lFragmentIon.getSubType() == rewindIon) {
-                        // If array unit is not '0', another ion for this fragmentation site is already found.
-                        if (yIons[lFragmentIon.getNumber() - 1] != 0) {
-                            // We want to save the most intense.
-                            if (yIons[lFragmentIon.getNumber() - 1] > lRatio) {
-                                // Reset lRatio to the most intense.
-                                lRatio = yIons[lFragmentIon.getNumber() - 1];
+                .filter(
+                        ionMatch -> ionMatch.ion.getType() == Ion.IonType.PEPTIDE_FRAGMENT_ION
+                )
+                .forEach(
+                        lMatch -> {
+
+                            double lRatio = lMatch.peakIntensity / lMaxIntensity;
+                            PeptideFragmentIon lFragmentIon = (PeptideFragmentIon) lMatch.ion;
+
+                            if (lFragmentIon.getSubType() == rewindIon) {
+
+                                // If array unit is not '0', another ion for this fragmentation site is already found.
+                                if (yIons[lFragmentIon.getNumber() - 1] != 0) {
+
+                                    // We want to save the most intense.
+                                    if (yIons[lFragmentIon.getNumber() - 1] > lRatio) {
+
+                                        // Reset lRatio to the most intense.
+                                        lRatio = yIons[lFragmentIon.getNumber() - 1];
+
+                                    }
+                                }
+
+                                yIons[lFragmentIon.getNumber() - 1] = lRatio;
+
+                            } else if (lFragmentIon.getSubType() == forwardIon) {
+
+                                if (bIons[lFragmentIon.getNumber() - 1] != 0) {
+
+                                    if (bIons[lFragmentIon.getNumber() - 1] > lRatio) {
+
+                                        lRatio = bIons[lFragmentIon.getNumber() - 1];
+
+                                    }
+                                }
+
+                                bIons[lFragmentIon.getNumber() - 1] = lRatio;
+
                             }
-                        }
-                        yIons[lFragmentIon.getNumber() - 1] = lRatio;
-                    } else if (lFragmentIon.getSubType() == forwardIon) {
-                        if (bIons[lFragmentIon.getNumber() - 1] != 0) {
-                            if (bIons[lFragmentIon.getNumber() - 1] > lRatio) {
-                                lRatio = bIons[lFragmentIon.getNumber() - 1];
-                            }
-                        }
-                        bIons[lFragmentIon.getNumber() - 1] = lRatio;
-                    }
-                });
+                        });
     }
 
     /**
@@ -542,7 +581,10 @@ public class SequenceFragmentationPanel extends JPanel {
      * @param boolModifiedSequence Boolean whether lSequence is a Modified
      * Sequence "NH2-K&lt;Ace&gt;ENNY-COOH" or a Flat Sequence "KENNY".
      */
-    public void setSequence(String lSequence, boolean boolModifiedSequence) {
+    public void setSequence(
+            String lSequence, 
+            boolean boolModifiedSequence
+    ) {
         isModifiedSequence = boolModifiedSequence;
         iSequenceComponents = parseSequenceIntoComponents(lSequence);
     }
@@ -553,7 +595,9 @@ public class SequenceFragmentationPanel extends JPanel {
      *
      * @param lIonMatches ArrayList
      */
-    public void setIonMatches(IonMatch[] lIonMatches) {
+    public void setIonMatches(
+            IonMatch[] lIonMatches
+    ) {
         iIonMatches = lIonMatches;
         normalizeMatchedIons();
     }
@@ -564,7 +608,9 @@ public class SequenceFragmentationPanel extends JPanel {
      * residue the modification name is shown. If not the tooltip is set to
      * null.
      */
-    private void mouseMovedHandler(MouseEvent me) {
+    private void mouseMovedHandler(
+            MouseEvent me
+    ) {
 
         String tooltip = null;
 

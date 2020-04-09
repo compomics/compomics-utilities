@@ -1,6 +1,7 @@
 package com.compomics.software.cli;
 
 import com.compomics.util.Util;
+import com.compomics.util.io.IoUtil;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -174,7 +175,7 @@ public class CommandLineUtils {
             if (testFile.exists()) {
                 if (testFile.isDirectory()) {
                     for (File childFile : testFile.listFiles()) {
-                        String fileName = Util.getFileName(childFile.getAbsolutePath());
+                        String fileName = IoUtil.getFileName(childFile.getAbsolutePath());
                         for (String extention : fileExtentions) {
                             if (fileName.toLowerCase().endsWith(extention.toLowerCase())) {
                                 if (childFile.exists()) {
@@ -187,7 +188,7 @@ public class CommandLineUtils {
                         }
                     }
                 } else {
-                    String fileName = Util.getFileName(testFile.getAbsolutePath());
+                    String fileName = IoUtil.getFileName(testFile.getAbsolutePath());
                     for (String extention : fileExtentions) {
                         if (fileName.toLowerCase().endsWith(extention.toLowerCase())) {
                             result.add(testFile);

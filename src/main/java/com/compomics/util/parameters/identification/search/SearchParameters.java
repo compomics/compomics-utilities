@@ -24,6 +24,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.parameters.identification.IdentificationParameters;
 import static com.compomics.util.parameters.identification.IdentificationParameters.CURRENT_VERSION;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -244,10 +245,17 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         } else {
             setIdentificationAlgorithmParameter(Advocate.tide.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.tide.getIndex()));
         }
+        
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.andromeda.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.andromeda.getIndex(), new AndromedaParameters());
         } else {
             setIdentificationAlgorithmParameter(Advocate.andromeda.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.andromeda.getIndex()));
+        }
+        
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.metaMorpheus.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.metaMorpheus.getIndex(), new MetaMorpheusParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.metaMorpheus.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.metaMorpheus.getIndex()));
         }
 
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex()) == null) {

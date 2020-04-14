@@ -262,7 +262,7 @@ public class FileChooserUtil {
      * @param parent the parent dialog or frame
      * @param aDialogTitle the title for the dialog
      * @param lastSelectedFolder the last selected folder
-     * @param aFolderDescription the folder description, e.g., CPS Folder
+     * @param aFolderDescription the folder description, e.g., PSDB Folder
      * @param approveButtonText the text on the approve button
      * @param openDialog if true the folder has to exist, if false the user will
      * be asked if he/she wants to create the folder is missing

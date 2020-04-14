@@ -19,59 +19,59 @@ import javax.swing.JOptionPane;
 public class ToolFactory {
 
     /**
-     * The command line argument for a cps file for PeptideShaker.
+     * The command line argument for a psdb file for PeptideShaker.
      */
-    public static final String peptideShakerFileOption = "-cps";
+    public static final String PEPTIDE_SHAKER_FILE_OPTION = "-psdb";
     /**
-     * The command line argument for a zipped cps URL for PeptideShaker.
+     * The command line argument for a zipped psdb URL for PeptideShaker.
      */
-    public static final String peptideShakerUrlOption = "-zipUrl";
+    public static final String PEPTIDE_SHAKER_URL_OPTION = "-zipUrl";
     /**
      * The command line argument for the download folder for the URL for
      * PeptideShaker.
      */
-    public static final String peptideShakerUrlDownloadFolderOption = "-zipUrlFolder";
+    public static final String PEPTIDE_SHAKER_URL_DOWNLOAD_FOLDER_OPTION = "-zipUrlFolder";
     /**
      * The command line argument to open a given PX accession in PRIDE Reshake.
      */
-    public static final String peptideShakerPxAccessionOption = "-pxAccession";
+    public static final String PEPTIDE_SHAKER_PX_ACCESSION_OPTION = "-pxAccession";
     /**
      * The command line argument to indicate that the PX accession to open in
      * PRIDE Reshake is private. If not set public is assumed.
      */
-    public static final String peptideShakerPxAccessionPrivateOption = "-pxAccessionPrivate";
+    public static final String PEPTIDE_SHAKER_PX_ACCESSION_PRIVATE_OPTION = "-pxAccessionPrivate";
     /**
      * The command line argument for mgf files for SearchGUI.
      */
-    public static final String searchGuiSpectrumFileOption = "-mgf";
+    public static final String SEARCHGUI_SPECTRUM_FILE_OPTION = "-mgf";
     /**
      * The command line argument for FASTA file for SearchGUI.
      */
-    public static final String searchGuiFastaFileOption = "-fasta";
+    public static final String SEARCHGUI_FASTA_FILE_OPTION = "-fasta";
     /**
      * The command line argument for raw files for SearchGUI.
      */
-    public static final String searchGuiRawFileOption = "-raw";
+    public static final String SEARCHGUI_RAW_FILE_OPTION = "-raw";
     /**
      * The command line argument for a parameters file for SearchGUI.
      */
-    public static final String searchGuiParametersFileOption = "-identification_parameters";
+    public static final String SEARCHGUI_PARAMETERS_FILE_OPTION = "-identification_parameters";
     /**
      * The command line argument for an output folder.
      */
-    public static final String outputFolderOption = "-output_folder";
+    public static final String OUTPUT_FOLDER_OPTION = "-output_folder";
     /**
      * The command line argument for the species.
      */
-    public static final String speciesOption = "-species";
+    public static final String SPECIES_OPTION = "-species";
     /**
      * The command line argument for the species type.
      */
-    public static final String speciesTypeOption = "-species_type";
+    public static final String SPECIES_TYPE_OPTION = "-species_type";
     /**
      * The command line argument for the PeptideShaker project name.
      */
-    public static final String projectNameOption = "-project_name";
+    public static final String PROJEC_NAME_OPTION = "-project_name";
 
     /**
      * Starts PeptideShaker from the location of utilities preferences.
@@ -94,7 +94,7 @@ public class ToolFactory {
      * open is not found, the tool will go for a default start.
      *
      * @param parent a frame to display the path setting dialog (can be null)
-     * @param cpsFile the file to open (cps format) (can be null)
+     * @param psdbFile the file to open (psdb format) (can be null)
      *
      * @throws IOException if an exception occurs while reading or writing a
      * file
@@ -102,7 +102,7 @@ public class ToolFactory {
      * user preferences
      * @throws InterruptedException if a threading issue occurs
      */
-    public static void startPeptideShaker(JFrame parent, File cpsFile) throws IOException, ClassNotFoundException, InterruptedException {
+    public static void startPeptideShaker(JFrame parent, File psdbFile) throws IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
         boolean openPeptideShaker = true;
@@ -115,10 +115,10 @@ public class ToolFactory {
         if (openPeptideShaker) {
             if (utilitiesUserPreferences.getPeptideShakerPath() != null
                     && new File(utilitiesUserPreferences.getPeptideShakerPath()).exists()) {
-                if (cpsFile != null) {
+                if (psdbFile != null) {
                     ArrayList<String> args = new ArrayList<>();
-                    args.add(peptideShakerFileOption);
-                    args.add(CommandLineUtils.getCommandLineArgument(cpsFile));
+                    args.add(PEPTIDE_SHAKER_FILE_OPTION);
+                    args.add(CommandLineUtils.getCommandLineArgument(psdbFile));
                     launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker", args);
                 } else {
                     launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker");
@@ -157,7 +157,7 @@ public class ToolFactory {
                     && new File(utilitiesUserPreferences.getPeptideShakerPath()).exists()) {
                 if (pxAccession != null) {
                     ArrayList<String> args = new ArrayList<>();
-                    args.add(peptideShakerPxAccessionOption);
+                    args.add(PEPTIDE_SHAKER_PX_ACCESSION_OPTION);
                     args.add(pxAccession);
                     launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker", args);
                 } else {
@@ -201,9 +201,9 @@ public class ToolFactory {
                     && new File(utilitiesUserPreferences.getPeptideShakerPath()).exists()) {
                 if (zipUrl != null) {
                     ArrayList<String> args = new ArrayList<>();
-                    args.add(peptideShakerUrlOption);
+                    args.add(PEPTIDE_SHAKER_URL_OPTION);
                     args.add(CommandLineUtils.getQuoteType() + zipUrl + CommandLineUtils.getQuoteType());
-                    args.add(peptideShakerUrlDownloadFolderOption);
+                    args.add(PEPTIDE_SHAKER_URL_DOWNLOAD_FOLDER_OPTION);
                     args.add(CommandLineUtils.getQuoteType() + downloadUrlFolder + CommandLineUtils.getQuoteType());
                     launch(utilitiesUserPreferences.getPeptideShakerPath(), "PeptideShaker", args);
                 } else {
@@ -299,35 +299,35 @@ public class ToolFactory {
                 } else {
                     ArrayList<String> args = new ArrayList<>();
                     if (mgfFiles != null && !mgfFiles.isEmpty()) {
-                        args.add(searchGuiSpectrumFileOption);
+                        args.add(SEARCHGUI_SPECTRUM_FILE_OPTION);
                         args.add(CommandLineUtils.getCommandLineArgument(mgfFiles));
                     }
                     if (rawFiles != null && !rawFiles.isEmpty()) {
-                        args.add(searchGuiRawFileOption);
+                        args.add(SEARCHGUI_RAW_FILE_OPTION);
                         args.add(CommandLineUtils.getCommandLineArgument(rawFiles));
                     }
                     if (fastaFile != null) {
-                        args.add(searchGuiFastaFileOption);
+                        args.add(SEARCHGUI_FASTA_FILE_OPTION);
                         args.add(CommandLineUtils.getCommandLineArgument(fastaFile));
                     }
                     if (searchParameters != null) {
-                        args.add(searchGuiParametersFileOption);
+                        args.add(SEARCHGUI_PARAMETERS_FILE_OPTION);
                         args.add(CommandLineUtils.getCommandLineArgument(searchParameters));
                     }
                     if (outputFolder != null) {
-                        args.add(outputFolderOption);
+                        args.add(OUTPUT_FOLDER_OPTION);
                         args.add(CommandLineUtils.getCommandLineArgument(outputFolder));
                     }
                     if (species != null) {
-                        args.add(speciesOption);
+                        args.add(SPECIES_OPTION);
                         args.add(species);
                     }
                     if (speciesType != null) {
-                        args.add(speciesTypeOption);
+                        args.add(SPECIES_TYPE_OPTION);
                         args.add(speciesType);
                     }
                     if (projectName != null) {
-                        args.add(projectNameOption);
+                        args.add(PROJEC_NAME_OPTION);
                         args.add(projectName);
                     }
                     launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI", args);

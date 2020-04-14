@@ -10,7 +10,6 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
@@ -23,6 +22,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Iterator;
 import javax.xml.bind.JAXBException;
 
 /**
@@ -100,7 +100,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
     public String getExtension() {
         return ".tide-search.target.txt";
     }
-    
+
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
@@ -108,7 +108,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
             SearchParameters searchParameters
     )
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        
+
         return getAllSpectrumMatches(
                 spectrumProvider,
                 waitingHandler,
@@ -117,7 +117,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                 true
         );
     }
-    
+
     @Override
     public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
@@ -127,21 +127,14 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
             boolean expandAaCombinations
     )
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        
-        ArrayList<SpectrumMatch> result = new ArrayList<>();
-        
-        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(tideTsvFile)) {
 
-            // check if the version number is included, ms amanda version 1.0.0.3196 or newer
-            //String versionNumberString = bufferedRandomAccessFile.readLine(); // @TODO: how to get the tide version number?
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
+
+        try (SimpleFileReader reader = SimpleFileReader.getFileReader(tideTsvFile)) {
+
+            // read the header
             String headerString = reader.readLine();
 
-            // skip the version number
-//        if (versionNumberString.toLowerCase().startsWith("#version: ")) {
-//            headerString = bufferedRandomAccessFile.readLine();
-//        } else {
-//            headerString = versionNumberString;
-//        }
             // parse the header line
             String[] headers = headerString.split("\t");
             int scanNumberIndex = -1, chargeIndex = -1, precursorMzIndex = -1, spectrumNeutralLossIndex = -1, peptideMassIndex = -1, deltaCnIndex = -1,
@@ -151,8 +144,9 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
 
             // get the column index of the headers
             for (int i = 0; i < headers.length; i++) {
+
                 String header = headers[i];
-                
+
                 if (header.equalsIgnoreCase("scan")) {
                     scanNumberIndex = i;
                 } else if (header.equalsIgnoreCase("charge")) {
@@ -192,40 +186,39 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                 }
             }
 
-            // check if all the required header are found
-            if (scanNumberIndex == -1 || chargeIndex == -1 /**
-                     * || exactPValueIndex == -1*
-                     */
+            // check if all the required headers are found
+            if (scanNumberIndex == -1 || chargeIndex == -1
                     || xcorrRank == -1 || sequenceIndex == -1) {
                 throw new IllegalArgumentException("Mandatory columns are missing in the Tide tsv file. Please check the file!");
             }
-            
+
             String line;
-            String currentSpectrumTitle = null;
-            SpectrumMatch currentMatch = null;
 
             // get the name of the mgf file
             String fileName = IoUtil.getFileName(tideTsvFile);
-            String spectrumFileName = getMgfFileName(fileName);
+            String spectrumFileName = IoUtil.removeExtension(getMgfFileName(fileName));
+
+            // required map given that the tide output is _not_ sorted on scan index
+            HashMap<Long, SpectrumMatch> tempSpectrumMatchesMap = new HashMap<>();
 
             // get the psms
             while ((line = reader.readLine()) != null) {
-                
+
                 String[] elements = line.split("\t");
-                
+
                 if (!line.trim().isEmpty()) {
-                    
+
                     int scanNumber = Integer.parseInt(elements[scanNumberIndex]);
                     String modifiedPeptideSequence = elements[sequenceIndex].toUpperCase();
                     int charge = Integer.parseInt(elements[chargeIndex]);
-                    
+
                     int rank;
-                    if (exactPValueIndex != -1) {
+                    if (xcorrRank != -1) {
                         rank = Integer.parseInt(elements[xcorrRank]);
                     } else {
                         rank = Integer.parseInt(elements[xcorrRank]);
                     }
-                    
+
                     double tideEValue, rawScore;
                     if (exactPValueIndex != -1) {
                         String scoreAsText = elements[exactPValueIndex];
@@ -240,20 +233,14 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                             tideEValue = Math.pow(10, -rawScore); // convert xcorr score to a kind of e-value
                         }
                     }
-                    
-                    String spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[scanNumber - 1];
 
-                    // set up the yet empty spectrum match, or add to the current match
-                    if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {
+                    String spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[scanNumber];
+                    Long tempSpectrumMatchKey = ExperimentObject.asLong(String.join("", spectrumFileName, spectrumTitle));
+                    SpectrumMatch currentMatch = tempSpectrumMatchesMap.get(tempSpectrumMatchKey);
 
-                        // add the previous match, if any
-                        if (currentMatch != null) {
-                            result.add(currentMatch);
-                        }
-                        
+                    if (currentMatch == null) {
                         currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
-                        currentSpectrumTitle = spectrumTitle;
-                        
+                        tempSpectrumMatchesMap.put(tempSpectrumMatchKey, currentMatch);
                     }
 
                     // get the modifications
@@ -280,7 +267,9 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                     }
 
                     // create the peptide
-                    Peptide peptide = new Peptide(unmodifiedPeptideSequence, utilitiesModifications.toArray(new ModificationMatch[utilitiesModifications.size()]), true);
+                    Peptide peptide = new Peptide(unmodifiedPeptideSequence,
+                            utilitiesModifications.toArray(
+                                    new ModificationMatch[utilitiesModifications.size()]), true);
 
                     // create the peptide assumption
                     PeptideAssumption peptideAssumption = new PeptideAssumption(
@@ -291,17 +280,20 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                             tideEValue,
                             IoUtil.getFileName(tideTsvFile)
                     );
+
+                    // add the raw score
                     peptideAssumption.setRawScore(rawScore);
-                    
+
                     if (expandAaCombinations && AminoAcidSequence.hasCombination(unmodifiedPeptideSequence)) {
+
                         ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
-                        
+
                         for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-                            
+
                             ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
                                     .map(modificationMatch -> modificationMatch.clone())
                                     .toArray(ModificationMatch[]::new);
-                            
+
                             Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
                             PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
                             newAssumption.setRawScore(rawScore);
@@ -314,21 +306,22 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                 }
             }
 
-            // add the last match, if any
-            if (currentMatch != null) {
-                result.add(currentMatch);
+            // iterate the matches and add to the results
+            Iterator<Long> iterator = tempSpectrumMatchesMap.keySet().iterator();
+
+            while (iterator.hasNext()) {
+                result.add(tempSpectrumMatchesMap.get(iterator.next()));
             }
-            
         }
-        
+
         return result;
     }
-    
+
     @Override
     public void close() throws IOException {
         tideTsvFile = null;
     }
-    
+
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
         HashMap<String, ArrayList<String>> result = new HashMap<>();
@@ -337,7 +330,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
         result.put(softwareName, versions); // @TODO: check!!
         return result;
     }
-    
+
     @Override
     public boolean hasDeNovoTags() {
         return false;
@@ -352,19 +345,19 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
      * @return the spectrum file name
      */
     public static String getMgfFileName(String fileName) {
-        
+
         if (fileName.endsWith(".tide-search.target.txt.gz")) {
-            
+
             return fileName.substring(0, fileName.length() - 26) + ".mgf";
-            
+
         } else if (fileName.endsWith(".tide-search.target.txt")) {
-            
+
             return fileName.substring(0, fileName.length() - 23) + ".mgf";
-            
+
         } else {
-            
+
             throw new IllegalArgumentException("Unexpected file extension. Expected: tide-search.target.txt or tide-search.target.txt.gz. File name: " + fileName + ".");
-            
+
         }
     }
 }

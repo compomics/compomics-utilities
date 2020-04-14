@@ -15,7 +15,7 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 
 /**
- * Writer for an ms file.
+ * Writer for cms files.
  *
  * @author Marc Vaudel
  */

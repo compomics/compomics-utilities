@@ -2358,12 +2358,18 @@
 <dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileWriter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms"><span class="typeNameLink">CmsFileWriter</span></a> - Class in <a href="com/compomics/util/experiment/io/mass_spectrometry/cms/package-summary.html">com.compomics.util.experiment.io.mass_spectrometry.cms</a></dt>
 <dd>
-<div class="block">Writer for an ms file.</div>
+<div class="block">Writer for cms files.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileWriter.html#CmsFileWriter-java.io.File-">CmsFileWriter(File)</a></span> - Constructor for class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileWriter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFileWriter</a></dt>
 <dd>
 <div class="block">Constructor.</div>
 </dd>
+<dt><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFolder.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms"><span class="typeNameLink">CmsFolder</span></a> - Class in <a href="com/compomics/util/experiment/io/mass_spectrometry/cms/package-summary.html">com.compomics.util.experiment.io.mass_spectrometry.cms</a></dt>
+<dd>
+<div class="block">Placeholder for the temp folder to use for cms files.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFolder.html#CmsFolder--">CmsFolder()</a></span> - Constructor for class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFolder.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFolder</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/Util.html#color2Hex-int-">color2Hex(int)</a></span> - Static method in class com.compomics.util.<a href="com/compomics/util/Util.html" title="class in com.compomics.util">Util</a></dt>
 <dd>
 <div class="block">Converts a color to hex format for use in HTML tags.</div>
@@ -2712,6 +2718,8 @@
 <dd>
 <div class="block">Experiment IO classes relative to the handling of parameters.</div>
 </dd>
+<dt><a href="com/compomics/util/experiment/io/temp/package-summary.html">com.compomics.util.experiment.io.temp</a> - package com.compomics.util.experiment.io.temp</dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/experiment/mass_spectrometry/package-summary.html">com.compomics.util.experiment.mass_spectrometry</a> - package com.compomics.util.experiment.mass_spectrometry</dt>
 <dd>
 <div class="block">Experiment classes related to mass spectrometry.</div>
@@ -4023,7 +4031,7 @@
 <dd>
 <div class="block">Delete the given sample.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/gui/file_handling/TempFilesManager.html#deleteTempFolders--">deleteTempFolders()</a></span> - Static method in class com.compomics.util.gui.file_handling.<a href="com/compomics/util/gui/file_handling/TempFilesManager.html" title="class in com.compomics.util.gui.file_handling">TempFilesManager</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/temp/TempFilesManager.html#deleteTempFolders--">deleteTempFolders()</a></span> - Static method in class com.compomics.util.experiment.io.temp.<a href="com/compomics/util/experiment/io/temp/TempFilesManager.html" title="class in com.compomics.util.experiment.io.temp">TempFilesManager</a></dt>
 <dd>
 <div class="block">Deletes the temp folders created.</div>
 </dd>
@@ -6971,7 +6979,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/SpectrumProvider.html#getCmsFilePaths--">getCmsFilePaths()</a></span> - Method in interface com.compomics.util.experiment.mass_spectrometry.<a href="com/compomics/util/experiment/mass_spectrometry/SpectrumProvider.html" title="interface in com.compomics.util.experiment.mass_spectrometry">SpectrumProvider</a></dt>
 <dd>
-<div class="block">Returns the absolute path to the cms file indexed by ms file name.</div>
+<div class="block">Returns the absolute path to the cms file indexed by ms file name without
+ file extension.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/interfaces/Modification.html#getCode--">getCode()</a></span> - Method in interface com.compomics.util.interfaces.<a href="com/compomics/util/interfaces/Modification.html" title="interface in com.compomics.util.interfaces">Modification</a></dt>
 <dd>
@@ -8456,7 +8465,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/SpectrumProvider.html#getFileNames--">getFileNames()</a></span> - Method in interface com.compomics.util.experiment.mass_spectrometry.<a href="com/compomics/util/experiment/mass_spectrometry/SpectrumProvider.html" title="interface in com.compomics.util.experiment.mass_spectrometry">SpectrumProvider</a></dt>
 <dd>
-<div class="block">Returns the spectrum file names.</div>
+<div class="block">Returns the spectrum file names without file extensions.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/cli/enzymes/EnzymesCLIInputBean.html#getFileOut--">getFileOut()</a></span> - Method in class com.compomics.cli.enzymes.<a href="com/compomics/cli/enzymes/EnzymesCLIInputBean.html" title="class in com.compomics.cli.enzymes">EnzymesCLIInputBean</a></dt>
 <dd>
@@ -8472,7 +8481,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/SpectrumProvider.html#getFilePaths--">getFilePaths()</a></span> - Method in interface com.compomics.util.experiment.mass_spectrometry.<a href="com/compomics/util/experiment/mass_spectrometry/SpectrumProvider.html" title="interface in com.compomics.util.experiment.mass_spectrometry">SpectrumProvider</a></dt>
 <dd>
-<div class="block">Returns the absolute path to the original mass spec file containing the spectra in a map indexed by file name.</div>
+<div class="block">Returns the absolute path to the original mass spec file containing the
+ spectra in a map indexed by file name without file extension.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/IdfileReaderFactory.html#getFileReader-java.io.File-">getFileReader(File)</a></span> - Method in class com.compomics.util.experiment.io.identification.<a href="com/compomics/util/experiment/io/identification/IdfileReaderFactory.html" title="class in com.compomics.util.experiment.io.identification">IdfileReaderFactory</a></dt>
 <dd>
@@ -12130,6 +12140,10 @@
 <dd>
 <div class="block">Returns the parent folder.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFolder.html#getParentFolder--">getParentFolder()</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFolder.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFolder</a></dt>
+<dd>
+<div class="block">Returns the parent folder where to write cms files.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/XtandemParameters.html#getParentMonoisotopicMassIsotopeError--">getParentMonoisotopicMassIsotopeError()</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/XtandemParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">XtandemParameters</a></dt>
 <dd>
 <div class="block">Returns true if the parent ion mass tolerance is expanded by opening up
@@ -14756,6 +14770,10 @@
 <div class="block">In case of a combination of amino acids, returns the comprised amino
  acids or amino acid groups represented by their single letter code.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFolder.html#getSubFolder--">getSubFolder()</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFolder.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFolder</a></dt>
+<dd>
+<div class="block">Returns the sub-folder where to write cms files.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/math/matrix/DoubleMatrix.html#getSubMatrix-int-int-int-int-">getSubMatrix(int, int, int, int)</a></span> - Method in class com.compomics.util.math.matrix.<a href="com/compomics/util/math/matrix/DoubleMatrix.html" title="class in com.compomics.util.math.matrix">DoubleMatrix</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/impl/TagFragmentIon.html#getSubNumber--">getSubNumber()</a></span> - Method in class com.compomics.util.experiment.biology.ions.impl.<a href="com/compomics/util/experiment/biology/ions/impl/TagFragmentIon.html" title="class in com.compomics.util.experiment.biology.ions.impl">TagFragmentIon</a></dt>
@@ -15697,6 +15715,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/MetaMorpheusParameters.html#getWritePepXml--">getWritePepXml()</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/MetaMorpheusParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">MetaMorpheusParameters</a></dt>
 <dd>
 <div class="block">Returns true if pepXML output is to be created.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#getWriter--">getWriter()</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
+<dd>
+<div class="block">Returns the underlying buffered writer.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/XYZDataPoint.html#getX--">getX()</a></span> - Method in class com.compomics.util.<a href="com/compomics/util/XYZDataPoint.html" title="class in com.compomics.util">XYZDataPoint</a></dt>
 <dd>
@@ -21489,14 +21511,14 @@
 <dd>
 <div class="block">Empty default constructor</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#OUTPUT_FOLDER_OPTION">OUTPUT_FOLDER_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
+<dd>
+<div class="block">The command line argument for an output folder.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/UtilitiesUserParameters.html#outputData--">outputData()</a></span> - Method in class com.compomics.util.parameters.<a href="com/compomics/util/parameters/UtilitiesUserParameters.html" title="class in com.compomics.util.parameters">UtilitiesUserParameters</a></dt>
 <dd>
 <div class="block">Indicates whether data should be copied along with the identification
  files in the SearchGUI output.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#outputFolderOption">outputFolderOption</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
-<dd>
-<div class="block">The command line argument for an output folder.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/proteowizard/ProteoWizardMsFormat.html#outputFormat">outputFormat</a></span> - Variable in enum com.compomics.util.experiment.mass_spectrometry.proteowizard.<a href="com/compomics/util/experiment/mass_spectrometry/proteowizard/ProteoWizardMsFormat.html" title="enum in com.compomics.util.experiment.mass_spectrometry.proteowizard">ProteoWizardMsFormat</a></dt>
 <dd>
@@ -21825,6 +21847,28 @@
 <dd>
 <div class="block">index for identification method based on peptide mass fingerprinting</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#PEPTIDE_SHAKER_FILE_OPTION">PEPTIDE_SHAKER_FILE_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
+<dd>
+<div class="block">The command line argument for a psdb file for PeptideShaker.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#PEPTIDE_SHAKER_PX_ACCESSION_OPTION">PEPTIDE_SHAKER_PX_ACCESSION_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
+<dd>
+<div class="block">The command line argument to open a given PX accession in PRIDE Reshake.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#PEPTIDE_SHAKER_PX_ACCESSION_PRIVATE_OPTION">PEPTIDE_SHAKER_PX_ACCESSION_PRIVATE_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
+<dd>
+<div class="block">The command line argument to indicate that the PX accession to open in
+ PRIDE Reshake is private.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#PEPTIDE_SHAKER_URL_DOWNLOAD_FOLDER_OPTION">PEPTIDE_SHAKER_URL_DOWNLOAD_FOLDER_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
+<dd>
+<div class="block">The command line argument for the download folder for the URL for
+ PeptideShaker.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#PEPTIDE_SHAKER_URL_OPTION">PEPTIDE_SHAKER_URL_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
+<dd>
+<div class="block">The command line argument for a zipped psdb URL for PeptideShaker.</div>
+</dd>
 <dt><a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/PeptideAminoAcidFeature.html" title="class in com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features"><span class="typeNameLink">PeptideAminoAcidFeature</span></a> - Class in <a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/package-summary.html">com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features</a></dt>
 <dd>
 <div class="block">Feature based on the amino acid properties of a peptide.</div>
@@ -22042,19 +22086,6 @@
 <dd>
 <div class="block">The PeptideShaker multiple algorithm software.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#peptideShakerFileOption">peptideShakerFileOption</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
-<dd>
-<div class="block">The command line argument for a cps file for PeptideShaker.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#peptideShakerPxAccessionOption">peptideShakerPxAccessionOption</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
-<dd>
-<div class="block">The command line argument to open a given PX accession in PRIDE Reshake.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#peptideShakerPxAccessionPrivateOption">peptideShakerPxAccessionPrivateOption</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
-<dd>
-<div class="block">The command line argument to indicate that the PX accession to open in
- PRIDE Reshake is private.</div>
-</dd>
 <dt><a href="com/compomics/software/dialogs/PeptideShakerSetupDialog.html" title="class in com.compomics.software.dialogs"><span class="typeNameLink">PeptideShakerSetupDialog</span></a> - Class in <a href="com/compomics/software/dialogs/package-summary.html">com.compomics.software.dialogs</a></dt>
 <dd>
 <div class="block">A dialog used to set up the connection to PeptideShaker.</div>
@@ -22066,15 +22097,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/software/dialogs/PeptideShakerSetupDialog.html#PeptideShakerSetupDialog-javax.swing.JDialog-boolean-">PeptideShakerSetupDialog(JDialog, boolean)</a></span> - Constructor for class com.compomics.software.dialogs.<a href="com/compomics/software/dialogs/PeptideShakerSetupDialog.html" title="class in com.compomics.software.dialogs">PeptideShakerSetupDialog</a></dt>
 <dd>
 <div class="block">Creates a new PeptideShakerSetupDialog.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#peptideShakerUrlDownloadFolderOption">peptideShakerUrlDownloadFolderOption</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
-<dd>
-<div class="block">The command line argument for the download folder for the URL for
- PeptideShaker.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#peptideShakerUrlOption">peptideShakerUrlOption</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
-<dd>
-<div class="block">The command line argument for a zipped cps URL for PeptideShaker.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/PeptideSpectrumAnnotator.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators"><span class="typeNameLink">PeptideSpectrumAnnotator</span></a> - Class in <a href="com/compomics/util/experiment/identification/spectrum_annotation/spectrum_annotators/package-summary.html">com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators</a></dt>
 <dd>
@@ -22669,7 +22691,7 @@
 <dd>
 <div class="block">Opens a new ProgressDialog.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#projectNameOption">projectNameOption</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#PROJEC_NAME_OPTION">PROJEC_NAME_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
 <dd>
 <div class="block">The command line argument for the PeptideShaker project name.</div>
 </dd>
@@ -23404,7 +23426,7 @@
 <div class="block">This method registers a new IdfileReader Class, and the file extension it
  can read from.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/gui/file_handling/TempFilesManager.html#registerTempFolder-java.io.File-">registerTempFolder(File)</a></span> - Static method in class com.compomics.util.gui.file_handling.<a href="com/compomics/util/gui/file_handling/TempFilesManager.html" title="class in com.compomics.util.gui.file_handling">TempFilesManager</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/temp/TempFilesManager.html#registerTempFolder-java.io.File-">registerTempFolder(File)</a></span> - Static method in class com.compomics.util.experiment.io.temp.<a href="com/compomics/util/experiment/io/temp/TempFilesManager.html" title="class in com.compomics.util.experiment.io.temp">TempFilesManager</a></dt>
 <dd>
 <div class="block">Adds a temp folder to the references temp folders.</div>
 </dd>
@@ -24166,17 +24188,21 @@
 <dd>
 <div class="block">Returns whether MS-GF+ is to create and search a decoy database.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#searchGuiFastaFileOption">searchGuiFastaFileOption</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#SEARCHGUI_FASTA_FILE_OPTION">SEARCHGUI_FASTA_FILE_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
 <dd>
 <div class="block">The command line argument for FASTA file for SearchGUI.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#searchGuiParametersFileOption">searchGuiParametersFileOption</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#SEARCHGUI_PARAMETERS_FILE_OPTION">SEARCHGUI_PARAMETERS_FILE_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
 <dd>
 <div class="block">The command line argument for a parameters file for SearchGUI.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#searchGuiRawFileOption">searchGuiRawFileOption</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#SEARCHGUI_RAW_FILE_OPTION">SEARCHGUI_RAW_FILE_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
 <dd>
 <div class="block">The command line argument for raw files for SearchGUI.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#SEARCHGUI_SPECTRUM_FILE_OPTION">SEARCHGUI_SPECTRUM_FILE_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
+<dd>
+<div class="block">The command line argument for mgf files for SearchGUI.</div>
 </dd>
 <dt><a href="com/compomics/software/dialogs/SearchGuiSetupDialog.html" title="class in com.compomics.software.dialogs"><span class="typeNameLink">SearchGuiSetupDialog</span></a> - Class in <a href="com/compomics/software/dialogs/package-summary.html">com.compomics.software.dialogs</a></dt>
 <dd>
@@ -24189,10 +24215,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/software/dialogs/SearchGuiSetupDialog.html#SearchGuiSetupDialog-javax.swing.JDialog-boolean-">SearchGuiSetupDialog(JDialog, boolean)</a></span> - Constructor for class com.compomics.software.dialogs.<a href="com/compomics/software/dialogs/SearchGuiSetupDialog.html" title="class in com.compomics.software.dialogs">SearchGuiSetupDialog</a></dt>
 <dd>
 <div class="block">Creates a new SearchGuiSetupDialog.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#searchGuiSpectrumFileOption">searchGuiSpectrumFileOption</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
-<dd>
-<div class="block">The command line argument for mgf files for SearchGUI.</div>
 </dd>
 <dt><a href="com/compomics/util/parameters/identification/search/SearchParameters.html" title="class in com.compomics.util.parameters.identification.search"><span class="typeNameLink">SearchParameters</span></a> - Class in <a href="com/compomics/util/parameters/identification/search/package-summary.html">com.compomics.util.parameters.identification.search</a></dt>
 <dd>
@@ -26799,6 +26821,10 @@
 <dd>
 <div class="block">Set the parent folder.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFolder.html#setParentFolder-java.lang.String-">setParentFolder(String)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFolder.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFolder</a></dt>
+<dd>
+<div class="block">Sets the parent folder where to write cms files to.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/XtandemParameters.html#setParentMonoisotopicMassIsotopeError-boolean-">setParentMonoisotopicMassIsotopeError(boolean)</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/XtandemParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">XtandemParameters</a></dt>
 <dd>
 <div class="block">Sets whether the parent ion mass tolerance is expanded by opening up
@@ -28483,6 +28509,14 @@
 <dd>
 <div class="block">Creates a new SparklineColorsDialog.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#SPECIES_OPTION">SPECIES_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
+<dd>
+<div class="block">The command line argument for the species.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#SPECIES_TYPE_OPTION">SPECIES_TYPE_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
+<dd>
+<div class="block">The command line argument for the species type.</div>
+</dd>
 <dt><a href="com/compomics/util/gui/genes/SpeciesDialog.html" title="class in com.compomics.util.gui.genes"><span class="typeNameLink">SpeciesDialog</span></a> - Class in <a href="com/compomics/util/gui/genes/package-summary.html">com.compomics.util.gui.genes</a></dt>
 <dd>
 <div class="block"><span class="deprecatedLabel">Deprecated.</span>
@@ -28506,14 +28540,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/biology/protein/FastaSummary.html#speciesOccurrence">speciesOccurrence</a></span> - Variable in class com.compomics.util.experiment.io.biology.protein.<a href="com/compomics/util/experiment/io/biology/protein/FastaSummary.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaSummary</a></dt>
 <dd>
 <div class="block">The species occurrence in the FASTA file.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#speciesOption">speciesOption</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
-<dd>
-<div class="block">The command line argument for the species.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#speciesTypeOption">speciesTypeOption</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
-<dd>
-<div class="block">The command line argument for the species type.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/identification/spectrum_annotation/SpecificAnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation"><span class="typeNameLink">SpecificAnnotationParameters</span></a> - Class in <a href="com/compomics/util/experiment/identification/spectrum_annotation/package-summary.html">com.compomics.util.experiment.identification.spectrum_annotation</a></dt>
 <dd>
@@ -29239,11 +29265,11 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
-<dt><a href="com/compomics/util/gui/file_handling/TempFilesManager.html" title="class in com.compomics.util.gui.file_handling"><span class="typeNameLink">TempFilesManager</span></a> - Class in <a href="com/compomics/util/gui/file_handling/package-summary.html">com.compomics.util.gui.file_handling</a></dt>
+<dt><a href="com/compomics/util/experiment/io/temp/TempFilesManager.html" title="class in com.compomics.util.experiment.io.temp"><span class="typeNameLink">TempFilesManager</span></a> - Class in <a href="com/compomics/util/experiment/io/temp/package-summary.html">com.compomics.util.experiment.io.temp</a></dt>
 <dd>
 <div class="block">This class can be used to reference temp files and manage them.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/gui/file_handling/TempFilesManager.html#TempFilesManager--">TempFilesManager()</a></span> - Constructor for class com.compomics.util.gui.file_handling.<a href="com/compomics/util/gui/file_handling/TempFilesManager.html" title="class in com.compomics.util.gui.file_handling">TempFilesManager</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/temp/TempFilesManager.html#TempFilesManager--">TempFilesManager()</a></span> - Constructor for class com.compomics.util.experiment.io.temp.<a href="com/compomics/util/experiment/io/temp/TempFilesManager.html" title="class in com.compomics.util.experiment.io.temp">TempFilesManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/junit/TestCaseLM.html" title="class in com.compomics.util.junit"><span class="typeNameLink">TestCaseLM</span></a> - Class in <a href="com/compomics/util/junit/package-summary.html">com.compomics.util.junit</a></dt>
 <dd>
@@ -31301,9 +31327,13 @@ the order they are declared.</div>
 <dd>
 <div class="block">Writes the content to the file.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#write-java.lang.String-">write(String)</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
+<dd>
+<div class="block">Writes text.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#write-java.lang.String-boolean-">write(String, boolean)</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
 <dd>
-<div class="block">Writes some text.</div>
+<div class="block">Writes text.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/json/adapter/FileAdapter.html#write-com.google.gson.stream.JsonWriter-java.lang.Object-">write(JsonWriter, Object)</a></span> - Method in class com.compomics.util.io.json.adapter.<a href="com/compomics/util/io/json/adapter/FileAdapter.html" title="class in com.compomics.util.io.json.adapter">FileAdapter</a></dt>
 <dd>&nbsp;</dd>

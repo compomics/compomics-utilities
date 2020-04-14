@@ -144,8 +144,8 @@ public class MzmlFileIterator implements MsFileIterator {
 
                 // get the precursor m/z, charge and intensity
                 ArrayList<Integer> possibleChargesAsArray = new ArrayList<>(); // @TODO: can there be more than one..?
-                double precursorMz = -1.0;
-                double precursorIntensity = -1.0; // @TODO: how to handle missing values?
+                double precursorMz = 0.0;
+                double precursorIntensity = 0.0;
 
                 if (mzmlSpectrum.getPrecursorList().getCount() > 0) {
                     uk.ac.ebi.jmzml.model.mzml.Precursor mzMlPrecursor

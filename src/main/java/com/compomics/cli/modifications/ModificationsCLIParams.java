@@ -86,21 +86,21 @@ public enum ModificationsCLIParams {
         String output = "";
 
         output += "Input and Output:\n\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IN.id) + " " + IN.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, OUT.id) + " " + OUT.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, LIST.id) + " " + LIST.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IN.id) + " " + IN.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, OUT.id) + " " + OUT.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, LIST.id) + " " + LIST.description + "\n";
 
         output += "\n\nRemove modification:\n";
-        output += "-" + String.format(CommandLineUtils.formatter, RM.id) + " " + RM.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, RM.id) + " " + RM.description + "\n";
 
         output += "\n\nAdd modification:\n";
-        output += "-" + String.format(CommandLineUtils.formatter, TYPE.id) + " " + TYPE.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, NAME.id) + " " + NAME.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, SHORT_NAME.id) + " " + SHORT_NAME.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, COMPOSITION_ADDED.id) + " " + COMPOSITION_ADDED.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, COMPOSITION_REMOVED.id) + " " + COMPOSITION_REMOVED.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, PATTERN.id) + " " + PATTERN.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, PATTERN_INDEX.id) + " " + PATTERN_INDEX.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, TYPE.id) + " " + TYPE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, NAME.id) + " " + NAME.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, SHORT_NAME.id) + " " + SHORT_NAME.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, COMPOSITION_ADDED.id) + " " + COMPOSITION_ADDED.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, COMPOSITION_REMOVED.id) + " " + COMPOSITION_REMOVED.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, PATTERN.id) + " " + PATTERN.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, PATTERN_INDEX.id) + " " + PATTERN_INDEX.description + "\n";
 
         return output;
     }

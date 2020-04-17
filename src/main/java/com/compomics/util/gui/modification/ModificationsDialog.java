@@ -173,7 +173,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         modificationTypeTooltipMap.put(ModificationType.modn_protein.index, "Protein N-term");
         modificationTypeTooltipMap.put(ModificationType.modnaa_protein.index, "Protein N-term - Particular Amino Acid(s)");
         modificationTypeTooltipMap.put(ModificationType.modn_peptide.index, "Peptide N-term");
-        modificationTypeTooltipMap.put(ModificationType.modnaa_protein.index, "Peptide N-term - Particular Amino Acid(s)");
+        modificationTypeTooltipMap.put(ModificationType.modnaa_peptide.index, "Peptide N-term - Particular Amino Acid(s)");
 
         defaultModificationsTable.getColumn("Type").setCellRenderer(new JSparklinesIntegerColorTableCellRenderer(Color.lightGray, modificationTypeColorMap, modificationTypeTooltipMap));
         userModificationsTable.getColumn("Type").setCellRenderer(new JSparklinesIntegerColorTableCellRenderer(Color.lightGray, modificationTypeColorMap, modificationTypeTooltipMap));

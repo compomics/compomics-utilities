@@ -43,7 +43,7 @@ public class ModificationFactory {
      * The name of the Modification factory back-up file. The version number
      * follows the one of utilities.
      */
-    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.1-beta.json";
+    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.2-beta.json";
     /**
      * A map linking indexes with modifications.
      */
@@ -2996,6 +2996,51 @@ public class ModificationFactory {
         modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:01678", "N6-carbamoyl-L-lysine", null));
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
+        
+        // Carbamylation of R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "Carbamilation of R";
+        modification = new Modification(ModificationType.modaa, modificationName, "cm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:5", "Carbamyl", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00398", "carbamoylated residue", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Carbamylation of C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "Carbamilation of C";
+        modification = new Modification(ModificationType.modaa, modificationName, "cm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:5", "Carbamyl", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00337", "S-carbamoyl-L-cysteine", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Carbamylation of M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "Carbamilation of M";
+        modification = new Modification(ModificationType.modaa, modificationName, "cm", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:5", "Carbamyl", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:00398", "carbamoylated residue", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
 
         // Acetaldehyde +26
         atomChainAdded = new AtomChain();
@@ -3377,6 +3422,20 @@ public class ModificationFactory {
         modification = new Modification(ModificationType.modaa, modificationName, "carbox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:6", "Carboxymethyl", null));
         modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:01061", "S-carboxymethyl-L-cysteine", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Carboxymethylation of peptide N-term
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = new AminoAcidPattern();
+        modificationName = "Carboxymethylation of peptide N-term";
+        modification = new Modification(ModificationType.modn_peptide, modificationName, "carbox", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:6", "Carboxymethyl", null));
+        modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:01084", "iodoacetic acid derivatized amino-terminal residue", null));
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
 
@@ -4170,6 +4229,19 @@ public class ModificationFactory {
         modificationName = "Copper on E";
         modification = new Modification(ModificationType.modaa, modificationName, "cu", atomChainAdded, atomChainRemoved, aminoAcidPattern);
         modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:531", "Cation:Cu[I]", null));
+        // @TODO: add PSI-MOD mapping?
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+        
+        // Ammonia loss from N
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 1);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "Ammonia loss from N";
+        modification = new Modification(ModificationType.modaa, modificationName, "-nh3", atomChainAdded, atomChainRemoved, aminoAcidPattern);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:385", "Ammonia-loss", null));
         // @TODO: add PSI-MOD mapping?
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);

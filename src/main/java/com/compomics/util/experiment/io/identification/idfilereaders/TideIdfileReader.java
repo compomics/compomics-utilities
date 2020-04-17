@@ -234,7 +234,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                         }
                     }
 
-                    String spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[scanNumber];
+                    String spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[scanNumber]; // @TODO: does not work for mzML files
                     Long tempSpectrumMatchKey = ExperimentObject.asLong(String.join("", spectrumFileName, spectrumTitle));
                     SpectrumMatch currentMatch = tempSpectrumMatchesMap.get(tempSpectrumMatchKey);
 

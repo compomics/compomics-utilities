@@ -573,12 +573,7 @@ public class ModificationDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         backgroundPanel = new javax.swing.JPanel();
-        okButton = new javax.swing.JButton();
-        helpJButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-        scrollPane = new javax.swing.JScrollPane();
-        scrollPanePanel = new javax.swing.JPanel();
-        detailsPanel = new javax.swing.JPanel();
+        propertiesPanel = new javax.swing.JPanel();
         typeLabel = new javax.swing.JLabel();
         typeCmb = new javax.swing.JComboBox();
         categoryLabel = new javax.swing.JLabel();
@@ -643,6 +638,9 @@ public class ModificationDialog extends javax.swing.JDialog {
         psiModNameJTextField = new javax.swing.JTextField();
         psiModNameLabel = new javax.swing.JLabel();
         psiModAccessionLabel = new javax.swing.JLabel();
+        helpJButton = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("New Modification");
@@ -651,46 +649,8 @@ public class ModificationDialog extends javax.swing.JDialog {
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
         backgroundPanel.setPreferredSize(new java.awt.Dimension(800, 600));
 
-        okButton.setText("OK");
-        okButton.setEnabled(false);
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-
-        helpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
-        helpJButton.setToolTipText("Help");
-        helpJButton.setBorder(null);
-        helpJButton.setBorderPainted(false);
-        helpJButton.setContentAreaFilled(false);
-        helpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                helpJButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                helpJButtonMouseExited(evt);
-            }
-        });
-        helpJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                helpJButtonActionPerformed(evt);
-            }
-        });
-
-        cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-
-        scrollPane.setBorder(null);
-
-        scrollPanePanel.setBackground(new java.awt.Color(230, 230, 230));
-
-        detailsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Properties"));
-        detailsPanel.setOpaque(false);
+        propertiesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Properties"));
+        propertiesPanel.setOpaque(false);
 
         typeLabel.setText("Type");
         typeLabel.setToolTipText("The modification type. See help for details.");
@@ -765,37 +725,37 @@ public class ModificationDialog extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout detailsPanelLayout = new javax.swing.GroupLayout(detailsPanel);
-        detailsPanel.setLayout(detailsPanelLayout);
-        detailsPanelLayout.setHorizontalGroup(
-            detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(detailsPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout propertiesPanelLayout = new javax.swing.GroupLayout(propertiesPanel);
+        propertiesPanel.setLayout(propertiesPanelLayout);
+        propertiesPanelLayout.setHorizontalGroup(
+            propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(propertiesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(detailsPanelLayout.createSequentialGroup()
-                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(propertiesPanelLayout.createSequentialGroup()
+                        .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                             .addComponent(typeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(typeCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(categoryCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(detailsPanelLayout.createSequentialGroup()
+                            .addGroup(propertiesPanelLayout.createSequentialGroup()
                                 .addComponent(nameTxt)
                                 .addGap(18, 18, 18)
                                 .addComponent(nameShortLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(nameShortTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(detailsPanelLayout.createSequentialGroup()
+                    .addGroup(propertiesPanelLayout.createSequentialGroup()
                         .addComponent(categoryLabel)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(detailsPanelLayout.createSequentialGroup()
-                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(propertiesPanelLayout.createSequentialGroup()
+                        .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(patternLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(compositionLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(detailsPanelLayout.createSequentialGroup()
+                        .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(propertiesPanelLayout.createSequentialGroup()
                                 .addComponent(compositionTxt)
                                 .addGap(18, 18, 18)
                                 .addComponent(massLabel)
@@ -805,33 +765,33 @@ public class ModificationDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        detailsPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {nameLabel, patternLabel, typeLabel});
+        propertiesPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {nameLabel, patternLabel, typeLabel});
 
-        detailsPanelLayout.setVerticalGroup(
-            detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(detailsPanelLayout.createSequentialGroup()
+        propertiesPanelLayout.setVerticalGroup(
+            propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(propertiesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(typeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(typeLabel))
                 .addGap(0, 0, 0)
-                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(categoryLabel)
                     .addComponent(categoryCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
-                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nameLabel)
                     .addComponent(nameShortLabel)
                     .addComponent(nameShortTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
-                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(compositionTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(compositionLabel)
                     .addComponent(massLabel)
                     .addComponent(massTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
-                .addGroup(detailsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(propertiesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(patternTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(patternLabel))
                 .addContainerGap())
@@ -880,7 +840,7 @@ public class ModificationDialog extends javax.swing.JDialog {
                     .addComponent(addNeutralLoss, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(removeNeutralLoss, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(neutralLossesJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 532, Short.MAX_VALUE)
+                .addComponent(neutralLossesJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
                 .addContainerGap())
         );
         neutralLossesPanelLayout.setVerticalGroup(
@@ -893,7 +853,7 @@ public class ModificationDialog extends javax.swing.JDialog {
                         .addComponent(addNeutralLoss)
                         .addGap(0, 0, 0)
                         .addComponent(removeNeutralLoss)
-                        .addGap(0, 75, Short.MAX_VALUE)))
+                        .addGap(0, 68, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -937,7 +897,7 @@ public class ModificationDialog extends javax.swing.JDialog {
                     .addComponent(addReporterIon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(removerReporterIon, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 532, Short.MAX_VALUE)
+                .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
                 .addContainerGap())
         );
         reporterIonsPanelLayout.setVerticalGroup(
@@ -945,7 +905,7 @@ public class ModificationDialog extends javax.swing.JDialog {
             .addGroup(reporterIonsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(reporterIonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                    .addComponent(reporterIonsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
                     .addGroup(reporterIonsPanelLayout.createSequentialGroup()
                         .addComponent(addReporterIon)
                         .addGap(0, 0, 0)
@@ -970,7 +930,7 @@ public class ModificationDialog extends javax.swing.JDialog {
             reporterIonsAndNeutralLossesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(reporterIonsAndNeutralLossesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(neutralLossesAndReportIonsTabbedPane))
+                .addComponent(neutralLossesAndReportIonsTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
         );
 
         unimodMappingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Unimod and PSI-MOD Mapping"));
@@ -1036,7 +996,7 @@ public class ModificationDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(unimodPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unimodPanelLayout.createSequentialGroup()
-                                .addGap(0, 70, Short.MAX_VALUE)
+                                .addGap(0, 109, Short.MAX_VALUE)
                                 .addComponent(unimodLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(unimodNameJTextField)
                             .addComponent(unimodAccessionJTextField))))
@@ -1118,7 +1078,7 @@ public class ModificationDialog extends javax.swing.JDialog {
                                     .addComponent(psiModNameLabel))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(psiModPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(psiModAccessionJTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
+                                    .addComponent(psiModAccessionJTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                                     .addComponent(psiModNameJTextField)))
                             .addComponent(unimodLinkLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
@@ -1157,29 +1117,39 @@ public class ModificationDialog extends javax.swing.JDialog {
             .addComponent(cvTermSplitPane)
         );
 
-        javax.swing.GroupLayout scrollPanePanelLayout = new javax.swing.GroupLayout(scrollPanePanel);
-        scrollPanePanel.setLayout(scrollPanePanelLayout);
-        scrollPanePanelLayout.setHorizontalGroup(
-            scrollPanePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(scrollPanePanelLayout.createSequentialGroup()
-                .addGroup(scrollPanePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(unimodMappingPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(reporterIonsAndNeutralLossesPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(detailsPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, 0))
-        );
-        scrollPanePanelLayout.setVerticalGroup(
-            scrollPanePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(scrollPanePanelLayout.createSequentialGroup()
-                .addComponent(detailsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(reporterIonsAndNeutralLossesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(unimodMappingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
-        );
+        helpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
+        helpJButton.setToolTipText("Help");
+        helpJButton.setBorder(null);
+        helpJButton.setBorderPainted(false);
+        helpJButton.setContentAreaFilled(false);
+        helpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                helpJButtonMouseExited(evt);
+            }
+        });
+        helpJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpJButtonActionPerformed(evt);
+            }
+        });
 
-        scrollPane.setViewportView(scrollPanePanel);
+        okButton.setText("OK");
+        okButton.setEnabled(false);
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
@@ -1194,16 +1164,26 @@ public class ModificationDialog extends javax.swing.JDialog {
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(propertiesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(scrollPane)))
+                        .addComponent(unimodMappingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(backgroundPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(reporterIonsAndNeutralLossesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         backgroundPanelLayout.setVerticalGroup(
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(scrollPane)
+                .addComponent(propertiesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(reporterIonsAndNeutralLossesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(unimodMappingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(helpJButton)
@@ -1217,12 +1197,12 @@ public class ModificationDialog extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
+                .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 681, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
+            .addComponent(backgroundPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 606, Short.MAX_VALUE)
         );
 
         pack();
@@ -1679,7 +1659,6 @@ public class ModificationDialog extends javax.swing.JDialog {
     private javax.swing.JLabel compositionLabel;
     private javax.swing.JTextField compositionTxt;
     private javax.swing.JSplitPane cvTermSplitPane;
-    private javax.swing.JPanel detailsPanel;
     private javax.swing.JButton helpJButton;
     private javax.swing.JLabel massLabel;
     private javax.swing.JTextField massTxt;
@@ -1694,6 +1673,7 @@ public class ModificationDialog extends javax.swing.JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JLabel patternLabel;
     private javax.swing.JTextField patternTxt;
+    private javax.swing.JPanel propertiesPanel;
     private javax.swing.JTextField psiModAccessionJTextField;
     private javax.swing.JLabel psiModAccessionLabel;
     private javax.swing.JLabel psiModLabel;
@@ -1706,8 +1686,6 @@ public class ModificationDialog extends javax.swing.JDialog {
     private javax.swing.JScrollPane reporterIonsJScrollPane;
     private javax.swing.JPanel reporterIonsPanel;
     private javax.swing.JTable reporterIonsTable;
-    private javax.swing.JScrollPane scrollPane;
-    private javax.swing.JPanel scrollPanePanel;
     private javax.swing.JComboBox typeCmb;
     private javax.swing.JLabel typeLabel;
     private javax.swing.JTextField unimodAccessionJTextField;

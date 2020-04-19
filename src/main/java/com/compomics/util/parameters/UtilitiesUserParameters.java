@@ -6,12 +6,12 @@ import com.compomics.util.io.json.JsonMarshaller;
 import java.awt.Color;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 /**
  * Utilities user parameters can be used to store user parameters.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class UtilitiesUserParameters {
 
@@ -199,10 +199,6 @@ public class UtilitiesUserParameters {
      * The minimum charge added when the charge is missing for a given spectrum.
      */
     private int maxSpectrumChargeRange = 4;
-    /**
-     * The list of the default modifications.
-     */
-    private HashSet<String> defaultModifications = defaultModifications();
 
     /**
      * Constructor.
@@ -1066,24 +1062,6 @@ public class UtilitiesUserParameters {
     public void setMaxSpectrumChargeRange(int maxSpectrumChargeRange) {
         this.maxSpectrumChargeRange = maxSpectrumChargeRange;
     }
-
-    /**
-     * Returns the default modifications.
-     * 
-     * @return the default modifications
-     */
-    public HashSet<String> getDefaultModifications() {
-        return defaultModifications;
-    }
-
-    /**
-     * Sets the default modifications.
-     * 
-     * @param defaultModifications the default modifications
-     */
-    public void setDefaultModifications(HashSet<String> defaultModifications) {
-        this.defaultModifications = defaultModifications;
-    }
     
     /**
      * Returns the folder where FASTA files summary statistics are stored.
@@ -1091,41 +1069,6 @@ public class UtilitiesUserParameters {
      * @return the folder where FASTA files summary statistics are stored
      */
     public File getDbSummaryFolder() {
-        
         return new File(getUserParametersFolder(), "fastaSummary");
-    }
-    
-    /**
-     * Sets the default list of modifications.
-     */
-    private static HashSet<String> defaultModifications() {
-        
-        HashSet<String> defaultList = new HashSet<>(12);
-        
-        defaultList.add("Acetylation of K");
-        defaultList.add("Acetylation of protein N-term");
-        defaultList.add("Carbamidomethylation of C");
-        defaultList.add("Deamidation of N");
-        defaultList.add("Deamidation of Q");
-        defaultList.add("Oxidation of M");
-        defaultList.add("Phosphorylation of S");
-        defaultList.add("Phosphorylation of T");
-        defaultList.add("Phosphorylation of Y");
-        defaultList.add("Pyrolidone from E");
-        defaultList.add("Pyrolidone from Q");
-        defaultList.add("Pyrolidone from carbamidomethylated C");
-        defaultList.add("TMT 10-plex of K");
-        defaultList.add("TMT 10-plex of peptide N-term");
-        defaultList.add("TMT 6-plex of K");
-        defaultList.add("TMT 6-plex of peptide N-term");
-        defaultList.add("iTRAQ 4-plex of K");
-        defaultList.add("iTRAQ 4-plex of Y");
-        defaultList.add("iTRAQ 4-plex of peptide N-term");
-        defaultList.add("iTRAQ 8-plex of K");
-        defaultList.add("iTRAQ 8-plex of Y");
-        defaultList.add("iTRAQ 8-plex of peptide N-term");
-        
-        return defaultList;
-        
     }
 }

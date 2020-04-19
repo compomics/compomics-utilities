@@ -76,13 +76,17 @@ public class Modification extends ExperimentObject {
      * The number of decimals used in the getRoundedMass method.
      */
     private static final int NUMBER_OF_ROUNDED_DECIMALS = 6;
+    /**
+     * The category for the modification. Null if not set.
+     */
+    private ModificationCategory category = null;
 
     /**
      * Constructor for the modification.
      */
     public Modification() {
     }
-
+    
     /**
      * Constructor for a reference modification.
      *
@@ -92,8 +96,11 @@ public class Modification extends ExperimentObject {
      * @param atomChainAdded atomic composition of the molecule added
      * @param atomChainRemoved atomic composition of the molecule removed
      * @param aminoAcidPattern residue pattern affected by this modification
+     * @param category the modification category
      */
-    public Modification(ModificationType modificationType, String name, String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern) {
+    public Modification(ModificationType modificationType, String name,
+            String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved,
+            AminoAcidPattern aminoAcidPattern, ModificationCategory category) {
         this.modificationType = modificationType;
         this.name = name;
         this.shortName = shortName;
@@ -102,6 +109,7 @@ public class Modification extends ExperimentObject {
         this.pattern = aminoAcidPattern;
         this.unimodCvTerm = null;
         this.psiModCvTerm = null;
+        this.category = category;
     }
 
     /**
@@ -117,8 +125,11 @@ public class Modification extends ExperimentObject {
      * null if not set
      * @param psiModCvTerm the PSI-MOD CV term associated with this
      * modification, null if not set
+     * @param category the modification category
      */
-    public Modification(ModificationType modificationType, String name, String shortName, AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern, CvTerm unimodCvTerm, CvTerm psiModCvTerm) {
+    public Modification(ModificationType modificationType, String name, String shortName,
+            AtomChain atomChainAdded, AtomChain atomChainRemoved, AminoAcidPattern aminoAcidPattern,
+            CvTerm unimodCvTerm, CvTerm psiModCvTerm, ModificationCategory category) {
         this.modificationType = modificationType;
         this.name = name;
         this.shortName = shortName;
@@ -127,6 +138,7 @@ public class Modification extends ExperimentObject {
         this.pattern = aminoAcidPattern;
         this.unimodCvTerm = unimodCvTerm;
         this.psiModCvTerm = psiModCvTerm;
+        this.category = category;
     }
 
     /**
@@ -137,14 +149,17 @@ public class Modification extends ExperimentObject {
      * @param name name of the modification
      * @param mass the mass of the modification
      * @param residues list of residues possibly targeted by this modification
+     * @param category the modification category
      */
-    public Modification(ModificationType modificationType, String name, Double mass, ArrayList<String> residues) {
+    public Modification(ModificationType modificationType, String name, Double mass,
+            ArrayList<String> residues, ModificationCategory category) {
         this.modificationType = modificationType;
         this.name = name;
         this.mass = mass;
         if (residues != null) {
             this.pattern = new AminoAcidPattern(residues);
         }
+        this.category = category;
     }
 
     /**
@@ -390,6 +405,13 @@ public class Modification extends ExperimentObject {
 //            System.out.println("parameters removed: " + anotherModification.getAtomChainRemoved());
             return false;
         }
+        if (category != anotherModification.getCategory()) {
+//            System.out.println("category difference");
+//            System.out.println("local: " + category);
+//            System.out.println("parameters: " + anotherModification.getCategory());
+            return false;
+        }
+
         return true;
     }
 
@@ -501,6 +523,7 @@ public class Modification extends ExperimentObject {
         String tooltip = "<html>";
 
         tooltip += "Name: " + name + "<br>";
+        tooltip += "Category: " + category + "<br>";
         tooltip += "Mass: " + getRoundedMass(4) + "<br>";
         tooltip += "Type: ";
 
@@ -581,6 +604,24 @@ public class Modification extends ExperimentObject {
         this.psiModCvTerm = cvTerm;
     }
 
+    /**
+     * Returns the modification category. Null if not set.
+     *
+     * @return the modification category
+     */
+    public ModificationCategory getCategory() {
+        return category;
+    }
+
+    /**
+     * Set the modification category.
+     *
+     * @param category the modification category
+     */
+    public void setCategory(ModificationCategory category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         readDBMode();
@@ -621,7 +662,7 @@ public class Modification extends ExperimentObject {
         if (shortName != null && !shortName.equals("")) {
             description.append("(").append(shortName).append(")");
         }
-        description.append("\t");
+        description.append("\t").append(category).append("\t");
         if (atomChainAdded != null) {
             description.append("+{").append(atomChainAdded).append("}");
         }

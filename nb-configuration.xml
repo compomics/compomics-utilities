@@ -22,6 +22,7 @@ Any value defined here will override the pom.xml file value but is only applicab
         <word>deserialization</word>
         <word>deserializing</word>
         <word>Ensembl</word>
+        <word>Glycosylation</word>
         <word>huffman</word>
         <word>immonium</word>
         <word>isoforms</word>

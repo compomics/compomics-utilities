@@ -2284,10 +2284,15 @@
 <pre><a href="com/compomics/util/pride/CvTerm.html" title="class in com.compomics.util.pride">CvTerm</a> psiModCvTerm</pre>
 <div class="block">The PSI-MOD CV term associated with this modification. Null if not set.</div>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>ambiguityKey</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a> ambiguityKey</pre>
 <div class="block">The ambiguity key for ambiguous modifications.</div>
+</li>
+<li class="blockListLast">
+<h4>category</h4>
+<pre><a href="com/compomics/util/experiment/biology/modifications/ModificationCategory.html" title="enum in com.compomics.util.experiment.biology.modifications">ModificationCategory</a> category</pre>
+<div class="block">The category for the modification. Null if not set.</div>
 </li>
 </ul>
 </li>
@@ -6828,6 +6833,14 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> cancelButton</pre>
 </li>
 <li class="blockList">
+<h4>categoryCmb</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; categoryCmb</pre>
+</li>
+<li class="blockList">
+<h4>categoryLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> categoryLabel</pre>
+</li>
+<li class="blockList">
 <h4>compositionLabel</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> compositionLabel</pre>
 </li>
@@ -6836,24 +6849,12 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> compositionTxt</pre>
 </li>
 <li class="blockList">
-<h4>cvExampleLabel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> cvExampleLabel</pre>
-</li>
-<li class="blockList">
-<h4>cvExampleLabel1</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> cvExampleLabel1</pre>
-</li>
-<li class="blockList">
-<h4>detailsPanel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> detailsPanel</pre>
+<h4>cvTermSplitPane</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JSplitPane.html?is-external=true" title="class or interface in javax.swing">JSplitPane</a> cvTermSplitPane</pre>
 </li>
 <li class="blockList">
 <h4>helpJButton</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> helpJButton</pre>
-</li>
-<li class="blockList">
-<h4>jLabel1</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> jLabel1</pre>
 </li>
 <li class="blockList">
 <h4>massLabel</h4>
@@ -6880,6 +6881,10 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> nameTxt</pre>
 </li>
 <li class="blockList">
+<h4>neutralLossesAndReportIonsTabbedPane</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTabbedPane.html?is-external=true" title="class or interface in javax.swing">JTabbedPane</a> neutralLossesAndReportIonsTabbedPane</pre>
+</li>
+<li class="blockList">
 <h4>neutralLossesJScrollPane</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JScrollPane.html?is-external=true" title="class or interface in javax.swing">JScrollPane</a> neutralLossesJScrollPane</pre>
 </li>
@@ -6904,6 +6909,10 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> patternTxt</pre>
 </li>
 <li class="blockList">
+<h4>propertiesPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> propertiesPanel</pre>
+</li>
+<li class="blockList">
 <h4>psiModAccessionJTextField</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> psiModAccessionJTextField</pre>
 </li>
@@ -6924,12 +6933,20 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> psiModNameLabel</pre>
 </li>
 <li class="blockList">
+<h4>psiModPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> psiModPanel</pre>
+</li>
+<li class="blockList">
 <h4>removeNeutralLoss</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> removeNeutralLoss</pre>
 </li>
 <li class="blockList">
 <h4>removerReporterIon</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JButton.html?is-external=true" title="class or interface in javax.swing">JButton</a> removerReporterIon</pre>
+</li>
+<li class="blockList">
+<h4>reporterIonsAndNeutralLossesPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> reporterIonsAndNeutralLossesPanel</pre>
 </li>
 <li class="blockList">
 <h4>reporterIonsJScrollPane</h4>
@@ -6944,16 +6961,12 @@
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.html?is-external=true" title="class or interface in javax.swing">JTable</a> reporterIonsTable</pre>
 </li>
 <li class="blockList">
-<h4>scrollPane</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JScrollPane.html?is-external=true" title="class or interface in javax.swing">JScrollPane</a> scrollPane</pre>
-</li>
-<li class="blockList">
-<h4>scrollPanePanel</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> scrollPanePanel</pre>
-</li>
-<li class="blockList">
 <h4>typeCmb</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">JComboBox</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing">E</a>&gt; typeCmb</pre>
+</li>
+<li class="blockList">
+<h4>typeLabel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> typeLabel</pre>
 </li>
 <li class="blockList">
 <h4>unimodAccessionJTextField</h4>
@@ -6983,9 +6996,13 @@
 <h4>unimodNameJTextField</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTextField.html?is-external=true" title="class or interface in javax.swing">JTextField</a> unimodNameJTextField</pre>
 </li>
-<li class="blockListLast">
+<li class="blockList">
 <h4>unimodNameLabel</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing">JLabel</a> unimodNameLabel</pre>
+</li>
+<li class="blockListLast">
+<h4>unimodPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing">JPanel</a> unimodPanel</pre>
 </li>
 </ul>
 </li>
@@ -11585,11 +11602,6 @@
 <h4>waitingTime</h4>
 <pre>int waitingTime</pre>
 <div class="block">The time to wait between keys typed before updating the search.</div>
-</li>
-<li class="blockList">
-<h4>defaultModifications</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">HashSet</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html?is-external=true" title="class or interface in java.util">E</a>&gt; defaultModifications</pre>
-<div class="block">The modifications to include in the table by default.</div>
 </li>
 <li class="blockList">
 <h4>canceled</h4>

@@ -5666,7 +5666,7 @@
 <dd>
 <div class="block">Formats the table.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/software/cli/CommandLineUtils.html#formatter">formatter</a></span> - Static variable in class com.compomics.software.cli.<a href="com/compomics/software/cli/CommandLineUtils.html" title="class in com.compomics.software.cli">CommandLineUtils</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/software/cli/CommandLineUtils.html#FORMATTER">FORMATTER</a></span> - Static variable in class com.compomics.software.cli.<a href="com/compomics/software/cli/CommandLineUtils.html" title="class in com.compomics.software.cli">CommandLineUtils</a></dt>
 <dd>
 <div class="block">The format to use for string output.</div>
 </dd>
@@ -6850,6 +6850,14 @@
 <dd>
 <div class="block">Returns the different categories of the features in this map.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationCategory.html#getCategoriesAsString--">getCategoriesAsString()</a></span> - Static method in enum com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationCategory.html" title="enum in com.compomics.util.experiment.biology.modifications">ModificationCategory</a></dt>
+<dd>
+<div class="block">Returns all of the modification category options as a string.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/Modification.html#getCategory--">getCategory()</a></span> - Method in class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a></dt>
+<dd>
+<div class="block">Returns the modification category.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/AAIdentityFeatureAbsolute.html#getCategory--">getCategory()</a></span> - Method in class com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.<a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/AAIdentityFeatureAbsolute.html" title="class in com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features">AAIdentityFeatureAbsolute</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/AAIdentityFeatureRelative.html#getCategory--">getCategory()</a></span> - Method in class com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.<a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/AAIdentityFeatureRelative.html" title="class in com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features">AAIdentityFeatureRelative</a></dt>
@@ -7637,10 +7645,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html#getDefaultModifications--">getDefaultModifications()</a></span> - Method in class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a></dt>
 <dd>
 <div class="block">Returns the names of the default modifications.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/UtilitiesUserParameters.html#getDefaultModifications--">getDefaultModifications()</a></span> - Method in class com.compomics.util.parameters.<a href="com/compomics/util/parameters/UtilitiesUserParameters.html" title="class in com.compomics.util.parameters">UtilitiesUserParameters</a></dt>
-<dd>
-<div class="block">Returns the default modifications.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html#getDefaultModificationsOrdered--">getDefaultModificationsOrdered()</a></span> - Method in class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a></dt>
 <dd>
@@ -11064,6 +11068,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html#getModifications--">getModifications()</a></span> - Method in class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a></dt>
 <dd>
 <div class="block">Returns the names of all imported Modifications.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html#getModifications-com.compomics.util.experiment.biology.modifications.ModificationCategory...-">getModifications(ModificationCategory...)</a></span> - Method in class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a></dt>
+<dd>
+<div class="block">Returns the names of all modifications in the given categories.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/protein/AASequenceImpl.html#getModifications--">getModifications()</a></span> - Method in class com.compomics.util.protein.<a href="com/compomics/util/protein/AASequenceImpl.html" title="class in com.compomics.util.protein">AASequenceImpl</a></dt>
 <dd>
@@ -15276,6 +15284,10 @@
 <dd>
 <div class="block">Returns the type reference.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationType.html#getTypesAsString--">getTypesAsString()</a></span> - Static method in enum com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationType.html" title="enum in com.compomics.util.experiment.biology.modifications">ModificationType</a></dt>
+<dd>
+<div class="block">Returns all of the modification type options as a string.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/pdbfinder/das/readers/DasFeature.html#getTypeSubparts--">getTypeSubparts()</a></span> - Method in class com.compomics.util.pdbfinder.das.readers.<a href="com/compomics/util/pdbfinder/das/readers/DasFeature.html" title="class in com.compomics.util.pdbfinder.das.readers">DasFeature</a></dt>
 <dd>
 <div class="block">Returns the type subparts.</div>
@@ -17623,7 +17635,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationType.html#isCTerm--">isCTerm()</a></span> - Method in enum com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationType.html" title="enum in com.compomics.util.experiment.biology.modifications">ModificationType</a></dt>
 <dd>
-<div class="block">Returns a boolean indicating whether the modification type targets the C-terminus of a protein or of a peptide.</div>
+<div class="block">Returns a boolean indicating whether the modification type targets the
+ C-terminus of a protein or of a peptide.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#isCterm-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">isCterm(Peptide, SequenceProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
 <dd>
@@ -17909,7 +17922,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationType.html#isNTerm--">isNTerm()</a></span> - Method in enum com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationType.html" title="enum in com.compomics.util.experiment.biology.modifications">ModificationType</a></dt>
 <dd>
-<div class="block">Returns a boolean indicating whether the modification type targets the N-terminus of a protein or of a peptide.</div>
+<div class="block">Returns a boolean indicating whether the modification type targets the
+ N-terminus of a protein or of a peptide.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#isNterm-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.io.biology.protein.SequenceProvider-">isNterm(Peptide, SequenceProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
 <dd>
@@ -20097,15 +20111,15 @@
 <dd>
 <div class="block">Constructor for the modification.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/Modification.html#Modification-com.compomics.util.experiment.biology.modifications.ModificationType-java.lang.String-java.lang.String-com.compomics.util.experiment.biology.atoms.AtomChain-com.compomics.util.experiment.biology.atoms.AtomChain-com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern-">Modification(ModificationType, String, String, AtomChain, AtomChain, AminoAcidPattern)</a></span> - Constructor for class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/Modification.html#Modification-com.compomics.util.experiment.biology.modifications.ModificationType-java.lang.String-java.lang.String-com.compomics.util.experiment.biology.atoms.AtomChain-com.compomics.util.experiment.biology.atoms.AtomChain-com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern-com.compomics.util.experiment.biology.modifications.ModificationCategory-">Modification(ModificationType, String, String, AtomChain, AtomChain, AminoAcidPattern, ModificationCategory)</a></span> - Constructor for class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a></dt>
 <dd>
 <div class="block">Constructor for a reference modification.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/Modification.html#Modification-com.compomics.util.experiment.biology.modifications.ModificationType-java.lang.String-java.lang.String-com.compomics.util.experiment.biology.atoms.AtomChain-com.compomics.util.experiment.biology.atoms.AtomChain-com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern-com.compomics.util.pride.CvTerm-com.compomics.util.pride.CvTerm-">Modification(ModificationType, String, String, AtomChain, AtomChain, AminoAcidPattern, CvTerm, CvTerm)</a></span> - Constructor for class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/Modification.html#Modification-com.compomics.util.experiment.biology.modifications.ModificationType-java.lang.String-java.lang.String-com.compomics.util.experiment.biology.atoms.AtomChain-com.compomics.util.experiment.biology.atoms.AtomChain-com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern-com.compomics.util.pride.CvTerm-com.compomics.util.pride.CvTerm-com.compomics.util.experiment.biology.modifications.ModificationCategory-">Modification(ModificationType, String, String, AtomChain, AtomChain, AminoAcidPattern, CvTerm, CvTerm, ModificationCategory)</a></span> - Constructor for class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a></dt>
 <dd>
 <div class="block">Constructor for a reference modification.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/Modification.html#Modification-com.compomics.util.experiment.biology.modifications.ModificationType-java.lang.String-java.lang.Double-java.util.ArrayList-">Modification(ModificationType, String, Double, ArrayList&lt;String&gt;)</a></span> - Constructor for class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/Modification.html#Modification-com.compomics.util.experiment.biology.modifications.ModificationType-java.lang.String-java.lang.Double-java.util.ArrayList-com.compomics.util.experiment.biology.modifications.ModificationCategory-">Modification(ModificationType, String, Double, ArrayList&lt;String&gt;, ModificationCategory)</a></span> - Constructor for class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a></dt>
 <dd>
 <div class="block">Simple constructor for a modification.</div>
 </dd>
@@ -20125,6 +20139,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/proteins/Peptide.html#MODIFICATION_SEPARATOR">MODIFICATION_SEPARATOR</a></span> - Static variable in class com.compomics.util.experiment.biology.proteins.<a href="com/compomics/util/experiment/biology/proteins/Peptide.html" title="class in com.compomics.util.experiment.biology.proteins">Peptide</a></dt>
 <dd>
 <div class="block">Separator used to separate modifications in peptide keys as string.</div>
+</dd>
+<dt><a href="com/compomics/util/experiment/biology/modifications/ModificationCategory.html" title="enum in com.compomics.util.experiment.biology.modifications"><span class="typeNameLink">ModificationCategory</span></a> - Enum in <a href="com/compomics/util/experiment/biology/modifications/package-summary.html">com.compomics.util.experiment.biology.modifications</a></dt>
+<dd>
+<div class="block">Enum for the different modification categories supported.</div>
 </dd>
 <dt><a href="com/compomics/util/gui/utils/user_choice/list_choosers/ModificationChooser.html" title="class in com.compomics.util.gui.utils.user_choice.list_choosers"><span class="typeNameLink">ModificationChooser</span></a> - Class in <a href="com/compomics/util/gui/utils/user_choice/list_choosers/package-summary.html">com.compomics.util.gui.utils.user_choice.list_choosers</a></dt>
 <dd>
@@ -20294,7 +20312,7 @@
 </dd>
 <dt><a href="com/compomics/cli/modifications/ModificationsCLIInputBean.html" title="class in com.compomics.cli.modifications"><span class="typeNameLink">ModificationsCLIInputBean</span></a> - Class in <a href="com/compomics/cli/modifications/package-summary.html">com.compomics.cli.modifications</a></dt>
 <dd>
-<div class="block">This class parses the parameters from an EnzymeCLI.</div>
+<div class="block">This class parses the parameters from an ModificationsCLI.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/cli/modifications/ModificationsCLIInputBean.html#ModificationsCLIInputBean-org.apache.commons.cli.CommandLine-">ModificationsCLIInputBean(CommandLine)</a></span> - Constructor for class com.compomics.cli.modifications.<a href="com/compomics/cli/modifications/ModificationsCLIInputBean.html" title="class in com.compomics.cli.modifications">ModificationsCLIInputBean</a></dt>
 <dd>
@@ -20343,10 +20361,6 @@
 <dt><a href="com/compomics/util/gui/modification/ModificationTable.html" title="class in com.compomics.util.gui.modification"><span class="typeNameLink">ModificationTable</span></a> - Class in <a href="com/compomics/util/gui/modification/package-summary.html">com.compomics.util.gui.modification</a></dt>
 <dd>
 <div class="block">Table containing information about the peak annotation of a modified peptide.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/gui/modification/ModificationTable.html#ModificationTable--">ModificationTable()</a></span> - Constructor for class com.compomics.util.gui.modification.<a href="com/compomics/util/gui/modification/ModificationTable.html" title="class in com.compomics.util.gui.modification">ModificationTable</a></dt>
-<dd>
-<div class="block">Empty default constructor</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/modification/ModificationTable.html#ModificationTable-com.compomics.util.experiment.identification.Identification-com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters-com.compomics.util.experiment.identification.matches.PeptideMatch-com.compomics.util.experiment.biology.modifications.Modification-boolean-com.compomics.util.parameters.identification.search.ModificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.experiment.mass_spectrometry.SpectrumProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">ModificationTable(Identification, AnnotationParameters, PeptideMatch, Modification, boolean, ModificationParameters, SequenceProvider, SpectrumProvider, SequenceMatchingParameters)</a></span> - Constructor for class com.compomics.util.gui.modification.<a href="com/compomics/util/gui/modification/ModificationTable.html" title="class in com.compomics.util.gui.modification">ModificationTable</a></dt>
 <dd>
@@ -24759,6 +24773,10 @@
 <dd>
 <div class="block">Set the border width.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/Modification.html#setCategory-com.compomics.util.experiment.biology.modifications.ModificationCategory-">setCategory(ModificationCategory)</a></span> - Method in class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a></dt>
+<dd>
+<div class="block">Set the modification category.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/general/IsotopicDistributionSpectrum.html#setCharge-int-">setCharge(int)</a></span> - Method in class com.compomics.util.general.<a href="com/compomics/util/general/IsotopicDistributionSpectrum.html" title="class in com.compomics.util.general">IsotopicDistributionSpectrum</a></dt>
 <dd>
 <div class="block">Setter for the charge</div>
@@ -25035,10 +25053,6 @@
 <div class="block">Set the advanced settings to the values in the given search parameters
  object or to the default values of the advanced settings are not set for
  a given advocate.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/UtilitiesUserParameters.html#setDefaultModifications-java.util.HashSet-">setDefaultModifications(HashSet&lt;String&gt;)</a></span> - Method in class com.compomics.util.parameters.<a href="com/compomics/util/parameters/UtilitiesUserParameters.html" title="class in com.compomics.util.parameters">UtilitiesUserParameters</a></dt>
-<dd>
-<div class="block">Sets the default modifications.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/IdMatchValidationParameters.html#setDefaultPeptideFDR-double-">setDefaultPeptideFDR(double)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/IdMatchValidationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">IdMatchValidationParameters</a></dt>
 <dd>
@@ -28256,6 +28270,10 @@
 <dd>
 <div class="block">Sets the z value.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationType.html#shortName">shortName</a></span> - Variable in enum com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationType.html" title="enum in com.compomics.util.experiment.biology.modifications">ModificationType</a></dt>
+<dd>
+<div class="block">The short name of the type.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html#showAllPeaks--">showAllPeaks()</a></span> - Method in class com.compomics.util.experiment.identification.spectrum_annotation.<a href="com/compomics/util/experiment/identification/spectrum_annotation/AnnotationParameters.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">AnnotationParameters</a></dt>
 <dd>
 <div class="block">If true, all peaks are shown, false displays the annotated peaks, and the
@@ -29698,6 +29716,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/Modification.html#toString--">toString()</a></span> - Method in class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications">Modification</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationCategory.html#toString--">toString()</a></span> - Method in enum com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationCategory.html" title="enum in com.compomics.util.experiment.biology.modifications">ModificationCategory</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationType.html#toString--">toString()</a></span> - Method in enum com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationType.html" title="enum in com.compomics.util.experiment.biology.modifications">ModificationType</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/variants/AaSubstitutionMatrix.html#toString--">toString()</a></span> - Method in class com.compomics.util.experiment.biology.variants.<a href="com/compomics/util/experiment/biology/variants/AaSubstitutionMatrix.html" title="class in com.compomics.util.experiment.biology.variants">AaSubstitutionMatrix</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/filtering/FilterItemComparator.html#toString--">toString()</a></span> - Method in enum com.compomics.util.experiment.filtering.<a href="com/compomics/util/experiment/filtering/FilterItemComparator.html" title="enum in com.compomics.util.experiment.filtering">FilterItemComparator</a></dt>
@@ -30452,6 +30474,10 @@
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationCategory.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationCategory.html" title="enum in com.compomics.util.experiment.biology.modifications">ModificationCategory</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this type with the specified name.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationType.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationType.html" title="enum in com.compomics.util.experiment.biology.modifications">ModificationType</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
@@ -30763,6 +30789,11 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/Ion.IonType.html#values--">values()</a></span> - Static method in enum com.compomics.util.experiment.biology.ions.<a href="com/compomics/util/experiment/biology/ions/Ion.IonType.html" title="enum in com.compomics.util.experiment.biology.ions">Ion.IonType</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum type, in
+the order they are declared.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationCategory.html#values--">values()</a></span> - Static method in enum com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationCategory.html" title="enum in com.compomics.util.experiment.biology.modifications">ModificationCategory</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>

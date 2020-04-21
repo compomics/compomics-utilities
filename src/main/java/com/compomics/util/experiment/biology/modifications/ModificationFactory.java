@@ -43,7 +43,7 @@ public class ModificationFactory {
      * The name of the Modification factory back-up file. The version number
      * follows the one of utilities.
      */
-    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.2-beta.json";
+    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.3-beta.json";
     /**
      * A map linking indexes with modifications.
      */
@@ -4901,6 +4901,5982 @@ public class ModificationFactory {
                 ModificationCategory.Common_Artifact);
         modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:385", "Ammonia-loss", null));
         // @TODO: add PSI-MOD mapping?
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        addSubstitutions();
+    }
+
+    /**
+     * Add the substitutions. Has to be done in a separate method or the
+     * combined method becomes too large...
+     */
+    private void addSubstitutions() {
+
+        // W to G
+        AtomChain atomChainAdded = new AtomChain();
+        AtomChain atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 9);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        AminoAcidPattern aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        String modificationName = "W to G";
+        Modification modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:676", "Trp->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1224", "Trp->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1239", "Tyr->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 9);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:646", "Arg->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:673", "Trp->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1237", "Tyr->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1093", "Phe->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to P
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1232", "Trp->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to V
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:677", "Trp->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1189", "Arg->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1234", "Trp->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:674", "Trp->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1117", "His->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1090", "Phe->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to S
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:679", "Tyr->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1147", "Met->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1231", "Trp->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:564", "Glu->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 9);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1135", "Lys->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1225", "Trp->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1181", "Gln->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:636", "Arg->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1113", "His->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to P
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1242", "Tyr->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to V
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1248", "Tyr->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to T
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1245", "Tyr->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:683", "Tyr->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:566", "Phe->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1142", "Met->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to P
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:639", "Arg->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1233", "Trp->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:556", "Asp->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:560", "Glu->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 5);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1229", "Trp->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1131", "Lys->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1226", "Trp->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to V
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:645", "Arg->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1159", "Asn->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1177", "Gln->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 8);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 8);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:638", "Arg->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1230", "Trp->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:644", "Arg->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1121", "His->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to P
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1098", "Phe->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1228", "Trp->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:680", "Tyr->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:682", "Tyr->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to V
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:568", "Phe->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1101", "Phe->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:552", "Cys->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:567", "Phe->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1207", "Thr->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1152", "Met->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:553", "Asp->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to I
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to L
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1155", "Asn->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1192", "Arg->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1129", "Xle->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to S
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1086", "Glu->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1190", "Arg->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1138", "Lys->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to S
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1184", "Gln->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1170", "Pro->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to P
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:580", "His->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to F
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1227", "Trp->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to V
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:585", "His->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1122", "His->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1243", "Tyr->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1240", "Tyr->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1114", "His->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1238", "Tyr->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to P
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1150", "Met->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1097", "Phe->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1091", "Phe->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1241", "Tyr->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to P
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1084", "Glu->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:939", "Cys->methylaminoAla", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to V
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:614", "Met->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to P
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1137", "Lys->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to P
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:630", "Gln->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:657", "Ser->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:659", "Thr->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:610", "Met->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 5);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:675", "Trp->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to V
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1081", "Glu->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to V
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:600", "Lys->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to V
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:635", "Gln->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:642", "Arg->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to C
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1143", "Met->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1125", "Xle->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to K
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:640", "Arg->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to S
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1075", "Asp->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to T
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1087", "Glu->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1191", "Arg->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:594", "Lys->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to S
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:616", "Asn->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to T
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1185", "Gln->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1078", "Glu->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:624", "Pro->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:681", "Tyr->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1132", "Lys->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:837", "Arg->Npo", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1178", "Gln->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // W to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("W");
+        modificationName = "W to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1236", "Trp->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to H
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:641", "Arg->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1099", "Phe->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1095", "Phe->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1092", "Phe->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to P
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1072", "Asp->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1149", "Met->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to P
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1161", "Asn->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to P
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to P
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1096", "Phe->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1144", "Met->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to A
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:648", "Ser->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to F
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:678", "Tyr->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:548", "Cys->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to V
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1069", "Asp->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to I
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to L
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1083", "Glu->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to V
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:622", "Asn->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:595", "Lys->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to G
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to G";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:544", "Ala->Gly", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to D
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:562", "Glu->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to V
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to V
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to N
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1183", "Gln->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to S
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:658", "Thr->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1076", "Asp->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1133", "Lys->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1179", "Gln->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:617", "Asn->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:905", "Leu->MetOx", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:601", "Xle->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1067", "Asp->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1156", "Asn->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:623", "Pro->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1094", "Phe->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1195", "Arg->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:582", "His->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1119", "His->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1115", "His->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1244", "Tyr->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1120", "His->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to P
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1063", "Cys->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to P
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:662", "Thr->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to V
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1059", "Cys->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1151", "Met->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:613", "Met->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to P
+        atomChainAdded = new AtomChain();
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:604", "Xle->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1145", "Met->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to V
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:664", "Thr->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1065", "Cys->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:555", "Asp->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:561", "Glu->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:563", "Glu->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:597", "Lys->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:631", "Gln->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:596", "Lys->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:621", "Asn->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:632", "Gln->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 6);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1203", "Thr->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:588", "Xle->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1082", "Glu->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to V
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:629", "Pro->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:598", "Lys->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1182", "Gln->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1126", "Xle->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:627", "Pro->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1166", "Pro->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:899", "Met->Hpg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1194", "Arg->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1080", "Glu->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 5);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1136", "Lys->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:633", "Gln->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1100", "Phe->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1116", "His->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to P
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:652", "Ser->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1062", "Cys->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1056", "Cys->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to V
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:656", "Ser->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:660", "Thr->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1073", "Asp->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1070", "Asp->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1204", "Thr->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:558", "Asp->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to A
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to A";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:571", "Gly->Ala", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1162", "Asn->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:650", "Ser->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:618", "Asn->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:589", "Xle->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1157", "Asn->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1127", "Xle->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:654", "Ser->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:540", "Ala->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:569", "Phe->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1071", "Asp->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1146", "Met->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1173", "Pro->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1160", "Asn->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.C, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1922", "Pro->HAVA", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1079", "Glu->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1134", "Lys->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1180", "Gln->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:584", "His->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:554", "Asp->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:620", "Asn->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Y to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Y");
+        modificationName = "Y to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1247", "Tyr->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 4);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1064", "Cys->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:611", "Met->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1060", "Cys->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:581", "His->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to P
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:543", "Ala->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1057", "Cys->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:651", "Ser->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1209", "Thr->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:661", "Thr->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1085", "Glu->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1196", "Ser->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1205", "Thr->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:599", "Lys->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to V
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1047", "Ala->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1033", "Cys->SecNEM", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:634", "Gln->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:607", "Xle->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:590", "Xle->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1128", "Xle->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // R to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("R");
+        modificationName = "R to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:637", "Arg->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:663", "Thr->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:541", "Ala->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to S
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to S";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:572", "Gly->Ser", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:626", "Pro->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1171", "Pro->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1044", "Ala->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:608", "Xle->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1168", "Pro->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1154", "Met->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1068", "Asp->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1158", "Asn->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1172", "Pro->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1089", "Glu->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1058", "Cys->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1141", "Lys->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1188", "Gln->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1208", "Thr->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:606", "Xle->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // F to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("F");
+        modificationName = "F to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1102", "Phe->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:625", "Pro->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to P
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to P";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1109", "Gly->Pro", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1201", "Ser->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1199", "Ser->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1074", "Asp->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1197", "Ser->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to V
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to V";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1105", "Gly->Xle", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1163", "Asn->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1050", "Ala->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:542", "Ala->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1200", "Ser->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to T
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to T";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1111", "Gly->Thr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:547", "Cys->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to C
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to C";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:577", "Gly->Cys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1206", "Thr->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:602", "Xle->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:557", "Asp->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // H to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
+        modificationName = "H to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1124", "His->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.N, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:619", "Asn->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1169", "Pro->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1198", "Ser->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:551", "Cys->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // M to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("M");
+        modificationName = "M to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1153", "Met->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:665", "Thr->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to I
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 8);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to I";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to L
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 8);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to L";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1051", "Ala->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to N
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to N";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1108", "Gly->Asn", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:609", "Xle->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // E to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("E");
+        modificationName = "E to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1088", "Glu->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1048", "Ala->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // K to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
+        modificationName = "K to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1140", "Lys->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:545", "Ala->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to D
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to D";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:576", "Gly->Asp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // Q to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("Q");
+        modificationName = "Q to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1187", "Gln->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0));
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:628", "Pro->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1049", "Ala->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:647", "Ser->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:550", "Cys->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1212", "Thr->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1130", "Xle->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1176", "Pro->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 2);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1046", "Ala->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:655", "Ser->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to Q
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to Q";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1110", "Gly->Gln", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // D to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0), 2);
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("D");
+        modificationName = "D to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1077", "Asp->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to K
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 9);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to K";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1106", "Gly->Lys", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to E
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to E";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:574", "Gly->Glu", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // N to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("N");
+        modificationName = "N to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1165", "Asn->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // I to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("I");
+        modificationName = "I to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // L to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.H, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("L");
+        modificationName = "L to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to M
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.S, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to M";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1107", "Gly->Met", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1045", "Ala->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:653", "Ser->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to H
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 2);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to H";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1104", "Gly->His", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // C to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.S, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
+        modificationName = "C to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:549", "Cys->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // T to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("T");
+        modificationName = "T to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1211", "Thr->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1052", "Ala->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // V to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0));
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("V");
+        modificationName = "V to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:603", "Xle->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // P to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 3);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("P");
+        modificationName = "P to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1175", "Pro->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to F
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to F";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1103", "Gly->Phe", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1054", "Ala->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // S to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        atomChainRemoved.append(new AtomImpl(Atom.O, 0));
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("S");
+        modificationName = "S to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:649", "Ser->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to R
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 4);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 9);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to R";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:578", "Gly->Arg", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to Y
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 6);
+        atomChainAdded.append(new AtomImpl(Atom.O, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to Y";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1112", "Gly->Tyr", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // A to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 8);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 5);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("A");
+        modificationName = "A to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_TwoPlus);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1053", "Ala->Trp", null));
+        defaultMods.add(modificationName);
+        modificationMap.put(modificationName, modification);
+
+        // G to W
+        atomChainAdded = new AtomChain();
+        atomChainAdded.append(new AtomImpl(Atom.C, 0), 9);
+        atomChainAdded.append(new AtomImpl(Atom.H, 0), 7);
+        atomChainAdded.append(new AtomImpl(Atom.N, 0));
+        atomChainRemoved = new AtomChain();
+        aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("G");
+        modificationName = "G to W";
+        modification = new Modification(
+                ModificationType.modaa, modificationName, "sub",
+                atomChainAdded, atomChainRemoved, aminoAcidPattern,
+                ModificationCategory.Nucleotide_Substitution_One);
+        modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:573", "Gly->Trp", null));
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
     }

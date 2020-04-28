@@ -38,7 +38,10 @@ public class PeptideVariantMatches extends DbObject {
      * on the peptide
      * @param lengthDiff the length difference induced by the variants
      */
-    public PeptideVariantMatches(HashMap<Integer, Variant> variantMatches, int lengthDiff) {
+    public PeptideVariantMatches(
+            HashMap<Integer, Variant> variantMatches, 
+            int lengthDiff
+    ) {
 
         if (variantMatches.isEmpty()) {
 

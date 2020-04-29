@@ -379,6 +379,21 @@ public class Identification extends ExperimentObject {
     }
 
     /**
+     * Updates an object in the database.
+     *
+     * @param key the key of the object
+     * @param object the object
+     */
+    public void updateObject(
+            long key,
+            Object object
+    ) {
+
+        objectsDB.updateObject(key, object);
+
+    }
+
+    /**
      * Removes an object from the database.
      *
      * @param key the key of the object

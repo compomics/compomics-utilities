@@ -361,6 +361,20 @@ public class Identification extends ExperimentObject {
     }
 
     /**
+     * Placeholder function
+     *
+     * @param key the key of the object
+     * @param object
+     */
+    public void updateObject(
+            long key,
+            Object object
+    ) {
+        
+    
+    }
+
+    /**
      * Removes an object from the database.
      *
      * @param key the key of the object

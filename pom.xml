@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>4.12.15</version>
+    <version>4.12.16</version>
     <name>computational omics utilities</name>
     <url>https://github.com/compomics/compomics-utilities</url>
     <description>Open source java library for computational proteomics</description>
@@ -92,7 +92,7 @@
             <name>Dominik Kopczynski</name>
             <id>dominik</id>
             <email>dominik.kopczynski AT isas.de</email>
-            <organization>Leibniz-Institut fÃ¼r Analytische Wissenschaften â€“ ISAS â€“ e.V.</organization>
+            <organization>Leibniz-Institut für Analytische Wissenschaften – ISAS – e.V.</organization>
             <roles>
                 <role>Java Developer</role>
             </roles>
@@ -273,6 +273,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9.1</version>
                 <configuration>
+                    <source>1.8</source>
                     <destDir>docs/javadoc</destDir>
                     <notimestamp>true</notimestamp>
                 </configuration>

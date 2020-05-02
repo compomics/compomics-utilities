@@ -361,10 +361,10 @@ public class Identification extends ExperimentObject {
     }
 
     /**
-     * Placeholder function
+     * Placeholder function.
      *
      * @param key the key of the object
-     * @param object
+     * @param object the object
      */
     public void updateObject(
             long key,

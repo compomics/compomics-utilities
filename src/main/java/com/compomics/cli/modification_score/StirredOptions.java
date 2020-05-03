@@ -9,7 +9,7 @@ import org.apache.commons.cli.Options;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public enum ModificationScoreOptions {
+public enum StirredOptions {
 
     input("i", "input", "The file containing the peptides. See documentation for details.", true, true),
     spectrum("s", "spectrum", "The file containing the spectra. See documentation for details.", true, true),
@@ -47,7 +47,7 @@ public enum ModificationScoreOptions {
      * @param mandatory If true the parameter is mandatory.
      * @param hasValue If true this command line argument needs a value.
      */
-    private ModificationScoreOptions(
+    private StirredOptions(
             String opt,
             String longOpt,
             String description,
@@ -71,7 +71,7 @@ public enum ModificationScoreOptions {
             Options aOptions
     ) {
 
-        for (ModificationScoreOptions option : values()) {
+        for (StirredOptions option : values()) {
 
             aOptions.addOption(option.opt,
                     option.hasValue,
@@ -92,7 +92,7 @@ public enum ModificationScoreOptions {
 
         output += "Mandatory arguments:\n";
 
-        for (ModificationScoreOptions option : values()) {
+        for (StirredOptions option : values()) {
 
             if (option.mandatory) {
 
@@ -103,7 +103,7 @@ public enum ModificationScoreOptions {
 
         output += "\n\nOptional arguments:\n";
 
-        for (ModificationScoreOptions option : values()) {
+        for (StirredOptions option : values()) {
 
             if (option.mandatory) {
 

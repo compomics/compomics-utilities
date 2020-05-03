@@ -14,7 +14,7 @@ import org.apache.commons.cli.Options;
  *
  * @author Marc Vaudel
  */
-public class ModificationScoreCLI {
+public class StirredCLI {
 
     /**
      * Main method.
@@ -44,11 +44,11 @@ public class ModificationScoreCLI {
         try {
 
             Options lOptions = new Options();
-            ModificationScoreOptions.createOptionsCLI(lOptions);
+            StirredOptions.createOptionsCLI(lOptions);
             CommandLineParser parser = new DefaultParser();
             CommandLine commandLine = parser.parse(lOptions, args);
 
-            ModificationScoreOptionsBean modificationScoreOptionsBean = new ModificationScoreOptionsBean(commandLine);
+            StirredOptionsBean modificationScoreOptionsBean = new StirredOptionsBean(commandLine);
 
             try ( CliLogger cliLogger = new CliLogger(
                     modificationScoreOptionsBean.logFile,
@@ -80,7 +80,7 @@ public class ModificationScoreCLI {
      * @param bean the bean of command line parameters
      */
     private static void run(
-            ModificationScoreOptionsBean bean,
+            StirredOptionsBean bean,
             CliLogger cliLogger
     ) {
 
@@ -111,7 +111,7 @@ public class ModificationScoreCLI {
                     + LINE_SEPARATOR
                     + "----------------------" + LINE_SEPARATOR
                     + LINE_SEPARATOR);
-            lPrintWriter.print(ModificationScoreOptions.getOptionsAsString());
+            lPrintWriter.print(StirredOptions.getOptionsAsString());
             lPrintWriter.flush();
         }
     }

@@ -10,7 +10,7 @@ import org.apache.commons.cli.CommandLine;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ModificationScoreOptionsBean {
+public class StirredOptionsBean {
 
     /**
      * The input file.
@@ -36,10 +36,10 @@ public class ModificationScoreOptionsBean {
      *
      * @throws IOException if an error occurs while reading or writing a file.
      */
-    public ModificationScoreOptionsBean(CommandLine aLine) throws IOException {
+    public StirredOptionsBean(CommandLine aLine) throws IOException {
 
         // Check that mandatory options are provided
-        for (ModificationScoreOptions option : ModificationScoreOptions.values()) {
+        for (StirredOptions option : StirredOptions.values()) {
 
             if (option.mandatory && !aLine.hasOption(option.opt)) {
 
@@ -49,21 +49,21 @@ public class ModificationScoreOptionsBean {
         }
 
         // Input file
-        String arg = aLine.getOptionValue(ModificationScoreOptions.input.opt);
+        String arg = aLine.getOptionValue(StirredOptions.input.opt);
         inputFile = new File(arg);
 
         // Spectrum file
-        arg = aLine.getOptionValue(ModificationScoreOptions.spectrum.opt);
+        arg = aLine.getOptionValue(StirredOptions.spectrum.opt);
         spectrumFile = new File(arg);
 
         // Output file
-        arg = aLine.getOptionValue(ModificationScoreOptions.output.opt);
+        arg = aLine.getOptionValue(StirredOptions.output.opt);
         outputFile = new File(arg);
 
         // Log file
-        if (aLine.hasOption(ModificationScoreOptions.log.opt)) {
+        if (aLine.hasOption(StirredOptions.log.opt)) {
 
-            arg = aLine.getOptionValue(ModificationScoreOptions.log.opt);
+            arg = aLine.getOptionValue(StirredOptions.log.opt);
             logFile = new File(arg);
 
         } else {

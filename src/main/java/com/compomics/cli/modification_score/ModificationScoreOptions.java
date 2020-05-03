@@ -11,47 +11,54 @@ import org.apache.commons.cli.Options;
  */
 public enum ModificationScoreOptions {
 
-    IN("i", "The file containing the peptides. See documentation for details.", true, true),
-    LOG("l", "The file to write the log to. Defualt: next to output file.", false, true),
-    OUT("o", "The where to write the results. See documentation for details.", true, true);
+    input("i", "input", "The file containing the peptides. See documentation for details.", true, true),
+    spectrum("s", "spectrum", "The file containing the spectra. See documentation for details.", true, true),
+    log("l", "log", "The file to write the log to. Defualt: next to output file.", false, true),
+    output("o", "output", "The where to write the results. See documentation for details.", true, true);
 
     /**
-     * Short Id for the CLI parameter.
+     * Short key for the command line argument.
      */
-    public final String id;
+    public final String opt;
     /**
-     * Explanation for the CLI parameter.
+     * Key for the command line argument.
+     */
+    public final String longOpt;
+    /**
+     * Description for the command line argument.
      */
     public final String description;
     /**
-     * Boolean indicating whether the parameter is mandatory.
+     * If true the parameter is mandatory.
      */
     public final boolean mandatory;
     /**
-     * Boolean indicating whether this command line option needs an argument.
+     * If true this command line argument needs a value.
      */
-    public final boolean hasArgument;
+    public final boolean hasValue;
 
     /**
      * Private constructor managing the various variables for the enum
      * instances.
      *
-     * @param id the id
-     * @param description the description
-     * @param mandatory is the parameter mandatory
-     * @param hasArgument boolean indicating whether this command line option
-     * needs an argument
+     * @param opt Short key for the CLI parameter.
+     * @param longOpt Key for the CLI parameter.
+     * @param description Description for the command line argument.
+     * @param mandatory If true the parameter is mandatory.
+     * @param hasValue If true this command line argument needs a value.
      */
     private ModificationScoreOptions(
-            String id,
+            String opt,
+            String longOpt,
             String description,
             boolean mandatory,
-            boolean hasArgument
+            boolean hasValue
     ) {
-        this.id = id;
+        this.opt = opt;
+        this.longOpt = longOpt;
         this.description = description;
         this.mandatory = mandatory;
-        this.hasArgument = hasArgument;
+        this.hasValue = hasValue;
     }
 
     /**
@@ -66,9 +73,8 @@ public enum ModificationScoreOptions {
 
         for (ModificationScoreOptions option : values()) {
 
-            aOptions.addOption(
-                    option.id,
-                    option.hasArgument,
+            aOptions.addOption(option.opt,
+                    option.hasValue,
                     option.description
             );
 
@@ -90,7 +96,7 @@ public enum ModificationScoreOptions {
 
             if (option.mandatory) {
 
-                output += "-" + String.format(CommandLineUtils.FORMATTER, option.id) + " " + option.description + "\n";
+                output += "-" + String.format(CommandLineUtils.FORMATTER, option.opt) + " " + option.description + "\n";
 
             }
         }
@@ -101,7 +107,7 @@ public enum ModificationScoreOptions {
 
             if (option.mandatory) {
 
-                output += "-" + String.format(CommandLineUtils.FORMATTER, option.id) + " " + option.description + "\n";
+                output += "-" + String.format(CommandLineUtils.FORMATTER, option.opt) + " " + option.description + "\n";
 
             }
         }

@@ -25,12 +25,8 @@ import java.util.Iterator;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ModificationFactory {
-
-    /**
-     * Serial number for serialization compatibility.
-     */
-//    static final long serialVersionUID = 7935264190312934466L;
+public class ModificationFactory implements ModificationProvider {
+    
     /**
      * Instance of the factory.
      */
@@ -265,13 +261,7 @@ public class ModificationFactory {
         userMods.remove(modificationName);
     }
 
-    /**
-     * Returns the Modification indexed by its name. Null if none found.
-     *
-     * @param name the name of the modification of interest
-     *
-     * @return the modification of interest
-     */
+    @Override
     public Modification getModification(String name) {
         return modificationMap.get(name);
     }

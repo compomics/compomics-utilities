@@ -16,16 +16,18 @@ public class ModificationScoreOptionsBean {
      * The input file.
      */
     public final File inputFile;
-
     /**
      * The output file.
      */
     public final File outputFile;
-
     /**
      * The log file.
      */
     public final File logFile;
+    /**
+     * The spectrum file.
+     */
+    public final File spectrumFile;
 
     /**
      * Parses all the arguments from a command line.
@@ -39,25 +41,29 @@ public class ModificationScoreOptionsBean {
         // Check that mandatory options are provided
         for (ModificationScoreOptions option : ModificationScoreOptions.values()) {
 
-            if (option.mandatory && !aLine.hasOption(option.id)) {
+            if (option.mandatory && !aLine.hasOption(option.opt)) {
 
-                throw new IllegalArgumentException("No value found for mandatory option " + option.id + ".");
+                throw new IllegalArgumentException("No value found for mandatory option " + option.opt + ".");
 
             }
         }
 
         // Input file
-        String arg = aLine.getOptionValue(ModificationScoreOptions.IN.id);
+        String arg = aLine.getOptionValue(ModificationScoreOptions.input.opt);
         inputFile = new File(arg);
 
+        // Spectrum file
+        arg = aLine.getOptionValue(ModificationScoreOptions.spectrum.opt);
+        spectrumFile = new File(arg);
+
         // Output file
-        arg = aLine.getOptionValue(ModificationScoreOptions.OUT.id);
+        arg = aLine.getOptionValue(ModificationScoreOptions.output.opt);
         outputFile = new File(arg);
 
         // Log file
-        if (aLine.hasOption(ModificationScoreOptions.LOG.id)) {
+        if (aLine.hasOption(ModificationScoreOptions.log.opt)) {
 
-            arg = aLine.getOptionValue(ModificationScoreOptions.LOG.id);
+            arg = aLine.getOptionValue(ModificationScoreOptions.log.opt);
             logFile = new File(arg);
 
         } else {

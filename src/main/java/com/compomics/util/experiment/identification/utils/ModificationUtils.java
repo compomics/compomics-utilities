@@ -56,7 +56,9 @@ public class ModificationUtils {
      *
      * @return an array containing only the given index
      */
-    public static int[] getArray(int index) {
+    public static int[] getArray(
+            int index
+    ) {
 
         int[] result = ARRAYS_MAP.get(index);
 
@@ -85,15 +87,21 @@ public class ModificationUtils {
      *
      * @return an array of the possible modification sites
      */
-    public static int[] getPossibleModificationSites(Peptide peptide, Modification modification,
-            SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+    public static int[] getPossibleModificationSites(
+            Peptide peptide, 
+            Modification modification,
+            SequenceProvider sequenceProvider, 
+            SequenceMatchingParameters modificationsSequenceMatchingParameters
+    ) {
 
         String peptideSequence = peptide.getSequence();
         ModificationType modificationType = modification.getModificationType();
 
-        if (null == modificationType) {
+        if (modificationType == null) {
 
-            throw new UnsupportedOperationException("Modification mapping not supported for modification of type " + modificationType + ".");
+            throw new UnsupportedOperationException(
+                    "Modification mapping not supported for modification of type " + modificationType + "."
+            );
 
         } else {
 
@@ -105,7 +113,10 @@ public class ModificationUtils {
 
                     if (aminoAcidPattern.length() == 1) {
 
-                        return aminoAcidPattern.getIndexes(peptideSequence, modificationsSequenceMatchingParameters);
+                        return aminoAcidPattern.getIndexes(
+                                peptideSequence, 
+                                modificationsSequenceMatchingParameters
+                        );
 
                     } else if (aminoAcidPattern.length() > 1) {
 
@@ -131,8 +142,13 @@ public class ModificationUtils {
 
                                 if (maxIndex > 0) {
 
-                                    String suffix = sequence.substring(startIndex + peptideSequence.length(),
-                                            Math.min(startIndex + peptideSequence.length() + maxIndex, sequence.length()));
+                                    String suffix = sequence.substring(
+                                            startIndex + peptideSequence.length(),
+                                            Math.min(
+                                                    startIndex + peptideSequence.length() + maxIndex, 
+                                                    sequence.length()
+                                            )
+                                    );
                                     extendedSequenceBuilder.append(suffix);
                                 }
 
@@ -174,7 +190,9 @@ public class ModificationUtils {
                         int maxIndex = aminoAcidPattern.getMaxIndex();
 
                         if (minIndex == 0 && maxIndex < peptideSequence.length()) {
+                            
                             return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, 0) ? ZERO : EMPTY;
+                        
                         }
 
                         for (Map.Entry<String, int[]> entry : peptide.getProteinMapping().entrySet()) {
@@ -192,7 +210,9 @@ public class ModificationUtils {
                                     String subSequence = sequence.substring(tempStart, tempEnd);
 
                                     if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
+                                        
                                         return ZERO;
+                                    
                                     }
                                 }
                             }
@@ -236,7 +256,9 @@ public class ModificationUtils {
                             int maxIndex = aminoAcidPattern.getMaxIndex();
 
                             if (maxIndex < peptideSequence.length()) {
+                                
                                 return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, 0) ? ZERO : EMPTY;
+                            
                             }
 
                             for (String accession : accessions) {
@@ -248,7 +270,9 @@ public class ModificationUtils {
                                     String subSequence = sequence.substring(0, maxIndex + 1);
 
                                     if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
+                                        
                                         return ZERO;
+                                    
                                     }
 
                                     if (sequence.charAt(0) == 'M' && maxIndex + 1 < sequence.length()) {
@@ -256,7 +280,9 @@ public class ModificationUtils {
                                         subSequence = sequence.substring(1, maxIndex + 2);
 
                                         if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
+                                    
                                             return ZERO;
+                                        
                                         }
                                     }
                                 }
@@ -295,7 +321,9 @@ public class ModificationUtils {
                         int tempStart = peptideSequence.length() + minIndex;
 
                         if (maxIndex == 0 && tempStart > 0) {
+                            
                             return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, peptideSequence.length() - 1) ? getArray(peptideSequence.length() + 1) : EMPTY;
+                        
                         }
 
                         for (Map.Entry<String, int[]> entry : peptide.getProteinMapping().entrySet()) {
@@ -313,7 +341,9 @@ public class ModificationUtils {
                                     String subSequence = sequence.substring(tempStartProtein, tempEndProtein);
 
                                     if (aminoAcidPattern.matches(subSequence, modificationsSequenceMatchingParameters)) {
+                                        
                                         return getArray(peptideSequence.length() + 1);
+                                    
                                     }
                                 }
                             }
@@ -330,9 +360,20 @@ public class ModificationUtils {
 
                 case modcaa_protein: {
 
-                    String[] accessions = peptide.getProteinMapping().entrySet().stream()
-                            .filter(entry -> Arrays.stream(entry.getValue()).anyMatch(index -> index + peptideSequence.length() == sequenceProvider.getSequence(entry.getKey()).length()))
-                            .map(entry -> entry.getKey())
+                    String[] accessions = peptide.getProteinMapping()
+                            .entrySet()
+                            .stream()
+                            .filter(
+                                    entry -> Arrays.stream(
+                                            entry.getValue()
+                                    )
+                                            .anyMatch(
+                                                    index -> index + peptideSequence.length() == sequenceProvider.getSequence(entry.getKey()).length()
+                                            )
+                            )
+                            .map(
+                                    entry -> entry.getKey()
+                            )
                             .toArray(String[]::new);
 
                     if (accessions.length > 0) {
@@ -349,7 +390,9 @@ public class ModificationUtils {
                             int tempStart = peptideSequence.length() + minIndex;
 
                             if (tempStart > 0) {
+                                
                                 return aminoAcidPattern.matchesAt(peptideSequence, modificationsSequenceMatchingParameters, peptideSequence.length() - 1) ? getArray(peptideSequence.length() + 1) : EMPTY;
+                            
                             }
 
                             for (String accession : accessions) {
@@ -403,8 +446,13 @@ public class ModificationUtils {
      *
      * @return an array of the possible modification sites
      */
-    public static int[] getPossibleModificationSites(AminoAcidSequence aminoAcidSequence, boolean nTerm,
-            boolean cTerm, Modification modification, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+    public static int[] getPossibleModificationSites(
+            AminoAcidSequence aminoAcidSequence, 
+            boolean nTerm,
+            boolean cTerm, 
+            Modification modification, 
+            SequenceMatchingParameters modificationsSequenceMatchingParameters
+    ) {
 
         String sequence = aminoAcidSequence.getSequence();
         ModificationType modificationType = modification.getModificationType();
@@ -462,7 +510,11 @@ public class ModificationUtils {
                     }
 
                     AminoAcidPattern aminoAcidPattern = modification.getPattern();
-                    return aminoAcidPattern.matchesAt(sequence, modificationsSequenceMatchingParameters, sequence.length() - 1) ? getArray(sequence.length() + 1) : EMPTY;
+                    return aminoAcidPattern.matchesAt(
+                            sequence, 
+                            modificationsSequenceMatchingParameters, 
+                            sequence.length() - 1
+                    ) ? getArray(sequence.length() + 1) : EMPTY;
 
                 }
 
@@ -503,12 +555,16 @@ public class ModificationUtils {
      *
      * @return the tagged modified sequence as a string
      */
-    public static String getTaggedModifiedSequence(ModificationParameters modificationProfile, String sequence,
+    public static String getTaggedModifiedSequence(
+            ModificationParameters modificationProfile, 
+            String sequence,
             String[] confidentModificationSites,
             String[] representativeAmbiguousModificationSites,
             String[] secondaryAmbiguousModificationSites,
-            String[] fixedModificationSites, boolean useHtmlColorCoding,
-            boolean useShortName) {
+            String[] fixedModificationSites, 
+            boolean useHtmlColorCoding,
+            boolean useShortName
+    ) {
 
         if (confidentModificationSites == null) {
             confidentModificationSites = new String[sequence.length() + 2];
@@ -533,9 +589,17 @@ public class ModificationUtils {
             int aaIndex = aa - 1;
             char aminoAcid = sequence.charAt(aaIndex);
 
-            appendTaggedResidue(modifiedSequence, aminoAcid,
-                    confidentModificationSites[aa], representativeAmbiguousModificationSites[aa], secondaryAmbiguousModificationSites[aa], fixedModificationSites[aa],
-                    modificationProfile, useHtmlColorCoding, useShortName);
+            appendTaggedResidue(
+                    modifiedSequence, 
+                    aminoAcid,
+                    confidentModificationSites[aa], 
+                    representativeAmbiguousModificationSites[aa], 
+                    secondaryAmbiguousModificationSites[aa], 
+                    fixedModificationSites[aa],
+                    modificationProfile, 
+                    useHtmlColorCoding, 
+                    useShortName
+            );
 
         }
 
@@ -559,28 +623,65 @@ public class ModificationUtils {
      * PTM tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
      */
-    public static void appendTaggedResidue(StringBuilder stringBuilder, char residue,
+    public static void appendTaggedResidue(
+            StringBuilder stringBuilder, 
+            char residue,
             String confidentModification,
             String representativeAmbiguousModification,
             String secondaryAmbiguousModification,
             String fixedModification,
-            ModificationParameters modificationProfile, boolean useHtmlColorCoding, boolean useShortName) {
+            ModificationParameters modificationProfile, 
+            boolean useHtmlColorCoding, 
+            boolean useShortName
+    ) {
 
         if (confidentModification != null) {
 
-            appendTaggedResidue(stringBuilder, residue, confidentModification, modificationProfile, 1, useHtmlColorCoding, useShortName);
+            appendTaggedResidue(
+                    stringBuilder, 
+                    residue, 
+                    confidentModification, 
+                    modificationProfile, 
+                    1, 
+                    useHtmlColorCoding, 
+                    useShortName
+            );
 
         } else if (representativeAmbiguousModification != null) {
 
-            appendTaggedResidue(stringBuilder, residue, representativeAmbiguousModification, modificationProfile, 2, useHtmlColorCoding, useShortName);
+            appendTaggedResidue(
+                    stringBuilder, 
+                    residue, 
+                    representativeAmbiguousModification, 
+                    modificationProfile, 
+                    2, 
+                    useHtmlColorCoding, 
+                    useShortName
+            );
 
         } else if (secondaryAmbiguousModification != null) {
 
-            appendTaggedResidue(stringBuilder, residue, secondaryAmbiguousModification, modificationProfile, 3, useHtmlColorCoding, useShortName);
+            appendTaggedResidue(
+                    stringBuilder, 
+                    residue, 
+                    secondaryAmbiguousModification, 
+                    modificationProfile, 
+                    3, 
+                    useHtmlColorCoding, 
+                    useShortName
+            );
 
         } else if (fixedModification != null) {
 
-            appendTaggedResidue(stringBuilder, residue, fixedModification, modificationProfile, 1, useHtmlColorCoding, useShortName);
+            appendTaggedResidue(
+                    stringBuilder, 
+                    residue, 
+                    fixedModification, 
+                    modificationProfile, 
+                    1, 
+                    useHtmlColorCoding, 
+                    useShortName
+            );
 
         } else {
 
@@ -611,7 +712,8 @@ public class ModificationUtils {
             ModificationParameters modificationProfile,
             int localizationConfidenceLevel,
             boolean useHtmlColorCoding,
-            boolean useShortName) {
+            boolean useShortName
+    ) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
         Modification modification = modificationFactory.getModification(modificationName);
@@ -642,11 +744,25 @@ public class ModificationUtils {
 
             switch (localizationConfidenceLevel) {
                 case 1:
-                    stringBuilder.append("<span style=\"color:#").append(Util.color2Hex(Color.WHITE)).append(";background:#").append(Util.color2Hex(modificationColor)).append("\">").append(residue).append("</span>");
+                    stringBuilder
+                            .append("<span style=\"color:#")
+                            .append(Util.color2Hex(Color.WHITE))
+                            .append(";background:#")
+                            .append(Util.color2Hex(modificationColor))
+                            .append("\">")
+                            .append(residue)
+                            .append("</span>");
                     break;
 
                 case 2:
-                    stringBuilder.append("<span style=\"color:#").append(Util.color2Hex(modificationColor)).append(";background:#").append(Util.color2Hex(Color.WHITE)).append("\">").append(residue).append("</span>");
+                    stringBuilder
+                            .append("<span style=\"color:#")
+                            .append(Util.color2Hex(modificationColor))
+                            .append(";background:#")
+                            .append(Util.color2Hex(Color.WHITE))
+                            .append("\">")
+                            .append(residue)
+                            .append("</span>");
                     break;
 
                 case 3:
@@ -656,7 +772,9 @@ public class ModificationUtils {
                     break;
 
                 default:
-                    throw new IllegalArgumentException("No formatting implemented for localization confidence level " + localizationConfidenceLevel + ".");
+                    throw new IllegalArgumentException(
+                            "No formatting implemented for localization confidence level " + localizationConfidenceLevel + "."
+                    );
             }
         }
     }
@@ -669,7 +787,10 @@ public class ModificationUtils {
      *
      * @return the 1-based index on the sequence
      */
-    public static int getSite(int index, int sequenceLength) {
+    public static int getSite(
+            int index, 
+            int sequenceLength
+    ) {
 
         if (index > 0 && index < sequenceLength + 1) {
 
@@ -697,18 +818,36 @@ public class ModificationUtils {
      *
      * @return a set of the names of all modifications found on a peptide
      */
-    public static HashSet<String> getAllModifications(Peptide peptide, ModificationParameters modificationParameters, 
-            SequenceProvider sequenceProvider, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+    public static HashSet<String> getAllModifications(
+            Peptide peptide, 
+            ModificationParameters modificationParameters, 
+            SequenceProvider sequenceProvider, 
+            SequenceMatchingParameters modificationsSequenceMatchingParameters
+    ) {
 
         HashSet<String> modNames = Arrays.stream(peptide.getVariableModifications())
-                .map(ModificationMatch::getModification)
-                .collect(Collectors.toCollection(HashSet::new));
+                .map(
+                        ModificationMatch::getModification
+                )
+                .collect(
+                        Collectors.toCollection(HashSet::new)
+                );
 
-        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
+        String[] fixedModifications = peptide.getFixedModifications(
+                modificationParameters, 
+                sequenceProvider, 
+                modificationsSequenceMatchingParameters
+        );
 
-        modNames.addAll(Arrays.stream(fixedModifications)
-                .filter(modName -> modName != null)
-                .collect(Collectors.toSet()));
+        modNames.addAll(
+                Arrays.stream(fixedModifications)
+                .filter(
+                        modName -> modName != null
+                )
+                .collect(
+                        Collectors.toSet()
+                )
+        );
 
         return modNames;
     }
@@ -723,7 +862,11 @@ public class ModificationUtils {
      *
      * @return a set of the names of all modifications found on a peptide
      */
-    public static HashSet<String> getAllModifications(Tag tag, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
+    public static HashSet<String> getAllModifications(
+            Tag tag, 
+            ModificationParameters modificationParameters, 
+            SequenceMatchingParameters modificationsSequenceMatchingParameters
+    ) {
 
         HashSet<String> modNames = new HashSet<>(2);
 
@@ -737,14 +880,31 @@ public class ModificationUtils {
 
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
 
-                modNames.addAll(Arrays.stream(aminoAcidSequence.getVariableModifications())
-                        .map(ModificationMatch::getModification)
-                        .collect(Collectors.toCollection(HashSet::new)));
+                modNames.addAll(
+                        Arrays.stream(aminoAcidSequence.getVariableModifications())
+                        .map(
+                                ModificationMatch::getModification
+                        )
+                        .collect(
+                                Collectors.toCollection(HashSet::new)
+                        )
+                );
 
-                String[] fixedModifications = aminoAcidSequence.getFixedModifications(i == 0, i == tagComponents.size() - 1, modificationParameters, modificationsSequenceMatchingParameters);
-                modNames.addAll(Arrays.stream(fixedModifications)
-                        .filter(modName -> modName != null)
-                        .collect(Collectors.toSet()));
+                String[] fixedModifications = aminoAcidSequence.getFixedModifications(
+                        i == 0, 
+                        i == tagComponents.size() - 1, 
+                        modificationParameters, 
+                        modificationsSequenceMatchingParameters
+                );
+                modNames.addAll(
+                        Arrays.stream(fixedModifications)
+                        .filter(
+                                modName -> modName != null
+                        )
+                        .collect(
+                                Collectors.toSet()
+                        )
+                );
 
             }
         }
@@ -766,8 +926,14 @@ public class ModificationUtils {
      * @return the expected modifications for a given protein mass indexed by
      * site
      */
-    public static HashMap<Integer, HashSet<String>> getExpectedModifications(double modMass, ModificationParameters modificationParameters, 
-            Peptide peptide, double massTolerance, SequenceProvider sequenceProvider, SequenceMatchingParameters modificationSequenceMatchingParameters) {
+    public static HashMap<Integer, HashSet<String>> getExpectedModifications(
+            double modMass, 
+            ModificationParameters modificationParameters, 
+            Peptide peptide, 
+            double massTolerance, 
+            SequenceProvider sequenceProvider, 
+            SequenceMatchingParameters modificationSequenceMatchingParameters
+    ) {
 
         HashMap<Integer, HashSet<String>> results = new HashMap<>(1);
 
@@ -779,7 +945,12 @@ public class ModificationUtils {
 
             if (Math.abs(modMass - possibleModification.getMass()) < massTolerance) {
 
-                int[] possibleSites = getPossibleModificationSites(peptide, possibleModification, sequenceProvider, modificationSequenceMatchingParameters);
+                int[] possibleSites = getPossibleModificationSites(
+                        peptide, 
+                        possibleModification, 
+                        sequenceProvider, 
+                        modificationSequenceMatchingParameters
+                );
 
                 for (int site : possibleSites) {
 

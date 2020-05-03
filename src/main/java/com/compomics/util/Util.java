@@ -46,6 +46,12 @@ public class Util {
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
     /**
+     * The mass added per amino acid as part of the reference mass when
+     * converting a tolerance in Dalton to ppm.
+     */
+    public static final double MASS_PER_AA = 100.0;
+
+    /**
      * Removes characters from a string.
      *
      * @param string the string of interest

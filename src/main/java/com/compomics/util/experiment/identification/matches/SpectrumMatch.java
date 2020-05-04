@@ -4,6 +4,7 @@ import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.io.IoUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import java.util.stream.Stream;
  *
  * @author Marc Vaudel
  * @author Dominik Kopczynski
+ * @author Harald Barsnes
  */
 public class SpectrumMatch extends IdentificationMatch {
 
@@ -89,10 +91,10 @@ public class SpectrumMatch extends IdentificationMatch {
             String spectrumFile,
             String spectrumTitle
     ) {
-        
-        this.spectrumFile = spectrumFile;
+             
+        this.spectrumFile = IoUtil.removeExtension(spectrumFile);
         this.spectrumtitle = spectrumTitle;
-        this.key = getKey(spectrumFile, spectrumTitle);
+        this.key = getKey(this.spectrumFile, spectrumTitle);
         
     }
     
@@ -108,7 +110,7 @@ public class SpectrumMatch extends IdentificationMatch {
             String spectrumFile,
             String spectrumTitle
     ) {
-        return ExperimentObject.asLong(String.join("", spectrumFile, spectrumTitle));
+        return ExperimentObject.asLong(String.join("", IoUtil.removeExtension(spectrumFile), spectrumTitle));
     }
     
     /**
@@ -179,7 +181,7 @@ public class SpectrumMatch extends IdentificationMatch {
     public void setSpectrumFile(
             String spectrumFile 
     ) {
-        this.spectrumFile = spectrumFile;
+        this.spectrumFile = IoUtil.removeExtension(spectrumFile);
     }
 
     /**
@@ -203,6 +205,7 @@ public class SpectrumMatch extends IdentificationMatch {
             String spectrumTitle 
     ) {
         this.spectrumtitle = spectrumTitle;
+        key = getKey(spectrumFile, spectrumTitle);
     }
 
     @Override

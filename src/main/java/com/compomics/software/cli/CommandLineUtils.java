@@ -1,6 +1,5 @@
 package com.compomics.software.cli;
 
-import com.compomics.util.Util;
 import com.compomics.util.io.IoUtil;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,7 +16,7 @@ public class CommandLineUtils {
     /**
      * The format to use for string output.
      */
-    public static final String formatter = "%-35s";
+    public static final String FORMATTER = "%-35s";
     /**
      * The command line argument separator.
      */
@@ -27,17 +26,22 @@ public class CommandLineUtils {
      * Returns the list of file as argument for the command line.
      *
      * @param files the files
-     * 
+     *
      * @return the list of file as string for command line argument
      */
     public static String getCommandLineArgument(ArrayList<File> files) {
+
         String result = "";
+
         for (File file : files) {
+
             if (!result.equals("")) {
                 result += SEPARATOR;
             }
+
             result += getQuoteType() + file.getAbsolutePath() + getQuoteType();
         }
+
         return result;
     }
 
@@ -46,7 +50,7 @@ public class CommandLineUtils {
      * line.
      *
      * @param args the arguments
-     * 
+     *
      * @return a comma separated string
      */
     public static String concatenate(ArrayList<String> args) {
@@ -59,6 +63,7 @@ public class CommandLineUtils {
         String result = "";
 
         for (String arg : args) {
+
             if (!result.equals("")) {
                 result += " ";
             }
@@ -79,7 +84,7 @@ public class CommandLineUtils {
      * line. Adds quotes where they seem to be needed.
      *
      * @param args the arguments
-     * 
+     *
      * @return a comma separated string
      */
     public static String concatenate(String[] args) {
@@ -92,6 +97,7 @@ public class CommandLineUtils {
         String result = "";
 
         for (String arg : args) {
+
             if (!result.equals("")) {
                 result += " ";
             }
@@ -127,7 +133,7 @@ public class CommandLineUtils {
      * Returns the file as argument for the command line.
      *
      * @param file the file
-     * 
+     *
      * @return the list of file as string for command line argument
      */
     public static String getCommandLineArgument(File file) {
@@ -139,10 +145,11 @@ public class CommandLineUtils {
      * results as an arraylist.
      *
      * @param cliInput the CLI input
-     * 
+     *
      * @return an arraylist containing the results, empty list if empty string
      */
     public static ArrayList<String> splitInput(String cliInput) {
+
         ArrayList<String> results = new ArrayList<>();
 
         // empty input, return the empty list
@@ -161,17 +168,21 @@ public class CommandLineUtils {
      *
      * @param optionInput the command line option
      * @param fileExtentions the file extensions to be considered
-     * 
+     *
      * @return a list of file candidates
-     * 
+     *
      * @throws FileNotFoundException exception thrown whenever a file is not
      * found
      */
     public static ArrayList<File> getFiles(String optionInput, ArrayList<String> fileExtentions) throws FileNotFoundException {
+
         ArrayList<File> result = new ArrayList<>();
         ArrayList<String> files = splitInput(optionInput);
+
         if (files.size() == 1) {
+
             File testFile = new File(files.get(0));
+
             if (testFile.exists()) {
                 if (testFile.isDirectory()) {
                     for (File childFile : testFile.listFiles()) {
@@ -214,6 +225,7 @@ public class CommandLineUtils {
                 }
             }
         }
+
         return result;
     }
 
@@ -222,19 +234,24 @@ public class CommandLineUtils {
      *
      * @param aString the command line option
      * @param separator the separator used to separate the string
-     * 
+     *
      * @return the list if integers
      */
     public static ArrayList<Integer> getIntegerListFromString(String aString, String separator) {
+
         ArrayList<Integer> result = new ArrayList<>();
+
         for (String component : aString.split(separator)) {
             try {
                 Integer input = new Integer(component.trim());
                 result.add(input);
             } catch (Exception e) {
-                throw new IllegalArgumentException("Cannot parse " + component.trim() + " into an integer from " + aString + " with separator '" + separator + "'.");
+                throw new IllegalArgumentException("Cannot parse "
+                        + component.trim() + " into an integer from "
+                        + aString + " with separator '" + separator + "'.");
             }
         }
+
         return result;
     }
 
@@ -243,14 +260,17 @@ public class CommandLineUtils {
      *
      * @param aString the command line option
      * @param separator the separator used to separate the string
-     * 
+     *
      * @return the list if doubles
      */
     public static ArrayList<Double> getDoubleListFromString(String aString, String separator) {
+
         ArrayList<Double> result = new ArrayList<>();
+
         for (String component : aString.split(separator)) {
             result.add(new Double(component.trim()));
         }
+
         return result;
     }
 }

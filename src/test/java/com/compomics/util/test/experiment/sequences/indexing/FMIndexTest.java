@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPatter
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationCategory;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.proteins.Protein;
@@ -1096,7 +1097,10 @@ public class FMIndexTest extends TestCase {
         atomChainAdded = ptmFactory.getModification("Carbamidomethylation of C").getAtomChainAdded();
         atomChainRemoved = null;
         aminoAcidPatternPattern = AminoAcidPattern.getAminoAcidPatternFromString("[AST][MPST][RS]", 2);
-        ptmPattern = new Modification(ModificationType.modaa, "Domification of R", "doc", atomChainAdded, atomChainRemoved, aminoAcidPatternPattern);
+        ptmPattern = new Modification(
+                ModificationType.modaa, "Domification of R", "doc", 
+                atomChainAdded, atomChainRemoved, aminoAcidPatternPattern,
+                ModificationCategory.Other);
         ptmFactory.addUserModification(ptmPattern);
         aminoAcidSequence = new AminoAcidSequence("TEST");
         nTermGap = ptmFactory.getModification("Carbamidomethylation of C").getMass() + AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -1123,7 +1127,10 @@ public class FMIndexTest extends TestCase {
         atomChainAdded = ptmFactory.getModification("Carbamidomethylation of C").getAtomChainAdded();
         atomChainRemoved = null;
         aminoAcidPatternPattern = AminoAcidPattern.getAminoAcidPatternFromString("[PST][IJT][CMP]", 2);
-        ptmPattern = new Modification(ModificationType.modaa, "Domification of R", "doc", atomChainAdded, atomChainRemoved, aminoAcidPatternPattern);
+        ptmPattern = new Modification(
+                ModificationType.modaa, "Domification of R", "doc", 
+                atomChainAdded, atomChainRemoved, aminoAcidPatternPattern,
+                ModificationCategory.Other);
         ptmFactory.addUserModification(ptmPattern);
         aminoAcidSequence = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();

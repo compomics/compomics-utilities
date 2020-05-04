@@ -165,15 +165,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         // set up the modification type tooltip map
         HashMap<Integer, String> modificationTypeTooltipMap = new HashMap<>();
-        modificationTypeTooltipMap.put(ModificationType.modaa.index, "Particular Amino Acid(s)");
-        modificationTypeTooltipMap.put(ModificationType.modc_protein.index, "Protein C-term");
-        modificationTypeTooltipMap.put(ModificationType.modcaa_protein.index, "Protein C-term - Particular Amino Acid(s)");
-        modificationTypeTooltipMap.put(ModificationType.modc_peptide.index, "Peptide C-term");
-        modificationTypeTooltipMap.put(ModificationType.modcaa_peptide.index, "Peptide C-term - Particular Amino Acid(s)");
-        modificationTypeTooltipMap.put(ModificationType.modn_protein.index, "Protein N-term");
-        modificationTypeTooltipMap.put(ModificationType.modnaa_protein.index, "Protein N-term - Particular Amino Acid(s)");
-        modificationTypeTooltipMap.put(ModificationType.modn_peptide.index, "Peptide N-term");
-        modificationTypeTooltipMap.put(ModificationType.modnaa_protein.index, "Peptide N-term - Particular Amino Acid(s)");
+        for (ModificationType modType : ModificationType.values()) {
+            modificationTypeTooltipMap.put(modType.index, modType.shortName);
+        }
 
         defaultModificationsTable.getColumn("Type").setCellRenderer(new JSparklinesIntegerColorTableCellRenderer(Color.lightGray, modificationTypeColorMap, modificationTypeTooltipMap));
         userModificationsTable.getColumn("Type").setCellRenderer(new JSparklinesIntegerColorTableCellRenderer(Color.lightGray, modificationTypeColorMap, modificationTypeTooltipMap));
@@ -193,6 +187,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         defaultModsTableToolTips.add("Modification Mass Change");
         defaultModsTableToolTips.add("Modification Type");
         defaultModsTableToolTips.add("Affected Residues");
+        defaultModsTableToolTips.add("Modification Category");
         defaultModsTableToolTips.add("Unimod Mapping");
         defaultModsTableToolTips.add("PSI-MOD Mapping");
 
@@ -203,6 +198,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         userModsTableToolTips.add("Modification Mass Change");
         userModsTableToolTips.add("Modification Type");
         userModsTableToolTips.add("Affected Residues");
+        userModsTableToolTips.add("Modification Category");
         userModsTableToolTips.add("Unimod Mapping");
         userModsTableToolTips.add("PSI-MOD Mapping");
 
@@ -432,7 +428,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, defaultModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(defaultModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 924, Short.MAX_VALUE)
+                    .addComponent(defaultModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 973, Short.MAX_VALUE)
                     .addGroup(defaultModsPanelLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(exportDefaultModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -536,7 +532,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             .addGroup(userModsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 924, Short.MAX_VALUE)
+                    .addComponent(userModsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 973, Short.MAX_VALUE)
                     .addGroup(userModsPanelLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(exportUserModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -598,7 +594,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(modificationsEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(modificationsSplitPane)
+                    .addComponent(modificationsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1013, Short.MAX_VALUE)
                     .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(modificationsHelpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -622,7 +618,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 976, Short.MAX_VALUE)
+            .addGap(0, 1025, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(modificationsEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1172,7 +1168,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         @Override
         public int getColumnCount() {
-            return 8;
+            return 9;
         }
 
         @Override
@@ -1191,8 +1187,10 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 case 5:
                     return "Residues";
                 case 6:
-                    return "Unimod";
+                    return "Category";
                 case 7:
+                    return "Unimod";
+                case 8:
                     return "PSI-MOD";
                 default:
                     return "";
@@ -1231,13 +1229,15 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     }
                     return residues;
                 case 6:
+                    return modificationFactory.getModification(name).getCategory();
+                case 7:
                     CvTerm cvTerm = modificationFactory.getModification(name).getUnimodCvTerm();
                     if (cvTerm != null) {
                         return getUniModAccessionLink(cvTerm.getAccession());
                     } else {
                         return null;
                     }
-                case 7:
+                case 8:
                     cvTerm = modificationFactory.getModification(name).getPsiModCvTerm();
                     if (cvTerm != null) {
                         return getOlsAccessionLink(cvTerm.getAccession());
@@ -1277,7 +1277,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         @Override
         public int getColumnCount() {
-            return 8;
+            return 9;
         }
 
         @Override
@@ -1296,8 +1296,10 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 case 5:
                     return "Residues";
                 case 6:
-                    return "Unimod";
+                    return "Category";
                 case 7:
+                    return "Unimod";
+                case 8:
                     return "PSI-MOD";
                 default:
                     return "";
@@ -1336,13 +1338,15 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     }
                     return residues;
                 case 6:
+                    return modificationFactory.getModification(name).getCategory();
+                case 7:
                     CvTerm cvTerm = modificationFactory.getModification(name).getUnimodCvTerm();
                     if (cvTerm != null) {
                         return getUniModAccessionLink(cvTerm.getAccession());
                     } else {
                         return null;
                     }
-                case 7:
+                case 8:
                     cvTerm = modificationFactory.getModification(name).getPsiModCvTerm();
                     if (cvTerm != null) {
                         return getOlsAccessionLink(cvTerm.getAccession());

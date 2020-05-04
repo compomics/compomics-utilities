@@ -1,4 +1,3 @@
-
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.db.object.ObjectsDB;

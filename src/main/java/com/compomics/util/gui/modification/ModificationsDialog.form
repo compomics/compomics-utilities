@@ -65,7 +65,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="976" max="32767" attributes="0"/>
+          <EmptySpace min="0" pref="1025" max="32767" attributes="0"/>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Component id="modificationsEditorPanel" alignment="0" max="32767" attributes="0"/>
           </Group>
@@ -97,7 +97,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="modificationsSplitPane" max="32767" attributes="0"/>
+                      <Component id="modificationsSplitPane" pref="1013" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                           <Component id="modificationsHelpJButton" min="-2" pref="23" max="-2" attributes="0"/>
@@ -159,7 +159,7 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="defaultModsScrollPane" pref="924" max="32767" attributes="0"/>
+                              <Component id="defaultModsScrollPane" pref="973" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                                   <Component id="exportDefaultModsLabel" min="-2" max="-2" attributes="0"/>
@@ -343,7 +343,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="userModsScrollPane" pref="924" max="32767" attributes="0"/>
+                              <Component id="userModsScrollPane" pref="973" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                                   <Component id="exportUserModsLabel" min="-2" max="-2" attributes="0"/>

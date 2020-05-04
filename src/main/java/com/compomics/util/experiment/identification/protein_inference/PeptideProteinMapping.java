@@ -5,7 +5,6 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.PeptideVariantMatches;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -240,7 +239,10 @@ public class PeptideProteinMapping {
      *
      * @return a list of peptides
      */
-    public static Collection<Peptide> getPeptides(ArrayList<PeptideProteinMapping> peptideProteinMappings, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public static Collection<Peptide> getPeptides(
+            ArrayList<PeptideProteinMapping> peptideProteinMappings, 
+            SequenceMatchingParameters sequenceMatchingPreferences
+    ) {
 
         HashMap<Long, Peptide> peptidesMap = new HashMap<>(peptideProteinMappings.size());
         HashMap<Long, HashMap<String, HashSet<Integer>>> proteinsMap = new HashMap<>(peptideProteinMappings.size());
@@ -314,15 +316,6 @@ public class PeptideProteinMapping {
             Peptide peptide = peptidesMap.get(peptideKey);
 
             HashMap<String, HashSet<Integer>> proteinMapping = proteinsMap.get(peptideKey);
-            /*  // TODO: the new code below results in an error, changed it back
-            TreeMap<String, int[]> proteinMappingArray = proteinMapping.entrySet().stream()
-                    .collect(Collectors.toMap(Entry::getKey,
-                            entry -> entry.getValue().stream()
-                                    .mapToInt(Integer::intValue)
-                                    .sorted()
-                                    .toArray(),
-                            null,
-                            TreeMap::new));*/
             TreeMap<String, int[]> proteinMappingArray = new TreeMap<>();
             for (Entry<String, HashSet<Integer>> e : proteinMapping.entrySet()){
                 int[] i = e.getValue().stream() 

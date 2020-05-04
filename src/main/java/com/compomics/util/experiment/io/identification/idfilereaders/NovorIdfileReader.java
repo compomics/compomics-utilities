@@ -274,7 +274,7 @@ public class NovorIdfileReader implements IdfileReader {
                     aminoAcidScores.add(aminoAcidScoresAsList);
 
                     // get the name of the spectrum file
-                    String spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[id];
+                    String spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[id - 1];
 
                     // set up the yet empty spectrum match, or add to the current match
                     if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {

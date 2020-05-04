@@ -76,19 +76,19 @@ public enum EnzymesCLIParams {
         String output = "";
 
         output += "Input-Output:\n\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IN.id) + " " + IN.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, OUT.id) + " " + OUT.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, LIST.id) + " " + LIST.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IN.id) + " " + IN.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, OUT.id) + " " + OUT.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, LIST.id) + " " + LIST.description + "\n";
 
         output += "\n\nRemove enzyme:\n";
-        output += "-" + String.format(CommandLineUtils.formatter, RM.id) + " " + RM.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, RM.id) + " " + RM.description + "\n";
 
         output += "\n\nAdd enzyme:\n";
-        output += "-" + String.format(CommandLineUtils.formatter, NAME.id) + " " + NAME.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, CLEAVE_BEFORE.id) + " " + CLEAVE_BEFORE.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, CLEAVE_AFTER.id) + " " + CLEAVE_AFTER.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, RESTRICTION_BEFORE.id) + " " + RESTRICTION_BEFORE.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, RESTRICTION_AFTER.id) + " " + RESTRICTION_AFTER.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, NAME.id) + " " + NAME.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, CLEAVE_BEFORE.id) + " " + CLEAVE_BEFORE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, CLEAVE_AFTER.id) + " " + CLEAVE_AFTER.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, RESTRICTION_BEFORE.id) + " " + RESTRICTION_BEFORE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, RESTRICTION_AFTER.id) + " " + RESTRICTION_AFTER.description + "\n";
 
         return output;
     }

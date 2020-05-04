@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.modifications.ModificationCategory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.parameters.identification.search.SearchParameters;
@@ -24,7 +25,6 @@ import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -32,8 +32,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
-import no.uib.jsparklines.extra.TrueFalseIconRenderer;
 import no.uib.jsparklines.renderers.JSparklinesBarChartTableCellRenderer;
 import no.uib.jsparklines.renderers.JSparklinesColorTableCellRenderer;
 import org.jfree.chart.plot.PlotOrientation;
@@ -94,10 +92,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * The time to wait between keys typed before updating the search.
      */
     private int waitingTime = 500;
-    /**
-     * The modifications to include in the table by default.
-     */
-    private HashSet<String> defaultModifications;
     /**
      * Boolean indicating whether the cancel button was pressed.
      */
@@ -166,8 +160,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         loadUserPreferences();
 
-        defaultModifications = utilitiesUserParameters.getDefaultModifications();
-
         initComponents();
         setUpGUI();
         formComponentResized(null);
@@ -217,8 +209,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         }
 
         loadUserPreferences();
-
-        defaultModifications = utilitiesUserParameters.getDefaultModifications();
 
         initComponents();
         setUpGUI();
@@ -339,19 +329,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         modificationsTable.getColumn(" ").setMinWidth(35);
         modificationsTable.getColumn("Mass").setMaxWidth(100);
         modificationsTable.getColumn("Mass").setMinWidth(100);
-
-        if (modificationsListCombo.getSelectedIndex() == 1) {
-            try {
-                ImageIcon pinnedIcon = new ImageIcon(this.getClass().getResource("/icons/pinned.png"));
-                //ImageIcon unpinnedIcon = new ImageIcon(this.getClass().getResource("/icons/unpinned.png"));
-                modificationsTable.getColumn("  ").setCellRenderer(new TrueFalseIconRenderer(
-                        pinnedIcon, null, "<html>Included in the list of the<br>Most Used Modifications</html>", null));
-            } catch (Exception e) {
-                modificationsTable.getColumn("  ").setCellRenderer(new NimbusCheckBoxRenderer());
-            }
-            modificationsTable.getColumn("  ").setMaxWidth(30);
-            modificationsTable.getColumn("  ").setMinWidth(30);
-        }
     }
 
     /**
@@ -863,7 +840,8 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         availableModsPanel.setOpaque(false);
 
-        modificationsListCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Most Used Modifications", "All Modifications" }));
+        modificationsListCombo.setMaximumRowCount(10);
+        modificationsListCombo.setModel(new DefaultComboBoxModel(ModificationCategory.values()));
         modificationsListCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 modificationsListComboActionPerformed(evt);
@@ -877,14 +855,14 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
             },
             new String [] {
-                " ", "Name", "Mass", "  "
+                " ", "Name", "Mass"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.String.class, java.lang.Double.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.String.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, true
+                false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -1099,12 +1077,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             if (!found) {
                 fixedModifications[cpt] = name;
                 cpt++;
-
-                if (!defaultModifications.contains(name)) {
-
-                    defaultModifications.add(name);
-
-                }
             }
         }
 
@@ -1215,11 +1187,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 variableModifications[cpt] = name;
                 cpt++;
 
-                if (!defaultModifications.contains(name)) {
-
-                    defaultModifications.add(name);
-
-                }
             }
         }
 
@@ -1329,24 +1296,11 @@ public class SearchParametersDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
-     * Save the changes and then close the dialog.
+     * Close the dialog.
      *
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-
-        utilitiesUserParameters.setDefaultModifications(defaultModifications);
-
-        try {
-
-            UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
-
-        } catch (Exception e) {
-
-            // Ignore
-            e.printStackTrace();
-
-        }
 
         dispose();
 
@@ -1502,52 +1456,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                     modificationsTable.repaint();
 
                 }
-            } else if (modificationsListCombo.getSelectedIndex() == 1
-                    && column == modificationsTable.getColumn("  ").getModelIndex()
-                    && modificationsTable.getValueAt(row, column) != null) {
-
-                boolean selected = (Boolean) modificationsTable.getValueAt(row, column);
-                String modificationName = (String) modificationsTable.getValueAt(row, 1);
-
-                // change if the modification is considered as default
-                if (modificationsListCombo.getSelectedIndex() == 0) {
-
-                    // remove from default modification set
-                    defaultModifications.remove(modificationName);
-
-                } else if (selected) {
-
-                    // add to default modification set
-                    if (!defaultModifications.contains(modificationName)) {
-
-                        defaultModifications.add(modificationName);
-
-                    }
-
-                } else {
-
-                    // remove from default modification set
-                    defaultModifications.remove(modificationName);
-
-                }
-
-                Point viewPosition = modificationsJScrollPane.getViewport().getViewPosition();
-
-                updateModificationList();
-
-                if (row < modificationsTable.getRowCount()) {
-
-                    modificationsTable.setRowSelectionInterval(row, row);
-
-                } else if (row - 1 < modificationsTable.getRowCount() && row >= 0) {
-
-                    modificationsTable.setRowSelectionInterval(row - 1, row - 1);
-
-                }
-
-                modificationsJScrollPane.getViewport().setViewPosition(viewPosition);
-                modificationsJScrollPane.repaint();
-
             }
 
             enableAddRemoveButtons();
@@ -2509,25 +2417,8 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      */
     private void updateModificationList() {
 
-        ArrayList<String> allModificationsList = new ArrayList<>();
-
-        if (modificationsListCombo.getSelectedIndex() == 0) {
-
-            for (String name : defaultModifications) {
-
-                if (defaultModifications.contains(name)) {
-
-                    if (modificationFactory.getModification(name) != null) {
-                        allModificationsList.add(name);
-                    }
-                }
-            }
-
-        } else {
-
-            allModificationsList = modificationFactory.getModifications();
-
-        }
+        ArrayList<String> allModificationsList = modificationFactory.getModifications(
+                (ModificationCategory) modificationsListCombo.getSelectedItem());
 
         int nFixed = fixedModsTable.getRowCount();
         int nVariable = variableModsTable.getRowCount();
@@ -2571,54 +2462,30 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 .sorted()
                 .toArray(String[]::new);
 
-        if (modificationsListCombo.getSelectedIndex() == 0) {
-            modificationsTable.setModel(new javax.swing.table.DefaultTableModel(
-                    new Object[][]{},
-                    new String[]{
-                        " ", "Name", "Mass"
-                    }
-            ) {
-                Class[] types = new Class[]{
-                    java.lang.Object.class, java.lang.String.class, java.lang.Double.class
-                };
-                boolean[] canEdit = new boolean[]{
-                    false, false, false
-                };
-
-                public Class getColumnClass(int columnIndex) {
-                    return types[columnIndex];
+        modificationsTable.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    " ", "Name", "Mass"
                 }
+        ) {
+            Class[] types = new Class[]{
+                java.lang.Object.class, java.lang.String.class, java.lang.Double.class
+            };
 
-                public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit[columnIndex];
-                }
-            });
-        } else {
-            modificationsTable.setModel(new javax.swing.table.DefaultTableModel(
-                    new Object[][]{},
-                    new String[]{
-                        " ", "Name", "Mass", "  "
-                    }
-            ) {
-                Class[] types = new Class[]{
-                    java.lang.Object.class, java.lang.String.class, java.lang.Double.class, java.lang.Boolean.class
-                };
-                boolean[] canEdit = new boolean[]{
-                    false, false, false, true
-                };
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
 
-                public Class getColumnClass(int columnIndex) {
-                    return types[columnIndex];
-                }
-
-                public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return canEdit[columnIndex];
-                }
-            });
-        }
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return false;
+            }
+        });
 
         for (String mod : allModificationsAsArray) {
-            ((DefaultTableModel) modificationsTable.getModel()).addRow(new Object[]{new Color(modificationFactory.getColor(mod)), mod, modificationFactory.getModification(mod).getMass(), defaultModifications.contains(mod)});
+            ((DefaultTableModel) modificationsTable.getModel()).addRow(
+                    new Object[]{new Color(modificationFactory.getColor(mod)),
+                        mod, modificationFactory.getModification(mod).getMass()
+                    });
         }
         ((DefaultTableModel) modificationsTable.getModel()).fireTableDataChanged();
         modificationsTable.repaint();

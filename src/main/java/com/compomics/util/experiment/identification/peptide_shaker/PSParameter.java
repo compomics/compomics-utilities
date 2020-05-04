@@ -663,7 +663,7 @@ public class PSParameter extends DbObject implements UrParameter {
     }
 
     /**
-     * Get the number of validated spectra in the given fraction. Null if not
+     * Get the number of validated spectra in the given fraction. Zero if not
      * found.
      *
      * @param fraction the fraction
@@ -672,8 +672,8 @@ public class PSParameter extends DbObject implements UrParameter {
     public Integer getFractionValidatedSpectra(String fraction) {
 
         readDBMode();
-
-        return validatedSpectraPerFraction == null ? null
+        
+        return validatedSpectraPerFraction == null || validatedSpectraPerFraction.get(fraction) == null ? 0
                 : validatedSpectraPerFraction.get(fraction);
 
     }

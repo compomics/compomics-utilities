@@ -565,7 +565,7 @@ public class PepxmlIdfileReader implements IdfileReader {
         }
 
         File spectrumFile = new File(path);
-        spectrumFileName = IoUtil.getFileName(spectrumFile);
+        spectrumFileName = IoUtil.removeExtension(IoUtil.getFileName(spectrumFile));
         
     }
 

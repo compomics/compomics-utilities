@@ -5,11 +5,15 @@ import com.compomics.util.experiment.io.mass_spectrometry.apl.AplFileWriter;
 import com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfFileWriter;
 import com.compomics.util.experiment.io.mass_spectrometry.ms2.Ms2FileWriter;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.parameters.identification.tool_specific.AndromedaParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.stream.IntStream;
 
 /**
@@ -88,72 +92,83 @@ public class MsFileExporter {
             WaitingHandler waitingHandler
     ) {
 
-        AndromedaParameters andromedaParameters = (AndromedaParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.andromeda.getIndex());
+        AndromedaParameters andromedaParameters = 
+                (AndromedaParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.andromeda.getIndex());
 
         String[] spectrumTitles = spectrumProvider.getSpectrumTitles(fileName);
 
         if (spectrumTitles == null) {
-
-            throw new IllegalArgumentException(
-                    fileName + " not loaded."
-            );
+            throw new IllegalArgumentException(fileName + " not loaded.");
         }
 
-        waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-        waitingHandler.setMaxSecondaryProgressCounter(spectrumTitles.length);
+        // sort the spectra on ascending precursor mass
+        HashMap<Double, HashMap<String, Integer>> precursorMassToTitleMap
+                = new HashMap<Double, HashMap<String, Integer>>(spectrumTitles.length);
 
-        AplFileWriter writer = new AplFileWriter(destinationFile);
-
-        for (String spectrumTitle : spectrumTitles) { // @TODO: has to be done in ascending mass order!
+        for (String spectrumTitle : spectrumTitles) {
 
             Spectrum spectrum = spectrumProvider.getSpectrum(fileName, spectrumTitle);
+            Precursor precursor = spectrum.getPrecursor();
 
             int[] charges = spectrum.getPrecursor().possibleCharges;
 
             if (charges.length == 0) {
-
-                charges = IntStream.rangeClosed(searchParameters.getMinChargeSearched(), searchParameters.getMaxChargeSearched())
+                charges = IntStream.rangeClosed(searchParameters.getMinChargeSearched(),
+                        searchParameters.getMaxChargeSearched())
                         .toArray();
-
             }
 
-            if (charges.length == 1) {
+            for (int charge : charges) {
+
+                double mass = precursor.getMass(charge);
+
+                HashMap<String, Integer> titlesAtMass = precursorMassToTitleMap.get(mass);
+
+                if (titlesAtMass == null) {
+                    titlesAtMass = new HashMap<String, Integer>(1);
+                    precursorMassToTitleMap.put(mass, titlesAtMass);
+                }
+
+                titlesAtMass.put(spectrumTitle, charge);
+
+            }
+        }
+
+        ArrayList<Double> masses = new ArrayList<Double>(precursorMassToTitleMap.keySet());
+        Collections.sort(masses);
+
+        waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+        waitingHandler.setMaxSecondaryProgressCounter(masses.size());
+
+        // write the spectra
+        AplFileWriter writer = new AplFileWriter(destinationFile);
+
+        for (Double mass : masses) {
+
+            HashMap<String, Integer> tempSpectrumTitles = precursorMassToTitleMap.get(mass);
+
+            for (String spectrumTitle : tempSpectrumTitles.keySet()) {
+
+                Spectrum spectrum = spectrumProvider.getSpectrum(fileName, spectrumTitle);
 
                 writer.writeSpectrum(
                         spectrumTitle,
                         spectrum,
                         andromedaParameters.getFragmentationMethod(),
-                        charges[0]
+                        tempSpectrumTitles.get(spectrumTitle)
                 );
-
-            } else {
-
-                for (int charge : charges) {
-
-                    String tempTitle = String.join("_", spectrumTitle, Integer.toString(charge));
-
-                    writer.writeSpectrum(
-                            tempTitle,
-                            spectrum,
-                            andromedaParameters.getFragmentationMethod(),
-                            charges[0]
-                    );
-                }
             }
 
             waitingHandler.increaseSecondaryProgressCounter();
 
             if (waitingHandler.isRunCanceled()) {
-
                 break;
-
             }
         }
 
         writer.close();
-        
-        waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 
+        waitingHandler.setSecondaryProgressCounterIndeterminate(true);
     }
 
     /**

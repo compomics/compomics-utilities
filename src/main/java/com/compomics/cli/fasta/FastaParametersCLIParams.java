@@ -82,7 +82,7 @@ public enum FastaParametersCLIParams {
 
         for (FastaParametersCLIParams value : values()) {
 
-            output += "-" + String.format(CommandLineUtils.formatter, value.id) + " " + value.description + "\n";
+            output += "-" + String.format(CommandLineUtils.FORMATTER, value.id) + " " + value.description + "\n";
 
         }
 

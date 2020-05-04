@@ -87,6 +87,10 @@ public class MzIdentMLIdfileReader implements IdfileReader {
      */
     private SequenceMatchingParameters sequenceMatchingPreferences;
     /**
+     * The spectrum provider.
+     */
+    private SpectrumProvider spectrumProvider;
+    /**
      * Set if the amino acid combinations are to be expanded. For example
      * replacing X's.
      */
@@ -170,6 +174,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
     )
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException {
 
+        this.spectrumProvider = spectrumProvider;
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;
         this.expandAaCombinations = expandAaCombinations;
 
@@ -740,15 +745,17 @@ public class MzIdentMLIdfileReader implements IdfileReader {
         if (spectraDataRef == null || spectrumId == null) {
             throw new IllegalArgumentException("Error parsing SpectrumIdentificationResult!");
         }
-
-        // see if we can find the spectrum index
-        Integer spectrumIndex = null; // @TODO: why is the index not used?
-        if (spectrumId != null && spectrumId.startsWith("index=")) { // @TODO: support more index types
-            spectrumIndex = Integer.valueOf(spectrumId.substring(spectrumId.indexOf("=") + 1));
-        }
+        
+        String spectrumTitle = null;
 
         // get the spectrum file name
         String spectrumFileName = spectrumFileNameMap.get(spectraDataRef);
+        
+        // get the spectrum index and potentially the spectrum name
+        if (spectrumId.startsWith("index=")) { // @TODO: support more index types
+            Integer spectrumIndex = Integer.valueOf(spectrumId.substring(spectrumId.indexOf("=") + 1));
+            spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[spectrumIndex];
+        }
 
         // set up the spectrum match
         SpectrumMatch currentMatch = new SpectrumMatch(spectrumFileName, spectrumId);
@@ -948,8 +955,6 @@ public class MzIdentMLIdfileReader implements IdfileReader {
         }
 
         // get the spectrum title
-        String spectrumTitle = null;
-
         while (parser.getName() != null && parser.getName().equals("cvParam")) {
 
             String accession = null;
@@ -982,9 +987,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
 
         // update the spectrum key with the correct spectrum title
         if (spectrumTitle != null) {
-
             currentMatch.setSpectrumTitle(spectrumTitle);
-
         }
 
         result.add(currentMatch);

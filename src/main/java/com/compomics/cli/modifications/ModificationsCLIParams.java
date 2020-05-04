@@ -1,12 +1,15 @@
 package com.compomics.cli.modifications;
 
 import com.compomics.software.cli.CommandLineUtils;
+import com.compomics.util.experiment.biology.modifications.ModificationCategory;
+import com.compomics.util.experiment.biology.modifications.ModificationType;
 import org.apache.commons.cli.Options;
 
 /**
  * Enum class specifying the ModificationsCLI parameters.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public enum ModificationsCLIParams {
 
@@ -15,11 +18,8 @@ public enum ModificationsCLIParams {
     LIST("l", "Lists all modifications implemented. All other options than " + IN.id + " will be ignored.", false, false),
     OUT("out", "The destination modifications file (.json).", true, true),
     RM("rm", "The name of a modification to remove.", false, true),
-    TYPE("type", "The type of the modification to add. 0: Modification at particular amino acids; 1: Modification at the N terminus of a protein; "
-            + "2: Modification at the N terminus of a protein at particular amino acids; 3: Modification at the C terminus of a protein; "
-            + "4: Modification at the C terminus of a protein at particular amino acids; 5: Modification at the N terminus of a peptide; "
-            + "6: Modification at the N terminus of a peptide at particular amino acids; 7: Modification at the C terminus of a peptide; "
-            + "8: Modification at the C terminus of a peptide at particular amino acids.", false, true),
+    TYPE("type", "The type of the modification to add. " + ModificationType.getTypesAsString(), false, true),
+    CATEGORY("category", "The categoty of the modification to add. " + ModificationCategory.getCategoriesAsString(), false, true),
     NAME("name", "The name of a modification to add.", false, true),
     SHORT_NAME("short_name", "The short name of the modification to add.", false, true),
     COMPOSITION_ADDED("composition_added", "The atomic composition of the modification to add.", false, true),
@@ -86,21 +86,21 @@ public enum ModificationsCLIParams {
         String output = "";
 
         output += "Input and Output:\n\n";
-        output += "-" + String.format(CommandLineUtils.formatter, IN.id) + " " + IN.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, OUT.id) + " " + OUT.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, LIST.id) + " " + LIST.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IN.id) + " " + IN.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, OUT.id) + " " + OUT.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, LIST.id) + " " + LIST.description + "\n";
 
         output += "\n\nRemove modification:\n";
-        output += "-" + String.format(CommandLineUtils.formatter, RM.id) + " " + RM.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, RM.id) + " " + RM.description + "\n";
 
         output += "\n\nAdd modification:\n";
-        output += "-" + String.format(CommandLineUtils.formatter, TYPE.id) + " " + TYPE.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, NAME.id) + " " + NAME.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, SHORT_NAME.id) + " " + SHORT_NAME.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, COMPOSITION_ADDED.id) + " " + COMPOSITION_ADDED.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, COMPOSITION_REMOVED.id) + " " + COMPOSITION_REMOVED.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, PATTERN.id) + " " + PATTERN.description + "\n";
-        output += "-" + String.format(CommandLineUtils.formatter, PATTERN_INDEX.id) + " " + PATTERN_INDEX.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, TYPE.id) + " " + TYPE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, NAME.id) + " " + NAME.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, SHORT_NAME.id) + " " + SHORT_NAME.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, COMPOSITION_ADDED.id) + " " + COMPOSITION_ADDED.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, COMPOSITION_REMOVED.id) + " " + COMPOSITION_REMOVED.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, PATTERN.id) + " " + PATTERN.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, PATTERN_INDEX.id) + " " + PATTERN_INDEX.description + "\n";
 
         return output;
     }

@@ -262,7 +262,7 @@ public class WaitingDialog extends javax.swing.JDialog implements WaitingHandler
         if (displayProgress) {
             
             primaryMutex.acquire();
-            secondaryJProgressBar.setValue(value);
+            progressBar.setValue(value);
             primaryMutex.release();
             
         }

@@ -727,11 +727,9 @@
                   <SubComponents>
                     <Component class="javax.swing.JComboBox" name="modificationsListCombo">
                       <Properties>
-                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                          <StringArray count="2">
-                            <StringItem index="0" value="Most Used Modifications"/>
-                            <StringItem index="1" value="All Modifications"/>
-                          </StringArray>
+                        <Property name="maximumRowCount" type="int" value="10"/>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                          <Connection code="new DefaultComboBoxModel(ModificationCategory.values())" type="code"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -753,11 +751,10 @@
                         <Component class="javax.swing.JTable" name="modificationsTable">
                           <Properties>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                              <Table columnCount="4" rowCount="0">
+                              <Table columnCount="3" rowCount="0">
                                 <Column editable="false" title=" " type="java.lang.Object"/>
                                 <Column editable="false" title="Name" type="java.lang.String"/>
                                 <Column editable="false" title="Mass" type="java.lang.Double"/>
-                                <Column editable="true" title="  " type="java.lang.Boolean"/>
                               </Table>
                             </Property>
                             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

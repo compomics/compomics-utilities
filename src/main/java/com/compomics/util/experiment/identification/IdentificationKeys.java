@@ -15,7 +15,7 @@ public class IdentificationKeys extends ExperimentObject {
     /**
      * Key to use in the database.
      */
-    public static final long key = ExperimentObject.asLong("IdentificationKeys");
+    public static final long KEY = ExperimentObject.asLong("IdentificationKeys");
     /**
      * List of the keys of all imported proteins.
      */

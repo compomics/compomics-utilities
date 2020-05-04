@@ -765,7 +765,10 @@ public class Util {
         FileChannel inChannel = new FileInputStream(in).getChannel();
         FileChannel outChannel = new FileOutputStream(out).getChannel();
         try {
-            inChannel.transferTo(start, inChannel.size(), outChannel);
+            long bytesCopied = 0;
+            while (bytesCopied < in.length()) {
+                bytesCopied += inChannel.transferTo(start + bytesCopied, inChannel.size(), outChannel);
+            }
         } finally {
             if (inChannel != null) {
                 inChannel.close();

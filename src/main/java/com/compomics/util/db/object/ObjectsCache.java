@@ -128,7 +128,7 @@ public class ObjectsCache {
      *
      * @return the object of interest, null if not present in the cache
      */
-    public Object getObject(Long objectKey) {
+    public Object getObject(long objectKey) {
         Object object = null;
 
         if (loadedObjects.containsKey(objectKey)) {
@@ -170,7 +170,7 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      * @param object the object to store in the cache
      */
-    public void addObject(Long objectKey, Object object) {
+    public void addObject(long objectKey, Object object) {
         addObject(objectKey, object, false, false);
     }
 
@@ -184,7 +184,7 @@ public class ObjectsCache {
      * @param inDB the database state
      * @param edited the edited state
      */
-    public void addObject(Long objectKey, Object object, boolean inDB, boolean edited) {
+    public void addObject(long objectKey, Object object, boolean inDB, boolean edited) {
 
         if (!readOnly) {
             if (!loadedObjects.containsKey(objectKey)) {
@@ -287,6 +287,7 @@ public class ObjectsCache {
             ListIterator<Long> listIterator = objectQueue.listIterator();
             PreparedStatement psInsert = null, psUpdate = null;
             try {
+                loadObjectMutex.acquire();
                 psInsert = connection.prepareStatement("INSERT INTO data (id, class, data) VALUES (?, ?, ?);");
                 psUpdate = connection.prepareStatement("UPDATE data SET data = ? WHERE id = ?;");
     
@@ -295,7 +296,7 @@ public class ObjectsCache {
                 e.printStackTrace();
             }
             
-            for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i) {
+            for (int i = 0; i < numLastEntries && objectQueue.size() > 0 && listIterator.hasNext(); ++i) {
 
                 if (waitingHandler != null) {
                     waitingHandler.increaseSecondaryProgressCounter();
@@ -337,7 +338,6 @@ public class ObjectsCache {
             }
 
             try {
-                loadObjectMutex.acquire();
                 psInsert.executeBatch();
                 psUpdate.executeBatch();
                 connection.commit();

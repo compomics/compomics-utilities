@@ -71,7 +71,7 @@ public class IoUtil {
      * stops attempting to delete and returns false.
      *
      * @param dir the directory to delete
-     * 
+     *
      * @return rue if all deletions were successful
      */
     public static boolean deleteDir(
@@ -99,12 +99,12 @@ public class IoUtil {
      * @throws IOException if a problem occurs when writing to the file
      */
     public static void copyFile(
-            File in, 
+            File in,
             File out
     ) throws IOException {
-        
+
         copyFile(in, out, true);
-    
+
     }
 
     /**
@@ -116,12 +116,12 @@ public class IoUtil {
      * @throws IOException if a problem occurs when writing to the file
      */
     public static void append(
-            File in, 
+            File in,
             File out
     ) throws IOException {
-    
+
         copyFile(in, out, false);
-    
+
     }
 
     /**
@@ -154,10 +154,16 @@ public class IoUtil {
             }
         }
 
-        try ( FileChannel inChannel = new FileInputStream(in).getChannel()) {
-            try ( FileChannel outChannel = new FileOutputStream(out).getChannel()) {
+        try (FileChannel inChannel = new FileInputStream(in).getChannel()) {
+            try (FileChannel outChannel = new FileOutputStream(out).getChannel()) {
 
-                inChannel.transferTo(start, inChannel.size(), outChannel);
+                long bytesCopied = 0;
+
+                while (bytesCopied < in.length()) {
+
+                    bytesCopied += inChannel.transferTo(start + bytesCopied, inChannel.size(), outChannel);
+
+                }
 
             }
         }
@@ -210,10 +216,10 @@ public class IoUtil {
     public static String getExtension(
             File file
     ) {
-        
+
         String fileName = getFileName(file.getAbsolutePath());
         return fileName.substring(fileName.lastIndexOf("."));
-    
+
     }
 
     /**
@@ -224,10 +230,10 @@ public class IoUtil {
      * @return the file name with suffix
      */
     public static String appendSuffix(
-            String fileName, 
+            String fileName,
             String suffix
     ) {
-    
+
         String tempName;
         String extension;
         int extensionIndex = fileName.lastIndexOf(".");
@@ -250,10 +256,10 @@ public class IoUtil {
     public static String removeExtension(
             String fileName
     ) {
-    
+
         int pointIndex = fileName.lastIndexOf(".");
         return pointIndex > 0 ? fileName.substring(0, pointIndex) : fileName;
-        
+
     }
 
     /**
@@ -272,11 +278,11 @@ public class IoUtil {
      * @throws FileNotFoundException thrown if a FileNotFoundException occurs
      */
     public static File saveUrl(
-            File saveFile, 
-            String targetUrlAsString, 
-            int fileSizeInBytes, 
-            String userName, 
-            String password, 
+            File saveFile,
+            String targetUrlAsString,
+            int fileSizeInBytes,
+            String userName,
+            String password,
             WaitingHandler waitingHandler
     )
             throws MalformedURLException, IOException, FileNotFoundException {
@@ -355,8 +361,8 @@ public class IoUtil {
      * @return true of it exists
      */
     public static boolean checkIfURLExists(
-            String targetUrlAsString, 
-            String userName, 
+            String targetUrlAsString,
+            String userName,
             String password
     ) {
 

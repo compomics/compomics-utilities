@@ -354,7 +354,7 @@ public class OmssaParametersDialog extends javax.swing.JDialog implements Algori
         input = intensityIncrementTxt.getText().trim();
         tempOmssaParameters.setIntensityCutOffIncrement(new Double(input));
         input = nPeaksTxt.getText().trim();
-        tempOmssaParameters.setIntensityCutOffIncrement(new Double(input));
+        tempOmssaParameters.setMinPeaks(new Integer(input));
         tempOmssaParameters.setRemovePrecursor(eliminatePrecursorCombo.getSelectedIndex() == 0);
         tempOmssaParameters.setEstimateCharge(chargeEstimationCombo.getSelectedIndex() == 0);
         tempOmssaParameters.setDetermineChargePlusOneAlgorithmically(plusOneChargeCmb.getSelectedIndex() == 0);

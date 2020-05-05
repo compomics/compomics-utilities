@@ -7,6 +7,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.matches_iterators.PeptideMatchesIterator;
 import com.compomics.util.experiment.identification.matches_iterators.ProteinMatchesIterator;
 import com.compomics.util.experiment.identification.matches_iterators.SpectrumMatchesIterator;
+import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.waiting.WaitingHandler;
 
@@ -141,27 +142,14 @@ public class Identification extends ExperimentObject {
      *
      * @return the iterator
      */
+    /*
     public Iterator<?> getIterator(
             Class className,
             String filters
     ) {
         return objectsDB.getObjectsIterator(className, filters);
     }
-    
-    /**
-     * Updates an object in the database.
-     *
-     * @param key the key of the object
-     * @param object the object
-     */
-    public void updateObject(
-            long key,
-            Object object
-    ) {
-
-        objectsDB.updateObject(key, object);
-
-    }
+    */
 
     /**
      * Returns the keys of the objects of the given class,
@@ -173,7 +161,21 @@ public class Identification extends ExperimentObject {
     public HashSet<Long> getClassObjects(
             Class className
     ) {
-        return objectsDB.getClassObjects(className);
+        return objectsDB.getClassObjectIDs(className);
+    }
+
+    /**
+     * Returns the keys of the objects of the given class,
+     *
+     * @param className the class
+     *
+     * @return the keys of the objects
+     */
+    public HashSet<Long> getClassObjects(
+            Class className,
+            String filters
+    ) {
+        return objectsDB.getClassObjectIDs(className, filters);
     }
 
     /**
@@ -376,7 +378,7 @@ public class Identification extends ExperimentObject {
     }
 
     /**
-     * Placeholder function.
+     * Updates an object in the database.
      *
      * @param key the key of the object
      * @param object the object
@@ -385,8 +387,9 @@ public class Identification extends ExperimentObject {
             long key,
             Object object
     ) {
-        
-    
+
+        objectsDB.updateObject(key, object);
+
     }
 
     /**

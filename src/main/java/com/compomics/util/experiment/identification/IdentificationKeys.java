@@ -15,7 +15,7 @@ public class IdentificationKeys extends ExperimentObject {
     /**
      * Key to use in the database.
      */
-    public static final long key = ExperimentObject.asLong("IdentificationKeys");
+    public static final long KEY = ExperimentObject.asLong("IdentificationKeys");
     /**
      * List of the keys of all imported proteins.
      */
@@ -27,7 +27,7 @@ public class IdentificationKeys extends ExperimentObject {
     /**
      * Map mapping spectra per file.
      */
-    public HashMap<String, HashSet<Long>> spectrumIdentification = new HashMap<>(1);
+    public HashMap<String, HashSet<Long>> spectrumIdentification = new HashMap<>();
     /**
      * A map linking protein accessions to all their protein matches keys.
      */

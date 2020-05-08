@@ -865,7 +865,7 @@
 <dd>
 <div class="block">Convenience method adding a row sorter listener to the given JTable.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#addSpectrum-java.lang.String-java.lang.String-com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption:A-java.util.TreeMap:A-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator-">addSpectrum(String, String, PeptideAssumption[], TreeMap&lt;Double, HashMap&lt;Integer, Double&gt;&gt;[], PeptideSpectrumAnnotator)</a></span> - Method in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#addSpectrum-java.lang.String-java.lang.String-java.util.ArrayList-java.util.ArrayList-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator-">addSpectrum(String, String, ArrayList&lt;PeptideAssumption&gt;, ArrayList&lt;TreeMap&lt;Double, HashMap&lt;Integer, Double&gt;&gt;&gt;, PeptideSpectrumAnnotator)</a></span> - Method in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
 <dd>
 <div class="block">Adds a peptide-spectrum match to the file.</div>
 </dd>
@@ -5509,10 +5509,6 @@
 <dd>
 <div class="block">The type of filter.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#finalize--">finalize()</a></span> - Method in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
-<dd>
-<div class="block">Finalizes the writing of the mzIdentML file.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/general/FileLoggerImplementation.html#finalize--">finalize()</a></span> - Method in class com.compomics.util.general.<a href="com/compomics/util/general/FileLoggerImplementation.html" title="class in com.compomics.util.general">FileLoggerImplementation</a></dt>
 <dd>
 <div class="block">Called by the garbage collector on an object when garbage collection
@@ -5522,6 +5518,10 @@
 <dd>
 <div class="block">Called by the garbage collector on an object when garbage collection
  determines that there are no more references to the object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#finalizeFile--">finalizeFile()</a></span> - Method in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">Finalizes the writing of the mzIdentML file.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/spectrum/GraphicsPanel.html#findDeltaMassMatches-double-double-">findDeltaMassMatches(double, double)</a></span> - Method in class com.compomics.util.gui.spectrum.<a href="com/compomics/util/gui/spectrum/GraphicsPanel.html" title="class in com.compomics.util.gui.spectrum">GraphicsPanel</a></dt>
 <dd>
@@ -6343,8 +6343,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#getAllPeptideAssumptions-int-">getAllPeptideAssumptions(int)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
 <dd>
-<div class="block">Returns all peptide assumptions for the specified search engine indexed by their
- score.</div>
+<div class="block">Returns all peptide assumptions for the specified search engine indexed
+ by their score.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#getAllPeptideAssumptions--">getAllPeptideAssumptions()</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
 <dd>
@@ -6440,8 +6440,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#getAllTagAssumptions-int-">getAllTagAssumptions(int)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
 <dd>
-<div class="block">Returns all tag assumptions for the specified search engine indexed by their
- score.</div>
+<div class="block">Returns all tag assumptions for the specified search engine indexed by
+ their score.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#getAllTagAssumptions--">getAllTagAssumptions()</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
 <dd>
@@ -9810,7 +9810,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#getKey-java.lang.String-java.lang.String-">getKey(String, String)</a></span> - Static method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
 <dd>
-<div class="block">Returns a key to use for the spectrum match based on the file where the spectrum was found and its title.</div>
+<div class="block">Returns a key to use for the spectrum match based on the file where the
+ spectrum was found and its title.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#getKey--">getKey()</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
 <dd>&nbsp;</dd>
@@ -14816,6 +14817,10 @@
 <dd>
 <div class="block">Returns the block start.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html#getStartEnd-java.lang.String-">getStartEnd(String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html" title="class in com.compomics.util.io.compression.SectionGzWriter">SectionGzWriter</a></dt>
+<dd>
+<div class="block">Returns the start and end indexes of the given section in the final file.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/biology/protein/Header.html#getStartLocation--">getStartLocation()</a></span> - Method in class com.compomics.util.experiment.io.biology.protein.<a href="com/compomics/util/experiment/io/biology/protein/Header.html" title="class in com.compomics.util.experiment.io.biology.protein">Header</a></dt>
 <dd>
 <div class="block">This method reports on the start index of the header.</div>
@@ -16184,8 +16189,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html#hasTagAssumption-int-">hasTagAssumption(int)</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/SpectrumMatch.html" title="class in com.compomics.util.experiment.identification.matches">SpectrumMatch</a></dt>
 <dd>
-<div class="block">Indicates whether the spectrum match contains a tag assumption for
- the given advocate (see the Advocate class).</div>
+<div class="block">Indicates whether the spectrum match contains a tag assumption for the
+ given advocate (see the Advocate class).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/NeutralLoss.html#HCNO">HCNO</a></span> - Static variable in class com.compomics.util.experiment.biology.ions.<a href="com/compomics/util/experiment/biology/ions/NeutralLoss.html" title="class in com.compomics.util.experiment.biology.ions">NeutralLoss</a></dt>
 <dd>
@@ -19034,7 +19039,7 @@
 <dd>
 <div class="block">The Potassium atom.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/IdentificationKeys.html#key">key</a></span> - Static variable in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/IdentificationKeys.html" title="class in com.compomics.util.experiment.identification">IdentificationKeys</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/IdentificationKeys.html#KEY">KEY</a></span> - Static variable in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/IdentificationKeys.html" title="class in com.compomics.util.experiment.identification">IdentificationKeys</a></dt>
 <dd>
 <div class="block">Key to use in the database.</div>
 </dd>
@@ -29964,6 +29969,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/thermo_raw_file_parser/ThermoRawFileParserOutputFormat.html#toString--">toString()</a></span> - Method in enum com.compomics.util.experiment.mass_spectrometry.thermo_raw_file_parser.<a href="com/compomics/util/experiment/mass_spectrometry/thermo_raw_file_parser/ThermoRawFileParserOutputFormat.html" title="enum in com.compomics.util.experiment.mass_spectrometry.thermo_raw_file_parser">ThermoRawFileParserOutputFormat</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/quantification/spectrumcounting/SpectrumCountingMethod.html#toString--">toString()</a></span> - Method in enum com.compomics.util.experiment.quantification.spectrumcounting.<a href="com/compomics/util/experiment/quantification/spectrumcounting/SpectrumCountingMethod.html" title="enum in com.compomics.util.experiment.quantification.spectrumcounting">SpectrumCountingMethod</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/units/UnitOfMeasurement.html#toString--">toString()</a></span> - Method in class com.compomics.util.experiment.units.<a href="com/compomics/util/experiment/units/UnitOfMeasurement.html" title="class in com.compomics.util.experiment.units">UnitOfMeasurement</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/general/IsotopicElement.html#toString--">toString()</a></span> - Method in class com.compomics.util.general.<a href="com/compomics/util/general/IsotopicElement.html" title="class in com.compomics.util.general">IsotopicElement</a></dt>
@@ -30348,7 +30355,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Identification.html#updateObject-long-java.lang.Object-">updateObject(long, Object)</a></span> - Method in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Identification.html" title="class in com.compomics.util.experiment.identification">Identification</a></dt>
 <dd>
-<div class="block">Placeholder function</div>
+<div class="block">Placeholder function.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/features/IdentificationFeaturesGenerator.html#updateObservableCoverage-long-">updateObservableCoverage(long)</a></span> - Method in class com.compomics.util.experiment.identification.features.<a href="com/compomics/util/experiment/identification/features/IdentificationFeaturesGenerator.html" title="class in com.compomics.util.experiment.identification.features">IdentificationFeaturesGenerator</a></dt>
 <dd>

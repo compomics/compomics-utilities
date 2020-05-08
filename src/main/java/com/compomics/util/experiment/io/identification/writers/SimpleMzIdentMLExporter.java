@@ -381,7 +381,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
     /**
      * Finalizes the writing of the mzIdentML file.
      */
-    public void finalize() {
+    public void finalizeFile() {
 
         // Make sure that initialization is finished and did not encounter any exception.
         initSemaphore.acquire();
@@ -842,8 +842,8 @@ public class SimpleMzIdentMLExporter implements Closeable {
     public void addSpectrum(
             String spectrumFile,
             String spectrumTitle,
-            PeptideAssumption[] peptideAssumptions,
-            TreeMap<Double, HashMap<Integer, Double>>[] modificationLocalizationScores,
+            ArrayList<PeptideAssumption> peptideAssumptions,
+            ArrayList<TreeMap<Double, HashMap<Integer, Double>>> modificationLocalizationScores,
             PeptideSpectrumAnnotator peptideSpectrumAnnotator
     ) {
 
@@ -2200,8 +2200,8 @@ public class SimpleMzIdentMLExporter implements Closeable {
     private void writeSpectrumIdentificationResult(
             String spectrumFile,
             String spectrumTitle,
-            PeptideAssumption[] peptideAssumptions,
-            TreeMap<Double, HashMap<Integer, Double>>[] modificationLocalizationScores,
+            ArrayList<PeptideAssumption> peptideAssumptions,
+            ArrayList<TreeMap<Double, HashMap<Integer, Double>>> modificationLocalizationScores,
             PeptideSpectrumAnnotator peptideSpectrumAnnotator
     ) {
 
@@ -2225,7 +2225,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         writer.newLine(DATA_SECTION);
         increaseIndent(DATA_SECTION);
 
-        for (int i = 0; i < peptideAssumptions.length; i++) {
+        for (int i = 0; i < peptideAssumptions.size(); i++) {
 
             String spectrumIdentificationItemKey = String.join("",
                     "SII_",
@@ -2238,8 +2238,8 @@ public class SimpleMzIdentMLExporter implements Closeable {
                     spectrumFile,
                     spectrumTitle,
                     spectrumIdentificationItemKey,
-                    peptideAssumptions[i],
-                    modificationLocalizationScores[i],
+                    peptideAssumptions.get(i),
+                    modificationLocalizationScores.get(i),
                     peptideSpectrumAnnotator
             );
 
@@ -2979,7 +2979,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
     @Override
     public void close() {
 
-        finalize();
+        finalizeFile();
 
         writer.close();
 

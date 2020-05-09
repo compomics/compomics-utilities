@@ -2092,7 +2092,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         }
 
-        if (searchParameters.getMaxIsotopicCorrection() > 0) {
+        if (searchParameters.getMaxIsotopicCorrection() >= 0) {
 
             isotopeMaxTxt.setText(searchParameters.getMaxIsotopicCorrection() + "");
 
@@ -2128,7 +2128,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         }
 
         boolean lowerBoundValid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMinTxt, "lower bound for the precursor isotope", "Precursor Isotope Error", false, showMessage, valid);
-        valid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMaxTxt, "upper bound for the precursor isotope", "Precursor Isotope Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, isotopesLbl, isotopeMaxTxt, "upper bound for the precursor isotope", "Precursor Isotope Error", false, showMessage, valid);
 
         if (!lowerBoundValid) {
 

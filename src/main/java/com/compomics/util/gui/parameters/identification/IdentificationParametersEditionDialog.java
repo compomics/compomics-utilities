@@ -1,7 +1,6 @@
 package com.compomics.util.gui.parameters.identification;
 
 import com.compomics.util.parameters.identification.search.SearchParameters;
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.ions.IonFactory;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.identification_parameters.IdentificationParametersFactory;

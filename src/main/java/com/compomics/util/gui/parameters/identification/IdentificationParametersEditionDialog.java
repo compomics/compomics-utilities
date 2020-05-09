@@ -35,6 +35,7 @@ import com.compomics.util.parameters.identification.advanced.ValidationQcParamet
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -444,6 +445,7 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(this, "Unsupported character in parameters name (" + character + "). Please avoid special characters in parameters name.",
                             "Special Character", JOptionPane.INFORMATION_MESSAGE);
                     valid = false;
+                    break;
                 }
             }
         }
@@ -1167,7 +1169,9 @@ public class IdentificationParametersEditionDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void nameTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTxtKeyReleased
-        validateInput();
+        if (evt.getKeyChar() != KeyEvent.VK_ENTER) {
+            validateInput();
+        }
     }//GEN-LAST:event_nameTxtKeyReleased
 
     /**

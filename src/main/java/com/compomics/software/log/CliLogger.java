@@ -41,10 +41,14 @@ public class CliLogger implements AutoCloseable {
             String version
     ) {
 
-        logWriter = new SimpleFileWriter(logFile, true);
+        logWriter = new SimpleFileWriter(logFile, false);
+        
         if (cliName != null) {
+
             logWriter.writeLine("# " + cliName + " version: " + version);
+
         }
+
         logWriter.writeLine(
                 "time",
                 "type",

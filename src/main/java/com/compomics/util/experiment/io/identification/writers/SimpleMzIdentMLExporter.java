@@ -81,10 +81,6 @@ public class SimpleMzIdentMLExporter implements Closeable {
      */
     public static final String DATA_SECTION = "DATA_SECTION";
     /**
-     * Key for the tail section.
-     */
-    public static final String TAIL_SECTION = "TAIL_SECTION";
-    /**
      * The version of the mzIdentML format.
      */
     public static final MzIdentMLVersion MZIDENTML_VERSION = MzIdentMLVersion.v1_2;
@@ -279,8 +275,9 @@ public class SimpleMzIdentMLExporter implements Closeable {
         this.spectrumProvider = spectrumProvider;
         this.modificationProvider = modificationProvider;
         this.fastaSummary = fastaSummary;
-        writer = new SectionGzWriter(destinationFile, tempFolder);
+        this.writer = new SectionGzWriter(destinationFile, tempFolder);
 
+        initWriter();
         initTabCounterMap();
 
         init(
@@ -2785,12 +2782,24 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
     }
 
+    private void initWriter()
+            throws FileNotFoundException {
+        
+        writer.registerSection(HEAD_SECTION);
+        writer.registerSection(PEPTIDE_SECTION);
+        writer.registerSection(PEPTIDE_EVIDENCE_SECTION);
+        writer.registerSection(ANALYSIS_SECTION);
+        writer.registerSection(DATA_SECTION);
+        
+    }
+
     private void initTabCounterMap() {
 
         indentCounterMap.put(HEAD_SECTION, 0);
         indentCounterMap.put(PEPTIDE_SECTION, 1);
         indentCounterMap.put(PEPTIDE_EVIDENCE_SECTION, 2);
         indentCounterMap.put(ANALYSIS_SECTION, 1);
+        indentCounterMap.put(DATA_SECTION, 1);
 
     }
 

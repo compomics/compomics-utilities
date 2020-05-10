@@ -4,11 +4,12 @@ import com.compomics.util.Util;
 import static com.compomics.util.Util.LINE_SEPARATOR;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.threading.SimpleSemaphore;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,21 +48,13 @@ public class SectionGzWriter implements AutoCloseable {
      */
     private final ConcurrentHashMap<String, File> tempFileMap = new ConcurrentHashMap<>();
     /**
-     * Map of the temp randome access files.
+     * Map of the writers to section temp files.
      */
-    private final ConcurrentHashMap<String, RandomAccessFile> tempRafMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, BufferedWriter> tempWriterMap = new ConcurrentHashMap<>();
     /**
      * Map of the semaphores to use for accessing the temp files.
      */
     private final ConcurrentHashMap<String, SimpleSemaphore> semaphoreMap = new ConcurrentHashMap<>();
-    /**
-     * Map of deflaters.
-     */
-    private final ConcurrentHashMap<String, Deflater> deflaterMap = new ConcurrentHashMap<>();
-    /**
-     * Map of buffers.
-     */
-    private final ConcurrentHashMap<String, byte[]> bufferMap = new ConcurrentHashMap<>();
     /**
      * Map of the start end indexes of each section in the final file.
      */
@@ -70,10 +63,6 @@ public class SectionGzWriter implements AutoCloseable {
      * The random access file to the destination file.
      */
     private final RandomAccessFile raf;
-    /**
-     * Writing channel to the raf.
-     */
-    private final FileChannel rafChannel;
     /**
      * Semaphore for access to the destination file.
      */
@@ -91,6 +80,10 @@ public class SectionGzWriter implements AutoCloseable {
      */
     private final static int GZIP_MAGIC = 0x8b1f;
     /**
+     * The deflater to use.
+     */
+    private final Deflater deflater;
+    /**
      * CRC-32 of uncompressed data.
      *
      * Adapted from java.util.zip.GZIPOutputStream by David Connelly. Copyright
@@ -98,10 +91,6 @@ public class SectionGzWriter implements AutoCloseable {
      * intended.
      */
     private CRC32 crc = new CRC32();
-    /**
-     * Semaphore for the crc.
-     */
-    private final SimpleSemaphore crcSemaphore = new SimpleSemaphore(1);
 
     /**
      * Constructor.
@@ -126,7 +115,7 @@ public class SectionGzWriter implements AutoCloseable {
         this.destinationFileName = IoUtil.getFileName(destinationFile);
 
         raf = new RandomAccessFile(destinationFile, "rw");
-        rafChannel = raf.getChannel();
+        deflater = new Deflater(compressionLevel, true);
 
         writeHeader();
         crc.reset();
@@ -173,7 +162,8 @@ public class SectionGzWriter implements AutoCloseable {
                     0, // Modification time MTIME (int)
                     0, // Extra flags (XFLG)
                     0 // Operating system (OS)
-                });
+                }
+        );
     }
 
     @Override
@@ -187,22 +177,37 @@ public class SectionGzWriter implements AutoCloseable {
             simpleSemaphore.acquire();
             simpleSemaphore.release();
 
-            if (tempRafMap.containsKey(sectionName)) {
+            if (tempWriterMap.containsKey(sectionName)) {
 
                 throw new IllegalArgumentException("Attempted to close the gz file writer before section " + sectionName + " is completed.");
 
             }
         }
 
-        int crcValue = (int) crc.getValue();
-        long deflaterInput = deflaterMap.values()
-                .stream()
-                .mapToLong(
-                        deflater -> deflater.getBytesRead()
-                )
-                .sum();
+        rafSemaphore.acquire();
 
         try {
+
+            byte[] buffer = new byte[BUFFER_SIZE];
+
+            if (!deflater.finished()) {
+
+                deflater.finish();
+
+                while (!deflater.finished()) {
+
+                    int compressedLength = deflater.deflate(buffer, 0, buffer.length, Deflater.FULL_FLUSH);
+
+                    if (compressedLength > 0) {
+
+                        raf.write(buffer, 0, compressedLength);
+
+                    }
+                }
+            }
+
+            int crcValue = (int) crc.getValue();
+            long deflaterInput = deflater.getBytesRead();
 
             byte[] trailer = new byte[8];
             writeInt(crcValue, trailer, 0); // CRC-32 of uncompr. data
@@ -215,6 +220,10 @@ public class SectionGzWriter implements AutoCloseable {
 
             throw new RuntimeException(e);
 
+        } finally {
+
+            rafSemaphore.release();
+
         }
     }
 
@@ -226,27 +235,26 @@ public class SectionGzWriter implements AutoCloseable {
      *
      * @throws FileNotFoundException Exception thrown if the temp folder does
      * not exist or is not writable.
+     * @throws IOException Exception thrown if an error occurred while writing
+     * the temp file.
      */
     public synchronized void registerSection(
             String sectionName
     )
-            throws FileNotFoundException {
+            throws FileNotFoundException, IOException {
 
         if (Util.containsForbiddenCharacter(sectionName)) {
 
-            throw new IllegalArgumentException("Section names should not contain characters forbidden in file names.");
+            throw new IllegalArgumentException("Invalid section name '" + sectionName + "'. Section names should not contain characters forbidden in file names.");
 
         }
 
         File tempFile = new File(tempFolder, destinationFileName + "." + sectionName);
-        RandomAccessFile tempRaf = new RandomAccessFile(tempFile, "rw");
-        Deflater deflater = new Deflater(compressionLevel, true);
+        BufferedWriter tempWriter = new BufferedWriter(new FileWriter(tempFile));
 
         tempFileMap.put(sectionName, tempFile);
-        tempRafMap.put(sectionName, tempRaf);
+        tempWriterMap.put(sectionName, tempWriter);
         semaphoreMap.put(sectionName, new SimpleSemaphore(1));
-        deflaterMap.put(sectionName, deflater);
-        bufferMap.put(sectionName, new byte[BUFFER_SIZE]);
 
     }
 
@@ -263,49 +271,62 @@ public class SectionGzWriter implements AutoCloseable {
         SimpleSemaphore sectionSemaphore = semaphoreMap.get(sectionName);
         sectionSemaphore.acquire();
 
-        Deflater deflater = deflaterMap.get(sectionName);
-        byte[] buffer = bufferMap.get(sectionName);
-        File tempFile = tempFileMap.get(sectionName);
-        RandomAccessFile tempRaf = tempRafMap.get(sectionName);
-
         try {
 
-            if (!deflater.finished()) {
+            BufferedWriter tempWriter = tempWriterMap.get(sectionName);
+            tempWriter.close();
 
-                deflater.finish();
+            rafSemaphore.acquire();
 
-                while (!deflater.finished()) {
+            byte[] buffer = new byte[BUFFER_SIZE];
+            File tempFile = tempFileMap.get(sectionName);
+
+            long[] startEnd = new long[2];
+            startEnd[0] = raf.getFilePointer();
+
+            RandomAccessFile tempRaf = new RandomAccessFile(tempFile, "rw");
+
+            long position = 0;
+
+            while (position < tempRaf.length()) {
+
+                long remaining = tempRaf.length() - position;
+                long bufferLength = buffer.length;
+                boolean useRemaining = remaining < bufferLength;
+
+                int length = useRemaining ? (int) remaining : buffer.length;
+
+                tempRaf.read(buffer, 0, length);
+
+                deflater.setInput(buffer, 0, length);
+                crc.update(buffer, 0, length);
+
+                while (!deflater.needsInput()) {
 
                     int compressedLength = deflater.deflate(buffer, 0, buffer.length);
 
                     if (compressedLength > 0) {
 
-                        tempRaf.write(buffer, 0, compressedLength);
+                        raf.write(buffer, 0, compressedLength);
 
                     }
                 }
+
+                position = tempRaf.getFilePointer();
+
             }
 
-            rafSemaphore.acquire();
+            int compressedLength = buffer.length;
 
-            long start = raf.getFilePointer();
+            while (compressedLength == buffer.length) {
 
-            try ( FileChannel inChannel = tempRaf.getChannel()) {
+                compressedLength = deflater.deflate(buffer, 0, buffer.length, Deflater.FULL_FLUSH);
 
-                inChannel.transferTo(
-                        start,
-                        inChannel.size(),
-                        rafChannel
-                );
-                
-                long end = raf.getFilePointer();
-                long[] startEnd = new long[] {start, end};
-                
-                sectionStartEndMap.put(sectionName, startEnd);
+                if (compressedLength > 0) {
 
-            } finally {
+                    raf.write(buffer, 0, compressedLength);
 
-                rafSemaphore.release();
+                }
 
             }
 
@@ -314,8 +335,11 @@ public class SectionGzWriter implements AutoCloseable {
             tempFile.delete();
 
             tempFileMap.remove(sectionName);
-            tempRafMap.remove(sectionName);
-            bufferMap.remove(sectionName);
+            tempWriterMap.remove(sectionName);
+
+            startEnd[1] = raf.getFilePointer();
+
+            sectionStartEndMap.put(sectionName, startEnd);
 
         } catch (IOException e) {
 
@@ -323,6 +347,7 @@ public class SectionGzWriter implements AutoCloseable {
 
         } finally {
 
+            rafSemaphore.release();
             sectionSemaphore.release();
 
         }
@@ -347,53 +372,29 @@ public class SectionGzWriter implements AutoCloseable {
      * Writes content to the given section.
      *
      * @param sectionName The name of the section.
-     * @param uncompressedContent The content to write.
+     * @param content The content to write.
      */
     public void write(
             String sectionName,
-            String uncompressedContent
+            String content
     ) {
+
+        SimpleSemaphore sectionSemaphore = semaphoreMap.get(sectionName);
+        sectionSemaphore.acquire();
 
         try {
 
-            byte[] uncompressedBytes = uncompressedContent.getBytes(IoUtil.ENCODING);
+            BufferedWriter tempWriter = tempWriterMap.get(sectionName);
 
-            crcSemaphore.acquire();
+            tempWriter.write(content);
 
-            crc.update(uncompressedBytes);
-
-            crcSemaphore.release();
-
-            SimpleSemaphore sectionSemaphore = semaphoreMap.get(sectionName);
-            sectionSemaphore.acquire();
-
-            Deflater deflater = deflaterMap.get(sectionName);
-            byte[] buffer = bufferMap.get(sectionName);
-            RandomAccessFile tempRaf = tempRafMap.get(sectionName);
-
-            try {
-
-                deflater.setInput(uncompressedBytes);
-
-                while (!deflater.needsInput()) {
-
-                    int compressedLength = deflater.deflate(buffer, 0, buffer.length);
-
-                    if (compressedLength > 0) {
-
-                        tempRaf.write(buffer, 0, compressedLength);
-
-                    }
-                }
-
-            } finally {
-
-                sectionSemaphore.release();
-
-            }
         } catch (IOException e) {
 
             throw new RuntimeException(e);
+
+        } finally {
+
+            sectionSemaphore.release();
 
         }
     }
@@ -435,17 +436,18 @@ public class SectionGzWriter implements AutoCloseable {
         buf[offset + 1] = (byte) ((s >> 8) & 0xff);
 
     }
-    
+
     /**
-     * Returns the start and end indexes of the given section in the final file. Null if section is not in the file or not completed yet.
-     * 
+     * Returns the start and end indexes of the given section in the final file.
+     * Null if section is not in the file or not completed yet.
+     *
      * @param sectionName The name of the section.
-     * 
+     *
      * @return The start and end indexes in an array.
      */
     public long[] getStartEnd(String sectionName) {
-        
+
         return sectionStartEndMap.get(sectionName);
-        
+
     }
 }

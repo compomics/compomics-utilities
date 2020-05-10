@@ -117,7 +117,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
      * Integer keeping track of the number of tabs to include at the beginning
      * of each line.
      */
-    private final ConcurrentHashMap<String, Integer> indentCounterMap = new ConcurrentHashMap<>(6);
+    private final ConcurrentHashMap<String, Integer> indentationMap = new ConcurrentHashMap<>(6);
     /**
      * The provider to use to get modification information.
      */
@@ -278,7 +278,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         this.writer = new SectionGzWriter(destinationFile, tempFolder);
 
         initWriter();
-        initTabCounterMap();
+        initIndentationMap();
 
         init(
                 contactFirstName,
@@ -437,7 +437,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         );
         writer.newLine(HEAD_SECTION);
 
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
     }
 
@@ -446,37 +446,37 @@ public class SimpleMzIdentMLExporter implements Closeable {
      */
     private void writeCvList() {
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<cvList>");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<cv id=\"PSI-MS\" ");
         writer.write(HEAD_SECTION, "uri=\"https://raw.githubusercontent.com/HUPO-PSI/psi-ms-CV/master/psi-ms.obo\" ");
         writer.write(HEAD_SECTION, "fullName=\"PSI-MS\"/>");
         writer.newLine(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<cv id=\"UNIMOD\" ");
         writer.write(HEAD_SECTION, "uri=\"http://www.unimod.org/obo/unimod.obo\" ");
         writer.write(HEAD_SECTION, "fullName=\"UNIMOD\"/>");
         writer.newLine(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<cv id=\"UO\" ");
         writer.write(HEAD_SECTION, "uri=\"https://raw.githubusercontent.com/bio-ontology-research-group/unit-ontology/master/unit.obo\" ");
         writer.write(HEAD_SECTION, "fullName=\"UNIT-ONTOLOGY\"/>");
         writer.newLine(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<cv id=\"PRIDE\" ");
         writer.write(HEAD_SECTION, "uri=\"https://github.com/PRIDE-Utilities/pride-ontology/blob/master/pride_cv.obo\" ");
         writer.write(HEAD_SECTION, "fullName=\"PRIDE\"/>");
         writer.newLine(HEAD_SECTION);
 
         decreaseIndent(HEAD_SECTION);
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "</cvList>");
         writer.newLine(HEAD_SECTION);
 
@@ -487,13 +487,13 @@ public class SimpleMzIdentMLExporter implements Closeable {
      */
     private void writeAnalysisSoftwareList() {
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<AnalysisSoftwareList>");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
         // @TODO: also add SearchGUI and/or search engines used?
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<AnalysisSoftware name=\"");
         writer.write(HEAD_SECTION, softwareName);
         writer.write(HEAD_SECTION, "\" version=\"");
@@ -502,17 +502,17 @@ public class SimpleMzIdentMLExporter implements Closeable {
         writer.write(HEAD_SECTION, softwareUrl);
         writer.write(HEAD_SECTION, "\">");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<ContactRole contact_ref=\"PS_DEV\">");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<Role>");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
         writeCvTerm(
                 HEAD_SECTION,
@@ -525,19 +525,19 @@ public class SimpleMzIdentMLExporter implements Closeable {
         );
         decreaseIndent(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "</Role>");
         writer.newLine(HEAD_SECTION);
         decreaseIndent(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "</ContactRole>");
         writer.newLine(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<SoftwareName>");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
         writeCvTerm(
                 HEAD_SECTION,
@@ -550,21 +550,21 @@ public class SimpleMzIdentMLExporter implements Closeable {
         );
         decreaseIndent(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "</SoftwareName>");
         writer.newLine(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<Customizations>No customisations</Customizations>");
         writer.newLine(HEAD_SECTION);
 
         decreaseIndent(HEAD_SECTION);
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "</AnalysisSoftware>");
         writer.newLine(HEAD_SECTION);
 
         decreaseIndent(HEAD_SECTION);
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "</AnalysisSoftwareList>");
         writer.newLine(HEAD_SECTION);
 
@@ -575,20 +575,20 @@ public class SimpleMzIdentMLExporter implements Closeable {
      */
     private void writeProviderDetails() {
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<Provider id=\"PROVIDER\">");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<ContactRole contact_ref=\"PROVIDER\">");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<Role>");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
         // @TODO: add user defined provider role?
         writeCvTerm(
@@ -602,17 +602,17 @@ public class SimpleMzIdentMLExporter implements Closeable {
         );
         decreaseIndent(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "</Role>");
         writer.newLine(HEAD_SECTION);
 
         decreaseIndent(HEAD_SECTION);
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "</ContactRole>");
         writer.newLine(HEAD_SECTION);
 
         decreaseIndent(HEAD_SECTION);
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "</Provider>");
         writer.newLine(HEAD_SECTION);
 
@@ -631,19 +631,19 @@ public class SimpleMzIdentMLExporter implements Closeable {
             String contactOrganizationEmail
     ) {
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<AuditCollection>");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<Person firstName=\"");
         writer.write(HEAD_SECTION, contactFirstName);
         writer.write(HEAD_SECTION, "\" lastName=\"");
         writer.write(HEAD_SECTION, contactLastName);
         writer.write(HEAD_SECTION, "\" id=\"PROVIDER\">");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
         writeCvTerm(
                 HEAD_SECTION,
@@ -667,21 +667,21 @@ public class SimpleMzIdentMLExporter implements Closeable {
                 )
         );
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<Affiliation organization_ref=\"ORG_DOC_OWNER\"/>");
         writer.newLine(HEAD_SECTION);
         decreaseIndent(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "</Person>");
         writer.newLine(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<Organization name=\"");
         writer.write(HEAD_SECTION, StringEscapeUtils.escapeHtml4(contactOrganizationName));
         writer.write(HEAD_SECTION, "\" id=\"ORG_DOC_OWNER\">");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
         writeCvTerm(
                 HEAD_SECTION,
@@ -713,14 +713,14 @@ public class SimpleMzIdentMLExporter implements Closeable {
         );
         decreaseIndent(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "</Organization>");
         writer.newLine(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<Organization name=\"PeptideShaker developers\" id=\"PS_DEV\">");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
         writeCvTerm(
                 HEAD_SECTION,
@@ -761,12 +761,12 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
         decreaseIndent(HEAD_SECTION);
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "</Organization>");
         writer.newLine(HEAD_SECTION);
 
         decreaseIndent(HEAD_SECTION);
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "</AuditCollection>");
         writer.newLine(HEAD_SECTION);
 
@@ -777,10 +777,10 @@ public class SimpleMzIdentMLExporter implements Closeable {
      */
     private void writeProteinSequenceCollection() {
 
-        writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+        writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
         writer.write(HEAD_SECTION, "<SequenceCollection>");
         writer.newLine(HEAD_SECTION);
-        increaseIndent(HEAD_SECTION);
+        increaseIndentation(HEAD_SECTION);
 
 //        String dbType = Header.getDatabaseTypeAsString(Header.DatabaseType.Unknown); // @TODO: add database type as cv param? children of MS:1001013 (database name)
 //        FastaIndex fastaIndex = sequenceFactory.getCurrentFastaIndex();
@@ -790,7 +790,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
 //
         for (String accession : sequenceProvider.getAccessions()) { // @TODO: include only protein sequences with at least one PeptideEvidence element referring to it (note: this is a SHOULD rule in the mzid specifications)
 
-            writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+            writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
             writer.write(HEAD_SECTION, "<DBSequence id=\"");
             writer.write(HEAD_SECTION, accession);
             writer.write(HEAD_SECTION, "\" ");
@@ -798,10 +798,10 @@ public class SimpleMzIdentMLExporter implements Closeable {
             writer.write(HEAD_SECTION, accession);
             writer.write(HEAD_SECTION, "\" searchDatabase_ref=\"SearchDB_1\" >");
             writer.newLine(HEAD_SECTION);
-            increaseIndent(HEAD_SECTION);
+            increaseIndentation(HEAD_SECTION);
 
             String sequence = sequenceProvider.getSequence(accession);
-            writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+            writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
             writer.write(HEAD_SECTION, "<Seq>");
             writer.write(HEAD_SECTION, sequence);
             writer.write(HEAD_SECTION, "</Seq>");
@@ -819,7 +819,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
             );
 
             decreaseIndent(HEAD_SECTION);
-            writer.write(HEAD_SECTION, getCurrentTabSpace(HEAD_SECTION));
+            writer.write(HEAD_SECTION, getCurrentIndentation(HEAD_SECTION));
             writer.write(HEAD_SECTION, "</DBSequence>");
             writer.newLine(HEAD_SECTION);
 
@@ -908,14 +908,14 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
         String peptideSequence = peptide.getSequence();
 
-        writer.write(PEPTIDE_SECTION, getCurrentTabSpace(PEPTIDE_SECTION));
+        writer.write(PEPTIDE_SECTION, getCurrentIndentation(PEPTIDE_SECTION));
         writer.write(PEPTIDE_SECTION, "<Peptide id=\"");
         writer.write(PEPTIDE_SECTION, Long.toString(peptide.getKey()));
         writer.write(PEPTIDE_SECTION, "\">");
         writer.newLine(PEPTIDE_SECTION);
-        increaseIndent(PEPTIDE_SECTION);
+        increaseIndentation(PEPTIDE_SECTION);
 
-        writer.write(PEPTIDE_SECTION, getCurrentTabSpace(PEPTIDE_SECTION));
+        writer.write(PEPTIDE_SECTION, getCurrentIndentation(PEPTIDE_SECTION));
         writer.write(PEPTIDE_SECTION, "<PeptideSequence>");
         writer.write(PEPTIDE_SECTION, peptideSequence);
         writer.write(PEPTIDE_SECTION, "</PeptideSequence>");
@@ -937,7 +937,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
                 int aa = Math.min(Math.max(site, 1), peptideSequence.length());
 
-                writer.write(PEPTIDE_SECTION, getCurrentTabSpace(PEPTIDE_SECTION));
+                writer.write(PEPTIDE_SECTION, getCurrentIndentation(PEPTIDE_SECTION));
                 writer.write(PEPTIDE_SECTION, "<Modification monoisotopicMassDelta=\"");
                 writer.write(PEPTIDE_SECTION, Double.toString(modification.getRoundedMass()));
                 writer.write(PEPTIDE_SECTION, "\" residues=\"");
@@ -951,7 +951,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
                 if (ptmCvTerm != null) {
 
-                    increaseIndent(PEPTIDE_SECTION);
+                    increaseIndentation(PEPTIDE_SECTION);
                     writeCvTerm(
                             PEPTIDE_SECTION,
                             ptmCvTerm,
@@ -966,7 +966,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
                     if (ptmCvTerm != null) {
 
-                        increaseIndent(PEPTIDE_SECTION);
+                        increaseIndentation(PEPTIDE_SECTION);
                         writeCvTerm(
                                 PEPTIDE_SECTION,
                                 ptmCvTerm,
@@ -978,7 +978,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
                 }
 
-                writer.write(PEPTIDE_SECTION, getCurrentTabSpace(PEPTIDE_SECTION));
+                writer.write(PEPTIDE_SECTION, getCurrentIndentation(PEPTIDE_SECTION));
                 writer.write(PEPTIDE_SECTION, "</Modification>");
                 writer.newLine(PEPTIDE_SECTION);
 
@@ -992,7 +992,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
             int site = modMatch.getSite();
             int aa = Math.min(Math.max(site, 1), peptideSequence.length());
 
-            writer.write(PEPTIDE_SECTION, getCurrentTabSpace(PEPTIDE_SECTION));
+            writer.write(PEPTIDE_SECTION, getCurrentIndentation(PEPTIDE_SECTION));
             writer.write(PEPTIDE_SECTION, "<Modification monoisotopicMassDelta=\"");
             writer.write(PEPTIDE_SECTION, Double.toString(modification.getRoundedMass()));
             writer.write(PEPTIDE_SECTION, "\" residues=\"");
@@ -1006,7 +1006,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
             if (ptmCvTerm != null) {
 
-                increaseIndent(PEPTIDE_SECTION);
+                increaseIndentation(PEPTIDE_SECTION);
                 writeCvTerm(
                         PEPTIDE_SECTION,
                         ptmCvTerm,
@@ -1019,7 +1019,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                 // try PSI-MOD instead
                 ptmCvTerm = modification.getPsiModCvTerm();
 
-                increaseIndent(PEPTIDE_SECTION);
+                increaseIndentation(PEPTIDE_SECTION);
                 writeCvTerm(
                         PEPTIDE_SECTION,
                         ptmCvTerm,
@@ -1029,14 +1029,14 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
             }
 
-            writer.write(PEPTIDE_SECTION, getCurrentTabSpace(PEPTIDE_SECTION));
+            writer.write(PEPTIDE_SECTION, getCurrentIndentation(PEPTIDE_SECTION));
             writer.write(PEPTIDE_SECTION, "</Modification>");
             writer.newLine(PEPTIDE_SECTION);
 
         }
 
         decreaseIndent(PEPTIDE_SECTION);
-        writer.write(PEPTIDE_SECTION, getCurrentTabSpace(PEPTIDE_SECTION));
+        writer.write(PEPTIDE_SECTION, getCurrentIndentation(PEPTIDE_SECTION));
         writer.write(PEPTIDE_SECTION, "</Peptide>");
         writer.newLine(PEPTIDE_SECTION);
 
@@ -1091,7 +1091,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
                 pepEvidenceIds.put(pepEvidenceKey, pepEvidenceValue);
 
-                writer.write(PEPTIDE_EVIDENCE_SECTION, getCurrentTabSpace(PEPTIDE_EVIDENCE_SECTION));
+                writer.write(PEPTIDE_EVIDENCE_SECTION, getCurrentIndentation(PEPTIDE_EVIDENCE_SECTION));
                 writer.write(PEPTIDE_EVIDENCE_SECTION, "<PeptideEvidence isDecoy=\"");
                 writer.write(
                         PEPTIDE_EVIDENCE_SECTION,
@@ -1166,7 +1166,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
     private void finalizePeptideEvidenceSection() {
 
         decreaseIndent(PEPTIDE_EVIDENCE_SECTION);
-        writer.write(PEPTIDE_EVIDENCE_SECTION, getCurrentTabSpace(PEPTIDE_EVIDENCE_SECTION));
+        writer.write(PEPTIDE_EVIDENCE_SECTION, getCurrentIndentation(PEPTIDE_EVIDENCE_SECTION));
         writer.write(PEPTIDE_EVIDENCE_SECTION, "</SequenceCollection>");
         writer.newLine(PEPTIDE_EVIDENCE_SECTION);
 
@@ -1177,51 +1177,51 @@ public class SimpleMzIdentMLExporter implements Closeable {
      */
     private void writeAnalysisCollection() {
 
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<AnalysisCollection>");
         writer.newLine(ANALYSIS_SECTION);
-        increaseIndent(ANALYSIS_SECTION);
+        increaseIndentation(ANALYSIS_SECTION);
 
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<SpectrumIdentification spectrumIdentificationList_ref=\"SIL_1\" ");
         writer.write(ANALYSIS_SECTION, "spectrumIdentificationProtocol_ref=\"SearchProtocol_1\" id=\"SpecIdent_1\">");
         writer.newLine(ANALYSIS_SECTION);
-        increaseIndent(ANALYSIS_SECTION);
+        increaseIndentation(ANALYSIS_SECTION);
 
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<InputSpectra spectraData_ref=\"");
         writer.write(ANALYSIS_SECTION, IoUtil.getFileName(spectrumFile));
         writer.write(ANALYSIS_SECTION, "\"/>");
         writer.newLine(ANALYSIS_SECTION);
 
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<SearchDatabaseRef searchDatabase_ref=\"SearchDB_1\"/>");
         writer.newLine(ANALYSIS_SECTION);
 
         decreaseIndent(ANALYSIS_SECTION);
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "</SpectrumIdentification>");
         writer.newLine(ANALYSIS_SECTION);
 
         // add protein detection
         // @TODO: add activityDate? example: activityDate="2011-03-25T13:33:51
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<ProteinDetection proteinDetectionProtocol_ref=\"PeptideShaker_1\" ");
         writer.write(ANALYSIS_SECTION, "proteinDetectionList_ref=\"Protein_groups\" id=\"PD_1\">");
         writer.newLine(ANALYSIS_SECTION);
 
-        increaseIndent(ANALYSIS_SECTION);
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        increaseIndentation(ANALYSIS_SECTION);
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<InputSpectrumIdentifications spectrumIdentificationList_ref=\"SIL_1\"/>");
         writer.newLine(ANALYSIS_SECTION);
 
         decreaseIndent(ANALYSIS_SECTION);
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "</ProteinDetection>");
         writer.newLine(ANALYSIS_SECTION);
 
         decreaseIndent(ANALYSIS_SECTION);
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "</AnalysisCollection>");
         writer.newLine(ANALYSIS_SECTION);
 
@@ -1232,23 +1232,23 @@ public class SimpleMzIdentMLExporter implements Closeable {
      */
     private void writeAnalysisProtocol() {
 
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<AnalysisProtocolCollection>");
         writer.newLine(ANALYSIS_SECTION);
-        increaseIndent(ANALYSIS_SECTION);
+        increaseIndentation(ANALYSIS_SECTION);
 
         // add spectrum identification protocol
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<SpectrumIdentificationProtocol analysisSoftware_ref=\"ID_software\" id=\"SearchProtocol_1\">");
         writer.newLine(ANALYSIS_SECTION);
-        increaseIndent(ANALYSIS_SECTION);
+        increaseIndentation(ANALYSIS_SECTION);
 
         // the search type
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<SearchType>");
         writer.newLine(ANALYSIS_SECTION);
 
-        increaseIndent(ANALYSIS_SECTION);
+        increaseIndentation(ANALYSIS_SECTION);
         writeCvTerm(
                 ANALYSIS_SECTION,
                 new CvTerm(
@@ -1260,17 +1260,17 @@ public class SimpleMzIdentMLExporter implements Closeable {
         );
 
         decreaseIndent(ANALYSIS_SECTION);
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "</SearchType>");
         writer.newLine(ANALYSIS_SECTION);
 
         // the search parameters
         SearchParameters searchParameters = identificationParameters.getSearchParameters();
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<AdditionalSearchParams>");
         writer.newLine(ANALYSIS_SECTION);
 
-        increaseIndent(ANALYSIS_SECTION);
+        increaseIndentation(ANALYSIS_SECTION);
         writeCvTerm(
                 ANALYSIS_SECTION,
                 new CvTerm(
@@ -1301,15 +1301,15 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
         // @TODO: list all search parameters from the search engines used?
         decreaseIndent(ANALYSIS_SECTION);
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "</AdditionalSearchParams>");
         writer.newLine(ANALYSIS_SECTION);
 
         // the modifications
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<ModificationParams>");
         writer.newLine(ANALYSIS_SECTION);
-        increaseIndent(ANALYSIS_SECTION);
+        increaseIndentation(ANALYSIS_SECTION);
 
         // create the ptm index map
         for (String modName : searchParameters.getModificationParameters().getAllModifications()) {
@@ -1358,7 +1358,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
             }
 
-            writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+            writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
             writer.write(ANALYSIS_SECTION, "<SearchModification residues=\"");
             writer.write(ANALYSIS_SECTION, aminoAcidsAtTarget);
             writer.write(ANALYSIS_SECTION, "\" massDelta=\"");
@@ -1367,15 +1367,15 @@ public class SimpleMzIdentMLExporter implements Closeable {
             writer.write(ANALYSIS_SECTION, Boolean.toString(searchParameters.getModificationParameters().getFixedModifications().contains(modName)));
             writer.write(ANALYSIS_SECTION, "\" >");
             writer.newLine(ANALYSIS_SECTION);
-            increaseIndent(ANALYSIS_SECTION);
+            increaseIndentation(ANALYSIS_SECTION);
 
             // add modification specificity
             if (modificationType != ModificationType.modaa) {
 
-                writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+                writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
                 writer.write(ANALYSIS_SECTION, "<SpecificityRules>");
                 writer.newLine(ANALYSIS_SECTION);
-                increaseIndent(ANALYSIS_SECTION);
+                increaseIndentation(ANALYSIS_SECTION);
 
                 switch (modificationType) {
 
@@ -1436,7 +1436,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                 }
 
                 decreaseIndent(ANALYSIS_SECTION);
-                writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+                writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
                 writer.write(ANALYSIS_SECTION, "</SpecificityRules>");
                 writer.newLine(ANALYSIS_SECTION);
 
@@ -1498,14 +1498,14 @@ public class SimpleMzIdentMLExporter implements Closeable {
             );
 
             decreaseIndent(ANALYSIS_SECTION);
-            writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+            writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
             writer.write(ANALYSIS_SECTION, "</SearchModification>");
             writer.newLine(ANALYSIS_SECTION);
 
         }
 
         decreaseIndent(ANALYSIS_SECTION);
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "</ModificationParams>");
         writer.newLine(ANALYSIS_SECTION);
 
@@ -1515,21 +1515,21 @@ public class SimpleMzIdentMLExporter implements Closeable {
         if (digestionPreferences.getCleavageParameter()
                 == DigestionParameters.CleavageParameter.unSpecific) {
 
-            writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+            writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
             writer.write(ANALYSIS_SECTION, "<Enzymes independent=\"false\">");
             writer.newLine(ANALYSIS_SECTION);
 
-            increaseIndent(ANALYSIS_SECTION);
-            writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+            increaseIndentation(ANALYSIS_SECTION);
+            writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
             writer.write(ANALYSIS_SECTION, "<Enzyme name=\"unspecific cleavage\">");
             writer.newLine(ANALYSIS_SECTION);
 
-            increaseIndent(ANALYSIS_SECTION);
-            writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+            increaseIndentation(ANALYSIS_SECTION);
+            writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
             writer.write(ANALYSIS_SECTION, "<EnzymeName>");
             writer.newLine(ANALYSIS_SECTION);
 
-            increaseIndent(ANALYSIS_SECTION);
+            increaseIndentation(ANALYSIS_SECTION);
             CvTerm enzymeCvTerm = new CvTerm(
                     "PSI-MS",
                     "MS:1001091",
@@ -1542,32 +1542,32 @@ public class SimpleMzIdentMLExporter implements Closeable {
             );
 
             decreaseIndent(ANALYSIS_SECTION);
-            writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+            writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
             writer.write(ANALYSIS_SECTION, "</EnzymeName>");
             writer.newLine(ANALYSIS_SECTION);
 
             decreaseIndent(ANALYSIS_SECTION);
-            writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+            writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
             writer.write(ANALYSIS_SECTION, "</Enzyme>");
             writer.newLine(ANALYSIS_SECTION);
 
         } else if (digestionPreferences.getCleavageParameter()
                 == DigestionParameters.CleavageParameter.wholeProtein) {
 
-            writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+            writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
             writer.write(ANALYSIS_SECTION, "<Enzymes independent=\"false\">");
             writer.newLine(ANALYSIS_SECTION);
-            increaseIndent(ANALYSIS_SECTION);
+            increaseIndentation(ANALYSIS_SECTION);
 
-            writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+            writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
             writer.write(ANALYSIS_SECTION, "<Enzyme name=\"NoEnzyme\">");
             writer.newLine(ANALYSIS_SECTION);
-            increaseIndent(ANALYSIS_SECTION);
+            increaseIndentation(ANALYSIS_SECTION);
 
-            writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+            writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
             writer.write(ANALYSIS_SECTION, "<EnzymeName>");
             writer.newLine(ANALYSIS_SECTION);
-            increaseIndent(ANALYSIS_SECTION);
+            increaseIndentation(ANALYSIS_SECTION);
 
             CvTerm enzymeCvTerm = new CvTerm(
                     "PSI-MS",
@@ -1578,12 +1578,12 @@ public class SimpleMzIdentMLExporter implements Closeable {
             writeCvTerm(ANALYSIS_SECTION, enzymeCvTerm);
 
             decreaseIndent(ANALYSIS_SECTION);
-            writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+            writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
             writer.write(ANALYSIS_SECTION, "</EnzymeName>");
             writer.newLine(ANALYSIS_SECTION);
 
             decreaseIndent(ANALYSIS_SECTION);
-            writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+            writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
             writer.write(ANALYSIS_SECTION, "</Enzyme>");
             writer.newLine(ANALYSIS_SECTION);
 
@@ -1591,17 +1591,17 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
             ArrayList<Enzyme> enzymes = digestionPreferences.getEnzymes();
 
-            writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+            writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
             writer.write(ANALYSIS_SECTION, "<Enzymes independent=\"");
             writer.write(ANALYSIS_SECTION, Boolean.toString(enzymes.size() > 1));
             writer.write(ANALYSIS_SECTION, "\">");
             writer.newLine(ANALYSIS_SECTION);
-            increaseIndent(ANALYSIS_SECTION);
+            increaseIndentation(ANALYSIS_SECTION);
 
             for (Enzyme enzyme : enzymes) {
 
                 String enzymeName = enzyme.getName();
-                writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+                writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
                 writer.write(ANALYSIS_SECTION, "<Enzyme missedCleavages=\"");
                 writer.write(ANALYSIS_SECTION, Integer.toString(digestionPreferences.getnMissedCleavages(enzymeName)));
                 writer.write(ANALYSIS_SECTION, "\" semiSpecific=\"");
@@ -1614,13 +1614,13 @@ public class SimpleMzIdentMLExporter implements Closeable {
                 writer.write(ANALYSIS_SECTION, enzyme.getName());
                 writer.write(ANALYSIS_SECTION, "\">");
                 writer.newLine(ANALYSIS_SECTION);
-                increaseIndent(ANALYSIS_SECTION);
+                increaseIndentation(ANALYSIS_SECTION);
 
-                writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+                writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
                 writer.write(ANALYSIS_SECTION, "<EnzymeName>");
                 writer.newLine(ANALYSIS_SECTION);
 
-                increaseIndent(ANALYSIS_SECTION);
+                increaseIndentation(ANALYSIS_SECTION);
                 CvTerm enzymeCvTerm = enzyme.getCvTerm();
 
                 if (enzymeCvTerm != null) {
@@ -1634,12 +1634,12 @@ public class SimpleMzIdentMLExporter implements Closeable {
                 }
 
                 decreaseIndent(ANALYSIS_SECTION);
-                writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+                writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
                 writer.write(ANALYSIS_SECTION, "</EnzymeName>");
                 writer.newLine(ANALYSIS_SECTION);
 
                 decreaseIndent(ANALYSIS_SECTION);
-                writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+                writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
                 writer.write(ANALYSIS_SECTION, "</Enzyme>");
                 writer.newLine(ANALYSIS_SECTION);
 
@@ -1648,15 +1648,15 @@ public class SimpleMzIdentMLExporter implements Closeable {
             }
         }
 
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "</Enzymes>");
         writer.newLine(ANALYSIS_SECTION);
 
         // fragment tolerance
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<FragmentTolerance>");
         writer.newLine(ANALYSIS_SECTION);
-        increaseIndent(ANALYSIS_SECTION);
+        increaseIndentation(ANALYSIS_SECTION);
 
         String fragmentIonToleranceUnit;
         String unitAccession;
@@ -1677,7 +1677,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                 throw new UnsupportedOperationException("CV term not implemented for fragment accuracy in " + searchParameters.getFragmentAccuracyType() + ".");
 
         }
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<cvParam accession=\"MS:1001412\" cvRef=\"PSI-MS\" unitCvRef=\"UO\" unitName=\"");
         writer.write(ANALYSIS_SECTION, fragmentIonToleranceUnit);
 
@@ -1690,7 +1690,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         writer.write(ANALYSIS_SECTION, "name=\"search tolerance plus value\" />");
         writer.newLine(ANALYSIS_SECTION);
 
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<cvParam accession=\"MS:1001413\" cvRef=\"PSI-MS\" unitCvRef=\"UO\" unitName=\"");
         writer.write(ANALYSIS_SECTION, fragmentIonToleranceUnit);
 
@@ -1703,15 +1703,15 @@ public class SimpleMzIdentMLExporter implements Closeable {
         writer.newLine(ANALYSIS_SECTION);
 
         decreaseIndent(ANALYSIS_SECTION);
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "</FragmentTolerance>");
         writer.newLine(ANALYSIS_SECTION);
 
         // precursor tolerance
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<ParentTolerance>");
         writer.newLine(ANALYSIS_SECTION);
-        increaseIndent(ANALYSIS_SECTION);
+        increaseIndentation(ANALYSIS_SECTION);
 
         String precursorIonToleranceUnit;
         switch (searchParameters.getPrecursorAccuracyType()) {
@@ -1728,7 +1728,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                 throw new UnsupportedOperationException("CV term not implemented for precursor accuracy in " + searchParameters.getFragmentAccuracyType() + ".");
 
         }
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<cvParam accession=\"MS:1001412\" cvRef=\"PSI-MS\" unitCvRef=\"UO\" unitName=\"");
         writer.write(ANALYSIS_SECTION, precursorIonToleranceUnit);
 
@@ -1737,7 +1737,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         writer.write(ANALYSIS_SECTION, "\" name=\"search tolerance plus value\" />");
         writer.newLine(ANALYSIS_SECTION);
 
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<cvParam accession=\"MS:1001413\" cvRef=\"PSI-MS\" unitCvRef=\"UO\" unitName=\"");
         writer.write(ANALYSIS_SECTION, precursorIonToleranceUnit);
 
@@ -1748,15 +1748,15 @@ public class SimpleMzIdentMLExporter implements Closeable {
         decreaseIndent(ANALYSIS_SECTION);
         writer.newLine(ANALYSIS_SECTION);
 
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "</ParentTolerance>");
         writer.newLine(ANALYSIS_SECTION);
 
         // thresholds
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<Threshold>");
         writer.newLine(ANALYSIS_SECTION);
-        increaseIndent(ANALYSIS_SECTION);
+        increaseIndentation(ANALYSIS_SECTION);
 
         writeCvTerm(
                 ANALYSIS_SECTION,
@@ -1769,17 +1769,17 @@ public class SimpleMzIdentMLExporter implements Closeable {
         );
 
         decreaseIndent(ANALYSIS_SECTION);
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "</Threshold>");
         writer.newLine(ANALYSIS_SECTION);
 
         decreaseIndent(ANALYSIS_SECTION);
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "</SpectrumIdentificationProtocol>");
         writer.newLine(ANALYSIS_SECTION);
 
         decreaseIndent(ANALYSIS_SECTION);
-        writer.write(ANALYSIS_SECTION, getCurrentTabSpace(ANALYSIS_SECTION));
+        writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "</AnalysisProtocolCollection>");
         writer.newLine(ANALYSIS_SECTION);
 
@@ -1790,10 +1790,10 @@ public class SimpleMzIdentMLExporter implements Closeable {
      */
     private void setupDataCollection() {
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<DataCollection>");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
         writeInputFileDetails();
         setupDataAnalysis();
@@ -1808,7 +1808,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         finalizeDataAnalysis();
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</DataCollection>");
         writer.newLine(DATA_SECTION);
 
@@ -1819,10 +1819,10 @@ public class SimpleMzIdentMLExporter implements Closeable {
      */
     private void writeInputFileDetails() {
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<Inputs>");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
         int sourceFileCounter = 1;
 
@@ -1831,19 +1831,19 @@ public class SimpleMzIdentMLExporter implements Closeable {
 //            FileInputStream fis = new FileInputStream(new File("foo"));
 //            String md5 = DigestUtils.md5Hex(fis);
 //            fis.close();
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<SourceFile location=\"");
         writer.write(DATA_SECTION, searchEngineFile.toURI().toString());
         writer.write(DATA_SECTION, "\" id=\"SourceFile_");
         writer.write(DATA_SECTION, Integer.toString(sourceFileCounter++));
         writer.write(DATA_SECTION, "\">");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<FileFormat>");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
         for (String algorithmName : searchEngines.keySet()) {
 
@@ -1955,29 +1955,29 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
         // @TODO: add children of MS:1000561 - data file checksum type?
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</FileFormat>");
         writer.newLine(DATA_SECTION);
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</SourceFile>");
         writer.newLine(DATA_SECTION);
 
         // add the database
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<SearchDatabase numDatabaseSequences=\"");
         writer.write(DATA_SECTION, Integer.toString(fastaSummary.nSequences));
         writer.write(DATA_SECTION, "\" location=\"");
         writer.write(DATA_SECTION, fastaFile.toURI().toString());
         writer.write(DATA_SECTION, "\" id=\"SearchDB_1\">");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<FileFormat>");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
         writeCvTerm(
                 DATA_SECTION,
@@ -1990,19 +1990,19 @@ public class SimpleMzIdentMLExporter implements Closeable {
         );
         decreaseIndent(DATA_SECTION);
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</FileFormat>");
         writer.newLine(DATA_SECTION);
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<DatabaseName>");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
         writeUserParam(DATA_SECTION, fastaFile.getName()); // @TODO: add database type? children of MS:1001013 - database name??? for example: MS:1001104 (database UniProtKB/Swiss-Prot)
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</DatabaseName>");
         writer.newLine(DATA_SECTION);
 
@@ -2017,12 +2017,12 @@ public class SimpleMzIdentMLExporter implements Closeable {
         );
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</SearchDatabase>");
         writer.newLine(DATA_SECTION);
 
         // add the spectra location
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<SpectraData location=\"");
         writer.write(DATA_SECTION, spectrumFile.toURI().toString());
         writer.write(DATA_SECTION, "\" id=\"");
@@ -2031,12 +2031,12 @@ public class SimpleMzIdentMLExporter implements Closeable {
         writer.write(DATA_SECTION, spectrumFile.getName());
         writer.write(DATA_SECTION, "\">");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<FileFormat>");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
         writeCvTerm(
                 DATA_SECTION,
@@ -2049,14 +2049,14 @@ public class SimpleMzIdentMLExporter implements Closeable {
         );
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</FileFormat>");
         writer.newLine(DATA_SECTION);
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<SpectrumIDFormat>");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
         writeCvTerm(
                 DATA_SECTION,
@@ -2069,17 +2069,17 @@ public class SimpleMzIdentMLExporter implements Closeable {
         );
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</SpectrumIDFormat>");
         writer.newLine(DATA_SECTION);
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</SpectraData>");
         writer.newLine(DATA_SECTION);
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</Inputs>");
         writer.newLine(DATA_SECTION);
 
@@ -2090,15 +2090,15 @@ public class SimpleMzIdentMLExporter implements Closeable {
      */
     private void setupDataAnalysis() {
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<AnalysisData>");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<SpectrumIdentificationList id=\"SIL_1\">");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
         writeFragmentationTable();
 
@@ -2111,12 +2111,12 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
         //writeCvTerm(new CvTerm("PSI-MS", "MS:1002439", "final PSM list", null)); // @TODO: add children of MS:1001184 (search statistics)?
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</SpectrumIdentificationList>");
         writer.newLine(DATA_SECTION);
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</AnalysisData>");
         writer.newLine(DATA_SECTION);
 
@@ -2127,58 +2127,58 @@ public class SimpleMzIdentMLExporter implements Closeable {
      */
     private void writeFragmentationTable() {
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<FragmentationTable>");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
         // mz
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<Measure id=\"Measure_MZ\">");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<cvParam cvRef=\"PSI-MS\" accession=\"MS:1001225\" name=\"product ion m/z\" unitCvRef=\"PSI-MS\" unitAccession=\"MS:1000040\" unitName=\"m/z\" />");
         writer.newLine(DATA_SECTION);
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</Measure>");
         writer.newLine(DATA_SECTION);
 
         // intensity
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<Measure id=\"Measure_Int\">");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<cvParam cvRef=\"PSI-MS\" accession=\"MS:1001226\" name=\"product ion intensity\" unitCvRef=\"PSI-MS\" unitAccession=\"MS:1000131\" unitName=\"number of detector counts\"/>");
         writer.newLine(DATA_SECTION);
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</Measure>");
         writer.newLine(DATA_SECTION);
 
         // mass error
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<Measure id=\"Measure_Error\">");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<cvParam cvRef=\"PSI-MS\" accession=\"MS:1001227\" name=\"product ion m/z error\" unitCvRef=\"PSI-MS\" unitAccession=\"MS:1000040\" unitName=\"m/z\"/>");
         writer.newLine(DATA_SECTION);
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</Measure>");
         writer.newLine(DATA_SECTION);
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</FragmentationTable>");
         writer.newLine(DATA_SECTION);
 
@@ -2211,7 +2211,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                 Integer.toString(spectrumMatchIndex)
         );
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<SpectrumIdentificationResult spectraData_ref=\"");
         writer.write(DATA_SECTION, spectrumFile);
         writer.write(DATA_SECTION, "\" spectrumID=\"index=");
@@ -2220,7 +2220,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         writer.write(DATA_SECTION, spectrumIdentificationResultItemKey);
         writer.write(DATA_SECTION, "\">");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
         for (int i = 0; i < peptideAssumptions.size(); i++) {
 
@@ -2258,7 +2258,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
         if (!Double.isNaN(precursorRt)) {
 
-            writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+            writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
             writer.write(DATA_SECTION, "<cvParam cvRef=\"PSI-MS\" accession=\"MS:1000894\" name=\"retention time\" value=\"");
             writer.write(DATA_SECTION, Double.toString(precursorRt));
             writer.write(DATA_SECTION, "\" unitCvRef=\"UO\" unitAccession=\"UO:0000010\" unitName=\"second\"/>");
@@ -2267,7 +2267,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         }
 
         decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</SpectrumIdentificationResult>");
         writer.newLine(DATA_SECTION);
 
@@ -2295,7 +2295,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         Peptide peptide = peptideAssumption.getPeptide();
         long peptideKey = peptide.getKey();
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<SpectrumIdentificationItem peptide_ref=\"");
         writer.write(DATA_SECTION, Long.toString(peptideKey));
         writer.write(DATA_SECTION, "\" calculatedMassToCharge=\"");
@@ -2308,7 +2308,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         writer.write(DATA_SECTION, spectrumIdentificationItemKey);
         writer.write(DATA_SECTION, "\">");
         writer.newLine(DATA_SECTION);
-        increaseIndent(DATA_SECTION);
+        increaseIndentation(DATA_SECTION);
 
         // add the peptide evidence references
         // get all the possible parent proteins
@@ -2330,7 +2330,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                 );
                 String peptideEvidenceId = pepEvidenceIds.get(pepEvidenceKey);
 
-                writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+                writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
                 writer.write(DATA_SECTION, "<PeptideEvidenceRef peptideEvidence_ref=\"");
                 writer.write(DATA_SECTION, peptideEvidenceId);
                 writer.write(DATA_SECTION, "\"/>");
@@ -2413,10 +2413,10 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
         if (!allFragmentIons.isEmpty()) {
 
-            writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+            writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
             writer.write(DATA_SECTION, "<Fragmentation>");
             writer.newLine(DATA_SECTION);
-            increaseIndent(DATA_SECTION);
+            increaseIndentation(DATA_SECTION);
 
             // add the fragment ions
             Iterator<String> fragmentTypeIterator = allFragmentIons.keySet().iterator();
@@ -2482,28 +2482,28 @@ public class SimpleMzIdentMLExporter implements Closeable {
                     // add the supported fragment ions
                     if (fragmentIonCvTerm != null) {
 
-                        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+                        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
                         writer.write(DATA_SECTION, "<IonType charge=\"");
                         writer.write(DATA_SECTION, Integer.toString(fragmentCharge));
                         writer.write(DATA_SECTION, "\" index=\"");
                         writer.write(DATA_SECTION, indexes.toString().trim());
                         writer.write(DATA_SECTION, "\">");
                         writer.newLine(DATA_SECTION);
-                        increaseIndent(DATA_SECTION);
+                        increaseIndentation(DATA_SECTION);
 
-                        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+                        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
                         writer.write(DATA_SECTION, "<FragmentArray measure_ref=\"Measure_MZ\" values=\"");
                         writer.write(DATA_SECTION, mzValues.toString().trim());
                         writer.write(DATA_SECTION, "\"/>");
                         writer.newLine(DATA_SECTION);
 
-                        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+                        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
                         writer.write(DATA_SECTION, "<FragmentArray measure_ref=\"Measure_Int\" values=\"");
                         writer.write(DATA_SECTION, intensityValues.toString().trim());
                         writer.write(DATA_SECTION, "\"/>");
                         writer.newLine(DATA_SECTION);
 
-                        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+                        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
                         writer.write(DATA_SECTION, "<FragmentArray measure_ref=\"Measure_Error\" values=\"");
                         writer.write(DATA_SECTION, errorValues.toString().trim());
                         writer.write(DATA_SECTION, "\"/>");
@@ -2532,7 +2532,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                         }
 
                         decreaseIndent(DATA_SECTION);
-                        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+                        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
                         writer.write(DATA_SECTION, "</IonType>");
                         writer.newLine(DATA_SECTION);
 
@@ -2541,7 +2541,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
             }
 
             decreaseIndent(DATA_SECTION);
-            writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+            writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
             writer.write(DATA_SECTION, "</Fragmentation>");
             writer.newLine(DATA_SECTION);
 
@@ -2681,7 +2681,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         }
 
         // add other cv and user params
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<cvParam cvRef=\"PSI-MS\" accession=\"MS:1001117\" name=\"theoretical mass\" value=\"");
         writer.write(DATA_SECTION, Double.toString(peptideAssumption.getTheoreticMass()));
         writer.write(DATA_SECTION, "\" unitCvRef=\"UO\" unitAccession=\"UO:0000221\" unitName=\"dalton\"/>");
@@ -2690,7 +2690,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         // add validation level information
         decreaseIndent(DATA_SECTION);
 
-        writer.write(DATA_SECTION, getCurrentTabSpace(DATA_SECTION));
+        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "</SpectrumIdentificationItem>");
         writer.newLine(DATA_SECTION);
 
@@ -2782,8 +2782,14 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
     }
 
+    /**
+     * Sets up the writer.
+     * 
+     * @throws FileNotFoundException Exception thrown if the temp folder is not found or not writable.
+     * @throws IOException Exception thrown if an error occurs while reading or writing a file.
+     */
     private void initWriter()
-            throws FileNotFoundException {
+            throws FileNotFoundException, IOException {
         
         writer.registerSection(HEAD_SECTION);
         writer.registerSection(PEPTIDE_SECTION);
@@ -2793,47 +2799,60 @@ public class SimpleMzIdentMLExporter implements Closeable {
         
     }
 
-    private void initTabCounterMap() {
+    /**
+     * Sets up the indentation for each section.
+     */
+    private void initIndentationMap() {
 
-        indentCounterMap.put(HEAD_SECTION, 0);
-        indentCounterMap.put(PEPTIDE_SECTION, 1);
-        indentCounterMap.put(PEPTIDE_EVIDENCE_SECTION, 2);
-        indentCounterMap.put(ANALYSIS_SECTION, 1);
-        indentCounterMap.put(DATA_SECTION, 1);
-
-    }
-
-    private void increaseIndent(
-            String sectionName
-    ) {
-
-        indentCounterMap.put(sectionName, indentCounterMap.get(sectionName) + 1);
-
-    }
-
-    private void decreaseIndent(
-            String sectionName
-    ) {
-
-        indentCounterMap.put(sectionName, indentCounterMap.get(sectionName) - 1);
+        indentationMap.put(HEAD_SECTION, 0);
+        indentationMap.put(PEPTIDE_SECTION, 1);
+        indentationMap.put(PEPTIDE_EVIDENCE_SECTION, 2);
+        indentationMap.put(ANALYSIS_SECTION, 1);
+        indentationMap.put(DATA_SECTION, 1);
 
     }
 
     /**
-     * Convenience method returning the tabs at the beginning of each line
-     * depending on the tabCounter for each section.
-     *
-     * @param sectionName The section name.
-     *
-     * @return The tabs in the beginning of each line as a string.
+     * Increases the line indentation of the given section.
+     * 
+     * @param sectionName The name of the section.
      */
-    private String getCurrentTabSpace(
+    private void increaseIndentation(
             String sectionName
     ) {
 
-        int indentCounter = indentCounterMap.get(sectionName);
+        indentationMap.put(sectionName, indentationMap.get(sectionName) + 1);
 
-        switch (indentCounter) {
+    }
+
+    /**
+     * Decreases the line indentation of the given section.
+     * 
+     * @param sectionName The name of the section.
+     */
+    private void decreaseIndent(
+            String sectionName
+    ) {
+
+        indentationMap.put(sectionName, indentationMap.get(sectionName) - 1);
+
+    }
+
+    /**
+     * Convenience method returning the indentation at the beginning of each line
+     * depending on the indentation map.
+     *
+     * @param sectionName The section name.
+     *
+     * @return The indentation in the beginning of each line as a string.
+     */
+    private String getCurrentIndentation(
+            String sectionName
+    ) {
+
+        int tabCounter = indentationMap.get(sectionName);
+
+        switch (tabCounter) {
             case 0:
                 return "";
             case 1:
@@ -2861,8 +2880,8 @@ public class SimpleMzIdentMLExporter implements Closeable {
             case 12:
                 return "\t\t\t\t\t\t\t\t\t\t\t\t";
             default:
-                StringBuilder sb = new StringBuilder(indentCounter);
-                for (int i = 0; i < indentCounter; i++) {
+                StringBuilder sb = new StringBuilder(tabCounter);
+                for (int i = 0; i < tabCounter; i++) {
                     sb.append('\t');
                 }
                 return sb.toString();
@@ -2898,7 +2917,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
             boolean writeValue
     ) {
 
-        writer.write(sectionName, getCurrentTabSpace(sectionName));
+        writer.write(sectionName, getCurrentIndentation(sectionName));
         writer.write(sectionName, "<cvParam cvRef=\"");
         writer.write(sectionName, StringEscapeUtils.escapeHtml4(cvTerm.getOntology()));
         writer.write(sectionName, "\" accession=\"");
@@ -2953,7 +2972,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
             String userParamAsString
     ) {
 
-        writer.write(sectionName, getCurrentTabSpace(sectionName));
+        writer.write(sectionName, getCurrentIndentation(sectionName));
         writer.write(sectionName, "<userParam name=\"");
         writer.write(sectionName, StringEscapeUtils.escapeHtml4(userParamAsString));
         writer.write(sectionName, "\"/>");
@@ -2975,7 +2994,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
             String value
     ) {
 
-        writer.write(sectionName, getCurrentTabSpace(sectionName));
+        writer.write(sectionName, getCurrentIndentation(sectionName));
         writer.write(sectionName, "<userParam name=\"");
         writer.write(sectionName, StringEscapeUtils.escapeHtml4(name));
         writer.write(sectionName, "\" value=\"");

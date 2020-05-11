@@ -39,20 +39,28 @@ public class MappingWorker implements Runnable {
 
     @Override
     public void run() {
+        ArrayList<String> peptides = new ArrayList<>();
+        ArrayList<PeptideProteinMapping> peptideProteinMappings = new ArrayList<>();
+        int n = 100;
+        
         while (true){
-            String peptide = null;
+            peptides.clear();
+            peptideProteinMappings.clear();
             synchronized(waitingHandlerCLIImpl){
-                if (peptidesIterator.hasNext()){
-                    peptide = peptidesIterator.next();
+                int i = 0;
+                while (peptidesIterator.hasNext() && i++ < n){
+                    peptides.add(peptidesIterator.next());
                     waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                 }
-                else {
+                if (peptides.size() == 0){
                     break;
                 }
             }
-            ArrayList<PeptideProteinMapping> peptideProteinMappings = peptideMapper.getProteinMapping(peptide, sequenceMatchingPreferences);
-
-            synchronized(waitingHandlerCLIImpl){
+            
+            for (String peptide : peptides){
+                peptideProteinMappings.addAll(peptideMapper.getProteinMapping(peptide, sequenceMatchingPreferences));
+            }
+            synchronized(allPeptideProteinMappings){
                 allPeptideProteinMappings.addAll(peptideProteinMappings);
             }
 

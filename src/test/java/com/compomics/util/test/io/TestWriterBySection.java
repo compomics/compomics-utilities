@@ -1,13 +1,11 @@
 package com.compomics.util.test.io;
 
-import com.compomics.util.io.IoUtil;
-import com.compomics.util.io.compression.SectionGzWriter.SectionGzWriter;
+import com.compomics.util.io.compression.SectionGzWriter.WriterBySection;
 import com.compomics.util.io.flat.SimpleFileReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.stream.IntStream;
-import java.util.zip.CRC32;
 import junit.framework.TestCase;
 
 /**
@@ -15,7 +13,7 @@ import junit.framework.TestCase;
  *
  * @author Marc Vaudel
  */
-public class TestSectionGzWriter extends TestCase {
+public class TestWriterBySection extends TestCase {
 
     public void testSingleSection()
             throws FileNotFoundException, IOException {
@@ -26,7 +24,7 @@ public class TestSectionGzWriter extends TestCase {
         String content = "TEST_TEST_TEST";
         StringBuilder sb = new StringBuilder();
 
-        SectionGzWriter writer = new SectionGzWriter(destinationFile, destinationFile.getParentFile());
+        WriterBySection writer = new WriterBySection(destinationFile, destinationFile.getParentFile(), true, true, true);
 
         writer.registerSection(sectionName);
 
@@ -61,9 +59,8 @@ public class TestSectionGzWriter extends TestCase {
 
     public void testMultipleSections()
             throws FileNotFoundException, IOException {
-        
-        // Single thread
 
+        // Single thread
         int nSections = 10;
 
         File destinationFile = new File("src/test/resources/tempSectionGzWriter.gz");
@@ -71,7 +68,7 @@ public class TestSectionGzWriter extends TestCase {
         String content = "TEST_TEST_TEST";
         StringBuilder sb = new StringBuilder();
 
-        SectionGzWriter writer1 = new SectionGzWriter(destinationFile, destinationFile.getParentFile());
+        WriterBySection writer1 = new WriterBySection(destinationFile, destinationFile.getParentFile(), true, true, true);
 
         for (int section = 0; section < nSections; section++) {
 
@@ -108,11 +105,9 @@ public class TestSectionGzWriter extends TestCase {
         reader.close();
 
         destinationFile.delete();
-        
-        
+
         // Parallel
-        
-        SectionGzWriter writer2 = new SectionGzWriter(destinationFile, destinationFile.getParentFile());
+        WriterBySection writer2 = new WriterBySection(destinationFile, destinationFile.getParentFile(), true, true, true);
 
         for (int section = 0; section < nSections; section++) {
 
@@ -126,17 +121,17 @@ public class TestSectionGzWriter extends TestCase {
                 .parallel()
                 .forEach(section -> {
 
-                            String sectionName = "SECTION_" + section;
+                    String sectionName = "SECTION_" + section;
 
-                            for (int i = 0; i < 1000; i++) {
+                    for (int i = 0; i < 1000; i++) {
 
-                                String toWrite = content + "_" + sectionName + "_" + i + "|";
+                        String toWrite = content + "_" + sectionName + "_" + i + "|";
 
-                                writer2.write(sectionName, toWrite);
+                        writer2.write(sectionName, toWrite);
 
-                            }
+                    }
 
-                        }
+                }
                 );
 
         for (int section = 0; section < nSections; section++) {

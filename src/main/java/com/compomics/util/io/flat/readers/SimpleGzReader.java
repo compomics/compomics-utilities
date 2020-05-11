@@ -42,14 +42,14 @@ public class SimpleGzReader implements SimpleFileReader {
     ) {
 
         try {
-            
+
             InputStream fileStream = new FileInputStream(file);
             countingInputStream = new CountingInputStream(fileStream);
             InputStream gzipStream = new GZIPInputStream(countingInputStream);
             Reader reader = new InputStreamReader(gzipStream, ENCODING);
-            
+
             br = new BufferedReader(reader);
-            
+
             fileLength = file.length();
 
         } catch (IOException e) {
@@ -85,15 +85,49 @@ public class SimpleGzReader implements SimpleFileReader {
 
     @Override
     public Reader getReader() {
-        
+
         return br;
-        
+
     }
 
     @Override
     public double getProgressInPercent() {
-        
+
         return 100.0 * ((double) countingInputStream.getByteCount()) / fileLength;
-        
+
+    }
+
+    @Override
+    public int read(
+            char[] buffer
+    ) {
+
+        try {
+
+            return br.read(buffer);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public int read(
+            char[] buffer, 
+            int offset, 
+            int length
+    ) {
+
+        try {
+
+            return br.read(
+                    buffer, 
+                    offset, 
+                    length
+            );
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

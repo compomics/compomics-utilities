@@ -28,7 +28,7 @@ import com.compomics.util.experiment.io.identification.MzIdentMLVersion;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.IoUtil;
-import com.compomics.util.io.compression.SectionGzWriter.SectionGzWriter;
+import com.compomics.util.io.compression.SectionGzWriter.WriterBySection;
 import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
@@ -96,7 +96,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
     /**
      * Writer for the mzIdentML file.
      */
-    private final SectionGzWriter writer;
+    private final WriterBySection writer;
     /**
      * The spectrum file.
      */
@@ -275,7 +275,13 @@ public class SimpleMzIdentMLExporter implements Closeable {
         this.spectrumProvider = spectrumProvider;
         this.modificationProvider = modificationProvider;
         this.fastaSummary = fastaSummary;
-        this.writer = new SectionGzWriter(destinationFile, tempFolder);
+        this.writer = new WriterBySection(
+                destinationFile, 
+                tempFolder, 
+                false, 
+                false, 
+                true
+        );
 
         initWriter();
         initIndentationMap();

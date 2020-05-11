@@ -1808,10 +1808,6 @@
 <dd>
 <div class="block">The length of the character buffer to use.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html#BUFFER_SIZE">BUFFER_SIZE</a></span> - Variable in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html" title="class in com.compomics.util.io.compression.SectionGzWriter">SectionGzWriter</a></dt>
-<dd>
-<div class="block">The default buffer size for the deflaters.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/TarUtils.html#BUFFER_SIZE">BUFFER_SIZE</a></span> - Static variable in class com.compomics.util.io.compression.<a href="com/compomics/util/io/compression/TarUtils.html" title="class in com.compomics.util.io.compression">TarUtils</a></dt>
 <dd>
 <div class="block">The buffer size.</div>
@@ -1979,6 +1975,10 @@
 <dd>
 <div class="block">Changes the representative site for a given ambiguously localized
  modification in all maps.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#CHAR_BUFFER_SIZE">CHAR_BUFFER_SIZE</a></span> - Static variable in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">The size of the char buffer to use when copying files.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html#character">character</a></span> - Variable in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MatrixContent</a></dt>
 <dd>
@@ -2332,7 +2332,7 @@
 <dd>
 <div class="block">This method closes the stream to the output file.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html#close--">close()</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html" title="class in com.compomics.util.io.compression.SectionGzWriter">SectionGzWriter</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#close--">close()</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/ExportWriter.html#close--">close()</a></span> - Method in class com.compomics.util.io.export.<a href="com/compomics/util/io/export/ExportWriter.html" title="class in com.compomics.util.io.export">ExportWriter</a></dt>
 <dd>
@@ -4072,6 +4072,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/pride/PrideObjectsFactory.html#deleteSample-com.compomics.util.pride.prideobjects.Sample-">deleteSample(Sample)</a></span> - Method in class com.compomics.util.pride.<a href="com/compomics/util/pride/PrideObjectsFactory.html" title="class in com.compomics.util.pride">PrideObjectsFactory</a></dt>
 <dd>
 <div class="block">Delete the given sample.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#deleteTempFiles">deleteTempFiles</a></span> - Variable in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">If true, temp files are deleted upon completion.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/temp/TempFilesManager.html#deleteTempFolders--">deleteTempFolders()</a></span> - Static method in class com.compomics.util.experiment.io.temp.<a href="com/compomics/util/experiment/io/temp/TempFilesManager.html" title="class in com.compomics.util.experiment.io.temp">TempFilesManager</a></dt>
 <dd>
@@ -14817,10 +14821,6 @@
 <dd>
 <div class="block">Returns the block start.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html#getStartEnd-java.lang.String-">getStartEnd(String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html" title="class in com.compomics.util.io.compression.SectionGzWriter">SectionGzWriter</a></dt>
-<dd>
-<div class="block">Returns the start and end indexes of the given section in the final file.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/biology/protein/Header.html#getStartLocation--">getStartLocation()</a></span> - Method in class com.compomics.util.experiment.io.biology.protein.<a href="com/compomics/util/experiment/io/biology/protein/Header.html" title="class in com.compomics.util.experiment.io.biology.protein">Header</a></dt>
 <dd>
 <div class="block">This method reports on the start index of the header.</div>
@@ -16010,6 +16010,10 @@
 <div class="block">Gzip a file.If the gz file already exists it will be silently
  overwritten.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#gzipTemp">gzipTemp</a></span> - Variable in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">If true, temp files are gzipped.</div>
+</dd>
 <dt><a href="com/compomics/util/io/compression/GzUtils.html" title="class in com.compomics.util.io.compression"><span class="typeNameLink">GzUtils</span></a> - Class in <a href="com/compomics/util/io/compression/package-summary.html">com.compomics.util.io.compression</a></dt>
 <dd>
 <div class="block">Convenience methods to work with gzipped files.</div>
@@ -16211,10 +16215,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileWriter.html#HEADER_LENGTH">HEADER_LENGTH</a></span> - Static variable in class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileWriter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFileWriter</a></dt>
 <dd>
 <div class="block">The length of the file header.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html#HEADER_LENGTH">HEADER_LENGTH</a></span> - Static variable in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html" title="class in com.compomics.util.io.compression.SectionGzWriter">SectionGzWriter</a></dt>
-<dd>
-<div class="block">Length of the header in bytes.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/io/biology/protein/iterators/HeaderIterator.html" title="class in com.compomics.util.experiment.io.biology.protein.iterators"><span class="typeNameLink">HeaderIterator</span></a> - Class in <a href="com/compomics/util/experiment/io/biology/protein/iterators/package-summary.html">com.compomics.util.experiment.io.biology.protein.iterators</a></dt>
 <dd>
@@ -21180,7 +21180,7 @@
 <dd>
 <div class="block">Cache for the multiples of the neutron mass.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html#newLine-java.lang.String-">newLine(String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html" title="class in com.compomics.util.io.compression.SectionGzWriter">SectionGzWriter</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#newLine-java.lang.String-">newLine(String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
 <dd>
 <div class="block">Appends a new line to the given section.</div>
 </dd>
@@ -21197,7 +21197,9 @@
 <div class="block">Adds an end of line character.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#newLine--">newLine()</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Appends a new line to the output.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/genes/ProteinGeneDetailsProvider.html#newVersionExists-java.lang.Integer-">newVersionExists(Integer)</a></span> - Method in class com.compomics.util.experiment.biology.genes.<a href="com/compomics/util/experiment/biology/genes/ProteinGeneDetailsProvider.html" title="class in com.compomics.util.experiment.biology.genes">ProteinGeneDetailsProvider</a></dt>
 <dd>
 <div class="block">Returns true if a newer version of the species mapping exists in Ensembl.</div>
@@ -23484,6 +23486,22 @@
 <div class="block">Reads up to <code>len</code> bytes of data from this input stream
  into an array of bytes.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/readers/SimpleGzReader.html#read-char:A-">read(char[])</a></span> - Method in class com.compomics.util.io.flat.readers.<a href="com/compomics/util/io/flat/readers/SimpleGzReader.html" title="class in com.compomics.util.io.flat.readers">SimpleGzReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/readers/SimpleGzReader.html#read-char:A-int-int-">read(char[], int, int)</a></span> - Method in class com.compomics.util.io.flat.readers.<a href="com/compomics/util/io/flat/readers/SimpleGzReader.html" title="class in com.compomics.util.io.flat.readers">SimpleGzReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/readers/SimpleTextReader.html#read-char:A-">read(char[])</a></span> - Method in class com.compomics.util.io.flat.readers.<a href="com/compomics/util/io/flat/readers/SimpleTextReader.html" title="class in com.compomics.util.io.flat.readers">SimpleTextReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/readers/SimpleTextReader.html#read-char:A-int-int-">read(char[], int, int)</a></span> - Method in class com.compomics.util.io.flat.readers.<a href="com/compomics/util/io/flat/readers/SimpleTextReader.html" title="class in com.compomics.util.io.flat.readers">SimpleTextReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileReader.html#read-char:A-">read(char[])</a></span> - Method in interface com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileReader.html" title="interface in com.compomics.util.io.flat">SimpleFileReader</a></dt>
+<dd>
+<div class="block">Reads characters into an array.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileReader.html#read-char:A-int-int-">read(char[], int, int)</a></span> - Method in interface com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileReader.html" title="interface in com.compomics.util.io.flat">SimpleFileReader</a></dt>
+<dd>
+<div class="block">Reads characters into an array.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/json/adapter/FileAdapter.html#read-com.google.gson.stream.JsonReader-">read(JsonReader)</a></span> - Method in class com.compomics.util.io.json.adapter.<a href="com/compomics/util/io/json/adapter/FileAdapter.html" title="class in com.compomics.util.io.json.adapter">FileAdapter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/db/object/DbObject.html#readDBMode--">readDBMode()</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a></dt>
@@ -23621,7 +23639,7 @@
 <div class="block">This method registers a new IdfileReader Class, and the file extension it
  can read from.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html#registerSection-java.lang.String-">registerSection(String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html" title="class in com.compomics.util.io.compression.SectionGzWriter">SectionGzWriter</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#registerSection-java.lang.String-">registerSection(String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
 <dd>
 <div class="block">Registers a new section.</div>
 </dd>
@@ -24447,22 +24465,10 @@
 <dd>
 <div class="block">Creates a new SearchSettingsDialog with a dialog as owner.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html#sectionCompleted-java.lang.String-">sectionCompleted(String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html" title="class in com.compomics.util.io.compression.SectionGzWriter">SectionGzWriter</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#sectionCompleted-java.lang.String-">sectionCompleted(String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
 <dd>
 <div class="block">Registers a section as completed and transfers its content to the main
  file.</div>
-</dd>
-<dt><a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html" title="class in com.compomics.util.io.compression.SectionGzWriter"><span class="typeNameLink">SectionGzWriter</span></a> - Class in <a href="com/compomics/util/io/compression/SectionGzWriter/package-summary.html">com.compomics.util.io.compression.SectionGzWriter</a></dt>
-<dd>
-<div class="block">Writer by section for the gz file.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html#SectionGzWriter-java.io.File-java.io.File-int-">SectionGzWriter(File, File, int)</a></span> - Constructor for class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html" title="class in com.compomics.util.io.compression.SectionGzWriter">SectionGzWriter</a></dt>
-<dd>
-<div class="block">Constructor.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html#SectionGzWriter-java.io.File-java.io.File-">SectionGzWriter(File, File)</a></span> - Constructor for class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html" title="class in com.compomics.util.io.compression.SectionGzWriter">SectionGzWriter</a></dt>
-<dd>
-<div class="block">Constructor with deflater default compression level.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/genes/SpeciesDialog.html#SELECT_SPECIES_TAG">SELECT_SPECIES_TAG</a></span> - Static variable in class com.compomics.util.gui.genes.<a href="com/compomics/util/gui/genes/SpeciesDialog.html" title="class in com.compomics.util.gui.genes">SpeciesDialog</a></dt>
 <dd>
@@ -31558,7 +31564,11 @@ the order they are declared.</div>
 <dd>
 <div class="block">This interface sets the style of a workbook export.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html#write-java.lang.String-java.lang.String-">write(String, String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/SectionGzWriter.html" title="class in com.compomics.util.io.compression.SectionGzWriter">SectionGzWriter</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#write-java.lang.String-java.lang.String-">write(String, String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">Writes content to the given section.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#write-java.lang.String-char:A-int-int-">write(String, char[], int, int)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
 <dd>
 <div class="block">Writes content to the given section.</div>
 </dd>
@@ -31577,6 +31587,10 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/xml/SimpleXmlWriter.html#write-java.lang.String-">write(String)</a></span> - Method in class com.compomics.util.io.export.xml.<a href="com/compomics/util/io/export/xml/SimpleXmlWriter.html" title="class in com.compomics.util.io.export.xml">SimpleXmlWriter</a></dt>
 <dd>
 <div class="block">Writes the content to the file.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#write-char:A-int-int-">write(char[], int, int)</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
+<dd>
+<div class="block">Writes a a buffer of characters to the file.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#write-java.lang.String-">write(String)</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
 <dd>
@@ -31692,6 +31706,15 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/compomics/software/settings/UtilitiesPathParameters.html#writePathToFile-java.io.BufferedWriter-com.compomics.software.settings.UtilitiesPathParameters.UtilitiesPathKey-">writePathToFile(BufferedWriter, UtilitiesPathParameters.UtilitiesPathKey)</a></span> - Static method in class com.compomics.software.settings.<a href="com/compomics/software/settings/UtilitiesPathParameters.html" title="class in com.compomics.software.settings">UtilitiesPathParameters</a></dt>
 <dd>
 <div class="block">Writes the path of interest using the provided buffered writer.</div>
+</dd>
+<dt><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter"><span class="typeNameLink">WriterBySection</span></a> - Class in <a href="com/compomics/util/io/compression/SectionGzWriter/package-summary.html">com.compomics.util.io.compression.SectionGzWriter</a></dt>
+<dd>
+<div class="block">This writer writes the different sections of a file in temp files and bundles
+ them together upon completion.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#WriterBySection-java.io.File-java.io.File-boolean-boolean-boolean-">WriterBySection(File, File, boolean, boolean, boolean)</a></span> - Constructor for class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">Constructor.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/apl/AplFileWriter.html#writeSpectrum-java.lang.String-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.mass_spectrometry.FragmentationMethod-int-">writeSpectrum(String, Spectrum, FragmentationMethod, int)</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.apl.<a href="com/compomics/util/experiment/io/mass_spectrometry/apl/AplFileWriter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.apl">AplFileWriter</a></dt>
 <dd>

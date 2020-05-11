@@ -113,9 +113,7 @@ public class ObjectsCache {
     public void setMemoryShare(double memoryShare) {
         this.memoryShare = memoryShare;
         try {
-            loadObjectMutex.acquire();
             updateCache();
-            loadObjectMutex.release();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -149,7 +147,7 @@ public class ObjectsCache {
     public String removeObject(long objectKey) {
 
         String className = null;
-
+        
         if (!readOnly) {
             if (loadedObjects.containsKey(objectKey)) {
                 className = loadedObjects.get(objectKey).object.getClass().getSimpleName();
@@ -187,6 +185,7 @@ public class ObjectsCache {
     public void addObject(long objectKey, Object object, boolean inDB, boolean edited) {
 
         if (!readOnly) {
+            
             if (!loadedObjects.containsKey(objectKey)) {
                 loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
                 objectQueue.add(objectKey);
@@ -225,8 +224,6 @@ public class ObjectsCache {
      */
     public void addObjects(HashMap<Long, Object> objects, boolean inDB, boolean edited) {
 
-        loadObjectMutex.acquire();
-
         if (!readOnly) {
             for (Entry<Long, Object>kv : objects.entrySet()){
                 long objectKey = kv.getKey();
@@ -244,8 +241,6 @@ public class ObjectsCache {
 
             updateCache();
         }
-
-        loadObjectMutex.release();
 
     }
 
@@ -266,9 +261,7 @@ public class ObjectsCache {
      * @param numLastEntries number of keys of the entries
      */
     public void saveObjects(int numLastEntries) {
-        loadObjectMutex.acquire();
         saveObjects(numLastEntries, null, true);
-        loadObjectMutex.release();
     }
 
     /**
@@ -284,10 +277,8 @@ public class ObjectsCache {
 
         if (!readOnly) {
             Connection connection = objectsDB.getDB();
-            ListIterator<Long> listIterator = objectQueue.listIterator();
             PreparedStatement psInsert = null, psUpdate = null;
             try {
-                loadObjectMutex.acquire();
                 psInsert = connection.prepareStatement("INSERT INTO data (id, class, data) VALUES (?, ?, ?);");
                 psUpdate = connection.prepareStatement("UPDATE data SET data = ? WHERE id = ?;");
     
@@ -296,7 +287,7 @@ public class ObjectsCache {
                 e.printStackTrace();
             }
             
-            for (int i = 0; i < numLastEntries && objectQueue.size() > 0 && listIterator.hasNext(); ++i) {
+            for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i) {
 
                 if (waitingHandler != null) {
                     waitingHandler.increaseSecondaryProgressCounter();
@@ -305,8 +296,8 @@ public class ObjectsCache {
                         break;
                     }
                 }
-
-                long key = clearEntries ? objectQueue.pollFirst() : listIterator.next();
+                long key = objectQueue.pollFirst();
+                
                 ObjectsCacheElement obj = loadedObjects.get(key);
                 if (!obj.edited) continue;
                 
@@ -334,10 +325,14 @@ public class ObjectsCache {
                 if (clearEntries) {
                     loadedObjects.remove(key);
                 }
+                else {
+                    objectQueue.addLast(key);
+                }
 
             }
 
             try {
+                loadObjectMutex.acquire();
                 psInsert.executeBatch();
                 psUpdate.executeBatch();
                 connection.commit();
@@ -426,12 +421,7 @@ public class ObjectsCache {
      * only
      */
     public void setReadOnly(boolean readOnly) {
-
-        loadObjectMutex.acquire();
-
         this.readOnly = readOnly;
-
-        loadObjectMutex.release();
 
     }
 }

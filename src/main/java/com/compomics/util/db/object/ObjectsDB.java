@@ -513,7 +513,7 @@ public class ObjectsDB {
 
         HashMap<Long, Object> objectsNotInCache = new HashMap<>();
 
-        for (Long objectKey : keys) {
+        for (long objectKey : keys) {
             if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                 return retrievingObjects;
             }

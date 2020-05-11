@@ -20,6 +20,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
+import java.util.concurrent.*;
+import java.util.*;
 
 /**
  * Command line peptide mapping.
@@ -27,6 +29,7 @@ import com.compomics.util.experiment.identification.protein_inference.FastaMappe
  * @author Dominik Kopczynski
  */
 public class PeptideMapperCLI {
+
 
     /**
      * Main class.
@@ -60,6 +63,8 @@ public class PeptideMapperCLI {
         File fastaFile = new File(args[1]);
         boolean flanking = false;
         String storeIndex = "";
+        int nCores = Runtime.getRuntime().availableProcessors();
+        int TIMEOUT_DAYS = 1;
 
         SearchParameters searchParameters = null;
         PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
@@ -130,7 +135,7 @@ public class PeptideMapperCLI {
 
         
         System.out.println();
-        System.out.println("Start mapping");
+        System.out.println("Start mapping using " + nCores + " threads");
         
         if (args[0].equals("-p")) {
             ArrayList<String> peptides = new ArrayList<>();
@@ -154,16 +159,34 @@ public class PeptideMapperCLI {
             waitingHandlerCLIImpl.setMaxSecondaryProgressCounter(peptides.size());
             waitingHandlerCLIImpl.setSecondaryProgressCounter(0);
             ArrayList<PeptideProteinMapping> allPeptideProteinMappings = new ArrayList<>();
+            
+            // Preparing thread pool
+            ExecutorService importPool = Executors.newFixedThreadPool(nCores);
+            ArrayList<MappingWorker> workers = new ArrayList<>();
+            Iterator<String> peptidesIterator = peptides.iterator();
+            for (int i = 0; i < nCores; i++) {
+                workers.add(new MappingWorker(peptidesIterator, waitingHandlerCLIImpl, allPeptideProteinMappings, peptideMapper, sequenceMatchingPreferences));
+            }
 
             // starting the mapping
             try {
                 long startTimeMapping = System.nanoTime();
+                
+                workers.forEach(worker -> importPool.submit(worker));
+                importPool.shutdown();
+                if (!importPool.awaitTermination(TIMEOUT_DAYS, TimeUnit.DAYS)) {
+                    System.out.println("Analysis timed out (time out: " + TIMEOUT_DAYS + " days)");
+                }
+                
+                /*
                 for (int i = 0; i < peptides.size(); ++i) {
                     String peptide = peptides.get(i);
                     waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     ArrayList<PeptideProteinMapping> peptideProteinMappings = peptideMapper.getProteinMapping(peptide, sequenceMatchingPreferences);
                     allPeptideProteinMappings.addAll(peptideProteinMappings);
                 }
+                */
+                
                 long diffTimeMapping = System.nanoTime() - startTimeMapping;
                 System.out.println();
                 System.out.println("Mapping " + peptides.size() + " peptides took " + (diffTimeMapping / 1e9) + " seconds");

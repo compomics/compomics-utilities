@@ -160,16 +160,19 @@ public class PeptideMapperCLI {
             waitingHandlerCLIImpl.setSecondaryProgressCounter(0);
             ArrayList<PeptideProteinMapping> allPeptideProteinMappings = new ArrayList<>();
             
-            // Preparing thread pool
-            ExecutorService importPool = Executors.newFixedThreadPool(nCores);
-            ArrayList<MappingWorker> workers = new ArrayList<>();
-            Iterator<String> peptidesIterator = peptides.iterator();
-            for (int i = 0; i < nCores; i++) {
-                workers.add(new MappingWorker(peptidesIterator, waitingHandlerCLIImpl, allPeptideProteinMappings, peptideMapper, sequenceMatchingPreferences));
-            }
+            
 
             // starting the mapping
             try {
+                // Preparing thread pool
+                ExecutorService importPool = Executors.newFixedThreadPool(nCores);
+                ArrayList<MappingWorker> workers = new ArrayList<>();
+                Iterator<String> peptidesIterator = peptides.iterator();
+                for (int i = 0; i < nCores; i++) {
+                    workers.add(new MappingWorker(peptidesIterator, waitingHandlerCLIImpl, allPeptideProteinMappings, peptideMapper, sequenceMatchingPreferences));
+                }
+                
+                
                 long startTimeMapping = System.nanoTime();
                 
                 workers.forEach(worker -> importPool.submit(worker));
@@ -258,11 +261,28 @@ public class PeptideMapperCLI {
 
             // starting the mapping
             try {
+                // Preparing thread pool
+                ExecutorService importPool = Executors.newFixedThreadPool(nCores);
+                ArrayList<MappingWorker> workers = new ArrayList<>();
+                Iterator<Tag> tagsIterator = tags.iterator();
+                Integer counter = 0;
+                for (int i = 0; i < nCores; i++) {
+                    workers.add(new MappingWorker(tagsIterator, waitingHandlerCLIImpl, allPeptideProteinMappings, peptideMapper, sequenceMatchingPreferences, counter, tagIndexes));
+                }
+            
+            
                 // setting up modifications lists, only relevant for protein tree
                 ArrayList<String> variableModifications = searchParameters.getModificationParameters().getVariableModifications();
                 ArrayList<String> fixedModifications = searchParameters.getModificationParameters().getFixedModifications();
 
                 long startTimeMapping = System.nanoTime();
+                workers.forEach(worker -> importPool.submit(worker));
+                importPool.shutdown();
+                if (!importPool.awaitTermination(TIMEOUT_DAYS, TimeUnit.DAYS)) {
+                    System.out.println("Analysis timed out (time out: " + TIMEOUT_DAYS + " days)");
+                }
+                
+                /*
                 for (int i = 0; i < tags.size(); ++i) {
                     waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     ArrayList<PeptideProteinMapping> peptideProteinMappings = peptideMapper.getProteinMapping(tags.get(i), sequenceMatchingPreferences);
@@ -271,6 +291,8 @@ public class PeptideMapperCLI {
                         tagIndexes.add(i);
                     }
                 }
+                */
+                
                 long diffTimeMapping = System.nanoTime() - startTimeMapping;
                 System.out.println();
                 System.out.println("Mapping " + tags.size() + " tags took " + (diffTimeMapping / 1e9) + " seconds");

@@ -321,6 +321,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      * Arraylist for sorted masses to index mappings.
      */
     ArrayList<MassIndexMap> massIndexMaps = null;
+    
 
     /**
      * Empty default constructor.
@@ -536,6 +537,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
         return bytes;
     }
+    
+    
 
     /**
      * Constructor. If modification settings are provided the index will contain
@@ -579,6 +582,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters modificationSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
         init(fastaFile, fastaParameters, waitingHandler, displayProgress, modificationSettings, peptideVariantsPreferences);
     }
+    
+    
 
     /**
      * Init function only called by the constructors. If modification settings

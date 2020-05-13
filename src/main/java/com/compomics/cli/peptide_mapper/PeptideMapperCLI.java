@@ -20,6 +20,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.*;
 import java.util.*;
 
@@ -50,6 +53,7 @@ public class PeptideMapperCLI {
             System.out.println("Additional options are:");
             System.out.println("\t-u [utilities-parameter-file]\tpeptide mapping");
             System.out.println("\t-f\tadd flanking amino acids to peptide in output");
+            System.out.println("\t-c\tspecify the number of cores used");
             
             System.out.println();
             System.out.println("Default parameters:");
@@ -61,11 +65,19 @@ public class PeptideMapperCLI {
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         File fastaFile = new File(args[1]);
+        String inputFileName = args[2];
+        String outputFileName = args[3];
         boolean flanking = false;
-        String storeIndex = "";
+        boolean peptideMapping = args[0].equals("-p");
         int nCores = Runtime.getRuntime().availableProcessors();
         int TIMEOUT_DAYS = 1;
+        
+        if (!args[0].equals("-p") && !args[0].equals("-t")){
+            System.out.println("Invalid first parameter: " + args[0]);
+            System.exit(-1);
+        }
 
+        // read in the parameters
         SearchParameters searchParameters = null;
         PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
         SequenceMatchingParameters sequenceMatchingPreferences = null;
@@ -77,6 +89,18 @@ public class PeptideMapperCLI {
                     case "-f":  // flanking
                         flanking = true;
                         ++argPos;
+                        break;
+                        
+                    case "-c": // number of cores
+                        try {
+                            nCores = Integer.parseInt(args[argPos + 1]);
+                            if (nCores < 1 || 100000 < nCores) throw new Exception();
+                        }
+                        catch (Exception e){
+                            System.out.println("Parameter -c has no valid number.");
+                            System.exit(-1);
+                        }
+                        argPos += 2;
                         break;
                         
                     case "-u":  // use utilities parameter file
@@ -104,9 +128,7 @@ public class PeptideMapperCLI {
                 }
             }
 
-        } 
-          
-        
+        }
         if (!customParameters) {
             searchParameters = new SearchParameters();
             searchParameters.setModificationParameters(new ModificationParameters());
@@ -117,9 +139,12 @@ public class PeptideMapperCLI {
             sequenceMatchingPreferences.setLimitX(0.25);
         }
         
-        FastaMapper peptideMapper = null;
         
-
+        
+        
+        
+        // setting up the mapper
+        FastaMapper peptideMapper = null;
         System.out.println("Start indexing fasta file");
         long startTimeIndex = System.nanoTime();
         try {
@@ -132,219 +157,68 @@ public class PeptideMapperCLI {
         double diffTimeIndex = System.nanoTime() - startTimeIndex;
         System.out.println();
         System.out.println("Indexing took " + (diffTimeIndex / 1e9) + " seconds and consumes " + (((float) ((FMIndex) peptideMapper).getAllocatedBytes()) / 1e6) + " MB");
-
-        
         System.out.println();
         System.out.println("Start mapping using " + nCores + " threads");
         
-        if (args[0].equals("-p")) {
-            ArrayList<String> peptides = new ArrayList<>();
-            try {
-                String line = "";
-                BufferedReader br = new BufferedReader(new FileReader(args[2]));
-                while ((line = br.readLine()) != null) {
-                    if (!Pattern.matches("[a-zA-Z]+", line)) {
-                        System.err.println("Error: invalid character in line '" + line + "'");
-                        System.exit(-1);
-                    }
-                    peptides.add(line.toUpperCase());
-                }
-                br.close();
-            } catch (Exception e) {
-                System.err.println("Error: cound not open input list");
-                e.printStackTrace();
-                System.exit(-1);
+        
+        
+        
+        // open input / output files
+        BufferedReader br = null;
+        PrintWriter writer = null;
+        long lineCount = 0;
+        try {
+            br = new BufferedReader(new FileReader(inputFileName));
+            Path path = Paths.get(inputFileName);
+            lineCount = Files.lines(path).count();
+            writer = new PrintWriter(outputFileName, "UTF-8");
+        }
+        catch (Exception e){
+            System.out.println("Error: could not open files properly.");
+            System.exit(-1);
+        }
+        waitingHandlerCLIImpl.setSecondaryProgressCounterIndeterminate(false);
+        waitingHandlerCLIImpl.setMaxSecondaryProgressCounter((int)lineCount);
+        waitingHandlerCLIImpl.setSecondaryProgressCounter(0);
+
+
+
+        
+        
+        // starting the mapping
+        try {
+            long startTimeMapping = System.nanoTime();
+
+            ExecutorService importPool = Executors.newFixedThreadPool(nCores);
+            for (int i = 0; i < nCores; ++i){
+                importPool.submit(new MappingWorker(waitingHandlerCLIImpl, peptideMapper, sequenceMatchingPreferences, br, writer, peptideMapping, flanking));
+            };
+            importPool.shutdown();
+            if (!importPool.awaitTermination(TIMEOUT_DAYS, TimeUnit.DAYS)) {
+                System.out.println("Analysis timed out (time out: " + TIMEOUT_DAYS + " days)");
             }
-            waitingHandlerCLIImpl.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandlerCLIImpl.setMaxSecondaryProgressCounter(peptides.size());
-            waitingHandlerCLIImpl.setSecondaryProgressCounter(0);
-            ArrayList<PeptideProteinMapping> allPeptideProteinMappings = new ArrayList<>();
+
+            long diffTimeMapping = System.nanoTime() - startTimeMapping;
+            System.out.println();
+            System.out.println("Mapping " + lineCount + " peptides took " + (diffTimeMapping / 1e9) + " seconds");
+
+        } catch (Exception e) {
+            System.err.println("Error: mapping went wrong");
+            e.printStackTrace();
+            System.exit(-1);
+        }
             
             
-
-            // starting the mapping
-            try {
-                // Preparing thread pool
-                ExecutorService importPool = Executors.newFixedThreadPool(nCores);
-                ArrayList<MappingWorker> workers = new ArrayList<>();
-                Iterator<String> peptidesIterator = peptides.iterator();
-                for (int i = 0; i < nCores; i++) {
-                    workers.add(new MappingWorker(peptidesIterator, waitingHandlerCLIImpl, allPeptideProteinMappings, peptideMapper, sequenceMatchingPreferences));
-                }
-                
-                
-                long startTimeMapping = System.nanoTime();
-                
-                workers.forEach(worker -> importPool.submit(worker));
-                importPool.shutdown();
-                if (!importPool.awaitTermination(TIMEOUT_DAYS, TimeUnit.DAYS)) {
-                    System.out.println("Analysis timed out (time out: " + TIMEOUT_DAYS + " days)");
-                }
-                
-                /*
-                for (int i = 0; i < peptides.size(); ++i) {
-                    String peptide = peptides.get(i);
-                    waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
-                    ArrayList<PeptideProteinMapping> peptideProteinMappings = peptideMapper.getProteinMapping(peptide, sequenceMatchingPreferences);
-                    allPeptideProteinMappings.addAll(peptideProteinMappings);
-                }
-                */
-                
-                long diffTimeMapping = System.nanoTime() - startTimeMapping;
-                System.out.println();
-                System.out.println("Mapping " + peptides.size() + " peptides took " + (diffTimeMapping / 1e9) + " seconds");
-            } catch (Exception e) {
-                System.err.println("Error: mapping went wrong");
-                e.printStackTrace();
-                System.exit(-1);
-            }
-
-            try {
-                PrintWriter writer = new PrintWriter(args[3], "UTF-8");
-                for (PeptideProteinMapping peptideProteinMapping : allPeptideProteinMappings) {
-                    String peptide = peptideProteinMapping.getPeptideSequence();
-                    String accession = peptideProteinMapping.getProteinAccession();
-                    int startIndex = peptideProteinMapping.getIndex();
-                    if (flanking){
-                        int peptideLength = peptide.length();
-                        String proteinSequence = ((FMIndex)peptideMapper).getSequence(accession);
-                        
-                        if (startIndex > 0) peptide = proteinSequence.charAt(startIndex - 1) + "." + peptide;
-                        else peptide = "-" + peptide;
-                        
-                        if (startIndex + peptideLength + 1 < proteinSequence.length()) peptide = peptide + "." + proteinSequence.charAt(startIndex + peptideLength);
-                        else peptide = peptide + "-";
-                    }
-                    ++startIndex; // + 1 because we start counting from one -_-
-                    writer.println(peptide + "," + accession + "," + startIndex);
-                }
-                writer.close();
-            } catch (Exception e) {
-                System.err.println("Error: could not write into file '" + args[3] + "'");
-                e.printStackTrace();
-                System.exit(-1);
-            }
-        } else {
-            ArrayList<Tag> tags = new ArrayList<>();
-            ArrayList<Integer> tagIndexes = new ArrayList<>();
-            try {
-                String line = "";
-                BufferedReader br = new BufferedReader(new FileReader(args[2]));
-                while ((line = br.readLine()) != null) {
-                    Tag tag = new Tag();
-                    for (String part : line.split(",")) {
-
-                        if (Pattern.matches("[a-zA-Z]+", part)) {
-                            tag.addAminoAcidSequence(new AminoAcidSequence(part));
-                        } else {
-                            try {
-                                double mass = Double.parseDouble(part);
-                                tag.addMassGap(mass);
-                            } catch (NumberFormatException e) {
-                                System.err.println("Error: line contains no valid tag: '" + line + "'");
-                                e.printStackTrace();
-                                System.exit(-1);
-                            }
-                        }
-                    }
-                    tags.add(tag);
-                }
-            } catch (Exception e) {
-                System.err.println("Error: cound not open input list");
-                System.exit(-1);
-            }
-
-            waitingHandlerCLIImpl.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandlerCLIImpl.setMaxSecondaryProgressCounter(tags.size());
-            waitingHandlerCLIImpl.setSecondaryProgressCounter(0);
-            ArrayList<PeptideProteinMapping> allPeptideProteinMappings = new ArrayList<>();
-
-            // starting the mapping
-            try {
-                // Preparing thread pool
-                ExecutorService importPool = Executors.newFixedThreadPool(nCores);
-                ArrayList<MappingWorker> workers = new ArrayList<>();
-                Iterator<Tag> tagsIterator = tags.iterator();
-                Integer counter = 0;
-                for (int i = 0; i < nCores; i++) {
-                    workers.add(new MappingWorker(tagsIterator, waitingHandlerCLIImpl, allPeptideProteinMappings, peptideMapper, sequenceMatchingPreferences, counter, tagIndexes));
-                }
             
-            
-                // setting up modifications lists, only relevant for protein tree
-                ArrayList<String> variableModifications = searchParameters.getModificationParameters().getVariableModifications();
-                ArrayList<String> fixedModifications = searchParameters.getModificationParameters().getFixedModifications();
-
-                long startTimeMapping = System.nanoTime();
-                workers.forEach(worker -> importPool.submit(worker));
-                importPool.shutdown();
-                if (!importPool.awaitTermination(TIMEOUT_DAYS, TimeUnit.DAYS)) {
-                    System.out.println("Analysis timed out (time out: " + TIMEOUT_DAYS + " days)");
-                }
-                
-                /*
-                for (int i = 0; i < tags.size(); ++i) {
-                    waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
-                    ArrayList<PeptideProteinMapping> peptideProteinMappings = peptideMapper.getProteinMapping(tags.get(i), sequenceMatchingPreferences);
-                    allPeptideProteinMappings.addAll(peptideProteinMappings);
-                    for (int j = 0; j < peptideProteinMappings.size(); ++j) {
-                        tagIndexes.add(i);
-                    }
-                }
-                */
-                
-                long diffTimeMapping = System.nanoTime() - startTimeMapping;
-                System.out.println();
-                System.out.println("Mapping " + tags.size() + " tags took " + (diffTimeMapping / 1e9) + " seconds");
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.err.println("Error: an unexpected error happened.");
-                e.printStackTrace();
-                System.exit(-1);
-            }
-
-            try {
-                
-                PrintWriter writer = new PrintWriter(args[3], "UTF-8");
-                
-                for (int i = 0; i < allPeptideProteinMappings.size(); ++i) {
-                
-                    PeptideProteinMapping peptideProteinMapping = allPeptideProteinMappings.get(i);
-                    String peptide = peptideProteinMapping.getPeptideSequence();
-                    String accession = peptideProteinMapping.getProteinAccession();
-                    int startIndex = peptideProteinMapping.getIndex();
-                    
-                    for (TagComponent tagComponent : tags.get(tagIndexes.get(i)).getContent()) {
-                        
-                        if (tagComponent instanceof MassGap) {
-                        
-                            writer.print(tagComponent.getMass());
-                        
-                        } else if (tagComponent instanceof AminoAcidSequence) {
-                        
-                            writer.print(tagComponent.asSequence());
-                        
-                        } else {
-                        
-                            throw new UnsupportedOperationException("Tag component of class " + tagComponent.getClass().getName() + " not supported.");
-                        
-                        }
-                        
-                        writer.print(",");
-                        
-                    }
-                    
-                    writer.println(peptide + "," + accession + "," + startIndex);
-                
-                }
-                
-                writer.close();
-            
-            } catch (Exception e) {
-                System.err.println("Error: could not write into file '" + args[3] + "'");
-                e.printStackTrace();
-                System.exit(-1);
-            }
+        // close everything
+        try {
+            writer.close();
+            br.close();
+        }
+        catch (Exception e) {
+            System.err.println("Error: could not close files properly");
+            e.printStackTrace();
+            System.exit(-1);
         }
     }
 }

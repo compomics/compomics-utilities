@@ -50,6 +50,10 @@ public class PeptideProteinMapping {
      * Eventual variants.
      */
     private final PeptideVariantMatches peptideVariantMatches;
+    /**
+     * The position in the FM index
+     */
+    public int fmIndexPosition = 0;
 
     /**
      * Constructor.

@@ -5,133 +5,173 @@
  */
 package com.compomics.cli.peptide_mapper;
 
+import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
 import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
+import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author dominik.kopczynski
  */
 public class MappingWorker implements Runnable {
-    public Iterator<String> peptidesIterator = null;
-    public Iterator<Tag> tagsIterator = null;
-    public ArrayList<PeptideProteinMapping> allPeptideProteinMappings = null;
-    public WaitingHandlerCLIImpl waitingHandlerCLIImpl = null;
-    public FastaMapper peptideMapper = null;
-    public SequenceMatchingParameters sequenceMatchingPreferences = null;
-    public Integer counter = 0;
-    public ArrayList<Integer> tagIndexes;
-    
+    WaitingHandlerCLIImpl waitingHandlerCLIImpl = null;
+    FastaMapper peptideMapper = null;
+    SequenceMatchingParameters sequenceMatchingPreferences = null;
+    BufferedReader br = null;
+    PrintWriter writer = null;
+    int NUM_READS = 1000;
+    boolean flanking = false;
+    boolean peptideMapping = false;
     
 
-    public MappingWorker(Iterator<String> peptidesIterator,
-                  WaitingHandlerCLIImpl waitingHandlerCLIImpl,
-                  ArrayList<PeptideProteinMapping> allPeptideProteinMappings,
-                  FastaMapper peptideMapper,
-                  SequenceMatchingParameters sequenceMatchingPreferences
-                  ){
-        this.peptidesIterator = peptidesIterator;
-        this.allPeptideProteinMappings = allPeptideProteinMappings;
-        this.waitingHandlerCLIImpl = waitingHandlerCLIImpl;
-        this.peptideMapper = peptideMapper;
-        this.sequenceMatchingPreferences = sequenceMatchingPreferences;
-    }
-    
-    
-    public MappingWorker(Iterator<Tag> tagsIterator,
-                  WaitingHandlerCLIImpl waitingHandlerCLIImpl,
-                  ArrayList<PeptideProteinMapping> allPeptideProteinMappings,
+
+    public MappingWorker(WaitingHandlerCLIImpl waitingHandlerCLIImpl,
                   FastaMapper peptideMapper,
                   SequenceMatchingParameters sequenceMatchingPreferences,
-                  Integer counter,
-                  ArrayList<Integer> tagIndexes
+                  BufferedReader br,
+                  PrintWriter writer,
+                  boolean peptideMapping,
+                  boolean flanking
                   ){
-        this.tagsIterator = tagsIterator;
-        this.allPeptideProteinMappings = allPeptideProteinMappings;
         this.waitingHandlerCLIImpl = waitingHandlerCLIImpl;
         this.peptideMapper = peptideMapper;
         this.sequenceMatchingPreferences = sequenceMatchingPreferences;
-        this.counter = counter;
-        this.tagIndexes = tagIndexes;
+        this.br = br;
+        this.writer = writer;
+        this.flanking = flanking;
+        this.peptideMapping = peptideMapping;
     }
     
     
+    
+    public String flanking(PeptideProteinMapping peptideProteinMapping, FastaMapper peptideMapper){
+        String peptide = peptideProteinMapping.getPeptideSequence();
+        String accession = peptideProteinMapping.getProteinAccession();
+        int startIndex = peptideProteinMapping.getIndex();
+        int peptideLength = peptide.length();
+        String proteinSequence = ((FMIndex)peptideMapper).getSequence(accession);
+
+        if (startIndex > 1){
+            peptide = proteinSequence.charAt(startIndex - 2) + "." + peptide;
+        }
+        else peptide = "-" + peptide;
+
+        if (startIndex + peptideLength < proteinSequence.length()){
+            peptide = peptide + "." + proteinSequence.charAt(startIndex + peptideLength - 1);
+        }
+        else peptide = peptide + "-";
+        
+        return peptide;
+    }
     
 
 
     @Override
     public void run() {
-        if (peptidesIterator != null){
-            ArrayList<String> peptides = new ArrayList<>();
-            ArrayList<PeptideProteinMapping> peptideProteinMappings = new ArrayList<>();
-            int n = 100;
             
-            while (true){
-                peptides.clear();
-                peptideProteinMappings.clear();
-                synchronized(waitingHandlerCLIImpl){
-                    int i = 0;
-                    while (peptidesIterator.hasNext() && i++ < n){
-                        peptides.add(peptidesIterator.next());
+        ArrayList<String> rows = new ArrayList<>();
+        ArrayList<String> outputData = new ArrayList<>();
+
+        while (true){
+            rows.clear();
+            outputData.clear();
+
+            // readin input file batch wise
+            try {
+                String row = "";
+                int i = 0;
+                synchronized(br){
+                    while (i++ < NUM_READS && (row = br.readLine()) != null) {
+                        rows.add(row);
                         waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     }
-                    if (peptides.size() == 0){
-                        break;
+                }
+                if (rows.size() == 0) break;
+
+            } catch (Exception e) {
+                System.err.println("Error: cound not open input list");
+                System.exit(-1);
+            }
+
+
+            // map peptides sequences
+            if (peptideMapping){
+
+                for (String inputPeptide : rows){
+                    for (int j = 0; j < inputPeptide.length(); ++j){
+                        int c = (int)inputPeptide.charAt(j);
+                        if (!(((int)'A' <= c && c <= (int)'Z') || ((int)'a' <= c && c <= (int)'z'))){
+                            System.err.println("Error: invalid character in line '" + inputPeptide + "'");
+                            System.exit(-1);
+                        }
                     }
-                }
-                
-                for (String peptide : peptides){
-                    peptideProteinMappings.addAll(peptideMapper.getProteinMapping(peptide, sequenceMatchingPreferences));
-                }
-                synchronized(allPeptideProteinMappings){
-                    allPeptideProteinMappings.addAll(peptideProteinMappings);
+
+
+                    for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(inputPeptide.toUpperCase(), sequenceMatchingPreferences)) {
+                        String peptide = peptideProteinMapping.getPeptideSequence();
+                        String accession = peptideProteinMapping.getProteinAccession();
+                        int startIndex = peptideProteinMapping.getIndex();
+                        if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
+                        
+                        outputData.add(peptide + "," + accession + "," + startIndex);
+                    }
                 }
 
-            }
-        }
-        
-        else if (tagsIterator != null){
-            ArrayList<Tag> tags = new ArrayList<>();
-            ArrayList<Integer> tmpTagIndexes = new ArrayList<>();
-            ArrayList<PeptideProteinMapping> tmpPeptideProteinMappings = new ArrayList<>();
-            int n = 100;
-            while (true){
-                tags.clear();
-                tmpTagIndexes.clear();
-                tmpPeptideProteinMappings.clear();
-                int cnt = 0;
-                synchronized(tagsIterator){
-                    int i = 0;
-                    while (tagsIterator.hasNext() && i < n){
-                        tags.add(tagsIterator.next());
-                        waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
-                        if (i == 0) cnt = counter;
-                        counter++;
-                        i++;
-                    }
-                    if (tags.size() == 0) break;
-                }
-                
-                for (Tag tag : tags){
-                    ArrayList<PeptideProteinMapping> peptideProteinMappings = peptideMapper.getProteinMapping(tag, sequenceMatchingPreferences);
-                    for (int j = 0; j < peptideProteinMappings.size(); ++j) {
-                        tmpTagIndexes.add(cnt);
-                    }
-                    tmpPeptideProteinMappings.addAll(peptideProteinMappings);
-                    cnt++;
-                }
-                
-                synchronized(allPeptideProteinMappings){
-                    allPeptideProteinMappings.addAll(tmpPeptideProteinMappings);
-                    tagIndexes.addAll(tmpTagIndexes);
-                }
 
             }
+            else {
+                for (String tagString : rows){
+
+                    Tag tag = new Tag();
+                    for (String part : tagString.split(",")) {
+
+                        if (Pattern.matches("[a-zA-Z]+", part)) {
+                            tag.addAminoAcidSequence(new AminoAcidSequence(part));
+                        } else {
+                            try {
+                                double mass = Double.parseDouble(part);
+                                tag.addMassGap(mass);
+                            } catch (NumberFormatException e) {
+                                System.err.println("Error: line contains no valid tag: '" + tagString + "'");
+                                System.exit(-1);
+                            }
+                        }
+                    }
+
+                    for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(tag, sequenceMatchingPreferences)){
+                        String peptide = peptideProteinMapping.getPeptideSequence();
+                        String accession = peptideProteinMapping.getProteinAccession();
+                        int startIndex = peptideProteinMapping.getIndex();
+                        if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
+
+                        outputData.add(tagString + "," + peptide + "," + accession + "," + startIndex);
+                    }
+                }
+            }
+
+
+
+
+
+            // write out processed batch
+            try {
+                synchronized(br){
+                    for (String output : outputData) writer.println(output);
+                }
+            }
+            catch (Exception e) {
+                System.err.println("Error: could not write into file");
+                System.exit(-1);
+            }
         }
+            
     }
 }

@@ -37,7 +37,7 @@ public class AtomChainDialog extends javax.swing.JDialog {
      */
     private int atomPanelIndex = 0;
     /**
-     * True of the GUI is currently being set up.
+     * True if the GUI is currently being set up.
      */
     private boolean settingUpGUI = false;
     /**

@@ -193,6 +193,10 @@ public class MetaMorpheusParameters implements IdentificationAlgorithmParameter 
      * Max heterozygous variants.
      */
     private Integer maxHeterozygousVariants = 4;
+    /**
+     * If true, the G-PTM search is performed.
+     */
+    private boolean runGptm = false;
 
     /**
      * Constructor.
@@ -320,6 +324,9 @@ public class MetaMorpheusParameters implements IdentificationAlgorithmParameter 
             if (!maxHeterozygousVariants.equals(metaMorpheusParameters.getMaxHeterozygousVariants())) {
                 return false;
             }
+            if (runGptm()!= metaMorpheusParameters.runGptm()) {
+                return false;
+            }
 
             return true;
         }
@@ -442,6 +449,9 @@ public class MetaMorpheusParameters implements IdentificationAlgorithmParameter 
         output.append(newLine);
         output.append("MAX_HETROZYGOUS_VARIANTS=");
         output.append(getMaxHeterozygousVariants());
+        output.append(newLine);
+        output.append("RUN_GPTM=");
+        output.append(runGptm());
         output.append(newLine);
 
         return output.toString();
@@ -1043,5 +1053,23 @@ public class MetaMorpheusParameters implements IdentificationAlgorithmParameter 
      */
     public void setMaxHeterozygousVariants(Integer maxHeterozygousVariants) {
         this.maxHeterozygousVariants = maxHeterozygousVariants;
+    }
+
+    /**
+     * Returns true if the G-PTM search is to be performed.
+     *
+     * @return true if the G-PTM search is to be performed
+     */
+    public boolean runGptm() {
+        return runGptm;
+    }
+
+    /**
+     * Set whether the G-PTM search is to be performed.
+     *
+     * @param runGptm set to true if the G-PTM search is to be performed
+     */
+    public void setRunGptm(boolean runGptm) {
+        this.runGptm = runGptm;
     }
 }

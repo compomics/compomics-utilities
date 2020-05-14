@@ -96,6 +96,7 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         fragmentationTerminusCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         searchTargetComboBox.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         decoyTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        runGtpmCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
         searchTypeCombo.setEnabled(editable);
         numberOfPartitionsTxt.setEditable(editable);
@@ -145,6 +146,7 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         minVariantDepthTxt.setEnabled(editable);
         maxHetroVariantsTxt.setEditable(editable);
         maxHetroVariantsTxt.setEnabled(editable);
+        runGtpmCmb.setEnabled(editable);
 
     }
 
@@ -255,6 +257,11 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         minVariantDepthTxt.setText(metaMorpheusParameters.getMinVariantDepth() + "");
         maxHetroVariantsTxt.setText(metaMorpheusParameters.getMaxHeterozygousVariants() + "");
 
+        if (metaMorpheusParameters.runGptm()) {
+            runGtpmCmb.setSelectedIndex(0);
+        } else {
+            runGtpmCmb.setSelectedIndex(1);
+        }
     }
 
     @Override
@@ -328,6 +335,7 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         tempMetaMorpheusParameters.setMinVariantDepth(Integer.valueOf(input));
         input = maxHetroVariantsTxt.getText().trim();
         tempMetaMorpheusParameters.setMaxHeterozygousVariants(Integer.valueOf(input));
+        tempMetaMorpheusParameters.setRunGptm(runGtpmCmb.getSelectedIndex() == 0);
 
         return tempMetaMorpheusParameters;
     }
@@ -419,6 +427,9 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         minVariantDepthTxt = new javax.swing.JTextField();
         maxHetroVariantsLbl = new javax.swing.JLabel();
         maxHetroVariantsTxt = new javax.swing.JTextField();
+        gptmPanel = new javax.swing.JPanel();
+        runGptmLbl = new javax.swing.JLabel();
+        runGtpmCmb = new javax.swing.JComboBox();
         jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -1049,6 +1060,36 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
 
         tabbedPane.addTab("In Silico Digestion", inSilicoDigestionPanel);
 
+        gptmPanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        runGptmLbl.setText("Run G-PTM Search");
+
+        runGtpmCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        runGtpmCmb.setSelectedIndex(1);
+
+        javax.swing.GroupLayout gptmPanelLayout = new javax.swing.GroupLayout(gptmPanel);
+        gptmPanel.setLayout(gptmPanelLayout);
+        gptmPanelLayout.setHorizontalGroup(
+            gptmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gptmPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(runGptmLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(runGtpmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25))
+        );
+        gptmPanelLayout.setVerticalGroup(
+            gptmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gptmPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(gptmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(runGptmLbl)
+                    .addComponent(runGtpmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(291, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("G-PTM Search", gptmPanel);
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -1073,7 +1114,7 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1369,6 +1410,7 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
     private javax.swing.JLabel excludeOneHitWondersLbl;
     private javax.swing.JComboBox fragmentationTerminusCmb;
     private javax.swing.JLabel fragmentationTerminusLbl;
+    private javax.swing.JPanel gptmPanel;
     private javax.swing.JPanel inSilicoDigestionPanel;
     private javax.swing.JComboBox intitiatorMethBehaviorCombo;
     private javax.swing.JLabel intitiatorMethBehaviorLabel;
@@ -1406,6 +1448,8 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
     private javax.swing.JLabel peptideLengthDividerLabel;
     private javax.swing.JLabel peptideLengthJLabel;
     private javax.swing.JPanel proteinGroupingPanel;
+    private javax.swing.JLabel runGptmLbl;
+    private javax.swing.JComboBox runGtpmCmb;
     private javax.swing.JLabel scoreCutoffLabel;
     private javax.swing.JTextField scoreCutoffTxt;
     private javax.swing.JPanel searchPanel;

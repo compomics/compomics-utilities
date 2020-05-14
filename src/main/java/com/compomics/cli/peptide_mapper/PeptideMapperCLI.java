@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.*;
 
 
 
@@ -204,10 +205,11 @@ public class PeptideMapperCLI {
         // starting the mapping
         try {
             long startTimeMapping = System.nanoTime();
+            ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
             ExecutorService importPool = Executors.newFixedThreadPool(nCores);
             for (int i = 0; i < nCores; ++i){
-                importPool.submit(new MappingWorker(waitingHandlerCLIImpl, peptideMapper, sequenceMatchingPreferences, br, writer, peptideMapping, searchParameters.getFlanking()));
+                importPool.submit(new MappingWorker(waitingHandlerCLIImpl, peptideMapper, sequenceMatchingPreferences, br, writer, peptideMapping, searchParameters.getFlanking(), readWriteLock));
             };
             importPool.shutdown();
             if (!importPool.awaitTermination(TIMEOUT_DAYS, TimeUnit.DAYS)) {

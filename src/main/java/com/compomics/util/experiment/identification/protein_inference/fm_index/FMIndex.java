@@ -4433,6 +4433,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         WaveletTree occurrenceTableReversed = occurrenceTablesReversed.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>(1);
         double xLimit = sequenceMatchingPreferences.getLimitX();
+        
 
         // copying tags into own data structure
         int maxSequencePosition = -1;
@@ -4504,7 +4505,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
         }
 
-        ArrayList<MatrixContent> cached = isCached(refTagContent, indexPart);
+        ArrayList<MatrixContent> cached = null;//isCached(refTagContent, indexPart);
         if (cached != null && cached.isEmpty()) {
             return allMatches;
         }
@@ -4541,6 +4542,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         } else {
             matrixReversed[0].add(new MatrixContent(indexStringLengths.get(indexPart) - 1));
         }
+        
 
         if (cached == null) {
             // Map Reverse
@@ -4550,7 +4552,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                 mappingSequenceAndMasses(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed, towardsC);
             }
 
-            //System.out.println("found: " + matrixReversed[combinationsReversed.length].size());
+            
             // Traceback Reverse
             for (MatrixContent content : matrixReversed[combinationsReversed.length]) {
 
@@ -4605,7 +4607,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             for (MatrixContent matrixContent : cachePrimary) {
                 matrix[0].add(matrixContent);
             }
-            cacheIt(refTagContent, cachePrimary, indexPart);
+            //cacheIt(refTagContent, cachePrimary, indexPart);
         }
 
         if (!matrix[0].isEmpty()) {
@@ -4616,6 +4618,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                 mappingSequenceAndMasses(combinations, matrix, lessPrimary, occurrencePrimary, !towardsC);
             }
         }
+        
+        
         // Traceback from NTerm
         for (MatrixContent content : matrix[combinations.length]) {
 
@@ -5000,7 +5004,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
         }
 
-        ArrayList<MatrixContent> cached = isCached(refTagContent, indexPart);
+        ArrayList<MatrixContent> cached = null; //isCached(refTagContent, indexPart);
 
         if (cached != null && cached.isEmpty()) {
 
@@ -5206,7 +5210,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                 matrix[error][0].add(matrixContent);
             }
 
-            cacheIt(refTagContent, cachePrimary, indexPart);
+            //cacheIt(refTagContent, cachePrimary, indexPart);
 
         }
 
@@ -5403,13 +5407,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         peptideProteinMapping.fmIndexPosition = j;
                     
                         if (checkModificationPattern(peptideProteinMapping)) {
-                            /*
-                            System.out.println(accession + " " + cleanPeptide + " " + pepMass(cleanPeptide));
-                            for (int key : variants.keySet()){
-                                System.out.println("pos: " + key + " -> " + variants.get(key).getDescription());
-                            }
-                            System.out.println();
-                             */
                             allMatches.add(peptideProteinMapping);
 
                         }

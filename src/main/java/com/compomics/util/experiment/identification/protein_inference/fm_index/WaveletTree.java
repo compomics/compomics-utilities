@@ -488,6 +488,7 @@ public class WaveletTree implements Serializable {
      * @return a list of character and new left/right index for a given range
      * recursively
      */
+    /*
     public int[] singleRangeQuery(int leftIndex, int rightIndex, int character) {
         boolean left = ((alphabetDirections[character >>> BIT_SHIFT] >>> (character & BIT_MASK)) & 1) == 1;
 
@@ -509,5 +510,70 @@ public class WaveletTree implements Serializable {
                 return new int[]{ newLeftIndex, newRightIndex};
             }
         }
+    }
+    */
+    
+
+    /**
+     * Returns a new left/right index range for a given character recursively.
+     *
+     * @param leftIndex left index boundary
+     * @param rightIndex right index boundary
+     * @param character character to check
+     * @return a list of character and new left/right index for a given range
+     */
+    public int[] singleRangeQuery(int leftIndex, int rightIndex, int character) {
+        
+        WaveletTree tree = this;
+        int[] returnValue = null;
+        
+        while (true){
+            boolean left = ((tree.alphabetDirections[character >>> BIT_SHIFT] >>> (character & BIT_MASK)) & 1) == 1;
+            int newLeftIndex = (leftIndex >= 0) ? tree.rank.getRankOne(leftIndex) : 0;
+            int newRightIndex = (rightIndex >= 0) ? tree.rank.getRankOne(rightIndex) : 0;
+
+            if (left) {
+                if (tree.leftChild != null) {
+                    tree = tree.leftChild;
+                    leftIndex -= newLeftIndex;
+                    rightIndex -= newRightIndex;
+                } else {
+                    returnValue = new int[]{leftIndex - newLeftIndex + 1, rightIndex - newRightIndex + 1};
+                    break;
+                }
+            } else {
+
+                if (tree.rightChild != null) {
+                    tree = tree.rightChild;
+                    leftIndex = newLeftIndex - 1;
+                    rightIndex = newRightIndex - 1;
+                } else {
+                    returnValue = new int[]{newLeftIndex, newRightIndex};
+                    break;
+                }
+            }
+        }
+        return returnValue;
+    }
+    
+    
+    /**
+     * Inverse function to the rank function: given the i'th occurrence of a character
+     * in the tree, it provides its position
+     *
+     * @param occurrence the i'th occurrence
+     * @param character the character to check
+     * @return the position of the i'th occurrence of the character
+     */
+    public int select(int occurrence, int character){
+        // performing a binary search by narrowing the interval
+        int L = 0, R = lenText - 1, m = -1;
+        while (R - L > 1){
+            m = (L + R) >>> 1;
+            if (getRank(m, character) <= occurrence) L = m;
+            else R = m;
+        }
+        
+        return R;
     }
 }

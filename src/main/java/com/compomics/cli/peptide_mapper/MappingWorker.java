@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+import java.util.concurrent.locks.*;
 
 /**
  *
@@ -30,8 +31,8 @@ public class MappingWorker implements Runnable {
     int NUM_READS = 1000;
     boolean flanking = false;
     boolean peptideMapping = false;
+    ReadWriteLock readWriteLock = null;
     
-
 
     public MappingWorker(WaitingHandlerCLIImpl waitingHandlerCLIImpl,
                   FastaMapper peptideMapper,
@@ -39,7 +40,8 @@ public class MappingWorker implements Runnable {
                   BufferedReader br,
                   PrintWriter writer,
                   boolean peptideMapping,
-                  boolean flanking
+                  boolean flanking,
+                  ReadWriteLock readWriteLock
                   ){
         this.waitingHandlerCLIImpl = waitingHandlerCLIImpl;
         this.peptideMapper = peptideMapper;
@@ -48,6 +50,7 @@ public class MappingWorker implements Runnable {
         this.writer = writer;
         this.flanking = flanking;
         this.peptideMapping = peptideMapping;
+        this.readWriteLock = readWriteLock;
     }
     
     
@@ -55,19 +58,21 @@ public class MappingWorker implements Runnable {
     public String flanking(PeptideProteinMapping peptideProteinMapping, FastaMapper peptideMapper){
         String peptide = peptideProteinMapping.getPeptideSequence();
         String accession = peptideProteinMapping.getProteinAccession();
-        int startIndex = peptideProteinMapping.getIndex();
         int peptideLength = peptide.length();
-        String proteinSequence = ((FMIndex)peptideMapper).getSequence(accession);
-
-        if (startIndex > 1){
-            peptide = proteinSequence.charAt(startIndex - 2) + "." + peptide;
+        
+        
+        char prefixChar = ((FMIndex)peptideMapper).prefixCharacter(accession, peptideProteinMapping.fmIndexPosition);
+        if (prefixChar != FMIndex.DELIMITER){
+            peptide = Character.toString(prefixChar) + "." + peptide;
         }
         else peptide = "-" + peptide;
 
-        if (startIndex + peptideLength < proteinSequence.length()){
-            peptide = peptide + "." + proteinSequence.charAt(startIndex + peptideLength - 1);
+        char suffixChar = ((FMIndex)peptideMapper).suffixCharacter(accession, peptideProteinMapping.fmIndexPosition, peptideLength + 1);
+        if (suffixChar != FMIndex.DELIMITER){
+            peptide += "." + Character.toString(suffixChar);
+        
         }
-        else peptide = peptide + "-";
+        else peptide += "-";
         
         return peptide;
     }
@@ -77,8 +82,10 @@ public class MappingWorker implements Runnable {
     @Override
     public void run() {
             
+        
         ArrayList<String> rows = new ArrayList<>();
         ArrayList<String> outputData = new ArrayList<>();
+        
 
         while (true){
             rows.clear();
@@ -88,12 +95,12 @@ public class MappingWorker implements Runnable {
             try {
                 String row = "";
                 int i = 0;
-                synchronized(br){
+                //synchronized(br){
                     while (i++ < NUM_READS && (row = br.readLine()) != null) {
                         rows.add(row);
                         waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     }
-                }
+                //}
                 if (rows.size() == 0) break;
 
             } catch (Exception e) {
@@ -145,6 +152,7 @@ public class MappingWorker implements Runnable {
                             }
                         }
                     }
+                    
 
                     for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(tag, sequenceMatchingPreferences)){
                         String peptide = peptideProteinMapping.getPeptideSequence();
@@ -163,9 +171,9 @@ public class MappingWorker implements Runnable {
 
             // write out processed batch
             try {
-                synchronized(br){
+                //synchronized(br){
                     for (String output : outputData) writer.println(output);
-                }
+                //}
             }
             catch (Exception e) {
                 System.err.println("Error: could not write into file");

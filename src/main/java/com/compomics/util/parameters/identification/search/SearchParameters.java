@@ -142,6 +142,10 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * The algorithm specific parameters.
      */
     private HashMap<Integer, IdentificationAlgorithmParameter> algorithmParameters;
+    /**
+     * Report the flanking amino acids of a mapped peptide.
+     */
+    private boolean flanking = false;
 
     /**
      * Constructor.
@@ -1085,6 +1089,21 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
 
         return true;
     }
+
+    
+    public void setFlanking(boolean flanking) {
+        writeDBMode();
+        this.flanking = flanking;
+    }
+
+    
+    public boolean getFlanking() {
+
+        readDBMode();
+        return flanking;
+    }
+    
+    
 
     @Override
     public void setType() {

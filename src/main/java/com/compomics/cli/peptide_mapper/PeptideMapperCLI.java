@@ -14,8 +14,6 @@ import com.compomics.util.parameters.identification.advanced.PeptideVariantsPara
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,7 +22,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.*;
-import java.util.*;
+import java.util.concurrent.locks.*;
+
+
 
 /**
  * Command line peptide mapping.
@@ -32,8 +32,7 @@ import java.util.*;
  * @author Dominik Kopczynski
  */
 public class PeptideMapperCLI {
-
-
+    public static int TIMEOUT_DAYS = 1;
     /**
      * Main class.
      *
@@ -70,7 +69,6 @@ public class PeptideMapperCLI {
         boolean flanking = false;
         boolean peptideMapping = args[0].equals("-p");
         int nCores = Runtime.getRuntime().availableProcessors();
-        int TIMEOUT_DAYS = 1;
         
         if (!args[0].equals("-p") && !args[0].equals("-t")){
             System.out.println("Invalid first parameter: " + args[0]);
@@ -111,7 +109,6 @@ public class PeptideMapperCLI {
                             identificationParameters = IdentificationParameters.getIdentificationParameters(parameterFile);
                         } catch (Exception e) {
                             System.err.println("Error: cound not open / parse parameter file");
-                            e.printStackTrace();
                             System.exit(-1);
                         }
 
@@ -138,11 +135,32 @@ public class PeptideMapperCLI {
             sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
             sequenceMatchingPreferences.setLimitX(0.25);
         }
+        searchParameters.setFlanking(flanking);
         
+        runMapping(fastaFile,
+                   waitingHandlerCLIImpl,
+                   peptideVariantsPreferences,
+                   searchParameters,
+                   inputFileName,
+                   outputFileName,
+                   nCores,
+                   sequenceMatchingPreferences,
+                   peptideMapping);
+    }
+    
+    
+    
+    
         
-        
-        
-        
+    public static void runMapping(File fastaFile,
+                                  WaitingHandlerCLIImpl waitingHandlerCLIImpl,
+                                  PeptideVariantsParameters peptideVariantsPreferences,
+                                  SearchParameters searchParameters,
+                                  String inputFileName,
+                                  String outputFileName,
+                                  int nCores,
+                                  SequenceMatchingParameters sequenceMatchingPreferences,
+                                  boolean peptideMapping){
         // setting up the mapper
         FastaMapper peptideMapper = null;
         System.out.println("Start indexing fasta file");
@@ -151,7 +169,6 @@ public class PeptideMapperCLI {
             peptideMapper = new FMIndex(fastaFile, null, waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
         } catch (IOException e) {
             System.err.println("Error: cound not index the fasta file");
-            e.printStackTrace();
             System.exit(-1);
         }
         double diffTimeIndex = System.nanoTime() - startTimeIndex;
@@ -168,7 +185,7 @@ public class PeptideMapperCLI {
         PrintWriter writer = null;
         long lineCount = 0;
         try {
-            br = new BufferedReader(new FileReader(inputFileName));
+            br = new BufferedReader(new FileReader(inputFileName), 1024 * 1024 * 10);
             Path path = Paths.get(inputFileName);
             lineCount = Files.lines(path).count();
             writer = new PrintWriter(outputFileName, "UTF-8");
@@ -188,10 +205,11 @@ public class PeptideMapperCLI {
         // starting the mapping
         try {
             long startTimeMapping = System.nanoTime();
+            ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
             ExecutorService importPool = Executors.newFixedThreadPool(nCores);
             for (int i = 0; i < nCores; ++i){
-                importPool.submit(new MappingWorker(waitingHandlerCLIImpl, peptideMapper, sequenceMatchingPreferences, br, writer, peptideMapping, flanking));
+                importPool.submit(new MappingWorker(waitingHandlerCLIImpl, peptideMapper, sequenceMatchingPreferences, br, writer, peptideMapping, searchParameters.getFlanking(), readWriteLock));
             };
             importPool.shutdown();
             if (!importPool.awaitTermination(TIMEOUT_DAYS, TimeUnit.DAYS)) {
@@ -204,7 +222,6 @@ public class PeptideMapperCLI {
 
         } catch (Exception e) {
             System.err.println("Error: mapping went wrong");
-            e.printStackTrace();
             System.exit(-1);
         }
             
@@ -217,7 +234,6 @@ public class PeptideMapperCLI {
         }
         catch (Exception e) {
             System.err.println("Error: could not close files properly");
-            e.printStackTrace();
             System.exit(-1);
         }
     }

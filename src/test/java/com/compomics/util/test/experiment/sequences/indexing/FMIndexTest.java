@@ -185,7 +185,7 @@ public class FMIndexTest extends TestCase {
         PeptideProteinMapping peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("ECTQDRXKTAFTEAVLLP"));
         Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
-        Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+        Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
         
         
         String sequence = fmIndex.getSequence("Q9FHX5");
@@ -198,22 +198,22 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(proteinMapping.size() == 2);
         int[] indexes = proteinMapping.get("Q9FHX5");
         Assert.assertTrue(indexes.length == 3);
-        int index = sequence.indexOf("SSS");
+        int index = sequence.indexOf("SSS") + 1;
         Assert.assertTrue(indexes[0] == index);
-        index += sequence.substring(index + 1).indexOf("SSS") + 1;
+        index += sequence.substring(index).indexOf("SSS") + 1;
         Assert.assertTrue(indexes[1] == index);
-        index = sequence.lastIndexOf("SSS");
+        index = sequence.lastIndexOf("SSS") + 1;
         Assert.assertTrue(indexes[2] == index);
         indexes = proteinMapping.get("Q9FHX5-REVERSED");
         
         sequence = fmIndex.getSequence("Q9FHX5-REVERSED");
         Assert.assertTrue(sequence.equals("LRLKIICLLFFFLVCEVFRGKGGASSISMYDPSPNGTVPQYIGGGSSSGGTNGGGGSSSGGTSNSSGSGSSHTSSTKIGLSYVPTGDPNFLGYNRESTPGPKMNENFLAFVFITLDCEPRIPTRMKKSMMMKILNGNYKRANDCTAGVEQPDGNSPWGTESVVIPVKKYSIGVADLAHYVADVQAFLMNDYHFNSGPDTFGQNPQFLVFDLSVHKPNEEYAFFPYANILIPSGTKVHFDLIPTLSGLLDRRFSTASPPYSVDLIALSHATTVFIQKNLGCDVLAGHISQMAPFLAATLALAVLLAVIIAVLIAVIKTNPLDNAVNEKVWGQAKIPDSMQALYENGLAVTLEFGSGAFARLAQPDADYLKVKTAGVSKLLPIVNKPPPLBNAVQGYNIGISSVILPLSFLALCFLSFLSQLSSSAM"));
         Assert.assertTrue(indexes.length == 3);
-        index = sequence.indexOf("SSS");
+        index = sequence.indexOf("SSS") + 1;
         Assert.assertTrue(indexes[0] == index);
-        index += sequence.substring(index + 1).indexOf("SSS") + 1;
+        index += sequence.substring(index).indexOf("SSS") + 1;
         Assert.assertTrue(indexes[1] == index);
-        index = sequence.lastIndexOf("SSS");
+        index = sequence.lastIndexOf("SSS") + 1;
         Assert.assertTrue(indexes[2] == index);
 
         HashSet<String> accessions = new HashSet<>(fmIndex.getAccessions());
@@ -281,7 +281,7 @@ public class FMIndexTest extends TestCase {
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("ECTQDRXKTAFTEAVLLP")) {
                 Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
-                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 
                 PeptideVariantMatches peptideVariantMatches = peptideProteinMapping.getPeptideVariantMatches();
                 Assert.assertTrue(peptideVariantMatches == null);
@@ -299,7 +299,7 @@ public class FMIndexTest extends TestCase {
             if (peptideProteinMapping.getPeptideSequence().equals("ECTQDRXKTAFTEVLLP")) {
                 
                 Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
-                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 
                 PeptideVariantMatches peptideVariantMatches = peptideProteinMapping.getPeptideVariantMatches();
 
@@ -327,7 +327,7 @@ public class FMIndexTest extends TestCase {
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("ECTQDRXKTMAFTEAVLLP")) {
                 Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
-                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 
                 PeptideVariantMatches peptideVariantMatches = peptideProteinMapping.getPeptideVariantMatches();
 
@@ -355,7 +355,7 @@ public class FMIndexTest extends TestCase {
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("ECTQDKXKTAFTEAVLLP")) {
                 Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
-                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 
                 PeptideVariantMatches peptideVariantMatches = peptideProteinMapping.getPeptideVariantMatches();
 
@@ -386,7 +386,7 @@ public class FMIndexTest extends TestCase {
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("ECTQDKXKTAFTEALLP")) {
                 Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
-                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 
                 PeptideVariantMatches peptideVariantMatches = peptideProteinMapping.getPeptideVariantMatches();
 
@@ -418,7 +418,7 @@ public class FMIndexTest extends TestCase {
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("ECTDRXKTAFTEAVLTLP")) {
                 Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
-                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 
                 PeptideVariantMatches peptideVariantMatches = peptideProteinMapping.getPeptideVariantMatches();
 
@@ -492,7 +492,7 @@ public class FMIndexTest extends TestCase {
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("ECTQDRXKTAFTEAVLLP")) {
                 Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
-                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 
                 PeptideVariantMatches peptideVariantMatches = peptideProteinMapping.getPeptideVariantMatches();
                 Assert.assertTrue(peptideVariantMatches == null);
@@ -512,7 +512,7 @@ public class FMIndexTest extends TestCase {
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("ECPQDRXKTRFTEAVLLP")) {
                 Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
-                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 
                 PeptideVariantMatches peptideVariantMatches = peptideProteinMapping.getPeptideVariantMatches();
 
@@ -549,7 +549,7 @@ public class FMIndexTest extends TestCase {
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("ECTDRXKTAFTEAVLTLP")) {
                 Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
-                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 
                 PeptideVariantMatches peptideVariantMatches = peptideProteinMapping.getPeptideVariantMatches();
 
@@ -587,7 +587,7 @@ public class FMIndexTest extends TestCase {
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("ECTQTTDRXKTAFTAVLLP")) {
                 Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
-                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 
                 PeptideVariantMatches peptideVariantMatches = peptideProteinMapping.getPeptideVariantMatches();
 
@@ -628,7 +628,7 @@ public class FMIndexTest extends TestCase {
         for (PeptideProteinMapping peptideProteinMapping : peptideProteinMappings) {
             if (peptideProteinMapping.getPeptideSequence().equals("ECTDRXKPAFTEAKVLLP")) {
                 Assert.assertTrue(peptideProteinMapping.getProteinAccession().equals("TEST_ACCESSION"));
-                Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+                Assert.assertTrue(peptideProteinMapping.getIndex() == 4);
                 
                 PeptideVariantMatches peptideVariantMatches = peptideProteinMapping.getPeptideVariantMatches();
 

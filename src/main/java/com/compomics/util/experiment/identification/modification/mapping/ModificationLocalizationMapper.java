@@ -515,5 +515,4 @@ public class ModificationLocalizationMapper {
             }
         }
     }
-
 }

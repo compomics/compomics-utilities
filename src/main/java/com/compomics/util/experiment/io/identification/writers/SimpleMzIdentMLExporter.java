@@ -276,10 +276,10 @@ public class SimpleMzIdentMLExporter implements Closeable {
         this.modificationProvider = modificationProvider;
         this.fastaSummary = fastaSummary;
         this.writer = new WriterBySection(
-                destinationFile, 
-                tempFolder, 
-                false, 
-                false, 
+                destinationFile,
+                tempFolder,
+                false,
+                false,
                 true
         );
 
@@ -878,9 +878,9 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
                 if (!peptideKeys.contains(peptideKey)) {
 
-                    peptideKeys.add(peptideKey);
-
                     writePeptide(peptide);
+
+                    peptideKeys.add(peptideKey);
 
                 }
 
@@ -1086,7 +1086,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
                 String pepEvidenceKey = getPeptideEvidenceKey(
                         accession,
-                        peptideStart,
+                        index,
                         peptide.getKey()
                 );
 
@@ -2332,7 +2332,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                 String pepEvidenceKey = getPeptideEvidenceKey(
                         accession,
                         index,
-                        peptideKey
+                        peptide.getKey()
                 );
                 String peptideEvidenceId = pepEvidenceIds.get(pepEvidenceKey);
 
@@ -2790,19 +2790,21 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
     /**
      * Sets up the writer.
-     * 
-     * @throws FileNotFoundException Exception thrown if the temp folder is not found or not writable.
-     * @throws IOException Exception thrown if an error occurs while reading or writing a file.
+     *
+     * @throws FileNotFoundException Exception thrown if the temp folder is not
+     * found or not writable.
+     * @throws IOException Exception thrown if an error occurs while reading or
+     * writing a file.
      */
     private void initWriter()
             throws FileNotFoundException, IOException {
-        
+
         writer.registerSection(HEAD_SECTION);
         writer.registerSection(PEPTIDE_SECTION);
         writer.registerSection(PEPTIDE_EVIDENCE_SECTION);
         writer.registerSection(ANALYSIS_SECTION);
         writer.registerSection(DATA_SECTION);
-        
+
     }
 
     /**
@@ -2820,7 +2822,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
     /**
      * Increases the line indentation of the given section.
-     * 
+     *
      * @param sectionName The name of the section.
      */
     private void increaseIndentation(
@@ -2833,7 +2835,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
     /**
      * Decreases the line indentation of the given section.
-     * 
+     *
      * @param sectionName The name of the section.
      */
     private void decreaseIndent(
@@ -2845,8 +2847,8 @@ public class SimpleMzIdentMLExporter implements Closeable {
     }
 
     /**
-     * Convenience method returning the indentation at the beginning of each line
-     * depending on the indentation map.
+     * Convenience method returning the indentation at the beginning of each
+     * line depending on the indentation map.
      *
      * @param sectionName The section name.
      *

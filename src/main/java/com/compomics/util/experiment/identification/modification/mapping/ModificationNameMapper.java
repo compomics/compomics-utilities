@@ -39,7 +39,7 @@ public class ModificationNameMapper {
             ModificationProvider modificationProvider
     ) {
 
-        switch (idfileReader.getClass().getName()) {
+        switch (idfileReader.getClass().getSimpleName()) {
             case "MascotIdidfileReader":
             case "XTandemIdfileReader":
             case "MsAmandaIdfileReader":
@@ -89,7 +89,7 @@ public class ModificationNameMapper {
 
             default:
 
-                throw new IllegalArgumentException("Modification mapping not implemented for file reader " + idfileReader.getClass().getName() + ".");
+                throw new IllegalArgumentException("Modification mapping not implemented for file reader " + idfileReader.getClass().getSimpleName()+ ".");
 
         }
     }

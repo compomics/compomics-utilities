@@ -1814,7 +1814,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                     int index = binarySearch(boundaries.get(indexPart), pos);
                     String accession = accessions.get(indexPart)[index];
 
-                    PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, currentPeptide, pos - boundaries.get(indexPart)[index] + 1);
+                    PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, currentPeptide, pos - boundaries.get(indexPart)[index]);
                     peptideProteinMapping.fmIndexPosition = j;
                     allMatches.add(peptideProteinMapping);
                 }
@@ -1995,7 +1995,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                             PeptideVariantMatches peptideVariantMatches = variants.isEmpty() ? null : new PeptideVariantMatches(variants, lengthDifference);
 
-                            PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition + 1, null, peptideVariantMatches);
+                            PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition, null, peptideVariantMatches);
                             peptideProteinMapping.fmIndexPosition = j;
                             allMatches.add(peptideProteinMapping);
 
@@ -2169,7 +2169,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                             PeptideVariantMatches peptideVariantMatches = variants.isEmpty() ? null : new PeptideVariantMatches(variants, lengthDifference);
 
-                            PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition + 1, null, peptideVariantMatches);
+                            PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition, null, peptideVariantMatches);
                             peptideProteinMapping.fmIndexPosition = j;
                             allMatches.add(peptideProteinMapping);
 
@@ -2349,7 +2349,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                             PeptideVariantMatches peptideVariantMatches = variants.isEmpty() ? null : new PeptideVariantMatches(variants, lengthDifference);
 
-                            PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition + 1, null, peptideVariantMatches);
+                            PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition, null, peptideVariantMatches);
                             peptideProteinMapping.fmIndexPosition = j;
                             allMatches.add(peptideProteinMapping);
                         }
@@ -4733,7 +4733,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                     int pos = getTextPosition(j, indexPart);
                     int index = binarySearch(boundaries.get(indexPart), pos);
                     String accession = accessions.get(indexPart)[index];
-                    PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, peptide.toString(), pos - boundaries.get(indexPart)[index] + 1, modifications.toArray(new ModificationMatch[modifications.size()]));
+                    PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, peptide.toString(), pos - boundaries.get(indexPart)[index], modifications.toArray(new ModificationMatch[modifications.size()]));
                     peptideProteinMapping.fmIndexPosition = j;
                     
                     if (checkModificationPattern(peptideProteinMapping)) {
@@ -4864,7 +4864,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                         // pos - boundaries.get(indexPart)[index] +1 because of start counting from one
                         ArrayList<ModificationMatch> currenModifications = substitutedModifications.get(i);
-                        PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, substitutedPeptides.get(i), pos - boundaries.get(indexPart)[index] + 1, currenModifications.toArray(new ModificationMatch[currenModifications.size()]));
+                        PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, substitutedPeptides.get(i), pos - boundaries.get(indexPart)[index], currenModifications.toArray(new ModificationMatch[currenModifications.size()]));
                         peptideProteinMapping.fmIndexPosition = j;
                     
                         if (checkModificationPattern(peptideProteinMapping)) {
@@ -5402,8 +5402,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                         PeptideVariantMatches peptideVariantMatches = variants.isEmpty() ? null : new PeptideVariantMatches(variants, lengthDifference);
 
-                        // startPosition +1 because of start counting from one
-                        PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition + 1, modifications.toArray(new ModificationMatch[modifications.size()]), peptideVariantMatches);
+                        PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition, modifications.toArray(new ModificationMatch[modifications.size()]), peptideVariantMatches);
                         peptideProteinMapping.fmIndexPosition = j;
                     
                         if (checkModificationPattern(peptideProteinMapping)) {

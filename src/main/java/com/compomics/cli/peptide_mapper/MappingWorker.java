@@ -125,7 +125,7 @@ public class MappingWorker implements Runnable {
                     for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(inputPeptide.toUpperCase(), sequenceMatchingPreferences)) {
                         String peptide = peptideProteinMapping.getPeptideSequence();
                         String accession = peptideProteinMapping.getProteinAccession();
-                        int startIndex = peptideProteinMapping.getIndex();
+                        int startIndex = peptideProteinMapping.getIndex() + 1;
                         if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
                         
                         outputData.add(peptide + "," + accession + "," + startIndex);
@@ -157,7 +157,7 @@ public class MappingWorker implements Runnable {
                     for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(tag, sequenceMatchingPreferences)){
                         String peptide = peptideProteinMapping.getPeptideSequence();
                         String accession = peptideProteinMapping.getProteinAccession();
-                        int startIndex = peptideProteinMapping.getIndex();
+                        int startIndex = peptideProteinMapping.getIndex() + 1;
                         if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
 
                         outputData.add(tagString + "," + peptide + "," + accession + "," + startIndex);

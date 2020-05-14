@@ -521,7 +521,6 @@ public class WaveletTree implements Serializable {
      * @param rightIndex right index boundary
      * @param character character to check
      * @return a list of character and new left/right index for a given range
-     * recursively
      */
     public int[] singleRangeQuery(int leftIndex, int rightIndex, int character) {
         
@@ -555,5 +554,26 @@ public class WaveletTree implements Serializable {
             }
         }
         return returnValue;
+    }
+    
+    
+    /**
+     * Inverse function to the rank function: given the i'th occurrence of a character
+     * in the tree, it provides its position
+     *
+     * @param occurrence the i'th occurrence
+     * @param character the character to check
+     * @return the position of the i'th occurrence of the character
+     */
+    public int select(int occurrence, int character){
+        // performing a binary search by narrowing the interval
+        int L = 0, R = lenText - 1, m = -1;
+        while (R - L > 1){
+            m = (L + R) >>> 1;
+            if (getRank(m, character) <= occurrence) L = m;
+            else R = m;
+        }
+        
+        return R;
     }
 }

@@ -134,6 +134,7 @@ public class PeptideMapperCLI {
             sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
             sequenceMatchingPreferences.setLimitX(0.25);
         }
+        searchParameters.setFlanking(flanking);
         
         runMapping(fastaFile,
                    waitingHandlerCLIImpl,
@@ -143,8 +144,7 @@ public class PeptideMapperCLI {
                    outputFileName,
                    nCores,
                    sequenceMatchingPreferences,
-                   peptideMapping,
-                   flanking);
+                   peptideMapping);
     }
     
     
@@ -159,8 +159,7 @@ public class PeptideMapperCLI {
                                   String outputFileName,
                                   int nCores,
                                   SequenceMatchingParameters sequenceMatchingPreferences,
-                                  boolean peptideMapping,
-                                  boolean flanking){
+                                  boolean peptideMapping){
         // setting up the mapper
         FastaMapper peptideMapper = null;
         System.out.println("Start indexing fasta file");
@@ -208,7 +207,7 @@ public class PeptideMapperCLI {
 
             ExecutorService importPool = Executors.newFixedThreadPool(nCores);
             for (int i = 0; i < nCores; ++i){
-                importPool.submit(new MappingWorker(waitingHandlerCLIImpl, peptideMapper, sequenceMatchingPreferences, br, writer, peptideMapping, flanking));
+                importPool.submit(new MappingWorker(waitingHandlerCLIImpl, peptideMapper, sequenceMatchingPreferences, br, writer, peptideMapping, searchParameters.getFlanking()));
             };
             importPool.shutdown();
             if (!importPool.awaitTermination(TIMEOUT_DAYS, TimeUnit.DAYS)) {

@@ -55,19 +55,21 @@ public class MappingWorker implements Runnable {
     public String flanking(PeptideProteinMapping peptideProteinMapping, FastaMapper peptideMapper){
         String peptide = peptideProteinMapping.getPeptideSequence();
         String accession = peptideProteinMapping.getProteinAccession();
-        int startIndex = peptideProteinMapping.getIndex();
         int peptideLength = peptide.length();
-        String proteinSequence = ((FMIndex)peptideMapper).getSequence(accession);
-
-        if (startIndex > 1){
-            peptide = proteinSequence.charAt(startIndex - 2) + "." + peptide;
+        
+        
+        char prefixChar = ((FMIndex)peptideMapper).prefixCharacter(accession, peptideProteinMapping.fmIndexPosition);
+        if (prefixChar != FMIndex.DELIMITER){
+            peptide = Character.toString(prefixChar) + "." + peptide;
         }
         else peptide = "-" + peptide;
 
-        if (startIndex + peptideLength < proteinSequence.length()){
-            peptide = peptide + "." + proteinSequence.charAt(startIndex + peptideLength - 1);
+        char suffixChar = ((FMIndex)peptideMapper).suffixCharacter(accession, peptideProteinMapping.fmIndexPosition, peptideLength + 1);
+        if (suffixChar != FMIndex.DELIMITER){
+            peptide += "." + Character.toString(suffixChar);
+        
         }
-        else peptide = peptide + "-";
+        else peptide += "-";
         
         return peptide;
     }
@@ -77,6 +79,7 @@ public class MappingWorker implements Runnable {
     @Override
     public void run() {
             
+        
         ArrayList<String> rows = new ArrayList<>();
         ArrayList<String> outputData = new ArrayList<>();
 

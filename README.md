@@ -49,6 +49,7 @@ The [Computational Omics and Systems Biology Group](http://www.compomics.com) de
 | [Peptizer](https://github.com/compomics/peptizer) | _automating manual validation of MS/MS search results_|_[Helsens et al: MCP 2008;7(12):2363-72](http://www.ncbi.nlm.nih.gov/pubmed/18667410)_|
 | [MascotDatfile](http://compomics.github.io/projects/mascotdatfile.html) | _java API for MS/MS search results by Mascot_|_[Helsens et al: Proteomics 2007;7(3):364-6](http://www.ncbi.nlm.nih.gov/pubmed/17203510)_|
 | [DBToolkit](https://github.com/compomics/dbtoolkit) | _manipulating fasta sequence databases_|_[Martens et al: Bioinformatics 2005;21(17):3584-5](http://www.ncbi.nlm.nih.gov/pubmed/16030071)_|
+| [MetaNovo](https://github.com/uct-cbio/proteomics-pipelines/) | a probabilistic approach to peptide and polymorphism discovery in complex mass spectrometry datasets|_[Potgieter et al: BioRxiv 2019;605550](https://www.biorxiv.org/content/10.1101/605550v1)_|
 
 [Go to top of page](#compomics-utilities)
 

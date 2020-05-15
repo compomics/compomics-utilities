@@ -73,7 +73,7 @@ public class FMIndexTest extends TestCase {
     }
     
     
-    public void terminiPTMTagMapping() throws IOException {
+    public void terminiPTMTagMapping() throws Exception {
         
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
@@ -134,10 +134,10 @@ public class FMIndexTest extends TestCase {
     /**
      * Tests the retrieving of protein sequences from the index
      *
-     * @throws IOException thrown whenever an error occurs while reading or
+     * @throws Exception thrown whenever an error occurs while reading or
      * writing a file
      */
-    public void getSequences() throws IOException {
+    public void getSequences() throws Exception {
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         
@@ -162,10 +162,10 @@ public class FMIndexTest extends TestCase {
     /**
      * Tests the import and the mapping of a few peptide sequences.
      *
-     * @throws IOException thrown whenever an error occurs while reading or
+     * @throws Exception thrown whenever an error occurs while reading or
      * writing a file
      */
-    public void peptideToProteinMapping() throws IOException {
+    public void peptideToProteinMapping() throws Exception {
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         
@@ -241,7 +241,7 @@ public class FMIndexTest extends TestCase {
      * Tests the import and the mapping of a few peptide sequences.
      *
      * @throws FileNotFoundException thrown whenever a file is not found
-     * @throws IOException thrown whenever an error occurs while reading or
+     * @throws Exception thrown whenever an error occurs while reading or
      * writing a file
      * @throws ClassNotFoundException thrown whenever an error occurs while
      * deserializing an object
@@ -250,7 +250,7 @@ public class FMIndexTest extends TestCase {
      * @throws SQLException if an SQLException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void peptideToProteinMappingWithVariants() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
+    public void peptideToProteinMappingWithVariants() throws FileNotFoundException, Exception, ClassNotFoundException, SQLException, InterruptedException {
         
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
@@ -451,7 +451,7 @@ public class FMIndexTest extends TestCase {
      * Tests the import and the mapping of a few peptide sequences.
      *
      * @throws FileNotFoundException thrown whenever a file is not found
-     * @throws IOException thrown whenever an error occurs while reading or
+     * @throws Exception thrown whenever an error occurs while reading or
      * writing a file
      * @throws ClassNotFoundException thrown whenever an error occurs while
      * deserializing an object
@@ -460,10 +460,9 @@ public class FMIndexTest extends TestCase {
      * @throws SQLException if an SQLException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void peptideToProteinMappingWithVariantsSpecific() throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, InterruptedException {
+    public void peptideToProteinMappingWithVariantsSpecific() throws FileNotFoundException, Exception, ClassNotFoundException, SQLException, InterruptedException {
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
-        ExceptionHandler exceptionHandler = new CommandLineExceptionHandler();
         
         File fastaFile = new File("src/test/resources/experiment/testSequences.fasta");
         FastaParameters fastaParameters = new FastaParameters();
@@ -665,7 +664,7 @@ public class FMIndexTest extends TestCase {
      * Tests the mapping of de novo sequence tags to the database.
      *
      * @throws FileNotFoundException thrown whenever a file is not found
-     * @throws IOException thrown whenever an error occurs while reading or
+     * @throws Exception thrown whenever an error occurs while reading or
      * writing a file
      * @throws ClassNotFoundException thrown whenever an error occurs while
      * deserializing an object
@@ -676,7 +675,7 @@ public class FMIndexTest extends TestCase {
      * @throws org.xmlpull.v1.XmlPullParserException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void tagToProteinMapping() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+    public void tagToProteinMapping() throws Exception, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
         
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
@@ -2032,7 +2031,7 @@ public class FMIndexTest extends TestCase {
      * Tests the mapping of de novo sequence tags to the database.
      *
      * @throws FileNotFoundException thrown whenever a file is not found
-     * @throws IOException thrown whenever an error occurs while reading or
+     * @throws Exception thrown whenever an error occurs while reading or
      * writing a file
      * @throws ClassNotFoundException thrown whenever an error occurs while
      * deserializing an object
@@ -2043,7 +2042,7 @@ public class FMIndexTest extends TestCase {
      * @throws org.xmlpull.v1.XmlPullParserException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void tagToProteinMappingWithVariantsGeneric() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+    public void tagToProteinMappingWithVariantsGeneric() throws Exception, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
         
         
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
@@ -2636,7 +2635,7 @@ public class FMIndexTest extends TestCase {
      * Tests the mapping of de novo sequence tags to the database.
      *
      * @throws FileNotFoundException thrown whenever a file is not found
-     * @throws IOException thrown whenever an error occurs while reading or
+     * @throws Exception thrown whenever an error occurs while reading or
      * writing a file
      * @throws ClassNotFoundException thrown whenever an error occurs while
      * deserializing an object
@@ -2647,7 +2646,7 @@ public class FMIndexTest extends TestCase {
      * @throws org.xmlpull.v1.XmlPullParserException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void tagToProteinMappingWithPTMsAndVariants() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+    public void tagToProteinMappingWithPTMsAndVariants() throws Exception, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
         
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
@@ -4278,7 +4277,7 @@ public class FMIndexTest extends TestCase {
      * Tests the mapping of de novo sequence tags to the database.
      *
      * @throws FileNotFoundException thrown whenever a file is not found
-     * @throws IOException thrown whenever an error occurs while reading or
+     * @throws Exception thrown whenever an error occurs while reading or
      * writing a file
      * @throws ClassNotFoundException thrown whenever an error occurs while
      * deserializing an object
@@ -4289,7 +4288,7 @@ public class FMIndexTest extends TestCase {
      * @throws org.xmlpull.v1.XmlPullParserException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void tagToProteinMappingWithVariantsSpecific() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+    public void tagToProteinMappingWithVariantsSpecific() throws Exception, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
         
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
@@ -4652,7 +4651,7 @@ public class FMIndexTest extends TestCase {
      * Tests the mapping of de novo sequence tags to the database.
      *
      * @throws FileNotFoundException thrown whenever a file is not found
-     * @throws IOException thrown whenever an error occurs while reading or
+     * @throws Exception thrown whenever an error occurs while reading or
      * writing a file
      * @throws ClassNotFoundException thrown whenever an error occurs while
      * deserializing an object
@@ -4663,7 +4662,7 @@ public class FMIndexTest extends TestCase {
      * @throws org.xmlpull.v1.XmlPullParserException thrown whenever a problem
      * occurred while interacting with the tree database
      */
-    public void tagToProteinMappingWithVariantsFixed() throws IOException, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
+    public void tagToProteinMappingWithVariantsFixed() throws Exception, FileNotFoundException, ClassNotFoundException, InterruptedException, SQLException, XmlPullParserException {
         
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);

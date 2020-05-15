@@ -21,6 +21,8 @@ import com.compomics.util.experiment.identification.protein_inference.FastaMappe
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
 
@@ -151,6 +153,34 @@ public class PeptideMapperCLI {
     
     
     
+    public static void handleError(String outputFileName, String errorMessage, Exception e){
+        PrintWriter writer = null;
+        System.out.println(errorMessage);
+        
+        String path = (new File(outputFileName)).getParent();
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date());
+        
+        String logFileName = Paths.get(path, "PeptideMapper_Error-log_" + timeStamp + ".txt").toString();
+        
+        
+        try {
+            
+            writer = new PrintWriter(logFileName, "UTF-8");
+            e.printStackTrace(writer);
+            writer.close();
+            System.out.println("A proper error log was stored in '" + logFileName + "'");
+            
+        } catch (Exception e2){
+            System.out.println("Could not store the error log into a file, it will be printed directly:");
+            System.out.println();
+            System.out.println(e.getMessage());
+        }
+        System.exit(-1);
+    }
+    
+    
+    
+    
         
     public static void runMapping(File fastaFile,
                                   WaitingHandlerCLIImpl waitingHandlerCLIImpl,
@@ -161,22 +191,23 @@ public class PeptideMapperCLI {
                                   int nCores,
                                   SequenceMatchingParameters sequenceMatchingPreferences,
                                   boolean peptideMapping){
+        
+        
+        
         // setting up the mapper
         FastaMapper peptideMapper = null;
         System.out.println("Start indexing fasta file");
         long startTimeIndex = System.nanoTime();
         try {
             peptideMapper = new FMIndex(fastaFile, null, waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
-        } catch (IOException e) {
-            System.err.println("Error: cound not index the fasta file");
-            System.exit(-1);
+        } catch (Exception e) {
+            handleError(outputFileName, "Error: cound not index the fasta file", e);
         }
         double diffTimeIndex = System.nanoTime() - startTimeIndex;
         System.out.println();
         System.out.println("Indexing took " + (diffTimeIndex / 1e9) + " seconds and consumes " + (((float) ((FMIndex) peptideMapper).getAllocatedBytes()) / 1e6) + " MB");
         System.out.println();
         System.out.println("Start mapping using " + nCores + " threads");
-        
         
         
         
@@ -191,8 +222,7 @@ public class PeptideMapperCLI {
             writer = new PrintWriter(outputFileName, "UTF-8");
         }
         catch (Exception e){
-            System.out.println("Error: could not open files properly.");
-            System.exit(-1);
+            handleError(outputFileName, "Error: could not open files properly.", e);
         }
         waitingHandlerCLIImpl.setSecondaryProgressCounterIndeterminate(false);
         waitingHandlerCLIImpl.setMaxSecondaryProgressCounter((int)lineCount);
@@ -221,8 +251,7 @@ public class PeptideMapperCLI {
             System.out.println("Mapping " + lineCount + " peptides took " + (diffTimeMapping / 1e9) + " seconds");
 
         } catch (Exception e) {
-            System.err.println("Error: mapping went wrong");
-            System.exit(-1);
+            handleError(outputFileName, "Error: mapping went wrong", e);
         }
             
             
@@ -233,8 +262,7 @@ public class PeptideMapperCLI {
             br.close();
         }
         catch (Exception e) {
-            System.err.println("Error: could not close files properly");
-            System.exit(-1);
+            handleError(outputFileName, "Error: could not close files properly", e);
         }
     }
 }

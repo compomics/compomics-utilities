@@ -558,10 +558,10 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      * @param peptideVariantsPreferences contains all parameters for variants
      * @param searchParameters the search parameters
      *
-     * @throws IOException exception thrown if an error occurs while iterating
+     * @throws Exception exception thrown if an error occurs while iterating
      * the FASTA file.
      */
-    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, PeptideVariantsParameters peptideVariantsPreferences, SearchParameters searchParameters) throws IOException {
+    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, PeptideVariantsParameters peptideVariantsPreferences, SearchParameters searchParameters) throws Exception {
         if (searchParameters != null) {
             massTolerance = searchParameters.getFragmentIonAccuracy();
             massAccuracyType = searchParameters.getFragmentAccuracyType();
@@ -583,10 +583,10 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      * identification
      * @param peptideVariantsPreferences contains all parameters for variants
      *
-     * @throws IOException exception thrown if an error occurs while iterating
+     * @throws Exception exception thrown if an error occurs while iterating
      * the FASTA file
      */
-    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters modificationSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
+    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters modificationSettings, PeptideVariantsParameters peptideVariantsPreferences) throws Exception {
         init(fastaFile, fastaParameters, waitingHandler, displayProgress, modificationSettings, peptideVariantsPreferences);
     }
     
@@ -606,10 +606,10 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      * @param peptideVariantsPreferences contains all parameters for variants
      * @param massTolerance the mass tolerance
      *
-     * @throws IOException exception thrown if an error occurs while iterating
+     * @throws Exception exception thrown if an error occurs while iterating
      * the fasta file.
      */
-    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters modificatoinSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException {
+    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters modificatoinSettings, PeptideVariantsParameters peptideVariantsPreferences) throws Exception {
 
         // load all variant preferences
         maxNumberVariants = peptideVariantsPreferences.getnVariants();
@@ -1121,43 +1121,47 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
         if (loadFasta) {
 
-            // reading all proteins in a first pass to get information about number and total length
-            ArrayList<Integer> tmpLengths = new ArrayList<>();
-            ArrayList<Integer> tmpProteins = new ArrayList<>();
-            long ticker = indexChunkSize;
+            try {
+                // reading all proteins in a first pass to get information about number and total length
+                ArrayList<Integer> tmpLengths = new ArrayList<>();
+                ArrayList<Integer> tmpProteins = new ArrayList<>();
+                long ticker = indexChunkSize;
 
-            int indexStringLength = 1;
-            int numProteins = 0;
-            ProteinIterator pi = new FastaIterator(fastaFile);
-            Protein protein;
-            while ((protein = pi.getNextProtein()) != null) {
-                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                    return;
+                int indexStringLength = 1;
+                int numProteins = 0;
+                ProteinIterator pi = new FastaIterator(fastaFile);
+                Protein protein;
+                while ((protein = pi.getNextProtein()) != null) {
+                    if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                        return;
+                    }
+                    int proteinLen = protein.getLength();
+                    indexStringLength += proteinLen;
+                    ++numProteins;
+                    if (indexStringLength > ticker) {
+                        tmpLengths.add(indexStringLength);
+                        tmpProteins.add(numProteins);
+                        indexStringLength = 1;
+                        numProteins = 0;
+                    }
                 }
-                int proteinLen = protein.getLength();
-                indexStringLength += proteinLen;
-                ++numProteins;
-                if (indexStringLength > ticker) {
-                    tmpLengths.add(indexStringLength);
-                    tmpProteins.add(numProteins);
-                    indexStringLength = 1;
-                    numProteins = 0;
+                tmpLengths.add(indexStringLength);
+                tmpProteins.add(numProteins);
+
+                int maxProgressBar = 11 * tmpLengths.size();
+
+                if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
+                    waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+                    waitingHandler.setMaxSecondaryProgressCounter(maxProgressBar);
+                    waitingHandler.setSecondaryProgressCounter(0);
                 }
-            }
-            tmpLengths.add(indexStringLength);
-            tmpProteins.add(numProteins);
 
-            int maxProgressBar = 11 * tmpLengths.size();
-
-            if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
-                waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-                waitingHandler.setMaxSecondaryProgressCounter(maxProgressBar);
-                waitingHandler.setSecondaryProgressCounter(0);
-            }
-
-            pi = new FastaIterator(fastaFile);
-            for (int i = 0; i < tmpLengths.size(); ++i) {
-                addDataToIndex(pi, tmpLengths.get(i), tmpProteins.get(i), alphabet, fastaParameters, waitingHandler, displayProgress);
+                pi = new FastaIterator(fastaFile);
+                for (int i = 0; i < tmpLengths.size(); ++i) {
+                    addDataToIndex(pi, tmpLengths.get(i), tmpProteins.get(i), alphabet, fastaParameters, waitingHandler, displayProgress);
+                }
+            } catch(Exception e) {
+                throw e;
             }
         }
 
@@ -1338,7 +1342,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      * @throws IOException exception thrown if an error occurs while iterating
      * the FASTA file.
      */
-    void addDataToIndex(ProteinIterator pi, int indexStringLength, int numProteins, long[] alphabet, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress) throws IOException {
+    void addDataToIndex(ProteinIterator pi, int indexStringLength, int numProteins, long[] alphabet, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress) throws Exception {
 
         indexParts += 1;
         indexStringLength += numProteins + 1; // delimiters between protein sequences + sentinal
@@ -1397,6 +1401,14 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             T[tmpN++] = (byte)DELIMITER; // adding the delimiters
             accMD.trueBeginning = tmpN;
             accessionEndings.put(accession, tmpN + proteinLen);
+            
+            
+            for (char c : currentProtein.getSequence().toCharArray()){
+                if (!(((int)'A' <= c && c <= (int)'Z') || ((int)'a' <= c && c <= (int)'z'))){
+                    throw new IllegalArgumentException("Protein sequence of protein '" + header + "' contains invalid character: '" + Character.toString(c) + "'.");
+                }
+            }
+            
             System.arraycopy(currentProtein.getSequence().toUpperCase().getBytes(), 0, T, tmpN, proteinLen);
             tmpN += proteinLen;
             accssions[tmpNumProtein++] = accession;

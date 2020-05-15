@@ -16,15 +16,14 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.*;
-import java.util.concurrent.locks.*;
 
 
 
@@ -137,7 +136,7 @@ public class PeptideMapperCLI {
             sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
             sequenceMatchingPreferences.setLimitX(0.25);
         }
-        searchParameters.setFlanking(flanking);
+        if (searchParameters != null) searchParameters.setFlanking(flanking);
         
         runMapping(fastaFile,
                    waitingHandlerCLIImpl,
@@ -153,7 +152,7 @@ public class PeptideMapperCLI {
     
     
     
-    public static void handleError(String outputFileName, String errorMessage, Exception e){
+    public static void handleError(String outputFileName, String errorMessage, Throwable e){
         PrintWriter writer = null;
         System.out.println(errorMessage);
         
@@ -164,7 +163,7 @@ public class PeptideMapperCLI {
         
         
         try {
-            
+            if (e instanceof OutOfMemoryError) System.gc();
             writer = new PrintWriter(logFileName, "UTF-8");
             e.printStackTrace(writer);
             writer.close();
@@ -202,7 +201,10 @@ public class PeptideMapperCLI {
             peptideMapper = new FMIndex(fastaFile, null, waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
         } catch (Exception e) {
             handleError(outputFileName, "Error: cound not index the fasta file", e);
+        } catch (OutOfMemoryError e){
+            handleError(outputFileName, "Error: not enough memory available. Please try to run Java with more memory, e.g.: java -Xmx16G ...\n\n", e);
         }
+        
         double diffTimeIndex = System.nanoTime() - startTimeIndex;
         System.out.println();
         System.out.println("Indexing took " + (diffTimeIndex / 1e9) + " seconds and consumes " + (((float) ((FMIndex) peptideMapper).getAllocatedBytes()) / 1e6) + " MB");
@@ -235,15 +237,20 @@ public class PeptideMapperCLI {
         // starting the mapping
         try {
             long startTimeMapping = System.nanoTime();
-            ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
+            ArrayList<MappingWorker> workers = new ArrayList<>();
             ExecutorService importPool = Executors.newFixedThreadPool(nCores);
             for (int i = 0; i < nCores; ++i){
-                importPool.submit(new MappingWorker(waitingHandlerCLIImpl, peptideMapper, sequenceMatchingPreferences, br, writer, peptideMapping, searchParameters.getFlanking(), readWriteLock));
+                MappingWorker mw = new MappingWorker(waitingHandlerCLIImpl, peptideMapper, sequenceMatchingPreferences, br, writer, peptideMapping, searchParameters.getFlanking());
+                importPool.submit(mw);
+                workers.add(mw);
             };
             importPool.shutdown();
             if (!importPool.awaitTermination(TIMEOUT_DAYS, TimeUnit.DAYS)) {
                 System.out.println("Analysis timed out (time out: " + TIMEOUT_DAYS + " days)");
+            }
+            for (MappingWorker mw : workers){
+                if (mw.exception != null) throw mw.exception;
             }
 
             long diffTimeMapping = System.nanoTime() - startTimeMapping;

@@ -13,10 +13,10 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-import java.util.concurrent.locks.*;
 
 /**
  *
@@ -31,7 +31,7 @@ public class MappingWorker implements Runnable {
     int NUM_READS = 1000;
     boolean flanking = false;
     boolean peptideMapping = false;
-    ReadWriteLock readWriteLock = null;
+    public Exception exception = null;
     
 
     public MappingWorker(WaitingHandlerCLIImpl waitingHandlerCLIImpl,
@@ -40,8 +40,7 @@ public class MappingWorker implements Runnable {
                   BufferedReader br,
                   PrintWriter writer,
                   boolean peptideMapping,
-                  boolean flanking,
-                  ReadWriteLock readWriteLock
+                  boolean flanking
                   ){
         this.waitingHandlerCLIImpl = waitingHandlerCLIImpl;
         this.peptideMapper = peptideMapper;
@@ -50,7 +49,6 @@ public class MappingWorker implements Runnable {
         this.writer = writer;
         this.flanking = flanking;
         this.peptideMapping = peptideMapping;
-        this.readWriteLock = readWriteLock;
     }
     
     
@@ -81,8 +79,6 @@ public class MappingWorker implements Runnable {
 
     @Override
     public void run() {
-            
-        
         ArrayList<String> rows = new ArrayList<>();
         ArrayList<String> outputData = new ArrayList<>();
         
@@ -96,39 +92,45 @@ public class MappingWorker implements Runnable {
                 String row = "";
                 int i = 0;
                 //synchronized(br){
-                    while (i++ < NUM_READS && (row = br.readLine()) != null) {
+                    while (!waitingHandlerCLIImpl.isRunCanceled() && i++ < NUM_READS && (row = br.readLine()) != null) {
                         rows.add(row);
                         waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     }
                 //}
-                if (rows.size() == 0) break;
+                if (waitingHandlerCLIImpl.isRunCanceled() || rows.isEmpty()) break;
 
             } catch (Exception e) {
-                System.err.println("Error: cound not open input list");
-                System.exit(-1);
+                waitingHandlerCLIImpl.setRunCanceled();
+                exception = new IOException("Error: cound not open input list.\n\n" + e);
+                return;
             }
-
+            
 
             // map peptides sequences
             if (peptideMapping){
-
                 for (String inputPeptide : rows){
-                    for (int j = 0; j < inputPeptide.length(); ++j){
-                        int c = (int)inputPeptide.charAt(j);
+                    if (waitingHandlerCLIImpl.isRunCanceled()) break;
+                    for (char c : inputPeptide.toCharArray()){
                         if (!(((int)'A' <= c && c <= (int)'Z') || ((int)'a' <= c && c <= (int)'z'))){
-                            System.err.println("Error: invalid character in line '" + inputPeptide + "'");
-                            System.exit(-1);
+                            waitingHandlerCLIImpl.setRunCanceled();
+                            exception = new RuntimeException("Error: invalid character in line '" + inputPeptide + "' -> '" + (char)c + "'.");
+                            return;
                         }
                     }
 
+                    try {
+                        for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(inputPeptide.toUpperCase(), sequenceMatchingPreferences)) {
+                            String peptide = peptideProteinMapping.getPeptideSequence();
+                            String accession = peptideProteinMapping.getProteinAccession();
+                            int startIndex = peptideProteinMapping.getIndex() + 1;
+                            if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
 
-                    for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(inputPeptide.toUpperCase(), sequenceMatchingPreferences)) {
-                        String peptide = peptideProteinMapping.getPeptideSequence();
-                        String accession = peptideProteinMapping.getProteinAccession();
-                        int startIndex = peptideProteinMapping.getIndex() + 1;
-                        if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
-                        
-                        outputData.add(peptide + "," + accession + "," + startIndex);
+                            outputData.add(peptide + "," + accession + "," + startIndex);
+                        }
+                    }
+                    catch (Exception e){
+                        exception = new RuntimeException("An error occurred during the mapping of '" + inputPeptide + "'\n\n" + e);
+                        waitingHandlerCLIImpl.setRunCanceled();
                     }
                 }
 
@@ -136,6 +138,7 @@ public class MappingWorker implements Runnable {
             }
             else {
                 for (String tagString : rows){
+                    if (waitingHandlerCLIImpl.isRunCanceled()) break;
 
                     Tag tag = new Tag();
                     for (String part : tagString.split(",")) {
@@ -147,20 +150,26 @@ public class MappingWorker implements Runnable {
                                 double mass = Double.parseDouble(part);
                                 tag.addMassGap(mass);
                             } catch (NumberFormatException e) {
-                                System.err.println("Error: line contains no valid tag: '" + tagString + "'");
-                                System.exit(-1);
+                                waitingHandlerCLIImpl.setRunCanceled();
+                                exception = new RuntimeException("Error: line contains no valid tag: '" + tagString + "'.\n\n" + e);
+                                return;
                             }
                         }
                     }
                     
+                    try {
+                        for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(tag, sequenceMatchingPreferences)){
+                            String peptide = peptideProteinMapping.getPeptideSequence();
+                            String accession = peptideProteinMapping.getProteinAccession();
+                            int startIndex = peptideProteinMapping.getIndex() + 1;
+                            if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
 
-                    for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(tag, sequenceMatchingPreferences)){
-                        String peptide = peptideProteinMapping.getPeptideSequence();
-                        String accession = peptideProteinMapping.getProteinAccession();
-                        int startIndex = peptideProteinMapping.getIndex() + 1;
-                        if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
-
-                        outputData.add(tagString + "," + peptide + "," + accession + "," + startIndex);
+                            outputData.add(tagString + "," + peptide + "," + accession + "," + startIndex);
+                        }
+                    }
+                    catch (Exception e){
+                        exception = new RuntimeException("An error occurred during the mapping of '" + tagString + "'\n\n" + e);
+                        waitingHandlerCLIImpl.setRunCanceled();
                     }
                 }
             }
@@ -172,14 +181,17 @@ public class MappingWorker implements Runnable {
             // write out processed batch
             try {
                 //synchronized(br){
-                    for (String output : outputData) writer.println(output);
+                    for (String output : outputData){
+                    if (waitingHandlerCLIImpl.isRunCanceled()) break;
+                        writer.println(output);
+                    }
                 //}
             }
             catch (Exception e) {
-                System.err.println("Error: could not write into file");
-                System.exit(-1);
+                exception = new IOException("Error: could not write into file.\n\n" + e);
+                waitingHandlerCLIImpl.setRunCanceled();
+                return;
             }
         }
-            
     }
 }

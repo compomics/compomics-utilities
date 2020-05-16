@@ -1,7 +1,10 @@
 package com.compomics.util.parameters.identification.tool_specific;
 
+import com.compomics.util.experiment.biology.modifications.ModificationCategory;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * The MetaMorpheus specific parameters.
@@ -197,6 +200,14 @@ public class MetaMorpheusParameters implements IdentificationAlgorithmParameter 
      * If true, the G-PTM search is performed.
      */
     private boolean runGptm = false;
+    /**
+     * The modification categories to include in the G-PTM search.
+     */
+    private ArrayList<ModificationCategory> gPtmCategories = new ArrayList<>(
+            Arrays.asList(ModificationCategory.Common_Biological,
+                    ModificationCategory.Common_Artifact,
+                    ModificationCategory.Metal)
+    );
 
     /**
      * Constructor.
@@ -324,7 +335,10 @@ public class MetaMorpheusParameters implements IdentificationAlgorithmParameter 
             if (!maxHeterozygousVariants.equals(metaMorpheusParameters.getMaxHeterozygousVariants())) {
                 return false;
             }
-            if (runGptm()!= metaMorpheusParameters.runGptm()) {
+            if (runGptm != metaMorpheusParameters.runGptm()) {
+                return false;
+            }
+            if (!gPtmCategories.equals(metaMorpheusParameters.getGPtmCategories())) {
                 return false;
             }
 
@@ -452,6 +466,19 @@ public class MetaMorpheusParameters implements IdentificationAlgorithmParameter 
         output.append(newLine);
         output.append("RUN_GPTM=");
         output.append(runGptm());
+        output.append(newLine);
+        output.append("GPTMS=");
+        
+        String tempGPtmCategories = "";
+        
+        for (ModificationCategory tempCategory : gPtmCategories) {
+            if (!tempGPtmCategories.isEmpty()) {
+                tempGPtmCategories += ", ";
+            }
+            tempGPtmCategories += tempCategory;
+        }
+        
+        output.append(tempGPtmCategories);
         output.append(newLine);
 
         return output.toString();
@@ -1071,5 +1098,23 @@ public class MetaMorpheusParameters implements IdentificationAlgorithmParameter 
      */
     public void setRunGptm(boolean runGptm) {
         this.runGptm = runGptm;
+    }
+
+    /**
+     * Returns the modification categories to include in the G-PTM search.
+     *
+     * @return the modification categories to include in the G-PTM search
+     */
+    public ArrayList<ModificationCategory> getGPtmCategories() {
+        return gPtmCategories;
+    }
+
+    /**
+     * Set the modification categories to include in the G-PTM search.
+     *
+     * @param gPtmCategories the gPtmCategories to set
+     */
+    public void setGPtmCategories(ArrayList<ModificationCategory> gPtmCategories) {
+        this.gPtmCategories = gPtmCategories;
     }
 }

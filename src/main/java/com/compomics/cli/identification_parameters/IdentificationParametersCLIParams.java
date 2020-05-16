@@ -1,6 +1,7 @@
 package com.compomics.cli.identification_parameters;
 
 import com.compomics.software.cli.CommandLineUtils;
+import com.compomics.util.experiment.biology.modifications.ModificationCategory;
 import com.compomics.util.experiment.identification.modification.ModificationLocalizationScore;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
@@ -291,6 +292,8 @@ public enum IdentificationParametersCLIParams {
     META_MORPHEUS_MAX_MOD_ISOFORMS("meta_morpheus_max_mod_isoforms", "MetaMorpheus maximum modified isoforms, default is '1024'.", false, true),
     META_MORPHEUS_MIN_VARIANT_DEPTH("meta_morpheus_min_variant_depth", "MetaMorpheus minimum variant depth, default is '1'.", false, true),
     META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS("meta_morpheus_max_hetrozygous_var", "MetaMorpheus maximum hetrozygous variants, default is '4'.", false, true),
+    META_MORPHEUS_GPTM("meta_morpheus_gptm", "MetaMorpheus run G-PTM, 1: true, 0: false, default is '0'.", false, true),
+    META_MORPHEUS_GPTM_CATEGORIES("meta_morpheus_gptm_categories", "MetaMorpheus G-PTM categories to include in the G-PTM search: " + ModificationCategory.getCategoriesAsString(), false, true),
     //////////////////////////////////
     // DirecTag specific parameters
     //////////////////////////////////
@@ -717,7 +720,8 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_MAX_MOD_ISOFORMS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MAX_MOD_ISOFORMS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_MIN_VARIANT_DEPTH.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MIN_VARIANT_DEPTH.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.description + "\n";
-
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_GPTM.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_GPTM.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.description + "\n";
         
         output += "\n\nNovor:\n\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id) + " " + IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.description + "\n";

@@ -19,9 +19,9 @@ import java.util.TreeSet;
 public class PSModificationScores extends DbObject implements UrParameter {
 
     /**
-     * Serial version UID for post-serialization compatibility.
+     * Dummy scores.
      */
-    static final long serialVersionUID = 7450340838299319636L;
+    public static final PSModificationScores dummy = new PSModificationScores();
     /**
      * A map containing all scores indexed by the modification of interest for a
      * peptide or a PSM.
@@ -60,7 +60,10 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * @param modName the modification of interest
      * @param modificationScoring the corresponding scoring
      */
-    public void addModificationScoring(String modName, ModificationScoring modificationScoring) {
+    public void addModificationScoring(
+            String modName, 
+            ModificationScoring modificationScoring
+    ) {
 
         writeDBMode();
 
@@ -76,7 +79,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      *
      * @return the scoring
      */
-    public ModificationScoring getModificationScoring(String modName) {
+    public ModificationScoring getModificationScoring(
+            String modName
+    ) {
 
         readDBMode();
 
@@ -91,7 +96,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      *
      * @return a boolean indicating whether the modification is in the map
      */
-    public boolean containsModification(String modName) {
+    public boolean containsModification(
+            String modName
+    ) {
 
         readDBMode();
 
@@ -253,6 +260,8 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * @param originalModName The name of the modification at the original site.
      * @param originalRepresentativeSite The original representative site.
      * @param newRepresentativeSite The new representative site.
+     * @param nMod The occurrence of modifications of the exact same mass in
+     * this peptide.
      * @param modificationProvider The modification provider to use.
      */
     public void changeRepresentativeSite(
@@ -348,6 +357,11 @@ public class PSModificationScores extends DbObject implements UrParameter {
 
             modificationSiteMap.remove(originalRepresentativeSite);
 
+            if (modificationSiteMap.isEmpty()) {
+
+                ambiguousModificationsByModName.remove(originalModName);
+
+            }
         }
 
         modificationSiteMap = ambiguousModificationsByModName.get(modName);
@@ -428,7 +442,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * @return a list containing all potential modifications as main match, an
      * empty list if none found
      */
-    public HashSet<String> getConfidentModificationsAt(int site) {
+    public HashSet<String> getConfidentModificationsAt(
+            int site
+    ) {
 
         readDBMode();
 
@@ -446,7 +462,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * @return a list of modifications which have a representative ambiguous
      * site at the given site
      */
-    public HashSet<String> getModificationsAtRepresentativeSite(int site) {
+    public HashSet<String> getModificationsAtRepresentativeSite(
+            int site
+    ) {
 
         readDBMode();
 
@@ -467,7 +485,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      *
      * @return the confident sites for the given modification
      */
-    public HashSet<Integer> getConfidentSitesForModification(String modName) {
+    public HashSet<Integer> getConfidentSitesForModification(
+            String modName
+    ) {
 
         readDBMode();
 
@@ -485,7 +505,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * @return the ambiguous modification assignments registered at the given
      * representative site
      */
-    public HashMap<Integer, HashSet<String>> getAmbiguousModificationsAtRepresentativeSite(int representativeSite) {
+    public HashMap<Integer, HashSet<String>> getAmbiguousModificationsAtRepresentativeSite(
+            int representativeSite
+    ) {
 
         readDBMode();
 
@@ -504,7 +526,9 @@ public class PSModificationScores extends DbObject implements UrParameter {
      * @return the ambiguous modification sites registered for the given
      * modification
      */
-    public HashMap<Integer, HashSet<Integer>> getAmbiguousModificationsSites(String modName) {
+    public HashMap<Integer, HashSet<Integer>> getAmbiguousModificationsSites(
+            String modName
+    ) {
 
         readDBMode();
 

@@ -155,8 +155,7 @@ public class PeptideFilter extends MatchFilter {
 
             case modification:
                 peptideMatch = identification.getPeptideMatch(matchKey);
-                PSModificationScores modificationScores = new PSModificationScores();
-                modificationScores = (PSModificationScores) peptideMatch.getUrParam(modificationScores);
+                PSModificationScores modificationScores = (PSModificationScores) peptideMatch.getUrParam(PSModificationScores.dummy);
                 Set<String> modifications = modificationScores == null ? new HashSet<>(0)
                         : modificationScores.getScoredModifications();
                 return filterItemComparator.passes(input, modifications);

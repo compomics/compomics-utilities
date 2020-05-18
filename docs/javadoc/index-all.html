@@ -4551,6 +4551,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/scripts_marc/Dummy.html#Dummy--">Dummy()</a></span> - Constructor for class com.compomics.scripts_marc.<a href="com/compomics/scripts_marc/Dummy.html" title="class in com.compomics.scripts_marc">Dummy</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSModificationScores.html#dummy">dummy</a></span> - Static variable in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSModificationScores.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSModificationScores</a></dt>
+<dd>
+<div class="block">Dummy scores.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html#dummy">dummy</a></span> - Static variable in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSParameter</a></dt>
 <dd>
 <div class="block">An empty parameter used for instantiation.</div>
@@ -5145,13 +5149,13 @@
 <dd>
 <div class="block">The Fluorine atom.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/math/BasicMathFunctions.html#factorial-java.lang.Integer-">factorial(Integer)</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BasicMathFunctions.html" title="class in com.compomics.util.math">BasicMathFunctions</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/math/BasicMathFunctions.html#factorial-int-">factorial(int)</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BasicMathFunctions.html" title="class in com.compomics.util.math">BasicMathFunctions</a></dt>
 <dd>
 <div class="block">Returns n! as a long.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/math/BasicMathFunctions.html#factorial-java.lang.Integer-java.lang.Integer-">factorial(Integer, Integer)</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BasicMathFunctions.html" title="class in com.compomics.util.math">BasicMathFunctions</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/math/BasicMathFunctions.html#factorial-int-int-">factorial(int, int)</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BasicMathFunctions.html" title="class in com.compomics.util.math">BasicMathFunctions</a></dt>
 <dd>
-<div class="block">Returns n!/k!, null if it cannot fit in a long.</div>
+<div class="block">Returns n!/k!, -1 if it cannot fit in a long.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/math/BigFunctions.html#factorial-java.math.BigInteger-">factorial(BigInteger)</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BigFunctions.html" title="class in com.compomics.util.math">BigFunctions</a></dt>
 <dd>
@@ -8418,6 +8422,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/IoUtil.html#getExtension-java.lang.String-">getExtension(String)</a></span> - Static method in class com.compomics.util.io.<a href="com/compomics/util/io/IoUtil.html" title="class in com.compomics.util.io">IoUtil</a></dt>
 <dd>
 <div class="block">Returns the extensions of a file name.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/math/BasicMathFunctions.html#getFactorialsCache--">getFactorialsCache()</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BasicMathFunctions.html" title="class in com.compomics.util.math">BasicMathFunctions</a></dt>
+<dd>
+<div class="block">Returns factorial 0 to 20 in an array.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/cli/fasta/FastaParametersInputBean.html#getFastaParameters--">getFastaParameters()</a></span> - Method in class com.compomics.cli.fasta.<a href="com/compomics/cli/fasta/FastaParametersInputBean.html" title="class in com.compomics.cli.fasta">FastaParametersInputBean</a></dt>
 <dd>
@@ -13132,7 +13140,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html#getProbabilisticScoreThreshold--">getProbabilisticScoreThreshold()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ModificationLocalizationParameters</a></dt>
 <dd>
-<div class="block">Returns the probabilistic score threshold.</div>
+<div class="block">Returns the probabilistic score threshold (inclusive).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/ModificationScoring.html#getProbabilisticSites--">getProbabilisticSites()</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/ModificationScoring.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">ModificationScoring</a></dt>
 <dd>
@@ -13646,6 +13654,11 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/math/BasicMathFunctions.html#getRandomInteger-int-int-">getRandomInteger(int, int)</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BasicMathFunctions.html" title="class in com.compomics.util.math">BasicMathFunctions</a></dt>
 <dd>
 <div class="block">Returns an integer randomly chosen between min and max included.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/ModificationLocalizationScore.html#getRandomThreshold-int-int-">getRandomThreshold(int, int)</a></span> - Method in enum com.compomics.util.experiment.identification.modification.<a href="com/compomics/util/experiment/identification/modification/ModificationLocalizationScore.html" title="enum in com.compomics.util.experiment.identification.modification">ModificationLocalizationScore</a></dt>
+<dd>
+<div class="block">Returns the threshold (inclusive) to use to consider an assignment
+ random.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html#getRank-int-boolean-">getRank(int, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">Rank</a></dt>
 <dd>
@@ -27323,7 +27336,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html#setProbabilisticScoreThreshold-double-">setProbabilisticScoreThreshold(double)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ModificationLocalizationParameters</a></dt>
 <dd>
-<div class="block">Sets the probabilistic score threshold.</div>
+<div class="block">Sets the probabilistic score threshold (inclusive).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html#setProbability-double-">setProbability(double)</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSParameter</a></dt>
 <dd>

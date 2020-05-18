@@ -102,9 +102,9 @@ public class ModificationLocalizationParameters extends DbObject {
     }
 
     /**
-     * Returns the probabilistic score threshold.
+     * Returns the probabilistic score threshold (inclusive).
      *
-     * @return the probabilistic score threshold
+     * @return The probabilistic score threshold (inclusive).
      */
     public double getProbabilisticScoreThreshold() {
         readDBMode();
@@ -114,11 +114,13 @@ public class ModificationLocalizationParameters extends DbObject {
     }
 
     /**
-     * Sets the probabilistic score threshold.
+     * Sets the probabilistic score threshold (inclusive).
      *
-     * @param probabilisticScoreThreshold the probabilistic score threshold
+     * @param probabilisticScoreThreshold The probabilistic score threshold (inclusive).
      */
-    public void setProbabilisticScoreThreshold(double probabilisticScoreThreshold) {
+    public void setProbabilisticScoreThreshold(
+            double probabilisticScoreThreshold
+    ) {
     
         writeDBMode();
         this.probabilisticScoreThreshold = probabilisticScoreThreshold;

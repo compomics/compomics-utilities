@@ -2179,7 +2179,7 @@ public class IdentificationFeaturesGenerator {
             String sequence
     ) {
 
-        PSModificationScores modificationsScores = (PSModificationScores) identificationMatch.getUrParam(new PSModificationScores());
+        PSModificationScores modificationsScores = (PSModificationScores) identificationMatch.getUrParam(PSModificationScores.dummy);
 
         return modificationsScores == null ? ""
                 : modificationsScores.getConfidentlyLocalizedModifications().stream()
@@ -2218,7 +2218,7 @@ public class IdentificationFeaturesGenerator {
             IdentificationMatch identificationMatch
     ) {
 
-        final PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(new PSModificationScores());
+        final PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(PSModificationScores.dummy);
 
         return modificationScores == null ? ""
                 : modificationScores.getConfidentlyLocalizedModifications().stream()
@@ -2252,7 +2252,7 @@ public class IdentificationFeaturesGenerator {
             String sequence
     ) {
 
-        final PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(new PSModificationScores());
+        final PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(PSModificationScores.dummy);
 
         return modificationScores == null ? ""
                 : modificationScores.getAmbiguouslyLocalizedModifications().stream()
@@ -2340,7 +2340,7 @@ public class IdentificationFeaturesGenerator {
             IdentificationMatch identificationMatch
     ) {
 
-        final PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(new PSModificationScores());
+        final PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(PSModificationScores.dummy);
 
         return modificationScores == null ? ""
                 : modificationScores.getAmbiguouslyLocalizedModifications().stream()
@@ -2377,7 +2377,7 @@ public class IdentificationFeaturesGenerator {
             ArrayList<String> targetedModifications
     ) {
 
-        final PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(new PSModificationScores());
+        final PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(PSModificationScores.dummy);
 
         return modificationScores == null ? ""
                 : targetedModifications.stream()
@@ -2417,7 +2417,7 @@ public class IdentificationFeaturesGenerator {
             ArrayList<String> targetedModifications
     ) {
 
-        final PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(new PSModificationScores());
+        final PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(PSModificationScores.dummy);
 
         return modificationScores == null ? ""
                 : Long.toString(
@@ -2448,8 +2448,7 @@ public class IdentificationFeaturesGenerator {
             ArrayList<String> targetedModifications
     ) {
 
-        PSModificationScores modificationScores = new PSModificationScores();
-        modificationScores = (PSModificationScores) match.getUrParam(modificationScores);
+        PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(PSModificationScores.dummy);
 
         if (modificationScores == null) {
 
@@ -2526,7 +2525,7 @@ public class IdentificationFeaturesGenerator {
             ArrayList<String> targetedModifications
     ) {
 
-        final PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(new PSModificationScores());
+        final PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(PSModificationScores.dummy);
 
         return modificationScores == null ? ""
                 : Long.toString(
@@ -2553,7 +2552,7 @@ public class IdentificationFeaturesGenerator {
             String sequence
     ) {
 
-        PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(new PSModificationScores());
+        PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(PSModificationScores.dummy);
 
         if (modificationScores == null) {
 

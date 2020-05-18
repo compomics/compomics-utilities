@@ -265,7 +265,7 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
 
         thresholdTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
-        thresholdLabel.setText("Threshold");
+        thresholdLabel.setText("Threshold (Inclusive)");
 
         scoreTypeLabel.setText("Probabilistic Score");
 

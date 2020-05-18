@@ -3,6 +3,8 @@ package com.compomics.util.math;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
 import org.apache.commons.math.util.FastMath;
 
 /**
@@ -24,12 +26,32 @@ public class BasicMathFunctions {
     /**
      * Cache for factorials.
      */
-    private static final HashMap<Integer, Long> factorialsCache = new HashMap<Integer, Long>();
+    private static final long[] FACTORIALS_CACHE = getFactorialsCache();
 
     /**
      * Empty default constructor.
      */
     public BasicMathFunctions() {
+    }
+
+    /**
+     * Returns factorial 0 to 20 in an array.
+     *
+     * @return Factorial 0 to 20 in an array.
+     */
+    public static long[] getFactorialsCache() {
+
+        long[] result = new long[21];
+        result[0] = 1;
+
+        for (int i = 1; i <= 20; i++) {
+
+            result[i] = result[i - 1] * i;
+
+        }
+
+        return result;
+
     }
 
     /**
@@ -40,113 +62,120 @@ public class BasicMathFunctions {
      *
      * @return the corresponding factorial
      */
-    public static Long factorial(Integer n) {
+    public static long factorial(
+            int n
+    ) {
 
         if (n == 0) {
+
             return 0L;
+
         } else if (n == 1) {
+
             return 1L;
+
         } else if (n <= 20) {
-            Long result = factorialsCache.get(n);
-            if (result == null) {
-                result = estimateFactorial(n);
-            }
-            return result;
+
+            return FACTORIALS_CACHE[n];
+
         } else if (n > 20) {
+
             throw new IllegalArgumentException(
-                    "Factorial only implemented for n <= 20. Reached the maximal capacoty of an integer.");
-        } else if (n < 1) {
+                    "Factorial only implemented for n <= 20. Reached the maximal capacoty of a long.");
+
+        } else if (n < 0) {
+
             throw new ArithmeticException("Attempting to calculate the factorial of a negative number.");
+
         }
 
-        throw new UnsupportedOperationException("Factorial not implemented for n=" + n + ".");
+        throw new UnsupportedOperationException("Factorial not implemented for n = " + n + ".");
+
     }
 
     /**
-     * Estimates factorial in a synchronous method as part of the factorial
-     * method.
+     * Returns n!/k!, -1 if it cannot fit in a long.
      *
-     * @param n a given integer
+     * @param n n
+     * @param k k
      *
-     * @return the corresponding factorial
+     * @return n!/k!, -1 if it cannot fit in a long.
      */
-    private static synchronized Long estimateFactorial(Integer n) {
-
-        Long result = factorialsCache.get(n);
-
-        if (result == null) {
-            synchronized (BasicMathFunctions.class) {
-                result = factorialsCache.get(n);
-                if (result == null) {
-                    result = factorial(n - 1) * n;
-                    factorialsCache.put(n, result);
-                }
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Returns n!/k!, null if it cannot fit in a long.
-     *
-     * @param n a given integer
-     * @param k a given integer
-     *
-     * @return the corresponding factorial
-     */
-    public static Long factorial(Integer n, Integer k) {
+    public static long factorial(
+            int n,
+            int k
+    ) {
 
         if (n < k) {
             throw new ArithmeticException("n < k in n!/k!.");
         }
-        if (n.equals(k)) {
-            return (long) 1;
+        if (n == k) {
+
+            return 1L;
+
         } else {
 
             if (n < 20) {
+
                 return factorial(n) / factorial(k);
+
             }
 
-            Long nMinusOne = factorial(n - 1, k);
+            long nMinusOne = factorial(n - 1, k);
 
-            if (nMinusOne == null || nMinusOne > Long.MAX_VALUE / n) {
-                return null;
+            if (nMinusOne == -1L || nMinusOne > Long.MAX_VALUE / n) {
+
+                return -1;
+
             } else {
+
                 return nMinusOne * n;
+
             }
         }
     }
 
     /**
      * Returns the number of k-combinations in a set of n elements. If n!/k!
-     * cannot fit in a long, null is returned, use BigDecimal instead (see
-     * BigFunctions).
+     * cannot fit in a long, -1 is returned.
      *
      * @param k the number of k-combinations
      * @param n the number of elements
      *
-     * @return the number of k-combinations in a set of n elements
+     * @return The number of k-combinations in a set of n elements.
      */
-    public static Long getCombination(int k, int n) {
+    public static long getCombination(
+            int k, 
+            int n
+    ) {
 
         if (k == 0) {
-            return (long) 1;
+
+            return 1L;
+
         } else if (k < n) {
 
-            Long kInN = factorial(n, k);
-            Long nMinK = factorial(n - k);
+            long kInN = factorial(n, k);
+            long nMinK = factorial(n - k);
 
-            if (kInN == null || nMinK == null) {
-                return null;
+            if (kInN == -1L || nMinK == -1L) {
+
+                return -1L;
+
             } else {
-                return kInN / kInN;
+
+                return kInN / nMinK;
+
             }
 
         } else if (k == n) {
-            return (long) 1;
+
+            return 1L;
+
         } else {
+
             throw new IllegalArgumentException("n>k in combination.");
+
         }
     }
 

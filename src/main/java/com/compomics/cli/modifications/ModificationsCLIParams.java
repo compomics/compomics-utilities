@@ -19,7 +19,7 @@ public enum ModificationsCLIParams {
     OUT("out", "The destination modifications file (.json).", true, true),
     RM("rm", "The name of a modification to remove.", false, true),
     TYPE("type", "The type of the modification to add. " + ModificationType.getTypesAsString(), false, true),
-    CATEGORY("category", "The categoty of the modification to add. " + ModificationCategory.getCategoriesAsString(), false, true),
+    CATEGORY("category", "The category of the modification to add. " + ModificationCategory.getCategoriesAsString(), false, true),
     NAME("name", "The name of a modification to add.", false, true),
     SHORT_NAME("short_name", "The short name of the modification to add.", false, true),
     COMPOSITION_ADDED("composition_added", "The atomic composition of the modification to add.", false, true),

@@ -1,6 +1,7 @@
 package com.compomics.util.gui.parameters.identification.algorithm;
 
 import com.compomics.util.examples.BareBonesBrowserLaunch;
+import com.compomics.util.experiment.biology.modifications.ModificationCategory;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.gui.GuiUtilities;
 import java.awt.Dialog;
@@ -16,7 +17,10 @@ import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusPa
 import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusSearchType;
 import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusToleranceType;
 import java.awt.Color;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import no.uib.jsparklines.extra.NimbusCheckBoxRenderer;
 
 /**
  * Dialog for the MetaMorpheus specific parameters.
@@ -96,6 +100,7 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         fragmentationTerminusCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         searchTargetComboBox.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         decoyTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        runGtpmCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
         searchTypeCombo.setEnabled(editable);
         numberOfPartitionsTxt.setEditable(editable);
@@ -145,7 +150,19 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         minVariantDepthTxt.setEnabled(editable);
         maxHetroVariantsTxt.setEditable(editable);
         maxHetroVariantsTxt.setEnabled(editable);
+        runGtpmCmb.setEnabled(editable);
 
+        gPtmTable.setEnabled(editable);
+        
+        gPtmScrollPane.getViewport().setOpaque(false);
+        gPtmTable.getTableHeader().setReorderingAllowed(false);
+
+        gPtmTable.getColumn(" ").setMaxWidth(35);
+        gPtmTable.getColumn(" ").setMinWidth(35);
+        gPtmTable.getColumn("  ").setMaxWidth(35);
+        gPtmTable.getColumn("  ").setMinWidth(35);
+        gPtmTable.getColumn("  ").setCellRenderer(new NimbusCheckBoxRenderer());
+        gPtmTable.getColumn("  ").setCellRenderer(new NimbusCheckBoxRenderer());
     }
 
     /**
@@ -255,6 +272,23 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         minVariantDepthTxt.setText(metaMorpheusParameters.getMinVariantDepth() + "");
         maxHetroVariantsTxt.setText(metaMorpheusParameters.getMaxHeterozygousVariants() + "");
 
+        if (metaMorpheusParameters.runGptm()) {
+            runGtpmCmb.setSelectedIndex(0);
+        } else {
+            runGtpmCmb.setSelectedIndex(1);
+        }
+
+        for (int i = 0; i < ModificationCategory.values().length; i++) {
+            
+            ModificationCategory tempModCategory = ModificationCategory.values()[i];
+            
+            ((DefaultTableModel) gPtmTable.getModel()).addRow(
+                    new Object[]{i+1,
+                        tempModCategory,
+                        metaMorpheusParameters.getGPtmCategories().contains(tempModCategory)
+                    });
+        }
+
     }
 
     @Override
@@ -328,6 +362,17 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         tempMetaMorpheusParameters.setMinVariantDepth(Integer.valueOf(input));
         input = maxHetroVariantsTxt.getText().trim();
         tempMetaMorpheusParameters.setMaxHeterozygousVariants(Integer.valueOf(input));
+        tempMetaMorpheusParameters.setRunGptm(runGtpmCmb.getSelectedIndex() == 0);
+
+        ArrayList<ModificationCategory> gPtmCategories = new ArrayList<>();
+        
+        for (int i=0; i<gPtmTable.getRowCount(); i++) {
+            if ((Boolean) gPtmTable.getValueAt(i, 2)) {
+                gPtmCategories.add((ModificationCategory) gPtmTable.getValueAt(i, 1));
+            }
+        }
+
+        tempMetaMorpheusParameters.setGPtmCategories(gPtmCategories);
 
         return tempMetaMorpheusParameters;
     }
@@ -419,6 +464,11 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         minVariantDepthTxt = new javax.swing.JTextField();
         maxHetroVariantsLbl = new javax.swing.JLabel();
         maxHetroVariantsTxt = new javax.swing.JTextField();
+        gptmPanel = new javax.swing.JPanel();
+        runGptmLbl = new javax.swing.JLabel();
+        runGtpmCmb = new javax.swing.JComboBox();
+        gPtmScrollPane = new javax.swing.JScrollPane();
+        gPtmTable = new javax.swing.JTable();
         jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -1049,6 +1099,72 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
 
         tabbedPane.addTab("In Silico Digestion", inSilicoDigestionPanel);
 
+        gptmPanel.setBackground(new java.awt.Color(230, 230, 230));
+
+        runGptmLbl.setText("Run G-PTM Search");
+
+        runGtpmCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        runGtpmCmb.setSelectedIndex(1);
+        runGtpmCmb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                runGtpmCmbActionPerformed(evt);
+            }
+        });
+
+        gPtmTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                " ", "Category", "  "
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        gPtmTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        gPtmScrollPane.setViewportView(gPtmTable);
+
+        javax.swing.GroupLayout gptmPanelLayout = new javax.swing.GroupLayout(gptmPanel);
+        gptmPanel.setLayout(gptmPanelLayout);
+        gptmPanelLayout.setHorizontalGroup(
+            gptmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gptmPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(gptmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(gPtmScrollPane)
+                    .addGroup(gptmPanelLayout.createSequentialGroup()
+                        .addComponent(runGptmLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addComponent(runGtpmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(25, 25, 25))
+        );
+        gptmPanelLayout.setVerticalGroup(
+            gptmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gptmPanelLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(gptmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(runGptmLbl)
+                    .addComponent(runGtpmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(gPtmScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        tabbedPane.addTab("G-PTM Search", gptmPanel);
+
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
         backgroundPanelLayout.setHorizontalGroup(
@@ -1073,7 +1189,7 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1294,6 +1410,15 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
     }//GEN-LAST:event_minVariantDepthTxtKeyReleased
 
     /**
+     * Enable/disable the G-PTM table.
+     *
+     * @param evt
+     */
+    private void runGtpmCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runGtpmCmbActionPerformed
+        gPtmTable.setEnabled(runGtpmCmb.getSelectedIndex() == 0);
+    }//GEN-LAST:event_runGtpmCmbActionPerformed
+
+    /**
      * Inspects the parameters validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -1369,6 +1494,9 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
     private javax.swing.JLabel excludeOneHitWondersLbl;
     private javax.swing.JComboBox fragmentationTerminusCmb;
     private javax.swing.JLabel fragmentationTerminusLbl;
+    private javax.swing.JScrollPane gPtmScrollPane;
+    private javax.swing.JTable gPtmTable;
+    private javax.swing.JPanel gptmPanel;
     private javax.swing.JPanel inSilicoDigestionPanel;
     private javax.swing.JComboBox intitiatorMethBehaviorCombo;
     private javax.swing.JLabel intitiatorMethBehaviorLabel;
@@ -1406,6 +1534,8 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
     private javax.swing.JLabel peptideLengthDividerLabel;
     private javax.swing.JLabel peptideLengthJLabel;
     private javax.swing.JPanel proteinGroupingPanel;
+    private javax.swing.JLabel runGptmLbl;
+    private javax.swing.JComboBox runGtpmCmb;
     private javax.swing.JLabel scoreCutoffLabel;
     private javax.swing.JTextField scoreCutoffTxt;
     private javax.swing.JPanel searchPanel;

@@ -89,6 +89,37 @@ public class SimpleFileWriter implements AutoCloseable {
 
     }
 
+    /**
+     * Writes a a buffer of characters to the file.
+     *
+     * @param buffer The buffer to write.
+     * @param offset The offset from which to start reading characters.
+     * @param length The maximal number of characters to write
+     */
+    public void write(
+            char[] buffer, 
+            int offset, 
+            int length
+    ) {
+
+        try {
+
+            bw.write(
+                    buffer, 
+                    offset, 
+                    length
+            );
+
+        } catch (IOException e) {
+
+            throw new RuntimeException(e);
+
+        }
+    }
+
+    /**
+     * Appends a new line to the output.
+     */
     public void newLine() {
 
         try {

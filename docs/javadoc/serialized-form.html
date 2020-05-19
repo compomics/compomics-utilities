@@ -3243,14 +3243,46 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 </ul>
 </li>
+<li class="blockList"><a id="com.compomics.util.experiment.identification.peptide_shaker.ModificationScoring">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/experiment/identification/peptide_shaker/ModificationScoring.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">com.compomics.util.experiment.identification.peptide_shaker.ModificationScoring</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>-3357368272501542941L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>deltaScoresAtAA</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util" class="externalLink">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>,&#8203;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&gt; deltaScoresAtAA</pre>
+<div class="block">Amino acid specific delta score. 1 is the first amino acid.</div>
+</li>
+<li class="blockList">
+<h4>probabilisticScoresAtAA</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util" class="externalLink">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>,&#8203;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Double.html?is-external=true" title="class or interface in java.lang" class="externalLink">Double</a>&gt; probabilisticScoresAtAA</pre>
+<div class="block">Amino acid specific probabilistic score.</div>
+</li>
+<li class="blockList">
+<h4>ptmLocationAtAA</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashMap.html?is-external=true" title="class or interface in java.util" class="externalLink">HashMap</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>,&#8203;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt; ptmLocationAtAA</pre>
+<div class="block">The retained PTM site assignment.</div>
+</li>
+<li class="blockListLast">
+<h4>ptmName</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> ptmName</pre>
+<div class="block">The name of the modification of interest. 1 is the first amino acid.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="blockList"><a id="com.compomics.util.experiment.identification.peptide_shaker.PSModificationScores">
 <!--   -->
 </a>
 <h3>Class <a href="com/compomics/util/experiment/identification/peptide_shaker/PSModificationScores.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">com.compomics.util.experiment.identification.peptide_shaker.PSModificationScores</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
-<dl class="nameValue">
-<dt>serialVersionUID:</dt>
-<dd>7450340838299319636L</dd>
-</dl>
 <ul class="blockList">
 <li class="blockList">
 <h3>Serialized Fields</h3>
@@ -5734,7 +5766,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockListLast">
 <h4>settingUpGUI</h4>
 <pre>boolean settingUpGUI</pre>
-<div class="block">True of the GUI is currently being set up.</div>
+<div class="block">True if the GUI is currently being set up.</div>
 </li>
 </ul>
 </li>
@@ -9705,6 +9737,18 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing" class="externalLink">JLabel</a> fragmentationTerminusLbl</pre>
 </li>
 <li class="blockList">
+<h4>gptmPanel</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing" class="externalLink">JPanel</a> gptmPanel</pre>
+</li>
+<li class="blockList">
+<h4>gPtmScrollPane</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JScrollPane.html?is-external=true" title="class or interface in javax.swing" class="externalLink">JScrollPane</a> gPtmScrollPane</pre>
+</li>
+<li class="blockList">
+<h4>gPtmTable</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JTable.html?is-external=true" title="class or interface in javax.swing" class="externalLink">JTable</a> gPtmTable</pre>
+</li>
+<li class="blockList">
 <h4>inSilicoDigestionPanel</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing" class="externalLink">JPanel</a> inSilicoDigestionPanel</pre>
 </li>
@@ -9851,6 +9895,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>proteinGroupingPanel</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JPanel.html?is-external=true" title="class or interface in javax.swing" class="externalLink">JPanel</a> proteinGroupingPanel</pre>
+</li>
+<li class="blockList">
+<h4>runGptmLbl</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JLabel.html?is-external=true" title="class or interface in javax.swing" class="externalLink">JLabel</a> runGptmLbl</pre>
+</li>
+<li class="blockList">
+<h4>runGtpmCmb</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/javax/swing/JComboBox.html?is-external=true" title="class or interface in javax.swing" class="externalLink">JComboBox</a> runGtpmCmb</pre>
 </li>
 <li class="blockList">
 <h4>scoreCutoffLabel</h4>
@@ -14615,6 +14667,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  aligned on the confident sites.</div>
 </li>
 <li class="blockList">
+<h4>dScoreThreshold</h4>
+<pre>double dScoreThreshold</pre>
+<div class="block">The D-score threshold.</div>
+</li>
+<li class="blockList">
 <h4>probabilisticScoreCalculation</h4>
 <pre>boolean probabilisticScoreCalculation</pre>
 <div class="block">Boolean indicating whether a probabilistic score is to be calculated.</div>
@@ -14893,6 +14950,11 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>digestionParameters</h4>
 <pre><a href="com/compomics/util/parameters/identification/search/DigestionParameters.html" title="class in com.compomics.util.parameters.identification.search">DigestionParameters</a> digestionParameters</pre>
 <div class="block">The digestion preferences.</div>
+</li>
+<li class="blockList">
+<h4>flanking</h4>
+<pre>boolean flanking</pre>
+<div class="block">Report the flanking amino acids of a mapped peptide.</div>
 </li>
 <li class="blockList">
 <h4>forwardIons</h4>

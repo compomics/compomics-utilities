@@ -7,6 +7,7 @@ import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
+import com.compomics.util.experiment.biology.modifications.ModificationCategory;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
@@ -1551,6 +1552,22 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.id);
             if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_GPTM.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_GPTM.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id);
+            List<String> supportedInput = new ArrayList<>();
+            for (ModificationCategory modCategory : ModificationCategory.values()) {
+                supportedInput.add(modCategory.toString());
+            }
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id, arg, supportedInput)) {
                 return false;
             }
         }
@@ -3515,6 +3532,22 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.id);
             Integer option = new Integer(arg);
             metaMorpheusParameters.setMaxHeterozygousVariants(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_GPTM.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM.id);
+            Integer option = new Integer(arg);
+            metaMorpheusParameters.setRunGptm(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id);
+            ArrayList<ModificationCategory> gPtmModCategories = new ArrayList<>();
+            for (ModificationCategory category : ModificationCategory.values()) {
+                if (arg.equalsIgnoreCase(category.toString()) 
+                        && !gPtmModCategories.contains(category)) {
+                    gPtmModCategories.add(category);
+                }
+            }
+            metaMorpheusParameters.setGPtmCategories(gPtmModCategories);
         }
 
         ///////////////////////////////////

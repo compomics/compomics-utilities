@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":9,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":9,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -165,38 +165,52 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static char</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#DELIMITER">DELIMITER</a></span></code></th>
+<td class="colLast">
+<div class="block">Character defining as delimiter between protein sequences</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util" class="externalLink">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#indexStringLengths">indexStringLengths</a></span></code></th>
 <td class="colLast">
 <div class="block">Length of the indexed string (all concatenated protein sequences).</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util" class="externalLink">ArrayList</a>&lt;int[]&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lessTablesPrimary">lessTablesPrimary</a></span></code></th>
 <td class="colLast">
 <div class="block">Less table for doing an update step according to the LF step.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util" class="externalLink">ArrayList</a>&lt;int[]&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lessTablesReversed">lessTablesReversed</a></span></code></th>
 <td class="colLast">
 <div class="block">Less table for doing an update step according to the LF step reversed.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util" class="externalLink">ArrayList</a>&lt;<a href="WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#occurrenceTablesPrimary">occurrenceTablesPrimary</a></span></code></th>
 <td class="colLast">
 <div class="block">Wavelet tree for storing the burrows wheeler transform.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util" class="externalLink">ArrayList</a>&lt;<a href="WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#occurrenceTablesReversed">occurrenceTablesReversed</a></span></code></th>
 <td class="colLast">
 <div class="block">Wavelet tree for storing the burrows wheeler transform reversed.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static char</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#SENTINEL">SENTINEL</a></span></code></th>
+<td class="colLast">
+<div class="block">Sentinel character necessary for computation of the suffix array</div>
 </td>
 </tr>
 </table>
@@ -482,13 +496,30 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
 </td>
 </tr>
 <tr id="i28" class="altColor">
+<td class="colFirst"><code>char</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#prefixCharacter(java.lang.String,int)">prefixCharacter</a></span>&#8203;(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;proteinAccession,
+               int&nbsp;index)</code></th>
+<td class="colLast">
+<div class="block">Bactward propagation of the BWT to get the previous character</div>
+</td>
+</tr>
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#reconstructFasta(java.io.File)">reconstructFasta</a></span>&#8203;(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;file)</code></th>
 <td class="colLast">
 <div class="block">Reconstructs the fasta file stored in the index</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i30" class="altColor">
+<td class="colFirst"><code>char</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#suffixCharacter(java.lang.String,int,int)">suffixCharacter</a></span>&#8203;(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;proteinAccession,
+               int&nbsp;index,
+               int&nbsp;length)</code></th>
+<td class="colLast">
+<div class="block">Forward propagation of the BWT to get the n'th consecutive character</div>
+</td>
+</tr>
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#withinMassTolerance(double,int)">withinMassTolerance</a></span>&#8203;(double&nbsp;mass,
                    int&nbsp;numX)</code></th>
@@ -521,6 +552,26 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
 <!--   -->
 </a>
 <h3>Field Detail</h3>
+<a id="DELIMITER">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>DELIMITER</h4>
+<pre>public static&nbsp;char DELIMITER</pre>
+<div class="block">Character defining as delimiter between protein sequences</div>
+</li>
+</ul>
+<a id="SENTINEL">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>SENTINEL</h4>
+<pre>public static&nbsp;char SENTINEL</pre>
+<div class="block">Sentinel character necessary for computation of the suffix array</div>
+</li>
+</ul>
 <a id="occurrenceTablesPrimary">
 <!--   -->
 </a>
@@ -603,7 +654,10 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
                boolean&nbsp;displayProgress,
                <a href="../../../../parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a>&nbsp;peptideVariantsPreferences,
                <a href="../../../../parameters/identification/search/SearchParameters.html" title="class in com.compomics.util.parameters.identification.search">SearchParameters</a>&nbsp;searchParameters)
-        throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink">IOException</a></pre>
+        throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink">IOException</a>,
+               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/OutOfMemoryError.html?is-external=true" title="class or interface in java.lang" class="externalLink">OutOfMemoryError</a>,
+               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink">RuntimeException</a>,
+               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang" class="externalLink">IllegalArgumentException</a></pre>
 <div class="block">Constructor. If modification settings are provided the index will contain
  modification information, ignored if null.</div>
 <dl>
@@ -617,6 +671,9 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink">IOException</a></code> - exception thrown if an error occurs while iterating
  the FASTA file.</dd>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/OutOfMemoryError.html?is-external=true" title="class or interface in java.lang" class="externalLink">OutOfMemoryError</a></code></dd>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink">RuntimeException</a></code></dd>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang" class="externalLink">IllegalArgumentException</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -632,7 +689,10 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
                boolean&nbsp;displayProgress,
                <a href="../../../../parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search">ModificationParameters</a>&nbsp;modificationSettings,
                <a href="../../../../parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a>&nbsp;peptideVariantsPreferences)
-        throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink">IOException</a></pre>
+        throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink">IOException</a>,
+               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/OutOfMemoryError.html?is-external=true" title="class or interface in java.lang" class="externalLink">OutOfMemoryError</a>,
+               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink">RuntimeException</a>,
+               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang" class="externalLink">IllegalArgumentException</a></pre>
 <div class="block">Constructor. If modification settings are provided the index will contain
  modification information, ignored if null.</div>
 <dl>
@@ -647,6 +707,9 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink">IOException</a></code> - exception thrown if an error occurs while iterating
  the FASTA file</dd>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/OutOfMemoryError.html?is-external=true" title="class or interface in java.lang" class="externalLink">OutOfMemoryError</a></code></dd>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink">RuntimeException</a></code></dd>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang" class="externalLink">IllegalArgumentException</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -995,6 +1058,44 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>file</code> - the output fasta file object</dd>
+</dl>
+</li>
+</ul>
+<a id="prefixCharacter(java.lang.String,int)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>prefixCharacter</h4>
+<pre class="methodSignature">public&nbsp;char&nbsp;prefixCharacter&#8203;(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;proteinAccession,
+                            int&nbsp;index)</pre>
+<div class="block">Bactward propagation of the BWT to get the previous character</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>proteinAccession</code> - the accession</dd>
+<dd><code>index</code> - the index in the suffix array / BWT</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the previous character</dd>
+</dl>
+</li>
+</ul>
+<a id="suffixCharacter(java.lang.String,int,int)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>suffixCharacter</h4>
+<pre class="methodSignature">public&nbsp;char&nbsp;suffixCharacter&#8203;(<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&nbsp;proteinAccession,
+                            int&nbsp;index,
+                            int&nbsp;length)</pre>
+<div class="block">Forward propagation of the BWT to get the n'th consecutive character</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>proteinAccession</code> - the accession</dd>
+<dd><code>index</code> - the index in the suffix array / BWT</dd>
+<dd><code>length</code> - number of forward steps</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the n'th next character</dd>
 </dl>
 </li>
 </ul>

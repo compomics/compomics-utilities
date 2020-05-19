@@ -742,8 +742,7 @@ public class Peptide extends ExperimentObject {
                         modificationMatch -> modificationMatch.getConfident() || modificationMatch.getInferred()
                         ? Arrays.stream(
                                 new String[]{
-                                    modificationFactory.getModification(
-                                            modificationMatch.getModification()).getAmbiguityKey(),
+                                    modificationFactory.getModification(modificationMatch.getModification()).getAmbiguityKey(),
                                     MODIFICATION_LOCALIZATION_SEPARATOR,
                                     Integer.toString(modificationMatch.getSite()
                                     )

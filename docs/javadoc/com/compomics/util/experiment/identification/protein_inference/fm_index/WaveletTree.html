@@ -27,7 +27,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -309,6 +309,15 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 </td>
 </tr>
 <tr id="i10" class="altColor">
+<td class="colFirst"><code>int</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#select(int,int)">select</a></span>&#8203;(int&nbsp;occurrence,
+      int&nbsp;character)</code></th>
+<td class="colLast">
+<div class="block">Inverse function to the rank function: given the i'th occurrence of a character
+ in the tree, it provides its position</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>int[]</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#singleRangeQuery(int,int,int)">singleRangeQuery</a></span>&#8203;(int&nbsp;leftIndex,
                 int&nbsp;rightIndex,
@@ -561,7 +570,7 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <a id="singleRangeQuery(int,int,int)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>singleRangeQuery</h4>
 <pre class="methodSignature">public&nbsp;int[]&nbsp;singleRangeQuery&#8203;(int&nbsp;leftIndex,
@@ -574,8 +583,26 @@ implements <a href="http://docs.oracle.com/javase/7/docs/api/java/io/Serializabl
 <dd><code>rightIndex</code> - right index boundary</dd>
 <dd><code>character</code> - character to check</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a list of character and new left/right index for a given range
- recursively</dd>
+<dd>a list of character and new left/right index for a given range</dd>
+</dl>
+</li>
+</ul>
+<a id="select(int,int)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>select</h4>
+<pre class="methodSignature">public&nbsp;int&nbsp;select&#8203;(int&nbsp;occurrence,
+                  int&nbsp;character)</pre>
+<div class="block">Inverse function to the rank function: given the i'th occurrence of a character
+ in the tree, it provides its position</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>occurrence</code> - the i'th occurrence</dd>
+<dd><code>character</code> - the character to check</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the position of the i'th occurrence of the character</dd>
 </dl>
 </li>
 </ul>

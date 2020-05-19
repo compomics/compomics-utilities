@@ -9,6 +9,7 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -82,6 +83,15 @@ public class MsFileHandler implements SpectrumProvider {
             File cmsFolder,
             WaitingHandler waitingHandler
     ) throws IOException {
+
+        // Check whether the file exists but with a different case for the extension.
+        msFile = IoUtil.existsExtensionNotCaseSensitive(msFile);
+
+        if (!msFile.exists()) {
+
+            throw new FileNotFoundException("MS file " + msFile + " not found.");
+
+        }
 
         String spectrumFileNameWithoutExtension = IoUtil.removeExtension(msFile.getName());
 
@@ -197,9 +207,9 @@ public class MsFileHandler implements SpectrumProvider {
             WaitingHandler waitingHandler
     ) throws IOException {
 
-        try (MsFileIterator iterator = MsFileIterator.getMsFileIterator(msFile, waitingHandler)) {
+        try ( MsFileIterator iterator = MsFileIterator.getMsFileIterator(msFile, waitingHandler)) {
 
-            try (CmsFileWriter writer = new CmsFileWriter(cmsFile)) {
+            try ( CmsFileWriter writer = new CmsFileWriter(cmsFile)) {
 
                 String spectrumTitle;
                 while ((spectrumTitle = iterator.next()) != null) {

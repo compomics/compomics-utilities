@@ -87,6 +87,8 @@ public class FastaIterator implements ProteinIterator {
         this.sanityCheck = sanityCheck;
 
     }
+    
+    
 
     @Override
     public Protein getNextProtein() {
@@ -103,10 +105,9 @@ public class FastaIterator implements ProteinIterator {
 
             Header header = nextHeader;
             StringBuilder sequenceBuilder = new StringBuilder();
-
             String line;
+            
             while ((line = br.readLine()) != null) {
-
                 line = line.trim();
 
                 if (line.length() > 0) {
@@ -138,7 +139,7 @@ public class FastaIterator implements ProteinIterator {
             }
 
             bufferingMutex.release();
-
+            
             String sequence = sequenceBuilder.toString();
             if (sanityCheck) {
 
@@ -146,8 +147,13 @@ public class FastaIterator implements ProteinIterator {
 
             }
 
+            
             if (sequence.length() > 0) {
-
+                
+                if (header == null) {
+                    throw new RuntimeException("No header information found in the fasta file.");
+                }
+                
                 lastHeader = header;
                 return new Protein(header.getAccessionOrRest(), sequence);
 
@@ -162,9 +168,7 @@ public class FastaIterator implements ProteinIterator {
             }
 
         } catch (Exception e) {
-
-            throw new RuntimeException(e);
-
+            throw new RuntimeException("An error occurred in the fasta file\n\n" + e);
         }
     }
 

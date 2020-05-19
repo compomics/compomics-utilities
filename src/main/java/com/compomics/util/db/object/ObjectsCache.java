@@ -5,9 +5,9 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.ListIterator;
+import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
 import org.nustaq.serialization.FSTConfiguration;
 
 /**
@@ -59,7 +59,7 @@ public class ObjectsCache {
     /**
      * Linked list to manage a queue for old entries.
      */
-    private final LinkedList<Long> objectQueue = new LinkedList<>();
+    //private final LinkedList<Long> objectQueue = new LinkedList<>();
     /**
      * Indicates whether the cache is read only.
      */
@@ -141,23 +141,16 @@ public class ObjectsCache {
      * Removes an object from the cache.
      *
      * @param objectKey the key of the object
-     *
-     * @return the class name of the object
      */
-    public String removeObject(long objectKey) {
+    public void removeObject(long objectKey) {
 
-        String className = null;
         
         if (!readOnly) {
             if (loadedObjects.containsKey(objectKey)) {
-                className = loadedObjects.get(objectKey).object.getClass().getSimpleName();
                 loadedObjects.remove(objectKey);
-                objectQueue.removeFirstOccurrence(objectKey);
+                //objectQueue.remove(objectKey);
             }
         }
-
-
-        return className;
     }
 
     /**
@@ -188,7 +181,7 @@ public class ObjectsCache {
             
             if (!loadedObjects.containsKey(objectKey)) {
                 loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
-                objectQueue.add(objectKey);
+                //objectQueue.add(objectKey);
             }
             else {
                 loadedObjects.get(objectKey).object = object;
@@ -230,7 +223,7 @@ public class ObjectsCache {
                 Object object = kv.getValue();
                 if (!loadedObjects.containsKey(objectKey)) {
                     loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
-                    objectQueue.add(objectKey);
+                    //objectQueue.add(objectKey);
                 }
                 else {
                     loadedObjects.get(objectKey).object = object;
@@ -287,7 +280,11 @@ public class ObjectsCache {
                 e.printStackTrace();
             }
             
-            for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i) {
+            Set<Long> removeKeys = new HashSet<Long>();
+            
+            int i = 0;
+            for (Entry<Long, ObjectsCacheElement> entry : loadedObjects.entrySet()){
+                if (numLastEntries <= i++) break;
 
                 if (waitingHandler != null) {
                     waitingHandler.increaseSecondaryProgressCounter();
@@ -296,7 +293,7 @@ public class ObjectsCache {
                         break;
                     }
                 }
-                long key = objectQueue.pollFirst();
+                long key = entry.getKey();
                 
                 ObjectsCacheElement obj = loadedObjects.get(key);
                 if (!obj.edited) continue;
@@ -323,10 +320,7 @@ public class ObjectsCache {
                 }
                     
                 if (clearEntries) {
-                    loadedObjects.remove(key);
-                }
-                else {
-                    objectQueue.addLast(key);
+                    removeKeys.add(key);
                 }
 
             }
@@ -335,6 +329,7 @@ public class ObjectsCache {
                 loadObjectMutex.acquire();
                 psInsert.executeBatch();
                 psUpdate.executeBatch();
+                if (removeKeys.size() > 0) loadedObjects.keySet().removeAll(removeKeys);
                 connection.commit();
             }
             catch (Exception e){
@@ -411,7 +406,6 @@ public class ObjectsCache {
      */
     public void clearCache() {
         loadedObjects.clear();
-        objectQueue.clear();
     }
 
     /**

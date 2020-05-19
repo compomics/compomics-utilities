@@ -213,7 +213,6 @@ public class ObjectsDB {
         }
 
         ((DbObject) object).setId(objectKey);
-        ((DbObject) object).setFirstLevel(true);
         objectsCache.addObject(objectKey, object, false, true);
     }
 
@@ -243,7 +242,7 @@ public class ObjectsDB {
         
         
         String sqlQuery = "SELECT id FROM data WHERE class = ?";
-        if (filters == null){
+        if (filters != null){
             sqlQuery += " AND " + filters;
         }
         sqlQuery += ";";
@@ -303,7 +302,6 @@ public class ObjectsDB {
             }
 
             ((DbObject) object).setId(objectKey);
-            ((DbObject) object).setFirstLevel(true);
         }
 
         currentAdded += objects.size();
@@ -464,7 +462,7 @@ public class ObjectsDB {
         
         try {
             dbMutex.acquire();
-            PreparedStatement pstmt = connection.prepareStatement("select count(id) cnt from data where class = ?;");
+            PreparedStatement pstmt = connection.prepareStatement("SELECT count(id) cnt FROM data WHERE class = ?;");
             pstmt.setString(1, className.getSimpleName());
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()){
@@ -608,14 +606,14 @@ public class ObjectsDB {
 
         try {
             dbMutex.acquire();
-            PreparedStatement pstmt = connection.prepareStatement("DELETE data WHERE id = ?;");
+            PreparedStatement pstmt = connection.prepareStatement("DELETE FROM data WHERE id = ?;");
             for (long key : keys) {
 
                 if (waitingHandler.isRunCanceled())  break;
 
                 objectsCache.removeObject(key);
                 pstmt.setLong(1, key);
-                pstmt.executeQuery();
+                pstmt.executeUpdate();
 
             }
         }
@@ -644,9 +642,9 @@ public class ObjectsDB {
         try {
             objectsCache.removeObject(key);
             dbMutex.acquire();
-            PreparedStatement pstmt = connection.prepareStatement("DELETE data WHERE id = ?;");
+            PreparedStatement pstmt = connection.prepareStatement("DELETE FROM data WHERE id = ?;");
             pstmt.setLong(1, key);
-            pstmt.executeQuery();
+            pstmt.executeUpdate();
         }
         catch(Exception ex){
             ex.printStackTrace();

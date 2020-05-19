@@ -33,9 +33,23 @@ public class Util {
      */
     public static final String[] FORBIDDEN_CHARACTERS = {"!", ":", ";", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "'", "\\|"};
     /**
-     * Separator which can be used to separate things.
+     * Default encoding, cf the second rule.
      */
-    public static final String SEPARATOR = "_cus_";
+    public static final String ENCODING = "UTF-8";
+    /**
+     * Default column separator for text files.
+     */
+    public static final String DEFAULT_COLUMN_SEPARATOR = "\t";
+    /**
+     * The line separator.
+     */
+    public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+    /**
+     * The mass added per amino acid as part of the reference mass when
+     * converting a tolerance in Dalton to ppm.
+     */
+    public static final double MASS_PER_AA = 100.0;
 
     /**
      * Removes characters from a string.

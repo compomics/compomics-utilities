@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.peptide_shaker;
 
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.Set;
  *
  * @author Marc Vaudel
  */
-public class ModificationScoring {
+public class ModificationScoring extends ExperimentObject {
 
     /**
      * Serial version UID for post-serialization compatibility.

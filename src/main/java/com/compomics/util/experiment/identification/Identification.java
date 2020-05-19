@@ -655,7 +655,6 @@ public class Identification extends ExperimentObject {
      * Closes the database connection.
      */
     public void close() {
-
         objectsDB.close();
 
     }

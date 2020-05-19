@@ -1,6 +1,5 @@
 package com.compomics.util.test.experiment.io;
 
-import com.compomics.util.Util;
 import com.compomics.util.db.object.ObjectsDB;
 import com.compomics.util.experiment.ProjectParameters;
 import com.compomics.util.experiment.biology.proteins.Peptide;
@@ -10,18 +9,13 @@ import com.compomics.util.experiment.identification.spectrum_assumptions.Peptide
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails;
 import com.compomics.util.io.IoUtil;
 import junit.framework.Assert;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -84,10 +78,7 @@ public class IdentificationDBTest extends TestCase {
             identification.addObject(ProjectParameters.key, projectParameters);
 
 
-            System.out.println(ProjectParameters.key);
-
             // closing and reopening database
-            identification.getObjectsDB().dumpToDB();
             identification.close();
             
             

@@ -8,6 +8,7 @@ import java.util.HashMap;
  * A chain of atoms.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class AtomChain {
 
@@ -56,7 +57,7 @@ public class AtomChain {
             char character = atomChainAsStringCharArray[i];
             if (character != ' ') {
                 if (character == '-') {
-                    throw new IllegalArgumentException("Negative isotope found in " 
+                    throw new IllegalArgumentException("Negative isotope found in "
                             + atomChainAsString + ". Please use the atom number, e.g. 13 for 13C.");
                 }
                 Integer isotopeNumber = 0;
@@ -68,7 +69,7 @@ public class AtomChain {
                     if (i == atomChainAsStringCharArray.length) {
                         throw new IllegalArgumentException(
                                 "Reached the end of the atom chain while parsing "
-                                        + "isotope number in " + atomChainAsString + ".");
+                                + "isotope number in " + atomChainAsString + ".");
                     }
                     character = atomChainAsStringCharArray[i];
                     charAsInt = Character.getNumericValue(character);
@@ -95,22 +96,22 @@ public class AtomChain {
                         if (i == atomChainAsStringCharArray.length) {
                             throw new IllegalArgumentException(
                                     "Reached the end of the atom chain while "
-                                            + "parsing occurrence of " + atomName 
-                                            + " in " + atomChainAsString + ".");
+                                    + "parsing occurrence of " + atomName
+                                    + " in " + atomChainAsString + ".");
                         }
                         character = atomChainAsStringCharArray[i];
                         if (character == '-') {
                             throw new IllegalArgumentException(
-                                    "Negative occurrence found for " 
-                                            + atomName + " in " + atomChainAsString + ".");
+                                    "Negative occurrence found for "
+                                    + atomName + " in " + atomChainAsString + ".");
                         }
                         while (character != ')') {
                             charAsInt = Character.getNumericValue(character);
                             if (charAsInt < 0 || charAsInt > 9) {
                                 throw new IllegalArgumentException(
-                                        "Encountered unexpected character " + character 
-                                                + " while parsing occurrence of " 
-                                                + atomName + " in " + atomChainAsString + ".");
+                                        "Encountered unexpected character " + character
+                                        + " while parsing occurrence of "
+                                        + atomName + " in " + atomChainAsString + ".");
                             }
                             if (occurrence == null) {
                                 occurrence = charAsInt;
@@ -121,8 +122,8 @@ public class AtomChain {
                             if (i == atomChainAsStringCharArray.length) {
                                 throw new IllegalArgumentException(
                                         "Reached the end of the atom chain while "
-                                                + "parsing occurrence of " + atomName 
-                                                + " in " + atomChainAsString + ".");
+                                        + "parsing occurrence of " + atomName
+                                        + " in " + atomChainAsString + ".");
                             }
                             character = atomChainAsStringCharArray[i];
                         }
@@ -137,9 +138,9 @@ public class AtomChain {
                     isotopeNumber = atomImpl.getIsotopeNumber(isotopeNumber);
                     if (isotopeNumber == null) {
                         throw new UnsupportedOperationException(
-                                "An error occurred while parsing atom chain " 
-                                        + atomChainAsString + "Isotope " 
-                                        + isotopeNumber + " not supported for atom " + atom + ".");
+                                "An error occurred while parsing atom chain "
+                                + atomChainAsString + "Isotope "
+                                + isotopeNumber + " not supported for atom " + atom + ".");
                     }
                     atomImpl.setIsotope(isotopeNumber);
                 }
@@ -230,16 +231,23 @@ public class AtomChain {
      * brackets after the atom, e.g. carbon 13 is written as C{13}, if false,
      * the isotopes are indicated as a number before the atom, e.g. carbon 13 is
      * written as 13C
+     * @param negative if true, a minus sign is added in front of the occurrence
+     * values
      * @param alwaysRecreate if true, the string value will be recreated even if
      * it already exists (use in order to not overwrite the standard format)
      *
      * @return the string value
      */
     public synchronized String getStringValue(boolean includeSpaces, boolean includeBrackets,
-            boolean alwaysIncludeNumber, boolean isotopeCurlyBrackets, boolean alwaysRecreate) {
+            boolean alwaysIncludeNumber, boolean isotopeCurlyBrackets, boolean negative, boolean alwaysRecreate) {
 
         if (stringValue != null && !alwaysRecreate) {
             return stringValue;
+        }
+
+        String minusSign = "";
+        if (negative) {
+            minusSign = "-";
         }
 
         HashMap<String, Integer> composition = new HashMap<>(atomChain.size());
@@ -280,9 +288,9 @@ public class AtomChain {
                 Integer occurrence = composition.get(atomName);
                 if (occurrence > 1 || alwaysIncludeNumber) {
                     if (includeBrackets) {
-                        compositionAsString.append("(").append(occurrence).append(")");
+                        compositionAsString.append("(").append(minusSign).append(occurrence).append(")");
                     } else {
-                        compositionAsString.append(occurrence);
+                        compositionAsString.append(minusSign).append(occurrence);
                     }
                 }
             }
@@ -369,7 +377,7 @@ public class AtomChain {
     @Override
     public String toString() {
         if (stringValue == null) {
-            return getStringValue(false, true, false, false, false);
+            return getStringValue(false, true, false, false, false, false);
         }
         return stringValue;
     }

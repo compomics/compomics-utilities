@@ -121,6 +121,14 @@ public class UtilitiesUserParameters {
      */
     private File dbFolder = null;
     /**
+     * The user last used spectrum folder.
+     */
+    private File spectrumFolder = null;
+    /**
+     * The user last used output folder.
+     */
+    private File outputFolder = null;
+    /**
      * The list of already read tweets.
      */
     private ArrayList<String> readTweets = null;
@@ -667,6 +675,42 @@ public class UtilitiesUserParameters {
      */
     public void setDbFolder(File dbFolder) {
         this.dbFolder = dbFolder;
+    }
+    
+    /**
+     * Returns the last used spectrum folder. Null if not set.
+     *
+     * @return the last used spectrum folder
+     */
+    public File getSpectrumFolder() {
+        return spectrumFolder;
+    }
+
+    /**
+     * Sets the last used spectrum folder.
+     *
+     * @param spectrumFolder the last used spectrum folder
+     */
+    public void setSpectrumFolder(File spectrumFolder) {
+        this.spectrumFolder = spectrumFolder;
+    }
+    
+    /**
+     * Returns the last used output folder. Null if not set.
+     *
+     * @return the last used output folder
+     */
+    public File getOutputFolder() {
+        return outputFolder;
+    }
+
+    /**
+     * Sets the last used output folder.
+     *
+     * @param outputFolder the last used output folder
+     */
+    public void setOutputFolder(File outputFolder) {
+        this.outputFolder = outputFolder;
     }
 
     /**

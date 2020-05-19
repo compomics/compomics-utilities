@@ -183,7 +183,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="thresholdLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Threshold"/>
+                <Property name="text" type="java.lang.String" value="Threshold (Inclusive)"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="scoreTypeLabel">

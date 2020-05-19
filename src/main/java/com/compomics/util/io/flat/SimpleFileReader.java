@@ -39,6 +39,32 @@ public interface SimpleFileReader extends AutoCloseable {
      * @return a line of the file
      */
     public String readLine();
+
+    /**
+     * Reads characters into an array.
+     *
+     * @param buffer The destination buffer.
+     *
+     * @return The number of characters read, -1 if the end of the stream has been reached.
+     */
+    public int read(
+            char[] buffer
+    );
+
+    /**
+     * Reads characters into an array.
+     *
+     * @param buffer The destination buffer.
+     * @param offset The offset at which to start storing characters
+     * @param length The maximum number of characters to read
+     *
+     * @return The number of characters read, -1 if the end of the stream has been reached.
+     */
+    public int read(
+            char[] buffer, 
+            int offset, 
+            int length
+    );
     
     /**
      * Returns the underlying reader.

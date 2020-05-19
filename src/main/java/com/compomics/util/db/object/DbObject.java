@@ -55,31 +55,6 @@ public class DbObject implements Serializable {
     
     
     /**
-     * Gets whether an object is a first level object or not i.e. attribute within another object
-     * @return first level flag
-     */
-    public boolean getFirstLevel(){
-        
-        //readDBMode();
-        
-        return firstLevel;
-    
-    }
-    
-    
-    /**
-     * Sets whether an object is a first level object or not i.e. attribute within another object
-     * @param firstLevel first level flag 
-     */
-    public void setFirstLevel(boolean firstLevel){
-        
-        //readDBMode();
-        
-        this.firstLevel = firstLevel;
-    
-    }
-    
-    /**
      * Sets the ZooDB to read mode
      */
     public void readDBMode(){

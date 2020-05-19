@@ -57,7 +57,7 @@ public class IdentificationDBTest extends TestCase {
 
             Peptide peptide = new Peptide(peptideSequence);
             SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumFile, spectrumTitle);
-            testSpectrumMatch.addPeptideAssumption(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), 2, 0.1, "no file"));
+            testSpectrumMatch.addPeptideAssumption(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), 1, 0.1, "no file"));
             identification.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);
 
             peptide.setProteinMapping(testProteins);
@@ -82,10 +82,39 @@ public class IdentificationDBTest extends TestCase {
             identification.close();
             
             
+            
             objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", false);
             identification = new Identification(objectsDB);
 
+            testSpectrumMatch = (SpectrumMatch) identification.retrieveObject(spectrumMatchKey);
+            Assert.assertTrue(testSpectrumMatch.getKey() == spectrumMatchKey);
 
+            HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> assumptionsMap = testSpectrumMatch.getPeptideAssumptionsMap();
+            TreeMap<Double, ArrayList<PeptideAssumption>> mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
+            Assert.assertTrue(mascotAssumptions.size() == 1);
+            ArrayList<ArrayList<PeptideAssumption>> mascotAssumption = new ArrayList<>(mascotAssumptions.values());
+            Assert.assertTrue(mascotAssumption.size() == 1);
+            ArrayList<PeptideAssumption> bestAssumptions = mascotAssumption.get(0);
+            Assert.assertTrue(bestAssumptions.size() == 1);
+            PeptideAssumption bestAssumption = bestAssumptions.get(0);
+            Assert.assertTrue(bestAssumption.getRank() == 1);
+            
+            bestAssumption.setRank(2);
+            identification.updateObject(spectrumMatchKey, testSpectrumMatch);
+            
+
+            // closing and reopening database
+            identification.close();
+            
+            
+            
+            
+            
+            objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", false);
+            identification = new Identification(objectsDB);
+
+            
+            Assert.assertTrue(identification.getSpectrumIdentificationKeys().size() == 1);
 
 
             ProjectParameters retrieve = (ProjectParameters) identification.retrieveObject(ProjectParameters.key);
@@ -95,15 +124,25 @@ public class IdentificationDBTest extends TestCase {
             testSpectrumMatch = (SpectrumMatch) identification.retrieveObject(spectrumMatchKey);
             Assert.assertTrue(testSpectrumMatch.getKey() == spectrumMatchKey);
 
-            HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> assumptionsMap = testSpectrumMatch.getPeptideAssumptionsMap();
-            TreeMap<Double, ArrayList<PeptideAssumption>> mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
+            assumptionsMap = testSpectrumMatch.getPeptideAssumptionsMap();
+            mascotAssumptions = assumptionsMap.get(Advocate.mascot.getIndex());
             Assert.assertTrue(mascotAssumptions.size() == 1);
             ArrayList<Double> mascotScores = new ArrayList<>(mascotAssumptions.keySet());
             Assert.assertTrue(mascotScores.size() == 1);
             double bestScore = mascotScores.get(0);
             Assert.assertTrue(bestScore == 0.1);
-            ArrayList<PeptideAssumption> bestAssumptions = mascotAssumptions.get(bestScore);
-            PeptideAssumption bestAssumption = (PeptideAssumption) bestAssumptions.get(0);
+            
+            mascotAssumption = new ArrayList<>(mascotAssumptions.values());
+            Assert.assertTrue(mascotAssumption.size() == 1);
+            bestAssumptions = mascotAssumption.get(0);
+            Assert.assertTrue(bestAssumptions.size() == 1);
+            bestAssumption = bestAssumptions.get(0);
+            Assert.assertTrue(bestAssumption.getRank() == 2);
+            
+            
+            
+            bestAssumptions = mascotAssumptions.get(bestScore);
+            bestAssumption = (PeptideAssumption) bestAssumptions.get(0);
             Peptide bestPeptide = bestAssumption.getPeptide();
             String[] accessionsExpectation = testProteins.keySet().stream()
                     .sorted()

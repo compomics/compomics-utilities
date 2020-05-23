@@ -484,7 +484,7 @@ public class Identification extends ExperimentObject {
      * @param key the peptide match key
      * @param peptideMatch the peptide match
      */
-    public void addPeptideMatch(
+    public synchronized void addPeptideMatch(
             long key,
             PeptideMatch peptideMatch
     ) {
@@ -501,7 +501,7 @@ public class Identification extends ExperimentObject {
      *
      * @param peptideMatches the peptide matches in a map
      */
-    public void addPeptideMatches(
+    public synchronized void addPeptideMatches(
             HashMap<Long, Object> peptideMatches
     ) {
 
@@ -520,7 +520,7 @@ public class Identification extends ExperimentObject {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      */
-    public void addSpectrumMatches(
+    public synchronized void addSpectrumMatches(
             HashMap<Long, Object> spectrumMatches,
             WaitingHandler waitingHandler,
             boolean displayProgress
@@ -561,7 +561,7 @@ public class Identification extends ExperimentObject {
      * @param key The match key.
      * @param proteinMatch The protein match.
      */
-    public void addProteinMatch(
+    public synchronized void addProteinMatch(
             long key,
             ProteinMatch proteinMatch
     ) {
@@ -580,7 +580,7 @@ public class Identification extends ExperimentObject {
      *
      * @param proteinMatches Map of the protein matches indexed by key.
      */
-    public void addProteinMatches(
+    public synchronized void addProteinMatches(
             HashMap<Long, Object> proteinMatches
     ) {
 
@@ -600,7 +600,7 @@ public class Identification extends ExperimentObject {
      * @param key The match key.
      * @param proteinMatch The protein match.
      */
-    private void fillProteinMap(
+    private synchronized void fillProteinMap(
             long key,
             ProteinMatch proteinMatch
     ) {

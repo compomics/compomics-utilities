@@ -19,6 +19,7 @@ import java.util.HashSet;
  * Functions mapping search engine modifications to utilities by name.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ModificationNameMapper {
 
@@ -29,12 +30,25 @@ public class ModificationNameMapper {
      */
     public static final double MOD_MASS_TOLERANCE = 0.01;
 
+    /**
+     * Returns the possible modification names.
+     *
+     * @param peptide the peptide
+     * @param modificationMatch the modification match
+     * @param idfileReader the ID file reader
+     * @param searchParameters the search parameters
+     * @param sequenceMatchingParameters the sequence matching parameters
+     * @param sequenceProvider the sequence provider
+     * @param modificationProvider the modification provider
+     *
+     * @return the possible modification names
+     */
     public static HashMap<Integer, HashSet<String>> getPossibleModificationNames(
             Peptide peptide,
             ModificationMatch modificationMatch,
             IdfileReader idfileReader,
             SearchParameters searchParameters,
-            SequenceMatchingParameters modificationSequenceMatchingParameters,
+            SequenceMatchingParameters sequenceMatchingParameters,
             SequenceProvider sequenceProvider,
             ModificationProvider modificationProvider
     ) {
@@ -50,7 +64,7 @@ public class ModificationNameMapper {
                         peptide,
                         modificationMatch,
                         searchParameters,
-                        modificationSequenceMatchingParameters,
+                        sequenceMatchingParameters,
                         sequenceProvider,
                         modificationProvider
                 );
@@ -62,7 +76,7 @@ public class ModificationNameMapper {
                         peptide,
                         modificationMatch,
                         searchParameters,
-                        modificationSequenceMatchingParameters,
+                        sequenceMatchingParameters,
                         sequenceProvider,
                         modificationProvider
                 );
@@ -72,7 +86,7 @@ public class ModificationNameMapper {
                         peptide,
                         modificationMatch,
                         searchParameters,
-                        modificationSequenceMatchingParameters,
+                        sequenceMatchingParameters,
                         sequenceProvider,
                         modificationProvider
                 );
@@ -82,23 +96,37 @@ public class ModificationNameMapper {
                         peptide,
                         modificationMatch,
                         searchParameters,
-                        modificationSequenceMatchingParameters,
+                        sequenceMatchingParameters,
                         sequenceProvider,
                         modificationProvider
                 );
 
             default:
 
-                throw new IllegalArgumentException("Modification mapping not implemented for file reader " + idfileReader.getClass().getSimpleName()+ ".");
+                throw new IllegalArgumentException(
+                        "Modification mapping not implemented for file reader "
+                        + idfileReader.getClass().getSimpleName() + ".");
 
         }
     }
 
+    /**
+     * Returns the possible modifications names by mass.
+     *
+     * @param peptide the peptide
+     * @param modificationMatch the modification match
+     * @param searchParameters the search parameters
+     * @param sequenceMatchingParameters the sequence matching parameters
+     * @param sequenceProvider the sequence provider
+     * @param modificationProvider the modification provider
+     *
+     * @return the possible modifications names by mass
+     */
     public static HashMap<Integer, HashSet<String>> getPossibleModificationNamesByMass(
             Peptide peptide,
             ModificationMatch modificationMatch,
             SearchParameters searchParameters,
-            SequenceMatchingParameters modificationSequenceMatchingParameters,
+            SequenceMatchingParameters sequenceMatchingParameters,
             SequenceProvider sequenceProvider,
             ModificationProvider modificationProvider
     ) {
@@ -119,24 +147,37 @@ public class ModificationNameMapper {
                     peptide,
                     MOD_MASS_TOLERANCE,
                     sequenceProvider,
-                    modificationSequenceMatchingParameters,
+                    sequenceMatchingParameters,
                     searchParameters
             );
 
         } catch (Exception e) {
 
             throw new IllegalArgumentException(
-                    "Impossible to parse \'" + searchEngineModificationName + "\' as a modification. Expected \'mass@position\'.",
+                    "Impossible to parse \'" + searchEngineModificationName
+                    + "\' as a modification. Expected \'mass@position\'.",
                     e
             );
         }
     }
 
+    /**
+     * Returns the possible modifications by name.
+     *
+     * @param peptide the peptide
+     * @param modificationMatch the modification match
+     * @param searchParameters the search parameters
+     * @param sequenceMatchingParameters the sequence matching parameters
+     * @param sequenceProvider the sequence provider
+     * @param modificationProvider the modification provider
+     *
+     * @return the possible modifications by name
+     */
     public static HashMap<Integer, HashSet<String>> getPossibleModificationNamesByName(
             Peptide peptide,
             ModificationMatch modificationMatch,
             SearchParameters searchParameters,
-            SequenceMatchingParameters modificationSequenceMatchingParameters,
+            SequenceMatchingParameters sequenceMatchingParameters,
             SequenceProvider sequenceProvider,
             ModificationProvider modificationProvider
     ) {
@@ -147,36 +188,53 @@ public class ModificationNameMapper {
 
         if (modification == null) {
 
-            throw new IllegalArgumentException("Modification not recognized : " + searchEngineModificationName + ".");
+            throw new IllegalArgumentException(
+                    "Modification not recognized : "
+                    + searchEngineModificationName + ".");
 
         }
+
         return ModificationUtils.getExpectedModifications(
                 modification.getMass(),
                 searchParameters.getModificationParameters(),
                 peptide,
                 MOD_MASS_TOLERANCE,
                 sequenceProvider,
-                modificationSequenceMatchingParameters,
+                sequenceMatchingParameters,
                 searchParameters
         );
     }
 
+    /**
+     * Returns the possible OMSSA modification names.
+     *
+     * @param peptide the peptide
+     * @param modificationMatch the modification match
+     * @param searchParameters the search parameters
+     * @param sequenceMatchingParameters the sequence matching parameters
+     * @param sequenceProvider the sequence provider
+     * @param modificationProvider the modification provider
+     *
+     * @return the possible OMSSA modification names
+     */
     public static HashMap<Integer, HashSet<String>> getPossibleModificationNamesOmssa(
             Peptide peptide,
             ModificationMatch modificationMatch,
             SearchParameters searchParameters,
-            SequenceMatchingParameters modificationSequenceMatchingParameters,
+            SequenceMatchingParameters sequenceMatchingParameters,
             SequenceProvider sequenceProvider,
             ModificationProvider modificationProvider
     ) {
 
         String searchEngineModificationName = modificationMatch.getModification();
 
-        OmssaParameters omssaParameters = (OmssaParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.omssa.getIndex());
+        OmssaParameters omssaParameters
+                = (OmssaParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.omssa.getIndex());
 
         if (!omssaParameters.hasModificationIndexes()) {
 
-            throw new IllegalArgumentException("OMSSA modification indexes not set in the search parameters.");
+            throw new IllegalArgumentException(
+                    "OMSSA modification indexes not set in the search parameters.");
 
         }
 
@@ -188,7 +246,9 @@ public class ModificationNameMapper {
 
         } catch (Exception e) {
 
-            throw new IllegalArgumentException("Impossible to parse OMSSA modification index " + searchEngineModificationName + ".");
+            throw new IllegalArgumentException(
+                    "Impossible to parse OMSSA modification index "
+                    + searchEngineModificationName + ".");
 
         }
 
@@ -211,17 +271,29 @@ public class ModificationNameMapper {
                 peptide,
                 MOD_MASS_TOLERANCE,
                 sequenceProvider,
-                modificationSequenceMatchingParameters,
+                sequenceMatchingParameters,
                 searchParameters
         );
 
     }
 
+    /**
+     * Returns the possible Andromeda modification names.
+     * 
+     * @param peptide the peptide
+     * @param modificationMatch the modification match
+     * @param searchParameters the search parameters
+     * @param sequenceMatchingParameters the sequence matching parameters
+     * @param sequenceProvider the sequence provider
+     * @param modificationProvider the modification provider
+     *
+     * @return the possible Andromeda modification names
+     */
     public static HashMap<Integer, HashSet<String>> getPossibleModificationNamesAndromeda(
             Peptide peptide,
             ModificationMatch modificationMatch,
             SearchParameters searchParameters,
-            SequenceMatchingParameters modificationSequenceMatchingParameters,
+            SequenceMatchingParameters sequenceMatchingParameters,
             SequenceProvider sequenceProvider,
             ModificationProvider modificationProvider
     ) {
@@ -258,14 +330,14 @@ public class ModificationNameMapper {
         }
 
         Modification modification = modificationProvider.getModification(andromedaName);
-        
+
         return ModificationUtils.getExpectedModifications(
                 modification.getMass(),
                 searchParameters.getModificationParameters(),
                 peptide,
                 MOD_MASS_TOLERANCE,
                 sequenceProvider,
-                modificationSequenceMatchingParameters,
+                sequenceMatchingParameters,
                 searchParameters
         );
 

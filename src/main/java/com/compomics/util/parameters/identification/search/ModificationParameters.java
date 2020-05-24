@@ -5,7 +5,6 @@ import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -15,6 +14,7 @@ import java.util.stream.Stream;
  * colors, names).
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ModificationParameters {
 
@@ -362,24 +362,6 @@ public class ModificationParameters {
                 || fixedModifications.contains(modificationName)
                 || (refinementVariableModifications != null && refinementVariableModifications.contains(modificationName))
                 || (refinementFixedModifications != null && refinementFixedModifications.contains(modificationName));
-    }
-
-    /**
-     * Returns a list containing all not fixed modifications with the same mass.
-     * Warning: all modifications of the profile must be loaded in the
-     * modification factory.
-     *
-     * @param modificationMass the mass
-     * @return a list of all not fixed modifications with the same mass
-     */
-    public ArrayList<String> getSameMassNotFixedModifications(double modificationMass) {
-
-        ModificationFactory modificationFactory = ModificationFactory.getInstance();
-
-        return getAllNotFixedModifications().stream()
-                .filter(modName -> modificationFactory.getModification(modName).getMass() == modificationMass)
-                .collect(Collectors.toCollection(ArrayList::new));
-
     }
 
     /**

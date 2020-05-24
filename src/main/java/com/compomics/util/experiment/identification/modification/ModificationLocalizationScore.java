@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.modification;
 
+import com.compomics.util.math.BasicMathFunctions;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -33,18 +34,21 @@ public enum ModificationLocalizationScore {
      * @param id the id number
      * @param name the name
      */
-    private ModificationLocalizationScore(int id, String name) {
-        
+    private ModificationLocalizationScore(
+            int id,
+            String name
+    ) {
+
         this.id = id;
         this.name = name;
-        
+
     }
 
     @Override
     public String toString() {
-        
+
         return name;
-        
+
     }
 
     /**
@@ -53,9 +57,9 @@ public enum ModificationLocalizationScore {
      * @return the id number of the score
      */
     public int getId() {
-        
+
         return id;
-        
+
     }
 
     /**
@@ -64,9 +68,9 @@ public enum ModificationLocalizationScore {
      * @return the name of the score
      */
     public String getName() {
-        
+
         return name;
-        
+
     }
 
     /**
@@ -75,19 +79,21 @@ public enum ModificationLocalizationScore {
      * @param id the id number of the PTM score
      * @return the desired PTM score
      */
-    public static ModificationLocalizationScore getScore(int id) {
-        
+    public static ModificationLocalizationScore getScore(
+            int id
+    ) {
+
         for (ModificationLocalizationScore ptmScore : values()) {
-            
+
             if (ptmScore.getId() == id) {
-                
+
                 return ptmScore;
-                
+
             }
         }
-        
+
         throw new IllegalArgumentException("Modification localization score id " + id + " not recognized.");
-        
+
     }
 
     /**
@@ -96,19 +102,21 @@ public enum ModificationLocalizationScore {
      * @param name the name of the score
      * @return the desired PTM score
      */
-    public static ModificationLocalizationScore getScore(String name) {
-        
+    public static ModificationLocalizationScore getScore(
+            String name
+    ) {
+
         for (ModificationLocalizationScore ptmScore : values()) {
-            
+
             if (ptmScore.getName().equals(name)) {
-                
+
                 return ptmScore;
-                
+
             }
         }
-        
+
         throw new IllegalArgumentException("Modification localization score name " + name + " not recognized.");
-        
+
     }
 
     /**
@@ -117,18 +125,44 @@ public enum ModificationLocalizationScore {
      * @return the different implemented scores as list of command line option
      */
     public static String getCommandLineOptions() {
-        
+
         return Arrays.stream(values())
                 .map(score -> score.getId() + ": " + score.getName())
                 .collect(Collectors.joining(","));
-        
+
     }
 
     /**
-     * Empty default constructor
+     * Returns the threshold (inclusive) to use to consider an assignment
+     * random. E.g. PhosphoRS with one modifications in two sites, a score of
+     * 50% is considered random. Returns Double.NaN if the number of
+     * modifications equals zero or the number of sites.
+     *
+     * @param nModifications The number of modifications.
+     * @param nSites The number of sites.
+     *
+     * @return
      */
-    private ModificationLocalizationScore() {
-        id = 0;
-        name = "";
+    public double getRandomThreshold(
+            int nModifications,
+            int nSites
+    ) {
+
+        if (nModifications == 0 || nModifications == nSites) {
+
+            return Double.NaN;
+
+        }
+
+        switch (this) {
+
+            case PhosphoRS:
+                return 1.0 / ((double) BasicMathFunctions.getCombination(nModifications, nSites));
+
+            default:
+                throw new UnsupportedOperationException("Threshold not implemented for score " + this + ".");
+
+        }
+
     }
 }

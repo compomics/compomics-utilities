@@ -20,6 +20,10 @@ public class ModificationLocalizationParameters extends DbObject {
      */
     private ModificationLocalizationScore selectedProbabilisticScore = ModificationLocalizationScore.PhosphoRS;
     /**
+     * The D-score threshold.
+     */
+    private double dScoreThreshold = 95;
+    /**
      * The probabilistic score threshold.
      */
     private double probabilisticScoreThreshold = 95;
@@ -98,9 +102,9 @@ public class ModificationLocalizationParameters extends DbObject {
     }
 
     /**
-     * Returns the probabilistic score threshold.
+     * Returns the probabilistic score threshold (inclusive).
      *
-     * @return the probabilistic score threshold
+     * @return The probabilistic score threshold (inclusive).
      */
     public double getProbabilisticScoreThreshold() {
         readDBMode();
@@ -110,14 +114,40 @@ public class ModificationLocalizationParameters extends DbObject {
     }
 
     /**
-     * Sets the probabilistic score threshold.
+     * Sets the probabilistic score threshold (inclusive).
      *
-     * @param probabilisticScoreThreshold the probabilistic score threshold
+     * @param probabilisticScoreThreshold The probabilistic score threshold (inclusive).
      */
-    public void setProbabilisticScoreThreshold(double probabilisticScoreThreshold) {
+    public void setProbabilisticScoreThreshold(
+            double probabilisticScoreThreshold
+    ) {
     
         writeDBMode();
         this.probabilisticScoreThreshold = probabilisticScoreThreshold;
+    
+    }
+
+    /**
+     * Returns the D-score threshold.
+     *
+     * @return the D-score threshold
+     */
+    public double getDScoreThreshold() {
+        readDBMode();
+        
+        return dScoreThreshold;
+    
+    }
+
+    /**
+     * Sets the D-score threshold.
+     *
+     * @param dScoreThreshold the D-score threshold
+     */
+    public void setDScoreThreshold(double dScoreThreshold) {
+    
+        writeDBMode();
+        this.dScoreThreshold = dScoreThreshold;
     
     }
 

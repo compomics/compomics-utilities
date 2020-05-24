@@ -57,7 +57,9 @@ public class ModificationUtils {
      *
      * @return an array containing only the given index
      */
-    public static int[] getArray(int index) {
+    public static int[] getArray(
+            int index
+    ) {
 
         int[] result = ARRAYS_MAP.get(index);
 
@@ -95,7 +97,7 @@ public class ModificationUtils {
         String peptideSequence = peptide.getSequence();
         ModificationType modificationType = modification.getModificationType();
 
-        if (null == modificationType) {
+        if (modificationType == null) {
 
             throw new UnsupportedOperationException(
                     "Modification mapping not supported for modification of type "
@@ -139,8 +141,13 @@ public class ModificationUtils {
 
                                 if (maxIndex > 0) {
 
-                                    String suffix = sequence.substring(startIndex + peptideSequence.length(),
-                                            Math.min(startIndex + peptideSequence.length() + maxIndex, sequence.length()));
+                                    String suffix = sequence.substring(
+                                            startIndex + peptideSequence.length(),
+                                            Math.min(
+                                                    startIndex + peptideSequence.length() + maxIndex, 
+                                                    sequence.length()
+                                            )
+                                    );
                                     extendedSequenceBuilder.append(suffix);
                                 }
 
@@ -207,6 +214,7 @@ public class ModificationUtils {
 
                                     if (aminoAcidPattern.matches(subSequence, sequenceMatchingParameters)) {
                                         return ZERO;
+                                    
                                     }
                                 }
                             }
@@ -268,6 +276,7 @@ public class ModificationUtils {
 
                                     if (aminoAcidPattern.matches(subSequence, sequenceMatchingParameters)) {
                                         return ZERO;
+                                    
                                     }
 
                                     if (sequence.charAt(0) == 'M' && maxIndex + 1 < sequence.length()) {
@@ -276,6 +285,7 @@ public class ModificationUtils {
 
                                         if (aminoAcidPattern.matches(subSequence, sequenceMatchingParameters)) {
                                             return ZERO;
+                                        
                                         }
                                     }
                                 }
@@ -339,6 +349,7 @@ public class ModificationUtils {
 
                                     if (aminoAcidPattern.matches(subSequence, sequenceMatchingParameters)) {
                                         return getArray(peptideSequence.length() + 1);
+                                    
                                     }
                                 }
                             }
@@ -781,7 +792,10 @@ public class ModificationUtils {
      *
      * @return the 1-based index on the sequence
      */
-    public static int getSite(int index, int sequenceLength) {
+    public static int getSite(
+            int index, 
+            int sequenceLength
+    ) {
 
         if (index > 0 && index < sequenceLength + 1) {
 
@@ -816,15 +830,25 @@ public class ModificationUtils {
     ) {
 
         HashSet<String> modNames = Arrays.stream(peptide.getVariableModifications())
-                .map(ModificationMatch::getModification)
-                .collect(Collectors.toCollection(HashSet::new));
+                .map(
+                        ModificationMatch::getModification
+                )
+                .collect(
+                        Collectors.toCollection(HashSet::new)
+                );
 
         String[] fixedModifications = peptide.getFixedModifications(
                 modificationParameters, sequenceProvider, sequenceMatchingParameters);
 
-        modNames.addAll(Arrays.stream(fixedModifications)
-                .filter(modName -> modName != null)
-                .collect(Collectors.toSet()));
+        modNames.addAll(
+                Arrays.stream(fixedModifications)
+                .filter(
+                        modName -> modName != null
+                )
+                .collect(
+                        Collectors.toSet()
+                )
+        );
 
         return modNames;
     }
@@ -855,9 +879,15 @@ public class ModificationUtils {
 
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
 
-                modNames.addAll(Arrays.stream(aminoAcidSequence.getVariableModifications())
-                        .map(ModificationMatch::getModification)
-                        .collect(Collectors.toCollection(HashSet::new)));
+                modNames.addAll(
+                        Arrays.stream(aminoAcidSequence.getVariableModifications())
+                        .map(
+                                ModificationMatch::getModification
+                        )
+                        .collect(
+                                Collectors.toCollection(HashSet::new)
+                        )
+                );
 
                 String[] fixedModifications
                         = aminoAcidSequence.getFixedModifications(

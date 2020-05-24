@@ -154,8 +154,8 @@ public class IoUtil {
             }
         }
 
-        try (FileChannel inChannel = new FileInputStream(in).getChannel()) {
-            try (FileChannel outChannel = new FileOutputStream(out).getChannel()) {
+        try ( FileChannel inChannel = new FileInputStream(in).getChannel()) {
+            try ( FileChannel outChannel = new FileOutputStream(out).getChannel()) {
 
                 long bytesCopied = 0;
 
@@ -218,7 +218,75 @@ public class IoUtil {
     ) {
 
         String fileName = getFileName(file.getAbsolutePath());
-        return fileName.substring(fileName.lastIndexOf("."));
+
+        return getExtension(fileName);
+
+    }
+
+    /**
+     * Returns the extensions of a file name.
+     *
+     * @param fileName The file name.
+     *
+     * @return The extension of the file name.
+     */
+    public static String getExtension(
+            String fileName
+    ) {
+        
+        int index = fileName.lastIndexOf(".");
+
+        return index > 0 ? fileName.substring(index) : "";
+
+    }
+
+    /**
+     * Returns the given file name with lower-case extension.
+     * 
+     * @param fileName The name of the file.
+     * 
+     * @return The name of the file with lower-case extension.
+     */
+    public static String getFilenameExtensionLowerCase(
+            String fileName
+    ) {
+
+        return removeExtension(fileName) + getExtension(fileName).toLowerCase();
+
+    }
+
+    /**
+     * Checks if the given file exists with the extension in another case and returns it. Returns the given file otherwise.
+     * 
+     * @param file The file to check.
+     * 
+     * @return The existing file with another extension if it exists, the given file otherwise.
+     */
+    public static File existsExtensionNotCaseSensitive(File file) {
+        
+        if (file.exists()) {
+            
+            return file;
+            
+        }
+
+        File folder = file.getParentFile();
+        String fileName = file.getName();
+        String nameExtensionLowerCase = getFilenameExtensionLowerCase(fileName);
+
+        for (File tempFile : folder.listFiles()) {
+
+            String tempName = tempFile.getName();
+            String tempNameExtensionLowerCase = getFilenameExtensionLowerCase(tempName);
+
+            if (tempNameExtensionLowerCase.equals(nameExtensionLowerCase)) {
+
+                return tempFile;
+
+            }
+        }
+
+        return file;
 
     }
 

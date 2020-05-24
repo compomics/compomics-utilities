@@ -52,7 +52,10 @@ public interface MsFileIterator extends AutoCloseable {
      * @throws java.io.IOException Exception thrown if an error occurred while
      * reading the file.
      */
-    public static MsFileIterator getMsFileIterator(File file, WaitingHandler waitingHandler) throws IOException {
+    public static MsFileIterator getMsFileIterator(
+            File file, 
+            WaitingHandler waitingHandler
+    ) throws IOException {
 
         String fileName = file.getName();
 
@@ -75,7 +78,7 @@ public interface MsFileIterator extends AutoCloseable {
         String supportedExtensions = String.join(",", getSupportedExtensions());
 
         throw new UnsupportedOperationException(
-                "Mass spectrometry file extension not recognized. "
+                "Mass spectrometry file extension for file " + file.getName() + " not recognized. "
                 + "Supported: " + supportedExtensions);
 
     }

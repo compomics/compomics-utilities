@@ -170,8 +170,7 @@ public class ProteinFilter extends MatchFilter {
 
             case modification:
                 proteinMatch = identification.getProteinMatch(matchKey);
-                PSModificationScores modificationScores = new PSModificationScores();
-                modificationScores = (PSModificationScores) proteinMatch.getUrParam(modificationScores);
+                PSModificationScores modificationScores = (PSModificationScores) proteinMatch.getUrParam(PSModificationScores.dummy);
                 Set<String> modifications = modificationScores == null ? new HashSet<>(0)
                         : modificationScores.getScoredModifications();
                 return filterItemComparator.passes(input, modifications);

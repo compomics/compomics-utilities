@@ -93,4 +93,38 @@ public class SimpleTextReader implements SimpleFileReader {
         return 100.0 * ((double) countingInputStream.getByteCount()) / fileLength;
         
     }
+
+    @Override
+    public int read(
+            char[] buffer
+    ) {
+
+        try {
+
+            return br.read(buffer);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public int read(
+            char[] buffer, 
+            int offset, 
+            int length
+    ) {
+
+        try {
+
+            return br.read(
+                    buffer, 
+                    offset, 
+                    length
+            );
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

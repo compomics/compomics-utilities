@@ -865,6 +865,10 @@
 <dd>
 <div class="block">Convenience method adding a row sorter listener to the given JTable.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#addSpectrum-java.lang.String-java.lang.String-java.util.ArrayList-java.util.ArrayList-com.compomics.util.experiment.identification.spectrum_annotation.spectrum_annotators.PeptideSpectrumAnnotator-">addSpectrum(String, String, ArrayList&lt;PeptideAssumption&gt;, ArrayList&lt;TreeMap&lt;Double, HashMap&lt;Integer, Double&gt;&gt;&gt;, PeptideSpectrumAnnotator)</a></span> - Method in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">Adds a peptide-spectrum match to the file.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileWriter.html#addSpectrum-java.lang.String-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-">addSpectrum(String, Spectrum)</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileWriter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFileWriter</a></dt>
 <dd>
 <div class="block">Adds a spectrum to the file.</div>
@@ -1217,6 +1221,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/Constants.html#AMU_NO_EXP">AMU_NO_EXP</a></span> - Static variable in class com.compomics.util.experiment.<a href="com/compomics/util/experiment/Constants.html" title="class in com.compomics.util.experiment">Constants</a></dt>
 <dd>
 <div class="block">The atomic mass unit without exponent.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#ANALYSIS_SECTION">ANALYSIS_SECTION</a></span> - Static variable in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">Key for the analysis section.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/Advocate.html#andromeda">andromeda</a></span> - Static variable in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/Advocate.html" title="class in com.compomics.util.experiment.identification">Advocate</a></dt>
 <dd>
@@ -1963,10 +1971,14 @@
 <dd>
 <div class="block">CH4OS loss.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSModificationScores.html#changeRepresentativeSite-java.lang.String-int-int-">changeRepresentativeSite(String, int, int)</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSModificationScores.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSModificationScores</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSModificationScores.html#changeRepresentativeSite-java.lang.String-java.lang.String-int-int-int-com.compomics.util.experiment.biology.modifications.ModificationProvider-">changeRepresentativeSite(String, String, int, int, int, ModificationProvider)</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSModificationScores.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSModificationScores</a></dt>
 <dd>
 <div class="block">Changes the representative site for a given ambiguously localized
  modification in all maps.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#CHAR_BUFFER_SIZE">CHAR_BUFFER_SIZE</a></span> - Static variable in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">The size of the char buffer to use when copying files.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html#character">character</a></span> - Variable in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MatrixContent</a></dt>
 <dd>
@@ -2178,6 +2190,18 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/protein/RegExEnzyme.html#cleave-com.compomics.util.protein.Protein-">cleave(Protein)</a></span> - Method in class com.compomics.util.protein.<a href="com/compomics/util/protein/RegExEnzyme.html" title="class in com.compomics.util.protein">RegExEnzyme</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/compomics/software/log/CliLogger.html" title="class in com.compomics.software.log"><span class="typeNameLink">CliLogger</span></a> - Class in <a href="com/compomics/software/log/package-summary.html">com.compomics.software.log</a></dt>
+<dd>
+<div class="block">Simple logger.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/log/CliLogger.html#CliLogger-java.io.File-">CliLogger(File)</a></span> - Constructor for class com.compomics.software.log.<a href="com/compomics/software/log/CliLogger.html" title="class in com.compomics.software.log">CliLogger</a></dt>
+<dd>
+<div class="block">Constructor.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/log/CliLogger.html#CliLogger-java.io.File-java.lang.String-java.lang.String-">CliLogger(File, String, String)</a></span> - Constructor for class com.compomics.software.log.<a href="com/compomics/software/log/CliLogger.html" title="class in com.compomics.software.log">CliLogger</a></dt>
+<dd>
+<div class="block">Constructor.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/atoms/AtomChain.html#clone--">clone()</a></span> - Method in class com.compomics.util.experiment.biology.atoms.<a href="com/compomics/util/experiment/biology/atoms/AtomChain.html" title="class in com.compomics.util.experiment.biology.atoms">AtomChain</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/ions/impl/ReporterIon.html#clone--">clone()</a></span> - Method in class com.compomics.util.experiment.biology.ions.impl.<a href="com/compomics/util/experiment/biology/ions/impl/ReporterIon.html" title="class in com.compomics.util.experiment.biology.ions.impl">ReporterIon</a></dt>
@@ -2232,6 +2256,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/protein/RegExEnzyme.html#clone--">clone()</a></span> - Method in class com.compomics.util.protein.<a href="com/compomics/util/protein/RegExEnzyme.html" title="class in com.compomics.util.protein">RegExEnzyme</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/log/CliLogger.html#close--">close()</a></span> - Method in class com.compomics.software.log.<a href="com/compomics/software/log/CliLogger.html" title="class in com.compomics.software.log">CliLogger</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/db/object/ObjectsDB.html#close--">close()</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/ObjectsDB.html" title="class in com.compomics.util.db.object">ObjectsDB</a></dt>
 <dd>
 <div class="block">Closes the db connection.</div>
@@ -2280,6 +2306,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/idfilereaders/XTandemIdfileReader.html#close--">close()</a></span> - Method in class com.compomics.util.experiment.io.identification.idfilereaders.<a href="com/compomics/util/experiment/io/identification/idfilereaders/XTandemIdfileReader.html" title="class in com.compomics.util.experiment.io.identification.idfilereaders">XTandemIdfileReader</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#close--">close()</a></span> - Method in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/apl/AplFileWriter.html#close--">close()</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.apl.<a href="com/compomics/util/experiment/io/mass_spectrometry/apl/AplFileWriter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.apl">AplFileWriter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileIterator.html#close--">close()</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileIterator.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFileIterator</a></dt>
@@ -2304,6 +2332,8 @@
 <dd>
 <div class="block">This method closes the stream to the output file.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#close--">close()</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/ExportWriter.html#close--">close()</a></span> - Method in class com.compomics.util.io.export.<a href="com/compomics/util/io/export/ExportWriter.html" title="class in com.compomics.util.io.export">ExportWriter</a></dt>
 <dd>
 <div class="block">Writes the content in cache and closes the connection to the file.</div>
@@ -2426,6 +2456,10 @@
 <dt><a href="com/compomics/software/dialogs/package-summary.html">com.compomics.software.dialogs</a> - package com.compomics.software.dialogs</dt>
 <dd>
 <div class="block">Dialogs for starting compomics-utilities tools and setting their Java options.</div>
+</dd>
+<dt><a href="com/compomics/software/log/package-summary.html">com.compomics.software.log</a> - package com.compomics.software.log</dt>
+<dd>
+<div class="block">Classes related to software log.</div>
 </dd>
 <dt><a href="com/compomics/software/settings/package-summary.html">com.compomics.software.settings</a> - package com.compomics.software.settings</dt>
 <dd>
@@ -2584,7 +2618,11 @@
 </dd>
 <dt><a href="com/compomics/util/experiment/identification/modification/package-summary.html">com.compomics.util.experiment.identification.modification</a> - package com.compomics.util.experiment.identification.modification</dt>
 <dd>
-<div class="block">Additional PSM scoring classes.</div>
+<div class="block">Modification mapping and localization.</div>
+</dd>
+<dt><a href="com/compomics/util/experiment/identification/modification/mapping/package-summary.html">com.compomics.util.experiment.identification.modification.mapping</a> - package com.compomics.util.experiment.identification.modification.mapping</dt>
+<dd>
+<div class="block">Mapping between search engine and Utilities modifications.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/identification/modification/scores/package-summary.html">com.compomics.util.experiment.identification.modification.scores</a> - package com.compomics.util.experiment.identification.modification.scores</dt>
 <dd>
@@ -2689,6 +2727,10 @@
 <dt><a href="com/compomics/util/experiment/io/identification/idfilereaders/package-summary.html">com.compomics.util.experiment.io.identification.idfilereaders</a> - package com.compomics.util.experiment.io.identification.idfilereaders</dt>
 <dd>
 <div class="block">Experiment classes related to reading search engine files.</div>
+</dd>
+<dt><a href="com/compomics/util/experiment/io/identification/writers/package-summary.html">com.compomics.util.experiment.io.identification.writers</a> - package com.compomics.util.experiment.io.identification.writers</dt>
+<dd>
+<div class="block">Writer for identification results.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/io/mass_spectrometry/package-summary.html">com.compomics.util.experiment.io.mass_spectrometry</a> - package com.compomics.util.experiment.io.mass_spectrometry</dt>
 <dd>
@@ -2921,6 +2963,10 @@
 <dt><a href="com/compomics/util/io/compression/package-summary.html">com.compomics.util.io.compression</a> - package com.compomics.util.io.compression</dt>
 <dd>
 <div class="block">Classes related to file compression.</div>
+</dd>
+<dt><a href="com/compomics/util/io/compression/SectionGzWriter/package-summary.html">com.compomics.util.io.compression.SectionGzWriter</a> - package com.compomics.util.io.compression.SectionGzWriter</dt>
+<dd>
+<div class="block">Package for writing gzfiles with multiple sections.</div>
 </dd>
 <dt><a href="com/compomics/util/io/export/package-summary.html">com.compomics.util.io.export</a> - package com.compomics.util.io.export</dt>
 <dd>
@@ -3324,18 +3370,6 @@
 <dd>
 <div class="block">Returns a concatenation of the streams of the given collections.</div>
 </dd>
-<dt><a href="com/compomics/util/threading/ConcurrentIterator.html" title="class in com.compomics.util.threading"><span class="typeNameLink">ConcurrentIterator</span></a>&lt;<a href="com/compomics/util/threading/ConcurrentIterator.html" title="type parameter in ConcurrentIterator">K</a>&gt; - Class in <a href="com/compomics/util/threading/package-summary.html">com.compomics.util.threading</a></dt>
-<dd>
-<div class="block">Iterator based on a ConcurrentLinkedQueue.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/threading/ConcurrentIterator.html#ConcurrentIterator-K:A-">ConcurrentIterator(K[])</a></span> - Constructor for class com.compomics.util.threading.<a href="com/compomics/util/threading/ConcurrentIterator.html" title="class in com.compomics.util.threading">ConcurrentIterator</a></dt>
-<dd>
-<div class="block">Constructor.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/threading/ConcurrentIterator.html#ConcurrentIterator-java.util.Collection-">ConcurrentIterator(Collection&lt;K&gt;)</a></span> - Constructor for class com.compomics.util.threading.<a href="com/compomics/util/threading/ConcurrentIterator.html" title="class in com.compomics.util.threading">ConcurrentIterator</a></dt>
-<dd>
-<div class="block">Constructor.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/filtering/MatchFilter.html#condition">condition</a></span> - Variable in class com.compomics.util.experiment.identification.filtering.<a href="com/compomics/util/experiment/identification/filtering/MatchFilter.html" title="class in com.compomics.util.experiment.identification.filtering">MatchFilter</a></dt>
 <dd>
 <div class="block">Description of the condition to meet to pass the filter.</div>
@@ -3727,6 +3761,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/file/filefilters/FileFilterUtils.html#DAT">DAT</a></span> - Static variable in class com.compomics.util.io.file.filefilters.<a href="com/compomics/util/io/file/filefilters/FileFilterUtils.html" title="class in com.compomics.util.io.file.filefilters">FileFilterUtils</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#DATA_SECTION">DATA_SECTION</a></span> - Static variable in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">Key for the data section.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/biology/protein/FastaSummary.html#databaseType">databaseType</a></span> - Variable in class com.compomics.util.experiment.io.biology.protein.<a href="com/compomics/util/experiment/io/biology/protein/FastaSummary.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaSummary</a></dt>
 <dd>
 <div class="block">The database type occurrence in the FASTA file.</div>
@@ -3911,6 +3949,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/writers/TextWriter.html#decreseDepth--">decreseDepth()</a></span> - Method in class com.compomics.util.io.export.writers.<a href="com/compomics/util/io/export/writers/TextWriter.html" title="class in com.compomics.util.io.export.writers">TextWriter</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/Util.html#DEFAULT_COLUMN_SEPARATOR">DEFAULT_COLUMN_SEPARATOR</a></span> - Static variable in class com.compomics.util.<a href="com/compomics/util/Util.html" title="class in com.compomics.util">Util</a></dt>
+<dd>
+<div class="block">Default column separator for text files.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/idfilereaders/PepNovoIdfileReader.html#DEFAULT_HEADER">DEFAULT_HEADER</a></span> - Static variable in class com.compomics.util.experiment.io.identification.idfilereaders.<a href="com/compomics/util/experiment/io/identification/idfilereaders/PepNovoIdfileReader.html" title="class in com.compomics.util.experiment.io.identification.idfilereaders">PepNovoIdfileReader</a></dt>
 <dd>
 <div class="block">The standard format.</div>
@@ -4030,6 +4072,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/pride/PrideObjectsFactory.html#deleteSample-com.compomics.util.pride.prideobjects.Sample-">deleteSample(Sample)</a></span> - Method in class com.compomics.util.pride.<a href="com/compomics/util/pride/PrideObjectsFactory.html" title="class in com.compomics.util.pride">PrideObjectsFactory</a></dt>
 <dd>
 <div class="block">Delete the given sample.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#deleteTempFiles">deleteTempFiles</a></span> - Variable in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">If true, temp files are deleted upon completion.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/temp/TempFilesManager.html#deleteTempFolders--">deleteTempFolders()</a></span> - Static method in class com.compomics.util.experiment.io.temp.<a href="com/compomics/util/experiment/io/temp/TempFilesManager.html" title="class in com.compomics.util.experiment.io.temp">TempFilesManager</a></dt>
 <dd>
@@ -4509,6 +4555,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/scripts_marc/Dummy.html#Dummy--">Dummy()</a></span> - Constructor for class com.compomics.scripts_marc.<a href="com/compomics/scripts_marc/Dummy.html" title="class in com.compomics.scripts_marc">Dummy</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSModificationScores.html#dummy">dummy</a></span> - Static variable in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSModificationScores.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSModificationScores</a></dt>
+<dd>
+<div class="block">Dummy scores.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html#dummy">dummy</a></span> - Static variable in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSParameter</a></dt>
 <dd>
 <div class="block">An empty parameter used for instantiation.</div>
@@ -4627,6 +4677,10 @@
 <div class="block">Encoding for the file, cf the second rule.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/IoUtil.html#ENCODING">ENCODING</a></span> - Static variable in class com.compomics.util.io.<a href="com/compomics/util/io/IoUtil.html" title="class in com.compomics.util.io">IoUtil</a></dt>
+<dd>
+<div class="block">Default encoding, cf the second rule.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/Util.html#ENCODING">ENCODING</a></span> - Static variable in class com.compomics.util.<a href="com/compomics/util/Util.html" title="class in com.compomics.util">Util</a></dt>
 <dd>
 <div class="block">Default encoding, cf the second rule.</div>
 </dd>
@@ -4935,6 +4989,10 @@
 <dd>
 <div class="block">Exclude null values from an array of double.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/IoUtil.html#existsExtensionNotCaseSensitive-java.io.File-">existsExtensionNotCaseSensitive(File)</a></span> - Static method in class com.compomics.util.io.<a href="com/compomics/util/io/IoUtil.html" title="class in com.compomics.util.io">IoUtil</a></dt>
+<dd>
+<div class="block">Checks if the given file exists with the extension in another case and returns it.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/math/BigFunctions.html#exp-java.math.BigDecimal-java.math.MathContext-">exp(BigDecimal, MathContext)</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BigFunctions.html" title="class in com.compomics.util.math">BigFunctions</a></dt>
 <dd>
 <div class="block">Returns the value of the exponential of the given BigDecimal using the
@@ -5097,13 +5155,13 @@
 <dd>
 <div class="block">The Fluorine atom.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/math/BasicMathFunctions.html#factorial-java.lang.Integer-">factorial(Integer)</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BasicMathFunctions.html" title="class in com.compomics.util.math">BasicMathFunctions</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/math/BasicMathFunctions.html#factorial-int-">factorial(int)</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BasicMathFunctions.html" title="class in com.compomics.util.math">BasicMathFunctions</a></dt>
 <dd>
 <div class="block">Returns n! as a long.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/math/BasicMathFunctions.html#factorial-java.lang.Integer-java.lang.Integer-">factorial(Integer, Integer)</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BasicMathFunctions.html" title="class in com.compomics.util.math">BasicMathFunctions</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/math/BasicMathFunctions.html#factorial-int-int-">factorial(int, int)</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BasicMathFunctions.html" title="class in com.compomics.util.math">BasicMathFunctions</a></dt>
 <dd>
-<div class="block">Returns n!/k!, null if it cannot fit in a long.</div>
+<div class="block">Returns n!/k!, -1 if it cannot fit in a long.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/math/BigFunctions.html#factorial-java.math.BigInteger-">factorial(BigInteger)</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BigFunctions.html" title="class in com.compomics.util.math">BigFunctions</a></dt>
 <dd>
@@ -5478,6 +5536,10 @@
 <dd>
 <div class="block">Called by the garbage collector on an object when garbage collection
  determines that there are no more references to the object.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#finalizeFile--">finalizeFile()</a></span> - Method in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">Finalizes the writing of the mzIdentML file.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/spectrum/GraphicsPanel.html#findDeltaMassMatches-double-double-">findDeltaMassMatches(double, double)</a></span> - Method in class com.compomics.util.gui.spectrum.<a href="com/compomics/util/gui/spectrum/GraphicsPanel.html" title="class in com.compomics.util.gui.spectrum">GraphicsPanel</a></dt>
 <dd>
@@ -8044,6 +8106,10 @@
 <dd>
 <div class="block">Parses a list of doubles from a command line option.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html#getDScoreThreshold--">getDScoreThreshold()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ModificationLocalizationParameters</a></dt>
+<dd>
+<div class="block">Returns the D-score threshold.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/ModificationScoring.html#getDSites--">getDSites()</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/ModificationScoring.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">ModificationScoring</a></dt>
 <dd>
 <div class="block">Returns a set of sites where a D-score is available</div>
@@ -8369,6 +8435,14 @@
 <dd>
 <div class="block">Returns the extensions of a file.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/IoUtil.html#getExtension-java.lang.String-">getExtension(String)</a></span> - Static method in class com.compomics.util.io.<a href="com/compomics/util/io/IoUtil.html" title="class in com.compomics.util.io">IoUtil</a></dt>
+<dd>
+<div class="block">Returns the extensions of a file name.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/math/BasicMathFunctions.html#getFactorialsCache--">getFactorialsCache()</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BasicMathFunctions.html" title="class in com.compomics.util.math">BasicMathFunctions</a></dt>
+<dd>
+<div class="block">Returns factorial 0 to 20 in an array.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/cli/fasta/FastaParametersInputBean.html#getFastaParameters--">getFastaParameters()</a></span> - Method in class com.compomics.cli.fasta.<a href="com/compomics/cli/fasta/FastaParametersInputBean.html" title="class in com.compomics.cli.fasta">FastaParametersInputBean</a></dt>
 <dd>
 <div class="block">Returns the FASTA parameters as parsed from the command line.</div>
@@ -8479,6 +8553,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/pride/prideobjects/Sample.html#getFileName--">getFileName()</a></span> - Method in class com.compomics.util.pride.prideobjects.<a href="com/compomics/util/pride/prideobjects/Sample.html" title="class in com.compomics.util.pride.prideobjects">Sample</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/IoUtil.html#getFilenameExtensionLowerCase-java.lang.String-">getFilenameExtensionLowerCase(String)</a></span> - Static method in class com.compomics.util.io.<a href="com/compomics/util/io/IoUtil.html" title="class in com.compomics.util.io">IoUtil</a></dt>
+<dd>
+<div class="block">Returns the given file name with lower-case extension.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html#getFileNames--">getFileNames()</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.cms.<a href="com/compomics/util/experiment/io/mass_spectrometry/cms/CmsFileReader.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.cms">CmsFileReader</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileHandler.html#getFileNames--">getFileNames()</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileHandler.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileHandler</a></dt>
@@ -10105,6 +10183,11 @@
 <dd>
 <div class="block">Returns the mass of the tag component.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationMassMapper.html#getMass-java.lang.String-com.compomics.util.experiment.io.identification.IdfileReader-com.compomics.util.parameters.identification.search.SearchParameters-com.compomics.util.experiment.biology.modifications.ModificationProvider-">getMass(String, IdfileReader, SearchParameters, ModificationProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationMassMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationMassMapper</a></dt>
+<dd>
+<div class="block">Returns the mass indicated by the identification algorithm for the given
+ modification.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_sequences/digestion/PeptideDraft.html#getMass--">getMass()</a></span> - Method in class com.compomics.util.experiment.identification.protein_sequences.digestion.<a href="com/compomics/util/experiment/identification/protein_sequences/digestion/PeptideDraft.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">PeptideDraft</a></dt>
 <dd>
 <div class="block">Returns the mass.</div>
@@ -10149,6 +10232,12 @@
 <dd>
 <div class="block">Returns the mass analyzer.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationMassMapper.html#getMassAndromeda-java.lang.String-com.compomics.util.experiment.biology.modifications.ModificationProvider-com.compomics.util.parameters.identification.search.SearchParameters-">getMassAndromeda(String, ModificationProvider, SearchParameters)</a></span> - Static method in class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationMassMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationMassMapper</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationMassMapper.html#getMassByMass-java.lang.String-">getMassByMass(String)</a></span> - Static method in class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationMassMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationMassMapper</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationMassMapper.html#getMassByName-java.lang.String-com.compomics.util.experiment.biology.modifications.ModificationProvider-">getMassByName(String, ModificationProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationMassMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationMassMapper</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/protein/ModificationImplementation.html#getMassDelta-java.lang.String-int-">getMassDelta(String, int)</a></span> - Method in class com.compomics.util.protein.<a href="com/compomics/util/protein/ModificationImplementation.html" title="class in com.compomics.util.protein">ModificationImplementation</a></dt>
 <dd>
 <div class="block">This method returns the mass delta for the specified residue, measured either
@@ -10172,6 +10261,8 @@
 <dd>
 <div class="block">Returns the mass gap comprised in this ion.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationMassMapper.html#getMassOmssa-java.lang.String-com.compomics.util.experiment.biology.modifications.ModificationProvider-com.compomics.util.parameters.identification.search.SearchParameters-">getMassOmssa(String, ModificationProvider, SearchParameters)</a></span> - Static method in class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationMassMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationMassMapper</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/spectrum_annotation/SpectrumAnnotator.html#getMassShift--">getMassShift()</a></span> - Method in class com.compomics.util.experiment.identification.spectrum_annotation.<a href="com/compomics/util/experiment/identification/spectrum_annotation/SpectrumAnnotator.html" title="class in com.compomics.util.experiment.identification.spectrum_annotation">SpectrumAnnotator</a></dt>
 <dd>
 <div class="block">Returns the m/z shift applied to the fragment ions.</div>
@@ -11034,8 +11125,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/sun/TableMap.html#getModel--">getModel()</a></span> - Method in class com.compomics.util.sun.<a href="com/compomics/util/sun/TableMap.html" title="class in com.compomics.util.sun">TableMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html#getModification-java.lang.String-">getModification(String)</a></span> - Method in class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationProvider.html#getModification-java.lang.String-">getModification(String)</a></span> - Method in interface com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationProvider.html" title="interface in com.compomics.util.experiment.biology.modifications">ModificationProvider</a></dt>
 <dd>
-<div class="block">Returns the Modification indexed by its name.</div>
+<div class="block">Returns the modification with the given name name.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches/ModificationMatch.html#getModification--">getModification()</a></span> - Method in class com.compomics.util.experiment.identification.matches.<a href="com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches">ModificationMatch</a></dt>
 <dd>
@@ -11061,6 +11154,11 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_sequences/digestion/ProteinIteratorUtils.html#getModificationMass-java.lang.String-">getModificationMass(String)</a></span> - Method in class com.compomics.util.experiment.identification.protein_sequences.digestion.<a href="com/compomics/util/experiment/identification/protein_sequences/digestion/ProteinIteratorUtils.html" title="class in com.compomics.util.experiment.identification.protein_sequences.digestion">ProteinIteratorUtils</a></dt>
 <dd>
 <div class="block">Returns the mass corresponding to a given modification.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#getModificationName-double-com.compomics.util.experiment.biology.proteins.Peptide-int-">getModificationName(double, Peptide, int)</a></span> - Method in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">Returns the name of the modification corresponding to he given
+ modification mass at the given site on the given peptide.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/AndromedaParameters.html#getModificationName-int-">getModificationName(int)</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/AndromedaParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">AndromedaParameters</a></dt>
 <dd>
@@ -12351,6 +12449,11 @@
 <dd>
 <div class="block">Returns the 0 based end index of the peptide on the protein sequence.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#getPeptideEvidenceKey-java.lang.String-int-long-">getPeptideEvidenceKey(String, int, long)</a></span> - Static method in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">Returns the peptide evidence key as string for the given peptide
+ attributes.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ValidationQcParameters.html#getPeptideFilters--">getPeptideFilters()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ValidationQcParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ValidationQcParameters</a></dt>
 <dd>
 <div class="block">Returns the list of peptide quality filters.</div>
@@ -12779,6 +12882,16 @@
 <dd>
 <div class="block">Returns the filter items accepted by this filter.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html#getPossibleModificationNames-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.identification.matches.ModificationMatch-com.compomics.util.experiment.io.identification.IdfileReader-com.compomics.util.parameters.identification.search.SearchParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.experiment.biology.modifications.ModificationProvider-">getPossibleModificationNames(Peptide, ModificationMatch, IdfileReader, SearchParameters, SequenceMatchingParameters, SequenceProvider, ModificationProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationNameMapper</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html#getPossibleModificationNamesAndromeda-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.identification.matches.ModificationMatch-com.compomics.util.parameters.identification.search.SearchParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.experiment.biology.modifications.ModificationProvider-">getPossibleModificationNamesAndromeda(Peptide, ModificationMatch, SearchParameters, SequenceMatchingParameters, SequenceProvider, ModificationProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationNameMapper</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html#getPossibleModificationNamesByMass-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.identification.matches.ModificationMatch-com.compomics.util.parameters.identification.search.SearchParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.experiment.biology.modifications.ModificationProvider-">getPossibleModificationNamesByMass(Peptide, ModificationMatch, SearchParameters, SequenceMatchingParameters, SequenceProvider, ModificationProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationNameMapper</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html#getPossibleModificationNamesByName-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.identification.matches.ModificationMatch-com.compomics.util.parameters.identification.search.SearchParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.experiment.biology.modifications.ModificationProvider-">getPossibleModificationNamesByName(Peptide, ModificationMatch, SearchParameters, SequenceMatchingParameters, SequenceProvider, ModificationProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationNameMapper</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html#getPossibleModificationNamesOmssa-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.identification.matches.ModificationMatch-com.compomics.util.parameters.identification.search.SearchParameters-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.experiment.biology.modifications.ModificationProvider-">getPossibleModificationNamesOmssa(Peptide, ModificationMatch, SearchParameters, SequenceMatchingParameters, SequenceProvider, ModificationProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationNameMapper</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/ModificationUtils.html#getPossibleModificationSites-com.compomics.util.experiment.biology.proteins.Peptide-com.compomics.util.experiment.biology.modifications.Modification-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">getPossibleModificationSites(Peptide, Modification, SequenceProvider, SequenceMatchingParameters)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/ModificationUtils.html" title="class in com.compomics.util.experiment.identification.utils">ModificationUtils</a></dt>
 <dd>
 <div class="block">Returns an array of the possible modification sites for the given
@@ -13053,7 +13166,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html#getProbabilisticScoreThreshold--">getProbabilisticScoreThreshold()</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ModificationLocalizationParameters</a></dt>
 <dd>
-<div class="block">Returns the probabilistic score threshold.</div>
+<div class="block">Returns the probabilistic score threshold (inclusive).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/ModificationScoring.html#getProbabilisticSites--">getProbabilisticSites()</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/ModificationScoring.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">ModificationScoring</a></dt>
 <dd>
@@ -13567,6 +13680,11 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/math/BasicMathFunctions.html#getRandomInteger-int-int-">getRandomInteger(int, int)</a></span> - Static method in class com.compomics.util.math.<a href="com/compomics/util/math/BasicMathFunctions.html" title="class in com.compomics.util.math">BasicMathFunctions</a></dt>
 <dd>
 <div class="block">Returns an integer randomly chosen between min and max included.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/ModificationLocalizationScore.html#getRandomThreshold-int-int-">getRandomThreshold(int, int)</a></span> - Method in enum com.compomics.util.experiment.identification.modification.<a href="com/compomics/util/experiment/identification/modification/ModificationLocalizationScore.html" title="enum in com.compomics.util.experiment.identification.modification">ModificationLocalizationScore</a></dt>
+<dd>
+<div class="block">Returns the threshold (inclusive) to use to consider an assignment
+ random.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html#getRank-int-boolean-">getRank(int, boolean)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/Rank.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">Rank</a></dt>
 <dd>
@@ -15948,6 +16066,10 @@
 <div class="block">Gzip a file.If the gz file already exists it will be silently
  overwritten.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#gzipTemp">gzipTemp</a></span> - Variable in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">If true, temp files are gzipped.</div>
+</dd>
 <dt><a href="com/compomics/util/io/compression/GzUtils.html" title="class in com.compomics.util.io.compression"><span class="typeNameLink">GzUtils</span></a> - Class in <a href="com/compomics/util/io/compression/package-summary.html">com.compomics.util.io.compression</a></dt>
 <dd>
 <div class="block">Convenience methods to work with gzipped files.</div>
@@ -16139,6 +16261,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/atoms/Atom.html#He">He</a></span> - Static variable in class com.compomics.util.experiment.biology.atoms.<a href="com/compomics/util/experiment/biology/atoms/Atom.html" title="class in com.compomics.util.experiment.biology.atoms">Atom</a></dt>
 <dd>
 <div class="block">The helium atom.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#HEAD_SECTION">HEAD_SECTION</a></span> - Static variable in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">Key for the head section.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/io/biology/protein/Header.html" title="class in com.compomics.util.experiment.io.biology.protein"><span class="typeNameLink">Header</span></a> - Class in <a href="com/compomics/util/experiment/io/biology/protein/package-summary.html">com.compomics.util.experiment.io.biology.protein</a></dt>
 <dd>
@@ -17010,6 +17136,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/software/cli/CommandParameter.html#inIntegerRange-java.lang.String-java.lang.String-int-int-">inIntegerRange(String, String, int, int)</a></span> - Static method in class com.compomics.software.cli.<a href="com/compomics/software/cli/CommandParameter.html" title="class in com.compomics.software.cli">CommandParameter</a></dt>
 <dd>
 <div class="block">Returns true if the input is an integer value inside the given range.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#init-java.lang.String-java.lang.String-java.lang.String-java.lang.String-java.lang.String-java.lang.String-java.lang.String-">init(String, String, String, String, String, String, String)</a></span> - Method in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">Initializes the writing of the file.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/json/JsonMarshaller.html#init--">init()</a></span> - Method in class com.compomics.util.io.json.<a href="com/compomics/util/io/json/JsonMarshaller.html" title="class in com.compomics.util.io.json">JsonMarshaller</a></dt>
 <dd>
@@ -19119,6 +19249,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/file/FolderMonitor.html#LIMIT">LIMIT</a></span> - Static variable in class com.compomics.util.io.file.<a href="com/compomics/util/io/file/FolderMonitor.html" title="class in com.compomics.util.io.file">FolderMonitor</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/Util.html#LINE_SEPARATOR">LINE_SEPARATOR</a></span> - Static variable in class com.compomics.util.<a href="com/compomics/util/Util.html" title="class in com.compomics.util">Util</a></dt>
+<dd>
+<div class="block">The line separator.</div>
+</dd>
 <dt><a href="com/compomics/util/math/statistics/linear_regression/LinearRegression.html" title="class in com.compomics.util.math.statistics.linear_regression"><span class="typeNameLink">LinearRegression</span></a> - Class in <a href="com/compomics/util/math/statistics/linear_regression/package-summary.html">com.compomics.util.math.statistics.linear_regression</a></dt>
 <dd>
 <div class="block">Enum of the different implementations for a regression.</div>
@@ -19265,6 +19399,10 @@
 <dd>
 <div class="block">Returns the log of the input in the desired base.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/log/CliLogger.html#logError-java.lang.String-">logError(String)</a></span> - Method in class com.compomics.software.log.<a href="com/compomics/software/log/CliLogger.html" title="class in com.compomics.software.log">CliLogger</a></dt>
+<dd>
+<div class="block">Logs an error.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/general/DefaultOutputLoggerImplementation.html#logExceptionalEvent-java.lang.String-">logExceptionalEvent(String)</a></span> - Method in class com.compomics.util.general.<a href="com/compomics/util/general/DefaultOutputLoggerImplementation.html" title="class in com.compomics.util.general">DefaultOutputLoggerImplementation</a></dt>
 <dd>
 <div class="block">This method allows the logging of an exceptional event.</div>
@@ -19290,6 +19428,10 @@
 <dd>
 <div class="block">Login user to a host with username <i>user</i> and no password
  such as HP server which uses the form "&lt;username&gt;/&lt;password&gt;,user.&lt;group&gt;.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/log/CliLogger.html#logMessage-java.lang.String-">logMessage(String)</a></span> - Method in class com.compomics.software.log.<a href="com/compomics/software/log/CliLogger.html" title="class in com.compomics.software.log">CliLogger</a></dt>
+<dd>
+<div class="block">Logs a message.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/general/DefaultOutputLoggerImplementation.html#logNormalEvent-java.lang.String-">logNormalEvent(String)</a></span> - Method in class com.compomics.util.general.<a href="com/compomics/util/general/DefaultOutputLoggerImplementation.html" title="class in com.compomics.util.general">DefaultOutputLoggerImplementation</a></dt>
 <dd>
@@ -19557,6 +19699,16 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/mass_spectrometry/utils/StandardMasses.html#mass">mass</a></span> - Variable in enum com.compomics.util.experiment.mass_spectrometry.utils.<a href="com/compomics/util/experiment/mass_spectrometry/utils/StandardMasses.html" title="enum in com.compomics.util.experiment.mass_spectrometry.utils">StandardMasses</a></dt>
 <dd>
 <div class="block">The mass.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationLocalizationMapper.html#MASS_PER_AA">MASS_PER_AA</a></span> - Static variable in class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationLocalizationMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationLocalizationMapper</a></dt>
+<dd>
+<div class="block">The mass added per amino acid as part of the reference mass when
+ converting Dalton tolerances to ppm.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/Util.html#MASS_PER_AA">MASS_PER_AA</a></span> - Static variable in class com.compomics.util.<a href="com/compomics/util/Util.html" title="class in com.compomics.util">Util</a></dt>
+<dd>
+<div class="block">The mass added per amino acid as part of the reference mass when
+ converting a tolerance in Dalton to ppm.</div>
 </dd>
 <dt><a href="com/compomics/util/general/MassCalc.html" title="class in com.compomics.util.general"><span class="typeNameLink">MassCalc</span></a> - Class in <a href="com/compomics/util/general/package-summary.html">com.compomics.util.general</a></dt>
 <dd>
@@ -19854,6 +20006,11 @@
 <dd>
 <div class="block">The maximum allowed length of the FASTA file name.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#MAX_NEUTRAL_LOSSES">MAX_NEUTRAL_LOSSES</a></span> - Static variable in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">The maximum number of neutral losses a fragment ion can have in order to
+ be annotated.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/math/BigMathUtils.html#maxDouble">maxDouble</a></span> - Static variable in class com.compomics.util.math.<a href="com/compomics/util/math/BigMathUtils.html" title="class in com.compomics.util.math">BigMathUtils</a></dt>
 <dd>
 <div class="block">Big decimal value of the maximal value of a double.</div>
@@ -20139,6 +20296,11 @@
 <dd>
 <div class="block">Create a directory on the remote system</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html#MOD_MASS_TOLERANCE">MOD_MASS_TOLERANCE</a></span> - Static variable in class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationNameMapper</a></dt>
+<dd>
+<div class="block">The mass tolerance to be used to match modifications from search engines
+ and expected modifications.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/sun/TableMap.html#model">model</a></span> - Variable in class com.compomics.util.sun.<a href="com/compomics/util/sun/TableMap.html" title="class in com.compomics.util.sun">TableMap</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/experiment/biology/modifications/Modification.html" title="class in com.compomics.util.experiment.biology.modifications"><span class="typeNameLink">Modification</span></a> - Class in <a href="com/compomics/util/experiment/biology/modifications/package-summary.html">com.compomics.util.experiment.biology.modifications</a></dt>
@@ -20267,6 +20429,17 @@
 <dd>
 <div class="block">This constructor allows initialization of all the properties for the modification.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationLocalizationMapper.html#modificationLocalization-com.compomics.util.experiment.biology.proteins.Peptide-java.util.HashMap-java.util.HashMap-com.compomics.util.parameters.identification.IdentificationParameters-com.compomics.util.experiment.io.identification.IdfileReader-com.compomics.util.experiment.biology.modifications.ModificationProvider-">modificationLocalization(Peptide, HashMap&lt;Integer, ArrayList&lt;String&gt;&gt;, HashMap&lt;ModificationMatch, ArrayList&lt;String&gt;&gt;, IdentificationParameters, IdfileReader, ModificationProvider)</a></span> - Static method in class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationLocalizationMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationLocalizationMapper</a></dt>
+<dd>
+<div class="block">Makes an initial modification mapping based on the search engine results
+ and the compatibility to the searched modifications.</div>
+</dd>
+<dt><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationLocalizationMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping"><span class="typeNameLink">ModificationLocalizationMapper</span></a> - Class in <a href="com/compomics/util/experiment/identification/modification/mapping/package-summary.html">com.compomics.util.experiment.identification.modification.mapping</a></dt>
+<dd>
+<div class="block">Function attempting to map modification localization based on their type.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationLocalizationMapper.html#ModificationLocalizationMapper--">ModificationLocalizationMapper()</a></span> - Constructor for class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationLocalizationMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationLocalizationMapper</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html" title="class in com.compomics.util.parameters.identification.advanced"><span class="typeNameLink">ModificationLocalizationParameters</span></a> - Class in <a href="com/compomics/util/parameters/identification/advanced/package-summary.html">com.compomics.util.parameters.identification.advanced</a></dt>
 <dd>
 <div class="block">This class contains the modification localization preferences.</div>
@@ -20295,6 +20468,12 @@
 <dd>
 <div class="block">An enum of the modification localization scores.</div>
 </dd>
+<dt><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationMassMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping"><span class="typeNameLink">ModificationMassMapper</span></a> - Class in <a href="com/compomics/util/experiment/identification/modification/mapping/package-summary.html">com.compomics.util.experiment.identification.modification.mapping</a></dt>
+<dd>
+<div class="block">Function inferring the mass of a modification based on the search engine used.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationMassMapper.html#ModificationMassMapper--">ModificationMassMapper()</a></span> - Constructor for class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationMassMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationMassMapper</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/experiment/identification/matches/ModificationMatch.html" title="class in com.compomics.util.experiment.identification.matches"><span class="typeNameLink">ModificationMatch</span></a> - Class in <a href="com/compomics/util/experiment/identification/matches/package-summary.html">com.compomics.util.experiment.identification.matches</a></dt>
 <dd>
 <div class="block">This class models the match between theoretic PTM and identification results.</div>
@@ -20307,6 +20486,12 @@
 <dd>
 <div class="block">Default constructor for a modification match.</div>
 </dd>
+<dt><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping"><span class="typeNameLink">ModificationNameMapper</span></a> - Class in <a href="com/compomics/util/experiment/identification/modification/mapping/package-summary.html">com.compomics.util.experiment.identification.modification.mapping</a></dt>
+<dd>
+<div class="block">Functions mapping search engine modifications to utilities by name.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html#ModificationNameMapper--">ModificationNameMapper()</a></span> - Constructor for class com.compomics.util.experiment.identification.modification.mapping.<a href="com/compomics/util/experiment/identification/modification/mapping/ModificationNameMapper.html" title="class in com.compomics.util.experiment.identification.modification.mapping">ModificationNameMapper</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/parameters/identification/search/ModificationParameters.html" title="class in com.compomics.util.parameters.identification.search"><span class="typeNameLink">ModificationParameters</span></a> - Class in <a href="com/compomics/util/parameters/identification/search/package-summary.html">com.compomics.util.parameters.identification.search</a></dt>
 <dd>
 <div class="block">This class stores the information about the modification parameters (usage,
@@ -20335,6 +20520,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/protein/ModificationProfile.html#ModificationProfile-java.lang.String-double:A:A-java.awt.Color-">ModificationProfile(String, double[][], Color)</a></span> - Constructor for class com.compomics.util.gui.protein.<a href="com/compomics/util/gui/protein/ModificationProfile.html" title="class in com.compomics.util.gui.protein">ModificationProfile</a></dt>
 <dd>
 <div class="block">Modification profile constructor.</div>
+</dd>
+<dt><a href="com/compomics/util/experiment/biology/modifications/ModificationProvider.html" title="interface in com.compomics.util.experiment.biology.modifications"><span class="typeNameLink">ModificationProvider</span></a> - Interface in <a href="com/compomics/util/experiment/biology/modifications/package-summary.html">com.compomics.util.experiment.biology.modifications</a></dt>
+<dd>
+<div class="block">Interface for a modification provider.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html#modifications">modifications</a></span> - Variable in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MatrixContent</a></dt>
 <dd>
@@ -20782,6 +20971,10 @@
 <dd>
 <div class="block">Empty default constructor</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#MZIDENTML_VERSION">MZIDENTML_VERSION</a></span> - Static variable in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">The version of the mzIdentML format.</div>
+</dd>
 <dt><a href="com/compomics/util/experiment/io/identification/idfilereaders/MzIdentMLIdfileReader.html" title="class in com.compomics.util.experiment.io.identification.idfilereaders"><span class="typeNameLink">MzIdentMLIdfileReader</span></a> - Class in <a href="com/compomics/util/experiment/io/identification/idfilereaders/package-summary.html">com.compomics.util.experiment.io.identification.idfilereaders</a></dt>
 <dd>
 <div class="block">This IdfileReader reads identifications from an mzIdentML result file.</div>
@@ -20878,6 +21071,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/sun/TableSorter.html#n2sort--">n2sort()</a></span> - Method in class com.compomics.util.sun.<a href="com/compomics/util/sun/TableSorter.html" title="class in com.compomics.util.sun">TableSorter</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#N_AA">N_AA</a></span> - Static variable in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">The number of amino acids to export before and after the peptide</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/protein/Enzyme.html#N_TERM_ENZYMATIC">N_TERM_ENZYMATIC</a></span> - Static variable in class com.compomics.util.protein.<a href="com/compomics/util/protein/Enzyme.html" title="class in com.compomics.util.protein">Enzyme</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/atoms/Atom.html#Na">Na</a></span> - Static variable in class com.compomics.util.experiment.biology.atoms.<a href="com/compomics/util/experiment/biology/atoms/Atom.html" title="class in com.compomics.util.experiment.biology.atoms">Atom</a></dt>
@@ -21045,6 +21242,10 @@
 <dd>
 <div class="block">Cache for the multiples of the neutron mass.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#newLine-java.lang.String-">newLine(String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">Appends a new line to the given section.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/ExportWriter.html#newLine--">newLine()</a></span> - Method in class com.compomics.util.io.export.<a href="com/compomics/util/io/export/ExportWriter.html" title="class in com.compomics.util.io.export">ExportWriter</a></dt>
 <dd>
 <div class="block">Adds a separator.</div>
@@ -21058,7 +21259,9 @@
 <div class="block">Adds an end of line character.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#newLine--">newLine()</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Appends a new line to the output.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/genes/ProteinGeneDetailsProvider.html#newVersionExists-java.lang.Integer-">newVersionExists(Integer)</a></span> - Method in class com.compomics.util.experiment.biology.genes.<a href="com/compomics/util/experiment/biology/genes/ProteinGeneDetailsProvider.html" title="class in com.compomics.util.experiment.biology.genes">ProteinGeneDetailsProvider</a></dt>
 <dd>
 <div class="block">Returns true if a newer version of the species mapping exists in Ensembl.</div>
@@ -21089,10 +21292,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/mzml/MzmlFileIterator.html#next--">next()</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.mzml.<a href="com/compomics/util/experiment/io/mass_spectrometry/mzml/MzmlFileIterator.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.mzml">MzmlFileIterator</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/threading/ConcurrentIterator.html#next--">next()</a></span> - Method in class com.compomics.util.threading.<a href="com/compomics/util/threading/ConcurrentIterator.html" title="class in com.compomics.util.threading">ConcurrentIterator</a></dt>
-<dd>
-<div class="block">Returns the next object.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html#nextObject--">nextObject()</a></span> - Method in class com.compomics.util.experiment.identification.matches_iterators.<a href="com/compomics/util/experiment/identification/matches_iterators/MatchesIterator.html" title="class in com.compomics.util.experiment.identification.matches_iterators">MatchesIterator</a></dt>
 <dd>
 <div class="block">Returns the next match and updates the buffer.</div>
@@ -21895,9 +22094,17 @@
 <dd>
 <div class="block">The peptide.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#PEPTIDE_EVIDENCE_SECTION">PEPTIDE_EVIDENCE_SECTION</a></span> - Static variable in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">Key for the peptide evidence section.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/IdentificationMethod.html#PEPTIDE_FINGERPRINTING">PEPTIDE_FINGERPRINTING</a></span> - Static variable in class com.compomics.util.experiment.identification.<a href="com/compomics/util/experiment/identification/IdentificationMethod.html" title="class in com.compomics.util.experiment.identification">IdentificationMethod</a></dt>
 <dd>
 <div class="block">index for identification method based on peptide mass fingerprinting</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#PEPTIDE_SECTION">PEPTIDE_SECTION</a></span> - Static variable in class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">Key for the peptide section.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/software/ToolFactory.html#PEPTIDE_SHAKER_FILE_OPTION">PEPTIDE_SHAKER_FILE_OPTION</a></span> - Static variable in class com.compomics.software.<a href="com/compomics/software/ToolFactory.html" title="class in com.compomics.software">ToolFactory</a></dt>
 <dd>
@@ -23341,6 +23548,22 @@
 <div class="block">Reads up to <code>len</code> bytes of data from this input stream
  into an array of bytes.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/readers/SimpleGzReader.html#read-char:A-">read(char[])</a></span> - Method in class com.compomics.util.io.flat.readers.<a href="com/compomics/util/io/flat/readers/SimpleGzReader.html" title="class in com.compomics.util.io.flat.readers">SimpleGzReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/readers/SimpleGzReader.html#read-char:A-int-int-">read(char[], int, int)</a></span> - Method in class com.compomics.util.io.flat.readers.<a href="com/compomics/util/io/flat/readers/SimpleGzReader.html" title="class in com.compomics.util.io.flat.readers">SimpleGzReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/readers/SimpleTextReader.html#read-char:A-">read(char[])</a></span> - Method in class com.compomics.util.io.flat.readers.<a href="com/compomics/util/io/flat/readers/SimpleTextReader.html" title="class in com.compomics.util.io.flat.readers">SimpleTextReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/readers/SimpleTextReader.html#read-char:A-int-int-">read(char[], int, int)</a></span> - Method in class com.compomics.util.io.flat.readers.<a href="com/compomics/util/io/flat/readers/SimpleTextReader.html" title="class in com.compomics.util.io.flat.readers">SimpleTextReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileReader.html#read-char:A-">read(char[])</a></span> - Method in interface com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileReader.html" title="interface in com.compomics.util.io.flat">SimpleFileReader</a></dt>
+<dd>
+<div class="block">Reads characters into an array.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileReader.html#read-char:A-int-int-">read(char[], int, int)</a></span> - Method in interface com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileReader.html" title="interface in com.compomics.util.io.flat">SimpleFileReader</a></dt>
+<dd>
+<div class="block">Reads characters into an array.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/json/adapter/FileAdapter.html#read-com.google.gson.stream.JsonReader-">read(JsonReader)</a></span> - Method in class com.compomics.util.io.json.adapter.<a href="com/compomics/util/io/json/adapter/FileAdapter.html" title="class in com.compomics.util.io.json.adapter">FileAdapter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/db/object/DbObject.html#readDBMode--">readDBMode()</a></span> - Method in class com.compomics.util.db.object.<a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a></dt>
@@ -23477,6 +23700,10 @@
 <dd>
 <div class="block">This method registers a new IdfileReader Class, and the file extension it
  can read from.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#registerSection-java.lang.String-">registerSection(String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">Registers a new section.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/temp/TempFilesManager.html#registerTempFolder-java.io.File-">registerTempFolder(File)</a></span> - Static method in class com.compomics.util.experiment.io.temp.<a href="com/compomics/util/experiment/io/temp/TempFilesManager.html" title="class in com.compomics.util.experiment.io.temp">TempFilesManager</a></dt>
 <dd>
@@ -24308,6 +24535,11 @@
 <dd>
 <div class="block">Creates a new SearchSettingsDialog with a dialog as owner.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#sectionCompleted-java.lang.String-">sectionCompleted(String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">Registers a section as completed and transfers its content to the main
+ file.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html#select-int-int-">select(int, int)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a></dt>
 <dd>
 <div class="block">Inverse function to the rank function: given the i'th occurrence of a character
@@ -24437,10 +24669,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/idfilereaders/OnyaseIdfileReader.html#separator">separator</a></span> - Static variable in class com.compomics.util.experiment.io.identification.idfilereaders.<a href="com/compomics/util/experiment/io/identification/idfilereaders/OnyaseIdfileReader.html" title="class in com.compomics.util.experiment.io.identification.idfilereaders">OnyaseIdfileReader</a></dt>
 <dd>
 <div class="block">The columns separator.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/Util.html#SEPARATOR">SEPARATOR</a></span> - Static variable in class com.compomics.util.<a href="com/compomics/util/Util.html" title="class in com.compomics.util">Util</a></dt>
-<dd>
-<div class="block">Separator which can be used to separate things.</div>
 </dd>
 <dt><a href="com/compomics/util/interfaces/Sequence.html" title="interface in com.compomics.util.interfaces"><span class="typeNameLink">Sequence</span></a> - Interface in <a href="com/compomics/util/interfaces/package-summary.html">com.compomics.util.interfaces</a></dt>
 <dd>
@@ -25255,6 +25483,10 @@
 <dd>
 <div class="block">Set to true if the area is to be drawn in front of the data, false
  otherwise.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html#setDScoreThreshold-double-">setDScoreThreshold(double)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ModificationLocalizationParameters</a></dt>
+<dd>
+<div class="block">Sets the D-score threshold.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/tool_specific/DirecTagParameters.html#setDuplicateSpectra-boolean-">setDuplicateSpectra(boolean)</a></span> - Method in class com.compomics.util.parameters.identification.tool_specific.<a href="com/compomics/util/parameters/identification/tool_specific/DirecTagParameters.html" title="class in com.compomics.util.parameters.identification.tool_specific">DirecTagParameters</a></dt>
 <dd>
@@ -27168,7 +27400,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html#setProbabilisticScoreThreshold-double-">setProbabilisticScoreThreshold(double)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/ModificationLocalizationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">ModificationLocalizationParameters</a></dt>
 <dd>
-<div class="block">Sets the probabilistic score threshold.</div>
+<div class="block">Sets the probabilistic score threshold (inclusive).</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html#setProbability-double-">setProbability(double)</a></span> - Method in class com.compomics.util.experiment.identification.peptide_shaker.<a href="com/compomics/util/experiment/identification/peptide_shaker/PSParameter.html" title="class in com.compomics.util.experiment.identification.peptide_shaker">PSParameter</a></dt>
 <dd>
@@ -28433,6 +28665,14 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/math/statistics/linear_regression/regressions/SimpleLinearRegression.html#SimpleLinearRegression--">SimpleLinearRegression()</a></span> - Constructor for class com.compomics.util.math.statistics.linear_regression.regressions.<a href="com/compomics/util/math/statistics/linear_regression/regressions/SimpleLinearRegression.html" title="class in com.compomics.util.math.statistics.linear_regression.regressions">SimpleLinearRegression</a></dt>
 <dd>
 <div class="block">Empty default constructor</div>
+</dd>
+<dt><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers"><span class="typeNameLink">SimpleMzIdentMLExporter</span></a> - Class in <a href="com/compomics/util/experiment/io/identification/writers/package-summary.html">com.compomics.util.experiment.io.identification.writers</a></dt>
+<dd>
+<div class="block">Simple mzIdentML exporter for PSM-level results.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html#SimpleMzIdentMLExporter-java.lang.String-java.lang.String-java.lang.String-java.io.File-java.io.File-java.io.File-java.io.File-java.util.HashMap-java.io.File-com.compomics.util.parameters.identification.IdentificationParameters-com.compomics.util.experiment.io.biology.protein.SequenceProvider-com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider-com.compomics.util.experiment.mass_spectrometry.SpectrumProvider-com.compomics.util.experiment.biology.modifications.ModificationProvider-com.compomics.util.experiment.io.biology.protein.FastaSummary-java.lang.String-java.lang.String-java.lang.String-java.lang.String-java.lang.String-java.lang.String-java.lang.String-">SimpleMzIdentMLExporter(String, String, String, File, File, File, File, HashMap&lt;String, ArrayList&lt;String&gt;&gt;, File, IdentificationParameters, SequenceProvider, ProteinDetailsProvider, SpectrumProvider, ModificationProvider, FastaSummary, String, String, String, String, String, String, String)</a></span> - Constructor for class com.compomics.util.experiment.io.identification.writers.<a href="com/compomics/util/experiment/io/identification/writers/SimpleMzIdentMLExporter.html" title="class in com.compomics.util.experiment.io.identification.writers">SimpleMzIdentMLExporter</a></dt>
+<dd>
+<div class="block">Constructor.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/mass_spectrometry/SimpleNoiseDistribution.html" title="class in com.compomics.util.experiment.mass_spectrometry"><span class="typeNameLink">SimpleNoiseDistribution</span></a> - Class in <a href="com/compomics/util/experiment/mass_spectrometry/package-summary.html">com.compomics.util.experiment.mass_spectrometry</a></dt>
 <dd>
@@ -31427,6 +31667,14 @@ the order they are declared.</div>
 <dd>
 <div class="block">This interface sets the style of a workbook export.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#write-java.lang.String-java.lang.String-">write(String, String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">Writes content to the given section.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#write-java.lang.String-char:A-int-int-">write(String, char[], int, int)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">Writes content to the given section.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/ExportWriter.html#write-java.lang.String-">write(String)</a></span> - Method in class com.compomics.util.io.export.<a href="com/compomics/util/io/export/ExportWriter.html" title="class in com.compomics.util.io.export">ExportWriter</a></dt>
 <dd>
 <div class="block">Writes text to the export.</div>
@@ -31443,6 +31691,10 @@ the order they are declared.</div>
 <dd>
 <div class="block">Writes the content to the file.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#write-char:A-int-int-">write(char[], int, int)</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
+<dd>
+<div class="block">Writes a a buffer of characters to the file.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/flat/SimpleFileWriter.html#write-java.lang.String-">write(String)</a></span> - Method in class com.compomics.util.io.flat.<a href="com/compomics/util/io/flat/SimpleFileWriter.html" title="class in com.compomics.util.io.flat">SimpleFileWriter</a></dt>
 <dd>
 <div class="block">Writes text.</div>
@@ -31456,6 +31708,10 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html#writeAplFile-com.compomics.util.experiment.mass_spectrometry.SpectrumProvider-java.lang.String-java.io.File-com.compomics.util.parameters.identification.search.SearchParameters-com.compomics.util.waiting.WaitingHandler-">writeAplFile(SpectrumProvider, String, File, SearchParameters, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileExporter</a></dt>
 <dd>
 <div class="block">Writes the spectra of a file in the Andromeda peak list (apl) format.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/log/CliLogger.html#writeComment-java.lang.String-java.lang.String-">writeComment(String, String)</a></span> - Method in class com.compomics.software.log.<a href="com/compomics/software/log/CliLogger.html" title="class in com.compomics.software.log">CliLogger</a></dt>
+<dd>
+<div class="block">Write a comment line as '# key: value'.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/software/settings/UtilitiesPathParameters.html#writeConfigurationToFile-java.io.File-">writeConfigurationToFile(File)</a></span> - Static method in class com.compomics.software.settings.<a href="com/compomics/software/settings/UtilitiesPathParameters.html" title="class in com.compomics.software.settings">UtilitiesPathParameters</a></dt>
 <dd>
@@ -31476,6 +31732,10 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/ms2/Ms2FileWriter.html#writeHeader--">writeHeader()</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.ms2.<a href="com/compomics/util/experiment/io/mass_spectrometry/ms2/Ms2FileWriter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.ms2">Ms2FileWriter</a></dt>
 <dd>
 <div class="block">Writes the header of the file.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/software/log/CliLogger.html#writeHeaders--">writeHeaders()</a></span> - Method in class com.compomics.software.log.<a href="com/compomics/software/log/CliLogger.html" title="class in com.compomics.software.log">CliLogger</a></dt>
+<dd>
+<div class="block">Writes the headers to the files.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/export/ExportWriter.html#writeHeaderText-java.lang.String-">writeHeaderText(String)</a></span> - Method in class com.compomics.util.io.export.<a href="com/compomics/util/io/export/ExportWriter.html" title="class in com.compomics.util.io.export">ExportWriter</a></dt>
 <dd>
@@ -31549,6 +31809,15 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/compomics/software/settings/UtilitiesPathParameters.html#writePathToFile-java.io.BufferedWriter-com.compomics.software.settings.UtilitiesPathParameters.UtilitiesPathKey-">writePathToFile(BufferedWriter, UtilitiesPathParameters.UtilitiesPathKey)</a></span> - Static method in class com.compomics.software.settings.<a href="com/compomics/software/settings/UtilitiesPathParameters.html" title="class in com.compomics.software.settings">UtilitiesPathParameters</a></dt>
 <dd>
 <div class="block">Writes the path of interest using the provided buffered writer.</div>
+</dd>
+<dt><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter"><span class="typeNameLink">WriterBySection</span></a> - Class in <a href="com/compomics/util/io/compression/SectionGzWriter/package-summary.html">com.compomics.util.io.compression.SectionGzWriter</a></dt>
+<dd>
+<div class="block">This writer writes the different sections of a file in temp files and bundles
+ them together upon completion.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#WriterBySection-java.io.File-java.io.File-boolean-boolean-boolean-">WriterBySection(File, File, boolean, boolean, boolean)</a></span> - Constructor for class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
+<dd>
+<div class="block">Constructor.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/apl/AplFileWriter.html#writeSpectrum-java.lang.String-com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum-com.compomics.util.experiment.mass_spectrometry.FragmentationMethod-int-">writeSpectrum(String, Spectrum, FragmentationMethod, int)</a></span> - Method in class com.compomics.util.experiment.io.mass_spectrometry.apl.<a href="com/compomics/util/experiment/io/mass_spectrometry/apl/AplFileWriter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry.apl">AplFileWriter</a></dt>
 <dd>

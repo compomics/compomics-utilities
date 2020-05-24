@@ -119,7 +119,8 @@ public class ModificationNameMapper {
                     peptide,
                     MOD_MASS_TOLERANCE,
                     sequenceProvider,
-                    modificationSequenceMatchingParameters
+                    modificationSequenceMatchingParameters,
+                    searchParameters
             );
 
         } catch (Exception e) {
@@ -155,7 +156,8 @@ public class ModificationNameMapper {
                 peptide,
                 MOD_MASS_TOLERANCE,
                 sequenceProvider,
-                modificationSequenceMatchingParameters
+                modificationSequenceMatchingParameters,
+                searchParameters
         );
     }
 
@@ -209,7 +211,8 @@ public class ModificationNameMapper {
                 peptide,
                 MOD_MASS_TOLERANCE,
                 sequenceProvider,
-                modificationSequenceMatchingParameters
+                modificationSequenceMatchingParameters,
+                searchParameters
         );
 
     }
@@ -262,7 +265,8 @@ public class ModificationNameMapper {
                 peptide,
                 MOD_MASS_TOLERANCE,
                 sequenceProvider,
-                modificationSequenceMatchingParameters
+                modificationSequenceMatchingParameters,
+                searchParameters
         );
 
     }

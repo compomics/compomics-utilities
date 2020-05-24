@@ -119,8 +119,10 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="simplifyGroupsLbl" min="-2" max="-2" attributes="0"/>
+                          <Component id="modificationsLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
                               <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -130,36 +132,22 @@
                                       <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                                       <Component id="confidenceLbl" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                              </Group>
-                              <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="simplifyEvidenceCmb" pref="223" max="32767" attributes="0"/>
-                                  <Component id="simplifyConfidenceCmb" max="32767" attributes="0"/>
-                                  <Component id="confidenceTxt" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="simplifyGroupsLbl" min="-2" max="-2" attributes="0"/>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="simplifyVariantsLbl" min="-2" max="-2" attributes="0"/>
-                                          <Component id="simplifyEnzymaticityLbl" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Component id="modificationsLbl" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="98" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="simplifyVariantsCmb" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="simplifyGroupsCmb" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="simplifyEnzymaticityCmb" alignment="1" max="32767" attributes="0"/>
-                                  <Component id="modificatoinsCmb" max="32767" attributes="0"/>
+                                  <Component id="simplifyVariantsLbl" min="-2" max="-2" attributes="0"/>
+                                  <Component id="simplifyEnzymaticityLbl" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="78" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="simplifyGroupsCmb" alignment="1" pref="145" max="32767" attributes="0"/>
+                          <Component id="simplifyEvidenceCmb" alignment="1" pref="145" max="32767" attributes="0"/>
+                          <Component id="simplifyConfidenceCmb" alignment="1" pref="145" max="32767" attributes="0"/>
+                          <Component id="confidenceTxt" alignment="1" pref="145" max="32767" attributes="0"/>
+                          <Component id="simplifyEnzymaticityCmb" alignment="1" pref="145" max="32767" attributes="0"/>
+                          <Component id="simplifyVariantsCmb" alignment="1" pref="145" max="32767" attributes="0"/>
+                          <Component id="modificatoinsCmb" alignment="1" pref="145" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -292,7 +280,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="confidenceTxt">
               <Properties>
-                <Property name="horizontalAlignment" type="int" value="4"/>
+                <Property name="horizontalAlignment" type="int" value="0"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="modificatoinsCmb">

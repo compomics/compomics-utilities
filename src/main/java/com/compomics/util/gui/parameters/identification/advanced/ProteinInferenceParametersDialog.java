@@ -305,7 +305,7 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
 
         confidenceLbl.setText("Confidence below which a peptide is ignored");
 
-        confidenceTxt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        confidenceTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         modificatoinsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
@@ -318,6 +318,8 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
             .addGroup(proteinGroupPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(simplifyGroupsLbl)
+                    .addComponent(modificationsLbl)
                     .addGroup(proteinGroupPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -325,27 +327,18 @@ public class ProteinInferenceParametersDialog extends javax.swing.JDialog {
                             .addComponent(simplifyConfidenceLbl)
                             .addGroup(proteinGroupPanelLayout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addComponent(confidenceLbl)))
-                        .addGap(78, 78, 78)
-                        .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(simplifyEvidenceCmb, 0, 223, Short.MAX_VALUE)
-                            .addComponent(simplifyConfidenceCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(confidenceTxt)))
-                    .addGroup(proteinGroupPanelLayout.createSequentialGroup()
-                        .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(simplifyGroupsLbl)
-                            .addGroup(proteinGroupPanelLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(simplifyVariantsLbl)
-                                    .addComponent(simplifyEnzymaticityLbl)))
-                            .addComponent(modificationsLbl))
-                        .addGap(98, 98, 98)
-                        .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(simplifyVariantsCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(simplifyGroupsCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(simplifyEnzymaticityCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(modificatoinsCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(confidenceLbl))
+                            .addComponent(simplifyVariantsLbl)
+                            .addComponent(simplifyEnzymaticityLbl))))
+                .addGap(78, 78, 78)
+                .addGroup(proteinGroupPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(simplifyGroupsCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 145, Short.MAX_VALUE)
+                    .addComponent(simplifyEvidenceCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 145, Short.MAX_VALUE)
+                    .addComponent(simplifyConfidenceCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 145, Short.MAX_VALUE)
+                    .addComponent(confidenceTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                    .addComponent(simplifyEnzymaticityCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 145, Short.MAX_VALUE)
+                    .addComponent(simplifyVariantsCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 145, Short.MAX_VALUE)
+                    .addComponent(modificatoinsCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, 145, Short.MAX_VALUE))
                 .addContainerGap())
         );
         proteinGroupPanelLayout.setVerticalGroup(

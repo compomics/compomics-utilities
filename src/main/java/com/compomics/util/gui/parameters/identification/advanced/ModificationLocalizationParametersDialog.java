@@ -442,6 +442,10 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
             neutralLossesCmb.setEnabled(true);
             thresholdTxt.setEnabled(true);
             thresholdTxt.setEditable(true);
+            
+            if (thresholdTxt.getText().isEmpty()) {
+                thresholdTxt.setText("95");
+            }
         } else {
             neutralLossesCmb.setEnabled(false);
             thresholdTxt.setEnabled(false);

@@ -18,6 +18,7 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
  * Writer for cms files.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class CmsFileWriter implements AutoCloseable {
 
@@ -98,72 +99,76 @@ public class CmsFileWriter implements AutoCloseable {
             throw new IOException("File exceeds memory mapped reader max buffer size.");
 
         }
-        
-        indexes.add((int) index);
-        titles.add(spectrumTitle);
-
-        Precursor precursor = spectrum.precursor;
-        double precursorMz = precursor == null ? Double.NaN : precursor.mz;
-        double precursorRt = precursor == null ? Double.NaN : precursor.rt;
-        double precursorIntensity = precursor == null ? Double.NaN : precursor.intensity;
-        int[] possibleCharges = precursor == null ? new int[0] : precursor.possibleCharges;
 
         int nPeaks = spectrum.mz.length;
 
-        ByteBuffer buffer = ByteBuffer.allocate(2 * nPeaks * Double.BYTES);
+        // make sure that empty spectra are not indexed
+        // (as this results in an endless loop when compressing the data)
+        if (nPeaks > 0) {
 
-        for (int i = 0; i < nPeaks; i++) {
+            indexes.add((int) index);
+            titles.add(spectrumTitle);
 
-            buffer.putDouble(spectrum.mz[i]);
-            buffer.putDouble(spectrum.intensity[i]);
+            Precursor precursor = spectrum.precursor;
+            double precursorMz = precursor == null ? Double.NaN : precursor.mz;
+            double precursorRt = precursor == null ? Double.NaN : precursor.rt;
+            double precursorIntensity = precursor == null ? Double.NaN : precursor.intensity;
+            int[] possibleCharges = precursor == null ? new int[0] : precursor.possibleCharges;
 
-        }
+            ByteBuffer buffer = ByteBuffer.allocate(2 * nPeaks * Double.BYTES);
 
-        TempByteArray compressedData = compress(buffer.array());
+            for (int i = 0; i < nPeaks; i++) {
 
-        buffer = ByteBuffer.allocate(3 * Double.BYTES + (3 + possibleCharges.length) * Integer.BYTES + compressedData.length);
-        buffer
-                .putDouble(precursorMz)
-                .putDouble(precursorRt)
-                .putDouble(precursorIntensity)
-                .putInt(compressedData.length)
-                .putInt(nPeaks)
-                .put(compressedData.array, 0, compressedData.length)
-                .putInt(possibleCharges.length);
+                buffer.putDouble(spectrum.mz[i]);
+                buffer.putDouble(spectrum.intensity[i]);
 
-        for (int charge : possibleCharges) {
+            }
 
-            buffer.putInt(charge);
+            TempByteArray compressedData = compress(buffer.array());
 
-        }
+            buffer = ByteBuffer.allocate(3 * Double.BYTES + (3 + possibleCharges.length) * Integer.BYTES + compressedData.length);
+            buffer
+                    .putDouble(precursorMz)
+                    .putDouble(precursorRt)
+                    .putDouble(precursorIntensity)
+                    .putInt(compressedData.length)
+                    .putInt(nPeaks)
+                    .put(compressedData.array, 0, compressedData.length)
+                    .putInt(possibleCharges.length);
 
-        byte[] arrayToWrite = buffer.array();
+            for (int charge : possibleCharges) {
 
-        raf.write(arrayToWrite, 0, arrayToWrite.length);
+                buffer.putInt(charge);
 
-        if (minMz > precursorMz) {
+            }
 
-            minMz = precursorMz;
+            byte[] arrayToWrite = buffer.array();
 
-        }
+            raf.write(arrayToWrite, 0, arrayToWrite.length);
 
-        if (maxMz < precursorMz) {
+            if (minMz > precursorMz) {
 
-            maxMz = precursorMz;
+                minMz = precursorMz;
 
-        }
-        
+            }
 
-        if (maxInt < precursorIntensity) {
+            if (maxMz < precursorMz) {
 
-            maxInt = precursorIntensity;
+                maxMz = precursorMz;
 
-        }
-        
-        if (maxRt < precursorRt) {
+            }
 
-            maxRt = precursorRt;
+            if (maxInt < precursorIntensity) {
 
+                maxInt = precursorIntensity;
+
+            }
+
+            if (maxRt < precursorRt) {
+
+                maxRt = precursorRt;
+
+            }
         }
     }
 
@@ -204,9 +209,9 @@ public class CmsFileWriter implements AutoCloseable {
 
         deflater.setInput(uncompressedData);
         int compressedByteLength = deflater.deflate(
-                compressedData, 
-                0, 
-                compressedData.length, 
+                compressedData,
+                0,
+                compressedData.length,
                 Deflater.FULL_FLUSH
         );
         int compressedDataLength = compressedByteLength;
@@ -215,15 +220,15 @@ public class CmsFileWriter implements AutoCloseable {
 
             byte[] output2 = new byte[outputLength];
             compressedByteLength = deflater.deflate(
-                    output2, 
-                    0, 
-                    outputLength, 
+                    output2,
+                    0,
+                    outputLength,
                     Deflater.FULL_FLUSH
             );
 
             compressedData = ArrayUtil.concatenate(
-                    compressedData, 
-                    output2, 
+                    compressedData,
+                    output2,
                     compressedByteLength
             );
             compressedDataLength += compressedByteLength;
@@ -253,8 +258,8 @@ public class CmsFileWriter implements AutoCloseable {
                         index -> index.toString()
                 )
                 .collect(Collectors.joining(CmsFileUtils.TITLE_SEPARATOR));
-        String titleIndexString = String.join(CmsFileUtils.TITLE_SEPARATOR, 
-                titleString, 
+        String titleIndexString = String.join(CmsFileUtils.TITLE_SEPARATOR,
+                titleString,
                 indexString
         );
 

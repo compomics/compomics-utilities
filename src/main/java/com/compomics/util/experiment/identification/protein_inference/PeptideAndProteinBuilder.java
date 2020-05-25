@@ -102,16 +102,22 @@ public class PeptideAndProteinBuilder implements AutoCloseable {
         /*
         if (peptideMatch == null) {
 
+            peptideBufferMutex.acquire();
+
             Object cacheObject = peptideBuffer.get(peptideMatchKey);
 
             if (cacheObject != null) {
 
                 peptideMatch = (PeptideMatch) cacheObject;
 
+            } else {
+
+                peptideMatch = identification.getPeptideMatch(peptideMatchKey);
+
             }
+            peptideBufferMutex.release();
         }*/
         
-        String output = Long.toString(spectrumMatchKey);
 
         if (peptideMatch == null) {
 
@@ -141,13 +147,20 @@ public class PeptideAndProteinBuilder implements AutoCloseable {
             /*
             if (proteinMatch == null) {
 
+                proteinBufferMutex.acquire();
+
                 Object cacheObject = proteinBuffer.get(proteinMatchKey);
 
                 if (cacheObject != null) {
 
                     proteinMatch = (ProteinMatch) cacheObject;
 
+                } else {
+
+                    proteinMatch = identification.getProteinMatch(proteinMatchKey);
+
                 }
+                proteinBufferMutex.release();
             }*/
 
             if (proteinMatch == null) {
@@ -230,8 +243,13 @@ public class PeptideAndProteinBuilder implements AutoCloseable {
     @Override
     public void close() {
 
+        peptideBufferMutex.acquire();
         identification.addPeptideMatches(peptideBuffer);
+        peptideBufferMutex.release();
+
+        proteinBufferMutex.acquire();
         identification.addProteinMatches(proteinBuffer);
+        proteinBufferMutex.release();
 
     }
 }

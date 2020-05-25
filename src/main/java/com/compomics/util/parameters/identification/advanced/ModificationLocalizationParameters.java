@@ -33,12 +33,13 @@ public class ModificationLocalizationParameters extends DbObject {
      */
     private boolean probabilisticScoreNeutralLosses = false;
     /**
-     * The preferences to use when matching modifications to amino acid sequences.
+     * The preferences to use when matching modifications to amino acid
+     * sequences.
      */
     private SequenceMatchingParameters sequenceMatchingParameters;
     /**
-     * Boolean indicating whether the non confidently localized modificatoin should be
-     * aligned on the confident sites.
+     * Boolean indicating whether the non confidently localized modification
+     * should be aligned on the confident sites.
      */
     private boolean alignNonConfidentModifications = true;
 
@@ -46,23 +47,23 @@ public class ModificationLocalizationParameters extends DbObject {
      * Constructor.
      */
     public ModificationLocalizationParameters() {
-        
+
         sequenceMatchingParameters = new SequenceMatchingParameters();
         sequenceMatchingParameters.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.aminoAcid);
-    
+
     }
 
     /**
      * Indicates whether a probabilistic modification score is required.
      *
-     * @return a boolean indicating whether a probabilistic modification score is
-     * required
+     * @return a boolean indicating whether a probabilistic modification score
+     * is required
      */
     public boolean isProbabilisticScoreCalculation() {
         readDBMode();
-        
+
         return probabilisticScoreCalculation;
-    
+
     }
 
     /**
@@ -74,7 +75,7 @@ public class ModificationLocalizationParameters extends DbObject {
     public void setProbabilisticScoreCalculation(boolean probabilisticScoreCalculation) {
         writeDBMode();
         this.probabilisticScoreCalculation = probabilisticScoreCalculation;
-    
+
     }
 
     /**
@@ -84,9 +85,9 @@ public class ModificationLocalizationParameters extends DbObject {
      */
     public ModificationLocalizationScore getSelectedProbabilisticScore() {
         readDBMode();
-        
+
         return selectedProbabilisticScore;
-    
+
     }
 
     /**
@@ -95,10 +96,10 @@ public class ModificationLocalizationParameters extends DbObject {
      * @param selectedProbabilisticScore the selected probabilistic score
      */
     public void setSelectedProbabilisticScore(ModificationLocalizationScore selectedProbabilisticScore) {
-        
+
         writeDBMode();
         this.selectedProbabilisticScore = selectedProbabilisticScore;
-    
+
     }
 
     /**
@@ -108,23 +109,24 @@ public class ModificationLocalizationParameters extends DbObject {
      */
     public double getProbabilisticScoreThreshold() {
         readDBMode();
-        
+
         return probabilisticScoreThreshold;
-    
+
     }
 
     /**
      * Sets the probabilistic score threshold (inclusive).
      *
-     * @param probabilisticScoreThreshold The probabilistic score threshold (inclusive).
+     * @param probabilisticScoreThreshold The probabilistic score threshold
+     * (inclusive).
      */
     public void setProbabilisticScoreThreshold(
             double probabilisticScoreThreshold
     ) {
-    
+
         writeDBMode();
         this.probabilisticScoreThreshold = probabilisticScoreThreshold;
-    
+
     }
 
     /**
@@ -134,9 +136,9 @@ public class ModificationLocalizationParameters extends DbObject {
      */
     public double getDScoreThreshold() {
         readDBMode();
-        
+
         return dScoreThreshold;
-    
+
     }
 
     /**
@@ -145,10 +147,10 @@ public class ModificationLocalizationParameters extends DbObject {
      * @param dScoreThreshold the D-score threshold
      */
     public void setDScoreThreshold(double dScoreThreshold) {
-    
+
         writeDBMode();
         this.dScoreThreshold = dScoreThreshold;
-    
+
     }
 
     /**
@@ -182,22 +184,22 @@ public class ModificationLocalizationParameters extends DbObject {
     }
 
     /**
-     * Returns the sequence matching preferences to use when mapping modifications on
-     * amino acid sequences.
+     * Returns the sequence matching preferences to use when mapping
+     * modifications on amino acid sequences.
      *
-     * @return the sequence matching preferences to use when mapping modifications on
-     * amino acid sequences
+     * @return the sequence matching preferences to use when mapping
+     * modifications on amino acid sequences
      */
     public SequenceMatchingParameters getSequenceMatchingParameters() {
         readDBMode();
-        
+
         return sequenceMatchingParameters;
-        
+
     }
 
     /**
-     * Sets the sequence matching preferences to use when mapping modifications on amino
-     * acid sequences.
+     * Sets the sequence matching preferences to use when mapping modifications
+     * on amino acid sequences.
      *
      * @param sequenceMatchingParameters the sequence matching preferences to
      * use when mapping modifications on amino acid sequences
@@ -210,11 +212,11 @@ public class ModificationLocalizationParameters extends DbObject {
     }
 
     /**
-     * Indicates whether the non confidently localized modifications should be aligned on
-     * the confident sites.
+     * Indicates whether the non confidently localized modifications should be
+     * aligned on the confident sites.
      *
-     * @return boolean indicating whether the non confidently localized modifications
-     * should be aligned on the confident sites
+     * @return boolean indicating whether the non confidently localized
+     * modifications should be aligned on the confident sites
      */
     public boolean getAlignNonConfidentModifications() {
         readDBMode();
@@ -224,11 +226,12 @@ public class ModificationLocalizationParameters extends DbObject {
     }
 
     /**
-     * Sets whether the non confidently localized modifications should be aligned on the
-     * confident sites.
+     * Sets whether the non confidently localized modifications should be
+     * aligned on the confident sites.
      *
-     * @param alignNonConfidentModifications a boolean indicating whether the non
-     * confidently localized modifications should be aligned on the confident sites
+     * @param alignNonConfidentModifications a boolean indicating whether the
+     * non confidently localized modifications should be aligned on the
+     * confident sites
      */
     public void setAlignNonConfidentModifications(boolean alignNonConfidentModifications) {
 
@@ -255,7 +258,7 @@ public class ModificationLocalizationParameters extends DbObject {
         output.append("Align modifications: ").append(getAlignNonConfidentModifications()).append(".").append(newLine);
 
         return output.toString();
-        
+
     }
 
     /**
@@ -269,42 +272,42 @@ public class ModificationLocalizationParameters extends DbObject {
         readDBMode();
 
         if (otherParameters == null) {
-            
+
             return false;
-        
+
         }
 
         if (probabilisticScoreCalculation != otherParameters.isProbabilisticScoreCalculation()) {
-         
+
             return false;
-        
+
         }
 
         if (selectedProbabilisticScore != otherParameters.getSelectedProbabilisticScore()) {
-         
+
             return false;
-        
+
         }
 
         if (probabilisticScoreNeutralLosses != otherParameters.isProbabilisticScoreNeutralLosses()) {
-           
+
             return false;
-        
+
         }
 
         if (!getAlignNonConfidentModifications() == otherParameters.getAlignNonConfidentModifications()) {
-        
+
             return false;
-        
+
         }
 
         if (!sequenceMatchingParameters.isSameAs(otherParameters.getSequenceMatchingParameters())) {
-        
+
             return false;
-        
+
         }
 
         return true;
-        
+
     }
 }

@@ -6,9 +6,11 @@ import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.biology.atoms.AtomImpl;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.biology.ions.impl.ReporterIon;
+import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.io.json.JsonMarshaller;
+import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters;
 import com.compomics.util.pride.CvTerm;
 import java.awt.Color;
 
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.stream.Collectors;
 
 /**
  * This factory will load Modification from an XML file and provide them on
@@ -39,7 +42,7 @@ public class ModificationFactory implements ModificationProvider {
      * The name of the Modification factory back-up file. The version number
      * follows the one of utilities.
      */
-    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.3-beta.json";
+    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.4-beta.json";
     /**
      * A map linking indexes with modifications.
      */
@@ -10947,5 +10950,59 @@ public class ModificationFactory implements ModificationProvider {
         }
 
         return modificationsInCategory;
+    }
+    
+    /**
+     * Returns a list containing all not fixed modifications with the same
+     * mass. Warning: all modifications of the profile must be loaded in the
+     * modification factory.
+     *
+     * @param modificationMass the mass
+     * @param searchParameters the search parameters
+     * @return a list of all not fixed modifications with the same mass
+     */
+    public ArrayList<String> getSameMassNotFixedModifications(double modificationMass, SearchParameters searchParameters) {
+
+        ArrayList<String> allNotFixed = getExpectedVariableModifications(searchParameters);
+
+        return allNotFixed.stream()
+                .filter(modName -> getModification(modName).getMass() == modificationMass)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Returns the expected variable modifications given the search parameters.
+     *
+     * @param searchParameters the search parameters
+     * @return expected variable modifications given the search parameters
+     */
+    public ArrayList<String> getExpectedVariableModifications(SearchParameters searchParameters) {
+
+        ModificationParameters modificationParameters = searchParameters.getModificationParameters();
+        ArrayList<String> expectedModifications = modificationParameters.getAllNotFixedModifications();
+
+        MetaMorpheusParameters metaMorpheusParameters
+                = (MetaMorpheusParameters) searchParameters.getIdentificationAlgorithmParameter(
+                        Advocate.metaMorpheus.getIndex());
+
+        if (metaMorpheusParameters != null) {
+            ArrayList<String> gPtmModifications = getModifications(
+                    metaMorpheusParameters.getGPtmCategories().toArray(new ModificationCategory[0])
+            );
+
+            // remove fixed modifications
+            for (String fixedMod : modificationParameters.getFixedModifications()) {
+                gPtmModifications.remove(fixedMod);
+            }
+
+            // add to the list of expected modifications if not allready included
+            for (String tempMod : gPtmModifications) {
+                if (!expectedModifications.contains(tempMod)) {
+                    expectedModifications.add(tempMod);
+                }
+            }
+        }
+
+        return expectedModifications;
     }
 }

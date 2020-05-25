@@ -223,7 +223,6 @@ public class ObjectsCache {
                 Object object = kv.getValue();
                 if (!loadedObjects.containsKey(objectKey)) {
                     loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
-                    //objectQueue.add(objectKey);
                 }
                 else {
                     loadedObjects.get(objectKey).object = object;
@@ -296,7 +295,7 @@ public class ObjectsCache {
                 long key = entry.getKey();
                 
                 ObjectsCacheElement obj = loadedObjects.get(key);
-                if (!obj.edited) continue;
+                //if (!obj.edited) continue;
                 
                 obj.edited = false;
                 

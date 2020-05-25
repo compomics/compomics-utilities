@@ -40,6 +40,7 @@ public class DbObject implements Serializable {
     
     }
     
+    
     /**
      * Sets the id of the object.
      * 

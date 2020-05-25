@@ -99,8 +99,11 @@ public class IdentificationDBTest extends TestCase {
             PeptideAssumption bestAssumption = bestAssumptions.get(0);
             Assert.assertTrue(bestAssumption.getRank() == 1);
             
+            //System.out.println(bestAssumption.hasChanged());
+            
             bestAssumption.setRank(2);
-            identification.updateObject(spectrumMatchKey, testSpectrumMatch);
+            //System.out.println(bestAssumption.hasChanged());
+            //identification.updateObject(spectrumMatchKey, testSpectrumMatch);
             
 
             // closing and reopening database

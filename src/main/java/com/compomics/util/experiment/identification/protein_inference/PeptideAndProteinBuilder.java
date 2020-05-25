@@ -95,10 +95,11 @@ public class PeptideAndProteinBuilder implements AutoCloseable {
         Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
         long peptideMatchKey = peptide.getMatchingKey(sequenceMatchingPreferences);
 
-        objectMutex.acquire(peptideMatchKey);
+        //objectMutex.acquire(peptideMatchKey);
 
         PeptideMatch peptideMatch = identification.getPeptideMatch(peptideMatchKey);
 
+        /*
         if (peptideMatch == null) {
 
             Object cacheObject = peptideBuffer.get(peptideMatchKey);
@@ -108,30 +109,36 @@ public class PeptideAndProteinBuilder implements AutoCloseable {
                 peptideMatch = (PeptideMatch) cacheObject;
 
             }
-        }
+        }*/
+        
+        String output = Long.toString(spectrumMatchKey);
 
         if (peptideMatch == null) {
 
             peptideMatch = new PeptideMatch(peptide, peptideMatchKey, spectrumMatchKey);
-
-            addPeptideMatch(peptideMatchKey, peptideMatch);
+            identification.addPeptideMatch(peptideMatchKey, peptideMatch);
+            //addPeptideMatch(peptideMatchKey, peptideMatch);
+            output += " new pep " + peptide.getSequence() + " "  + Long.toString(peptideMatchKey);
 
         } else {
 
             peptideMatch.addSpectrumMatchKey(spectrumMatchKey);
+            //addPeptideMatch(peptideMatchKey, peptideMatch);
+            output += " add pep " + Long.toString(peptideMatchKey);
 
         }
 
-        objectMutex.release(peptideMatchKey);
+        //objectMutex.release(peptideMatchKey);
 
         if (protein) {
 
             long proteinMatchKey = ProteinMatch.getProteinMatchKey(peptide);
 
-            objectMutex.acquire(proteinMatchKey);
+            //objectMutex.acquire(proteinMatchKey);
 
             ProteinMatch proteinMatch = identification.getProteinMatch(proteinMatchKey);
 
+            /*
             if (proteinMatch == null) {
 
                 Object cacheObject = proteinBuffer.get(proteinMatchKey);
@@ -141,25 +148,29 @@ public class PeptideAndProteinBuilder implements AutoCloseable {
                     proteinMatch = (ProteinMatch) cacheObject;
 
                 }
-            }
+            }*/
 
             if (proteinMatch == null) {
+                output += " new pro " + Long.toString(proteinMatchKey);
 
                 proteinMatch = new ProteinMatch(peptideMatch.getPeptide(), peptideMatchKey);
                 proteinMatch.setDecoy(Arrays.stream(proteinMatch.getAccessions())
                         .anyMatch(accession -> ProteinUtils.isDecoy(accession, sequenceProvider)));
 
-                addProteinMatch(proteinMatchKey, proteinMatch);
+                //addProteinMatch(proteinMatchKey, proteinMatch);
+                identification.addProteinMatch(proteinMatchKey, proteinMatch);
 
             } else if (Arrays.stream(proteinMatch.getPeptideMatchesKeys()).allMatch(key -> key != peptideMatchKey)) {
 
                 proteinMatch.addPeptideMatchKey(peptideMatchKey);
+                output += " add pro " + Long.toString(proteinMatchKey);
 
             }
-
-            objectMutex.release(proteinMatchKey);
+            
+            //objectMutex.release(proteinMatchKey);
 
         }
+        System.out.println(output);
     }
 
     /**

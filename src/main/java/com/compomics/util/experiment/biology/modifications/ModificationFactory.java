@@ -10985,7 +10985,7 @@ public class ModificationFactory implements ModificationProvider {
                 = (MetaMorpheusParameters) searchParameters.getIdentificationAlgorithmParameter(
                         Advocate.metaMorpheus.getIndex());
 
-        if (metaMorpheusParameters != null) {
+        if (metaMorpheusParameters != null && metaMorpheusParameters.runGptm()) {
             ArrayList<String> gPtmModifications = getModifications(
                     metaMorpheusParameters.getGPtmCategories().toArray(new ModificationCategory[0])
             );

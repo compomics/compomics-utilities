@@ -17,13 +17,6 @@ import org.apache.commons.cli.Options;
 public class EnzymesCLI {
 
     /**
-     * Empty default constructor
-     */
-    public EnzymesCLI() {
-        enzymesCLIInputBean = null;
-    }
-
-    /**
      * The parsed command line input.
      */
     private final EnzymesCLIInputBean enzymesCLIInputBean;
@@ -42,7 +35,10 @@ public class EnzymesCLI {
      */
     private static String getHeader() {
         return System.getProperty("line.separator")
-                + "The EnzymesCLI command line allows the command line management of enzymes. It can be used to create and edit json files containing enzymes compatible with CompOmics tools." + System.getProperty("line.separator")
+                + "The EnzymesCLI command line allows the command line management "
+                + "of enzymes. It can be used to create and edit json files containing "
+                + "enzymes compatible with CompOmics tools." 
+                + System.getProperty("line.separator")
                 + System.getProperty("line.separator")
                 //                + "For further help see https://compomics.github.io/projects/peptide-shaker.html and https://compomics.github.io/projects/peptide-shaker/wiki/peptideshakercli.html." + System.getProperty("line.separator")
                 //                + System.getProperty("line.separator")

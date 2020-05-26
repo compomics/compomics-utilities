@@ -242,9 +242,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        defaultPtmPopupMenu = new javax.swing.JPopupMenu();
-        viewDefaultPtmJMenuItem = new javax.swing.JMenuItem();
-        userPtmPopupMenu = new javax.swing.JPopupMenu();
+        defaultModsPopupMenu = new javax.swing.JPopupMenu();
+        viewDefaultModsJMenuItem = new javax.swing.JMenuItem();
+        userModsPopupMenu = new javax.swing.JPopupMenu();
         editUserPtmJMenuItem = new javax.swing.JMenuItem();
         modificationsEditorPanel = new javax.swing.JPanel();
         modificationsSplitPane = new javax.swing.JSplitPane();
@@ -284,19 +284,19 @@ public class ModificationsDialog extends javax.swing.JDialog {
         };
         deleteUserModification = new javax.swing.JButton();
         editUserModification = new javax.swing.JButton();
-        addUserPTM = new javax.swing.JButton();
+        addUserModification = new javax.swing.JButton();
         exportUserModsLabel = new javax.swing.JLabel();
         okButton = new javax.swing.JButton();
         modificationsHelpJButton = new javax.swing.JButton();
 
-        viewDefaultPtmJMenuItem.setText("View");
-        viewDefaultPtmJMenuItem.setToolTipText("View Details");
-        viewDefaultPtmJMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        viewDefaultModsJMenuItem.setText("View");
+        viewDefaultModsJMenuItem.setToolTipText("View Details");
+        viewDefaultModsJMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                viewDefaultPtmJMenuItemActionPerformed(evt);
+                viewDefaultModsJMenuItemActionPerformed(evt);
             }
         });
-        defaultPtmPopupMenu.add(viewDefaultPtmJMenuItem);
+        defaultModsPopupMenu.add(viewDefaultModsJMenuItem);
 
         editUserPtmJMenuItem.setText("Edit");
         editUserPtmJMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -304,7 +304,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 editUserPtmJMenuItemActionPerformed(evt);
             }
         });
-        userPtmPopupMenu.add(editUserPtmJMenuItem);
+        userModsPopupMenu.add(editUserPtmJMenuItem);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Modification Details");
@@ -503,11 +503,11 @@ public class ModificationsDialog extends javax.swing.JDialog {
             }
         });
 
-        addUserPTM.setText("Add");
-        addUserPTM.setToolTipText("Add a new user defined modification");
-        addUserPTM.addActionListener(new java.awt.event.ActionListener() {
+        addUserModification.setText("Add");
+        addUserModification.setToolTipText("Add a new user defined modification");
+        addUserModification.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addUserPTMActionPerformed(evt);
+                addUserModificationActionPerformed(evt);
             }
         });
 
@@ -537,7 +537,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
                         .addGap(6, 6, 6)
                         .addComponent(exportUserModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(addUserPTM, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(addUserModification, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editUserModification, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -554,7 +554,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
                     .addComponent(deleteUserModification, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(editUserModification, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(userModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(addUserPTM, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(addUserModification, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(exportUserModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -594,7 +594,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(modificationsEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(modificationsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1013, Short.MAX_VALUE)
+                    .addComponent(modificationsSplitPane)
                     .addGroup(modificationsEditorPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(modificationsHelpJButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -633,23 +633,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * Opens the default modification pop up menu.
-     *
-     * @param evt
-     */
-    private void defaultModificationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_defaultModificationsTableMouseClicked
-        if (evt.getButton() == MouseEvent.BUTTON3) {
-            defaultModificationsTable.setRowSelectionInterval(defaultModificationsTable.rowAtPoint(evt.getPoint()), defaultModificationsTable.rowAtPoint(evt.getPoint()));
-            defaultPtmPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
-        } else if (evt.getClickCount() == 2 && defaultModificationsTable.getSelectedRow() != -1) {
-            String modificationName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
-            Modification modification = modificationFactory.getModification(modificationName);
-            new ModificationDialog(this, modification, false);
-        }
-    }//GEN-LAST:event_defaultModificationsTableMouseClicked
-
+                                                    
     /**
      * Changes the cursor into hand cursor.
      *
@@ -660,7 +644,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_defaultModificationsTableMouseExited
 
     /**
-     * Opens the link in a new browser.
+     * Opens the link in a browser.
      *
      * @param evt
      */
@@ -669,9 +653,11 @@ public class ModificationsDialog extends javax.swing.JDialog {
         int column = defaultModificationsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
-            if (column == defaultModificationsTable.getColumn("Unimod").getModelIndex() || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) {
+            if (column == defaultModificationsTable.getColumn("Unimod").getModelIndex() 
+                    || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) {
                 // open protein link in web browser
-                if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex() || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) && evt.getButton() == MouseEvent.BUTTON1
+                if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex() 
+                        || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) && evt.getButton() == MouseEvent.BUTTON1
                         && defaultModificationsTable.getValueAt(row, column) != null
                         && ((String) defaultModificationsTable.getValueAt(row, column)).lastIndexOf("<html>") != -1) {
 
@@ -698,7 +684,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         if (row != -1) {
 
-            if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex() || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) && defaultModificationsTable.getValueAt(row, column) != null) {
+            if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex() 
+                    || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) 
+                    && defaultModificationsTable.getValueAt(row, column) != null) {
 
                 String tempValue = (String) defaultModificationsTable.getValueAt(row, column);
 
@@ -743,7 +731,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         } else {
             searchCurrentSelection++;
         }
-        updatePtmSelection();
+        updateModSelection();
     }//GEN-LAST:event_searchNextButtonActionPerformed
 
     /**
@@ -775,7 +763,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
         } else {
             searchCurrentSelection--;
         }
-        updatePtmSelection();
+        updateModSelection();
     }//GEN-LAST:event_searchPreviousButtonActionPerformed
 
     /**
@@ -809,12 +797,12 @@ public class ModificationsDialog extends javax.swing.JDialog {
             searchPreviousButton.setEnabled(true);
             searchNextButton.setEnabled(true);
             searchIndexLabel.setForeground(Color.BLACK);
-            updatePtmSelection();
+            updateModSelection();
         } else if (searchPossibilities.size() == 1) {
             searchPreviousButton.setEnabled(false);
             searchNextButton.setEnabled(false);
             searchIndexLabel.setForeground(Color.BLACK);
-            updatePtmSelection();
+            updateModSelection();
         } else {
             searchPreviousButton.setEnabled(false);
             searchNextButton.setEnabled(false);
@@ -833,7 +821,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             userModificationsTable.setRowSelectionInterval(userModificationsTable.rowAtPoint(evt.getPoint()), userModificationsTable.rowAtPoint(evt.getPoint()));
             editUserModification.setEnabled(true);
             deleteUserModification.setEnabled(true);
-            userPtmPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+            userModsPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
         } else if (evt.getClickCount() == 2 && userModificationsTable.getSelectedRow() != -1) {
             String modificationName = (String) userModificationsTable.getValueAt(userModificationsTable.getSelectedRow(), userModificationsTable.getColumn("Name").getModelIndex());
             Modification modification = modificationFactory.getModification(modificationName);
@@ -947,7 +935,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
      *
      * @param evt
      */
-    private void addUserPTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserPTMActionPerformed
+    private void addUserModificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserModificationActionPerformed
         if (modificationFactory.getUserModifications().size() < 30) {
             ModificationDialog modificationDialog = new ModificationDialog(this, null, true);
             if (!modificationDialog.isCanceled()) {
@@ -957,7 +945,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "In order to ensure compatibility with OMSSA, only 30 user modifications can be implemented. Please delete unused modifications.",
                     "Too many modifications", JOptionPane.WARNING_MESSAGE);
         }
-    }//GEN-LAST:event_addUserPTMActionPerformed
+    }//GEN-LAST:event_addUserModificationActionPerformed
 
     /**
      * Change the cursor to a hand cursor.
@@ -996,14 +984,14 @@ public class ModificationsDialog extends javax.swing.JDialog {
      *
      * @param evt
      */
-    private void viewDefaultPtmJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDefaultPtmJMenuItemActionPerformed
+    private void viewDefaultModsJMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewDefaultModsJMenuItemActionPerformed
         String modificationName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
         Modification modification = modificationFactory.getModification(modificationName);
         ModificationDialog modificationDialog = new ModificationDialog(this, modification, true);
         if (!modificationDialog.isCanceled()) {
             updateModifications();
         }
-    }//GEN-LAST:event_viewDefaultPtmJMenuItemActionPerformed
+    }//GEN-LAST:event_viewDefaultModsJMenuItemActionPerformed
 
     /**
      * Edit user Modification.
@@ -1073,16 +1061,33 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private void exportDefaultModsLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exportDefaultModsLabelMouseReleased
 
         // get the file to send the output to
-        final File selectedFile = FileChooserUtil.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export...", "user.home", "default modifications.txt", false);
+        final File selectedFile = FileChooserUtil.getUserSelectedFile(
+                this,
+                ".txt", "Tab separated text file (.txt)",
+                "Export...",
+                "user.home",
+                "default modifications.txt",
+                false
+        );
 
         if (selectedFile != null) {
             try {
                 BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile));
                 Util.tableToFile(defaultModificationsTable, "\t", null, true, writer);
                 writer.close();
-                JOptionPane.showMessageDialog(this, "Data copied to file:\n" + selectedFile.getAbsolutePath(), "Data Exported.", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Data copied to file:\n" + selectedFile.getAbsolutePath(),
+                        "Data Exported.",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(null, "An error occurred when exporting the table content.", "Export Failed", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(
+                        null,
+                        "An error occurred when exporting the table content.",
+                        "Export Failed",
+                        JOptionPane.ERROR_MESSAGE
+                );
                 e.printStackTrace();
             }
         }
@@ -1129,12 +1134,28 @@ public class ModificationsDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_exportUserModsLabelMouseReleased
 
+    /**
+     * Opens the default modification pop up menu.
+     *
+     * @param evt
+     */
+    private void defaultModificationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_defaultModificationsTableMouseClicked
+        if (evt.getButton() == MouseEvent.BUTTON3) {
+            defaultModificationsTable.setRowSelectionInterval(defaultModificationsTable.rowAtPoint(evt.getPoint()), defaultModificationsTable.rowAtPoint(evt.getPoint()));
+            defaultModsPopupMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+        } else if (evt.getClickCount() == 2 && defaultModificationsTable.getSelectedRow() != -1) {
+            String modificationName = (String) defaultModificationsTable.getValueAt(defaultModificationsTable.getSelectedRow(), defaultModificationsTable.getColumn("Name").getModelIndex());
+            Modification modification = modificationFactory.getModification(modificationName);
+            new ModificationDialog(this, modification, false);
+        }
+    }//GEN-LAST:event_defaultModificationsTableMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addUserPTM;
+    private javax.swing.JButton addUserModification;
     private javax.swing.JTable defaultModificationsTable;
     private javax.swing.JPanel defaultModsPanel;
+    private javax.swing.JPopupMenu defaultModsPopupMenu;
     private javax.swing.JScrollPane defaultModsScrollPane;
-    private javax.swing.JPopupMenu defaultPtmPopupMenu;
     private javax.swing.JButton deleteUserModification;
     private javax.swing.JButton editUserModification;
     private javax.swing.JMenuItem editUserPtmJMenuItem;
@@ -1151,9 +1172,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
     private javax.swing.JButton searchPreviousButton;
     private javax.swing.JTable userModificationsTable;
     private javax.swing.JPanel userModsPanel;
+    private javax.swing.JPopupMenu userModsPopupMenu;
     private javax.swing.JScrollPane userModsScrollPane;
-    private javax.swing.JPopupMenu userPtmPopupMenu;
-    private javax.swing.JMenuItem viewDefaultPtmJMenuItem;
+    private javax.swing.JMenuItem viewDefaultModsJMenuItem;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -1266,7 +1287,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Table model for the default Modification table.
+     * Table model for the user modifications table.
      */
     private class UserModificationTable extends DefaultTableModel {
 
@@ -1425,9 +1446,9 @@ public class ModificationsDialog extends javax.swing.JDialog {
     }
 
     /**
-     * Updates the Modification selection in the default table.
+     * Updates the modification selection in the default table.
      */
-    public void updatePtmSelection() {
+    public void updateModSelection() {
         int row = defaultModificationsTable.convertRowIndexToView(searchPossibilities.get(searchCurrentSelection));
         defaultModificationsTable.setRowSelectionInterval(row, row);
         searchIndexLabel.setText("(" + (searchCurrentSelection + 1) + " of " + searchPossibilities.size() + ")");

@@ -2,24 +2,24 @@
 
 <Form version="1.6" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
   <NonVisualComponents>
-    <Container class="javax.swing.JPopupMenu" name="defaultPtmPopupMenu">
+    <Container class="javax.swing.JPopupMenu" name="defaultModsPopupMenu">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
         <Property name="useNullLayout" type="boolean" value="true"/>
       </Layout>
       <SubComponents>
-        <MenuItem class="javax.swing.JMenuItem" name="viewDefaultPtmJMenuItem">
+        <MenuItem class="javax.swing.JMenuItem" name="viewDefaultModsJMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" value="View"/>
             <Property name="toolTipText" type="java.lang.String" value="View Details"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewDefaultPtmJMenuItemActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewDefaultModsJMenuItemActionPerformed"/>
           </Events>
         </MenuItem>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPopupMenu" name="userPtmPopupMenu">
+    <Container class="javax.swing.JPopupMenu" name="userModsPopupMenu">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
         <Property name="useNullLayout" type="boolean" value="true"/>
@@ -97,7 +97,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="modificationsSplitPane" pref="1013" max="32767" attributes="0"/>
+                      <Component id="modificationsSplitPane" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                           <Component id="modificationsHelpJButton" min="-2" pref="23" max="-2" attributes="0"/>
@@ -348,7 +348,7 @@
                                   <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                                   <Component id="exportUserModsLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="addUserPTM" min="-2" pref="65" max="-2" attributes="0"/>
+                                  <Component id="addUserModification" min="-2" pref="65" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="editUserModification" min="-2" pref="65" max="-2" attributes="2"/>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -369,7 +369,7 @@
                               <Component id="deleteUserModification" alignment="1" max="32767" attributes="1"/>
                               <Component id="editUserModification" alignment="1" max="32767" attributes="1"/>
                               <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                                  <Component id="addUserPTM" alignment="3" max="32767" attributes="1"/>
+                                  <Component id="addUserModification" alignment="3" max="32767" attributes="1"/>
                                   <Component id="exportUserModsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -433,13 +433,13 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editUserModificationActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="addUserPTM">
+                <Component class="javax.swing.JButton" name="addUserModification">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Add"/>
                     <Property name="toolTipText" type="java.lang.String" value="Add a new user defined modification"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addUserPTMActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addUserModificationActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="exportUserModsLabel">

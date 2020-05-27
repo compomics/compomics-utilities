@@ -85,6 +85,11 @@ public class SimpleMzIdentMLExporter implements Closeable {
      */
     public static final MzIdentMLVersion MZIDENTML_VERSION = MzIdentMLVersion.v1_2;
     /**
+     * Boolean indicating whether peptide inference was performed, in which case
+     * matching keys will be used for the peptides.
+     */
+    private final boolean peptideInference;
+    /**
      * The maximum number of neutral losses a fragment ion can have in order to
      * be annotated.
      */
@@ -98,9 +103,9 @@ public class SimpleMzIdentMLExporter implements Closeable {
      */
     private final WriterBySection writer;
     /**
-     * The spectrum file.
+     * The spectrum files.
      */
-    private final File spectrumFile;
+    private final ArrayList<File> spectrumFiles;
     /**
      * The search engine result file.
      */
@@ -153,11 +158,15 @@ public class SimpleMzIdentMLExporter implements Closeable {
     /**
      * The peptide evidence IDs.
      */
-    private final HashMap<String, String> pepEvidenceIds = new HashMap<>();
+    private final ConcurrentHashMap<String, String> pepEvidenceIds = new ConcurrentHashMap<>();
+    /**
+     * debug.
+     */
+    private final ConcurrentHashMap<Long, Peptide> debugMap = new ConcurrentHashMap<>();
     /**
      * Spectrum title to index map.
      */
-    private final HashMap<String, Integer> spectrumTitleToIndexMap = new HashMap<>();
+    private final ConcurrentHashMap<String, Integer> spectrumTitleToIndexMap = new ConcurrentHashMap<>();
     /**
      * Set of already encountered peptide keys.
      */
@@ -210,7 +219,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
      * file.
      * @param tempFolder The folder to use to write temporary files.
      * @param destinationFile The mzIdentML file to write.
-     * @param spectrumFile The spectrum file.
+     * @param spectrumFiles The spectrum files.
      * @param searchEngineFile The search engine file used to identify the
      * spectra.
      * @param searchEngines Map of the search engine(s) and their version used
@@ -231,6 +240,8 @@ public class SimpleMzIdentMLExporter implements Closeable {
      * @param contactOrganizationName Contact organization name.
      * @param contactOrganizationAddress Contact organization address.
      * @param contactOrganizationEmail Contact organization email.
+     * @param peptideInference Boolean indicating whether peptide inference was
+     * performed, in which case matching keys will be used for the peptides.
      *
      * @throws FileNotFoundException Exception thrown if a file is not found.
      * @throws IOException Exception thrown if an error occurred while reading
@@ -242,7 +253,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
             String softwareUrl,
             File tempFolder,
             File destinationFile,
-            File spectrumFile,
+            ArrayList<File> spectrumFiles,
             File searchEngineFile,
             HashMap<String, ArrayList<String>> searchEngines,
             File fastaFile,
@@ -258,14 +269,15 @@ public class SimpleMzIdentMLExporter implements Closeable {
             String contactEmail,
             String contactOrganizationName,
             String contactOrganizationAddress,
-            String contactOrganizationEmail
+            String contactOrganizationEmail,
+            boolean peptideInference
     )
             throws FileNotFoundException, IOException {
 
         this.softwareName = softwareName;
         this.softwareVersion = softwareVersion;
         this.softwareUrl = softwareUrl;
-        this.spectrumFile = spectrumFile;
+        this.spectrumFiles = spectrumFiles;
         this.searchEngineFile = searchEngineFile;
         this.searchEngines = searchEngines;
         this.fastaFile = fastaFile;
@@ -275,6 +287,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         this.spectrumProvider = spectrumProvider;
         this.modificationProvider = modificationProvider;
         this.fastaSummary = fastaSummary;
+        this.peptideInference = peptideInference;
         this.writer = new WriterBySection(
                 destinationFile,
                 tempFolder,
@@ -870,7 +883,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
         for (PeptideAssumption peptideAssumption : peptideAssumptions) {
 
             Peptide peptide = peptideAssumption.getPeptide();
-            long peptideKey = peptide.getKey();
+            long peptideKey = peptideInference ? peptide.getMatchingKey(identificationParameters.getSequenceMatchingParameters()) : peptide.getKey();
 
             if (!peptideKeys.contains(peptideKey)) {
 
@@ -881,6 +894,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                     writePeptide(peptide);
 
                     peptideKeys.add(peptideKey);
+//                    debugMap.put(peptideKey, peptide);
 
                 }
 
@@ -913,10 +927,11 @@ public class SimpleMzIdentMLExporter implements Closeable {
     ) {
 
         String peptideSequence = peptide.getSequence();
+        long peptideKey = peptideInference ? peptide.getMatchingKey(identificationParameters.getSequenceMatchingParameters()) : peptide.getKey();
 
         writer.write(PEPTIDE_SECTION, getCurrentIndentation(PEPTIDE_SECTION));
         writer.write(PEPTIDE_SECTION, "<Peptide id=\"");
-        writer.write(PEPTIDE_SECTION, Long.toString(peptide.getKey()));
+        writer.write(PEPTIDE_SECTION, Long.toString(peptideKey));
         writer.write(PEPTIDE_SECTION, "\">");
         writer.newLine(PEPTIDE_SECTION);
         increaseIndentation(PEPTIDE_SECTION);
@@ -1087,7 +1102,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                 String pepEvidenceKey = getPeptideEvidenceKey(
                         accession,
                         index,
-                        peptide.getKey()
+                        peptideKey
                 );
 
                 StringBuilder pepEvidenceValueBuilder = new StringBuilder();
@@ -1117,7 +1132,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                 writer.write(PEPTIDE_EVIDENCE_SECTION, "\" end=\"");
                 writer.write(PEPTIDE_EVIDENCE_SECTION, Integer.toString(peptideEnd + 1));
                 writer.write(PEPTIDE_EVIDENCE_SECTION, "\" peptide_ref=\"");
-                writer.write(PEPTIDE_EVIDENCE_SECTION, Long.toString(peptide.getKey()));
+                writer.write(PEPTIDE_EVIDENCE_SECTION, Long.toString(peptideKey));
                 writer.write(PEPTIDE_EVIDENCE_SECTION, "\" dBSequence_ref=\"");
                 writer.write(PEPTIDE_EVIDENCE_SECTION, accession);
                 writer.write(PEPTIDE_EVIDENCE_SECTION, "\" id=\"");
@@ -1196,7 +1211,13 @@ public class SimpleMzIdentMLExporter implements Closeable {
 
         writer.write(ANALYSIS_SECTION, getCurrentIndentation(ANALYSIS_SECTION));
         writer.write(ANALYSIS_SECTION, "<InputSpectra spectraData_ref=\"");
-        writer.write(ANALYSIS_SECTION, IoUtil.getFileName(spectrumFile));
+
+        for (File spectrumFile : spectrumFiles) {
+
+            writer.write(ANALYSIS_SECTION, IoUtil.getFileName(spectrumFile));
+
+        }
+
         writer.write(ANALYSIS_SECTION, "\"/>");
         writer.newLine(ANALYSIS_SECTION);
 
@@ -2028,61 +2049,66 @@ public class SimpleMzIdentMLExporter implements Closeable {
         writer.newLine(DATA_SECTION);
 
         // add the spectra location
-        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
-        writer.write(DATA_SECTION, "<SpectraData location=\"");
-        writer.write(DATA_SECTION, spectrumFile.toURI().toString());
-        writer.write(DATA_SECTION, "\" id=\"");
-        writer.write(DATA_SECTION, IoUtil.getFileName(spectrumFile));
-        writer.write(DATA_SECTION, "\" name=\"");
-        writer.write(DATA_SECTION, spectrumFile.getName());
-        writer.write(DATA_SECTION, "\">");
-        writer.newLine(DATA_SECTION);
-        increaseIndentation(DATA_SECTION);
+        for (File spectrumFile : spectrumFiles) {
 
-        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
-        writer.write(DATA_SECTION, "<FileFormat>");
-        writer.newLine(DATA_SECTION);
-        increaseIndentation(DATA_SECTION);
+            writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
+            writer.write(DATA_SECTION, "<SpectraData location=\"");
 
-        writeCvTerm(
-                DATA_SECTION,
-                new CvTerm(
-                        "PSI-MS",
-                        "MS:1001062",
-                        "Mascot MGF format",
-                        null
-                )
-        );
+            writer.write(DATA_SECTION, spectrumFile.toURI().toString());
+            writer.write(DATA_SECTION, "\" id=\"");
+            writer.write(DATA_SECTION, IoUtil.getFileName(spectrumFile));
+            writer.write(DATA_SECTION, "\" name=\"");
+            writer.write(DATA_SECTION, spectrumFile.getName());
+            writer.write(DATA_SECTION, "\">");
+            writer.newLine(DATA_SECTION);
+            increaseIndentation(DATA_SECTION);
 
-        decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
-        writer.write(DATA_SECTION, "</FileFormat>");
-        writer.newLine(DATA_SECTION);
+            writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
+            writer.write(DATA_SECTION, "<FileFormat>");
+            writer.newLine(DATA_SECTION);
+            increaseIndentation(DATA_SECTION);
 
-        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
-        writer.write(DATA_SECTION, "<SpectrumIDFormat>");
-        writer.newLine(DATA_SECTION);
-        increaseIndentation(DATA_SECTION);
+            writeCvTerm(
+                    DATA_SECTION,
+                    new CvTerm(
+                            "PSI-MS",
+                            "MS:1001062",
+                            "Mascot MGF format",
+                            null
+                    )
+            );
 
-        writeCvTerm(
-                DATA_SECTION,
-                new CvTerm(
-                        "PSI-MS",
-                        "MS:1000774",
-                        "multiple peak list nativeID format",
-                        null
-                )
-        );
+            decreaseIndent(DATA_SECTION);
+            writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
+            writer.write(DATA_SECTION, "</FileFormat>");
+            writer.newLine(DATA_SECTION);
 
-        decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
-        writer.write(DATA_SECTION, "</SpectrumIDFormat>");
-        writer.newLine(DATA_SECTION);
+            writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
+            writer.write(DATA_SECTION, "<SpectrumIDFormat>");
+            writer.newLine(DATA_SECTION);
+            increaseIndentation(DATA_SECTION);
 
-        decreaseIndent(DATA_SECTION);
-        writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
-        writer.write(DATA_SECTION, "</SpectraData>");
-        writer.newLine(DATA_SECTION);
+            writeCvTerm(
+                    DATA_SECTION,
+                    new CvTerm(
+                            "PSI-MS",
+                            "MS:1000774",
+                            "multiple peak list nativeID format",
+                            null
+                    )
+            );
+
+            decreaseIndent(DATA_SECTION);
+            writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
+            writer.write(DATA_SECTION, "</SpectrumIDFormat>");
+            writer.newLine(DATA_SECTION);
+
+            decreaseIndent(DATA_SECTION);
+            writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
+            writer.write(DATA_SECTION, "</SpectraData>");
+            writer.newLine(DATA_SECTION);
+
+        }
 
         decreaseIndent(DATA_SECTION);
         writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
@@ -2299,7 +2325,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
     ) {
 
         Peptide peptide = peptideAssumption.getPeptide();
-        long peptideKey = peptide.getKey();
+        long peptideKey = peptideInference ? peptide.getMatchingKey(identificationParameters.getSequenceMatchingParameters()) : peptide.getKey();
 
         writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
         writer.write(DATA_SECTION, "<SpectrumIdentificationItem peptide_ref=\"");
@@ -2332,9 +2358,17 @@ public class SimpleMzIdentMLExporter implements Closeable {
                 String pepEvidenceKey = getPeptideEvidenceKey(
                         accession,
                         index,
-                        peptide.getKey()
+                        peptideKey
                 );
                 String peptideEvidenceId = pepEvidenceIds.get(pepEvidenceKey);
+                
+//                if (peptideEvidenceId == null) {
+//                    
+//                    Peptide debug = debugMap.get(peptideKey);
+//                    
+//                    int nProteins = debug.getProteinMapping().size();
+//                    
+//                }
 
                 writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
                 writer.write(DATA_SECTION, "<PeptideEvidenceRef peptideEvidence_ref=\"");

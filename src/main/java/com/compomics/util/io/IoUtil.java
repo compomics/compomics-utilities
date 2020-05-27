@@ -233,7 +233,7 @@ public class IoUtil {
     public static String getExtension(
             String fileName
     ) {
-        
+
         int index = fileName.lastIndexOf(".");
 
         return index > 0 ? fileName.substring(index) : "";
@@ -242,9 +242,9 @@ public class IoUtil {
 
     /**
      * Returns the given file name with lower-case extension.
-     * 
+     *
      * @param fileName The name of the file.
-     * 
+     *
      * @return The name of the file with lower-case extension.
      */
     public static String getFilenameExtensionLowerCase(
@@ -256,18 +256,20 @@ public class IoUtil {
     }
 
     /**
-     * Checks if the given file exists with the extension in another case and returns it. Returns the given file otherwise.
-     * 
+     * Checks if the given file exists with the extension in another case and
+     * returns it. Returns the given file otherwise.
+     *
      * @param file The file to check.
-     * 
-     * @return The existing file with another extension if it exists, the given file otherwise.
+     *
+     * @return The existing file with another extension if it exists, the given
+     * file otherwise.
      */
     public static File existsExtensionNotCaseSensitive(File file) {
-        
+
         if (file.exists()) {
-            
+
             return file;
-            
+
         }
 
         File folder = file.getParentFile();
@@ -324,6 +326,12 @@ public class IoUtil {
     public static String removeExtension(
             String fileName
     ) {
+
+        if (fileName.endsWith(".gz")) {
+
+            fileName = fileName.substring(0, fileName.length() - 3);
+
+        }
 
         int pointIndex = fileName.lastIndexOf(".");
         return pointIndex > 0 ? fileName.substring(0, pointIndex) : fileName;

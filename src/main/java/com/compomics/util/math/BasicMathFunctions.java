@@ -2,9 +2,6 @@ package com.compomics.util.math;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.IntStream;
 import org.apache.commons.math.util.FastMath;
 
 /**

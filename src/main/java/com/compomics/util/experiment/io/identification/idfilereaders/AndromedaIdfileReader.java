@@ -86,7 +86,8 @@ public class AndromedaIdfileReader implements IdfileReader {
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
     ) 
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+            throws IOException, IllegalArgumentException, SQLException, 
+            ClassNotFoundException, InterruptedException, JAXBException {
 
         String mgfFile = getMgfFileName(fileName);
 

@@ -326,10 +326,10 @@
                               <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                               <Component id="proteinLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="accessionsSpinner" min="-2" pref="192" max="-2" attributes="0"/>
+                              <Component id="accessionsSpinner" min="-2" pref="222" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="targetDecoyTxt" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="199" max="32767" attributes="0"/>
+                              <EmptySpace pref="169" max="32767" attributes="0"/>
                               <Component id="editFastaParametersJLabel" min="-2" pref="155" max="-2" attributes="0"/>
                           </Group>
                           <Component id="proteinYxtScrollPane" max="32767" attributes="0"/>

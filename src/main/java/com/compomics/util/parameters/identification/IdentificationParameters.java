@@ -53,7 +53,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     /**
      * Indicates whether the description is automatically generated.
      */
-    private Boolean defaultDescription = true;
+    private boolean defaultDescription = true;
     /**
      * The parameters used for the spectrum matching.
      */
@@ -683,12 +683,6 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      */
     public boolean getDefaultDescription() {
         readDBMode();
-
-        if (defaultDescription == null) {
-
-            return false;
-
-        }
 
         return defaultDescription;
 

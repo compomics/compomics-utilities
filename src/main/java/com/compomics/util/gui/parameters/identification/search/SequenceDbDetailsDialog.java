@@ -1,9 +1,9 @@
 package com.compomics.util.gui.parameters.identification.search;
 
-import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.experiment.biology.proteins.Protein;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
+import com.compomics.util.experiment.identification.utils.ProteinUtils;
 import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import com.compomics.util.experiment.io.biology.protein.Header;
@@ -89,7 +89,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
     /**
      * The batch size of proteins to sample.
      */
-    public static final int SAMPLE_BATCH_SIZE = 100;
+    public static final int SAMPLE_BATCH_SIZE = 50;
     /**
      * Accessions of the sampled proteins.
      */
@@ -124,7 +124,16 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param normalImange the normal icon
      * @param waitingImage the waiting icon
      */
-    public SequenceDbDetailsDialog(Dialog owner, Frame parent, String selectedFastaFile, FastaParameters fastaParameters, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
+    public SequenceDbDetailsDialog(
+            Dialog owner,
+            Frame parent,
+            String selectedFastaFile,
+            FastaParameters fastaParameters,
+            LastSelectedFolder lastSelectedFolder,
+            boolean dbEditable,
+            Image normalImange,
+            Image waitingImage
+    ) {
 
         super(owner, true);
         initComponents();
@@ -162,7 +171,15 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param normalImange the normal icon
      * @param waitingImage the waiting icon
      */
-    public SequenceDbDetailsDialog(Frame parent, String selectedFastaFile, FastaParameters fastaParameters, LastSelectedFolder lastSelectedFolder, boolean dbEditable, Image normalImange, Image waitingImage) {
+    public SequenceDbDetailsDialog(
+            Frame parent,
+            String selectedFastaFile,
+            FastaParameters fastaParameters,
+            LastSelectedFolder lastSelectedFolder,
+            boolean dbEditable,
+            Image normalImange,
+            Image waitingImage
+    ) {
 
         super(parent, true);
 
@@ -287,7 +304,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
                 } catch (Exception e) {
 
-                    JOptionPane.showMessageDialog(this, "An error occurred while reading the fasta file.",
+                    JOptionPane.showMessageDialog(this,
+                            "An error occurred while reading the FASTA file.",
                             "Import error", JOptionPane.WARNING_MESSAGE);
                     e.printStackTrace();
 
@@ -310,8 +328,18 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         Header header = headersSample.get(accession);
         Protein protein = proteinsSample.get(accession);
 
-        proteinTxt.setText(header.getRawHeader() + System.getProperty("line.separator") + protein.getSequence());
+        proteinTxt.setText(
+                header.getRawHeader()
+                + System.getProperty("line.separator")
+                + protein.getSequence()
+        );
         proteinTxt.setCaretPosition(0);
+
+        if (ProteinUtils.isDecoy(accession, fastaParameters)) {
+            targetDecoyTxt.setText("(Decoy)");
+        } else {
+            targetDecoyTxt.setText("(Target)");
+        }
 
     }
 
@@ -344,7 +372,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         File startLocation = null;
 
-        if (utilitiesUserParameters.getDbFolder() != null && utilitiesUserParameters.getDbFolder().exists()) {
+        if (utilitiesUserParameters.getDbFolder() != null
+                && utilitiesUserParameters.getDbFolder().exists()) {
 
             startLocation = utilitiesUserParameters.getDbFolder();
 
@@ -419,7 +448,12 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * if one already exists
      * @param setUpGUI if true the GUI will be updated
      */
-    private void loadFastaFile(String fastaFile, boolean inferParameters, boolean iNewFastaSummary, boolean setUpGUI) {
+    private void loadFastaFile(
+            String fastaFile,
+            boolean inferParameters,
+            boolean iNewFastaSummary,
+            boolean setUpGUI
+    ) {
 
         this.selectedFastaFile = fastaFile;
         final boolean newFastaSummary = iNewFastaSummary;
@@ -455,13 +489,23 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     if (!progressDialog.isRunCanceled()) {
 
                         progressDialog.setWaitingText("Importing Database. Please Wait...");
-                        fastaSummary = FastaSummary.getSummary(selectedFastaFile, fastaParameters, newFastaSummary, progressDialog);
+                        fastaSummary = FastaSummary.getSummary(
+                                selectedFastaFile,
+                                fastaParameters,
+                                newFastaSummary,
+                                progressDialog
+                        );
+
+                        progressDialog.setSecondaryProgressCounterIndeterminate(true);
 
                         if (!fastaSummary.containsDecoys()) {
 
-                            int outcome = JOptionPane.showConfirmDialog(SequenceDbDetailsDialog.this,
-                                    "The database does not seem to contain decoy sequences.\nAdd decoys?", "Add decoys?",
-                                    JOptionPane.YES_NO_OPTION);
+                            int outcome = JOptionPane.showConfirmDialog(
+                                    SequenceDbDetailsDialog.this,
+                                    "The database does not seem to contain decoy sequences.\nAdd decoys?",
+                                    "Add decoys?",
+                                    JOptionPane.YES_NO_OPTION
+                            );
 
                             if (outcome == JOptionPane.YES_OPTION) {
                                 generateTargetDecoyDatabase();
@@ -480,18 +524,25 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
                 } catch (IOException e) {
                     progressDialog.setRunFinished();
-                    JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
+                    JOptionPane.showMessageDialog(
+                            SequenceDbDetailsDialog.this,
                             "File " + selectedFastaFile + " not found.",
-                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                            "FASTA Import Error",
+                            JOptionPane.WARNING_MESSAGE
+                    );
                     e.printStackTrace();
                     return;
                 } catch (Exception e) {
                     progressDialog.setRunFinished();
-                    JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this, JOptionEditorPane.getJOptionEditorPane(
-                            "There was an error importing the FASTA file:<br>"
-                            + e.getMessage() + "<br>"
-                            + "See <a href=\"https://compomics.github.io/projects/searchgui/wiki/databasehelp.html\">DatabaseHelp</a> for help."),
-                            "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(
+                            SequenceDbDetailsDialog.this,
+                            JOptionEditorPane.getJOptionEditorPane(
+                                    "There was an error importing the FASTA file:<br>"
+                                    + e.getMessage() + "<br>"
+                                    + "See <a href=\"https://compomics.github.io/projects/searchgui/wiki/databasehelp.html\">DatabaseHelp</a> for help."
+                            ),
+                            "FASTA Import Error",
+                            JOptionPane.WARNING_MESSAGE);
                     e.printStackTrace();
                     return;
                 }
@@ -544,26 +595,34 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         } catch (OutOfMemoryError error) {
 
             Runtime.getRuntime().gc();
-            JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
+            JOptionPane.showMessageDialog(
+                    SequenceDbDetailsDialog.this,
                     "The tool used up all the available memory and had to be stopped.\n"
                     + "Memory boundaries are set in the Edit menu (Edit > Java Options).",
                     "Out Of Memory Error",
-                    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.ERROR_MESSAGE
+            );
             System.out.println("Ran out of memory!");
             error.printStackTrace();
 
         } catch (FileNotFoundException e) {
 
-            JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
+            JOptionPane.showMessageDialog(
+                    SequenceDbDetailsDialog.this,
                     new String[]{"FASTA Import Error.", "File " + selectedFastaFile + " not found."},
-                    "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+                    "FASTA Import Error", JOptionPane.WARNING_MESSAGE
+            );
             e.printStackTrace();
 
         } catch (Exception e) {
 
-            JOptionPane.showMessageDialog(SequenceDbDetailsDialog.this,
-                    new String[]{"FASTA Import Error.", "File " + selectedFastaFile + " could not be imported."},
-                    "FASTA Import Error", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    SequenceDbDetailsDialog.this,
+                    new String[]{"FASTA Import Error.",
+                        "File " + selectedFastaFile + " could not be imported."},
+                    "FASTA Import Error",
+                    JOptionPane.WARNING_MESSAGE
+            );
             e.printStackTrace();
 
         }
@@ -598,8 +657,12 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         } catch (IOException e) {
 
-            JOptionPane.showMessageDialog(this, "An error occurred while renaming the file.",
-                    "Please Rename File", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "An error occurred while renaming the file.",
+                    "Please Rename File",
+                    JOptionPane.WARNING_MESSAGE
+            );
             e.printStackTrace();
             success = false;
 
@@ -607,8 +670,13 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
         if (success) {
 
-            JOptionPane.showMessageDialog(this, "Your FASTA file name contained white space and has been renamed to:\n"
-                    + file.getParentFile().getAbsolutePath() + File.separator + tempName, "Renamed File", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Your FASTA file name contained white space and has been renamed to:\n"
+                    + file.getParentFile().getAbsolutePath() + File.separator + tempName,
+                    "Renamed File",
+                    JOptionPane.WARNING_MESSAGE
+            );
 
             return renamedFile;
 
@@ -863,10 +931,10 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                         .addGap(16, 16, 16)
                         .addComponent(proteinLabel)
                         .addGap(18, 18, 18)
-                        .addComponent(accessionsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(accessionsSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(targetDecoyTxt)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 199, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
                         .addComponent(editFastaParametersJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(proteinYxtScrollPane))
                 .addContainerGap())
@@ -957,11 +1025,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param evt the action event
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-
         UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
-
         dispose();
-
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**
@@ -970,11 +1035,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param evt the action event
      */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-
         canceled = true;
-
         dispose();
-
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     /**
@@ -1081,7 +1143,8 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void editFastaParametersJLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editFastaParametersJLabelMouseClicked
-        FastaParametersDialog fastaParametersDialog = new FastaParametersDialog(this, parentFrame, fastaParameters, dbEditable);
+        FastaParametersDialog fastaParametersDialog
+                = new FastaParametersDialog(this, parentFrame, fastaParameters, dbEditable);
 
         if (!fastaParametersDialog.isCanceled()) {
             FastaParameters newFastaParameters = fastaParametersDialog.getFastaSettings();
@@ -1150,11 +1213,17 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
      */
     private void bufferProteins() throws IOException {
 
-        int i = 0, previousSize = proteinsSample.size();
+        // clear the old buffer
+        accessionsSample.clear();
+        proteinsSample.clear();
+        headersSample.clear();
+        proteinsSample.clear();
 
+        int proteinCounter = 0;
         Protein protein;
 
-        while (i < SAMPLE_BATCH_SIZE && (protein = proteinIterator.getNextProtein()) != null) {
+        while (proteinCounter++ < SAMPLE_BATCH_SIZE
+                && (protein = proteinIterator.getNextProtein()) != null) {
 
             String accession = protein.getAccession();
             accessionsSample.add(accession);
@@ -1164,7 +1233,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
         }
 
         accessionsSpinner.setModel(new SpinnerListModel(accessionsSample));
-        accessionsSpinner.setValue(accessionsSample.get(previousSize));
+        accessionsSpinner.setValue(accessionsSample.get(0));
 
     }
 

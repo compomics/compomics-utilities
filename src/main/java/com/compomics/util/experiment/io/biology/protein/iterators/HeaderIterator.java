@@ -1,39 +1,28 @@
 package com.compomics.util.experiment.io.biology.protein.iterators;
 
-import com.compomics.util.experiment.io.biology.protein.Header;
-import java.io.BufferedReader;
+import com.compomics.util.io.flat.SimpleFileReader;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.concurrent.Semaphore;
 
 /**
- * Iterator for the headers of a fasta file. Errors encountered during iteration
+ * Iterator for the headers of a FASTA file. Errors encountered during iteration
  * are passed as runtime exceptions.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class HeaderIterator {
 
     /**
-     * Empty default constructor
-     */
-    public HeaderIterator() {
-        br = null;
-    }
-
-    /**
-     * Mutex for the buffering of the fasta file.
+     * Mutex for the buffering of the FASTA file.
      */
     private final Semaphore bufferingMutex = new Semaphore(1);
     /**
-     * Buffered reader for the fasta file.
+     * Buffered reader for the FASTA file.
      */
-    private final BufferedReader br;
-    /**
-     * The header corresponding to the last protein returned.
-     */
-    private final Header lastHeader = null;
+    private final SimpleFileReader simpleFileReader;
     /**
      * Boolean indicating whether the end of the file has been reached.
      */
@@ -42,23 +31,24 @@ public class HeaderIterator {
     /**
      * Constructor without sanity check.
      *
-     * @param fastaFile the fasta file
+     * @param fastaFile the FASTA file
      *
      * @throws FileNotFoundException exception thrown if the file could not be
      * found
      */
     public HeaderIterator(File fastaFile) throws FileNotFoundException {
 
-        br = new BufferedReader(new FileReader(fastaFile));
+        simpleFileReader = SimpleFileReader.getFileReader(fastaFile);
 
     }
 
     /**
-     * Returns the next header. Null if none.
+     * Returns the next header.Null if none.
      *
+     * @param waitingHandler the waiting handler
      * @return the next header
      */
-    public String getNextHeader() {
+    public String getNextHeader(WaitingHandler waitingHandler) {
 
         try {
 
@@ -71,8 +61,12 @@ public class HeaderIterator {
             }
 
             String line;
-            while ((line = br.readLine()) != null) {
+            while ((line = simpleFileReader.readLine()) != null) {
 
+                // progress update
+                double progress = simpleFileReader.getProgressInPercent();
+                waitingHandler.setSecondaryProgressCounter((int) progress);
+                
                 line = line.trim();
 
                 if (line.length() > 0) {
@@ -87,7 +81,7 @@ public class HeaderIterator {
                 }
             }
 
-            br.close();
+            simpleFileReader.close();
             endOfFileReached = true;
 
             bufferingMutex.release();
@@ -108,7 +102,7 @@ public class HeaderIterator {
         
         try {
             
-            br.close();
+            simpleFileReader.close();
             
         } catch (Exception e) {
             

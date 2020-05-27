@@ -1821,13 +1821,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      */
     private String[] loadEnzymes() {
 
-        ArrayList<String> tempEnzymes = new ArrayList<>();
-
-        for (int i = 0; i < enzymeFactory.getEnzymes().size(); i++) {
-            tempEnzymes.add(enzymeFactory.getEnzymes().get(i).getName());
-        }
-
-        Collections.sort(tempEnzymes);
+        ArrayList<String> tempEnzymes = enzymeFactory.getSortedEnzymeNames();
 
         String[] enzymes = new String[tempEnzymes.size() + 1];
 

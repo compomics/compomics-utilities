@@ -45,7 +45,6 @@ public class EnzymeFactory {
      */
     private EnzymeFactory() {
         enzymes = new HashMap<>();
-        getDefaultEnzymes();
     }
 
     /**
@@ -62,7 +61,7 @@ public class EnzymeFactory {
                 instance = loadFromFile(savedFile);
                 sortedEnzymeNames = null;
             } catch (Exception e) {
-                instance = new EnzymeFactory();
+                setDefaultEnzymes();
                 sortedEnzymeNames = null;
             }
         }

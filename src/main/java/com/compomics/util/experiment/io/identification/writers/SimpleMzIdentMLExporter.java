@@ -2847,7 +2847,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
     private void initIndentationMap() {
 
         indentationMap.put(HEAD_SECTION, 0);
-        indentationMap.put(PEPTIDE_SECTION, 1);
+        indentationMap.put(PEPTIDE_SECTION, 2);
         indentationMap.put(PEPTIDE_EVIDENCE_SECTION, 2);
         indentationMap.put(ANALYSIS_SECTION, 1);
         indentationMap.put(DATA_SECTION, 1);

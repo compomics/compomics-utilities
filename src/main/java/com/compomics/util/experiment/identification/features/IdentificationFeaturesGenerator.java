@@ -33,6 +33,7 @@ import com.compomics.util.gui.filtering.FilterParameters;
 import com.compomics.util.parameters.quantification.spectrum_counting.SpectrumCountingParameters;
 import com.compomics.util.experiment.identification.validation.MatchValidationLevel;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
+import com.compomics.util.threading.ObjectMutex;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,6 +42,7 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -87,7 +89,11 @@ public class IdentificationFeaturesGenerator {
     /**
      * Map of the distributions of precursor mass errors.
      */
-    private final HashMap<String, NonSymmetricalNormalDistribution> massErrorDistribution = new HashMap<>(1);
+    private final ConcurrentHashMap<String, NonSymmetricalNormalDistribution> massErrorDistribution = new ConcurrentHashMap<>(1);
+    /**
+     * Mutex for the creation of the mass eror distributions.
+     */
+    private final ObjectMutex massErrorDistributionMutex = new ObjectMutex();
 
     /**
      * Empty default constructor.
@@ -160,8 +166,15 @@ public class IdentificationFeaturesGenerator {
 
         if (massErrorDistribution == null || massErrorDistribution.get(spectrumFile) == null) {
 
-            estimateMassErrorDistribution(spectrumFile);
+            massErrorDistributionMutex.acquire(spectrumFile);
 
+            if (massErrorDistribution == null || massErrorDistribution.get(spectrumFile) == null) {
+
+                estimateMassErrorDistribution(spectrumFile);
+
+                massErrorDistributionMutex.release(spectrumFile);
+
+            }
         }
 
         return massErrorDistribution.get(spectrumFile);
@@ -190,6 +203,7 @@ public class IdentificationFeaturesGenerator {
                         && ((PSParameter) spectrumMatch.getUrParam(PSParameter.dummy))
                                 .getMatchValidationLevel()
                                 .isValidated()
+                        &&  !PeptideUtils.isDecoy(spectrumMatch.getBestPeptideAssumption().getPeptide(), sequenceProvider)
                 )
                 .mapToDouble(
                         spectrumMatch -> spectrumMatch.getBestPeptideAssumption()

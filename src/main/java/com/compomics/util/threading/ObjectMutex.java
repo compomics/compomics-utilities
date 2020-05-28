@@ -1,5 +1,6 @@
 package com.compomics.util.threading;
 
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -23,7 +24,6 @@ public class ObjectMutex {
      * Constructor.
      */
     public ObjectMutex() {
-
     }
 
     /**
@@ -39,7 +39,7 @@ public class ObjectMutex {
         SimpleSemaphore objectMutex = mutexMap.get(key);
 
         if (objectMutex == null) {
-            
+
             masterMutex.acquire();
 
             objectMutex = mutexMap.get(key);
@@ -60,6 +60,22 @@ public class ObjectMutex {
     }
 
     /**
+     * Acquire function for the given key. If a thread gets interrupted an
+     * exception is thrown as runtime exception.
+     *
+     * @param key the object key
+     */
+    public void acquire(
+            String key
+    ) {
+
+        long longKey = ExperimentObject.asLong(key);
+
+        acquire(longKey);
+
+    }
+
+    /**
      * Release function for the given key.
      *
      * @param key the object key
@@ -68,6 +84,21 @@ public class ObjectMutex {
 
         SimpleSemaphore objectMutex = mutexMap.get(key);
         objectMutex.release();
+
+    }
+
+    /**
+     * Release function for the given key.
+     *
+     * @param key the object key
+     */
+    public void release(
+            String key
+    ) {
+
+        long longKey = ExperimentObject.asLong(key);
+
+        release(longKey);
 
     }
 

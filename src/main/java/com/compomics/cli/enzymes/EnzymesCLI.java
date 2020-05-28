@@ -37,7 +37,7 @@ public class EnzymesCLI {
         return System.getProperty("line.separator")
                 + "The EnzymesCLI command line allows the command line management "
                 + "of enzymes. It can be used to create and edit json files containing "
-                + "enzymes compatible with CompOmics tools." 
+                + "enzymes compatible with CompOmics tools."
                 + System.getProperty("line.separator")
                 + System.getProperty("line.separator")
                 //                + "For further help see https://compomics.github.io/projects/peptide-shaker.html and https://compomics.github.io/projects/peptide-shaker/wiki/peptideshakercli.html." + System.getProperty("line.separator")
@@ -110,32 +110,43 @@ public class EnzymesCLI {
 
         EnzymeFactory enzymeFactory;
         File inputFile = enzymesCLIInputBean.getFileIn();
+
         if (inputFile != null) {
-            enzymeFactory = EnzymeFactory.getInstance(inputFile);
+            try {
+                enzymeFactory = EnzymeFactory.loadFromFile(inputFile);
+            } catch (IOException e) {
+                System.out.println("An error occurred while importing the enzymes from " + inputFile + ".");
+                return 1;
+            }
         } else {
             enzymeFactory = EnzymeFactory.getInstance();
         }
 
         if (enzymesCLIInputBean.isList()) {
+
             for (Enzyme enzyme : enzymeFactory.getEnzymes()) {
                 System.out.println(enzyme.getName() + ":");
                 System.out.println(enzyme.getDescription());
                 System.out.println();
             }
+
             return 0;
         }
 
         String enzymeToRemove = enzymesCLIInputBean.getEnzymeToRemove();
+
         if (enzymeToRemove != null) {
             enzymeFactory.removeEnzyme(enzymeToRemove);
         }
 
         Enzyme enzymeToAdd = enzymesCLIInputBean.getEnzymeToAdd();
+
         if (enzymeToAdd != null) {
             enzymeFactory.addEnzyme(enzymeToAdd);
         }
 
         File outputFile = enzymesCLIInputBean.getFileOut();
+
         if (outputFile != null) {
             try {
                 EnzymeFactory.saveToFile(enzymeFactory, outputFile);
@@ -144,6 +155,7 @@ public class EnzymesCLI {
                 return 1;
             }
         }
+
         return 0;
     }
 }

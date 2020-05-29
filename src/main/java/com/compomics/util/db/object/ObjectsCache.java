@@ -57,9 +57,9 @@ public class ObjectsCache {
      */
     private final HashMap<Long, ObjectsCacheElement> loadedObjects = new HashMap<>();
     /**
-     * Linked list to manage a queue for old entries.
+     * HashMap to store the class type of the objects in cache
      */
-    //private final LinkedList<Long> objectQueue = new LinkedList<>();
+    private HashMap<Class, HashSet<Long>> classMap = new HashMap<>();
     /**
      * Indicates whether the cache is read only.
      */
@@ -73,6 +73,7 @@ public class ObjectsCache {
      */
     private final int keepObjectsThreshold = 10000;
     static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
+    
 
     /**
      * Constructor.
@@ -147,8 +148,10 @@ public class ObjectsCache {
         
         if (!readOnly) {
             if (loadedObjects.containsKey(objectKey)) {
+                Object object = getObject(objectKey);
+                classMap.get(object.getClass()).remove(objectKey);
                 loadedObjects.remove(objectKey);
-                //objectQueue.remove(objectKey);
+                
             }
         }
     }
@@ -181,13 +184,17 @@ public class ObjectsCache {
             
             if (!loadedObjects.containsKey(objectKey)) {
                 loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
-                //objectQueue.add(objectKey);
             }
             else {
                 loadedObjects.get(objectKey).object = object;
                 loadedObjects.get(objectKey).inDB = inDB;
                 loadedObjects.get(objectKey).edited = edited;
             }
+            if (!classMap.containsKey(object.getClass())){
+                classMap.put(object.getClass(), new HashSet<>());
+            }
+            classMap.get(object.getClass()).add(objectKey);
+            
             updateCache();
         }
 
@@ -229,6 +236,11 @@ public class ObjectsCache {
                     loadedObjects.get(objectKey).inDB = inDB;
                     loadedObjects.get(objectKey).edited = edited;
                 }
+                
+                if (!classMap.containsKey(object.getClass())){
+                    classMap.put(object.getClass(), new HashSet<>());
+                }
+                classMap.get(object.getClass()).add(objectKey);
             }
 
             updateCache();
@@ -295,7 +307,6 @@ public class ObjectsCache {
                 long key = entry.getKey();
                 
                 ObjectsCacheElement obj = loadedObjects.get(key);
-                //if (!obj.edited) continue;
                 
                 obj.edited = false;
                 
@@ -320,6 +331,7 @@ public class ObjectsCache {
                     
                 if (clearEntries) {
                     removeKeys.add(key);
+                    classMap.get(obj.object.getClass()).remove(key);
                 }
 
             }
@@ -416,5 +428,10 @@ public class ObjectsCache {
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
 
+    }
+    
+    
+    public HashSet<Long> getClassInCache(Class className){
+        return classMap.get(className);
     }
 }

@@ -13,6 +13,7 @@ import java.util.HashSet;
  * This class groups the parameters for the digestion of proteins.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class DigestionParameters extends ExperimentObject {
 
@@ -226,8 +227,10 @@ public class DigestionParameters extends ExperimentObject {
         digestionParameters.setCleavageParameter(CleavageParameter.enzyme);
         String enzymeName = "Trypsin";
         Enzyme trypsin = EnzymeFactory.getInstance().getEnzyme(enzymeName);
-        digestionParameters.addEnzyme(trypsin);
-        digestionParameters.setnMissedCleavages(enzymeName, 2);
+        if (trypsin != null) { // required if the user deleted trypsin from the factory
+            digestionParameters.addEnzyme(trypsin);
+            digestionParameters.setnMissedCleavages(enzymeName, 2);
+        }
         return digestionParameters;
     }
 

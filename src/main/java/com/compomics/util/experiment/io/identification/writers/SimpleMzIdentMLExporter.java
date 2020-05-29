@@ -158,11 +158,15 @@ public class SimpleMzIdentMLExporter implements Closeable {
     /**
      * The peptide evidence IDs.
      */
-    private final HashMap<String, String> pepEvidenceIds = new HashMap<>();
+    private final ConcurrentHashMap<String, String> pepEvidenceIds = new ConcurrentHashMap<>();
+    /**
+     * debug.
+     */
+    private final ConcurrentHashMap<Long, Peptide> debugMap = new ConcurrentHashMap<>();
     /**
      * Spectrum title to index map.
      */
-    private final HashMap<String, Integer> spectrumTitleToIndexMap = new HashMap<>();
+    private final ConcurrentHashMap<String, Integer> spectrumTitleToIndexMap = new ConcurrentHashMap<>();
     /**
      * Set of already encountered peptide keys.
      */
@@ -890,6 +894,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                     writePeptide(peptide);
 
                     peptideKeys.add(peptideKey);
+//                    debugMap.put(peptideKey, peptide);
 
                 }
 
@@ -2356,6 +2361,14 @@ public class SimpleMzIdentMLExporter implements Closeable {
                         peptideKey
                 );
                 String peptideEvidenceId = pepEvidenceIds.get(pepEvidenceKey);
+                
+//                if (peptideEvidenceId == null) {
+//                    
+//                    Peptide debug = debugMap.get(peptideKey);
+//                    
+//                    int nProteins = debug.getProteinMapping().size();
+//                    
+//                }
 
                 writer.write(DATA_SECTION, getCurrentIndentation(DATA_SECTION));
                 writer.write(DATA_SECTION, "<PeptideEvidenceRef peptideEvidence_ref=\"");
@@ -2834,7 +2847,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
     private void initIndentationMap() {
 
         indentationMap.put(HEAD_SECTION, 0);
-        indentationMap.put(PEPTIDE_SECTION, 1);
+        indentationMap.put(PEPTIDE_SECTION, 2);
         indentationMap.put(PEPTIDE_EVIDENCE_SECTION, 2);
         indentationMap.put(ANALYSIS_SECTION, 1);
         indentationMap.put(DATA_SECTION, 1);

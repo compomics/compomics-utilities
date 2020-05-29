@@ -5,13 +5,13 @@ import com.compomics.util.pride.CvTerm;
 
 import java.util.ArrayList;
 import java.io.File;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * This factory will provide the implemented enzymes.
+ * This factory will load enzymes from an XML file and provide them on demand as
+ * a standard class.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -27,9 +27,18 @@ public class EnzymeFactory {
      */
     private static EnzymeFactory instance = null;
     /**
-     * The file where the factory is saved.
+     * The alphabetically sorted enzyme names.
      */
-    private static String SERIALIZATION_FILE = null;
+    private static ArrayList<String> sortedEnzymeNames = null;
+    /**
+     * The folder containing the enzymes factory.
+     */
+    private static String SERIALIZATION_FILE_FOLDER = System.getProperty("user.home") + "/.compomics";
+    /**
+     * The name of the enzymes factory back-up file. The version number follows
+     * the one of utilities.
+     */
+    private static final String SERIALIZATION_FILE_NAME = "enzymeFactory-5.0.4-beta.json";
 
     /**
      * The factory constructor.
@@ -46,63 +55,42 @@ public class EnzymeFactory {
      * @return the factory instance
      */
     public static EnzymeFactory getInstance() {
-        return getInstance(null);
-    }
-
-    /**
-     * Static method to get an instance of the factory. Attempts to load the
-     * factory from the given file. If the file is null, attempts to load from
-     * the file set in the path preferences. If any exception occurs it is
-     * ignored silently and defaults are used.
-     *
-     * @param enzymeFile the file to load the factory from
-     *
-     * @return the factory instance
-     */
-    public static EnzymeFactory getInstance(File enzymeFile) {
-
         if (instance == null) {
-
             try {
-
-                if (enzymeFile == null && getSerializationFile() != null) {
-
-                    enzymeFile = new File(getSerializationFile());
-
-                }
-
-                if (enzymeFile != null && enzymeFile.exists()) {
-
-                    instance = loadFromFile(enzymeFile);
-
-                } else {
-
-                    instance = getDefault();
-
-                }
-
+                File savedFile = new File(SERIALIZATION_FILE_FOLDER, SERIALIZATION_FILE_NAME);
+                instance = loadFromFile(savedFile);
+                sortedEnzymeNames = null;
             } catch (Exception e) {
-
-                instance = getDefault();
-
+                setDefaultEnzymes();
+                sortedEnzymeNames = null;
             }
         }
-
         return instance;
-
     }
 
     /**
-     * Returns an instance containing only the default enzymes.
+     * Saves the factory in the user folder.
      *
-     * @return an instance containing only the default enzymes
+     * @throws IOException exception thrown whenever an error occurred while
+     * saving the modificationFactory
      */
-    public static EnzymeFactory getDefault() {
-        EnzymeFactory enzymeFactory = new EnzymeFactory();
-        for (Enzyme enzyme : getDefaultEnzymes()) {
-            enzymeFactory.addEnzyme(enzyme);
+    public void saveFactory() throws IOException {
+        File factoryFile = new File(SERIALIZATION_FILE_FOLDER, SERIALIZATION_FILE_NAME);
+        if (!factoryFile.getParentFile().exists()) {
+            factoryFile.getParentFile().mkdir();
         }
-        return enzymeFactory;
+        saveToFile(instance, factoryFile);
+    }
+
+    /**
+     * Sets the instance to only contain the default enzymes.
+     */
+    public static void setDefaultEnzymes() {
+        instance = new EnzymeFactory();
+        for (Enzyme enzyme : getDefaultEnzymes()) {
+            instance.addEnzyme(enzyme);
+        }
+        sortedEnzymeNames = null;
     }
 
     /**
@@ -119,6 +107,7 @@ public class EnzymeFactory {
     public static EnzymeFactory loadFromFile(File file) throws IOException {
         JsonMarshaller jsonMarshaller = new JsonMarshaller();
         EnzymeFactory result = (EnzymeFactory) jsonMarshaller.fromJson(EnzymeFactory.class, file);
+        sortedEnzymeNames = null;
         return result;
     }
 
@@ -137,22 +126,22 @@ public class EnzymeFactory {
     }
 
     /**
-     * Returns the file where to save the factory.
+     * Returns the folder where to save the factory.
      *
-     * @return the file where to save the factory
+     * @return the folder where to save the factory
      */
-    public static String getSerializationFile() {
-        return SERIALIZATION_FILE;
+    public static String getSerializationFolder() {
+        return SERIALIZATION_FILE_FOLDER;
     }
 
     /**
-     * Sets the file where to save the factory. Warning: this overwrites
+     * Sets the folder where to save the factory. Warning: this overwrites
      * SERIALIZATION_FILE_FOLDER.
      *
-     * @param serializationFilePath the file where to save the factory
+     * @param serializationFilePath the folder where to save the factory
      */
-    public static void setSerializationFile(String serializationFilePath) {
-        SERIALIZATION_FILE = serializationFilePath;
+    public static void setSerializationFolder(String serializationFilePath) {
+        SERIALIZATION_FILE_FOLDER = serializationFilePath;
     }
 
     /**
@@ -162,6 +151,28 @@ public class EnzymeFactory {
      */
     public ArrayList<Enzyme> getEnzymes() {
         return new ArrayList<>(enzymes.values());
+    }
+
+    /**
+     * Get the sorted list of enzyme names.
+     *
+     * @return the enzyme names as a sorted ArrayList
+     */
+    public ArrayList<String> getSortedEnzymeNames() {
+
+        if (sortedEnzymeNames != null) {
+            return sortedEnzymeNames;
+        }
+
+        sortedEnzymeNames = new ArrayList<>();
+
+        for (Enzyme tempEnzyme : enzymes.values()) {
+            sortedEnzymeNames.add(tempEnzyme.getName());
+        }
+
+        Collections.sort(sortedEnzymeNames);
+
+        return sortedEnzymeNames;
     }
 
     /**
@@ -181,6 +192,7 @@ public class EnzymeFactory {
      */
     public void addEnzyme(Enzyme enzyme) {
         enzymes.put(enzyme.getName(), enzyme);
+        sortedEnzymeNames = null;
     }
 
     /**
@@ -190,6 +202,7 @@ public class EnzymeFactory {
      */
     public void removeEnzyme(String enzymeName) {
         enzymes.remove(enzymeName);
+        sortedEnzymeNames = null;
     }
 
     /**
@@ -211,81 +224,12 @@ public class EnzymeFactory {
      */
     public Enzyme getUtilitiesEnzyme(String cvTermAccession) {
         for (Enzyme enzyme : enzymes.values()) {
-            if (enzyme.getCvTerm() != null && enzyme.getCvTerm().getAccession().equals(cvTermAccession)) {
+            if (enzyme.getCvTerm() != null
+                    && enzyme.getCvTerm().getAccession().equals(cvTermAccession)) {
                 return enzyme;
             }
         }
         return null;
-    }
-
-    /**
-     * Creates the MS Amanda enzyme settings file corresponding to the enzymes
-     * loaded in the factory to the given file.
-     *
-     * @param file the file
-     * @throws IOException exception thrown whenever an error occurred while
-     * writing the file
-     */
-    public void writeMsAmandaEnzymeFile(File file) throws IOException {
-
-        // @TODO: not yet in use... (and not properly tested)
-        BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-        String toWrite = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
-        bw.write(toWrite);
-        bw.newLine();
-
-        bw.write("<enzymes>");
-        bw.newLine();
-
-        for (Enzyme enzyme : getEnzymes()) {
-
-            bw.write("  <enzyme>");
-            bw.newLine();
-
-            bw.write("    <name>" + enzyme.getName() + "</name>");
-            bw.newLine();
-
-            String cleavageSite = "";
-            String inhibitors = "";
-            String position;
-
-            if (!enzyme.getAminoAcidBefore().isEmpty()) {
-                position = "after";
-                for (Character aminoAcid : enzyme.getAminoAcidBefore()) {
-                    cleavageSite += aminoAcid;
-                }
-                for (Character aminoAcid : enzyme.getRestrictionAfter()) {
-                    inhibitors += aminoAcid;
-                }
-            } else {
-                position = "before";
-                for (Character aminoAcid : enzyme.getAminoAcidAfter()) {
-                    cleavageSite += aminoAcid;
-                }
-                for (Character aminoAcid : enzyme.getRestrictionBefore()) {
-                    inhibitors += aminoAcid;
-                }
-            }
-
-            bw.write("    <cleavage_sites>" + cleavageSite + "</cleavage_sites>");
-            bw.newLine();
-
-            if (!inhibitors.isEmpty()) {
-                bw.write("    <inhibitors>" + inhibitors + "</inhibitors>");
-                bw.newLine();
-            }
-
-            bw.write("    <position>" + position + "</position>");
-            bw.newLine();
-
-            bw.write("  </enzyme>");
-            bw.newLine();
-        }
-
-        bw.write("</enzymes>");
-
-        bw.flush();
-        bw.close();
     }
 
     /**
@@ -294,7 +238,7 @@ public class EnzymeFactory {
      * @return a list of default enzymes
      */
     private static ArrayList<Enzyme> getDefaultEnzymes() {
-        
+
         // NOTE: enzyme names cannot contain comma as this is used by
         // some of the search engines to separate multiple enzymes!
         ArrayList<Enzyme> enzymes = new ArrayList<>();
@@ -321,7 +265,7 @@ public class EnzymeFactory {
         enzyme = new Enzyme("Arg-C (no P rule)");
         enzyme.addAminoAcidBefore('R');
         enzymes.add(enzyme);
-        
+
         enzyme = new Enzyme("Arg-N");
         enzyme.addAminoAcidAfter('R');
         enzymes.add(enzyme);
@@ -397,7 +341,7 @@ public class EnzymeFactory {
         enzyme.addAminoAcidAfter('R');
         enzyme.addAminoAcidAfter('K');
         enzymes.add(enzyme);
-        
+
         return enzymes;
     }
 }

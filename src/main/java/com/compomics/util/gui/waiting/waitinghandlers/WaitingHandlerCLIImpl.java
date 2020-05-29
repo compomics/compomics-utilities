@@ -82,7 +82,9 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     @Override
     public void setMaxPrimaryProgressCounter(int maxProgressValue) {
         if (displayProgress) {
+            primaryMutex.acquire();
             primaryMaxProgressCounter = maxProgressValue;
+            primaryMutex.release();
         }
     }
 
@@ -95,13 +97,13 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     @Override
     public void increasePrimaryProgressCounter(int value) {
-        
+
         if (displayProgress) {
-        
+
             primaryMutex.acquire();
             primaryProgressCounter += value;
             primaryMutex.release();
-            
+
         }
     }
 
@@ -110,11 +112,11 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
             int value
     ) {
         if (displayProgress) {
-            
+
             primaryMutex.acquire();
             primaryProgressCounter = value;
             primaryMutex.release();
-            
+
         }
     }
 
@@ -123,73 +125,75 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
             int maxProgressValue
     ) {
         if (displayProgress) {
-    
+
+            secondaryMutex.acquire();
             secondaryMaxProgressCounter = maxProgressValue;
-        
+            secondaryMutex.release();
+
         }
     }
 
     @Override
     public void resetSecondaryProgressCounter() {
         if (displayProgress) {
-            secondaryProgressCounter = 0;
+            setMaxSecondaryProgressCounter(0);
         }
     }
 
     @Override
     public void increaseSecondaryProgressCounter() {
-        
+
         increaseSecondaryProgressCounter(1);
-        
+
     }
 
     @Override
     public void setSecondaryProgressCounter(
             int value
     ) {
-        
+
         if (displayProgress) {
             if (secondaryMaxProgressCounter != 0) {
-                
+
                 secondaryMutex.acquire();
                 int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
                 secondaryProgressCounter = value;
                 int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
                 secondaryMutex.release();
-                
+
                 printProgress(progress1, progress2);
-                
+
             } else {
-                
+
                 secondaryMutex.acquire();
                 secondaryProgressCounter = value;
                 secondaryMutex.release();
-                
+
             }
         }
     }
 
     @Override
     public void increaseSecondaryProgressCounter(int value) {
-        
+
         if (displayProgress) {
-            
+
             if (secondaryMaxProgressCounter != 0) {
-                
+
                 secondaryMutex.acquire();
                 int progress1 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
                 secondaryProgressCounter += value;
                 int progress2 = (int) 10.0 * secondaryProgressCounter / secondaryMaxProgressCounter;
                 secondaryMutex.release();
-                
+
                 printProgress(progress1, progress2);
-                
+
             } else {
-                
+
                 secondaryMutex.acquire();
                 secondaryProgressCounter += value;
                 secondaryMutex.release();
-            
+
             }
         }
     }
@@ -201,11 +205,11 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
      * @param progress2 current progress value
      */
     private void printProgress(int progress1, int progress2) {
-        
+
         if (progress2 > progress1) {
-            
+
             progressMutex.acquire();
-        
+
             int progress = 10 * progress2;
             if (progress1 == 0) {
                 if (needNewLine) {
@@ -221,9 +225,9 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
                 System.out.print(" " + progress + "%");
                 needNewLine = true;
             }
-            
+
             progressMutex.release();
-            
+
         }
     }
 
@@ -231,11 +235,11 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     public void setSecondaryProgressCounterIndeterminate(
             boolean indeterminate
     ) {
-    
+
         if (displayProgress) {
-        
+
             secondaryProgressCounter = -1;
-        
+
         }
     }
 
@@ -251,12 +255,12 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
 
     @Override
     public void appendReport(
-            String report, 
-            boolean includeDate, 
+            String report,
+            boolean includeDate,
             boolean addNewLine
     ) {
         if (displayProgress) {
-            
+
             String tempReport = report;
 
             if (includeDate) {
@@ -267,60 +271,60 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
             if (addNewLine) {
                 tempReport = tempReport + lineBreak;
             }
-            
+
             textMutex.acquire();
             iReport = iReport + tempReport;
             textMutex.release();
-            
+
             if (needNewLine) {
-            
+
                 System.out.append(lineBreak);
                 needNewLine = false;
-            
+
             }
-            
+
             System.out.append(tempReport);
-            
+
         }
     }
 
     @Override
     public void appendReportNewLineNoDate() {
-        
+
         if (displayProgress) {
-        
+
             if (needNewLine) {
-            
+
                 System.out.append(lineBreak);
                 needNewLine = false;
-            
+
             }
-            
+
             textMutex.acquire();
             iReport = iReport + lineBreak;
             textMutex.release();
-            
+
             System.out.append(lineBreak);
-        
+
         }
     }
 
     @Override
     public void appendReportEndLine() {
-        
+
         if (displayProgress) {
-        
+
             if (needNewLine) {
-            
+
                 System.out.append(lineBreak);
                 needNewLine = false;
-            
+
             }
-            
+
             textMutex.acquire();
             iReport = iReport + lineBreak;
             textMutex.release();
-            
+
             System.out.append(lineBreak);
         }
     }
@@ -339,11 +343,11 @@ public class WaitingHandlerCLIImpl implements WaitingHandler {
     public void setWaitingText(
             String text
     ) {
-    
+
         if (displayProgress) {
-        
+
             appendReport(text, true, true);
-        
+
         }
     }
 

@@ -237,8 +237,7 @@ public class ObjectsDB {
      * @return the iterator
      */
     public HashSet<Long> getClassObjectIDs(Class className, String filters) {
-        dumpToDB();
-        HashSet<Long> classObjectIds = new HashSet<Long>();
+        HashSet<Long> classObjectIds = new HashSet<Long>(objectsCache.getClassInCache(className));
         
         
         String sqlQuery = "SELECT id FROM data WHERE class = ?";
@@ -399,7 +398,7 @@ public class ObjectsDB {
             PreparedStatement pstmt = connection.prepareStatement("SELECT id, data FROM data WHERE class = ?;");
             pstmt.setString(1, className.getSimpleName());
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next()){
+            while (rs.next()){
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return;
                 }
@@ -452,32 +451,11 @@ public class ObjectsDB {
      *
      */
     public int getNumber(Class className) {
-        dumpToDB();
-        int counter = 0;
-        
-
-        if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " query number of " + className.getSimpleName() + " objects");
-        }
-        
-        try {
-            dbMutex.acquire();
-            PreparedStatement pstmt = connection.prepareStatement("SELECT count(id) cnt FROM data WHERE class = ?;");
-            pstmt.setString(1, className.getSimpleName());
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()){
-                counter = rs.getInt("cnt");
-            }
-        }
-        catch(Exception ex){
-            ex.printStackTrace();
-        }
-        finally {
-            dbMutex.release();
-        }
-        
-        return counter;
+        return getClassObjectIDs(className).size();
     }
+    
+    
+    
 
     /**
      * Triggers a dump of all objects within the cache into the database.
@@ -553,10 +531,14 @@ public class ObjectsDB {
      * @return the list of objects
      */
     public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
-        dumpToDB();
+        
         ArrayList<Object> retrievingObjects = new ArrayList<>();
         HashMap<Long, Object> objectsNotInCache = new HashMap<>();
-
+        HashSet<Long> objectInCache = objectsCache.getClassInCache(className);
+        objectInCache.forEach(key -> {
+            retrievingObjects.add(objectsCache.getObject(key));
+        });
+        
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
@@ -567,14 +549,14 @@ public class ObjectsDB {
             PreparedStatement pstmt = connection.prepareStatement("SELECT id, data FROM data WHERE class = ?;");
             pstmt.setString(1, className.getSimpleName());
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next()){
+            while (rs.next()){
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return retrievingObjects;
                 }
                 FSTObjectInput in = new FSTObjectInput(rs.getBinaryStream("data"));
                 long objectKey = rs.getLong("id");
                 Object object = in.readObject();
-                if (!objectsCache.inCache(objectKey)) objectsNotInCache.put(objectKey, object);
+                if (!objectInCache.contains(objectKey)) objectsNotInCache.put(objectKey, object);
                 retrievingObjects.add(object);
             }
         }
@@ -688,7 +670,7 @@ public class ObjectsDB {
             pstmt.setLong(1, objectKey);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()){
-                result = rs.getLong("id") == 1;
+                result = rs.getLong("cnt") == 1;
             }
         }
         catch(Exception ex){

@@ -41,11 +41,10 @@ import java.util.List;
 public abstract class AminoAcid {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public AminoAcid() {
     }
-
 
     public static final AminoAcid A = new Alanine();
     public static final AminoAcid C = new Cysteine();
@@ -91,15 +90,11 @@ public abstract class AminoAcid {
      */
     protected AtomChain monoisotopicAtomChain;
     /**
-     * The mass tolerance used for the indistinguishable amino acids in cache.
-     */
-    private final Double indistinguishableAACacheMass = null;
-    /**
-     * The sub amino acids.
+     * The sub amino acids without combination.
      */
     protected char[] subAminoAcidsWithoutCombination;
     /**
-     * The sub amino acids.
+     * The sub amino acids with combination.
      */
     protected char[] subAminoAcidsWithCombination;
     /**
@@ -113,19 +108,25 @@ public abstract class AminoAcid {
     /**
      * The amino acid one letter codes as char array.
      */
-    private static final char[] aminoAcidChars = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
-        'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+    private static final char[] AMINO_ACID_CHARS = {
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+    };
     /**
      * A char array of the one letter code of amino acids without combinations
      * of amino acids.
      */
-    private static final char[] uniqueAminoAcidChars = {'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O',
-        'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y'};
+    private static final char[] UNIQUE_AMINO_ACID_CHARS = {
+        'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M',
+        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y'
+    };
     /**
      * The amino acid one letter codes as string array.
      */
-    public static final String[] aminoAcidStrings = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O",
-        "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+    public static final String[] AMINO_ACID_STRINGS = new String[]{
+        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+        "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+    };
 
     /**
      * Convenience method returning an array of all implemented amino acids
@@ -134,7 +135,7 @@ public abstract class AminoAcid {
      * @return an array of all implemented amino acids
      */
     public static char[] getAminoAcids() {
-        return aminoAcidChars;
+        return AMINO_ACID_CHARS;
     }
 
     /**
@@ -153,7 +154,7 @@ public abstract class AminoAcid {
      * character
      */
     public static List<String> getAminoAcidsList() {
-        return Arrays.asList(aminoAcidStrings);
+        return Arrays.asList(AMINO_ACID_STRINGS);
     }
 
     /**
@@ -164,30 +165,31 @@ public abstract class AminoAcid {
      * combinations of amino acids
      */
     public static char[] getUniqueAminoAcids() {
-        return uniqueAminoAcidChars;
+        return UNIQUE_AMINO_ACID_CHARS;
     }
 
     /**
-     * Returns the amino acid corresponding to the letter given, null if not
-     * implemented. If more than one letter is given only the first one will be
-     * accounted for.
+     * Returns the amino acid corresponding to the letter given. Throws an
+     * exception if not implemented. If more than one letter is given only the
+     * first one will be accounted for.
      *
      * @param aa the amino acid single letter code as a String
-     * @return the corresponding amino acid.
+     * @throws IllegalArgumentException if the amino acid is not implemented
+     * @return the corresponding amino acid
      */
-    public static AminoAcid getAminoAcid(String aa) {
+    public static AminoAcid getAminoAcid(String aa) throws IllegalArgumentException {
         return getAminoAcid(aa.charAt(0));
     }
 
     /**
-     * Returns the amino acid corresponding to the single letter code given,
-     * null if not implemented.
+     * Returns the amino acid corresponding to the single letter code given.
+     * Throws an exception if not implemented.
      *
      * @param aa the single letter code of the amino acid
-     *
-     * @return the corresponding amino acid.
+     * @throws IllegalArgumentException if the amino acid is not implemented
+     * @return the corresponding amino acid
      */
-    public static AminoAcid getAminoAcid(char aa) {
+    public static AminoAcid getAminoAcid(char aa) throws IllegalArgumentException {
         switch (aa) {
             case 'A':
             case 'a':
@@ -330,8 +332,12 @@ public abstract class AminoAcid {
      * @return a matching amino acid using the given matching type and
      * massTolerance
      */
-    public static char getMatchingAminoAcid(char aa, SequenceMatchingParameters sequenceMatchingPreferences) {
-        if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids
+    public static char getMatchingAminoAcid(
+            char aa,
+            SequenceMatchingParameters sequenceMatchingPreferences
+    ) {
+        if (sequenceMatchingPreferences.getSequenceMatchingType()
+                == SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids
                 && aa == 'L') {
             return 'I';
         }
@@ -348,18 +354,22 @@ public abstract class AminoAcid {
      *
      * @return the matching sequence
      */
-    public static String getMatchingSequence(String sequence, SequenceMatchingParameters sequenceMatchingPreferences) {
+    public static String getMatchingSequence(
+            String sequence,
+            SequenceMatchingParameters sequenceMatchingPreferences
+    ) {
 
-        if (sequenceMatchingPreferences.getSequenceMatchingType() == SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids) {
+        if (sequenceMatchingPreferences.getSequenceMatchingType()
+                == SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids) {
 
             char[] aas = sequence.toCharArray();
 
             for (int i = 0; i < aas.length; i++) {
-                
+
                 if (aas[i] == 'L') {
-                    
+
                     aas[i] = 'I';
-                    
+
                 }
             }
 
@@ -391,11 +401,19 @@ public abstract class AminoAcid {
      * @return the amino acid from the standard genetic code
      */
     public static AminoAcid getAminoAcidFromGeneticCode(String geneticCode) {
+
         if (geneticCode.equals("TTT") || geneticCode.equals("TTC")) {
             return F;
-        } else if (geneticCode.equals("TTA") || geneticCode.equals("TTG") || geneticCode.equals("CTT") || geneticCode.equals("CTC") || geneticCode.equals("CTA") || geneticCode.equals("CTG")) {
+        } else if (geneticCode.equals("TTA")
+                || geneticCode.equals("TTG")
+                || geneticCode.equals("CTT")
+                || geneticCode.equals("CTC")
+                || geneticCode.equals("CTA")
+                || geneticCode.equals("CTG")) {
             return L;
-        } else if (geneticCode.equals("ATT") || geneticCode.equals("ATC") || geneticCode.equals("ATA")) {
+        } else if (geneticCode.equals("ATT")
+                || geneticCode.equals("ATC")
+                || geneticCode.equals("ATA")) {
             return I;
         } else if (geneticCode.equals("ATG")) {
             return M;
@@ -409,29 +427,39 @@ public abstract class AminoAcid {
             return T;
         } else if (geneticCode.startsWith("GC")) {
             return A;
-        } else if (geneticCode.equals("TAT") || geneticCode.equals("TAC")) {
+        } else if (geneticCode.equals("TAT")
+                || geneticCode.equals("TAC")) {
             return Y;
-        } else if (geneticCode.equals("CAT") || geneticCode.equals("CAC")) {
+        } else if (geneticCode.equals("CAT")
+                || geneticCode.equals("CAC")) {
             return H;
-        } else if (geneticCode.equals("CAA") || geneticCode.equals("CAG")) {
+        } else if (geneticCode.equals("CAA")
+                || geneticCode.equals("CAG")) {
             return Q;
-        } else if (geneticCode.equals("AAT") || geneticCode.equals("AAC")) {
+        } else if (geneticCode.equals("AAT")
+                || geneticCode.equals("AAC")) {
             return N;
-        } else if (geneticCode.equals("AAA") || geneticCode.equals("AAG")) {
+        } else if (geneticCode.equals("AAA")
+                || geneticCode.equals("AAG")) {
             return K;
-        } else if (geneticCode.equals("GAT") || geneticCode.equals("GAC")) {
+        } else if (geneticCode.equals("GAT")
+                || geneticCode.equals("GAC")) {
             return D;
-        } else if (geneticCode.equals("GAA") || geneticCode.equals("GAG")) {
+        } else if (geneticCode.equals("GAA")
+                || geneticCode.equals("GAG")) {
             return E;
-        } else if (geneticCode.equals("TGT") || geneticCode.equals("TGC")) {
+        } else if (geneticCode.equals("TGT")
+                || geneticCode.equals("TGC")) {
             return C;
         } else if (geneticCode.equals("TGG")) {
             return W;
         } else if (geneticCode.startsWith("CG")) {
             return R;
-        } else if (geneticCode.equals("AGT") || geneticCode.equals("AGC")) {
+        } else if (geneticCode.equals("AGT")
+                || geneticCode.equals("AGC")) {
             return S;
-        } else if (geneticCode.equals("AGA") || geneticCode.equals("AGG")) {
+        } else if (geneticCode.equals("AGA")
+                || geneticCode.equals("AGG")) {
             return R;
         } else if (geneticCode.startsWith("GG")) {
             return G;
@@ -440,6 +468,7 @@ public abstract class AminoAcid {
         } else if (geneticCode.equals("TGA")) {
             return U;
         }
+
         return null;
     }
 
@@ -451,17 +480,26 @@ public abstract class AminoAcid {
      * codes
      */
     protected String[] getStandardGeneticCodeForCombination() {
+
         ArrayList<String> uniqueCodes = new ArrayList<>();
+
         for (char aa : getSubAminoAcids()) {
+
             AminoAcid aminoAcid = AminoAcid.getAminoAcid(aa);
+
             if (!aminoAcid.iscombination()) {
+
                 for (String code : aminoAcid.getStandardGeneticCode()) {
+
                     if (!uniqueCodes.contains(code)) {
                         uniqueCodes.add(code);
                     }
+
                 }
             }
+
         }
+
         return uniqueCodes.toArray(new String[uniqueCodes.size()]);
     }
 
@@ -598,6 +636,7 @@ public abstract class AminoAcid {
      * @return the property of the amino acid
      */
     public double getProperty(Property property) {
+
         switch (property) {
             case mass:
                 return getMonoisotopicMass();
@@ -620,6 +659,7 @@ public abstract class AminoAcid {
             default:
                 throw new UnsupportedOperationException("Property " + property + " not implemented.");
         }
+
     }
 
     /**
@@ -634,7 +674,9 @@ public abstract class AminoAcid {
     /**
      * Convenience array of the amino acid indexes excluding combinations.
      */
-    private static final int[] aaIndexes = {0, -1, 1, 2, 3, 4, 5, 6, 7, -1, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, -1, 21, -1};
+    private static final int[] AA_INDEXES = {
+        0, -1, 1, 2, 3, 4, 5, 6, 7, -1, 8, 9, 10, 11, 12,
+        13, 14, 15, 16, 17, 18, 19, 20, -1, 21, -1};
 
     /**
      * Returns an index for the amino acid excluding combinations. The amino
@@ -647,7 +689,7 @@ public abstract class AminoAcid {
      */
     public static int getUniqueIndex(char aa) {
         int index = ((int) aa) - 65;
-        return aaIndexes[index];
+        return AA_INDEXES[index];
     }
 
     /**
@@ -677,7 +719,7 @@ public abstract class AminoAcid {
         // Accept all capital letters between A and Z
         int aaInt = (int) aa;
         return isAa(aaInt);
-        
+
     }
 
     /**

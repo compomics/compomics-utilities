@@ -1122,13 +1122,17 @@
 <dd>
 <div class="block">Constructor.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html#AMINO_ACID_STRINGS">AMINO_ACID_STRINGS</a></span> - Static variable in class com.compomics.util.experiment.biology.aminoacids.<a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html" title="class in com.compomics.util.experiment.biology.aminoacids">AminoAcid</a></dt>
+<dd>
+<div class="block">The amino acid one letter codes as string array.</div>
+</dd>
 <dt><a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html" title="class in com.compomics.util.experiment.biology.aminoacids"><span class="typeNameLink">AminoAcid</span></a> - Class in <a href="com/compomics/util/experiment/biology/aminoacids/package-summary.html">com.compomics.util.experiment.biology.aminoacids</a></dt>
 <dd>
 <div class="block">Class representing amino acids.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html#AminoAcid--">AminoAcid()</a></span> - Constructor for class com.compomics.util.experiment.biology.aminoacids.<a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html" title="class in com.compomics.util.experiment.biology.aminoacids">AminoAcid</a></dt>
 <dd>
-<div class="block">Empty default constructor</div>
+<div class="block">Empty default constructor.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/generic/AAIdentityFeature.html#aminoAcid">aminoAcid</a></span> - Variable in class com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.<a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/generic/AAIdentityFeature.html" title="class in com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic">AAIdentityFeature</a></dt>
 <dd>
@@ -1201,10 +1205,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidSequence.html#AminoAcidSequence-com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence-">AminoAcidSequence(AminoAcidSequence)</a></span> - Constructor for class com.compomics.util.experiment.biology.aminoacids.sequence.<a href="com/compomics/util/experiment/biology/aminoacids/sequence/AminoAcidSequence.html" title="class in com.compomics.util.experiment.biology.aminoacids.sequence">AminoAcidSequence</a></dt>
 <dd>
 <div class="block">Creates a sequence from another sequence.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html#aminoAcidStrings">aminoAcidStrings</a></span> - Static variable in class com.compomics.util.experiment.biology.aminoacids.<a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html" title="class in com.compomics.util.experiment.biology.aminoacids">AminoAcid</a></dt>
-<dd>
-<div class="block">The amino acid one letter codes as string array.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/biology/variants/AminoAcidSubstitution.html" title="class in com.compomics.util.experiment.biology.variants"><span class="typeNameLink">AminoAcidSubstitution</span></a> - Class in <a href="com/compomics/util/experiment/biology/variants/package-summary.html">com.compomics.util.experiment.biology.variants</a></dt>
 <dd>
@@ -2848,6 +2848,10 @@
 <dd>
 <div class="block">Atoms GUI dialogs.</div>
 </dd>
+<dt><a href="com/compomics/util/gui/enzymes/package-summary.html">com.compomics.util.gui.enzymes</a> - package com.compomics.util.gui.enzymes</dt>
+<dd>
+<div class="block">Dialogs for enzymes.</div>
+</dd>
 <dt><a href="com/compomics/util/gui/error_handlers/package-summary.html">com.compomics.util.gui.error_handlers</a> - package com.compomics.util.gui.error_handlers</dt>
 <dd>
 <div class="block">Help handlers.</div>
@@ -2914,7 +2918,7 @@
 </dd>
 <dt><a href="com/compomics/util/gui/parameters/identification/search/package-summary.html">com.compomics.util.gui.parameters.identification.search</a> - package com.compomics.util.gui.parameters.identification.search</dt>
 <dd>
-<div class="block">Dialogs for searh parameters.</div>
+<div class="block">Dialogs for search parameters.</div>
 </dd>
 <dt><a href="com/compomics/util/gui/parameters/proteowizard/package-summary.html">com.compomics.util.gui.parameters.proteowizard</a> - package com.compomics.util.gui.parameters.proteowizard</dt>
 <dd>
@@ -4780,7 +4784,8 @@
 </dd>
 <dt><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes"><span class="typeNameLink">EnzymeFactory</span></a> - Class in <a href="com/compomics/util/experiment/biology/enzymes/package-summary.html">com.compomics.util.experiment.biology.enzymes</a></dt>
 <dd>
-<div class="block">This factory will provide the implemented enzymes.</div>
+<div class="block">This factory will load enzymes from an XML file and provide them on demand as
+ a standard class.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html#enzymeLoaded-java.lang.String-">enzymeLoaded(String)</a></span> - Method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes">EnzymeFactory</a></dt>
 <dd>
@@ -4830,6 +4835,14 @@
 <dt><a href="com/compomics/cli/enzymes/EnzymesCLIParams.html" title="enum in com.compomics.cli.enzymes"><span class="typeNameLink">EnzymesCLIParams</span></a> - Enum in <a href="com/compomics/cli/enzymes/package-summary.html">com.compomics.cli.enzymes</a></dt>
 <dd>
 <div class="block">Enum class specifying the EnzymesCLI parameters.</div>
+</dd>
+<dt><a href="com/compomics/util/gui/enzymes/EnzymesDialog.html" title="class in com.compomics.util.gui.enzymes"><span class="typeNameLink">EnzymesDialog</span></a> - Class in <a href="com/compomics/util/gui/enzymes/package-summary.html">com.compomics.util.gui.enzymes</a></dt>
+<dd>
+<div class="block">Dialog for the Enzymes.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/gui/enzymes/EnzymesDialog.html#EnzymesDialog-java.awt.Frame-boolean-">EnzymesDialog(Frame, boolean)</a></span> - Constructor for class com.compomics.util.gui.enzymes.<a href="com/compomics/util/gui/enzymes/EnzymesDialog.html" title="class in com.compomics.util.gui.enzymes">EnzymesDialog</a></dt>
+<dd>
+<div class="block">Creates a new EnzymesDialog.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/BinaryArrayImpl.html#equals-java.lang.Object-">equals(Object)</a></span> - Method in class com.compomics.util.<a href="com/compomics/util/BinaryArrayImpl.html" title="class in com.compomics.util">BinaryArrayImpl</a></dt>
 <dd>
@@ -6532,13 +6545,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html#getAminoAcid-java.lang.String-">getAminoAcid(String)</a></span> - Static method in class com.compomics.util.experiment.biology.aminoacids.<a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html" title="class in com.compomics.util.experiment.biology.aminoacids">AminoAcid</a></dt>
 <dd>
-<div class="block">Returns the amino acid corresponding to the letter given, null if not
- implemented.</div>
+<div class="block">Returns the amino acid corresponding to the letter given.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html#getAminoAcid-char-">getAminoAcid(char)</a></span> - Static method in class com.compomics.util.experiment.biology.aminoacids.<a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html" title="class in com.compomics.util.experiment.biology.aminoacids">AminoAcid</a></dt>
 <dd>
-<div class="block">Returns the amino acid corresponding to the single letter code given,
- null if not implemented.</div>
+<div class="block">Returns the amino acid corresponding to the single letter code given.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/generic/AAIdentityFeature.html#getAminoAcid--">getAminoAcid()</a></span> - Method in class com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic.<a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/features/generic/AAIdentityFeature.html" title="class in com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.features.generic">AAIdentityFeature</a></dt>
 <dd>
@@ -7681,10 +7692,6 @@
 <dd>
 <div class="block">Scores the match between the given peptide and spectrum using the given
  score.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html#getDefault--">getDefault()</a></span> - Static method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes">EnzymeFactory</a></dt>
-<dd>
-<div class="block">Returns an instance containing only the default enzymes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html#getDefaultColor-java.lang.String-">getDefaultColor(String)</a></span> - Static method in class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a></dt>
 <dd>
@@ -9530,10 +9537,6 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/variants/amino_acids/Insertion.html#getInsertedAminoAcid--">getInsertedAminoAcid()</a></span> - Method in class com.compomics.util.experiment.biology.variants.amino_acids.<a href="com/compomics/util/experiment/biology/variants/amino_acids/Insertion.html" title="class in com.compomics.util.experiment.biology.variants.amino_acids">Insertion</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html#getInstance--">getInstance()</a></span> - Static method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes">EnzymeFactory</a></dt>
-<dd>
-<div class="block">Static method to get an instance of the factory.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html#getInstance-java.io.File-">getInstance(File)</a></span> - Static method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes">EnzymeFactory</a></dt>
 <dd>
 <div class="block">Static method to get an instance of the factory.</div>
 </dd>
@@ -12088,6 +12091,11 @@
 <dd>
 <div class="block">Returns the occurrence of a character in a string.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/gui/enzymes/EnzymesDialog.html#getOlsAccessionLink-java.lang.String-">getOlsAccessionLink(String)</a></span> - Method in class com.compomics.util.gui.enzymes.<a href="com/compomics/util/gui/enzymes/EnzymesDialog.html" title="class in com.compomics.util.gui.enzymes">EnzymesDialog</a></dt>
+<dd>
+<div class="block">Returns a web link to the given PSI-MS CV term at
+ https://www.ebi.ac.uk/ols/ontologies/ms.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/modification/ModificationsDialog.html#getOlsAccessionLink-java.lang.String-">getOlsAccessionLink(String)</a></span> - Method in class com.compomics.util.gui.modification.<a href="com/compomics/util/gui/modification/ModificationsDialog.html" title="class in com.compomics.util.gui.modification">ModificationsDialog</a></dt>
 <dd>
 <div class="block">Returns a web link to the given PSI-MOD CV term at
@@ -14378,9 +14386,9 @@
 <div class="block">Returns the PhosphoRS sequence probabilities for the modification
  possible locations.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html#getSerializationFile--">getSerializationFile()</a></span> - Static method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes">EnzymeFactory</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html#getSerializationFolder--">getSerializationFolder()</a></span> - Static method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes">EnzymeFactory</a></dt>
 <dd>
-<div class="block">Returns the file where to save the factory.</div>
+<div class="block">Returns the folder where to save the factory.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html#getSerializationFolder--">getSerializationFolder()</a></span> - Static method in class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a></dt>
 <dd>
@@ -14559,6 +14567,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/identification/idfilereaders/XTandemIdfileReader.html#getSoftwareVersions--">getSoftwareVersions()</a></span> - Method in class com.compomics.util.experiment.io.identification.idfilereaders.<a href="com/compomics/util/experiment/io/identification/idfilereaders/XTandemIdfileReader.html" title="class in com.compomics.util.experiment.io.identification.idfilereaders">XTandemIdfileReader</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html#getSortedEnzymeNames--">getSortedEnzymeNames()</a></span> - Method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes">EnzymeFactory</a></dt>
+<dd>
+<div class="block">Get the sorted list of enzyme names.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/FeaturesMap.html#getSortedFeaturesList--">getSortedFeaturesList()</a></span> - Method in class com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration.<a href="com/compomics/util/experiment/identification/peptide_fragmentation/models/ms2pip/features_configuration/FeaturesMap.html" title="class in com.compomics.util.experiment.identification.peptide_fragmentation.models.ms2pip.features_configuration">FeaturesMap</a></dt>
 <dd>
 <div class="block">Returns a sorted list of features categories.</div>
@@ -17570,6 +17582,10 @@
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/atoms/AtomChainDialog.html#isCanceled--">isCanceled()</a></span> - Method in class com.compomics.util.gui.atoms.<a href="com/compomics/util/gui/atoms/AtomChainDialog.html" title="class in com.compomics.util.gui.atoms">AtomChainDialog</a></dt>
 <dd>
 <div class="block">Indicates whether the edition has been canceled by the user.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/gui/enzymes/NewEnzymeDialog.html#isCanceled--">isCanceled()</a></span> - Method in class com.compomics.util.gui.enzymes.<a href="com/compomics/util/gui/enzymes/NewEnzymeDialog.html" title="class in com.compomics.util.gui.enzymes">NewEnzymeDialog</a></dt>
+<dd>
+<div class="block">Indicates whether the dialog was canceled by the user.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/ExportFormatSelectionDialog.html#isCanceled--">isCanceled()</a></span> - Method in class com.compomics.util.gui.<a href="com/compomics/util/gui/ExportFormatSelectionDialog.html" title="class in com.compomics.util.gui">ExportFormatSelectionDialog</a></dt>
 <dd>
@@ -21257,6 +21273,14 @@
 <dd>
 <div class="block">Cache for the multiples of the neutron mass.</div>
 </dd>
+<dt><a href="com/compomics/util/gui/enzymes/NewEnzymeDialog.html" title="class in com.compomics.util.gui.enzymes"><span class="typeNameLink">NewEnzymeDialog</span></a> - Class in <a href="com/compomics/util/gui/enzymes/package-summary.html">com.compomics.util.gui.enzymes</a></dt>
+<dd>
+<div class="block">This dialog allows the user to create a new enzyme.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/gui/enzymes/NewEnzymeDialog.html#NewEnzymeDialog-com.compomics.util.gui.enzymes.EnzymesDialog-">NewEnzymeDialog(EnzymesDialog)</a></span> - Constructor for class com.compomics.util.gui.enzymes.<a href="com/compomics/util/gui/enzymes/NewEnzymeDialog.html" title="class in com.compomics.util.gui.enzymes">NewEnzymeDialog</a></dt>
+<dd>
+<div class="block">Creates a NewEnzymeDialog.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html#newLine-java.lang.String-">newLine(String)</a></span> - Method in class com.compomics.util.io.compression.SectionGzWriter.<a href="com/compomics/util/io/compression/SectionGzWriter/WriterBySection.html" title="class in com.compomics.util.io.compression.SectionGzWriter">WriterBySection</a></dt>
 <dd>
 <div class="block">Appends a new line to the given section.</div>
@@ -24405,6 +24429,10 @@
 <dd>
 <div class="block">Saves the cache content in the database.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html#saveFactory--">saveFactory()</a></span> - Method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes">EnzymeFactory</a></dt>
+<dd>
+<div class="block">Saves the factory in the user folder.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html#saveFactory--">saveFactory()</a></span> - Method in class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a></dt>
 <dd>
 <div class="block">Saves the factory in the user folder.</div>
@@ -25366,6 +25394,10 @@
 <div class="block">Set the advanced settings to the values in the given search parameters
  object or to the default values of the advanced settings are not set for
  a given advocate.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html#setDefaultEnzymes--">setDefaultEnzymes()</a></span> - Static method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes">EnzymeFactory</a></dt>
+<dd>
+<div class="block">Sets the instance to only contain the default enzymes.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/parameters/identification/advanced/IdMatchValidationParameters.html#setDefaultPeptideFDR-double-">setDefaultPeptideFDR(double)</a></span> - Method in class com.compomics.util.parameters.identification.advanced.<a href="com/compomics/util/parameters/identification/advanced/IdMatchValidationParameters.html" title="class in com.compomics.util.parameters.identification.advanced">IdMatchValidationParameters</a></dt>
 <dd>
@@ -28016,9 +28048,9 @@
 <dd>
 <div class="block">Sets the sequence matching type.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html#setSerializationFile-java.lang.String-">setSerializationFile(String)</a></span> - Static method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes">EnzymeFactory</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html#setSerializationFolder-java.lang.String-">setSerializationFolder(String)</a></span> - Static method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes">EnzymeFactory</a></dt>
 <dd>
-<div class="block">Sets the file where to save the factory.</div>
+<div class="block">Sets the folder where to save the factory.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html#setSerializationFolder-java.lang.String-">setSerializationFolder(String)</a></span> - Static method in class com.compomics.util.experiment.biology.modifications.<a href="com/compomics/util/experiment/biology/modifications/ModificationFactory.html" title="class in com.compomics.util.experiment.biology.modifications">ModificationFactory</a></dt>
 <dd>
@@ -29343,11 +29375,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html#subAminoAcidsWithCombination">subAminoAcidsWithCombination</a></span> - Variable in class com.compomics.util.experiment.biology.aminoacids.<a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html" title="class in com.compomics.util.experiment.biology.aminoacids">AminoAcid</a></dt>
 <dd>
-<div class="block">The sub amino acids.</div>
+<div class="block">The sub amino acids with combination.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html#subAminoAcidsWithoutCombination">subAminoAcidsWithoutCombination</a></span> - Variable in class com.compomics.util.experiment.biology.aminoacids.<a href="com/compomics/util/experiment/biology/aminoacids/AminoAcid.html" title="class in com.compomics.util.experiment.biology.aminoacids">AminoAcid</a></dt>
 <dd>
-<div class="block">The sub amino acids.</div>
+<div class="block">The sub amino acids without combination.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/biology/variants/amino_acids/Substitution.html" title="class in com.compomics.util.experiment.biology.variants.amino_acids"><span class="typeNameLink">Substitution</span></a> - Class in <a href="com/compomics/util/experiment/biology/variants/amino_acids/package-summary.html">com.compomics.util.experiment.biology.variants.amino_acids</a></dt>
 <dd>
@@ -30450,6 +30482,10 @@
 <dd>
 <div class="block">Update the Ensembl version for the given species in the local map and in
  the Ensembl versions file.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/gui/enzymes/EnzymesDialog.html#updateEnzymesTable--">updateEnzymesTable()</a></span> - Method in class com.compomics.util.gui.enzymes.<a href="com/compomics/util/gui/enzymes/EnzymesDialog.html" title="class in com.compomics.util.gui.enzymes">EnzymesDialog</a></dt>
+<dd>
+<div class="block">Update the layout of the enzymes table.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/gui/parameters/identification/IdentificationParametersEditionDialog.html#updateGUI--">updateGUI()</a></span> - Method in class com.compomics.util.gui.parameters.identification.<a href="com/compomics/util/gui/parameters/identification/IdentificationParametersEditionDialog.html" title="class in com.compomics.util.gui.parameters.identification">IdentificationParametersEditionDialog</a></dt>
 <dd>
@@ -31822,11 +31858,6 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html#writeMs2File-com.compomics.util.experiment.mass_spectrometry.SpectrumProvider-java.lang.String-java.io.File-com.compomics.util.waiting.WaitingHandler-">writeMs2File(SpectrumProvider, String, File, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileExporter</a></dt>
 <dd>
 <div class="block">Writes the spectra of a file in the ms2 format.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html#writeMsAmandaEnzymeFile-java.io.File-">writeMsAmandaEnzymeFile(File)</a></span> - Method in class com.compomics.util.experiment.biology.enzymes.<a href="com/compomics/util/experiment/biology/enzymes/EnzymeFactory.html" title="class in com.compomics.util.experiment.biology.enzymes">EnzymeFactory</a></dt>
-<dd>
-<div class="block">Creates the MS Amanda enzyme settings file corresponding to the enzymes
- loaded in the factory to the given file.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html#writeMsFile-com.compomics.util.experiment.mass_spectrometry.SpectrumProvider-java.lang.String-java.io.File-com.compomics.util.experiment.io.mass_spectrometry.MsFileExporter.Format-com.compomics.util.parameters.identification.search.SearchParameters-com.compomics.util.waiting.WaitingHandler-">writeMsFile(SpectrumProvider, String, File, MsFileExporter.Format, SearchParameters, WaitingHandler)</a></span> - Static method in class com.compomics.util.experiment.io.mass_spectrometry.<a href="com/compomics/util/experiment/io/mass_spectrometry/MsFileExporter.html" title="class in com.compomics.util.experiment.io.mass_spectrometry">MsFileExporter</a></dt>
 <dd>

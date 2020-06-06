@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.io.identification.idfilereaders;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.identification.Advocate;
@@ -12,7 +11,6 @@ import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.parameters.identification.tool_specific.DirecTagParameters;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;

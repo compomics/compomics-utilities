@@ -217,7 +217,7 @@ public class FastaParameters extends DbObject {
         String fastaHeader;
         int i = 0, offset = 0, offSetIncrease = 100;
 
-        while ((fastaHeader = headerIterator.getNextHeader()) != null) {
+        while ((fastaHeader = headerIterator.getNextHeader(waitingHandler)) != null) {
 
             if (i > offset && i < offset + 10) {
 

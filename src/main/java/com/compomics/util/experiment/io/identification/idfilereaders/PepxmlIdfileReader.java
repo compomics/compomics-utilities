@@ -12,7 +12,6 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;

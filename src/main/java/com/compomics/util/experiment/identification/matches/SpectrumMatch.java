@@ -8,6 +8,7 @@ import com.compomics.util.io.IoUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
@@ -215,6 +216,31 @@ public class SpectrumMatch extends IdentificationMatch {
         readDBMode();
 
         return key;
+    }
+    
+    /**
+     * Returns the advocates supporting hits for this spectrum.
+     * 
+     * @return The advocates supporting hits for this spectrum.
+     */
+    public HashSet<Integer> getAdvocates() {
+        
+        HashSet<Integer> result = new HashSet<>(0);
+        
+        if (peptideAssumptionsMap != null) {
+        
+        result.addAll(peptideAssumptionsMap.keySet());
+                
+                }
+        
+        if (tagAssumptionsMap != null) {
+        
+        result.addAll(tagAssumptionsMap.keySet());
+                
+                }
+        
+        return result;
+        
     }
 
     /**

@@ -5,6 +5,7 @@ import com.compomics.software.cli.CommandParameter;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
+import com.compomics.util.pride.CvTerm;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import org.apache.commons.cli.CommandLine;
  * This class parses the parameters from an EnzymeCLI.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class EnzymesCLIInputBean {
 
@@ -25,108 +27,188 @@ public class EnzymesCLIInputBean {
      * @return true if the startup was valid
      */
     public static boolean isValidStartup(CommandLine aLine) {
+
         if (aLine.getOptions().length == 0) {
             return false;
         }
+
         EnzymeFactory enzymeFactory = null;
+
         if (aLine.hasOption(EnzymesCLIParams.IN.id)) {
+
             String arg = aLine.getOptionValue(EnzymesCLIParams.IN.id);
+
             if (arg.equals("")) {
-                System.out.println(System.getProperty("line.separator") + "No input file specified!" + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator")
+                        + "No input file specified!"
+                        + System.getProperty("line.separator"));
                 return false;
             }
+
             File fileIn = new File(arg);
+
             if (!fileIn.exists()) {
-                System.out.println(System.getProperty("line.separator") + "File " + fileIn + " not found." + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator")
+                        + "File " + fileIn + " not found."
+                        + System.getProperty("line.separator"));
                 return false;
             }
+
             try {
                 enzymeFactory = EnzymeFactory.loadFromFile(fileIn);
             } catch (Exception e) {
-                System.out.println(System.getProperty("line.separator") + "An error occurred while parsing " + fileIn + "." + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator")
+                        + "An error occurred while parsing " + fileIn + "."
+                        + System.getProperty("line.separator"));
                 e.printStackTrace();
                 return false;
             }
         }
+
         if (aLine.hasOption(EnzymesCLIParams.LIST.id)) {
             return true;
         }
+
         if (aLine.hasOption(EnzymesCLIParams.RM.id)) {
+
             String arg = aLine.getOptionValue(EnzymesCLIParams.RM.id);
             Enzyme enzyme = enzymeFactory.getEnzyme(arg);
+
             if (enzyme == null) {
                 String file = aLine.getOptionValue(EnzymesCLIParams.IN.id);
-                System.out.println(System.getProperty("line.separator") + "Enzyme " + arg + " not found in " + file + "." + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator")
+                        + "Enzyme " + arg + " not found in " + file + "."
+                        + System.getProperty("line.separator"));
                 return false;
             }
         }
+
         boolean name = aLine.hasOption(EnzymesCLIParams.NAME.id);
         boolean attributes = false;
         char[] aminoAcids = AminoAcid.getUniqueAminoAcids();
+
         ArrayList<String> possibilities = new ArrayList<>(aminoAcids.length);
+
         for (char aa : aminoAcids) {
             possibilities.add(aa + "");
         }
+
         if (aLine.hasOption(EnzymesCLIParams.RESTRICTION_BEFORE.id)) {
+
             if (!name) {
-                System.out.println(System.getProperty("line.separator") + "No name provided for the enzyme to add." + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator")
+                        + "No name provided for the enzyme to add."
+                        + System.getProperty("line.separator"));
                 return false;
             }
+
             String arg = aLine.getOptionValue(EnzymesCLIParams.RESTRICTION_BEFORE.id);
             ArrayList<String> aaInput = CommandLineUtils.splitInput(arg);
+
             for (String aa : aaInput) {
                 if (!CommandParameter.isInList(EnzymesCLIParams.RESTRICTION_BEFORE.id, aa, aaInput)) {
                     return false;
                 }
             }
+
             attributes = true;
         }
+
         if (aLine.hasOption(EnzymesCLIParams.RESTRICTION_AFTER.id)) {
+
             if (!name) {
-                System.out.println(System.getProperty("line.separator") + "No name provided for the enzyme to add." + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator")
+                        + "No name provided for the enzyme to add."
+                        + System.getProperty("line.separator"));
                 return false;
             }
+
             String arg = aLine.getOptionValue(EnzymesCLIParams.RESTRICTION_AFTER.id);
             ArrayList<String> aaInput = CommandLineUtils.splitInput(arg);
+
             for (String aa : aaInput) {
                 if (!CommandParameter.isInList(EnzymesCLIParams.RESTRICTION_AFTER.id, aa, aaInput)) {
                     return false;
                 }
             }
+
             attributes = true;
         }
+
         if (aLine.hasOption(EnzymesCLIParams.CLEAVE_BEFORE.id)) {
+
             if (!name) {
-                System.out.println(System.getProperty("line.separator") + "No name provided for the enzyme to add." + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator")
+                        + "No name provided for the enzyme to add."
+                        + System.getProperty("line.separator"));
                 return false;
             }
+
             String arg = aLine.getOptionValue(EnzymesCLIParams.CLEAVE_BEFORE.id);
             ArrayList<String> aaInput = CommandLineUtils.splitInput(arg);
+
             for (String aa : aaInput) {
                 if (!CommandParameter.isInList(EnzymesCLIParams.CLEAVE_BEFORE.id, aa, aaInput)) {
                     return false;
                 }
             }
+
             attributes = true;
         }
+
         if (aLine.hasOption(EnzymesCLIParams.CLEAVE_AFTER.id)) {
+
             if (!name) {
-                System.out.println(System.getProperty("line.separator") + "No name provided for the enzyme to add." + System.getProperty("line.separator"));
+                System.out.println(System.getProperty("line.separator")
+                        + "No name provided for the enzyme to add."
+                        + System.getProperty("line.separator"));
                 return false;
             }
+
             String arg = aLine.getOptionValue(EnzymesCLIParams.CLEAVE_AFTER.id);
             ArrayList<String> aaInput = CommandLineUtils.splitInput(arg);
+
             for (String aa : aaInput) {
                 if (!CommandParameter.isInList(EnzymesCLIParams.CLEAVE_AFTER.id, aa, aaInput)) {
                     return false;
                 }
             }
+
             attributes = true;
         }
+
+        if (aLine.hasOption(EnzymesCLIParams.CV_TERM.id)) {
+
+            // should be something like: PSI-MS, MS:1001251, Trypsin
+            String arg = aLine.getOptionValue(EnzymesCLIParams.CV_TERM.id);
+
+            // parse the cv term
+            String[] elements = arg.split(",");
+
+            if (elements.length != 3) {
+                System.out.println(System.getProperty("line.separator")
+                        + "Format of CV term is incorrect. Should be something like \"PSI-MS, MS:1001251, Trypsin\"."
+                        + System.getProperty("line.separator"));
+                return false;
+            }
+
+            try {
+                new CvTerm(elements[0].trim(), elements[1].trim(), elements[2].trim(), null);
+            } catch (Exception e) {
+                System.out.println(System.getProperty("line.separator")
+                        + "Format of CV term is incorrect. Should be something like \"PSI-MS, MS:1001251, Trypsin\"."
+                        + System.getProperty("line.separator"));
+                return false;
+            }
+        }
+
         if (name && !attributes) {
-            System.out.println(System.getProperty("line.separator") + "No cleavage properties provided for the enzyme to add." + System.getProperty("line.separator"));
+            System.out.println(System.getProperty("line.separator")
+                    + "No cleavage properties provided for the enzyme to add."
+                    + System.getProperty("line.separator"));
             return false;
         }
+
         return true;
     }
 
@@ -185,35 +267,59 @@ public class EnzymesCLIInputBean {
         }
 
         if (aLine.hasOption(EnzymesCLIParams.NAME.id)) {
+
             String enzymeName = aLine.getOptionValue(EnzymesCLIParams.NAME.id);
             enzymeToAdd = new Enzyme(enzymeName);
+
             if (aLine.hasOption(EnzymesCLIParams.RESTRICTION_BEFORE.id)) {
+
                 String arg = aLine.getOptionValue(EnzymesCLIParams.RESTRICTION_BEFORE.id);
                 ArrayList<String> aaInput = CommandLineUtils.splitInput(arg);
+
                 for (String aa : aaInput) {
                     enzymeToAdd.addRestrictionBefore(aa.charAt(0));
                 }
             }
+
             if (aLine.hasOption(EnzymesCLIParams.RESTRICTION_AFTER.id)) {
+
                 String arg = aLine.getOptionValue(EnzymesCLIParams.RESTRICTION_AFTER.id);
                 ArrayList<String> aaInput = CommandLineUtils.splitInput(arg);
+
                 for (String aa : aaInput) {
                     enzymeToAdd.addRestrictionAfter(aa.charAt(0));
                 }
             }
+
             if (aLine.hasOption(EnzymesCLIParams.CLEAVE_BEFORE.id)) {
+
                 String arg = aLine.getOptionValue(EnzymesCLIParams.CLEAVE_BEFORE.id);
                 ArrayList<String> aaInput = CommandLineUtils.splitInput(arg);
+
                 for (String aa : aaInput) {
                     enzymeToAdd.addAminoAcidBefore(aa.charAt(0));
                 }
             }
+
             if (aLine.hasOption(EnzymesCLIParams.CLEAVE_AFTER.id)) {
+
                 String arg = aLine.getOptionValue(EnzymesCLIParams.CLEAVE_AFTER.id);
                 ArrayList<String> aaInput = CommandLineUtils.splitInput(arg);
+
                 for (String aa : aaInput) {
                     enzymeToAdd.addAminoAcidAfter(aa.charAt(0));
                 }
+            }
+
+            if (aLine.hasOption(EnzymesCLIParams.CV_TERM.id)) {
+
+                // should be something like: PSI-MS, MS:1001251, Trypsin
+                String arg = aLine.getOptionValue(EnzymesCLIParams.CV_TERM.id);
+
+                // parse the cv term
+                String[] elements = arg.split(",");
+                CvTerm cvTerm = new CvTerm(elements[0].trim(), elements[1].trim(), elements[2].trim(), null);
+                enzymeToAdd.setCvTerm(cvTerm);
             }
         }
     }

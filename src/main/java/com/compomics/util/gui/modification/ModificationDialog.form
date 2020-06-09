@@ -334,7 +334,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="neutralLossesAndReportIonsTabbedPane" pref="166" max="32767" attributes="0"/>
+                      <Component id="neutralLossesAndReportIonsTabbedPane" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -728,7 +728,7 @@
                                                   <Component id="psiModNameJTextField" max="32767" attributes="0"/>
                                               </Group>
                                           </Group>
-                                          <Component id="unimodLinkLabel1" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="psiModLinkLabel" alignment="1" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -752,21 +752,21 @@
                                   <Component id="psiModNameJTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                              <Component id="unimodLinkLabel1" min="-2" max="-2" attributes="0"/>
+                              <Component id="psiModLinkLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JLabel" name="unimodLinkLabel1">
+                    <Component class="javax.swing.JLabel" name="psiModLinkLabel">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="&lt;html&gt;&lt;a href&gt;See: ebi.ac.uk/ols/ontologies/mod&lt;/a&gt;&lt;/html&gt;"/>
                       </Properties>
                       <Events>
-                        <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="unimodLinkLabel1MouseEntered"/>
-                        <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="unimodLinkLabel1MouseExited"/>
-                        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="unimodLinkLabel1MouseReleased"/>
+                        <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="psiModLinkLabelMouseEntered"/>
+                        <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="psiModLinkLabelMouseExited"/>
+                        <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="psiModLinkLabelMouseReleased"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JTextField" name="psiModAccessionJTextField">

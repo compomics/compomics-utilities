@@ -632,7 +632,7 @@ public class ModificationDialog extends javax.swing.JDialog {
         unimodNameLabel = new javax.swing.JLabel();
         unimodAccessionLabel = new javax.swing.JLabel();
         psiModPanel = new javax.swing.JPanel();
-        unimodLinkLabel1 = new javax.swing.JLabel();
+        psiModLinkLabel = new javax.swing.JLabel();
         psiModAccessionJTextField = new javax.swing.JTextField();
         psiModLabel = new javax.swing.JLabel();
         psiModNameJTextField = new javax.swing.JTextField();
@@ -930,7 +930,7 @@ public class ModificationDialog extends javax.swing.JDialog {
             reporterIonsAndNeutralLossesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(reporterIonsAndNeutralLossesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(neutralLossesAndReportIonsTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
+                .addComponent(neutralLossesAndReportIonsTabbedPane))
         );
 
         unimodMappingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Unimod and PSI-MOD Mapping"));
@@ -1023,16 +1023,16 @@ public class ModificationDialog extends javax.swing.JDialog {
 
         psiModPanel.setOpaque(false);
 
-        unimodLinkLabel1.setText("<html><a href>See: ebi.ac.uk/ols/ontologies/mod</a></html>");
-        unimodLinkLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        psiModLinkLabel.setText("<html><a href>See: ebi.ac.uk/ols/ontologies/mod</a></html>");
+        psiModLinkLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                unimodLinkLabel1MouseEntered(evt);
+                psiModLinkLabelMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                unimodLinkLabel1MouseExited(evt);
+                psiModLinkLabelMouseExited(evt);
             }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
-                unimodLinkLabel1MouseReleased(evt);
+                psiModLinkLabelMouseReleased(evt);
             }
         });
 
@@ -1080,7 +1080,7 @@ public class ModificationDialog extends javax.swing.JDialog {
                                 .addGroup(psiModPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(psiModAccessionJTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                                     .addComponent(psiModNameJTextField)))
-                            .addComponent(unimodLinkLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(psiModLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         psiModPanelLayout.setVerticalGroup(
@@ -1097,7 +1097,7 @@ public class ModificationDialog extends javax.swing.JDialog {
                     .addComponent(psiModNameLabel)
                     .addComponent(psiModNameJTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
-                .addComponent(unimodLinkLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(psiModLinkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -1625,29 +1625,29 @@ public class ModificationDialog extends javax.swing.JDialog {
      *
      * @param evt
      */
-    private void unimodLinkLabel1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unimodLinkLabel1MouseEntered
+    private void psiModLinkLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_psiModLinkLabelMouseEntered
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    }//GEN-LAST:event_unimodLinkLabel1MouseEntered
+    }//GEN-LAST:event_psiModLinkLabelMouseEntered
 
     /**
      * Change the cursor back to the default cursor.
      *
      * @param evt
      */
-    private void unimodLinkLabel1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unimodLinkLabel1MouseExited
+    private void psiModLinkLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_psiModLinkLabelMouseExited
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_unimodLinkLabel1MouseExited
+    }//GEN-LAST:event_psiModLinkLabelMouseExited
 
     /**
      * Open the OLS PSI-MOD web page.
      *
      * @param evt
      */
-    private void unimodLinkLabel1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_unimodLinkLabel1MouseReleased
+    private void psiModLinkLabelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_psiModLinkLabelMouseReleased
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
         BareBonesBrowserLaunch.openURL("https://www.ebi.ac.uk/ols/ontologies/mod");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    }//GEN-LAST:event_unimodLinkLabel1MouseReleased
+    }//GEN-LAST:event_psiModLinkLabelMouseReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNeutralLoss;
@@ -1677,6 +1677,7 @@ public class ModificationDialog extends javax.swing.JDialog {
     private javax.swing.JTextField psiModAccessionJTextField;
     private javax.swing.JLabel psiModAccessionLabel;
     private javax.swing.JLabel psiModLabel;
+    private javax.swing.JLabel psiModLinkLabel;
     private javax.swing.JTextField psiModNameJTextField;
     private javax.swing.JLabel psiModNameLabel;
     private javax.swing.JPanel psiModPanel;
@@ -1692,7 +1693,6 @@ public class ModificationDialog extends javax.swing.JDialog {
     private javax.swing.JLabel unimodAccessionLabel;
     private javax.swing.JLabel unimodLabel;
     private javax.swing.JLabel unimodLinkLabel;
-    private javax.swing.JLabel unimodLinkLabel1;
     private javax.swing.JPanel unimodMappingPanel;
     private javax.swing.JTextField unimodNameJTextField;
     private javax.swing.JLabel unimodNameLabel;

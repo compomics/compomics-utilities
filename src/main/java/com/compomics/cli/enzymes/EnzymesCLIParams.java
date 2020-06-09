@@ -7,6 +7,7 @@ import org.apache.commons.cli.Options;
  * Enum class specifying the EnzymesCLI parameters.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public enum EnzymesCLIParams {
 
@@ -18,7 +19,8 @@ public enum EnzymesCLIParams {
     RESTRICTION_BEFORE("restriction_before", "Comma separated list of amino acids forbidden before the cleavage site of the enzyme to add. e.g. \"S,T\"", false, true),
     RESTRICTION_AFTER("restriction_after", "Comma separated list of amino acids forbidden after the cleavage site of the enzyme to add. e.g. \"S,T\"", false, true),
     CLEAVE_BEFORE("cleave_before", "Comma separated list of amino acids present before the cleavage site of the enzyme to add. e.g. \"R,K\"", false, true),
-    CLEAVE_AFTER("cleave_after", "Comma separated list of amino acids present afterthe cleavage site of the enzyme to add. e.g. \"R,K\"", false, true),;
+    CLEAVE_AFTER("cleave_after", "Comma separated list of amino acids present afterthe cleavage site of the enzyme to add. e.g. \"R,K\"", false, true),
+    CV_TERM("cv_term", "The PSI-MS CV term as a comma separated list, e.g. \"PSI-MS, MS:1001251, Trypsin\"", false, true);
 
     /**
      * Short Id for the CLI parameter.
@@ -75,7 +77,7 @@ public enum EnzymesCLIParams {
 
         String output = "";
 
-        output += "Input-Output:\n\n";
+        output += "Input and Output:\n\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IN.id) + " " + IN.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, OUT.id) + " " + OUT.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, LIST.id) + " " + LIST.description + "\n";
@@ -89,6 +91,7 @@ public enum EnzymesCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, CLEAVE_AFTER.id) + " " + CLEAVE_AFTER.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, RESTRICTION_BEFORE.id) + " " + RESTRICTION_BEFORE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, RESTRICTION_AFTER.id) + " " + RESTRICTION_AFTER.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, CV_TERM.id) + " " + CV_TERM.description + "\n";
 
         return output;
     }

@@ -11,7 +11,7 @@ import java.io.FileReader;
 import java.util.concurrent.Semaphore;
 
 /**
- * Iterator for a fasta file.
+ * Iterator for a FASTA file.
  *
  * @author Marc Vaudel
  */
@@ -26,7 +26,7 @@ public class FastaIterator implements ProteinIterator {
     }
 
     /**
-     * Mutex for the buffering of the fasta file.
+     * Mutex for the buffering of the FASTA file.
      */
     private final Semaphore bufferingMutex = new Semaphore(1);
     /**
@@ -34,7 +34,7 @@ public class FastaIterator implements ProteinIterator {
      */
     public static final char forbiddenCharacter = '*';
     /**
-     * Buffered reader for the fasta file.
+     * Buffered reader for the FASTA file.
      */
     private final BufferedReader br;
     /**
@@ -60,7 +60,7 @@ public class FastaIterator implements ProteinIterator {
     /**
      * Constructor without sanity check.
      *
-     * @param fastaFile the fasta file
+     * @param fastaFile the FASTA file
      *
      * @throws FileNotFoundException exception thrown if the file could not be
      * found
@@ -74,7 +74,7 @@ public class FastaIterator implements ProteinIterator {
     /**
      * Constructor.
      *
-     * @param fastaFile the fasta file
+     * @param fastaFile the FASTA file
      * @param sanityCheck boolean indicating whether sanity check should be
      * conducted
      *
@@ -87,8 +87,6 @@ public class FastaIterator implements ProteinIterator {
         this.sanityCheck = sanityCheck;
 
     }
-    
-    
 
     @Override
     public Protein getNextProtein() {
@@ -106,7 +104,7 @@ public class FastaIterator implements ProteinIterator {
             Header header = nextHeader;
             StringBuilder sequenceBuilder = new StringBuilder();
             String line;
-            
+
             while ((line = br.readLine()) != null) {
                 line = line.trim();
 
@@ -139,7 +137,7 @@ public class FastaIterator implements ProteinIterator {
             }
 
             bufferingMutex.release();
-            
+
             String sequence = sequenceBuilder.toString();
             if (sanityCheck) {
 
@@ -147,13 +145,12 @@ public class FastaIterator implements ProteinIterator {
 
             }
 
-            
             if (sequence.length() > 0) {
-                
+
                 if (header == null) {
                     throw new RuntimeException("No header information found in the fasta file.");
                 }
-                
+
                 lastHeader = header;
                 return new Protein(header.getAccessionOrRest(), sequence);
 
@@ -163,7 +160,7 @@ public class FastaIterator implements ProteinIterator {
 
             } else {
 
-                throw new IllegalArgumentException("No sequence found for protein accession " + header.getAccessionOrRest()+ ".");
+                throw new IllegalArgumentException("No sequence found for protein accession " + header.getAccessionOrRest() + ".");
 
             }
 

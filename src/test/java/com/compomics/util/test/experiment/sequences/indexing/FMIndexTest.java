@@ -1238,7 +1238,6 @@ public class FMIndexTest extends TestCase {
 
         // TESTMRITESTCKTESTK with two fixed modification at peptide n-terminus and c-terminus
         aminoAcidSequence = new AminoAcidSequence("TEST");
-        Assert.assertTrue(ptmFactory.getModification("Amidation of peptide C-term") != null);
         nTermGap = ptmFactory.getModification("Acetylation of peptide N-term").getMass() + AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
         cTermGap = ptmFactory.getModification("Amidation of peptide C-term").getMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidSequence, cTermGap);
@@ -1432,10 +1431,10 @@ public class FMIndexTest extends TestCase {
         // TESTMRITESTCKTESTKMELTSESTE with one fixed modifications at protein c-terminus
         aminoAcidSequence = new AminoAcidSequence("LTSE");
         nTermGap = AminoAcid.E.getMonoisotopicMass();
-        cTermGap = ptmFactory.getModification("Amidation of the protein C-term").getMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = ptmFactory.getModification("Amidation of protein C-term").getMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidSequence, cTermGap);
         modificationParameters = new ModificationParameters();
-        modificationParameters.addFixedModification(ptmFactory.getModification("Amidation of the protein C-term"));
+        modificationParameters.addFixedModification(ptmFactory.getModification("Amidation of protein C-term"));
         searchParameters.setModificationParameters(modificationParameters);
         fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
 
@@ -1450,10 +1449,10 @@ public class FMIndexTest extends TestCase {
         // TESTMRITESTCKTESTKMELTSESTE with several modifications
         aminoAcidSequence = new AminoAcidSequence("LTSE");
         nTermGap = ptmFactory.getModification("Oxidation of M").getMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
-        cTermGap = ptmFactory.getModification("Amidation of the protein C-term").getMass() + ptmFactory.getModification("HexNAc of T").getMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = ptmFactory.getModification("Amidation of protein C-term").getMass() + ptmFactory.getModification("HexNAc of T").getMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidSequence, cTermGap);
         modificationParameters = new ModificationParameters();
-        modificationParameters.addFixedModification(ptmFactory.getModification("Amidation of the protein C-term"));
+        modificationParameters.addFixedModification(ptmFactory.getModification("Amidation of protein C-term"));
         modificationParameters.addFixedModification(ptmFactory.getModification("Oxidation of M"));
         modificationParameters.addVariableModification(ptmFactory.getModification("HexNAc of T"));
         searchParameters.setModificationParameters(modificationParameters);
@@ -1473,10 +1472,10 @@ public class FMIndexTest extends TestCase {
         // TESTMRITESTCKTESTKMELTSESTE with several modifictations
         aminoAcidSequence = new AminoAcidSequence("ELTS");
         nTermGap = ptmFactory.getModification("Oxidation of M").getMass() + AminoAcid.M.getMonoisotopicMass() + 42.01 + AminoAcid.K.getMonoisotopicMass();
-        cTermGap = ptmFactory.getModification("Amidation of the protein C-term").getMass() + ptmFactory.getModification("HexNAc of T").getMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + 2 * AminoAcid.E.getMonoisotopicMass();
+        cTermGap = ptmFactory.getModification("Amidation of protein C-term").getMass() + ptmFactory.getModification("HexNAc of T").getMass() + AminoAcid.S.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + 2 * AminoAcid.E.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidSequence, cTermGap);
         modificationParameters = new ModificationParameters();
-        modificationParameters.addFixedModification(ptmFactory.getModification("Amidation of the protein C-term"));
+        modificationParameters.addFixedModification(ptmFactory.getModification("Amidation of protein C-term"));
         modificationParameters.addFixedModification(ptmFactory.getModification("Oxidation of M"));
         modificationParameters.addVariableModification(ptmFactory.getModification("HexNAc of T"));
         modificationParameters.addVariableModification(ptmFactory.getModification("Acetylation of K"));
@@ -1994,11 +1993,11 @@ public class FMIndexTest extends TestCase {
                 AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() +
                 AminoAcid.F.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         nTermGap += AminoAcid.D.getMonoisotopicMass() + AminoAcid.D.getMonoisotopicMass();
-        cTermGap = ptmFactory.getModification("Amidation of the protein C-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.D.getMonoisotopicMass() + 
+        cTermGap = ptmFactory.getModification("Amidation of protein C-term").getMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.D.getMonoisotopicMass() + 
                 AminoAcid.C.getMonoisotopicMass() + AminoAcid.Y.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidSequence, cTermGap);
         modificationParameters = new ModificationParameters();
-        modificationParameters.addFixedModification(ptmFactory.getModification("Amidation of the protein C-term")); // -0.98
+        modificationParameters.addFixedModification(ptmFactory.getModification("Amidation of protein C-term")); // -0.98
         searchParameters.setModificationParameters(modificationParameters);
         fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
         peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
@@ -2017,11 +2016,11 @@ public class FMIndexTest extends TestCase {
                 AminoAcid.K.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.C.getMonoisotopicMass() +
                 AminoAcid.F.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
         nTermGap += AminoAcid.D.getMonoisotopicMass() + AminoAcid.D.getMonoisotopicMass();
-        cTermGap = ptmFactory.getModification("Amidation of the protein C-term").getMass()+ AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.D.getMonoisotopicMass() + 
+        cTermGap = ptmFactory.getModification("Amidation of protein C-term").getMass()+ AminoAcid.T.getMonoisotopicMass() + AminoAcid.A.getMonoisotopicMass() + AminoAcid.D.getMonoisotopicMass() + 
                 AminoAcid.C.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidSequence, cTermGap);
         modificationParameters = new ModificationParameters();
-        modificationParameters.addFixedModification(ptmFactory.getModification("Amidation of the protein C-term")); // -0.98
+        modificationParameters.addFixedModification(ptmFactory.getModification("Amidation of protein C-term")); // -0.98
         searchParameters.setModificationParameters(modificationParameters);
         fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
         peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);

@@ -29,4 +29,32 @@ public class Charge {
 
         return value > 0 ? value + "+" : value + "-";
     }
+
+    /**
+     *
+     * Returns the charge as a string of + or -. One for each charge. A charge
+     * of +1 however returns the empty string.
+     *
+     * @param value the value of the charge
+     *
+     * @return the charge as a string of +
+     */
+    public static String getChargeAsFormattedString(int value) {
+
+        if (value == 1) {
+            return "";
+        }
+
+        String temp = "";
+
+        for (int i = 0; i < Math.abs(value); i++) {
+            if (value > 0) {
+                temp += "+";
+            } else {
+                temp += "-";
+            }
+        }
+
+        return temp;
+    }
 }

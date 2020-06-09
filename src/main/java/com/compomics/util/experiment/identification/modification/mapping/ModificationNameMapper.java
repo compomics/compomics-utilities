@@ -54,12 +54,13 @@ public class ModificationNameMapper {
     ) {
 
         switch (idfileReader.getClass().getSimpleName()) {
-            case "MascotIdidfileReader":
+            case "MascotIdfileReader":
             case "XTandemIdfileReader":
             case "MsAmandaIdfileReader":
             case "MzIdentMLIdfileReader":
             case "PepxmlIdfileReader":
             case "TideIdfileReader":
+            case "CossIdfileReader":
                 return getPossibleModificationNamesByMass(
                         peptide,
                         modificationMatch,
@@ -279,7 +280,7 @@ public class ModificationNameMapper {
 
     /**
      * Returns the possible Andromeda modification names.
-     * 
+     *
      * @param peptide the peptide
      * @param modificationMatch the modification match
      * @param searchParameters the search parameters

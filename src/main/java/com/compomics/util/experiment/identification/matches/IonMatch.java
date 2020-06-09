@@ -357,7 +357,7 @@ public class IonMatch extends ExperimentObject {
                 }
 
                 // add charge
-                result.append(Charge.toString(charge));
+                result.append(Charge.getChargeAsFormattedString(charge));
 
                 // add any neutral losses
                 if (html) {
@@ -424,7 +424,7 @@ public class IonMatch extends ExperimentObject {
                 result.append(ion.getSubTypeAsString()).append("-");
 
                 // add charge
-                result.append(Charge.toString(charge));
+                result.append(Charge.getChargeAsFormattedString(charge));
 
                 // add any neutral losses
                 String neutralLoss = ion.getNeutralLossesAsString();

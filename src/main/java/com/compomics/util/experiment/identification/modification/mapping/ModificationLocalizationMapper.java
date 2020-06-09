@@ -17,6 +17,7 @@ import java.util.HashMap;
  * Function attempting to map modification localization based on their type.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ModificationLocalizationMapper {
 
@@ -48,12 +49,13 @@ public class ModificationLocalizationMapper {
 
         SearchParameters searchParameters = identificationParameters.getSearchParameters();
         ModificationParameters modificationParameters = searchParameters.getModificationParameters();
-
+        ModificationMatch[] modificationMatches = peptide.getVariableModifications();
         int peptideLength = peptide.getSequence().length();
 
-        // If a terminal modification cannot be elsewhere lock the terminus
+        ////////////////////////////////
+        // check cterm modifications
+        ////////////////////////////////
         ModificationMatch nTermModification = null;
-        ModificationMatch[] modificationMatches = peptide.getVariableModifications();
 
         for (ModificationMatch modMatch : modificationMatches) {
 
@@ -63,11 +65,12 @@ public class ModificationLocalizationMapper {
                     searchParameters,
                     modificationProvider
             );
+
             int modSite = modMatch.getSite();
 
             if (modSite == 1) {
 
-                ArrayList<String> expectedNamesAtSite = expectedNames.get(modSite);
+                ArrayList<String> expectedNamesAtSite = expectedNames.get(0);
 
                 if (expectedNamesAtSite != null) {
 
@@ -77,7 +80,8 @@ public class ModificationLocalizationMapper {
 
                         Modification modification = modificationProvider.getModification(modName);
 
-                        if (Math.abs(modification.getMass() - refMass) < searchParameters.getFragmentIonAccuracyInDaltons(MASS_PER_AA * peptideLength)) {
+                        if (Math.abs(modification.getMass() - refMass)
+                                < searchParameters.getFragmentIonAccuracyInDaltons(MASS_PER_AA * peptideLength)) {
 
                             filteredNamesAtSite.add(modName);
 
@@ -98,7 +102,8 @@ public class ModificationLocalizationMapper {
 
                                     Modification tempModification = modificationProvider.getModification(tempName);
 
-                                    if (tempModification.getMass() == modification.getMass() && !tempModification.getModificationType().isNTerm()) {
+                                    if (tempModification.getMass() == modification.getMass()
+                                            && !tempModification.getModificationType().isNTerm()) {
 
                                         otherPossibleMod = true;
                                         break;
@@ -111,6 +116,7 @@ public class ModificationLocalizationMapper {
 
                                 nTermModification = modMatch;
                                 modMatch.setModification(modName);
+                                modMatch.setSite(0);
                                 break;
 
                             }
@@ -126,6 +132,9 @@ public class ModificationLocalizationMapper {
             }
         }
 
+        ////////////////////////////////
+        // check cterm modifications
+        ////////////////////////////////
         ModificationMatch cTermModification = null;
 
         for (ModificationMatch modMatch : peptide.getVariableModifications()) {
@@ -138,11 +147,12 @@ public class ModificationLocalizationMapper {
                         searchParameters,
                         modificationProvider
                 );
+
                 int modSite = modMatch.getSite();
 
                 if (modSite == peptideLength) {
 
-                    ArrayList<String> expectedNamesAtSite = expectedNames.get(modSite);
+                    ArrayList<String> expectedNamesAtSite = expectedNames.get(peptideLength + 1);
 
                     if (expectedNamesAtSite != null) {
 
@@ -152,7 +162,8 @@ public class ModificationLocalizationMapper {
 
                             Modification modification = modificationProvider.getModification(modName);
 
-                            if (Math.abs(modification.getMass() - refMass) < searchParameters.getFragmentIonAccuracyInDaltons(MASS_PER_AA * peptideLength)) {
+                            if (Math.abs(modification.getMass() - refMass)
+                                    < searchParameters.getFragmentIonAccuracyInDaltons(MASS_PER_AA * peptideLength)) {
 
                                 filteredNamesAtSite.add(modName);
 
@@ -173,7 +184,8 @@ public class ModificationLocalizationMapper {
 
                                         Modification tempModification = modificationProvider.getModification(tempName);
 
-                                        if (tempModification.getMass() == modification.getMass() && !tempModification.getModificationType().isCTerm()) {
+                                        if (tempModification.getMass() == modification.getMass()
+                                                && !tempModification.getModificationType().isCTerm()) {
 
                                             otherPossibleMod = true;
                                             break;
@@ -186,6 +198,7 @@ public class ModificationLocalizationMapper {
 
                                     cTermModification = modMatch;
                                     modMatch.setModification(modName);
+                                    modMatch.setSite(peptideLength + 1);
                                     break;
 
                                 }
@@ -202,10 +215,19 @@ public class ModificationLocalizationMapper {
             }
         }
 
+        ///////////////////////////////////////////////////////////////////
         // Map the modifications according to search engine localization
-        HashMap<Integer, ArrayList<String>> siteToModMap = new HashMap<>(modificationMatches.length); // Site to ptm name including termini
-        HashMap<Integer, ModificationMatch> siteToMatchMap = new HashMap<>(modificationMatches.length); // Site to Modification match excluding termini
-        HashMap<ModificationMatch, Integer> matchToSiteMap = new HashMap<>(modificationMatches.length); // Modification match to site excluding termini
+        ///////////////////////////////////////////////////////////////////
+
+        // site to modification name map, including termini
+        HashMap<Integer, ArrayList<String>> siteToModMap = new HashMap<>(modificationMatches.length);
+
+        // site to modification match map, excluding termini
+        HashMap<Integer, ModificationMatch> siteToMatchMap = new HashMap<>(modificationMatches.length);
+
+        // modification match to site map, excluding termini
+        HashMap<ModificationMatch, Integer> matchToSiteMap = new HashMap<>(modificationMatches.length);
+
         boolean allMapped = true;
 
         for (ModificationMatch modMatch : modificationMatches) {
@@ -220,6 +242,7 @@ public class ModificationLocalizationMapper {
                         searchParameters,
                         modificationProvider
                 );
+
                 int modSite = modMatch.getSite();
                 boolean terminal = false;
                 ArrayList<String> expectedNamesAtSite = expectedNames.get(modSite);
@@ -233,7 +256,8 @@ public class ModificationLocalizationMapper {
 
                         Modification modification = modificationProvider.getModification(modName);
 
-                        if (Math.abs(modification.getMass() - refMass) < searchParameters.getFragmentIonAccuracyInDaltons(MASS_PER_AA * peptideLength)
+                        if (Math.abs(modification.getMass() - refMass)
+                                < searchParameters.getFragmentIonAccuracyInDaltons(MASS_PER_AA * peptideLength)
                                 && (modificationAtSite == null || !modificationAtSite.contains(modName))) {
 
                             filteredNamesAtSite.add(modName);
@@ -382,7 +406,10 @@ public class ModificationLocalizationMapper {
                                 Modification modification = modificationProvider.getModification(modName);
                                 ModificationType modificationType = modification.getModificationType();
 
-                                if (!modificationType.isCTerm() && !modificationType.isNTerm() && modNames.get(modMatch).contains(modName) && !siteToMatchMap.containsKey(modSite)) {
+                                if (!modificationType.isCTerm()
+                                        && !modificationType.isNTerm()
+                                        && modNames.get(modMatch).contains(modName)
+                                        && !siteToMatchMap.containsKey(modSite)) {
 
                                     double massError = Math.abs(refMass - modification.getMass());
 
@@ -425,14 +452,19 @@ public class ModificationLocalizationMapper {
             }
         }
 
+        //////////////////////////////////////////////
+        // try to correct incompatible localizations
+        //////////////////////////////////////////////
+
         if (!allMapped) {
 
-            // Try to correct incompatible localizations
             HashMap<Integer, ArrayList<Integer>> remap = new HashMap<>(0);
 
             for (ModificationMatch modMatch : peptide.getVariableModifications()) {
 
-                if (modMatch != nTermModification && modMatch != cTermModification && !matchToSiteMap.containsKey(modMatch)) {
+                if (modMatch != nTermModification 
+                        && modMatch != cTermModification 
+                        && !matchToSiteMap.containsKey(modMatch)) {
 
                     int modSite = modMatch.getSite();
 
@@ -476,7 +508,9 @@ public class ModificationLocalizationMapper {
 
             for (ModificationMatch modMatch : peptide.getVariableModifications()) {
 
-                if (modMatch != nTermModification && modMatch != cTermModification && !matchToSiteMap.containsKey(modMatch)) {
+                if (modMatch != nTermModification 
+                        && modMatch != cTermModification 
+                        && !matchToSiteMap.containsKey(modMatch)) {
 
                     Integer modSite = correctedIndexes.get(modMatch.getSite());
 

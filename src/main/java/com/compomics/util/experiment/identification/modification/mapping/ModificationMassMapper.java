@@ -3,30 +3,26 @@ package com.compomics.util.experiment.identification.modification.mapping;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationProvider;
 import com.compomics.util.experiment.identification.Advocate;
-import static com.compomics.util.experiment.identification.modification.mapping.ModificationNameMapper.MOD_MASS_TOLERANCE;
-import static com.compomics.util.experiment.identification.modification.mapping.ModificationNameMapper.getPossibleModificationNamesByMass;
-import static com.compomics.util.experiment.identification.modification.mapping.ModificationNameMapper.getPossibleModificationNamesByName;
-import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.parameters.identification.tool_specific.AndromedaParameters;
 import com.compomics.util.parameters.identification.tool_specific.OmssaParameters;
-import static com.compomics.util.experiment.identification.modification.mapping.ModificationNameMapper.getPossibleModificationNamesAndromeda;
-import static com.compomics.util.experiment.identification.modification.mapping.ModificationNameMapper.getPossibleModificationNamesOmssa;
 
 /**
- * Function inferring the mass of a modification based on the search engine used.
+ * Function inferring the mass of a modification based on the search engine
+ * used.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ModificationMassMapper {
-
 
     /**
      * Returns the mass indicated by the identification algorithm for the given
      * modification.
      *
-     * @param searchEngineModificationName The name according to the identification file reader.
+     * @param searchEngineModificationName The name according to the
+     * identification file reader.
      * @param idfileReader The identification file reader.
      * @param searchParameters The search parameters.
      * @param modificationProvider The modification provider to use.
@@ -47,6 +43,7 @@ public class ModificationMassMapper {
             case "MzIdentMLIdfileReader":
             case "PepxmlIdfileReader":
             case "TideIdfileReader":
+            case "CossIdfileReader":
                 return getMassByMass(
                         searchEngineModificationName
                 );
@@ -55,30 +52,44 @@ public class ModificationMassMapper {
             case "NovorIdfileReader":
             case "OnyaseIdfileReader":
                 return getMassByName(
-                        searchEngineModificationName, 
+                        searchEngineModificationName,
                         modificationProvider
                 );
 
             case "OMSSAIdfileReader":
                 return getMassOmssa(
-                        searchEngineModificationName, 
-                        modificationProvider, 
+                        searchEngineModificationName,
+                        modificationProvider,
                         searchParameters
                 );
 
             case "AndromedaIdfileReader":
                 return getMassAndromeda(
-                        searchEngineModificationName, 
-                        modificationProvider, 
+                        searchEngineModificationName,
+                        modificationProvider,
                         searchParameters
                 );
 
             default:
 
-                throw new IllegalArgumentException("Modification mapping not implemented for file reader " + idfileReader.getClass().getSimpleName() + ".");
+                throw new IllegalArgumentException(
+                        "Modification mapping not implemented for file reader "
+                        + idfileReader.getClass().getSimpleName()
+                        + "."
+                );
 
         }
     }
+
+    /**
+     * Returns the mass indicated by the identification algorithm for the given
+     * modification.
+     *
+     * @param searchEngineModificationName The name according to the
+     * identification file reader.
+     *
+     * @return The mass of the modification.
+     */
     public static double getMassByMass(
             String searchEngineModificationName
     ) {
@@ -95,12 +106,24 @@ public class ModificationMassMapper {
         } catch (Exception e) {
 
             throw new IllegalArgumentException(
-                    "Impossible to parse \'" + searchEngineModificationName + "\' as a modification. Expected \'mass@position\'.",
+                    "Impossible to parse \'"
+                    + searchEngineModificationName
+                    + "\' as a modification. Expected \'mass@position\'.",
                     e
             );
         }
     }
-    
+
+    /**
+     * Returns the mass indicated by the identification algorithm for the given
+     * modification.
+     *
+     * @param searchEngineModificationName The name according to the
+     * identification file reader.
+     * @param modificationProvider The modification provider to use.
+     *
+     * @return The mass of the modification.
+     */
     public static double getMassByName(
             String searchEngineModificationName,
             ModificationProvider modificationProvider
@@ -110,13 +133,27 @@ public class ModificationMassMapper {
 
         if (modification == null) {
 
-            throw new IllegalArgumentException("Modification not recognized : " + searchEngineModificationName + ".");
+            throw new IllegalArgumentException(
+                    "Modification not recognized : "
+                    + searchEngineModificationName
+                    + "."
+            );
 
         }
-        
+
         return modification.getMass();
     }
-    
+
+    /**
+     * Returns the mass indicated by the OMSSA for the given modification.
+     *
+     * @param searchEngineModificationName The name according to the
+     * identification file reader.
+     * @param modificationProvider The modification provider to use.
+     * @param searchParameters The search parameters.
+     *
+     * @return The mass of the modification.
+     */
     public static double getMassOmssa(
             String searchEngineModificationName,
             ModificationProvider modificationProvider,
@@ -139,7 +176,11 @@ public class ModificationMassMapper {
 
         } catch (Exception e) {
 
-            throw new IllegalArgumentException("Impossible to parse OMSSA modification index " + searchEngineModificationName + ".");
+            throw new IllegalArgumentException(
+                    "Impossible to parse OMSSA modification index "
+                    + searchEngineModificationName
+                    + "."
+            );
 
         }
 
@@ -155,11 +196,21 @@ public class ModificationMassMapper {
         }
 
         Modification modification = modificationProvider.getModification(omssaName);
-        
+
         return modification.getMass();
-        
+
     }
-    
+
+    /**
+     * Returns the mass indicated by the Andromeda for the given modification.
+     *
+     * @param searchEngineModificationName The name according to the
+     * identification file reader.
+     * @param modificationProvider The modification provider to use.
+     * @param searchParameters The search parameters.
+     *
+     * @return The mass of the modification.
+     */
     public static double getMassAndromeda(
             String searchEngineModificationName,
             ModificationProvider modificationProvider,
@@ -182,7 +233,11 @@ public class ModificationMassMapper {
 
         } catch (Exception e) {
 
-            throw new IllegalArgumentException("Impossible to parse Andromeda modification index " + searchEngineModificationName + ".");
+            throw new IllegalArgumentException(
+                    "Impossible to parse Andromeda modification index "
+                    + searchEngineModificationName
+                    + "."
+            );
 
         }
 
@@ -191,13 +246,15 @@ public class ModificationMassMapper {
         if (andromedaName == null) {
 
             throw new IllegalArgumentException(
-                    "Impossible to find Andromeda modification of index " + andromedaIndex + "."
+                    "Impossible to find Andromeda modification of index "
+                    + andromedaIndex
+                    + "."
             );
         }
 
         Modification modification = modificationProvider.getModification(andromedaName);
-        
+
         return modification.getMass();
     }
-    
+
 }

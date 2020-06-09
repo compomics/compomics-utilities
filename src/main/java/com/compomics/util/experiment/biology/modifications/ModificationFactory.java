@@ -847,7 +847,7 @@ public class ModificationFactory implements ModificationProvider {
                 || pridePtmName.equalsIgnoreCase("oxidized residue")) {
             return "Oxidation of M";
         } else if (pridePtmName.equalsIgnoreCase("Amidation")) {
-            return "Amidation of the peptide C-term";
+            return "Amidation of peptide C-term";
         } else if (pridePtmName.equalsIgnoreCase("Carboxymethyl")
                 || pridePtmName.equalsIgnoreCase("S-carboxymethyl-L-cysteine")
                 || pridePtmName.equalsIgnoreCase("iodoacetic acid derivatized residue")) {
@@ -976,7 +976,7 @@ public class ModificationFactory implements ModificationProvider {
         } else if (pridePtmName.equalsIgnoreCase("alpha-amino dimethylated residue")) {
             return "Dimethylation of N-term";
         } else if (pridePtmName.equalsIgnoreCase("amidated residue")) {
-            return "Amidation of the peptide C-term";
+            return "Amidation of peptide C-term";
         } else if (pridePtmName.equalsIgnoreCase("deamidated L-asparagine")
                 || pridePtmName.equalsIgnoreCase("deglycosylated asparagine")) {
             return "Deamidation of N";

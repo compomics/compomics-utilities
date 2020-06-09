@@ -237,7 +237,10 @@ public class ObjectsDB {
      * @return the iterator
      */
     public HashSet<Long> getClassObjectIDs(Class className, String filters) {
-        HashSet<Long> classObjectIds = new HashSet<Long>(objectsCache.getClassInCache(className));
+        HashSet<Long> cacheIDs = objectsCache.getClassInCache(className);
+        HashSet<Long> classObjectIds;
+        if (cacheIDs != null) classObjectIds = new HashSet<>(cacheIDs);
+        else classObjectIds = new HashSet<>();
         
         
         String sqlQuery = "SELECT id FROM data WHERE class = ?";
@@ -436,7 +439,7 @@ public class ObjectsDB {
 
         if (obj == null) {
             obj = loadFromDB(objectKey);
-            objectsCache.addObject(objectKey, obj, true, false);
+            if (obj != null) objectsCache.addObject(objectKey, obj, true, false);
         }
         
         return obj;
@@ -498,7 +501,7 @@ public class ObjectsDB {
 
             if (obj == null) {
                 obj = loadFromDB(objectKey);
-                objectsNotInCache.put(objectKey, obj);
+                if (obj != null) objectsNotInCache.put(objectKey, obj);
             }
 
             retrievingObjects.add(obj);

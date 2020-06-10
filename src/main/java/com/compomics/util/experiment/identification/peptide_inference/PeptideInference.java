@@ -70,8 +70,6 @@ public class PeptideInference {
 
         while ((spectrumMatch = psmIterator.next()) != null) {
 
-            long spectrumKey = spectrumMatch.getKey();
-
             if (spectrumMatch.getBestPeptideAssumption() != null) {
 
                 fillConfidentMaps(
@@ -156,7 +154,7 @@ public class PeptideInference {
 
         Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
         String sequence = peptide.getSequence();
-
+        
         int nMod = getNMod(
                 peptide,
                 modMass,
@@ -714,7 +712,7 @@ public class PeptideInference {
 
         boolean variableAA = false;
         Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
-
+        
         for (ModificationMatch modificationMatch : peptide.getVariableModifications()) {
 
             String modName = modificationMatch.getModification();

@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 
 /**
- * This object will models the assumption made by an advocate.
+ * This object models the assumption made by an advocate.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes

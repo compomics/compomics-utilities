@@ -437,6 +437,7 @@ public class Peptide extends ExperimentObject {
                 }
             }
         }
+
         return result;
     }
 

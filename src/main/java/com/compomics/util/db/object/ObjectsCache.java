@@ -2,10 +2,13 @@ package com.compomics.util.db.object;
 
 import static com.compomics.util.db.object.DbMutex.loadObjectMutex;
 import com.compomics.util.waiting.WaitingHandler;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import javax.jdo.PersistenceManager;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.Set;
+import org.nustaq.serialization.FSTConfiguration;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
@@ -19,6 +22,26 @@ import javax.jdo.PersistenceManager;
  */
 public class ObjectsCache {
 
+    public class ObjectsCacheElement {
+        public Object object;
+        public boolean inDB;
+        public boolean edited;
+        
+        
+        
+        public ObjectsCacheElement(Object object){
+            this(object, false, true);
+        }
+        
+        public ObjectsCacheElement(Object object, boolean inDB, boolean edited){
+            this.object = object;
+            this.inDB = inDB;
+            this.edited = edited;
+        }
+    }
+    
+    
+    
     /**
      * Empty default constructor
      */
@@ -32,11 +55,11 @@ public class ObjectsCache {
     /**
      * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */
-    private final HashMap<Long, Object> loadedObjects = new HashMap<>();
+    private final HashMap<Long, ObjectsCacheElement> loadedObjects = new HashMap<>();
     /**
-     * Linked list to manage a queue for old entries.
+     * HashMap to store the class type of the objects in cache
      */
-    private final LinkedList<Long> objectQueue = new LinkedList<>();
+    private HashMap<Class, HashSet<Long>> classMap = new HashMap<>();
     /**
      * Indicates whether the cache is read only.
      */
@@ -49,11 +72,8 @@ public class ObjectsCache {
      * Number of objects that should at least be kept.
      */
     private final int keepObjectsThreshold = 10000;
-    /**
-     * If number number of registered objects exceeds value, commit to db should
-     * be triggered.
-     */
-    private final int numToCommit = 10000;
+    static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
+    
 
     /**
      * Constructor.
@@ -94,9 +114,7 @@ public class ObjectsCache {
     public void setMemoryShare(double memoryShare) {
         this.memoryShare = memoryShare;
         try {
-            loadObjectMutex.acquire();
             updateCache();
-            loadObjectMutex.release();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,47 +127,33 @@ public class ObjectsCache {
      *
      * @return the object of interest, null if not present in the cache
      */
-    public Object getObject(Long objectKey) {
-
+    public Object getObject(long objectKey) {
         Object object = null;
 
-        loadObjectMutex.acquire();
-
         if (loadedObjects.containsKey(objectKey)) {
-
-            object = loadedObjects.get(objectKey);
-
+            object = loadedObjects.get(objectKey).object;
         }
-
-        loadObjectMutex.release();
 
         return object;
     }
+    
 
     /**
      * Removes an object from the cache.
      *
      * @param objectKey the key of the object
-     *
-     * @return the class name of the object
      */
-    public String removeObject(long objectKey) {
+    public void removeObject(long objectKey) {
 
-        String className = null;
-
-        loadObjectMutex.acquire();
-
+        
         if (!readOnly) {
             if (loadedObjects.containsKey(objectKey)) {
-                className = loadedObjects.get(objectKey).getClass().getSimpleName();
+                Object object = getObject(objectKey);
+                classMap.get(object.getClass()).remove(objectKey);
                 loadedObjects.remove(objectKey);
-                objectQueue.removeFirstOccurrence(objectKey);
+                
             }
         }
-
-        loadObjectMutex.release();
-
-        return className;
     }
 
     /**
@@ -160,27 +164,39 @@ public class ObjectsCache {
      * @param objectKey the key of the object
      * @param object the object to store in the cache
      */
-    public void addObject(Long objectKey, Object object) {
+    public void addObject(long objectKey, Object object) {
+        addObject(objectKey, object, false, false);
+    }
 
-        loadObjectMutex.acquire();
+    /**
+     * Adds an object to the cache. The object must not necessarily be in the
+     * database. If an object is already present with the same identifiers, it
+     * will be silently overwritten.
+     *
+     * @param objectKey the key of the object
+     * @param object the object to store in the cache
+     * @param inDB the database state
+     * @param edited the edited state
+     */
+    public void addObject(long objectKey, Object object, boolean inDB, boolean edited) {
 
         if (!readOnly) {
-
+            
             if (!loadedObjects.containsKey(objectKey)) {
-
-                loadedObjects.put(objectKey, object);
-                objectQueue.add(objectKey);
-
-                if (objectsDB.getCurrentAdded() > numToCommit) {
-                    objectsDB.commit();
-                }
+                loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
             }
-
+            else {
+                loadedObjects.get(objectKey).object = object;
+                loadedObjects.get(objectKey).inDB = inDB;
+                loadedObjects.get(objectKey).edited = edited;
+            }
+            if (!classMap.containsKey(object.getClass())){
+                classMap.put(object.getClass(), new HashSet<>());
+            }
+            classMap.get(object.getClass()).add(objectKey);
+            
             updateCache();
-
         }
-
-        loadObjectMutex.release();
 
     }
 
@@ -193,22 +209,42 @@ public class ObjectsCache {
      *
      */
     public void addObjects(HashMap<Long, Object> objects) {
+        addObjects(objects, false, false);
+    }
 
-        loadObjectMutex.acquire();
+    /**
+     * Adds an object to the cache. The object must not necessarily be in the
+     * database. If an object is already present with the same identifiers, it
+     * will be silently overwritten.
+     *
+     * @param objects the key / objects to store in the cache
+     * @param inDB their database state
+     * @param edited their editing state
+     *
+     */
+    public void addObjects(HashMap<Long, Object> objects, boolean inDB, boolean edited) {
 
         if (!readOnly) {
-
-            loadedObjects.putAll(objects);
-            objectQueue.addAll(objects.keySet());
-
-            if (objectsDB.getCurrentAdded() > numToCommit) {
-                objectsDB.commit();
+            for (Entry<Long, Object>kv : objects.entrySet()){
+                long objectKey = kv.getKey();
+                Object object = kv.getValue();
+                if (!loadedObjects.containsKey(objectKey)) {
+                    loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
+                }
+                else {
+                    loadedObjects.get(objectKey).object = object;
+                    loadedObjects.get(objectKey).inDB = inDB;
+                    loadedObjects.get(objectKey).edited = edited;
+                }
+                
+                if (!classMap.containsKey(object.getClass())){
+                    classMap.put(object.getClass(), new HashSet<>());
+                }
+                classMap.get(object.getClass()).add(objectKey);
             }
 
             updateCache();
         }
-
-        loadObjectMutex.release();
 
     }
 
@@ -229,9 +265,7 @@ public class ObjectsCache {
      * @param numLastEntries number of keys of the entries
      */
     public void saveObjects(int numLastEntries) {
-        loadObjectMutex.acquire();
         saveObjects(numLastEntries, null, true);
-        loadObjectMutex.release();
     }
 
     /**
@@ -246,41 +280,75 @@ public class ObjectsCache {
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) {
 
         if (!readOnly) {
-
-            ListIterator<Long> listIterator = objectQueue.listIterator();
-            PersistenceManager pm = objectsDB.getDB();
-
-            for (int i = 0; i < numLastEntries && objectQueue.size() > 0; ++i) {
+            Connection connection = objectsDB.getDB();
+            PreparedStatement psInsert = null, psUpdate = null;
+            try {
+                psInsert = connection.prepareStatement("INSERT INTO data (id, class, data) VALUES (?, ?, ?);");
+                psUpdate = connection.prepareStatement("UPDATE data SET data = ? WHERE id = ?;");
+    
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            
+            Set<Long> removeKeys = new HashSet<Long>();
+            
+            int i = 0;
+            for (Entry<Long, ObjectsCacheElement> entry : loadedObjects.entrySet()){
+                if (numLastEntries <= i++) break;
 
                 if (waitingHandler != null) {
-
                     waitingHandler.increaseSecondaryProgressCounter();
 
                     if (waitingHandler.isRunCanceled()) {
-
                         break;
-
                     }
                 }
-
-                long key = clearEntries ? objectQueue.pollFirst() : listIterator.next();
-
-                Object obj = loadedObjects.get(key);
-
-                if (!((DbObject) obj).jdoZooIsPersistent()) {
-
-                    pm.makePersistent(obj);
-                    objectsDB.getIdMap().put(key, ((DbObject) obj).jdoZooGetOid());
-                    
+                long key = entry.getKey();
+                
+                ObjectsCacheElement obj = loadedObjects.get(key);
+                
+                obj.edited = false;
+                
+                byte barray[] = conf.asByteArray(obj.object);
+                try {
+                    if (obj.inDB){
+                        psUpdate.setBytes(1, barray);
+                        psUpdate.setLong(2, ((DbObject)obj.object).getId());
+                        psUpdate.addBatch();
+                    }
+                    else {
+                        psInsert.setLong(1, ((DbObject)obj.object).getId());
+                        psInsert.setString(2, obj.object.getClass().getSimpleName());
+                        psInsert.setBytes(3, barray);
+                        psInsert.addBatch();
+                    }
+                    obj.inDB = true;
+                }
+                catch (Exception e){
+                    e.printStackTrace();
                 }
                     
                 if (clearEntries) {
-                    loadedObjects.remove(key);
+                    removeKeys.add(key);
+                    classMap.get(obj.object.getClass()).remove(key);
                 }
 
             }
 
-            objectsDB.commit();
+            try {
+                loadObjectMutex.acquire();
+                psInsert.executeBatch();
+                psUpdate.executeBatch();
+                if (removeKeys.size() > 0) loadedObjects.keySet().removeAll(removeKeys);
+                connection.commit();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            finally {
+                loadObjectMutex.release();
+            }
 
         }
 
@@ -297,12 +365,6 @@ public class ObjectsCache {
 
             int toRemove = loadedObjects.size() >> 2;
             saveObjects(toRemove, null, true);
-
-            // turning on the garbage collector from time to time
-            // helps to keep the memory clean. Performance becomes
-            // better, the mass for cleaning is lower
-            System.gc();
-
         }
     }
 
@@ -326,31 +388,18 @@ public class ObjectsCache {
      */
     public void saveCache(WaitingHandler waitingHandler, boolean emptyCache) {
 
-        loadObjectMutex.acquire();
-
-        // save in batches to enable progress display
-        int numSaveIterations = (int) Math.ceil(((double) loadedObjects.size()) / numToCommit); // @TODO: optimize batch size?
-
         if (waitingHandler != null) {
             waitingHandler.resetSecondaryProgressCounter();
             waitingHandler.setMaxSecondaryProgressCounter(loadedObjects.size() + 1); // @TODO: can this number get bigger than the max integer value? 
         }
 
-        for (int i = 0; i < numSaveIterations; i++) {
-            if (loadedObjects.size() > numToCommit) {
-                saveObjects(numToCommit, waitingHandler, emptyCache);
-            } else {
-                saveObjects(loadedObjects.size(), waitingHandler, emptyCache);
-            }
-        }
+        saveObjects(loadedObjects.size(), waitingHandler, emptyCache);
 
         if (waitingHandler != null) {
 
             waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 
         }
-
-        loadObjectMutex.release();
 
     }
 
@@ -368,7 +417,6 @@ public class ObjectsCache {
      */
     public void clearCache() {
         loadedObjects.clear();
-        objectQueue.clear();
     }
 
     /**
@@ -378,12 +426,12 @@ public class ObjectsCache {
      * only
      */
     public void setReadOnly(boolean readOnly) {
-
-        loadObjectMutex.acquire();
-
         this.readOnly = readOnly;
 
-        loadObjectMutex.release();
-
+    }
+    
+    
+    public HashSet<Long> getClassInCache(Class className){
+        return classMap.get(className);
     }
 }

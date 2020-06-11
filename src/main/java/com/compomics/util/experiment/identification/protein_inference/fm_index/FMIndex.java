@@ -563,7 +563,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         if (searchParameters != null) {
             massTolerance = searchParameters.getFragmentIonAccuracy();
             massAccuracyType = searchParameters.getFragmentAccuracyType();
-            init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters.getModificationParameters(), peptideVariantsPreferences);
+            init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters, peptideVariantsPreferences);
         } else {
             init(fastaFile, fastaParameters, waitingHandler, displayProgress, null, peptideVariantsPreferences);
         }
@@ -577,15 +577,14 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      * @param fastaParameters the parameters for the FASTA file parsing
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
-     * @param modificationSettings contains modification parameters for
-     * identification
+     * @param searchParameters the search parameters
      * @param peptideVariantsPreferences contains all parameters for variants
      *
      * @throws IOException exception thrown if an error occurs while iterating
      * the FASTA file
      */
-    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters modificationSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
-        init(fastaFile, fastaParameters, waitingHandler, displayProgress, modificationSettings, peptideVariantsPreferences);
+    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, SearchParameters searchParameters, PeptideVariantsParameters peptideVariantsPreferences) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
+        init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters, peptideVariantsPreferences);
     }
 
     /**
@@ -597,15 +596,14 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      * @param fastaParameters the parameters for the FASTA file parsing
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
-     * @param modificationSettings contains modification parameters for
-     * identification
+     * @param searchParameters the search parameters
      * @param peptideVariantsPreferences contains all parameters for variants
      * @param massTolerance the mass tolerance
      *
      * @throws IOException exception thrown if an error occurs while iterating
      * the FASTA file.
      */
-    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters modificationSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
+    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, SearchParameters searchParameters, PeptideVariantsParameters peptideVariantsPreferences) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
 
         // load all variant preferences
         maxNumberVariants = peptideVariantsPreferences.getnVariants();
@@ -643,17 +641,21 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             }
         }
 
+         ModificationParameters modificationSettings = searchParameters.getModificationParameters();
+        
         // load all ptm preferences
         if (modificationSettings != null) {
+
             // create masses table and modifications
             int[] modificationCounts = new int[128];
             for (int i = 0; i < modificationCounts.length; ++i) {
                 modificationCounts[i] = 0;
             }
-            ArrayList<String> variableModifications = modificationSettings.getVariableModifications();
-            ArrayList<String> fixedModifications = modificationSettings.getFixedModifications();
+            
             ModificationFactory ptmFactory = ModificationFactory.getInstance();
-
+            ArrayList<String> variableModifications = ptmFactory.getExpectedVariableModifications(searchParameters);
+            ArrayList<String> fixedModifications = modificationSettings.getFixedModifications();
+            
             int hasVariableModification = 0;
 
             // check which amino acids have variable modificatitions

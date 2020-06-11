@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * This class models a spectrum. Note: throughout the code, it is assumed that the m/z array is sorted by ascending m/z. Only minimal sanity check is conducted.
+ * This class models a spectrum. Note: throughout the code, it is assumed that
+ * the m/z array is sorted by ascending m/z. Only minimal sanity check is
+ * conducted.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -18,7 +20,9 @@ public class Spectrum extends ExperimentObject {
      */
     public Precursor precursor;
     /**
-     * The array of the m/z of the peaks. Note: throughout the code, it is assumed that the m/z array is sorted by ascending m/z. Only minimal sanity check is conducted.
+     * The array of the m/z of the peaks. Note: throughout the code, it is
+     * assumed that the m/z array is sorted by ascending m/z. Only minimal
+     * sanity check is conducted.
      */
     public double[] mz;
     /**
@@ -38,7 +42,8 @@ public class Spectrum extends ExperimentObject {
     }
 
     /**
-     * Constructor. Note: throughout the code, it is assumed that the m/z array is sorted by ascending m/z. Only minimal sanity check is conducted.
+     * Constructor. Note: throughout the code, it is assumed that the m/z array
+     * is sorted by ascending m/z. Only minimal sanity check is conducted.
      *
      * @param precursor The precursor.
      * @param mz The array of mz of the peaks.

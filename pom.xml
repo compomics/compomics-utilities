@@ -92,7 +92,7 @@
             <name>Dominik Kopczynski</name>
             <id>dominik</id>
             <email>dominik.kopczynski AT isas.de</email>
-            <organization>Leibniz-Institut für Analytische Wissenschaften – ISAS – e.V.</organization>
+            <organization>Leibniz-Institut fÃ¼r Analytische Wissenschaften â€“ ISAS â€“ e.V.</organization>
             <roles>
                 <role>Java Developer</role>
             </roles>
@@ -484,7 +484,7 @@
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
-            <version>2.9.1</version>
+            <version>2.12.0</version>
         </dependency>
 
         <dependency>

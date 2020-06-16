@@ -3,10 +3,9 @@ package com.compomics.cli.peptide_mapper;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
-import com.compomics.util.experiment.identification.amino_acid_tags.TagComponent;
+import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
-import com.compomics.util.experiment.identification.protein_inference.PeptideProteinMapping;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import com.compomics.util.parameters.identification.IdentificationParameters;
@@ -17,6 +16,12 @@ import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
+import com.compomics.util.experiment.identification.protein_inference.fm_index.TagElement;
+import com.compomics.util.experiment.io.identification.IdfileReader;
+import com.compomics.util.experiment.io.identification.IdfileReaderFactory;
+import com.compomics.util.experiment.io.mass_spectrometry.MsFileHandler;
+import com.compomics.util.io.IoUtil;
+import com.compomics.util.io.compression.ZipUtils;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 
 
@@ -34,32 +40,268 @@ import java.util.concurrent.*;
  */
 public class PeptideMapperCLI {
     public static int TIMEOUT_DAYS = 1;
+    
+    
+    public static void printHelp(){
+        System.out.println("PeptideMapping: a tool to map peptides or sequence tags against a given proteome.");
+        System.out.println("usage: PeptideMapping -[p|t|c] input-fasta input-peptide/tag-csv output-csv [additonal options]");
+        System.out.println();
+        System.out.println("Options are:");
+        System.out.println("\t-p\tpeptide mapping");
+        System.out.println("\t-t\tsequence tag mapping");
+        System.out.println("\t-x\textract peptide spectrum matches from SearchGUI output file");
+        System.out.println("\t-h\tprint this info");
+        System.out.println();
+        System.out.println("Additional options are:");
+        System.out.println("\t-u [utilities-parameter-file]\tpeptide mapping");
+        System.out.println("\t-f\tadd flanking amino acids to peptide in output");
+        System.out.println("\t-c\tspecify the number of cores used");
+
+        System.out.println();
+        System.out.println("Default parameters:");
+        System.out.println("\tindexing method:\t\tfm-index");
+        System.out.println("\tframentation tolerance [Da]:\t0.02");
+    }
+    
+    
+    
     /**
      * Main class.
      *
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        if ((args.length > 0 && (args[0].equals("-h") || args[0].equals("--help"))) || args.length < 4 || (!args[0].equals("-p") && !args[0].equals("-t"))) {
-
-            System.out.println("PeptideMapping: a tool to map peptides or sequence tags against a given proteome.");
-            System.out.println("usage: PeptideMapping -[p|t] input-fasta input-peptide/tag-csv output-csv [additonal options]");
-            System.out.println();
-            System.out.println("Options are:");
-            System.out.println("\t-p\tpeptide mapping");
-            System.out.println("\t-t\tsequence tag mapping");
-            System.out.println("\t-h\tprint this info");
-            System.out.println();
-            System.out.println("Additional options are:");
-            System.out.println("\t-u [utilities-parameter-file]\tpeptide mapping");
-            System.out.println("\t-f\tadd flanking amino acids to peptide in output");
-            System.out.println("\t-c\tspecify the number of cores used");
+        if (args.length < 1 || args[0].equals("-h") || args[0].equals("--help")) {
+            printHelp();
+            System.exit(-1);
+        }
+        
+        switch (args[0]){
+            case "-x":
+                convertSearchGUIFile(args);
+                break;
+                
+            case "-p":
+            case "-t":
+                handleParameters(args);
+                break;
+                
+            default:
+                printHelp();
+                System.exit(-1);
+                
+        }
+    }
+    
+    
+    
+    public static String tagToString(Tag tag){
+        StringBuilder sb = new StringBuilder();
+        
+        for (int i = 0; i < tag.getContent().size(); ++i) {
+            if (i > 0) sb.append(",");
+            if (tag.getContent().get(i) instanceof MassGap) {
+                sb.append(tag.getContent().get(i).getMass());
+            } else if (tag.getContent().get(i) instanceof AminoAcidSequence) {
+                sb.append(tag.getContent().get(i).asSequence());
+            }
+        }
+        
+        return sb.toString();
+    }
+    
+    
+    
+    public static void convertSearchGUIFile(String[] args){
+        if (args.length < 2){
+            printHelp();
+            System.exit(-1);
+        }
+        
+        
+        SearchParameters searchParameters = null;
+        SequenceMatchingParameters sequenceMatchingPreferences = null;
+        
+        ArrayList<File> idFiles = new ArrayList<>();
+        
+        try {
+            File SGfile = new File(args[1]);
+            MsFileHandler msFileHandler = new MsFileHandler();
+            File tmpDir = Paths.get(SGfile.getAbsoluteFile().getParent(), "tmpDir").toFile();
+            tmpDir.mkdir();
+            ZipUtils.unzip(
+                    SGfile,
+                    tmpDir,
+                    null
+            );
+            IdfileReaderFactory readerFactory = IdfileReaderFactory.getInstance();
             
-            System.out.println();
-            System.out.println("Default parameters:");
-            System.out.println("\tindexing method:\t\tfm-index");
-            System.out.println("\tframentation tolerance [Da]:\t0.02");
+            ArrayList<File> dirs = new ArrayList<>();
+            dirs.add(tmpDir);
+            
+            for (int d = 0; d < dirs.size(); ++d){
+                File dir = dirs.get(d);
+                for (File zippedFile : dir.listFiles()) {
+                    if (zippedFile.isDirectory()){
+                        dirs.add(zippedFile);
+                    }
+                    String lowerCaseName = zippedFile.getName().toLowerCase();
 
+                    if (lowerCaseName.endsWith(".dat")
+                            || lowerCaseName.endsWith(".omx")
+                            || lowerCaseName.endsWith(".res")
+                            || lowerCaseName.endsWith(".xml")
+                            || lowerCaseName.endsWith(".mzid")
+                            || lowerCaseName.endsWith(".csv")
+                            || lowerCaseName.endsWith(".tsv")
+                            || lowerCaseName.endsWith(".tags")
+                            || lowerCaseName.endsWith(".pnovo.txt")
+                            || lowerCaseName.endsWith(".tide-search.target.txt")
+                            || lowerCaseName.endsWith(".psm.gz")
+                            || lowerCaseName.endsWith(".omx.gz")
+                            || lowerCaseName.endsWith(".res.gz")
+                            || lowerCaseName.endsWith(".xml.gz")
+                            || lowerCaseName.endsWith(".mzid.gz")
+                            || lowerCaseName.endsWith(".csv.gz")
+                            || lowerCaseName.endsWith(".tsv.gz")
+                            || lowerCaseName.endsWith(".tags.gz")
+                            || lowerCaseName.endsWith(".pnovo.txt.gz")
+                            || lowerCaseName.endsWith(".tide-search.target.txt.gz")
+                            || lowerCaseName.endsWith(".psm.gz")) {
+
+                        if (!lowerCaseName.endsWith("mods.xml")
+                                && !lowerCaseName.endsWith("usermods.xml")
+                                && !lowerCaseName.endsWith("settings.xml")) {
+
+                            idFiles.add(zippedFile);
+
+                        }
+                    } else if (lowerCaseName.endsWith(".par")) {
+
+                        IdentificationParameters identificationParameters = null;
+                        try {
+                            identificationParameters = IdentificationParameters.getIdentificationParameters(zippedFile);
+                        } catch (Exception e) {
+                            System.err.println("Error: cound not open or parse parameter file");
+                            System.exit(-1);
+                        }
+
+                        sequenceMatchingPreferences = identificationParameters.getSequenceMatchingParameters();
+                        searchParameters = identificationParameters.getSearchParameters();
+
+                    } else if (lowerCaseName.endsWith(".mgf")){
+                        msFileHandler.register(zippedFile, zippedFile.getParentFile(), null);
+                    }
+                }
+            }
+            
+            if (searchParameters == null) {
+                searchParameters = new SearchParameters();
+                searchParameters.setModificationParameters(new ModificationParameters());
+                searchParameters.setFragmentIonAccuracy(0.02);
+                searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
+                sequenceMatchingPreferences = new SequenceMatchingParameters();
+                sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
+                sequenceMatchingPreferences.setLimitX(0.25);
+            }
+            
+            ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
+            
+            for (File idFile : idFiles){
+                    
+                IdfileReader fileReader = null;
+                try {
+
+                    fileReader = readerFactory.getFileReader(idFile);
+
+                } catch (OutOfMemoryError error) {
+                    System.out.println("Ran out of memory when parsing \'" + IoUtil.getFileName(idFile) + "\'.");
+                    System.exit(-1);
+                }
+                
+                spectrumMatches.addAll(fileReader.getAllSpectrumMatches(
+                    msFileHandler,
+                    null,
+                    searchParameters,
+                    sequenceMatchingPreferences,
+                    true
+                ));
+                
+            }
+            
+            
+            boolean hasPeptides = false;
+            boolean hasTags = false;
+            for (SpectrumMatch spectrumMatch : spectrumMatches){
+                hasPeptides |= spectrumMatch.hasPeptideAssumption();
+                hasTags |= spectrumMatch.hasTagAssumption();
+            }
+            
+            PrintWriter writerPeptides = null;
+            PrintWriter writerTags = null;
+            
+            try {
+                if (hasPeptides) writerPeptides = new PrintWriter(Paths.get((new File(args[1])).getParent(), "extracted-peptides.csv").toFile(), "UTF-8");
+                if (hasTags) writerTags = new PrintWriter(Paths.get((new File(args[1])).getParent(), "extracted-tags.csv").toFile(), "UTF-8");
+            }
+            catch (Exception e){
+                handleError("Opening error", "Error: could not open output files properly.", e);
+            }
+            
+            
+            for (SpectrumMatch spectrumMatch : spectrumMatches){
+                if (spectrumMatch.hasPeptideAssumption()){
+                    ArrayList<String> peptides = spectrumMatch.getAllPeptideAssumptions()
+                    .map(assumption -> assumption.getPeptide().getSequence())
+                    .collect(Collectors.toCollection(ArrayList::new));
+                    
+                    for (String peptide : peptides){
+                        try {
+                            writerPeptides.println(peptide);
+                        }
+                        catch (Exception e) {
+                            handleError("Writing error", "Error: could not write into file.", e);
+                        }
+                    }
+                }
+                
+                else if (spectrumMatch.hasTagAssumption()){
+                    ArrayList<String> sequenceTags = spectrumMatch.getAllTagAssumptions()
+                    .map(assumption -> tagToString(assumption.getTag()))
+                    .collect(Collectors.toCollection(ArrayList::new));
+                    
+                    for (String sequenceTag : sequenceTags){
+                        try {
+                            writerTags.println(sequenceTag);
+                        }
+                        catch (Exception e) {
+                            handleError("Writing error", "Error: could not write into file.", e);
+                        }
+                    }
+                }
+            }
+            
+            
+            // close everything
+            try {
+                if (writerPeptides != null) writerPeptides.close();
+                if (writerTags != null) writerTags.close();
+            }
+            catch (Exception e) {
+                handleError("Closing error", "Error: could not close files properly", e);
+            }
+            IoUtil.deleteDir(tmpDir);
+            
+        } catch (Exception e) {
+            handleError("SearchGUI file error", "Could not open SearchGUI zip file properly.", e);
+        }
+    }
+    
+        
+    public static void handleParameters(String[] args){
+        
+        if (args.length < 4){
+            printHelp();
             System.exit(-1);
         }
 
@@ -109,7 +351,7 @@ public class PeptideMapperCLI {
                             File parameterFile = new File(args[argPos + 1]);
                             identificationParameters = IdentificationParameters.getIdentificationParameters(parameterFile);
                         } catch (Exception e) {
-                            System.err.println("Error: cound not open / parse parameter file");
+                            System.err.println("Error: cound not open or parse parameter file");
                             System.exit(-1);
                         }
 

@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.regex.Pattern;
 
 /**
@@ -80,7 +81,7 @@ public class MappingWorker implements Runnable {
     @Override
     public void run() {
         ArrayList<String> rows = new ArrayList<>();
-        ArrayList<String> outputData = new ArrayList<>();
+        HashSet<String> outputData = new HashSet<>();
         
 
         while (true){
@@ -94,7 +95,6 @@ public class MappingWorker implements Runnable {
                 //synchronized(br){
                     while (!waitingHandlerCLIImpl.isRunCanceled() && i++ < NUM_READS && (row = br.readLine()) != null) {
                         rows.add(row);
-                        waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     }
                 //}
                 if (waitingHandlerCLIImpl.isRunCanceled() || rows.isEmpty()) break;
@@ -127,7 +127,9 @@ public class MappingWorker implements Runnable {
 
                             outputData.add(peptide + "," + accession + "," + startIndex);
                         }
+                        waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     }
+                    
                     catch (Exception e){
                         exception = new RuntimeException("An error occurred during the mapping of '" + inputPeptide + "'\n\n" + e);
                         waitingHandlerCLIImpl.setRunCanceled();
@@ -166,6 +168,7 @@ public class MappingWorker implements Runnable {
 
                             outputData.add(tagString + "," + peptide + "," + accession + "," + startIndex);
                         }
+                        waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     }
                     catch (Exception e){
                         exception = new RuntimeException("An error occurred during the mapping of '" + tagString + "'\n\n" + e);

@@ -50,7 +50,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/CacheElement.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/MassIndexMap.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/IndexStorage.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../../index.html?com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" target="_top">Frames</a></li>
@@ -164,18 +164,24 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#maxPTMsPerPeptide">maxPTMsPerPeptide</a></span></code>
+<div class="block">Maximal number of PTMs per peptide</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#occurrenceTablesPrimary">occurrenceTablesPrimary</a></span></code>
 <div class="block">Wavelet tree for storing the burrows wheeler transform.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util">ArrayList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#occurrenceTablesReversed">occurrenceTablesReversed</a></span></code>
 <div class="block">Wavelet tree for storing the burrows wheeler transform reversed.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static char</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#SENTINEL">SENTINEL</a></span></code>
 <div class="block">Sentinel character necessary for computation of the suffix array.</div>
@@ -477,6 +483,16 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <!--   -->
 </a>
 <h3>Field Detail</h3>
+<a name="maxPTMsPerPeptide">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>maxPTMsPerPeptide</h4>
+<pre>public&nbsp;int maxPTMsPerPeptide</pre>
+<div class="block">Maximal number of PTMs per peptide</div>
+</li>
+</ul>
 <a name="DELIMITER">
 <!--   -->
 </a>
@@ -1261,7 +1277,7 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/CacheElement.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/MassIndexMap.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/IndexStorage.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../../index.html?com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" target="_top">Frames</a></li>

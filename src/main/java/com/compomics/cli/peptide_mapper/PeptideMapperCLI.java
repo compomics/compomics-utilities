@@ -304,6 +304,7 @@ public class PeptideMapperCLI {
             printHelp();
             System.exit(-1);
         }
+        
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         File fastaFile = new File(args[1]);

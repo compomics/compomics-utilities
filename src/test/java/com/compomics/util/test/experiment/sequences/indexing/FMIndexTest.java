@@ -1,6 +1,6 @@
 package com.compomics.util.test.experiment.sequences.indexing;
 
-import static com.compomics.cli.peptide_mapper.PeptideMapperCLI.convertSearchGUIFile;
+import static com.compomics.cli.peptide_mapper.PeptideMapperCLI.handleParameters;
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.exceptions.exception_handlers.CommandLineExceptionHandler;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
@@ -35,7 +35,6 @@ import com.compomics.util.parameters.identification.advanced.PeptideVariantsPara
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,13 +65,32 @@ public class FMIndexTest extends TestCase {
             tagToProteinMappingWithVariantsGeneric();
             tagToProteinMappingWithVariantsSpecific();
             tagToProteinMappingWithVariantsFixed();
+            //mapperTest();
         }
         catch(Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
     
     
+    /*
+    public void mapperTest(){
+        String[] args = new String[]{
+            "-t",
+            "/home/dominik.kopczynski/Data/artifacts/uniprot-human-reviewed-trypsin-april-2019_concatenated_target_decoy.fasta",
+            "/home/dominik.kopczynski/Data/artifacts/extracted-tags.csv",
+            //"/home/dominik.kopczynski/Data/artifacts/test.csv",
+            "/home/dominik.kopczynski/Data/artifacts/extracted-tags-out.csv",
+            "-u",
+            //"/home/dominik.kopczynski/Data/artifacts/de novo ptm - common artifacts.par"
+            "/home/dominik.kopczynski/Data/artifacts/de novo ptm - biological artifacts metal.par",
+            "-c",
+            "1"
+        };
+    
+        handleParameters(args);
+    }
+    */
     
     
     public void terminiPTMTagMapping() throws Exception {
@@ -727,6 +745,7 @@ public class FMIndexTest extends TestCase {
         searchParameters.setFragmentIonAccuracy(5.);
         
         
+        
         // TESTMRITESTCKTESTK with no modifications
         aminoAcidSequence = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -740,6 +759,97 @@ public class FMIndexTest extends TestCase {
         peptideProteinMapping = peptideProteinMappings.get(0);
         Assert.assertTrue(peptideProteinMapping.getPeptideSequence().compareTo("TMRITESTCK") == 0);
         Assert.assertTrue(peptideProteinMapping.getIndex() == 3);
+        
+        
+        
+        
+        
+        // TESTMRITESTCKTESTK with five variable modifications
+        aminoAcidSequence = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + 2 * AminoAcid.T.getMonoisotopicMass() +
+                 AminoAcid.S.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + 2 * AminoAcid.T.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() +
+                AminoAcid.E.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        
+        nTermGap += ptmFactory.getModification("Oxidation of M").getMass() + 2 * ptmFactory.getModification("Phosphorylation of T").getMass();
+        cTermGap += ptmFactory.getModification("Carbamidomethylation of C").getMass() + ptmFactory.getModification("Phosphorylation of T").getMass();
+        
+        tag = new Tag(nTermGap, aminoAcidSequence, cTermGap);
+        modificationParameters = new ModificationParameters();
+        
+        modificationParameters.addVariableModification(ptmFactory.getModification("Carbamidomethylation of C"));
+        modificationParameters.addVariableModification(ptmFactory.getModification("Oxidation of M"));
+        modificationParameters.addVariableModification(ptmFactory.getModification("Phosphorylation of T"));
+        modificationParameters.addVariableModification(ptmFactory.getModification("Phosphorylation of S"));
+        
+        searchParameters.setModificationParameters(modificationParameters);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(peptideProteinMappings.size() > 0);
+        peptideProteinMapping = peptideProteinMappings.get(0);
+        Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TESTMRITESTCKTESTK"));
+        modificationMatches = peptideProteinMapping.getVariableModifications();
+        Assert.assertTrue(modificationMatches != null);
+        Assert.assertTrue(modificationMatches.length == 5);
+        
+        
+        
+        
+        // TESTMRITESTCKTESTK with five variable modifications
+        aminoAcidSequence = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + 2 * AminoAcid.T.getMonoisotopicMass() +
+                 AminoAcid.S.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + 2 * AminoAcid.T.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() +
+                AminoAcid.E.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        
+        nTermGap += ptmFactory.getModification("Oxidation of M").getMass() + ptmFactory.getModification("Phosphorylation of T").getMass();
+        cTermGap += ptmFactory.getModification("Carbamidomethylation of C").getMass() +  2 * ptmFactory.getModification("Phosphorylation of T").getMass();
+        
+        tag = new Tag(nTermGap, aminoAcidSequence, cTermGap);
+        modificationParameters = new ModificationParameters();
+        
+        modificationParameters.addVariableModification(ptmFactory.getModification("Carbamidomethylation of C"));
+        modificationParameters.addVariableModification(ptmFactory.getModification("Oxidation of M"));
+        modificationParameters.addVariableModification(ptmFactory.getModification("Phosphorylation of T"));
+        modificationParameters.addVariableModification(ptmFactory.getModification("Phosphorylation of S"));
+        
+        searchParameters.setModificationParameters(modificationParameters);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(peptideProteinMappings.size() > 0);
+        peptideProteinMapping = peptideProteinMappings.get(0);
+        Assert.assertTrue(peptideProteinMapping.getPeptideSequence().equals("TESTMRITESTCKTESTK"));
+        modificationMatches = peptideProteinMapping.getVariableModifications();
+        Assert.assertTrue(modificationMatches != null);
+        Assert.assertTrue(modificationMatches.length == 5);
+        
+        
+        
+        // TESTMRITESTCKTESTK with five variable modifications
+        aminoAcidSequence = new AminoAcidSequence("TEST");
+        nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + 2 * AminoAcid.T.getMonoisotopicMass() +
+                 AminoAcid.S.getMonoisotopicMass() + AminoAcid.E.getMonoisotopicMass();
+        cTermGap = AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass() + 2 * AminoAcid.T.getMonoisotopicMass() + AminoAcid.S.getMonoisotopicMass() +
+                AminoAcid.E.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
+        
+        nTermGap += ptmFactory.getModification("Oxidation of M").getMass() + 2 * ptmFactory.getModification("Phosphorylation of T").getMass();
+        cTermGap += ptmFactory.getModification("Carbamidomethylation of C").getMass() +  ptmFactory.getModification("Phosphorylation of S").getMass() +  ptmFactory.getModification("Phosphorylation of T").getMass();
+        
+        tag = new Tag(nTermGap, aminoAcidSequence, cTermGap);
+        modificationParameters = new ModificationParameters();
+        
+        modificationParameters.addVariableModification(ptmFactory.getModification("Carbamidomethylation of C"));
+        modificationParameters.addVariableModification(ptmFactory.getModification("Oxidation of M"));
+        modificationParameters.addVariableModification(ptmFactory.getModification("Phosphorylation of T"));
+        modificationParameters.addVariableModification(ptmFactory.getModification("Phosphorylation of S"));
+        
+        searchParameters.setModificationParameters(modificationParameters);
+        fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
+        Assert.assertTrue(peptideProteinMappings.size() == 0);
+        
+        
+        
         
         
         

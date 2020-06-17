@@ -54,9 +54,9 @@ public class MyriMatchParameters implements IdentificationAlgorithmParameter {
      */
     private Double maxPrecursorMass = 5000.0;
     /**
-     * If true, the UseSmartPlusThreeModel us to be used.
+     * If true, the UseSmartPlusThreeModel is used.
      */
-    private Boolean useSmartPlusThreeModel = true;
+    private Boolean useSmartPlusThreeModel = false;
     /**
      * If true, a Sequest-like cross correlation (xcorr) score will be
      * calculated for the top ranking hits in each spectrum’s result set.

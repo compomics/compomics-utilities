@@ -1063,6 +1063,7 @@ public class ModificationFactory implements ModificationProvider {
         modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:01458", "alpha-amino acetylated residue", null));
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
+        
 
         // Acetylation of protein N-term
         atomChainAdded = new AtomChain();
@@ -3305,7 +3306,7 @@ public class ModificationFactory implements ModificationProvider {
         modification = new Modification(
                 ModificationType.modn_protein, modificationName, "cm",
                 atomChainAdded, atomChainRemoved, aminoAcidPattern,
-                ModificationCategory.Common_Artifact);
+                ModificationCategory.Common_Biological);
         modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:5", "Carbamyl", null));
         modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:01679", "alpha-aminocarbamoylated residue", null));
         defaultMods.add(modificationName);

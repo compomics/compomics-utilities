@@ -119,7 +119,6 @@ public class DirecTagIdfileReader implements IdfileReader {
     public DirecTagIdfileReader(
             File tagFile
     ) {
-
         this.tagFile = tagFile;
     }
 
@@ -387,6 +386,7 @@ public class DirecTagIdfileReader implements IdfileReader {
             SimpleFileReader reader,
             String[] spectrumTitles
     ) {
+        
         ArrayList<SpectrumMatch> result = new ArrayList<>();
         String spectrumFileName = IoUtil.getFileName(getInputFile());
 

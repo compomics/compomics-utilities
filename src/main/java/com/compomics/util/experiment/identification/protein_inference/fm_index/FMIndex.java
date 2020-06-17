@@ -69,7 +69,7 @@ import java.util.zip.CRC32;
  */
 public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
     /**
-     * Maximal number of PTMs per peptide
+     * Maximal number of PTMs per peptide.
      */
     public int maxPTMsPerPeptide = 3;
     /**
@@ -80,8 +80,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      * Sentinel character necessary for computation of the suffix array.
      */
     public static char SENTINEL = '$';
-    
-    
     /**
      * Semaphore for caching.
      */

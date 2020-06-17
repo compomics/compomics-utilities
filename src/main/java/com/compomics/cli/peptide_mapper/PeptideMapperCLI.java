@@ -16,7 +16,6 @@ import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
-import com.compomics.util.experiment.identification.protein_inference.fm_index.TagElement;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.io.identification.IdfileReaderFactory;
 import com.compomics.util.experiment.io.mass_spectrometry.MsFileHandler;
@@ -303,8 +302,7 @@ public class PeptideMapperCLI {
         if (args.length < 4){
             printHelp();
             System.exit(-1);
-        }
-        
+        }        
 
         WaitingHandlerCLIImpl waitingHandlerCLIImpl = new WaitingHandlerCLIImpl();
         File fastaFile = new File(args[1]);

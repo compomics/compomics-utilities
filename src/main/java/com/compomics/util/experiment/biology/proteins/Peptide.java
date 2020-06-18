@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
  *
  * @author Marc Vaudel
  * @author Dominik Kopczynski
+ * @author Harald Barsnes
  */
 public class Peptide extends ExperimentObject {
 
@@ -100,7 +101,8 @@ public class Peptide extends ExperimentObject {
     ) {
 
         this.sequence = aSequence;
-        this.variableModifications = variableModifications != null && variableModifications.length > 0 ? variableModifications : null;
+        this.variableModifications = variableModifications != null
+                && variableModifications.length > 0 ? variableModifications : null;
         this.variantMatches = variantMatches;
         this.mass = mass;
 
@@ -244,7 +246,14 @@ public class Peptide extends ExperimentObject {
                 String conflictingPtmsString = Arrays.stream(conflictingPtms)
                         .collect(Collectors.joining(", "));
 
-                throw new IllegalArgumentException("Modification names containing '" + MODIFICATION_SEPARATOR + "' or '" + MODIFICATION_LOCALIZATION_SEPARATOR + "' are not supported. Conflicting name(s): " + conflictingPtmsString);
+                throw new IllegalArgumentException(
+                        "Modification names containing '"
+                        + MODIFICATION_SEPARATOR
+                        + "' or '"
+                        + MODIFICATION_LOCALIZATION_SEPARATOR
+                        + "' are not supported. Conflicting name(s): "
+                        + conflictingPtmsString
+                );
 
             }
         }
@@ -415,11 +424,20 @@ public class Peptide extends ExperimentObject {
 
                 } else {
 
-                    throw new IllegalArgumentException("Two modifications found (" + result[site] + " and " + modificationMatch.getModification() + ") at site " + site + " of peptide " + sequence + ".");
+                    throw new IllegalArgumentException(
+                            "Two modifications found ("
+                            + result[site]
+                            + " and "
+                            + modificationMatch.getModification()
+                            + ") at site "
+                            + site + " of peptide "
+                            + sequence + "."
+                    );
 
                 }
             }
         }
+
         return result;
     }
 
@@ -446,7 +464,6 @@ public class Peptide extends ExperimentObject {
     ) {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
-
         String[] result = new String[sequence.length() + 2];
 
         for (String modName : modificationParameters.getFixedModifications()) {
@@ -468,7 +485,17 @@ public class Peptide extends ExperimentObject {
 
                 } else {
 
-                    throw new IllegalArgumentException("Attempting to put two fixed modifications (" + result[site] + " and " + modification.getName() + " on amino acid " + site + " of peptide " + getSequence() + ".");
+                    throw new IllegalArgumentException(
+                            "Attempting to put two fixed modifications ("
+                            + result[site]
+                            + " and "
+                            + modification.getName()
+                            + " on amino acid "
+                            + site
+                            + " of peptide "
+                            + getSequence()
+                            + "."
+                    );
 
                 }
             }
@@ -874,6 +901,7 @@ public class Peptide extends ExperimentObject {
                     possibleSites.add(peptideEnd + 1);
 
                 }
+
                 return possibleSites;
 
             case modc_peptide:
@@ -889,6 +917,7 @@ public class Peptide extends ExperimentObject {
                     possibleSites.add(1);
 
                 }
+
                 return possibleSites;
 
             case modn_peptide:
@@ -919,6 +948,7 @@ public class Peptide extends ExperimentObject {
 
                     }
                 }
+
                 return possibleSites;
 
             case modcaa_peptide:
@@ -943,6 +973,7 @@ public class Peptide extends ExperimentObject {
 
                     }
                 }
+
                 return possibleSites;
 
             case modnaa_protein:
@@ -965,6 +996,7 @@ public class Peptide extends ExperimentObject {
 
                     }
                 }
+
                 return possibleSites;
 
             case modnaa_peptide:
@@ -984,10 +1016,15 @@ public class Peptide extends ExperimentObject {
                     possibleSites.add(1);
 
                 }
+
                 return possibleSites;
 
             default:
-                throw new UnsupportedOperationException("Modification site not implemented for modification of type " + modification.getModificationType() + ".");
+                throw new UnsupportedOperationException(
+                        "Modification site not implemented for modification of type "
+                        + modification.getModificationType()
+                        + "."
+                );
         }
     }
 
@@ -1040,7 +1077,6 @@ public class Peptide extends ExperimentObject {
         String otherMatchingSequence = AminoAcid.getMatchingSequence(otherSequence, sequenceMatchingPreferences);
 
         return matchingSequence.equals(otherMatchingSequence);
-
     }
 
     /**
@@ -1120,46 +1156,64 @@ public class Peptide extends ExperimentObject {
         HashMap<Double, ArrayList<Integer>> modificationToPositionsMap1 = new HashMap<>();
         HashMap<Double, ArrayList<Integer>> modificationToPositionsMap2 = new HashMap<>();
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
+
         for (ModificationMatch modificationMatch : getVariableModifications()) {
+
             String modName = modificationMatch.getModification();
+
             if (modifications.contains(modName)) {
+
                 double tempMass = modificationFactory.getModification(modName).getMass();
                 ArrayList<Integer> sites = modificationToPositionsMap1.get(tempMass);
+
                 if (sites == null) {
                     sites = new ArrayList<>();
                     modificationToPositionsMap1.put(tempMass, sites);
                 }
+
                 int position = modificationMatch.getSite();
                 sites.add(position);
             }
         }
+
         for (ModificationMatch modificationMatch : anotherPeptide.getVariableModifications()) {
+
             String modName = modificationMatch.getModification();
+
             if (modifications.contains(modName)) {
+
                 double tempMass = modificationFactory.getModification(modName).getMass();
                 ArrayList<Integer> sites = modificationToPositionsMap2.get(tempMass);
+
                 if (sites == null) {
                     sites = new ArrayList<>();
                     modificationToPositionsMap2.put(tempMass, sites);
                 }
+
                 int position = modificationMatch.getSite();
                 sites.add(position);
             }
         }
+
         for (double tempMass : modificationToPositionsMap1.keySet()) {
+
             ArrayList<Integer> sites1 = modificationToPositionsMap1.get(tempMass);
             ArrayList<Integer> sites2 = modificationToPositionsMap2.get(tempMass);
+
             if (sites2 == null || sites1.size() != sites2.size()) {
                 return false;
             }
+
             Collections.sort(sites1);
             Collections.sort(sites2);
+
             for (int i = 0; i < sites1.size(); i++) {
                 if (sites1.get(i).intValue() != sites2.get(i)) {
                     return false;
                 }
             }
         }
+
         return true;
     }
 
@@ -1187,18 +1241,27 @@ public class Peptide extends ExperimentObject {
         }
 
         ArrayList<String> modifications = new ArrayList<>();
+
         for (ModificationMatch modificationMatch : getVariableModifications()) {
+
             String modName = modificationMatch.getModification();
+
             if (!modifications.contains(modName)) {
                 modifications.add(modName);
             }
+
         }
+
         for (ModificationMatch modificationMatch : anotherPeptide.getVariableModifications()) {
+
             String modName = modificationMatch.getModification();
+
             if (!modifications.contains(modName)) {
                 modifications.add(modName);
             }
+
         }
+
         return sameModificationsAs(anotherPeptide, modifications);
     }
 
@@ -1381,6 +1444,7 @@ public class Peptide extends ExperimentObject {
                 getSequence(),
                 filteredVariableModifications
         );
+
         noModPeptide.setProteinMapping(getProteinMapping());
 
         return noModPeptide;

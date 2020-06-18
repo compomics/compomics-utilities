@@ -71,9 +71,9 @@ public class AndromedaIdfileReader implements IdfileReader {
 
         return getAllSpectrumMatches(
                 spectrumProvider,
-                waitingHandler, 
-                searchParameters, 
-                null, 
+                waitingHandler,
+                searchParameters,
+                null,
                 false
         );
     }
@@ -85,8 +85,8 @@ public class AndromedaIdfileReader implements IdfileReader {
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) 
-            throws IOException, IllegalArgumentException, SQLException, 
+    )
+            throws IOException, IllegalArgumentException, SQLException,
             ClassNotFoundException, InterruptedException, JAXBException {
 
         String mgfFile = getMgfFileName(fileName);
@@ -101,9 +101,9 @@ public class AndromedaIdfileReader implements IdfileReader {
             int rank = 0;
             boolean firstSpectrum = false;
             while ((line = reader.readLine()) != null) {
-                
+
                 if (line.startsWith(">")) {
-                    
+
                     if (!firstSpectrum) {
                         firstSpectrum = true;
                     }
@@ -111,23 +111,23 @@ public class AndromedaIdfileReader implements IdfileReader {
                     // remove any html from the title
                     title = URLDecoder.decode(title, "utf-8");
                     spectrumMatch = null;
-                    
+
                 } else if (firstSpectrum) {
-                    
+
                     if (spectrumMatch == null) {
-                    
+
                         spectrumMatch = spectrumMatchesMap.get(title);
                         rank = 0; // the rank is here per charge
-                        
+
                         if (spectrumMatch == null) {
-                        
+
                             spectrumMatch = new SpectrumMatch(
-                                    mgfFile, 
+                                    mgfFile,
                                     title
                             );
                             result.add(spectrumMatch);
                             spectrumMatchesMap.put(title, spectrumMatch);
-                        
+
                         }
                     }
                     rank++;
@@ -210,7 +210,7 @@ public class AndromedaIdfileReader implements IdfileReader {
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        
+
         HashMap<String, ArrayList<String>> result = new HashMap<>(1);
         ArrayList<String> versions = new ArrayList<>(1);
         versions.add("1.5.3.4");
@@ -222,30 +222,36 @@ public class AndromedaIdfileReader implements IdfileReader {
     public boolean hasDeNovoTags() {
         return false;
     }
-    
+
     /**
-     * Returns the name of the mgf file corresponding to the given Andromeda file name. Note: the Andromeda result name is expected to be the mgf file without extension appended with ".res" or ".res.gz". 
-     * 
+     * Returns the name of the mgf file corresponding to the given Andromeda
+     * file name. Note: the Andromeda result name is expected to be the mgf file
+     * without extension appended with ".res" or ".res.gz".
+     *
      * @param fileName the Andromeda result file
-     * 
-     * @return The name of the mgf file corresponding to the given Andromeda file name.
+     *
+     * @return The name of the mgf file corresponding to the given Andromeda
+     * file name.
      */
     public static String getMgfFileName(
             String fileName
     ) {
-        
+
         if (fileName.endsWith(".res.gz")) {
-            
+
             return fileName.substring(0, fileName.length() - 7) + ".mgf";
-            
+
         } else if (fileName.endsWith(".res")) {
-            
+
             return fileName.substring(0, fileName.length() - 4) + ".mgf";
-            
+
         } else {
-            
-            throw new IllegalArgumentException("Unexpected file extension. Expected: .res or .res.gz. File name: " + fileName + ".");
-            
+
+            throw new IllegalArgumentException(
+                    "Unexpected file extension. Expected: .res or .res.gz. File name: "
+                    + fileName + "."
+            );
+
         }
     }
 }

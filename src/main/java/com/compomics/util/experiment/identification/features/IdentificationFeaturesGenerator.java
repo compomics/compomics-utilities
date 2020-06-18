@@ -167,14 +167,9 @@ public class IdentificationFeaturesGenerator {
         if (massErrorDistribution == null || massErrorDistribution.get(spectrumFile) == null) {
 
             massErrorDistributionMutex.acquire(spectrumFile);
+            estimateMassErrorDistribution(spectrumFile);
+            massErrorDistributionMutex.release(spectrumFile);
 
-            if (massErrorDistribution == null || massErrorDistribution.get(spectrumFile) == null) {
-
-                estimateMassErrorDistribution(spectrumFile);
-
-                massErrorDistributionMutex.release(spectrumFile);
-
-            }
         }
 
         return massErrorDistribution.get(spectrumFile);
@@ -203,7 +198,7 @@ public class IdentificationFeaturesGenerator {
                         && ((PSParameter) spectrumMatch.getUrParam(PSParameter.dummy))
                                 .getMatchValidationLevel()
                                 .isValidated()
-                        &&  !PeptideUtils.isDecoy(spectrumMatch.getBestPeptideAssumption().getPeptide(), sequenceProvider)
+                        && !PeptideUtils.isDecoy(spectrumMatch.getBestPeptideAssumption().getPeptide(), sequenceProvider)
                 )
                 .mapToDouble(
                         spectrumMatch -> spectrumMatch.getBestPeptideAssumption()

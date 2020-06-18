@@ -172,11 +172,15 @@ public class Advocate extends DbObject {
      */
     public static final Advocate identiPy  = new Advocate(34, "IdentiPy", AdvocateType.search_engine, new Color(128, 128, 0));
     /**
+     * The CompOmics Spectral Searching (COSS) engine.
+     */
+    public static final Advocate coss  = new Advocate(35, "COSS", AdvocateType.spectral_library, new Color(108, 108, 0));
+    /**
      * Advocate type for mzId files where no software is annotated.
      */
     public static final Advocate genericMzId = new Advocate(100, "mzid", AdvocateType.unknown);
     /**
-     * Map of user defined advocates indexed by index.
+     * Map of user-defined advocates indexed by index.
      */
     private static HashMap<Integer, Advocate> userAdvocates = new HashMap<Integer, Advocate>();
     /**
@@ -300,7 +304,7 @@ public class Advocate extends DbObject {
      * @return the implemented advocates in an array
      */
     public static Advocate[] values() {
-        Advocate[] result = new Advocate[37 + userAdvocates.size()];
+        Advocate[] result = new Advocate[38 + userAdvocates.size()];
         int i = 0;
         result[i] = peptideShaker;
         result[++i] = onyaseEngine;
@@ -339,10 +343,12 @@ public class Advocate extends DbObject {
         result[++i] = onyaseEngine;
         result[++i] = metaMorpheus;
         result[++i] = identiPy;
+        result[++i] = coss;
 
         for (Advocate advocate : userAdvocates.values()) {
             result[++i] = advocate;
         }
+
         return result;
     }
 

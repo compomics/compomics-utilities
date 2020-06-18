@@ -207,9 +207,9 @@ public class MsFileHandler implements SpectrumProvider {
             WaitingHandler waitingHandler
     ) throws IOException {
 
-        try ( MsFileIterator iterator = MsFileIterator.getMsFileIterator(msFile, waitingHandler)) {
+        try (MsFileIterator iterator = MsFileIterator.getMsFileIterator(msFile, waitingHandler)) {
 
-            try ( CmsFileWriter writer = new CmsFileWriter(cmsFile)) {
+            try (CmsFileWriter writer = new CmsFileWriter(cmsFile)) {
 
                 String spectrumTitle;
                 while ((spectrumTitle = iterator.next()) != null) {
@@ -434,8 +434,7 @@ public class MsFileHandler implements SpectrumProvider {
     @Override
     public String[] getSpectrumTitles(String fileName) {
 
-        CmsFileReader reader = cmsFileReaderMap.get(IoUtil.removeExtension(fileName));
-
+        CmsFileReader reader = cmsFileReaderMap.get(IoUtil.removeExtension(IoUtil.getFileName(fileName)));
         return reader == null ? null : reader.titles;
 
     }

@@ -8,10 +8,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.utils.ProteinUtils;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
-import com.compomics.util.threading.ObjectMutex;
-import com.compomics.util.threading.SimpleSemaphore;
 import java.util.Arrays;
-import java.util.HashMap;
 
 /**
  * This class builds peptides and proteins based on PSMs. Note that the builder
@@ -19,7 +16,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class PeptideAndProteinBuilder implements AutoCloseable {
+public class PeptideAndProteinBuilder {
 
     /**
      * Empty default constructor
@@ -32,30 +29,6 @@ public class PeptideAndProteinBuilder implements AutoCloseable {
      * The identification object.
      */
     private final Identification identification;
-    /**
-     * An object mutex.
-     */
-    private final ObjectMutex objectMutex = new ObjectMutex();
-    /**
-     * The size of the buffers.
-     */
-    private final int bufferSize = 1024;
-    /**
-     * The peptide matches buffer.
-     */
-    private final HashMap<Long, Object> peptideBuffer = new HashMap<>(bufferSize);
-    /**
-     * Mutex for the peptide buffer.
-     */
-    private final SimpleSemaphore peptideBufferMutex = new SimpleSemaphore(1);
-    /**
-     * The protein matches buffer.
-     */
-    private final HashMap<Long, Object> proteinBuffer = new HashMap<>(bufferSize);
-    /**
-     * Mutex for the protein buffer.
-     */
-    private final SimpleSemaphore proteinBufferMutex = new SimpleSemaphore(1);
 
     /**
      * Constructor.
@@ -95,35 +68,14 @@ public class PeptideAndProteinBuilder implements AutoCloseable {
         Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
         long peptideMatchKey = peptide.getMatchingKey(sequenceMatchingPreferences);
 
-        objectMutex.acquire(peptideMatchKey);
 
         PeptideMatch peptideMatch = identification.getPeptideMatch(peptideMatchKey);
-
-        if (peptideMatch == null) {
-
-            peptideBufferMutex.acquire();
-
-            Object cacheObject = peptideBuffer.get(peptideMatchKey);
-
-            if (cacheObject != null) {
-
-                peptideMatch = (PeptideMatch) cacheObject;
-
-            } else {
-
-                peptideMatch = identification.getPeptideMatch(peptideMatchKey);
-
-            }
-
-            peptideBufferMutex.release();
-
-        }
+        
 
         if (peptideMatch == null) {
 
             peptideMatch = new PeptideMatch(peptide, peptideMatchKey, spectrumMatchKey);
-
-            addPeptideMatch(peptideMatchKey, peptideMatch);
+            identification.addPeptideMatch(peptideMatchKey, peptideMatch);
 
         } else {
 
@@ -131,43 +83,18 @@ public class PeptideAndProteinBuilder implements AutoCloseable {
 
         }
 
-        objectMutex.release(peptideMatchKey);
-
         if (protein) {
 
             long proteinMatchKey = ProteinMatch.getProteinMatchKey(peptide);
 
-            objectMutex.acquire(proteinMatchKey);
-
             ProteinMatch proteinMatch = identification.getProteinMatch(proteinMatchKey);
-
-            if (proteinMatch == null) {
-
-                proteinBufferMutex.acquire();
-
-                Object cacheObject = proteinBuffer.get(proteinMatchKey);
-
-                if (cacheObject != null) {
-
-                    proteinMatch = (ProteinMatch) cacheObject;
-
-                } else {
-
-                    proteinMatch = identification.getProteinMatch(proteinMatchKey);
-
-                }
-
-                proteinBufferMutex.release();
-
-            }
 
             if (proteinMatch == null) {
 
                 proteinMatch = new ProteinMatch(peptideMatch.getPeptide(), peptideMatchKey);
                 proteinMatch.setDecoy(Arrays.stream(proteinMatch.getAccessions())
                         .anyMatch(accession -> ProteinUtils.isDecoy(accession, sequenceProvider)));
-
-                addProteinMatch(proteinMatchKey, proteinMatch);
+                identification.addProteinMatch(proteinMatchKey, proteinMatch);
 
             } else if (Arrays.stream(proteinMatch.getPeptideMatchesKeys()).allMatch(key -> key != peptideMatchKey)) {
 
@@ -175,75 +102,6 @@ public class PeptideAndProteinBuilder implements AutoCloseable {
 
             }
 
-            objectMutex.release(proteinMatchKey);
-
         }
-    }
-
-    /**
-     * Adds a peptide match to the buffer. If the buffer is full, adds it to the
-     * db.
-     *
-     * @param key The key of the peptide match.
-     * @param peptideMatch The peptide Match.
-     */
-    private void addPeptideMatch(
-            long key,
-            PeptideMatch peptideMatch
-    ) {
-
-        peptideBufferMutex.acquire();
-
-        if (peptideBuffer.size() == bufferSize) {
-
-            identification.addPeptideMatches(peptideBuffer);
-            peptideBuffer.clear();
-
-        }
-
-        peptideBuffer.put(key, peptideMatch);
-
-        peptideBufferMutex.release();
-
-    }
-
-    /**
-     * Adds a protein match to the buffer. If the buffer is full, adds it to the
-     * db.
-     *
-     * @param key The key of the protein match.
-     * @param proteinMatch The protein Match.
-     */
-    private void addProteinMatch(
-            long key,
-            ProteinMatch proteinMatch
-    ) {
-
-        proteinBufferMutex.acquire();
-
-        if (proteinBuffer.size() == bufferSize) {
-
-            identification.addProteinMatches(proteinBuffer);
-            proteinBuffer.clear();
-
-        }
-
-        proteinBuffer.put(key, proteinMatch);
-
-        proteinBufferMutex.release();
-
-    }
-
-    @Override
-    public void close() {
-
-        peptideBufferMutex.acquire();
-        identification.addPeptideMatches(peptideBuffer);
-        peptideBufferMutex.release();
-
-        proteinBufferMutex.acquire();
-        identification.addProteinMatches(proteinBuffer);
-        proteinBufferMutex.release();
-
     }
 }

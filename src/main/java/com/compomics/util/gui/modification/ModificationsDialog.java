@@ -39,12 +39,6 @@ import org.jfree.chart.plot.PlotOrientation;
 public class ModificationsDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public ModificationsDialog() {
-    }
-
-    /**
      * The post translational modifications factory.
      */
     private final ModificationFactory modificationFactory = ModificationFactory.getInstance();
@@ -633,7 +627,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-                                                    
+
     /**
      * Changes the cursor into hand cursor.
      *
@@ -653,10 +647,10 @@ public class ModificationsDialog extends javax.swing.JDialog {
         int column = defaultModificationsTable.columnAtPoint(evt.getPoint());
 
         if (row != -1) {
-            if (column == defaultModificationsTable.getColumn("Unimod").getModelIndex() 
+            if (column == defaultModificationsTable.getColumn("Unimod").getModelIndex()
                     || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) {
                 // open protein link in web browser
-                if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex() 
+                if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex()
                         || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) && evt.getButton() == MouseEvent.BUTTON1
                         && defaultModificationsTable.getValueAt(row, column) != null
                         && ((String) defaultModificationsTable.getValueAt(row, column)).lastIndexOf("<html>") != -1) {
@@ -684,8 +678,8 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
         if (row != -1) {
 
-            if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex() 
-                    || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) 
+            if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex()
+                    || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex())
                     && defaultModificationsTable.getValueAt(row, column) != null) {
 
                 String tempValue = (String) defaultModificationsTable.getValueAt(row, column);
@@ -789,11 +783,41 @@ public class ModificationsDialog extends javax.swing.JDialog {
         } else {
             searchInputTxt.setForeground(new Color(204, 204, 204));
         }
+
         if (evt.getKeyCode() == KeyEvent.VK_RIGHT && searchNextButton.isEnabled()) {
             searchNextButtonActionPerformed(null);
         } else if (evt.getKeyCode() == KeyEvent.VK_LEFT & searchPreviousButton.isEnabled()) {
             searchPreviousButtonActionPerformed(null);
-        } else if (searchPossibilities.size() > 1) {
+        } else {
+
+            ArrayList<Integer> toAdd = new ArrayList<>();
+            searchPossibilities.clear();
+            searchCurrentSelection = 0;
+
+            String input = searchInputTxt.getText().trim().toLowerCase();
+
+            if (!input.isEmpty()) {
+
+                for (int i = 0; i < modificationFactory.getDefaultModifications().size(); i++) {
+
+                    String modName = modificationFactory.getDefaultModifications().get(i);
+                    String mass = modificationFactory.getModification(modName).getMass() + "";
+
+                    if (mass.startsWith(input)) {
+                        searchPossibilities.add(i);
+                    } else if (modName.toLowerCase().contains(input)) {
+                        toAdd.add(i);
+                    }
+
+                }
+
+                searchPossibilities.addAll(toAdd);
+
+            }
+        }
+        
+        
+        if (searchPossibilities.size() > 1) {
             searchPreviousButton.setEnabled(true);
             searchNextButton.setEnabled(true);
             searchIndexLabel.setForeground(Color.BLACK);

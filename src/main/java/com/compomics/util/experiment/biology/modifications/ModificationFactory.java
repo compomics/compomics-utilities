@@ -806,7 +806,7 @@ public class ModificationFactory implements ModificationProvider {
         } else {
 
             // single modification mapping
-            String utilitiesPtmName = convertPridePtmToUtilitiesPtm(pridePtmName);
+            String utilitiesPtmName = getUtilitiesModificationName(pridePtmName);
 
             if (utilitiesPtmName != null) {
                 if (!modProfile.contains(utilitiesPtmName)) {
@@ -827,178 +827,178 @@ public class ModificationFactory implements ModificationProvider {
     }
 
     /**
-     * Tries to convert a PRIDE Modification name to utilities Modification
-     * name.
+     * Tries to convert a modification name to a utilities modification
+     * name. Null if no mapping is found.
      *
-     * @param pridePtmName the PRIDE Modification name
-     * @return the utilities Modification name, or null if there is no mapping
+     * @param modName the modification name to map
+     * @return the utilities modification name, or null if there is no mapping
      */
-    private String convertPridePtmToUtilitiesPtm(String pridePtmName) {
+    public String getUtilitiesModificationName(String modName) {
 
-        if (pridePtmName.equalsIgnoreCase("Carbamidomethyl")
-                || pridePtmName.equalsIgnoreCase("S-carboxamidomethyl-L-cysteine")
-                || pridePtmName.equalsIgnoreCase("iodoacetamide - site C")
-                || pridePtmName.equalsIgnoreCase("iodoacetamide -site C")
-                || pridePtmName.equalsIgnoreCase("iodoacetamide derivatized residue")
-                || pridePtmName.equalsIgnoreCase("Iodoacetamide derivative")) {
+        if (modName.equalsIgnoreCase("Carbamidomethyl")
+                || modName.equalsIgnoreCase("S-carboxamidomethyl-L-cysteine")
+                || modName.equalsIgnoreCase("iodoacetamide - site C")
+                || modName.equalsIgnoreCase("iodoacetamide -site C")
+                || modName.equalsIgnoreCase("iodoacetamide derivatized residue")
+                || modName.equalsIgnoreCase("Iodoacetamide derivative")) {
             return "Carbamidomethylation of C";
-        } else if (pridePtmName.equalsIgnoreCase("Oxidation")
-                || pridePtmName.equalsIgnoreCase("monohydroxylated residue")
-                || pridePtmName.equalsIgnoreCase("oxidized residue")) {
+        } else if (modName.equalsIgnoreCase("Oxidation")
+                || modName.equalsIgnoreCase("monohydroxylated residue")
+                || modName.equalsIgnoreCase("oxidized residue")) {
             return "Oxidation of M";
-        } else if (pridePtmName.equalsIgnoreCase("Amidation")) {
-            return "Amidation of the peptide C-term";
-        } else if (pridePtmName.equalsIgnoreCase("Carboxymethyl")
-                || pridePtmName.equalsIgnoreCase("S-carboxymethyl-L-cysteine")
-                || pridePtmName.equalsIgnoreCase("iodoacetic acid derivatized residue")) {
+        } else if (modName.equalsIgnoreCase("Amidation")) {
+            return "Amidation of peptide C-term";
+        } else if (modName.equalsIgnoreCase("Carboxymethyl")
+                || modName.equalsIgnoreCase("S-carboxymethyl-L-cysteine")
+                || modName.equalsIgnoreCase("iodoacetic acid derivatized residue")) {
             return "Carboxymethylation of C";
-        } else if (pridePtmName.equalsIgnoreCase("Farnesylation")) {
+        } else if (modName.equalsIgnoreCase("Farnesylation")) {
             return "Farnesylation of C";
-        } else if (pridePtmName.equalsIgnoreCase("Geranyl-geranyl")) {
+        } else if (modName.equalsIgnoreCase("Geranyl-geranyl")) {
             return "Geranyl-geranyl of C";
-        } else if (pridePtmName.equalsIgnoreCase("Homoserine")) {
+        } else if (modName.equalsIgnoreCase("Homoserine")) {
             return "Homoserine of peptide C-term M";
-        } else if (pridePtmName.equalsIgnoreCase("Homoserine lactone")) {
+        } else if (modName.equalsIgnoreCase("Homoserine lactone")) {
             return "Homoserine lactone of peptide C-term M";
-        } else if (pridePtmName.equalsIgnoreCase("ICAT-C")
-                || pridePtmName.equalsIgnoreCase("Applied Biosystems cleavable ICAT(TM) light")) {
+        } else if (modName.equalsIgnoreCase("ICAT-C")
+                || modName.equalsIgnoreCase("Applied Biosystems cleavable ICAT(TM) light")) {
             return "ICAT-O";
-        } else if (pridePtmName.equalsIgnoreCase("ICAT-C:13C(9)")
-                || pridePtmName.equalsIgnoreCase("Applied Biosystems cleavable ICAT(TM) heavy")) {
+        } else if (modName.equalsIgnoreCase("ICAT-C:13C(9)")
+                || modName.equalsIgnoreCase("Applied Biosystems cleavable ICAT(TM) heavy")) {
             return "ICAT-9";
-        } else if (pridePtmName.equalsIgnoreCase("Lipoyl")) {
+        } else if (modName.equalsIgnoreCase("Lipoyl")) {
             return "Lipoyl of K";
-        } else if (pridePtmName.equalsIgnoreCase("NIPCAM(C)")) {
+        } else if (modName.equalsIgnoreCase("NIPCAM(C)")) {
             return "NIPCAM of C";
-        } else if (pridePtmName.equalsIgnoreCase("Phosphopantetheine")) {
+        } else if (modName.equalsIgnoreCase("Phosphopantetheine")) {
             return "phosphopantetheine s";
-        } else if (pridePtmName.equalsIgnoreCase("Propionamide(C)")
-                || pridePtmName.equalsIgnoreCase("Acrylamide adduct")) {
+        } else if (modName.equalsIgnoreCase("Propionamide(C)")
+                || modName.equalsIgnoreCase("Acrylamide adduct")) {
             return "Propionamide of C";
-        } else if (pridePtmName.equalsIgnoreCase("Pyridylethyl")) {
+        } else if (modName.equalsIgnoreCase("Pyridylethyl")) {
             return "Pyridylethyl of C";
-        } else if (pridePtmName.equalsIgnoreCase("(18)O label at both C-terminal oxygens")) {
+        } else if (modName.equalsIgnoreCase("(18)O label at both C-terminal oxygens")) {
             return "18O(2) of peptide C-term";
-        } else if (pridePtmName.equalsIgnoreCase("(18)O monosubstituted residue")) {
+        } else if (modName.equalsIgnoreCase("(18)O monosubstituted residue")) {
             return "18O(1) of peptide C-term";
-        } else if (pridePtmName.equalsIgnoreCase("(4,4,5,5-(2)H4)-L-lysine")) {
+        } else if (modName.equalsIgnoreCase("(4,4,5,5-(2)H4)-L-lysine")) {
             return "Lysine 2H4";
-        } else if (pridePtmName.equalsIgnoreCase("2-pyrrolidone-5-carboxylic acid (Gln)")
-                || pridePtmName.equalsIgnoreCase("Ammonia-loss")) {
+        } else if (modName.equalsIgnoreCase("2-pyrrolidone-5-carboxylic acid (Gln)")
+                || modName.equalsIgnoreCase("Ammonia-loss")) {
             return "Pyrolidone from Q";
-        } else if (pridePtmName.equalsIgnoreCase("2-pyrrolidone-5-carboxylic acid (Glu)")
-                || pridePtmName.equalsIgnoreCase("Glu->pyro-Glu")) {
+        } else if (modName.equalsIgnoreCase("2-pyrrolidone-5-carboxylic acid (Glu)")
+                || modName.equalsIgnoreCase("Glu->pyro-Glu")) {
             return "Pyrolidone from E";
-        } else if (pridePtmName.equalsIgnoreCase("3-hydroxy-L-proline")) {
+        } else if (modName.equalsIgnoreCase("3-hydroxy-L-proline")) {
             return "Oxidation of P";
-        } else if (pridePtmName.equalsIgnoreCase("3x(2)H labeled L-aspartic acid 4-methyl ester")) {
+        } else if (modName.equalsIgnoreCase("3x(2)H labeled L-aspartic acid 4-methyl ester")) {
             return "Trideuterated Methyl Ester of D";
-        } else if (pridePtmName.equalsIgnoreCase("4x(2)H labeled alpha-dimethylamino N-terminal residue")) {
+        } else if (modName.equalsIgnoreCase("4x(2)H labeled alpha-dimethylamino N-terminal residue")) {
             return "Dimethylation of peptide N-term 2H(4)";
-        } else if (pridePtmName.equalsIgnoreCase("4x(2)H labeled dimethylated L-lysine")) {
+        } else if (modName.equalsIgnoreCase("4x(2)H labeled dimethylated L-lysine")) {
             return "Dimethylation of K 2H(4)";
-        } else if (pridePtmName.equalsIgnoreCase("5-methyl-L-arginine")) {
+        } else if (modName.equalsIgnoreCase("5-methyl-L-arginine")) {
             return "Methylation of R";
-        } else if (pridePtmName.equalsIgnoreCase("6x(13)C labeled L-arginine")) {
+        } else if (modName.equalsIgnoreCase("6x(13)C labeled L-arginine")) {
             return "Arginine 13C6";
-        } else if (pridePtmName.equalsIgnoreCase("6x(13)C,4x(15)N labeled L-arginine")) {
+        } else if (modName.equalsIgnoreCase("6x(13)C,4x(15)N labeled L-arginine")) {
             return "Arginine 13C6 15N4";
-        } else if (pridePtmName.equalsIgnoreCase("6x(13)C labeled L-lysine")) {
+        } else if (modName.equalsIgnoreCase("6x(13)C labeled L-lysine")) {
             return "Lysine 13C6";
-        } else if (pridePtmName.equalsIgnoreCase("6x(13)C,2x(15)N labeled L-lysine")) {
+        } else if (modName.equalsIgnoreCase("6x(13)C,2x(15)N labeled L-lysine")) {
             return "Lysine 13C6 15N2";
-        } else if (pridePtmName.equalsIgnoreCase("L-aspartic acid 4-methyl ester")) {
+        } else if (modName.equalsIgnoreCase("L-aspartic acid 4-methyl ester")) {
             return "Methylation of D";
-        } else if (pridePtmName.equalsIgnoreCase("L-cysteic acid (L-cysteine sulfonic acid)")) {
+        } else if (modName.equalsIgnoreCase("L-cysteic acid (L-cysteine sulfonic acid)")) {
             return "Oxidation of C";
-        } else if (pridePtmName.equalsIgnoreCase("L-cysteine glutathione disulfide")) {
+        } else if (modName.equalsIgnoreCase("L-cysteine glutathione disulfide")) {
             return "Glutathione of C";
-        } else if (pridePtmName.equalsIgnoreCase("L-cysteine methyl disulfide")
-                || pridePtmName.equalsIgnoreCase("methyl methanethiosulfonate")) {
+        } else if (modName.equalsIgnoreCase("L-cysteine methyl disulfide")
+                || modName.equalsIgnoreCase("methyl methanethiosulfonate")) {
             return "Methylthio of C";
-        } else if (pridePtmName.equalsIgnoreCase("L-cystine (cross-link)")) {
+        } else if (modName.equalsIgnoreCase("L-cystine (cross-link)")) {
             return "Didehydro of T";
-        } else if (pridePtmName.equalsIgnoreCase("L-glutamic acid 5-methyl ester (Glu)")
-                || pridePtmName.equalsIgnoreCase("methylated glutamic acid")) {
+        } else if (modName.equalsIgnoreCase("L-glutamic acid 5-methyl ester (Glu)")
+                || modName.equalsIgnoreCase("methylated glutamic acid")) {
             return "Methylation of E";
-        } else if (pridePtmName.equalsIgnoreCase("L-homoarginine")) {
+        } else if (modName.equalsIgnoreCase("L-homoarginine")) {
             return "Guanidination of K";
-        } else if (pridePtmName.equalsIgnoreCase("L-methionine (R)-sulfoxide")
-                || pridePtmName.equalsIgnoreCase("L-methionine (S)-sulfoxide")
-                || pridePtmName.equalsIgnoreCase("L-methionine sulfoxide")) {
+        } else if (modName.equalsIgnoreCase("L-methionine (R)-sulfoxide")
+                || modName.equalsIgnoreCase("L-methionine (S)-sulfoxide")
+                || modName.equalsIgnoreCase("L-methionine sulfoxide")) {
             return "Oxidation of M";
-        } else if (pridePtmName.equalsIgnoreCase("L-methionine sulfone")) {
+        } else if (modName.equalsIgnoreCase("L-methionine sulfone")) {
             return "Dioxidation of M";
-        } else if (pridePtmName.equalsIgnoreCase("N-acetyl-L-asparagine")
-                || pridePtmName.equalsIgnoreCase("N-acetyl-L-cysteine")
-                || pridePtmName.equalsIgnoreCase("N-acetyl-L-glutamic acid")
-                || pridePtmName.equalsIgnoreCase("N-acetyl-L-isoleucine")
-                || pridePtmName.equalsIgnoreCase("N-acetyl-L-serine")
-                || pridePtmName.equalsIgnoreCase("N-acetyl-L-tyrosine")
-                || pridePtmName.equalsIgnoreCase("N2-acetyl-L-tryptophan")
-                || pridePtmName.equalsIgnoreCase("alpha-amino acetylated residue")) {
+        } else if (modName.equalsIgnoreCase("N-acetyl-L-asparagine")
+                || modName.equalsIgnoreCase("N-acetyl-L-cysteine")
+                || modName.equalsIgnoreCase("N-acetyl-L-glutamic acid")
+                || modName.equalsIgnoreCase("N-acetyl-L-isoleucine")
+                || modName.equalsIgnoreCase("N-acetyl-L-serine")
+                || modName.equalsIgnoreCase("N-acetyl-L-tyrosine")
+                || modName.equalsIgnoreCase("N2-acetyl-L-tryptophan")
+                || modName.equalsIgnoreCase("alpha-amino acetylated residue")) {
             return "Acetylation of protein N-term";
-        } else if (pridePtmName.equalsIgnoreCase("N-acetylated L-lysine")
-                || pridePtmName.equalsIgnoreCase("N6-acetyl-L-lysine")) {
+        } else if (modName.equalsIgnoreCase("N-acetylated L-lysine")
+                || modName.equalsIgnoreCase("N6-acetyl-L-lysine")) {
             return "Acetylation of K";
-        } else if (pridePtmName.equalsIgnoreCase("N-ethylmaleimide derivatized cysteine")) {
+        } else if (modName.equalsIgnoreCase("N-ethylmaleimide derivatized cysteine")) {
             return "Nethylmaleimide of C";
-        } else if (pridePtmName.equalsIgnoreCase("N-formyl-L-methionine")) {
+        } else if (modName.equalsIgnoreCase("N-formyl-L-methionine")) {
             return "FormylMet of protein N-term";
-        } else if (pridePtmName.equalsIgnoreCase("N-formylated residue")) {
+        } else if (modName.equalsIgnoreCase("N-formylated residue")) {
             return "Formylation of peptide N-term"; // note: could also be the other formylations
-        } else if (pridePtmName.equalsIgnoreCase("N-methyl-L-serine")) {
+        } else if (modName.equalsIgnoreCase("N-methyl-L-serine")) {
             return "Methylation of S";
-        } else if (pridePtmName.equalsIgnoreCase("N6,N6-dimethyl-L-lysine")) {
+        } else if (modName.equalsIgnoreCase("N6,N6-dimethyl-L-lysine")) {
             return "Dimethylation of K";
-        } else if (pridePtmName.equalsIgnoreCase("N6-formyl-L-lysine")) {
+        } else if (modName.equalsIgnoreCase("N6-formyl-L-lysine")) {
             return "Formylation of K";
-        } else if (pridePtmName.equalsIgnoreCase("N6-methyl-L-lysine")
-                || pridePtmName.equalsIgnoreCase("methylated lysine")
-                || pridePtmName.equalsIgnoreCase("monomethylated L-lysine")) {
+        } else if (modName.equalsIgnoreCase("N6-methyl-L-lysine")
+                || modName.equalsIgnoreCase("methylated lysine")
+                || modName.equalsIgnoreCase("monomethylated L-lysine")) {
             return "Methylation of K";
-        } else if (pridePtmName.equalsIgnoreCase("N6-propanoyl-L-lysine")) {
+        } else if (modName.equalsIgnoreCase("N6-propanoyl-L-lysine")) {
             return "Propionyl of K light";
-        } else if (pridePtmName.equalsIgnoreCase("O-(N-acetylamino)glucosyl-L-serine")) {
+        } else if (modName.equalsIgnoreCase("O-(N-acetylamino)glucosyl-L-serine")) {
             return "HexNAc of S";
-        } else if (pridePtmName.equalsIgnoreCase("O-(N-acetylamino)glucosyl-L-threonine")) {
+        } else if (modName.equalsIgnoreCase("O-(N-acetylamino)glucosyl-L-threonine")) {
             return "HexNAc of T";
-        } else if (pridePtmName.equalsIgnoreCase("O-phospho-L-serine")) {
+        } else if (modName.equalsIgnoreCase("O-phospho-L-serine")) {
             return "Phosphorylation of S";
-        } else if (pridePtmName.equalsIgnoreCase("O-phospho-L-threonine")) {
+        } else if (modName.equalsIgnoreCase("O-phospho-L-threonine")) {
             return "Phosphorylation of T";
-        } else if (pridePtmName.equalsIgnoreCase("O4&apos;-phospho-L-tyrosine")) {
+        } else if (modName.equalsIgnoreCase("O4&apos;-phospho-L-tyrosine")) {
             return "Phosphorylation of Y";
-        } else if (pridePtmName.equalsIgnoreCase("S-carboxamidoethyl-L-cysteine")) {
+        } else if (modName.equalsIgnoreCase("S-carboxamidoethyl-L-cysteine")) {
             return "Propionamide of C";
-        } else if (pridePtmName.equalsIgnoreCase("S-methyl-L-cysteine")) {
+        } else if (modName.equalsIgnoreCase("S-methyl-L-cysteine")) {
             return "Methylation of C";
-        } else if (pridePtmName.equalsIgnoreCase("alpha-amino dimethylated residue")) {
+        } else if (modName.equalsIgnoreCase("alpha-amino dimethylated residue")) {
             return "Dimethylation of N-term";
-        } else if (pridePtmName.equalsIgnoreCase("amidated residue")) {
-            return "Amidation of the peptide C-term";
-        } else if (pridePtmName.equalsIgnoreCase("deamidated L-asparagine")
-                || pridePtmName.equalsIgnoreCase("deglycosylated asparagine")) {
+        } else if (modName.equalsIgnoreCase("amidated residue")) {
+            return "Amidation of peptide C-term";
+        } else if (modName.equalsIgnoreCase("deamidated L-asparagine")
+                || modName.equalsIgnoreCase("deglycosylated asparagine")) {
             return "Deamidation of N";
-        } else if (pridePtmName.equalsIgnoreCase("dihydroxylated residue - site W")) {
+        } else if (modName.equalsIgnoreCase("dihydroxylated residue - site W")) {
             return "Dioxidation of W";
-        } else if (pridePtmName.equalsIgnoreCase("diiodinated residue")) {
+        } else if (modName.equalsIgnoreCase("diiodinated residue")) {
             return "Diiodination of Y";
-        } else if (pridePtmName.equalsIgnoreCase("hydroxylated lysine")
-                || pridePtmName.equalsIgnoreCase("monohydroxylated lysine")) {
+        } else if (modName.equalsIgnoreCase("hydroxylated lysine")
+                || modName.equalsIgnoreCase("monohydroxylated lysine")) {
             return "Oxidation of K";
-        } else if (pridePtmName.equalsIgnoreCase("iodoacetamide -site E")
-                || pridePtmName.equalsIgnoreCase("iodoacetamide - site E")) {
+        } else if (modName.equalsIgnoreCase("iodoacetamide -site E")
+                || modName.equalsIgnoreCase("iodoacetamide - site E")) {
             return "Carbamidomethylat\"iodoacetamide -site E\"ion of E";
-        } else if (pridePtmName.equalsIgnoreCase("iodoacetamide N6-derivatized lysine")) {
+        } else if (modName.equalsIgnoreCase("iodoacetamide N6-derivatized lysine")) {
             return "Carbamidomethylation of K";
-        } else if (pridePtmName.equalsIgnoreCase("monomethylated L-aspartic acid")) {
+        } else if (modName.equalsIgnoreCase("monomethylated L-aspartic acid")) {
             return "Methylation of D";
-        } else if (pridePtmName.equalsIgnoreCase("thioacylation of primary amines - site N-term")) {
+        } else if (modName.equalsIgnoreCase("thioacylation of primary amines - site N-term")) {
             return "Thioacyl of peptide N-term";
-        } else if (pridePtmName.equalsIgnoreCase("ubiquitination signature dipeptidyl lysine")) {
+        } else if (modName.equalsIgnoreCase("ubiquitination signature dipeptidyl lysine")) {
             return "Ubiquitination of K";
-        } else if (pridePtmName.equalsIgnoreCase("Label:13C(6)15N(2)")) {
+        } else if (modName.equalsIgnoreCase("Label:13C(6)15N(2)")) {
             return "Lysine 13C(6) 15N(2)";
         } else {
             return null;
@@ -1062,7 +1062,7 @@ public class ModificationFactory implements ModificationProvider {
         modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1", "Acetyl", null));
         modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:01458", "alpha-amino acetylated residue", null));
         defaultMods.add(modificationName);
-        modificationMap.put(modificationName, modification);
+        modificationMap.put(modificationName, modification);        
 
         // Acetylation of protein N-term
         atomChainAdded = new AtomChain();
@@ -4161,7 +4161,7 @@ public class ModificationFactory implements ModificationProvider {
         modificationMap.put(modificationName, modification);
 
         // Dehydration of S
-        atomChainAdded = new AtomChain();;
+        atomChainAdded = new AtomChain();
         atomChainRemoved = new AtomChain();
         atomChainRemoved.append(new AtomImpl(Atom.H, 0), 2);
         atomChainRemoved.append(new AtomImpl(Atom.O, 0), 1);

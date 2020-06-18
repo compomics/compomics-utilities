@@ -10,3 +10,4 @@ com.compomics.util.experiment.io.identification.idfilereaders.TideIdfileReader
 com.compomics.util.experiment.io.identification.idfilereaders.NovorIdfileReader
 com.compomics.util.experiment.io.identification.idfilereaders.OnyaseIdfileReader
 com.compomics.util.experiment.io.identification.idfilereaders.XTandemIdfileReader
+com.compomics.util.experiment.io.identification.idfilereaders.CossIdfileReader

@@ -11,6 +11,7 @@ import com.compomics.util.experiment.identification.protein_inference.PeptidePro
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
+import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -121,10 +122,11 @@ public class MappingWorker implements Runnable {
                     try {
                         for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(inputPeptide.toUpperCase(), sequenceMatchingPreferences)) {
                             String peptide = peptideProteinMapping.getPeptideSequence();
+                            
                             String accession = peptideProteinMapping.getProteinAccession();
                             int startIndex = peptideProteinMapping.getIndex() + 1;
                             if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
-
+                            
                             outputData.add(peptide + "," + accession + "," + startIndex);
                         }
                         waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
@@ -162,11 +164,23 @@ public class MappingWorker implements Runnable {
                     try {
                         for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(tag, sequenceMatchingPreferences)){
                             String peptide = peptideProteinMapping.getPeptideSequence();
+                            
+                            int l = peptide.length();
+                            
                             String accession = peptideProteinMapping.getProteinAccession();
                             int startIndex = peptideProteinMapping.getIndex() + 1;
                             if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
-
-                            outputData.add(tagString + "," + peptide + "," + accession + "," + startIndex);
+                            
+                            String[] mods = new String[l + 1];
+                            for (int i = 0; i < mods.length; ++i) mods[i] = "";
+                            for (ModificationMatch mm : peptideProteinMapping.getVariableModifications()){
+                                int p = mm.getSite();
+                                if (mods[p].length() != 0) mods[p] += "|";
+                                mods[p] += mm.getModification();
+                            }
+                            String modifications = String.join(":", mods);
+                            
+                            outputData.add(peptide + "," + accession + "," + startIndex + "," + modifications);
                         }
                         waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     }

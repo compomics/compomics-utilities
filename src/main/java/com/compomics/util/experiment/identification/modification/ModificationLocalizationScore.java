@@ -141,7 +141,7 @@ public enum ModificationLocalizationScore {
      * @param nModifications The number of modifications.
      * @param nSites The number of sites.
      *
-     * @return
+     * @return the threshold to use to consider an assignment random
      */
     public double getRandomThreshold(
             int nModifications,

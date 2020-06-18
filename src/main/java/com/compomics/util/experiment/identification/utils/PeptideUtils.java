@@ -12,9 +12,9 @@ import com.compomics.util.parameters.identification.search.ModificationParameter
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -47,7 +47,9 @@ public class PeptideUtils {
     ) {
 
         return peptide.getProteinMapping().navigableKeySet().stream()
-                .anyMatch(accession -> sequenceProvider.getDecoyAccessions().contains(accession));
+                .anyMatch(
+                        accession -> sequenceProvider.getDecoyAccessions().contains(accession)
+                );
 
     }
 
@@ -94,14 +96,19 @@ public class PeptideUtils {
     ) {
 
         return peptide.getProteinMapping().entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey,
-                        entry -> Arrays.stream(entry.getValue())
-                                .mapToObj(index -> getAaBefore(peptide, entry.getKey(), index, nAa, sequenceProvider))
-                                .toArray(String[]::new),
-                        (a, b) -> {
-                            throw new IllegalArgumentException("Duplicate key.");
-                        },
-                        TreeMap::new));
+                .collect(
+                        Collectors.toMap(
+                                Map.Entry::getKey,
+                                entry -> Arrays.stream(entry.getValue())
+                                        .mapToObj(
+                                                index -> getAaBefore(peptide, entry.getKey(), index, nAa, sequenceProvider)
+                                        )
+                                        .toArray(String[]::new),
+                                (a, b) -> {
+                                    throw new IllegalArgumentException("Duplicate key.");
+                                },
+                                TreeMap::new)
+                );
 
     }
 
@@ -125,7 +132,11 @@ public class PeptideUtils {
             SequenceProvider sequenceProvider
     ) {
 
-        return sequenceProvider.getSubsequence(accession, index + peptide.getSequence().length(), index + peptide.getSequence().length() + nAa);
+        return sequenceProvider.getSubsequence(
+                accession,
+                index + peptide.getSequence().length(),
+                index + peptide.getSequence().length() + nAa
+        );
 
     }
 
@@ -147,14 +158,20 @@ public class PeptideUtils {
     ) {
 
         return peptide.getProteinMapping().entrySet().stream()
-                .collect(Collectors.toMap(Map.Entry::getKey,
-                        entry -> Arrays.stream(entry.getValue())
-                                .mapToObj(index -> getAaAfter(peptide, entry.getKey(), index, nAa, sequenceProvider))
-                                .toArray(String[]::new),
-                        (a, b) -> {
-                            throw new IllegalArgumentException("Duplicate key.");
-                        },
-                        TreeMap::new));
+                .collect(
+                        Collectors.toMap(
+                                Map.Entry::getKey,
+                                entry -> Arrays.stream(entry.getValue())
+                                        .mapToObj(
+                                                index -> getAaAfter(peptide, entry.getKey(), index, nAa, sequenceProvider)
+                                        )
+                                        .toArray(String[]::new),
+                                (a, b) -> {
+                                    throw new IllegalArgumentException("Duplicate key.");
+                                },
+                                TreeMap::new
+                        )
+                );
 
     }
 
@@ -167,14 +184,22 @@ public class PeptideUtils {
      */
     public static String getVariableModificationsAsString(ModificationMatch[] modificationMatches) {
 
-        TreeMap<String, HashSet<Integer>> modMap = Arrays.stream(modificationMatches)
-                .collect(Collectors.groupingBy(ModificationMatch::getModification,
-                        TreeMap::new,
-                        Collectors.mapping(ModificationMatch::getSite,
-                                Collectors.toCollection(HashSet::new))));
+        TreeMap<String, TreeSet<Integer>> modMap = Arrays.stream(modificationMatches)
+                .collect(
+                        Collectors.groupingBy(
+                                ModificationMatch::getModification,
+                                TreeMap::new,
+                                Collectors.mapping(
+                                        ModificationMatch::getSite,
+                                        Collectors.toCollection(TreeSet::new)
+                                )
+                        )
+                );
 
         return modMap.entrySet().stream()
-                .map(entry -> getModificationString(entry.getKey(), entry.getValue()))
+                .map(
+                        entry -> getModificationString(entry.getKey(), entry.getValue())
+                )
                 .collect(Collectors.joining(";"));
     }
 
@@ -211,7 +236,7 @@ public class PeptideUtils {
 
         String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
 
-        TreeMap<String, HashSet<Integer>> modMap = IntStream.range(0, fixedModifications.length)
+        TreeMap<String, TreeSet<Integer>> modMap = IntStream.range(0, fixedModifications.length)
                 .mapToObj(i
                         -> new Object() {
             Integer position = i;
@@ -219,13 +244,21 @@ public class PeptideUtils {
         }
                 )
                 .filter(obj -> obj.modification != null)
-                .collect(Collectors.groupingBy(obj -> obj.modification,
-                        TreeMap::new,
-                        Collectors.mapping(obj -> obj.position,
-                                Collectors.toCollection(HashSet::new))));
+                .collect(
+                        Collectors.groupingBy(
+                                obj -> obj.modification,
+                                TreeMap::new,
+                                Collectors.mapping(
+                                        obj -> obj.position,
+                                        Collectors.toCollection(TreeSet::new)
+                                )
+                        )
+                );
 
         return modMap.entrySet().stream()
-                .map(entry -> getModificationString(entry.getKey(), entry.getValue()))
+                .map(
+                        entry -> getModificationString(entry.getKey(), entry.getValue())
+                )
                 .collect(Collectors.joining(";"));
     }
 
@@ -240,12 +273,13 @@ public class PeptideUtils {
      */
     private static String getModificationString(
             String modificationName,
-            HashSet<Integer> sites
+            TreeSet<Integer> sites
     ) {
 
         String sitesString = sites.stream()
-                .sorted()
-                .map(site -> site.toString())
+                .map(
+                        site -> site.toString()
+                )
                 .collect(Collectors.joining(","));
 
         StringBuilder sb = new StringBuilder(modificationName.length() + sitesString.length() + 3);
@@ -356,7 +390,9 @@ public class PeptideUtils {
                                 secondaryAmbiguousModificationSites,
                                 fixedModificationSites,
                                 useHtmlColorCoding,
-                                useShortName))
+                                useShortName
+                        )
+                )
                 .append('-')
                 .append(cTermAsString);
 
@@ -381,7 +417,8 @@ public class PeptideUtils {
      */
     public static String getNtermAsString(
             boolean useShortName,
-            String[]... modificationArrays
+            String[]  
+        ... modificationArrays
     ) {
 
         for (String[] modificationArray : modificationArrays) {
@@ -421,7 +458,8 @@ public class PeptideUtils {
     public static String getCtermAsString(
             boolean useShortName,
             int length,
-            String[]... modificationArrays
+            String[]  
+        ... modificationArrays
     ) {
 
         for (String[] modificationArray : modificationArrays) {
@@ -448,16 +486,16 @@ public class PeptideUtils {
     }
 
     /**
-     * Returns the number of enzymatic termini for the given peptide coordinates and enzyme on this
-     * protein.
+     * Returns the number of enzymatic termini for the given peptide coordinates
+     * and enzyme on this protein.
      *
      * @param peptideStart the 0 based index of the peptide start on the protein
      * @param peptideEnd the 0 based index of the peptide end on the protein
      * @param proteinSequence the protein sequence
      * @param enzyme the enzyme to use
      *
-     * @return the number of enzymatic termini for the given peptide coordinates and enzyme on this
-     * protein
+     * @return the number of enzymatic termini for the given peptide coordinates
+     * and enzyme on this protein
      */
     public static int getNEnzymaticTermini(
             int peptideStart,
@@ -532,14 +570,18 @@ public class PeptideUtils {
         return enzymes.stream()
                 .anyMatch(
                         enzyme -> Arrays.stream(startIndexes)
-                                .anyMatch(
-                                        startIndex -> getNEnzymaticTermini(
-                                                startIndex,
-                                                peptide.getPeptideEnd(proteinAccession, startIndex),
+                                .map(
+                                        index -> getNEnzymaticTermini(
+                                                index,
+                                                peptide.getPeptideEnd(proteinAccession, index),
                                                 proteinSequence,
                                                 enzyme
-                                        ) == 2
-                                ));
+                                        )
+                                )
+                                .anyMatch(
+                                        nTermini -> nTermini == 2
+                                )
+                );
     }
 
     /**
@@ -560,11 +602,14 @@ public class PeptideUtils {
     ) {
 
         return peptide.getProteinMapping().entrySet().stream()
-                .anyMatch(entry -> isEnzymatic(
-                peptide,
-                entry.getKey(),
-                sequenceProvider.getSequence(entry.getKey()),
-                enzymes));
+                .anyMatch(
+                        entry -> isEnzymatic(
+                                peptide,
+                                entry.getKey(),
+                                sequenceProvider.getSequence(entry.getKey()),
+                                enzymes
+                        )
+                );
 
     }
 
@@ -599,10 +644,19 @@ public class PeptideUtils {
      * @return a boolean indicating whether a peptide is at the N-terminus of a
      * protein
      */
-    public static boolean isNterm(Peptide peptide, SequenceProvider sequenceProvider) {
+    public static boolean isNterm(
+            Peptide peptide, 
+            SequenceProvider sequenceProvider
+    ) {
 
         return peptide.getProteinMapping().keySet().stream()
-                .anyMatch(accession -> isNterm(peptide, accession, sequenceProvider));
+                .anyMatch(
+                        accession -> isNterm(
+                                peptide, 
+                                accession, 
+                                sequenceProvider
+                        )
+                );
 
     }
 
@@ -616,10 +670,16 @@ public class PeptideUtils {
      * @return a boolean indicating whether a peptide is at the N-terminus of a
      * given protein
      */
-    public static boolean isNterm(Peptide peptide, String proteinAccession, SequenceProvider sequenceProvider) {
+    public static boolean isNterm(
+            Peptide peptide, 
+            String proteinAccession, 
+            SequenceProvider sequenceProvider
+    ) {
 
         return Arrays.stream(peptide.getProteinMapping().get(proteinAccession))
-                .anyMatch(aa -> aa == 0 || aa == 1 && sequenceProvider.getSequence(proteinAccession).charAt(0) == 'M');
+                .anyMatch(
+                        aa -> aa == 0 || aa == 1 && sequenceProvider.getSequence(proteinAccession).charAt(0) == 'M'
+                );
 
     }
 
@@ -632,11 +692,19 @@ public class PeptideUtils {
      * @return a boolean indicating whether a peptide is at the C-terminus of a
      * protein
      */
-    public static boolean isCterm(Peptide peptide, SequenceProvider sequenceProvider) {
+    public static boolean isCterm(
+            Peptide peptide, 
+            SequenceProvider sequenceProvider
+    ) {
 
         return peptide.getProteinMapping().keySet().stream()
-                .anyMatch(accession -> isCterm(peptide, accession, sequenceProvider));
-
+                .anyMatch(
+                        accession -> isCterm(
+                                peptide, 
+                                accession, 
+                                sequenceProvider
+                        )
+                );
     }
 
     /**
@@ -649,10 +717,16 @@ public class PeptideUtils {
      * @return a boolean indicating whether a peptide is at the N-terminus of a
      * given protein
      */
-    public static boolean isCterm(Peptide peptide, String proteinAccession, SequenceProvider sequenceProvider) {
+    public static boolean isCterm(
+            Peptide peptide, 
+            String proteinAccession, 
+            SequenceProvider sequenceProvider
+    ) {
 
         return Arrays.stream(peptide.getProteinMapping().get(proteinAccession))
-                .anyMatch(aa -> sequenceProvider.getSequence(proteinAccession).length() == aa + peptide.getSequence().length());
+                .anyMatch(
+                        aa -> sequenceProvider.getSequence(proteinAccession).length() == aa + peptide.getSequence().length()
+                );
 
     }
 

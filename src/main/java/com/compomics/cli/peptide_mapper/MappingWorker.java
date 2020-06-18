@@ -11,7 +11,6 @@ import com.compomics.util.experiment.identification.protein_inference.PeptidePro
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
-import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,6 +18,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.regex.Pattern;
+import com.compomics.util.experiment.identification.utils.PeptideUtils;
 
 /**
  *
@@ -165,22 +165,11 @@ public class MappingWorker implements Runnable {
                         for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(tag, sequenceMatchingPreferences)){
                             String peptide = peptideProteinMapping.getPeptideSequence();
                             
-                            int l = peptide.length();
-                            
                             String accession = peptideProteinMapping.getProteinAccession();
                             int startIndex = peptideProteinMapping.getIndex() + 1;
                             if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
                             
-                            String[] mods = new String[l + 1];
-                            for (int i = 0; i < mods.length; ++i) mods[i] = "";
-                            for (ModificationMatch mm : peptideProteinMapping.getVariableModifications()){
-                                int p = mm.getSite();
-                                if (mods[p].length() != 0) mods[p] += "|";
-                                mods[p] += mm.getModification();
-                            }
-                            String modifications = String.join(":", mods);
-                            
-                            outputData.add(peptide + "," + accession + "," + startIndex + "," + modifications);
+                            outputData.add(peptide + "," + accession + "," + startIndex + "," + PeptideUtils.getVariableModificationsAsString(peptideProteinMapping.getVariableModifications()));
                         }
                         waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     }

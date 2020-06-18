@@ -42,7 +42,9 @@ import java.util.Map.Entry;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.xmlpull.v1.XmlPullParserException;
-
+import com.compomics.cli.peptide_mapper.PeptideMapperCLI;
+        
+        
 /**
  * Test for the FM Index.
  *
@@ -70,7 +72,7 @@ public class FMIndexTest extends TestCase {
         }
         catch(Exception e){
             e.printStackTrace();
-            //Assert.assertTrue(false);
+            Assert.assertTrue(false);
         }
     }
     
@@ -90,7 +92,7 @@ public class FMIndexTest extends TestCase {
             "1"
         };
     
-        handleParameters(args);
+        PeptideMapperCLI.handleParameters(args);
     }
     */
     

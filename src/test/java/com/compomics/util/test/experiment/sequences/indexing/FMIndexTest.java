@@ -1,6 +1,5 @@
 package com.compomics.util.test.experiment.sequences.indexing;
 
-import static com.compomics.cli.peptide_mapper.PeptideMapperCLI.handleParameters;
 import com.compomics.util.exceptions.ExceptionHandler;
 import com.compomics.util.exceptions.exception_handlers.CommandLineExceptionHandler;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;

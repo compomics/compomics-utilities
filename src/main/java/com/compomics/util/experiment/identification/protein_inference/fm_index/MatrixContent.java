@@ -103,7 +103,9 @@ public class MatrixContent {
      * The all X mass differences.
      */
     public HashMap<Integer, Double> allXMassDiffs;
-    
+    /**
+     * The number of PTMs.
+     */
     public int numPTMs;
 
     /**

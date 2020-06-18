@@ -22,7 +22,7 @@ public class TideParameters implements IdentificationAlgorithmParameter {
      * The maximum number of variable modifications allowed on a single peptide.
      * The default is no limit (set to null).
      */
-    private Integer maxVariableModificationsPerPeptide = null;
+    private Integer maxVariableModificationsPerPeptide = 5;
     /**
      * The maximum number of variable modifications of each type allowed on a
      * single peptide.

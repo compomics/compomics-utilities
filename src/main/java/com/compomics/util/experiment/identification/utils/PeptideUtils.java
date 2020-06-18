@@ -161,13 +161,13 @@ public class PeptideUtils {
     /**
      * Returns the peptide modifications as a string.
      *
-     * @param peptide the peptide
+     * @param modificationMatches the modification matches
      *
      * @return the peptide modifications as a string
      */
-    public static String getVariableModificationsAsString(Peptide peptide) {
+    public static String getVariableModificationsAsString(ModificationMatch[] modificationMatches) {
 
-        TreeMap<String, HashSet<Integer>> modMap = Arrays.stream(peptide.getVariableModifications())
+        TreeMap<String, HashSet<Integer>> modMap = Arrays.stream(modificationMatches)
                 .collect(Collectors.groupingBy(ModificationMatch::getModification,
                         TreeMap::new,
                         Collectors.mapping(ModificationMatch::getSite,
@@ -176,6 +176,19 @@ public class PeptideUtils {
         return modMap.entrySet().stream()
                 .map(entry -> getModificationString(entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining(";"));
+    }
+
+    /**
+     * Returns the peptide modifications as a string.
+     *
+     * @param peptide the peptide
+     *
+     * @return the peptide modifications as a string
+     */
+    public static String getVariableModificationsAsString(Peptide peptide) {
+
+        return getVariableModificationsAsString(peptide.getVariableModifications());
+        
     }
 
     /**

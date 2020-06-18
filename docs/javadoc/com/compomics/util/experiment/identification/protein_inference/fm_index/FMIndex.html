@@ -166,7 +166,7 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <tr class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#maxPTMsPerPeptide">maxPTMsPerPeptide</a></span></code>
-<div class="block">Maximal number of PTMs per peptide</div>
+<div class="block">Maximal number of PTMs per peptide.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -420,11 +420,13 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </tr>
 <tr id="i26" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#mapTagToProteinTermini-com.compomics.util.experiment.identification.protein_inference.fm_index.MatrixContent-double-boolean-java.util.LinkedList:A-int-">mapTagToProteinTermini</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MatrixContent</a>&nbsp;cell,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#mapTagToProteinTermini-com.compomics.util.experiment.identification.protein_inference.fm_index.MatrixContent-double-boolean-java.util.LinkedList:A-int-int-int-">mapTagToProteinTermini</a></span>(<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MatrixContent</a>&nbsp;cell,
                       double&nbsp;combinationMass,
                       boolean&nbsp;CTermDirection,
                       <a href="http://docs.oracle.com/javase/7/docs/api/java/util/LinkedList.html?is-external=true" title="class or interface in java.util">LinkedList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MatrixContent</a>&gt;[]&nbsp;matrix,
-                      int&nbsp;k)</code>&nbsp;</td>
+                      int&nbsp;k,
+                      int&nbsp;leftIndex,
+                      int&nbsp;rightIndex)</code>&nbsp;</td>
 </tr>
 <tr id="i27" class="rowColor">
 <td class="colFirst"><code>double</code></td>
@@ -490,7 +492,7 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 <li class="blockList">
 <h4>maxPTMsPerPeptide</h4>
 <pre>public&nbsp;int maxPTMsPerPeptide</pre>
-<div class="block">Maximal number of PTMs per peptide</div>
+<div class="block">Maximal number of PTMs per peptide.</div>
 </li>
 </ul>
 <a name="DELIMITER">
@@ -896,7 +898,7 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
 </dl>
 </li>
 </ul>
-<a name="mapTagToProteinTermini-com.compomics.util.experiment.identification.protein_inference.fm_index.MatrixContent-double-boolean-java.util.LinkedList:A-int-">
+<a name="mapTagToProteinTermini-com.compomics.util.experiment.identification.protein_inference.fm_index.MatrixContent-double-boolean-java.util.LinkedList:A-int-int-int-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -906,7 +908,9 @@ implements <a href="../../../../../../../com/compomics/util/experiment/identific
                                    double&nbsp;combinationMass,
                                    boolean&nbsp;CTermDirection,
                                    <a href="http://docs.oracle.com/javase/7/docs/api/java/util/LinkedList.html?is-external=true" title="class or interface in java.util">LinkedList</a>&lt;<a href="../../../../../../../com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MatrixContent</a>&gt;[]&nbsp;matrix,
-                                   int&nbsp;k)</pre>
+                                   int&nbsp;k,
+                                   int&nbsp;leftIndex,
+                                   int&nbsp;rightIndex)</pre>
 </li>
 </ul>
 <a name="getProteinMapping-com.compomics.util.experiment.identification.amino_acid_tags.Tag-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-">

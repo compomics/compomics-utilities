@@ -42,7 +42,9 @@ import java.util.Map.Entry;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.xmlpull.v1.XmlPullParserException;
-
+import com.compomics.cli.peptide_mapper.PeptideMapperCLI;
+        
+        
 /**
  * Test for the FM Index.
  *
@@ -54,6 +56,7 @@ public class FMIndexTest extends TestCase {
     
     public void testWhatHasToBeTested(){
         try {
+            
             terminiPTMTagMapping();
             getSequences();
             peptideToProteinMapping();
@@ -64,10 +67,12 @@ public class FMIndexTest extends TestCase {
             tagToProteinMappingWithVariantsGeneric();
             tagToProteinMappingWithVariantsSpecific();
             tagToProteinMappingWithVariantsFixed();
+            
             //mapperTest();
         }
         catch(Exception e){
-            //e.printStackTrace();
+            e.printStackTrace();
+            Assert.assertTrue(false);
         }
     }
     
@@ -77,8 +82,8 @@ public class FMIndexTest extends TestCase {
         String[] args = new String[]{
             "-t",
             "/home/dominik.kopczynski/Data/artifacts/uniprot-human-reviewed-trypsin-april-2019_concatenated_target_decoy.fasta",
-            "/home/dominik.kopczynski/Data/artifacts/extracted-tags.csv",
-            //"/home/dominik.kopczynski/Data/artifacts/test.csv",
+            //"/home/dominik.kopczynski/Data/artifacts/extracted-tags.csv",
+            "/home/dominik.kopczynski/Data/artifacts/test.csv",
             "/home/dominik.kopczynski/Data/artifacts/extracted-tags-out.csv",
             "-u",
             //"/home/dominik.kopczynski/Data/artifacts/de novo ptm - common artifacts.par"
@@ -87,9 +92,10 @@ public class FMIndexTest extends TestCase {
             "1"
         };
     
-        handleParameters(args);
+        PeptideMapperCLI.handleParameters(args);
     }
     */
+    
     
     
     public void terminiPTMTagMapping() throws Exception {
@@ -736,6 +742,7 @@ public class FMIndexTest extends TestCase {
         Modification ptmPattern;
         
         
+        
         ////////////////////////////////////////////////////////////////////////
         // normal tags mass accuracy in PPM
         ////////////////////////////////////////////////////////////////////////
@@ -783,6 +790,7 @@ public class FMIndexTest extends TestCase {
         
         searchParameters.setModificationParameters(modificationParameters);
         fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        fmIndex.maxPTMsPerPeptide = 5;
         peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
         Assert.assertTrue(peptideProteinMappings.size() > 0);
         peptideProteinMapping = peptideProteinMappings.get(0);
@@ -814,6 +822,7 @@ public class FMIndexTest extends TestCase {
         
         searchParameters.setModificationParameters(modificationParameters);
         fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        fmIndex.maxPTMsPerPeptide = 5;
         peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
         Assert.assertTrue(peptideProteinMappings.size() > 0);
         peptideProteinMapping = peptideProteinMappings.get(0);
@@ -844,6 +853,7 @@ public class FMIndexTest extends TestCase {
         
         searchParameters.setModificationParameters(modificationParameters);
         fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        fmIndex.maxPTMsPerPeptide = 5;
         peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
         Assert.assertTrue(peptideProteinMappings.size() == 0);
         
@@ -1367,6 +1377,8 @@ public class FMIndexTest extends TestCase {
         modificationMatches = peptideProteinMapping.getVariableModifications();
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.length == 0);
+        
+        
 
         // TESTMRITESTCKTESTK with one fixed and one variable modification at peptide n-terminus and c-terminus
         aminoAcidSequence = new AminoAcidSequence("TEST");
@@ -1388,6 +1400,9 @@ public class FMIndexTest extends TestCase {
         Assert.assertTrue(modificationMatches != null);
         Assert.assertTrue(modificationMatches.length == 1);
         Assert.assertTrue(modificationMatches[0].getSite() == 10);
+        
+        
+        
 
         // TESTMRITESTCKTESTK with one fixed and one variable modification at peptide n-terminus and c-terminus
         aminoAcidSequence = new AminoAcidSequence("TEST");

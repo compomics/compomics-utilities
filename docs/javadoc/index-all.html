@@ -11630,8 +11630,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getNEnzymaticTermini-int-int-java.lang.String-com.compomics.util.experiment.biology.enzymes.Enzyme-">getNEnzymaticTermini(int, int, String, Enzyme)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
 <dd>
-<div class="block">Returns the number of enzymatic termini for the given peptide coordinates and enzyme on this
- protein.</div>
+<div class="block">Returns the number of enzymatic termini for the given peptide coordinates
+ and enzyme on this protein.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/db/GeneratorException.html#getNestedException--">getNestedException()</a></span> - Method in exception com.compomics.util.db.<a href="com/compomics/util/db/GeneratorException.html" title="class in com.compomics.util.db">GeneratorException</a></dt>
 <dd>
@@ -15886,6 +15886,10 @@
 <div class="block">Returns the expected variable modification names included in this
  profile.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getVariableModificationsAsString-com.compomics.util.experiment.identification.matches.ModificationMatch:A-">getVariableModificationsAsString(ModificationMatch[])</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
+<dd>
+<div class="block">Returns the peptide modifications as a string.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html#getVariableModificationsAsString-com.compomics.util.experiment.biology.proteins.Peptide-">getVariableModificationsAsString(Peptide)</a></span> - Static method in class com.compomics.util.experiment.identification.utils.<a href="com/compomics/util/experiment/identification/utils/PeptideUtils.html" title="class in com.compomics.util.experiment.identification.utils">PeptideUtils</a></dt>
 <dd>
 <div class="block">Returns the peptide modifications as a string.</div>
@@ -19752,7 +19756,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/cli/peptide_mapper/MappingWorker.html#MappingWorker-com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl-com.compomics.util.experiment.identification.protein_inference.FastaMapper-com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters-java.io.BufferedReader-java.io.PrintWriter-boolean-boolean-">MappingWorker(WaitingHandlerCLIImpl, FastaMapper, SequenceMatchingParameters, BufferedReader, PrintWriter, boolean, boolean)</a></span> - Constructor for class com.compomics.cli.peptide_mapper.<a href="com/compomics/cli/peptide_mapper/MappingWorker.html" title="class in com.compomics.cli.peptide_mapper">MappingWorker</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#mapTagToProteinTermini-com.compomics.util.experiment.identification.protein_inference.fm_index.MatrixContent-double-boolean-java.util.LinkedList:A-int-">mapTagToProteinTermini(MatrixContent, double, boolean, LinkedList&lt;MatrixContent&gt;[], int)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
+<dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#mapTagToProteinTermini-com.compomics.util.experiment.identification.protein_inference.fm_index.MatrixContent-double-boolean-java.util.LinkedList:A-int-int-int-">mapTagToProteinTermini(MatrixContent, double, boolean, LinkedList&lt;MatrixContent&gt;[], int, int, int)</a></span> - Method in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/compomics/util/experiment/io/parameters/MarshallableParameter.html" title="interface in com.compomics.util.experiment.io.parameters"><span class="typeNameLink">MarshallableParameter</span></a> - Interface in <a href="com/compomics/util/experiment/io/parameters/package-summary.html">com.compomics.util.experiment.io.parameters</a></dt>
 <dd>
@@ -20138,7 +20142,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html#maxPTMsPerPeptide">maxPTMsPerPeptide</a></span> - Variable in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/FMIndex.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">FMIndex</a></dt>
 <dd>
-<div class="block">Maximal number of PTMs per peptide</div>
+<div class="block">Maximal number of PTMs per peptide.</div>
 </dd>
 <dt><a href="com/compomics/util/experiment/identification/modification/scores/MDScore.html" title="class in com.compomics.util.experiment.identification.modification.scores"><span class="typeNameLink">MDScore</span></a> - Class in <a href="com/compomics/util/experiment/identification/modification/scores/package-summary.html">com.compomics.util.experiment.identification.modification.scores</a></dt>
 <dd>
@@ -21698,7 +21702,9 @@
 <div class="block">The index of the filter.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html#numPTMs">numPTMs</a></span> - Variable in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MatrixContent</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">The number of PTMs.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html#numSpecificVariants">numSpecificVariants</a></span> - Variable in class com.compomics.util.experiment.identification.protein_inference.fm_index.<a href="com/compomics/util/experiment/identification/protein_inference/fm_index/MatrixContent.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">MatrixContent</a></dt>
 <dd>
 <div class="block">The specific variants.</div>

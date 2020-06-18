@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.regex.Pattern;
+import com.compomics.util.experiment.identification.utils.PeptideUtils;
 
 /**
  *
@@ -121,10 +122,11 @@ public class MappingWorker implements Runnable {
                     try {
                         for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(inputPeptide.toUpperCase(), sequenceMatchingPreferences)) {
                             String peptide = peptideProteinMapping.getPeptideSequence();
+                            
                             String accession = peptideProteinMapping.getProteinAccession();
                             int startIndex = peptideProteinMapping.getIndex() + 1;
                             if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
-
+                            
                             outputData.add(peptide + "," + accession + "," + startIndex);
                         }
                         waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
@@ -162,11 +164,12 @@ public class MappingWorker implements Runnable {
                     try {
                         for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(tag, sequenceMatchingPreferences)){
                             String peptide = peptideProteinMapping.getPeptideSequence();
+                            
                             String accession = peptideProteinMapping.getProteinAccession();
                             int startIndex = peptideProteinMapping.getIndex() + 1;
                             if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
-
-                            outputData.add(tagString + "," + peptide + "," + accession + "," + startIndex);
+                            
+                            outputData.add(peptide + "," + accession + "," + startIndex + "," + PeptideUtils.getVariableModificationsAsString(peptideProteinMapping.getVariableModifications()));
                         }
                         waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     }

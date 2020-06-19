@@ -213,7 +213,7 @@ public class PeptideUtils {
     public static String getVariableModificationsAsString(Peptide peptide) {
 
         return getVariableModificationsAsString(peptide.getVariableModifications());
-        
+
     }
 
     /**
@@ -417,8 +417,7 @@ public class PeptideUtils {
      */
     public static String getNtermAsString(
             boolean useShortName,
-            String[]  
-        ... modificationArrays
+            String[]... modificationArrays
     ) {
 
         for (String[] modificationArray : modificationArrays) {
@@ -458,8 +457,7 @@ public class PeptideUtils {
     public static String getCtermAsString(
             boolean useShortName,
             int length,
-            String[]  
-        ... modificationArrays
+            String[]... modificationArrays
     ) {
 
         for (String[] modificationArray : modificationArrays) {
@@ -628,8 +626,11 @@ public class PeptideUtils {
             String accession
     ) {
 
+        if (peptide.getVariantMatches() == null) {
+            return false;
+        }
+
         int[] indexesOnProtein = peptide.getProteinMapping().get(accession);
-        if (peptide.getVariantMatches() == null) return false;
         HashMap<Integer, PeptideVariantMatches> variantOnProtein = peptide.getVariantMatches().get(accession);
 
         return indexesOnProtein.length == variantOnProtein.size();
@@ -646,15 +647,15 @@ public class PeptideUtils {
      * protein
      */
     public static boolean isNterm(
-            Peptide peptide, 
+            Peptide peptide,
             SequenceProvider sequenceProvider
     ) {
 
         return peptide.getProteinMapping().keySet().stream()
                 .anyMatch(
                         accession -> isNterm(
-                                peptide, 
-                                accession, 
+                                peptide,
+                                accession,
                                 sequenceProvider
                         )
                 );
@@ -672,8 +673,8 @@ public class PeptideUtils {
      * given protein
      */
     public static boolean isNterm(
-            Peptide peptide, 
-            String proteinAccession, 
+            Peptide peptide,
+            String proteinAccession,
             SequenceProvider sequenceProvider
     ) {
 
@@ -694,15 +695,15 @@ public class PeptideUtils {
      * protein
      */
     public static boolean isCterm(
-            Peptide peptide, 
+            Peptide peptide,
             SequenceProvider sequenceProvider
     ) {
 
         return peptide.getProteinMapping().keySet().stream()
                 .anyMatch(
                         accession -> isCterm(
-                                peptide, 
-                                accession, 
+                                peptide,
+                                accession,
                                 sequenceProvider
                         )
                 );
@@ -719,8 +720,8 @@ public class PeptideUtils {
      * given protein
      */
     public static boolean isCterm(
-            Peptide peptide, 
-            String proteinAccession, 
+            Peptide peptide,
+            String proteinAccession,
             SequenceProvider sequenceProvider
     ) {
 

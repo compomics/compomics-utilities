@@ -2587,6 +2587,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             if (aminoAcid == DELIMITER) {
                                 continue;
                             }
+                            
                             final double newMass = oldMass + aaMasses[borders[3]];
                             final int aminoAcidSearch = (borders[4] == -1) ? aminoAcid : borders[4];
                             final int lessValue = less[aminoAcidSearch];
@@ -2611,8 +2612,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                 for (int index : aaMassIndexes) {
                                     double aminoMass = oldMass + aaMasses[index];
                                     int amino = index & 127;
-
-                                    if (amino != aminoAcid && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
+                                    if (amino != aminoAcid && substitutionMatrix[amino][aminoAcid] && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
                                         if (!massNotValid(aminoMass, combinationMass)) {
                                             int offsetSub = ((computeMassValue(aminoMass, combinationMass) <= massTolerance) ? 1 : 0);
                                             matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, (char) aminoAcid, null));
@@ -2683,7 +2683,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0]));
 
                                     // substitution
-                                    if (aminoAcid != errorAminoAcid) {
+                                    if (aminoAcid != errorAminoAcid && substitutionMatrix[errorAminoAcid][aminoAcid]) {
                                         matrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, length + 1, numVariants + 1, (char) errorAminoAcid));
                                     }
                                 }
@@ -2769,7 +2769,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                         double aminoMass = oldMass + aaMasses[index];
                                         int amino = index & 127;
 
-                                        if (amino != aminoAcid && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
+                                        if (amino != aminoAcid && substitutionMatrix[amino][aminoAcid] && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
                                             int offsetSub = ((computeMassValue(aminoMass, combinationMass) <= massTolerance) ? 1 : 0);
                                             matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, (char) aminoAcid, null));
 
@@ -2839,7 +2839,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0]));
 
                                     // substitution
-                                    if (aminoAcid != errorAminoAcid) {
+                                    if (aminoAcid != errorAminoAcid && substitutionMatrix[errorAminoAcid][aminoAcid]) {
                                         matrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, length + 1, numVariants + 1, (char) errorAminoAcid));
                                     }
                                 }
@@ -3381,7 +3381,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     }
 
                                     double aminoMass = oldMass + aaMasses[index];
-                                    if (amino != aminoAcid && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
+                                    if (amino != aminoAcid && substitutionMatrix[amino][aminoAcid] && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
                                         if (!massNotValid(aminoMass, combinationMass)) {
                                             int offsetSub = ((computeMassValue(aminoMass, combinationMass) <= massTolerance) ? 1 : 0);
                                             matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, new int[]{numDeletions, numInsertions, numSubstitutions + 1}, (char) aminoAcid, null));
@@ -3550,7 +3550,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                         }
 
                                         double aminoMass = oldMass + aaMasses[index];
-                                        if (amino != aminoAcid && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
+                                        if (amino != aminoAcid && substitutionMatrix[amino][aminoAcid] && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
 
                                             int offsetSub = ((computeMassValue(aminoMass, combinationMass) <= massTolerance) ? 1 : 0);
                                             matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, new int[]{numDeletions, numInsertions, numSubstitutions + 1}, (char) aminoAcid, null));

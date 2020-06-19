@@ -618,6 +618,7 @@ public class PeptideUtils {
     ) {
 
         int[] indexesOnProtein = peptide.getProteinMapping().get(accession);
+        if (peptide.getVariantMatches() == null) return false;
         HashMap<Integer, PeptideVariantMatches> variantOnProtein = peptide.getVariantMatches().get(accession);
 
         return indexesOnProtein.length == variantOnProtein.size();

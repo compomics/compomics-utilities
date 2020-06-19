@@ -47,10 +47,6 @@ public class CossIdfileReader implements IdfileReader {
      */
     private File cossTsvFile;
     /**
-     * The name of the COSS result file.
-     */
-    private String fileName;
-    /**
      * The compomics PTM factory.
      */
     private final ModificationFactory modificationFactory = ModificationFactory.getInstance();
@@ -90,7 +86,6 @@ public class CossIdfileReader implements IdfileReader {
     ) throws IOException {
 
         this.cossTsvFile = cossTsvFile;
-        fileName = IoUtil.getFileName(cossTsvFile);
 
         // get the coss version number
         //extractVersionNumber(); // @TODO: not implemented
@@ -146,8 +141,6 @@ public class CossIdfileReader implements IdfileReader {
             throws IOException, IllegalArgumentException, SQLException,
             ClassNotFoundException, InterruptedException, JAXBException {
 
-        String mgfFile = getMgfFileName(fileName);
-        
         ArrayList<SpectrumMatch> result = new ArrayList<>();
 
         try (SimpleFileReader reader = SimpleFileReader.getFileReader(cossTsvFile)) {
@@ -165,11 +158,11 @@ public class CossIdfileReader implements IdfileReader {
 
             // parse the header line
             String[] headers = headerString.split("\t");
-            int titleIndex = -1, libraryIndex = -1, scanNumberIndex = -1,
-                    rtIndex = -1, sequenceIndex = -1, precMassIndex = -1,
-                    chargeQueryIndex = -1, chargeLibIndex = -1,
-                    cossScoreIndex = -1, validationFdrIndex = -1,
-                    modificationsIndex = -1, proteinsIndex = -1, filteredQueryPeaksIndex = -1,
+            int fileIndex = -1, titleIndex = -1, rankIndex = -1, libraryIndex = -1,
+                    scanNumberIndex = -1, rtIndex = -1, sequenceIndex = -1,
+                    precMassIndex = -1, chargeQueryIndex = -1, chargeLibIndex = -1,
+                    cossScoreIndex = -1, validationFdrIndex = -1, modificationsIndex = -1,
+                    proteinsIndex = -1, filteredQueryPeaksIndex = -1,
                     filteredLibraryPeaksIndex = -1, sumIntQueryIndex = -1,
                     sumIntLibIndex = -1, matchedPeaksIndex = -1,
                     matchedIntQueryIndex = -1, matchedIntLibIndex = -1;
@@ -178,8 +171,12 @@ public class CossIdfileReader implements IdfileReader {
             for (int i = 0; i < headers.length; i++) {
                 String header = headers[i];
 
-                if (header.equalsIgnoreCase("Title")) {
+                if (header.equalsIgnoreCase("File")) {
+                    fileIndex = i;
+                } else if (header.equalsIgnoreCase("Title")) {
                     titleIndex = i;
+                } else if (header.equalsIgnoreCase("Rank")) {
+                    rankIndex = i;
                 } else if (header.equalsIgnoreCase("Library")) {
                     libraryIndex = i;
                 } else if (header.equalsIgnoreCase("Scan No.")) {
@@ -222,13 +219,17 @@ public class CossIdfileReader implements IdfileReader {
             }
 
             // check if all the required headers are found
-            if (titleIndex == -1 || sequenceIndex == -1 || modificationsIndex == -1
-                    || cossScoreIndex == -1 || chargeLibIndex == -1 || validationFdrIndex == -1) {
+            if (fileIndex == -1 || titleIndex == -1 || rankIndex == -1
+                    || sequenceIndex == -1 || modificationsIndex == -1
+                    || cossScoreIndex == -1 || chargeLibIndex == -1
+                    || validationFdrIndex == -1) {
                 throw new IllegalArgumentException(
                         "Mandatory columns are missing in the COSS tsv file. Please check the file!");
             }
 
             String line;
+            String currentSpectrumTitle = null;
+            SpectrumMatch currentMatch = null;
 
             // get the psms
             while ((line = reader.readLine()) != null) {
@@ -237,32 +238,41 @@ public class CossIdfileReader implements IdfileReader {
 
                 if (!line.trim().isEmpty()) { // @TODO: make this more robust?
 
+                    // get spectrum file name and title
+                    String spectrumFileName = elements[fileIndex];
                     String spectrumTitle = elements[titleIndex];
+                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8"); // remove any html from the title
+
+                    // set up the yet empty spectrum match, or add to the current match
+                    if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {
+
+                        // add the previous match, if any
+                        if (currentMatch != null) {
+                            result.add(currentMatch);
+                        }
+
+                        currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
+                        currentSpectrumTitle = spectrumTitle;
+                        
+                    }
+                    
+                    // get the peptide sequence
                     String peptideSequence = elements[sequenceIndex].toUpperCase();
-                    String modifications = elements[modificationsIndex].trim();
+                    
+                    // get the rank and charge
+                    int rank = Integer.valueOf(elements[rankIndex]);
+                    int charge = Integer.valueOf(elements[chargeLibIndex]); // @TODO: correct to use this one?
 
                     // get the coss score and convert it to e-value like
                     String scoreAsText = elements[cossScoreIndex];
                     double cossRawScore = Util.readDoubleAsString(scoreAsText);
-                    double cossTransformedScore = Math.pow(10, -cossRawScore);
+                    //double cossTransformedScore = Math.pow(10, -cossRawScore);
 
                     // coss fdr value
-                    double cossFdrValue = Util.readDoubleAsString(elements[validationFdrIndex]);
+                    double cossFdrValue = Util.readDoubleAsString(elements[validationFdrIndex]);   
 
-                    int rank = 1; // Integer.valueOf(elements[rankIndex]); // @TODO: only includes the best match?
-                    int charge = Integer.valueOf(elements[chargeLibIndex]); // @TODO: correct to use this one?
-
-                    String fileName = mgfFile; //elements[filenameIndex]; // @TODO: not provided...
-
-                    // remove TITLE= from the title
-                    spectrumTitle = spectrumTitle.substring("TITLE=".length()); // @TODO: for some reason the title tag is included in the title...
-
-                    // remove any html from the title
-                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
-
-                    SpectrumMatch spectrumMatch = new SpectrumMatch(fileName, spectrumTitle);
-
-                    // get the modifications
+                    // get and process the modifications
+                    String modifications = elements[modificationsIndex].trim();
                     ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<>(1);
 
                     if (!modifications.isEmpty() && !modifications.equalsIgnoreCase("0")) {
@@ -377,8 +387,7 @@ public class CossIdfileReader implements IdfileReader {
                             rank,
                             Advocate.coss.getIndex(),
                             charge,
-                            //cossTransformedScore, 
-                            cossFdrValue,
+                            cossFdrValue, //cossTransformedScore
                             IoUtil.getFileName(cossTsvFile)
                     );
 
@@ -406,21 +415,23 @@ public class CossIdfileReader implements IdfileReader {
                             );
 
                             newAssumption.setRawScore(cossRawScore);
-                            spectrumMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), newAssumption);
+                            currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), newAssumption);
 
                         }
 
                     } else {
-                        spectrumMatch.addPeptideAssumption(Advocate.coss.getIndex(), peptideAssumption);
+                        currentMatch.addPeptideAssumption(Advocate.coss.getIndex(), peptideAssumption);
                     }
 
                     if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                         break;
                     }
-
-                    // create the spectrum match
-                    result.add(spectrumMatch);
                 }
+            }
+            
+            // add the last match, if any
+            if (currentMatch != null) {
+                result.add(currentMatch);
             }
         }
 
@@ -444,39 +455,5 @@ public class CossIdfileReader implements IdfileReader {
     @Override
     public boolean hasDeNovoTags() {
         return false;
-    }
-
-    /**
-     * Returns the name of the mgf file corresponding to the given COSS file
-     * name. Note: the COSS result name is expected to be the mgf file without
-     * extension appended with ".coss.tsv" or ".coss.tsv.gz".
-     *
-     * @param fileName the COSS result file
-     *
-     * @return The name of the mgf file corresponding to the given COSS file
-     * name.
-     */
-    public static String getMgfFileName(
-            String fileName
-    ) {
-
-        if (fileName.endsWith(".coss.tsv.gz")) {
-
-            return fileName.substring(0, fileName.length() - 7) + ".mgf";
-
-        } else if (fileName.endsWith(".coss.tsv")) {
-
-            return fileName.substring(0, fileName.length() - 4) + ".mgf";
-
-        } else {
-
-            throw new IllegalArgumentException(
-                    "Unexpected file extension. "
-                    + "Expected: .coss.tsv or .coss.tsv.gz. "
-                    + "File name: "
-                    + fileName + "."
-            );
-
-        }
     }
 }

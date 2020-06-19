@@ -8,6 +8,7 @@ import com.compomics.util.experiment.biology.variants.amino_acids.*;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationCategory;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
@@ -664,6 +665,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             // check which amino acids have variable modificatitions
             for (String modification : variableModifications) {
                 Modification ptm = ptmFactory.getModification(modification);
+                if (ptm.getCategory() == ModificationCategory.Nucleotide_Substitution_One || 
+                    ptm.getCategory() == ModificationCategory.Nucleotide_Substitution_TwoPlus) continue;
+                
                 //System.out.println("v: " + modification + " " + ptm.getModificationType());
                 ArrayList<Character> targets;
                 switch (ptm.getModificationType()) {
@@ -840,6 +844,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             // change masses for fixed modifications
             for (String modification : fixedModifications) {
                 Modification ptm = ptmFactory.getModification(modification);
+                if (ptm.getCategory() == ModificationCategory.Nucleotide_Substitution_One || 
+                    ptm.getCategory() == ModificationCategory.Nucleotide_Substitution_TwoPlus) continue;
                 //System.out.println("f: " + modification + " " + ptm.getModificationType());
                 ArrayList<Character> targets;
                 switch (ptm.getModificationType()) {

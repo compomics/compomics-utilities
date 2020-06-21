@@ -300,7 +300,9 @@ public class PeptideProteinMapping {
                 if (peptideProteinMapping.getPeptideVariantMatches() != null) {
 
                     HashMap<String, HashMap<Integer, PeptideVariantMatches>> proteinVariantMap = variantsMap.get(peptideKey);
-                    HashMap<Integer, PeptideVariantMatches> variantIndex = proteinVariantMap.get(proteinAccession);
+                    if (proteinVariantMap == null) proteinVariantMap = new HashMap<>();
+                    HashMap<Integer, PeptideVariantMatches> variantIndex = null;
+                    if (proteinAccession != null) variantIndex = proteinVariantMap.get(proteinAccession);
 
                     if (variantIndex == null) {
 

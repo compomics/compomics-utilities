@@ -1817,6 +1817,18 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_ENZYMATIC_TAGS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_ENZYMATIC_TAGS.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.SEQUENCE_MATCHING_ENZYMATIC_TAGS.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MAX_PTMS_PER_TAG.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MAX_PTMS_PER_TAG.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MAX_PTMS_PER_TAG.id, arg, true)) {
+                return false;
+            }
+        }
         Integer min = null;
         if (aLine.hasOption(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MIN.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MIN.id);
@@ -3880,6 +3892,16 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_X.id);
             Double value = new Double(arg);
             sequenceMatchingPreferences.setLimitX(value);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_ENZYMATIC_TAGS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_ENZYMATIC_TAGS.id);
+            Integer option = new Integer(arg);
+            sequenceMatchingPreferences.setEnzymaticTagsOnly(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MAX_PTMS_PER_TAG.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MAX_PTMS_PER_TAG.id);
+            Integer intValue = new Integer(arg);
+            sequenceMatchingPreferences.setMaxPtmsPerTagPeptide(intValue);
         }
 
         //////////////////////////////////

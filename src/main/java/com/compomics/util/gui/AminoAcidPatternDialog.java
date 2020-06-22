@@ -631,7 +631,7 @@ public class AminoAcidPatternDialog extends javax.swing.JDialog {
             tempSequence = tempSequence.replaceAll("\\<[^>]*>", "");
         }
 
-        HashSet<Integer> indexes = Arrays.stream(pattern.getIndexes(tempSequence, SequenceMatchingParameters.defaultStringMatching))
+        HashSet<Integer> indexes = Arrays.stream(pattern.getIndexes(tempSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING))
                 .boxed()
                 .collect(Collectors.toCollection(HashSet::new));
 

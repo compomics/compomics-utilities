@@ -69,7 +69,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
             int precursorCharge
     ) {
 
-        if (this.tag == null || !this.tag.isSameAs(newTag, SequenceMatchingParameters.defaultStringMatching) || this.precursorCharge != precursorCharge) {
+        if (this.tag == null || !this.tag.isSameAs(newTag, SequenceMatchingParameters.DEFAULT_STRING_MATCHING) || this.precursorCharge != precursorCharge) {
 
             // Set new values
             this.tag = newTag;

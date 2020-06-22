@@ -265,7 +265,7 @@ public class ProteinIteratorUtils {
             String fixedProteinNtermModificationAtAa = fixedProteinNtermModificationsAtAa.get(nTermAaChar);
             if (fixedProteinNtermModificationAtAa != null) {
                 AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(fixedProteinNtermModificationAtAa);
-                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, 0)) {
+                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, 0)) {
                     return fixedProteinNtermModificationAtAa;
                 }
             }
@@ -276,7 +276,7 @@ public class ProteinIteratorUtils {
         String fixedPeptideNtermModificationAtAa = fixedPeptideNtermModificationsAtAa.get(nTermAaChar);
         if (fixedPeptideNtermModificationAtAa != null) {
             AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(fixedPeptideNtermModificationAtAa);
-            if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, 0)) {
+            if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, 0)) {
                 return fixedPeptideNtermModificationAtAa;
             }
         }
@@ -306,7 +306,7 @@ public class ProteinIteratorUtils {
             String fixedProteinCtermModificationAtAa = fixedProteinCtermModificationsAtAa.get(aaChar);
             AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(fixedProteinCtermModificationAtAa);
 
-            if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, proteinSequence.length() - 1)) {
+            if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, proteinSequence.length() - 1)) {
                 return fixedProteinCtermModification;
             }
         }
@@ -321,7 +321,7 @@ public class ProteinIteratorUtils {
 
             AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(fixedPeptideCtermModificationAtAa);
 
-            if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, indexOnProtein + peptideDraft.length())) {
+            if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, indexOnProtein + peptideDraft.length())) {
                 return fixedPeptideCtermModificationAtAa;
             }
         }
@@ -457,7 +457,7 @@ public class ProteinIteratorUtils {
                 
                 
                 AminoAcidPattern aminoAcidPattern = modificationPatternMap.get(modificationAtAa);
-                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, i)) {
+                if (aminoAcidPattern == null || aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, i)) {
                 
                     peptideModifications.put(i + 1, modificationAtAa);
                     peptideMass += modificationsMasses.get(modificationAtAa);

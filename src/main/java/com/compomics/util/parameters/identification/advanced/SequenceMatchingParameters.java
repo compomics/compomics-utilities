@@ -2,7 +2,6 @@ package com.compomics.util.parameters.identification.advanced;
 
 import com.compomics.util.db.object.DbObject;
 
-
 /**
  * The sequence matching options.
  *
@@ -10,7 +9,6 @@ import com.compomics.util.db.object.DbObject;
  * @author Harald Barsnes
  */
 public class SequenceMatchingParameters extends DbObject {
-
 
     /**
      * The different types of amino acid matching.
@@ -63,13 +61,18 @@ public class SequenceMatchingParameters extends DbObject {
          * description
          */
         public static String getCommandLineOptions() {
+
             StringBuilder optionsStringBuilder = new StringBuilder();
+
             for (MatchingType matchingType : values()) {
+
                 if (optionsStringBuilder.length() != 0) {
                     optionsStringBuilder.append(", ");
                 }
+
                 optionsStringBuilder.append(matchingType.index).append(": ").append(matchingType.description);
             }
+
             return optionsStringBuilder.toString();
         }
 
@@ -81,11 +84,15 @@ public class SequenceMatchingParameters extends DbObject {
          * @return the matching type
          */
         public static MatchingType getMatchingType(int index) {
+
             for (MatchingType matchingType : values()) {
+
                 if (matchingType.index == index) {
                     return matchingType;
                 }
+
             }
+
             throw new IllegalArgumentException("No matching type found for index " + index + ".");
         }
     }
@@ -98,6 +105,19 @@ public class SequenceMatchingParameters extends DbObject {
      * Limit the share of X's a match can contain, range [0.0-1.0].
      */
     private double limitX = 0.25;
+    /**
+     * Boolean deciding whether tags should only be mapped to enzymatic
+     * peptides.
+     */
+    private Boolean enzymaticTagsOnly = false;
+    /**
+     * The maximum number of PTMs per peptide when mapping tags.
+     */
+    private int maxPtmsPerTagPeptide = 3;
+    /**
+     * Default string matching.
+     */
+    public static final SequenceMatchingParameters DEFAULT_STRING_MATCHING = getStringMatching();
 
     /**
      * Constructor for empty preferences.
@@ -107,19 +127,16 @@ public class SequenceMatchingParameters extends DbObject {
     }
 
     /**
-     * Default string matching.
-     */
-    public static final SequenceMatchingParameters defaultStringMatching = getStringMatching();
-
-    /**
      * Returns preferences for simple string matching.
      *
      * @return preferences for simple string matching
      */
     public static SequenceMatchingParameters getStringMatching() {
+
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setSequenceMatchingType(MatchingType.string);
         return sequenceMatchingPreferences;
+
     }
 
     /**
@@ -128,10 +145,13 @@ public class SequenceMatchingParameters extends DbObject {
      * @return default preferences from amino acid matching
      */
     public static SequenceMatchingParameters getDefaultSequenceMatching() {
+
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setSequenceMatchingType(MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
+        sequenceMatchingPreferences.setMaxPtmsPerTagPeptide(3);
         return sequenceMatchingPreferences;
+
     }
 
     /**
@@ -140,8 +160,10 @@ public class SequenceMatchingParameters extends DbObject {
      * @return the sequence matching type
      */
     public MatchingType getSequenceMatchingType() {
+
         readDBMode();
         return sequenceMatchingType;
+
     }
 
     /**
@@ -150,8 +172,10 @@ public class SequenceMatchingParameters extends DbObject {
      * @param sequenceMatchingType the sequence matching type
      */
     public void setSequenceMatchingType(MatchingType sequenceMatchingType) {
+
         writeDBMode();
         this.sequenceMatchingType = sequenceMatchingType;
+
     }
 
     /**
@@ -161,8 +185,10 @@ public class SequenceMatchingParameters extends DbObject {
      * @return the maximal share of X's a match can contain
      */
     public double getLimitX() {
+
         readDBMode();
         return limitX;
+
     }
 
     /**
@@ -171,8 +197,10 @@ public class SequenceMatchingParameters extends DbObject {
      * @param limitX the maximal share of X's a match can contain
      */
     public void setLimitX(double limitX) {
+
         writeDBMode();
         this.limitX = limitX;
+
     }
 
     /**
@@ -186,18 +214,23 @@ public class SequenceMatchingParameters extends DbObject {
      * one
      */
     public boolean isSameAs(SequenceMatchingParameters sequenceMatchingPreferences) {
+
         readDBMode();
 
         if (sequenceMatchingType != sequenceMatchingPreferences.getSequenceMatchingType()) {
-
             return false;
-
         }
 
         if (limitX != sequenceMatchingPreferences.getLimitX()) {
-
             return false;
+        }
 
+        if (isEnzymaticTagsOnly() != sequenceMatchingPreferences.isEnzymaticTagsOnly()) {
+            return false;
+        }
+
+        if (maxPtmsPerTagPeptide != sequenceMatchingPreferences.getMaxPtmsPerTagPeptide()) {
+            return false;
         }
 
         return true;
@@ -209,6 +242,7 @@ public class SequenceMatchingParameters extends DbObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
+
         readDBMode();
 
         String newLine = System.getProperty("line.separator");
@@ -217,7 +251,59 @@ public class SequenceMatchingParameters extends DbObject {
 
         output.append("Method: ").append(sequenceMatchingType).append(".").append(newLine);
         output.append("Max share of x's: ").append(limitX).append(".").append(newLine);
+        output.append("Enzymatic tags matching: ").append(isEnzymaticTagsOnly()).append(".").append(newLine);
+        output.append("Max PTMs per tag: ").append(getMaxPtmsPerTagPeptide()).append(".");
 
         return output.toString();
+    }
+
+    /**
+     * Returns true if tags should only be mapped to enzymatic peptides.
+     *
+     * @return true if tags should only be mapped to enzymatic peptides
+     */
+    public boolean isEnzymaticTagsOnly() {
+
+        if (enzymaticTagsOnly == null) {
+            enzymaticTagsOnly = false;
+        }
+
+        return enzymaticTagsOnly;
+    }
+
+    /**
+     * Sets whether tags should only be mapped to enzymatic peptides.
+     *
+     * @param enzymaticTagsOnly the enzymaticTagsOnly to set
+     */
+    public void setEnzymaticTagsOnly(boolean enzymaticTagsOnly) {
+
+        this.enzymaticTagsOnly = enzymaticTagsOnly;
+
+    }
+
+    /**
+     * Returns the maximum number of PTMs to consider when mapping tags to
+     * protein sequences.
+     *
+     * @return the maximum number of PTMs to consider when mapping tags to
+     * protein sequences
+     */
+    public int getMaxPtmsPerTagPeptide() {
+
+        return maxPtmsPerTagPeptide;
+
+    }
+
+    /**
+     * Sets the maximum number of PTMs to consider when mapping tags to protein
+     * sequences.
+     *
+     * @param numberOfPtmsPerTagPeptide the maxPtmsPerTagPeptide to set
+     */
+    public void setMaxPtmsPerTagPeptide(int numberOfPtmsPerTagPeptide) {
+
+        this.maxPtmsPerTagPeptide = numberOfPtmsPerTagPeptide;
+
     }
 }

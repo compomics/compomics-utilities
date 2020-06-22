@@ -16,20 +16,20 @@ public class AminoAcidPatternTest extends TestCase {
     public void testIndexes() {
         String input = "KTESTRTESTKPTESTK";
         AminoAcidPattern trypsinExample = AminoAcidPattern.getTrypsinExample();
-        int[] indexes = trypsinExample.getIndexes(input, SequenceMatchingParameters.defaultStringMatching);
+        int[] indexes = trypsinExample.getIndexes(input, SequenceMatchingParameters.DEFAULT_STRING_MATCHING);
         Assert.assertTrue(indexes.length == 2);
         Assert.assertTrue(indexes[0] == 1);
         Assert.assertTrue(indexes[1] == 6);
         input = "KTESTRTESTKPTESTKT";
         trypsinExample = AminoAcidPattern.getTrypsinExample();
-        indexes = trypsinExample.getIndexes(input, SequenceMatchingParameters.defaultStringMatching);
+        indexes = trypsinExample.getIndexes(input, SequenceMatchingParameters.DEFAULT_STRING_MATCHING);
         Assert.assertTrue(indexes.length == 3);
         Assert.assertTrue(indexes[0] == 1);
         Assert.assertTrue(indexes[1] == 6);
         Assert.assertTrue(indexes[2] == 17);
         input = "RRR";
         trypsinExample = AminoAcidPattern.getTrypsinExample();
-        indexes = trypsinExample.getIndexes(input, SequenceMatchingParameters.defaultStringMatching);
+        indexes = trypsinExample.getIndexes(input, SequenceMatchingParameters.DEFAULT_STRING_MATCHING);
         Assert.assertTrue(indexes.length == 2);
         Assert.assertTrue(indexes[0] == 1);
         Assert.assertTrue(indexes[1] == 2);

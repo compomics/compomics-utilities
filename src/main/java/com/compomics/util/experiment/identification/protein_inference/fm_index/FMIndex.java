@@ -69,6 +69,7 @@ import java.util.zip.CRC32;
  * @author Marc Vaudel
  */
 public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
+
     /**
      * Maximal number of PTMs per peptide.
      */
@@ -299,7 +300,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      */
     long[] lookupMasses = null;
     /**
-     * maximum supported number of Xs per tag.
+     * Maximum supported number of Xs per tag.
      */
     int maxXPerTag = 4;
     /**

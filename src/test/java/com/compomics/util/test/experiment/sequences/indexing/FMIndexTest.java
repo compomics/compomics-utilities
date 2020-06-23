@@ -214,7 +214,7 @@ public class FMIndexTest extends TestCase {
         String sequence = fmIndex.getSequence("Q9FHX5");
         
         
-        peptideProteinMappings = fmIndex.getProteinMapping("SSS", SequenceMatchingParameters.defaultStringMatching);
+        peptideProteinMappings = fmIndex.getProteinMapping("SSS", SequenceMatchingParameters.DEFAULT_STRING_MATCHING);
         HashMap<String, HashMap<String, int[]>> testIndexes = PeptideProteinMapping.getPeptideProteinIndexesMap(peptideProteinMappings);
 
         HashMap<String, int[]> proteinMapping = testIndexes.get("SSS");

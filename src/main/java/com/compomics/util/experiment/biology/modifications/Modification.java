@@ -368,7 +368,7 @@ public class Modification extends ExperimentObject {
         if (pattern == null && anotherModification.getPattern() != null && anotherModification.getPattern().length() > 0) {
             return false;
         }
-        if (pattern != null && !pattern.isSameAs(anotherModification.getPattern(), SequenceMatchingParameters.defaultStringMatching)) {
+        if (pattern != null && !pattern.isSameAs(anotherModification.getPattern(), SequenceMatchingParameters.DEFAULT_STRING_MATCHING)) {
             return false;
         }
         return true;

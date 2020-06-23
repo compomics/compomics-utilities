@@ -69,7 +69,7 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="sequenceMatchingPanel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="annotationPreferencesHelpJButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="okButton" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -115,11 +115,15 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="matchingMethodLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="xLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="tagMatchingLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxPtmsPerTagLbl" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="tagMatchingCmb" max="32767" attributes="0"/>
                           <Component id="matchingCmb" max="32767" attributes="0"/>
                           <Component id="xSpinner" pref="295" max="32767" attributes="0"/>
+                          <Component id="maxPtmsPerTagTextField" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -138,7 +142,17 @@
                           <Component id="xLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="xSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tagMatchingLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tagMatchingCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="maxPtmsPerTagTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxPtmsPerTagLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -167,6 +181,36 @@
                   <SpinnerModel initial="0.25" maximum="1.0" minimum="0.0" numberType="java.lang.Double" stepSize="0.1" type="number"/>
                 </Property>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="tagMatchingLbl">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Tag Matching"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="tagMatchingCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="All"/>
+                    <StringItem index="1" value="Enzymatic"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="maxPtmsPerTagLbl">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Max PTMs per Tag"/>
+                <Property name="toolTipText" type="java.lang.String" value="Maximum number of PTMs considered when mapping tags to peptides"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxPtmsPerTagTextField">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="3"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxPtmsPerTagTextFieldKeyReleased"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

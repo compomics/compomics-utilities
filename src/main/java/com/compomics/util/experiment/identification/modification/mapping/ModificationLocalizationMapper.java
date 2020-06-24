@@ -53,7 +53,7 @@ public class ModificationLocalizationMapper {
         int peptideLength = peptide.getSequence().length();
 
         ////////////////////////////////
-        // check cterm modifications
+        // check nterm modifications
         ////////////////////////////////
         ModificationMatch nTermModification = null;
 

@@ -1062,7 +1062,7 @@ public class ModificationFactory implements ModificationProvider {
         modification.setUnimodCvTerm(new CvTerm("UNIMOD", "UNIMOD:1", "Acetyl", null));
         modification.setPsiModCvTerm(new CvTerm("MOD", "MOD:01458", "alpha-amino acetylated residue", null));
         defaultMods.add(modificationName);
-        modificationMap.put(modificationName, modification);
+        modificationMap.put(modificationName, modification);        
 
         // Acetylation of protein N-term
         atomChainAdded = new AtomChain();

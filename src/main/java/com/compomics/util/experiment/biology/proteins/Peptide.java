@@ -437,6 +437,7 @@ public class Peptide extends ExperimentObject {
                 }
             }
         }
+
         return result;
     }
 
@@ -874,9 +875,8 @@ public class Peptide extends ExperimentObject {
 
                         Character aa = sequence.charAt(i);
 
-                        if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(
-                                proteinSequence,
-                                SequenceMatchingParameters.defaultStringMatching,
+                        if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence,
+                                SequenceMatchingParameters.DEFAULT_STRING_MATCHING,
                                 peptideStart + i
                         )) {
 
@@ -941,7 +941,7 @@ public class Peptide extends ExperimentObject {
                             possibleSites.add(sequence.length());
 
                         }
-                    } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, peptideEnd)) {
+                    } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, peptideEnd)) {
 
                         possibleSites.add(sequence.length());
 
@@ -966,7 +966,7 @@ public class Peptide extends ExperimentObject {
 
                     peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
 
-                    if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, peptideEnd)) {
+                    if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, peptideEnd)) {
 
                         possibleSites.add(sequence.length());
 
@@ -989,7 +989,7 @@ public class Peptide extends ExperimentObject {
                             possibleSites.add(1);
 
                         }
-                    } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, 0)) {
+                    } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, 0)) {
 
                         possibleSites.add(1);
 
@@ -1010,7 +1010,7 @@ public class Peptide extends ExperimentObject {
                         possibleSites.add(1);
 
                     }
-                } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.defaultStringMatching, 0)) {
+                } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, 0)) {
 
                     possibleSites.add(1);
 

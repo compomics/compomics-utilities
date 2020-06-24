@@ -115,17 +115,17 @@ public abstract class SpectrumAnnotator {
     /**
      * Minimal isotopic correction when matching an ion.
      */
-    protected static final boolean subtractIsotope = false;
+    protected static final boolean SUBTRACT_ISOTOPE = false;
     /**
-     * The minimal isotope correction. By default only the monoisotopic peak is
+     * The minimum isotope correction. By default only the monoisotopic peak is
      * annotated (min=0).
      */
-    protected static final Integer minIsotopicCorrection = 0;
+    protected static final Integer MIN_ISOTOPIC_CORRRECTION = 0;
     /**
      * The maximal isotope correction. By default only the monoisotopic peak is
      * annotated (max=0).
      */
-    protected static final Integer maxIsotopicCorrection = 0;
+    protected static final Integer MAX_ISOTOPIC_CORRRECTION = 0;
     /**
      * m/z shift applied to all theoretic peaks.
      */
@@ -166,7 +166,7 @@ public abstract class SpectrumAnnotator {
                 .map(
                         ionMatch -> new DefaultSpectrumAnnotation(
                                 ionMatch.peakMz,
-                                ionMatch.getAbsoluteError(minIsotopicCorrection, maxIsotopicCorrection),
+                                ionMatch.getAbsoluteError(MIN_ISOTOPIC_CORRRECTION, MAX_ISOTOPIC_CORRRECTION),
                                 SpectrumPanel.determineFragmentIonColor(ionMatch.ion, true),
                                 ionMatch.getPeakAnnotation()
                         )
@@ -849,16 +849,30 @@ public abstract class SpectrumAnnotator {
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
 
             PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
-            return ((PeptideSpectrumAnnotator) spectrumAnnotator).getDefaultLosses(peptideAssumption.getPeptide(), modificationParameters, sequenceProvider, modificationsSequenceMatchingParameters);
+            return PeptideSpectrumAnnotator.getDefaultLosses(
+                    peptideAssumption.getPeptide(),
+                    modificationParameters,
+                    sequenceProvider,
+                    modificationsSequenceMatchingParameters
+            );
 
         } else if (spectrumIdentificationAssumption instanceof TagAssumption) {
 
             TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
-            return ((TagSpectrumAnnotator) spectrumAnnotator).getDefaultLosses(tagAssumption.getTag(), modificationParameters, modificationsSequenceMatchingParameters);
+            return TagSpectrumAnnotator.getDefaultLosses(
+                    tagAssumption.getTag(),
+                    modificationParameters,
+                    modificationsSequenceMatchingParameters
+            );
 
         } else {
 
-            throw new IllegalArgumentException("Default neutral loss map not implemented for SpectrumIdentificationAssumption " + spectrumIdentificationAssumption.getClass() + ".");
+            throw new IllegalArgumentException(
+                    "Default neutral loss map not implemented "
+                    + "for SpectrumIdentificationAssumption "
+                    + spectrumIdentificationAssumption.getClass()
+                    + "."
+            );
 
         }
     }
@@ -915,8 +929,8 @@ public abstract class SpectrumAnnotator {
                                     double absError = Math.abs(
                                             ionMatch.getError(
                                                     specificAnnotationSettings.isFragmentIonPpm(),
-                                                    minIsotopicCorrection,
-                                                    maxIsotopicCorrection
+                                                    MIN_ISOTOPIC_CORRRECTION,
+                                                    MAX_ISOTOPIC_CORRRECTION
                                             )
                                     );
 

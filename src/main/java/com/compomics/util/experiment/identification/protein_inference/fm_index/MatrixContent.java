@@ -103,6 +103,10 @@ public class MatrixContent {
      * The all X mass differences.
      */
     public HashMap<Integer, Double> allXMassDiffs;
+    /**
+     * The number of PTMs.
+     */
+    public int numPTMs;
 
     /**
      * Constructor almost empty.
@@ -131,6 +135,7 @@ public class MatrixContent {
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
+        this.numPTMs = 0;
     }
 
     /**
@@ -164,6 +169,7 @@ public class MatrixContent {
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
+        this.numPTMs = 0;
     }
 
     /**
@@ -199,6 +205,7 @@ public class MatrixContent {
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
+        this.numPTMs = 0;
     }
 
     /**
@@ -235,6 +242,7 @@ public class MatrixContent {
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
+        this.numPTMs = 0;
     }
 
     /**
@@ -271,6 +279,7 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
         this.ambiguousChar = -1;
+        this.numPTMs = 0;
     }
 
     /**
@@ -307,6 +316,7 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
         this.ambiguousChar = -1;
+        this.numPTMs = 0;
     }
 
     /**
@@ -345,6 +355,7 @@ public class MatrixContent {
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
+        this.numPTMs = (modifictationPos >= 128 ? 1 : 0) + (previousContent != null ? previousContent.numPTMs : 0);
     }
 
     /**
@@ -388,6 +399,7 @@ public class MatrixContent {
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
+        this.numPTMs = (modifictationPos >= 128 ? 1 : 0) + (previousContent != null ? previousContent.numPTMs : 0);
     }
 
     /**
@@ -431,6 +443,7 @@ public class MatrixContent {
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
+        this.numPTMs = (modifictationPos >= 128 ? 1 : 0) + (previousContent != null ? previousContent.numPTMs : 0);
     }
 
     /**
@@ -471,6 +484,7 @@ public class MatrixContent {
         this.ambiguousChar = -1;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
+        this.numPTMs = (modifictationPos >= 128 ? 1 : 0) + (previousContent != null ? previousContent.numPTMs : 0);
     }
 
     /**
@@ -511,6 +525,7 @@ public class MatrixContent {
         this.allXcomponents = null;
         this.XMassDiff = -1;
         this.allXMassDiffs = null;
+        this.numPTMs = (modifictationPos >= 128 ? 1 : 0) + (previousContent != null ? previousContent.numPTMs : 0);
     }
 
     /**
@@ -554,6 +569,7 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.ambiguousChar = -1;
         this.allXMassDiffs = null;
+        this.numPTMs = (modifictationPos >= 128 ? 1 : 0) + (previousContent != null ? previousContent.numPTMs : 0);
     }
 
     /**
@@ -597,6 +613,7 @@ public class MatrixContent {
         this.XMassDiff = -1;
         this.ambiguousChar = -1;
         this.allXMassDiffs = null;
+        this.numPTMs = (modifictationPos >= 128 ? 1 : 0) + (previousContent != null ? previousContent.numPTMs : 0);
     }
 
     /**
@@ -626,5 +643,6 @@ public class MatrixContent {
         this.XMassDiff = foreign.XMassDiff;
         this.ambiguousChar = foreign.ambiguousChar;
         this.allXMassDiffs = foreign.allXMassDiffs;
+        this.numPTMs = foreign.numPTMs;
     }
 }

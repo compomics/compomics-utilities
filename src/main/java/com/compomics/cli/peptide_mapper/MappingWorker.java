@@ -16,7 +16,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.regex.Pattern;
+import com.compomics.util.experiment.identification.utils.PeptideUtils;
+import com.compomics.util.parameters.identification.IdentificationParameters;
 
 /**
  *
@@ -36,18 +39,17 @@ public class MappingWorker implements Runnable {
 
     public MappingWorker(WaitingHandlerCLIImpl waitingHandlerCLIImpl,
                   FastaMapper peptideMapper,
-                  SequenceMatchingParameters sequenceMatchingPreferences,
+                  IdentificationParameters identificationParameters,
                   BufferedReader br,
                   PrintWriter writer,
-                  boolean peptideMapping,
-                  boolean flanking
+                  boolean peptideMapping
                   ){
         this.waitingHandlerCLIImpl = waitingHandlerCLIImpl;
         this.peptideMapper = peptideMapper;
-        this.sequenceMatchingPreferences = sequenceMatchingPreferences;
+        this.sequenceMatchingPreferences = identificationParameters.getSequenceMatchingParameters();
         this.br = br;
         this.writer = writer;
-        this.flanking = flanking;
+        this.flanking = identificationParameters.getSearchParameters().getFlanking();
         this.peptideMapping = peptideMapping;
     }
     
@@ -80,7 +82,7 @@ public class MappingWorker implements Runnable {
     @Override
     public void run() {
         ArrayList<String> rows = new ArrayList<>();
-        ArrayList<String> outputData = new ArrayList<>();
+        HashSet<String> outputData = new HashSet<>();
         
 
         while (true){
@@ -94,7 +96,6 @@ public class MappingWorker implements Runnable {
                 //synchronized(br){
                     while (!waitingHandlerCLIImpl.isRunCanceled() && i++ < NUM_READS && (row = br.readLine()) != null) {
                         rows.add(row);
-                        waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     }
                 //}
                 if (waitingHandlerCLIImpl.isRunCanceled() || rows.isEmpty()) break;
@@ -121,13 +122,16 @@ public class MappingWorker implements Runnable {
                     try {
                         for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(inputPeptide.toUpperCase(), sequenceMatchingPreferences)) {
                             String peptide = peptideProteinMapping.getPeptideSequence();
+                            
                             String accession = peptideProteinMapping.getProteinAccession();
                             int startIndex = peptideProteinMapping.getIndex() + 1;
                             if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
-
+                            
                             outputData.add(peptide + "," + accession + "," + startIndex);
                         }
+                        waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     }
+                    
                     catch (Exception e){
                         exception = new RuntimeException("An error occurred during the mapping of '" + inputPeptide + "'\n\n" + e);
                         waitingHandlerCLIImpl.setRunCanceled();
@@ -160,12 +164,14 @@ public class MappingWorker implements Runnable {
                     try {
                         for (PeptideProteinMapping peptideProteinMapping : peptideMapper.getProteinMapping(tag, sequenceMatchingPreferences)){
                             String peptide = peptideProteinMapping.getPeptideSequence();
+                            
                             String accession = peptideProteinMapping.getProteinAccession();
                             int startIndex = peptideProteinMapping.getIndex() + 1;
                             if (flanking) peptide = flanking(peptideProteinMapping, peptideMapper);
-
-                            outputData.add(tagString + "," + peptide + "," + accession + "," + startIndex);
+                            
+                            outputData.add(peptide + "," + accession + "," + startIndex + "," + PeptideUtils.getVariableModificationsAsString(peptideProteinMapping.getVariableModifications()));
                         }
+                        waitingHandlerCLIImpl.increaseSecondaryProgressCounter();
                     }
                     catch (Exception e){
                         exception = new RuntimeException("An error occurred during the mapping of '" + tagString + "'\n\n" + e);

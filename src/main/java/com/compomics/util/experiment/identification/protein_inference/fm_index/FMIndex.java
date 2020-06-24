@@ -8,6 +8,7 @@ import com.compomics.util.experiment.biology.variants.amino_acids.*;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationCategory;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
@@ -45,6 +46,7 @@ import java.util.TreeSet;
 import org.jsuffixarrays.*;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters.VariantType;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -68,12 +70,21 @@ import java.util.zip.CRC32;
  * @author Marc Vaudel
  */
 public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
+
     /**
-     * Character defining as delimiter between protein sequences
+     * Maximal number of PTMs per peptide.
+     */
+    public int maxPTMsPerPeptide = 3;
+    /**
+     * Flag for only considering tryptic digested peptides.
+     */
+    public boolean onlyTrypticPeptides = false;
+    /**
+     * Character defining as delimiter between protein sequences.
      */
     public static char DELIMITER = '/';
     /**
-     * Sentinel character necessary for computation of the suffix array
+     * Sentinel character necessary for computation of the suffix array.
      */
     public static char SENTINEL = '$';
     /**
@@ -290,7 +301,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      */
     long[] lookupMasses = null;
     /**
-     * maximum supported number of Xs per tag.
+     * Maximum supported number of Xs per tag.
      */
     int maxXPerTag = 4;
     /**
@@ -325,10 +336,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         {3, 1, 0, 2}, {3, 1, 2, 0}, {3, 2, 0, 1}, {3, 2, 1, 0}}};
 
     /**
-     * Arraylist for sorted masses to index mappings.
+     * Array list for sorted masses to index mappings.
      */
     ArrayList<MassIndexMap> massIndexMaps = null;
-    
 
     /**
      * Empty default constructor.
@@ -544,8 +554,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
         return bytes;
     }
-    
-    
 
     /**
      * Constructor. If modification settings are provided the index will contain
@@ -565,9 +573,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         if (searchParameters != null) {
             massTolerance = searchParameters.getFragmentIonAccuracy();
             massAccuracyType = searchParameters.getFragmentAccuracyType();
-            init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters.getModificationParameters(), peptideVariantsPreferences);
+            init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters, peptideVariantsPreferences, null);
         } else {
-            init(fastaFile, fastaParameters, waitingHandler, displayProgress, null, peptideVariantsPreferences);
+            init(fastaFile, fastaParameters, waitingHandler, displayProgress, null, peptideVariantsPreferences, null);
         }
     }
 
@@ -579,15 +587,34 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      * @param fastaParameters the parameters for the FASTA file parsing
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
-     * @param modificationSettings contains modification parameters for
-     * identification
+     * @param searchParameters the search parameters
      * @param peptideVariantsPreferences contains all parameters for variants
      *
      * @throws IOException exception thrown if an error occurs while iterating
      * the FASTA file
      */
-    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters modificationSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
-        init(fastaFile, fastaParameters, waitingHandler, displayProgress, modificationSettings, peptideVariantsPreferences);
+    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, SearchParameters searchParameters, PeptideVariantsParameters peptideVariantsPreferences) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
+        init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters, peptideVariantsPreferences, null);
+    }
+    
+    
+    
+
+    /**
+     * Constructor. If modification settings are provided the index will contain
+     * modification information, ignored if null.
+     *
+     * @param fastaFile the FASTA file to index
+     * @param fastaParameters the parameters for the FASTA file parsing
+     * @param waitingHandler the waiting handler
+     * @param displayProgress if true, the progress is displayed
+     * @param identificationParameters contains all identification parameters
+     *
+     * @throws IOException exception thrown if an error occurs while iterating
+     * the FASTA file
+     */
+    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, IdentificationParameters identificationParameters) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
+        init(fastaFile, fastaParameters, waitingHandler, displayProgress, identificationParameters.getSearchParameters(), identificationParameters.getPeptideVariantsParameters(), identificationParameters.getSequenceMatchingParameters());
     }
     
     
@@ -601,15 +628,15 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      * @param fastaParameters the parameters for the FASTA file parsing
      * @param waitingHandler the waiting handler
      * @param displayProgress if true, the progress is displayed
-     * @param modificatoinSettings contains modification parameters for
-     * identification
+     * @param searchParameters the search parameters
      * @param peptideVariantsPreferences contains all parameters for variants
+     * @param sequenceMatchingParameters contains all parameters for sequence matching
      * @param massTolerance the mass tolerance
      *
      * @throws IOException exception thrown if an error occurs while iterating
-     * the fasta file.
+     * the FASTA file.
      */
-    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, ModificationParameters modificatoinSettings, PeptideVariantsParameters peptideVariantsPreferences) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
+    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, SearchParameters searchParameters, PeptideVariantsParameters peptideVariantsPreferences, SequenceMatchingParameters sequenceMatchingParameters) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
 
         // load all variant preferences
         maxNumberVariants = peptideVariantsPreferences.getnVariants();
@@ -618,6 +645,11 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         maxNumberDeletions = peptideVariantsPreferences.getnAaDeletions();
         maxNumberSubstitutions = peptideVariantsPreferences.getnAaSubstitutions();
         SNPs = peptideVariantsPreferences.getFixedVariants();
+        
+        if (sequenceMatchingParameters != null){
+            maxPTMsPerPeptide = sequenceMatchingParameters.getMaxPtmsPerTagPeptide();
+            onlyTrypticPeptides = sequenceMatchingParameters.isEnzymaticTagsOnly();
+        }
 
         TreeSet<Character> aaGroups = new TreeSet<>();
         aaGroups.add('B');
@@ -647,22 +679,30 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             }
         }
 
+        ModificationParameters modificationSettings = (searchParameters != null) ? searchParameters.getModificationParameters() : null;
+        
         // load all ptm preferences
-        if (modificatoinSettings != null) {
+        if (modificationSettings != null) {
+
             // create masses table and modifications
             int[] modificationCounts = new int[128];
             for (int i = 0; i < modificationCounts.length; ++i) {
                 modificationCounts[i] = 0;
             }
-            ArrayList<String> variableModifications = modificatoinSettings.getVariableModifications();
-            ArrayList<String> fixedModifications = modificatoinSettings.getFixedModifications();
+            
             ModificationFactory ptmFactory = ModificationFactory.getInstance();
-
+            ArrayList<String> variableModifications = ptmFactory.getExpectedVariableModifications(searchParameters);
+            ArrayList<String> fixedModifications = modificationSettings.getFixedModifications();
+            
             int hasVariableModification = 0;
 
             // check which amino acids have variable modificatitions
             for (String modification : variableModifications) {
                 Modification ptm = ptmFactory.getModification(modification);
+                if (ptm.getCategory() == ModificationCategory.Nucleotide_Substitution_One || 
+                    ptm.getCategory() == ModificationCategory.Nucleotide_Substitution_TwoPlus) continue;
+                
+                //System.out.println("v: " + modification + " " + ptm.getModificationType());
                 ArrayList<Character> targets;
                 switch (ptm.getModificationType()) {
                     case modaa:
@@ -838,6 +878,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             // change masses for fixed modifications
             for (String modification : fixedModifications) {
                 Modification ptm = ptmFactory.getModification(modification);
+                if (ptm.getCategory() == ModificationCategory.Nucleotide_Substitution_One || 
+                    ptm.getCategory() == ModificationCategory.Nucleotide_Substitution_TwoPlus) continue;
+                //System.out.println("f: " + modification + " " + ptm.getModificationType());
                 ArrayList<Character> targets;
                 switch (ptm.getModificationType()) {
                     case modaa:
@@ -848,8 +891,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         for (Character c : targets) {
                             aaMasses[c] += ptm.getMass();
                             negativeModificationMass = Math.min(negativeModificationMass, ptm.getMass());
-                            // modifictationLabels[c] = modification;
-                            // modificationFlags[c] = true;
                         }
                         break;
 
@@ -1158,7 +1199,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             for (int i = 0; i < tmpLengths.size(); ++i) {
                 addDataToIndex(pi, tmpLengths.get(i), tmpProteins.get(i), alphabet, fastaParameters, waitingHandler, displayProgress);
             }
-            
+
         }
 
         //int lookupLength = ((int) ((LOOKUP_MAX_MASS + computeMassTolerance(massTolerance, LOOKUP_MAX_MASS)) * lookupMultiplier));
@@ -1348,9 +1389,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             waitingHandler.increaseSecondaryProgressCounter();
         }
         byte[] T = new byte[indexStringLength];
-        T[0] = (byte)DELIMITER;                     // adding delimiter at beginning
-        T[indexStringLength - 2] = (byte)DELIMITER; // adding delimiter at ending
-        T[indexStringLength - 1] = (byte)SENTINEL; // adding the sentinal
+        T[0] = (byte) DELIMITER;                     // adding delimiter at beginning
+        T[indexStringLength - 2] = (byte) DELIMITER; // adding delimiter at ending
+        T[indexStringLength - 1] = (byte) SENTINEL; // adding the sentinal
 
         int[] bndaries = new int[numProteins + 1];
         boundaries.add(bndaries);
@@ -1394,17 +1435,16 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
             int proteinLen = currentProtein.getLength();
 
-            T[tmpN++] = (byte)DELIMITER; // adding the delimiters
+            T[tmpN++] = (byte) DELIMITER; // adding the delimiters
             accMD.trueBeginning = tmpN;
             accessionEndings.put(accession, tmpN + proteinLen);
-            
-            
-            for (char c : currentProtein.getSequence().toCharArray()){
-                if (!(((int)'A' <= c && c <= (int)'Z') || ((int)'a' <= c && c <= (int)'z'))){
+
+            for (char c : currentProtein.getSequence().toCharArray()) {
+                if (!(((int) 'A' <= c && c <= (int) 'Z') || ((int) 'a' <= c && c <= (int) 'z'))) {
                     throw new IllegalArgumentException("Protein sequence of protein '" + header + "' contains invalid character: '" + Character.toString(c) + "'.");
                 }
             }
-            
+
             System.arraycopy(currentProtein.getSequence().toUpperCase().getBytes(), 0, T, tmpN, proteinLen);
             tmpN += proteinLen;
             accssions[tmpNumProtein++] = accession;
@@ -1423,11 +1463,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         int[] suffixArrayPrimary = null;
         try {
             suffixArrayPrimary = (new DivSufSort()).buildSuffixArray(T_int, 0, indexStringLength);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("An error occurred during index computation (suffix array):\n\n" + e);
         }
-        
 
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
@@ -1487,7 +1525,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         for (int i = 0; i < indexStringLength - 1; ++i) {
             TReversed[indexStringLength - 2 - i] = T[i];
         }
-        TReversed[indexStringLength - 1] = (byte)SENTINEL;
+        TReversed[indexStringLength - 1] = (byte) SENTINEL;
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
         }
@@ -1715,7 +1753,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         int pos = suffixArrayPrimary[index >> samplingShift] + numIterations;
         return (pos < indexStringLength) ? pos : pos - indexStringLength;
     }
-    
 
     @Override
     public ArrayList<PeptideProteinMapping> getProteinMapping(String peptide, SequenceMatchingParameters sequenceMatchingParameters) {
@@ -1748,10 +1785,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         return peptideProteinMapping;
 
     }
-    
-    
-    
-    
 
     /**
      * Exact mapping peptides against the proteome.
@@ -1834,11 +1867,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                 }
             }
         }
-
-        /*
-        for (PeptideProteinMapping ppm : allMatches){
-            System.out.println(ppm.getPeptideSequence() + " " + ppm.getProteinAccession() + " " + ppm.getIndex());
-        }*/
         return allMatches;
     }
 
@@ -2372,11 +2400,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             }
         }
 
-        /*
-        for (PeptideProteinMapping ppm : allMatches){
-            System.out.println(ppm.getPeptideSequence() + " " + ppm.getProteinAccession() + " " + ppm.getIndex() + " " + ppm.getVariantMatches().size() + "e");
-        }
-         */
         return allMatches;
     }
 
@@ -2500,7 +2523,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                     ArrayList<int[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
                     addAmbiguous(setCharacter);
 
-                    if (withVariableModifications) {
+                    if (withVariableModifications && cell.numPTMs < maxPTMsPerPeptide) {
                         addModifications(setCharacter);
                     }
 
@@ -2604,6 +2627,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             if (aminoAcid == DELIMITER) {
                                 continue;
                             }
+                            
                             final double newMass = oldMass + aaMasses[borders[3]];
                             final int aminoAcidSearch = (borders[4] == -1) ? aminoAcid : borders[4];
                             final int lessValue = less[aminoAcidSearch];
@@ -2628,8 +2652,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                 for (int index : aaMassIndexes) {
                                     double aminoMass = oldMass + aaMasses[index];
                                     int amino = index & 127;
-
-                                    if (amino != aminoAcid && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
+                                    if (amino != aminoAcid && substitutionMatrix[amino][aminoAcid] && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
                                         if (!massNotValid(aminoMass, combinationMass)) {
                                             int offsetSub = ((computeMassValue(aminoMass, combinationMass) <= massTolerance) ? 1 : 0);
                                             matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, (char) aminoAcid, null));
@@ -2700,7 +2723,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0]));
 
                                     // substitution
-                                    if (aminoAcid != errorAminoAcid) {
+                                    if (aminoAcid != errorAminoAcid && substitutionMatrix[errorAminoAcid][aminoAcid]) {
                                         matrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, length + 1, numVariants + 1, (char) errorAminoAcid));
                                     }
                                 }
@@ -2754,7 +2777,10 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         for (int[] borders : setCharacter) {
                             final int aminoAcid = borders[0];
                             if (j == lenCombinations - 1 && aminoAcid == DELIMITER && length > 1) {
-                                mapTagToProteinTermini(content, combinationMass, CTermDirection, row, j);
+                                final int lessValue = less[aminoAcid];
+                                final int leftIndex = lessValue + borders[1];
+                                final int rightIndex = lessValue + borders[2] - 1;
+                                mapTagToProteinTermini(content, combinationMass, CTermDirection, row, j, leftIndex, rightIndex);
                             } else {
                                 if (aminoAcid == DELIMITER) {
                                     continue;
@@ -2783,7 +2809,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                         double aminoMass = oldMass + aaMasses[index];
                                         int amino = index & 127;
 
-                                        if (amino != aminoAcid && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
+                                        if (amino != aminoAcid && substitutionMatrix[amino][aminoAcid] && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
                                             int offsetSub = ((computeMassValue(aminoMass, combinationMass) <= massTolerance) ? 1 : 0);
                                             matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, numVariants + 1, (char) aminoAcid, null));
 
@@ -2853,7 +2879,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0]));
 
                                     // substitution
-                                    if (aminoAcid != errorAminoAcid) {
+                                    if (aminoAcid != errorAminoAcid && substitutionMatrix[errorAminoAcid][aminoAcid]) {
                                         matrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, length + 1, numVariants + 1, (char) errorAminoAcid));
                                     }
                                 }
@@ -3131,7 +3157,10 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         for (int[] borders : setCharacter) {
                             final int aminoAcid = borders[0];
                             if (j == lenCombinations - 1 && aminoAcid == DELIMITER && length > 1) {
-                                mapTagToProteinTermini(content, combinationMass, CTermDirection, row, j);
+                                final int lessValue = less[aminoAcid];
+                                final int leftIndex = lessValue + borders[1];
+                                final int rightIndex = lessValue + borders[2] - 1;
+                                mapTagToProteinTermini(content, combinationMass, CTermDirection, row, j, leftIndex, rightIndex);
                             } else {
                                 if (aminoAcid == DELIMITER) {
                                     continue;
@@ -3392,7 +3421,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     }
 
                                     double aminoMass = oldMass + aaMasses[index];
-                                    if (amino != aminoAcid && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
+                                    if (amino != aminoAcid && substitutionMatrix[amino][aminoAcid] && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
                                         if (!massNotValid(aminoMass, combinationMass)) {
                                             int offsetSub = ((computeMassValue(aminoMass, combinationMass) <= massTolerance) ? 1 : 0);
                                             matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, new int[]{numDeletions, numInsertions, numSubstitutions + 1}, (char) aminoAcid, null));
@@ -3523,7 +3552,10 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         for (int[] borders : setCharacter) {
                             final int aminoAcid = borders[0];
                             if (j == lenCombinations - 1 && aminoAcid == DELIMITER && length > 1) {
-                                mapTagToProteinTermini(content, combinationMass, CTermDirection, row, j);
+                                final int lessValue = less[aminoAcid];
+                                final int leftIndex = lessValue + borders[1];
+                                final int rightIndex = lessValue + borders[2] - 1;
+                                mapTagToProteinTermini(content, combinationMass, CTermDirection, row, j, leftIndex, rightIndex);
                             } else {
                                 if (aminoAcid == DELIMITER) {
                                     continue;
@@ -3558,7 +3590,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                         }
 
                                         double aminoMass = oldMass + aaMasses[index];
-                                        if (amino != aminoAcid && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
+                                        if (amino != aminoAcid && substitutionMatrix[amino][aminoAcid] && aminoMass - computeMassTolerance(massTolerance, combinationMass) < combinationMass) {
 
                                             int offsetSub = ((computeMassValue(aminoMass, combinationMass) <= massTolerance) ? 1 : 0);
                                             matrix[k + 1][j + offsetSub].add(new MatrixContent(leftIndex, rightIndex, amino, content, aminoMass, length + 1, numX, index, new int[]{numDeletions, numInsertions, numSubstitutions + 1}, (char) aminoAcid, null));
@@ -3673,7 +3705,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             return false;
         }
         int intMass = (int) ((mass + 1) * lookupMultiplier);
-        //System.out.println(mass + " " + LOOKUP_MAX_MASS + " " + intMass + " " + numX +" " + Xlookup[numX]);
         return (0 < numX && numX <= maxXPerTag && mass < LOOKUP_MAX_MASS && (((Xlookup[numX][intMass >>> 6] >>> (intMass & 63)) & 1L) == 1));
     }
 
@@ -3711,7 +3742,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                     ArrayList<int[]> setCharacter = occurrence.rangeQuery(leftIndexOld - 1, rightIndexOld);
                     addAmbiguous(setCharacter);
-                    if (withVariableModifications) {
+                    if (withVariableModifications && cell.numPTMs < maxPTMsPerPeptide) {
                         addModifications(setCharacter);
                     }
 
@@ -3732,7 +3763,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                 final int lessValue = less[aminoAcidSearch];
                                 final int leftIndex = lessValue + borders[1];
                                 final int rightIndex = lessValue + borders[2] - 1;
-                                //System.out.println(k + " " + length + " " + (char)borders[0] + " " +  leftIndex + " " + rightIndex + " " + newNumX + " " + massDiff + " / " + combination.xNumLimit);
                                 MatrixContent newCell = new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, newMass, length + 1, newNumX, borders[3], borders[4], k);
 
                                 ModificationMatch modificationMatchEnd = null;
@@ -3892,6 +3922,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                         }
                                     }
                                 }
+                                
 
                                 if (xMassDiff < -massTolerance) {
                                     if (newMass - computeMassTolerance(massTolerance, combinationMass) + negativeModificationMass <= combinationMass) {
@@ -3901,11 +3932,15 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     if (newNumX > 0 && !withinMass) {
                                         continue;
                                     }
+                                    //if (onlyTrypticPeptides && CTermDirection && !(newCell.character == 'K' || newCell.character == 'R')) continue;
+                                    
                                     MatrixContent newEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newCell, 0, null, null, length + 1, 0, k, modificationMatchEnd, null, -1);
+                                    newEndCell.numPTMs += 1;
                                     if (modificationMatchEndEnd == null) {
                                         matrix[k + 1].add(newEndCell);
                                     } else {
                                         MatrixContent newEndEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newEndCell, 0, null, null, length + 1, 0, k, modificationMatchEndEnd, null, -1);
+                                        newEndEndCell.numPTMs += 1;
                                         matrix[k + 1].add(newEndEndCell);
                                     }
                                     if (withinMass) {
@@ -3916,6 +3951,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     if (newNumX > 0 && !withinMass) {
                                         continue;
                                     }
+                                    // if (onlyTrypticPeptides && CTermDirection && !(newCell.character == 'K' || newCell.character == 'R')) continue;
                                     matrix[k + 1].add(newCell);
                                     matrix[k + 1].getLast().numX = 0;
                                     if (withinMass) {
@@ -3924,7 +3960,10 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                 }
 
                             } else if (length > 1) {
-                                mapTagToProteinTermini(cell, combinationMass, CTermDirection, matrix, k);
+                                final int lessValue = less[aminoAcid];
+                                final int leftIndex = lessValue + borders[1];
+                                final int rightIndex = lessValue + borders[2] - 1;
+                                mapTagToProteinTermini(cell, combinationMass, CTermDirection, matrix, k, leftIndex, rightIndex);
                             }
                         }
                     } else {
@@ -3989,13 +4028,14 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
     }
 
-    public void mapTagToProteinTermini(MatrixContent cell, double combinationMass, boolean CTermDirection, LinkedList<MatrixContent>[] matrix, int k) {
+    
+    
+    
+    public void mapTagToProteinTermini(MatrixContent cell, double combinationMass, boolean CTermDirection, LinkedList<MatrixContent>[] matrix, int k, int leftIndex, int rightIndex) {
         final int lastAcid = cell.character;
         final int newNumX = cell.numX;
         final double oldMass = cell.mass;
         final int length = cell.length;
-        final int leftIndexOld = cell.left;
-        final int rightIndexOld = cell.right;
         double massDiff = combinationMass - oldMass;
         ModificationMatch modificationMatchEnd = null;
         ModificationMatch modificationMatchEndEnd = null;
@@ -4395,11 +4435,13 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
 
         if (modificationMatchEnd != null) {
-            MatrixContent newEndCell = new MatrixContent(leftIndexOld, rightIndexOld, '\0', cell, 0, null, null, length, 0, k, modificationMatchEnd, null, -1);
+            MatrixContent newEndCell = new MatrixContent(leftIndex, rightIndex, DELIMITER, cell, 0, null, null, length, 0, k, modificationMatchEnd, null, -1);
+            newEndCell.numPTMs += 1;
             if (modificationMatchEndEnd == null) {
                 matrix[k + 1].add(newEndCell);
             } else {
-                MatrixContent newEndEndCell = new MatrixContent(leftIndexOld, rightIndexOld, '\0', newEndCell, 0, null, null, length, 0, k, modificationMatchEndEnd, null, -1);
+                MatrixContent newEndEndCell = new MatrixContent(leftIndex, rightIndex, DELIMITER, newEndCell, 0, null, null, length, 0, k, modificationMatchEndEnd, null, -1);
+                newEndEndCell.numPTMs += 1;
                 matrix[k + 1].add(newEndEndCell);
             }
             if (withinMass) {
@@ -4441,13 +4483,13 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      */
     public ArrayList<PeptideProteinMapping> getProteinMappingWithoutVariants(Tag tag, SequenceMatchingParameters sequenceMatchingPreferences, int indexPart) {
 
+        
         int[] lessTablePrimary = lessTablesPrimary.get(indexPart);
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
         int[] lessTableReversed = lessTablesReversed.get(indexPart);
         WaveletTree occurrenceTableReversed = occurrenceTablesReversed.get(indexPart);
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>(1);
         double xLimit = sequenceMatchingPreferences.getLimitX();
-        
 
         // copying tags into own data structure
         int maxSequencePosition = -1;
@@ -4456,8 +4498,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         for (int i = 0; i < tag.getContent().size(); ++i) {
 
             if (tag.getContent().get(i) instanceof MassGap) {
-
-                tagElements[i] = new TagElement(true, "", tag.getContent().get(i).getMass(), (int) Math.round(tag.getContent().get(i).getMass() / 120. * xLimit)); // 120 is the average mass of all amino acids
+                double mass = tag.getContent().get(i).getMass();
+                tagElements[i] = new TagElement(true, "", tag.getContent().get(i).getMass(), (int) Math.round(mass / 120. * xLimit)); // 120 is the average mass of all amino acids
 
             } else if (tag.getContent().get(i) instanceof AminoAcidSequence) {
 
@@ -4556,17 +4598,16 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         } else {
             matrixReversed[0].add(new MatrixContent(indexStringLengths.get(indexPart) - 1));
         }
-        
 
         if (cached == null) {
             // Map Reverse
-            if (!hasCTermDirection) {
-                mappingSequenceAndMasses(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed);
-            } else {
+            //if (hasCTermDirection || (onlyTrypticPeptides && towardsC)) {
+            if (hasCTermDirection) {
                 mappingSequenceAndMasses(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed, towardsC);
+            } else {
+                mappingSequenceAndMasses(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed);
             }
 
-            
             // Traceback Reverse
             for (MatrixContent content : matrixReversed[combinationsReversed.length]) {
 
@@ -4583,19 +4624,25 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                 while (currentContent.previousContent != null) {
                     final int aminoAcid = currentContent.character;
                     if (aminoAcid > 0) {
-                        currentPeptide.append((char) currentContent.character);
-                        int c = currentContent.ambiguousChar == -1 ? aminoAcid : currentContent.ambiguousChar;
-                        if (currentContent.character == 'X') {
-                            xComponents.add(new int[]{0, currentContent.tagComponent, currentContent.length});
-                            xComponents.get(xComponents.size() - 1)[2] = currentContent.length;
+                        int c = 0;
+                        if (aminoAcid != DELIMITER){
+                            currentPeptide.append((char) currentContent.character);
+                            c = currentContent.ambiguousChar == -1 ? aminoAcid : currentContent.ambiguousChar;
+                            if (currentContent.character == 'X') {
+                                xComponents.add(new int[]{0, currentContent.tagComponent, currentContent.length});
+                                xComponents.get(xComponents.size() - 1)[2] = currentContent.length;
+                            }
+                            currentPeptideSearch.append((char) c);
                         }
-                        //System.out.println((char) currentContent.character);
-                        currentPeptideSearch.append((char) c);
+                        else {
+                            c = DELIMITER;
+                        }
                         final int lessValue = lessPrimary[c];
                         final int[] range = occurrencePrimary.singleRangeQuery(leftIndexFront - 1, rightIndexFront, c);
                         leftIndexFront = lessValue + range[0];
                         rightIndexFront = lessValue + range[1] - 1;
                     }
+                    
                     if (currentContent.XMassDiff > -1) {
                         xMassDiffs.put(currentContent.tagComponent, currentContent.XMassDiff);
                     }
@@ -4613,6 +4660,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                 String reversePeptide = currentPeptide.reverse().toString();
                 String reversePeptideSearch = currentPeptideSearch.reverse().toString();
                 MatrixContent cell = new MatrixContent(leftIndexFront, rightIndexFront, reversePeptide.charAt(0), null, 0, reversePeptide, reversePeptideSearch, content.length, 0, 0, null, modifications, -1);
+                cell.numPTMs = content.numPTMs;
                 cell.allXcomponents = xComponents;
                 cell.allXMassDiffs = xMassDiffs;
                 cachePrimary.add(cell);
@@ -4626,14 +4674,14 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
         if (!matrix[0].isEmpty()) {
             // Map towards NTerm
-            if (!hasNTermDirection) {
-                mappingSequenceAndMasses(combinations, matrix, lessPrimary, occurrencePrimary);
-            } else {
+            //if (hasNTermDirection || (onlyTrypticPeptides && !towardsC)) {
+            if (hasNTermDirection) {
                 mappingSequenceAndMasses(combinations, matrix, lessPrimary, occurrencePrimary, !towardsC);
+            } else {
+                mappingSequenceAndMasses(combinations, matrix, lessPrimary, occurrencePrimary);
             }
         }
-        
-        
+
         // Traceback from NTerm
         for (MatrixContent content : matrix[combinations.length]) {
 
@@ -4646,7 +4694,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
             while (currentContent.previousContent != null) {
 
-                if (currentContent.character != '\0') {
+                if (currentContent.character != '\0' && currentContent.character != DELIMITER) {
 
                     currentPeptide.append((char) currentContent.character);
                     currentPeptideSearch.append((char) (currentContent.ambiguousChar == -1 ? currentContent.character : currentContent.ambiguousChar));
@@ -4749,11 +4797,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                     String accession = accessions.get(indexPart)[index];
                     PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, peptide.toString(), pos - boundaries.get(indexPart)[index], modifications.toArray(new ModificationMatch[modifications.size()]));
                     peptideProteinMapping.fmIndexPosition = j;
-                    
+
                     if (checkModificationPattern(peptideProteinMapping)) {
-
                         allMatches.add(peptideProteinMapping);
-
                     }
                 }
 
@@ -4880,7 +4926,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                         ArrayList<ModificationMatch> currenModifications = substitutedModifications.get(i);
                         PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, substitutedPeptides.get(i), pos - boundaries.get(indexPart)[index], currenModifications.toArray(new ModificationMatch[currenModifications.size()]));
                         peptideProteinMapping.fmIndexPosition = j;
-                    
+                        
+
                         if (checkModificationPattern(peptideProteinMapping)) {
 
                             allMatches.add(peptideProteinMapping);
@@ -4889,13 +4936,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                     }
                 }
             }
-        }/*
-        if (tag.getContent().size() == 3){
-            ArrayList<TagComponent> tc = tag.getContent();
-            for (PeptideProteinMapping ppm : allMatches){
-                System.out.println(tc.get(0).getMass() + " " + tc.get(1).asSequence() + " " + tc.get(2).getMass() + " " + ppm.getPeptideSequence() + " " + ppm.getProteinAccession() + " " + ppm.getIndex());
-            }
-        }*/
+        }
         return allMatches;
     }
 
@@ -5163,7 +5204,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                             }
                         }
 
-                        if (aminoAcidPep > 0) {
+                        if (aminoAcidPep > 0 && aminoAcidPep != DELIMITER) {
 
                             currentPeptide += (char) aminoAcidPep;
                             allVariants += (char) edit;
@@ -5225,7 +5266,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             }
 
             //cacheIt(refTagContent, cachePrimary, indexPart);
-
         }
 
         // Map towards NTerm
@@ -5270,7 +5310,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                     int aminoAcid = currentContent.character;
 
-                    if (aminoAcid > 0) {
+                    if (aminoAcid > 0 && aminoAcid != DELIMITER) {
 
                         currentPeptide += (char) aminoAcid;
                         allVariants += (char) currentContent.variant;
@@ -5418,7 +5458,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
                         PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, cleanPeptide, startPosition, modifications.toArray(new ModificationMatch[modifications.size()]), peptideVariantMatches);
                         peptideProteinMapping.fmIndexPosition = j;
-                    
+
                         if (checkModificationPattern(peptideProteinMapping)) {
                             allMatches.add(peptideProteinMapping);
 
@@ -5526,34 +5566,32 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
             }
         }
     }
-    
-    
+
     /**
-     * Bactward propagation of the BWT to get the previous character
+     * Backward propagation of the BWT to get the previous character.
      *
      * @param proteinAccession the accession
      * @param index the index in the suffix array / BWT
-     * 
+     *
      * @return the previous character
      */
-    public char prefixCharacter(String proteinAccession, int index){
+    public char prefixCharacter(String proteinAccession, int index) {
         AccessionMetaData accessionMeta = accessionMetaData.get(proteinAccession);
         int indexPart = accessionMeta.indexPart;
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
-        return (char)occurrenceTablePrimary.getCharacterInfo(index)[0];
+        return (char) occurrenceTablePrimary.getCharacterInfo(index)[0];
     }
-    
-    
+
     /**
      * Forward propagation of the BWT to get the n'th consecutive character
      *
      * @param proteinAccession the accession
      * @param index the index in the suffix array / BWT
      * @param length number of forward steps
-     * 
+     *
      * @return the n'th next character
      */
-    public char suffixCharacter(String proteinAccession, int index, int length){
+    public char suffixCharacter(String proteinAccession, int index, int length) {
 
         AccessionMetaData accessionMeta = accessionMetaData.get(proteinAccession);
         int indexPart = accessionMeta.indexPart;
@@ -5561,24 +5599,24 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         WaveletTree occurrenceTablePrimary = occurrenceTablesPrimary.get(indexPart);
 
         int L = 0;
-        for (int i = 0; i < length; ++i){
+        for (int i = 0; i < length; ++i) {
             L = 0;
             int R = lessTablePrimary.length - 1, m = -1;
-            while (R - L > 1){
+            while (R - L > 1) {
                 m = (L + R) >>> 1;
-                if (lessTablePrimary[m] <= index) L = m;
-                else R = m;
+                if (lessTablePrimary[m] <= index) {
+                    L = m;
+                } else {
+                    R = m;
+                }
             }
-            if (i < length - 1) index = occurrenceTablePrimary.select(index - lessTablePrimary[L], L);
+            if (i < length - 1) {
+                index = occurrenceTablePrimary.select(index - lessTablePrimary[L], L);
+            }
         }
-        
-        return (char)L;
+
+        return (char) L;
     }
-    
-    
-    
-    
-    
 
     @Override
     public String getSequence(String proteinAccession) {

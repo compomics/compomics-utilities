@@ -53,8 +53,8 @@ public class EnzymesDialog extends javax.swing.JDialog {
     /**
      * Creates a new EnzymesDialog.
      *
-     * @param parentFrame
-     * @param modal
+     * @param parentFrame the parent frame
+     * @param modal true if modal
      */
     public EnzymesDialog(Frame parentFrame, boolean modal) {
         super(parentFrame, modal);

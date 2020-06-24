@@ -20,17 +20,6 @@ import java.util.stream.Collectors;
 public class PeptideProteinMapping {
 
     /**
-     * Empty default constructor
-     */
-    public PeptideProteinMapping() {
-        proteinAccession = "";
-        peptideSequence = "";
-        index = 0;
-        modificationMatches = null;
-        peptideVariantMatches = null;
-    }
-
-    /**
      * Accession of the protein.
      */
     private final String proteinAccession;
@@ -51,9 +40,20 @@ public class PeptideProteinMapping {
      */
     private final PeptideVariantMatches peptideVariantMatches;
     /**
-     * The position in the FM index
+     * The position in the FM index.
      */
     public int fmIndexPosition = 0;
+
+    /**
+     * Empty default constructor.
+     */
+    public PeptideProteinMapping() {
+        proteinAccession = "";
+        peptideSequence = "";
+        index = 0;
+        modificationMatches = null;
+        peptideVariantMatches = null;
+    }
 
     /**
      * Constructor.
@@ -64,7 +64,13 @@ public class PeptideProteinMapping {
      * @param modificationMatches eventual modification matches
      * @param peptideVariantMatches eventual sequence variants
      */
-    public PeptideProteinMapping(String proteinAccession, String peptideSequence, int index, ModificationMatch[] modificationMatches, PeptideVariantMatches peptideVariantMatches) {
+    public PeptideProteinMapping(
+            String proteinAccession,
+            String peptideSequence,
+            int index,
+            ModificationMatch[] modificationMatches,
+            PeptideVariantMatches peptideVariantMatches
+    ) {
 
         this.proteinAccession = proteinAccession;
         this.peptideSequence = peptideSequence;
@@ -81,7 +87,11 @@ public class PeptideProteinMapping {
      * @param peptideSequence the peptide sequence
      * @param index the index on the protein
      */
-    public PeptideProteinMapping(String proteinAccession, String peptideSequence, int index) {
+    public PeptideProteinMapping(
+            String proteinAccession,
+            String peptideSequence,
+            int index
+    ) {
         this(proteinAccession, peptideSequence, index, null, null);
     }
 
@@ -93,7 +103,12 @@ public class PeptideProteinMapping {
      * @param index the index on the protein
      * @param modificationMatches modification matches
      */
-    public PeptideProteinMapping(String proteinAccession, String peptideSequence, int index, ModificationMatch[] modificationMatches) {
+    public PeptideProteinMapping(
+            String proteinAccession,
+            String peptideSequence,
+            int index,
+            ModificationMatch[] modificationMatches
+    ) {
         this(proteinAccession, peptideSequence, index, modificationMatches, null);
     }
 
@@ -151,7 +166,10 @@ public class PeptideProteinMapping {
      *
      * @return a map of the mapping
      */
-    public static HashMap<String, HashMap<String, int[]>> getPeptideProteinIndexesMap(ArrayList<PeptideProteinMapping> peptideProteinMappings) {
+    public static HashMap<String, HashMap<String, int[]>> getPeptideProteinIndexesMap(
+            ArrayList<PeptideProteinMapping> peptideProteinMappings
+    ) {
+
         return peptideProteinMappings.stream()
                 .collect(Collectors.groupingBy(PeptideProteinMapping::getPeptideSequence)).entrySet().stream()
                 .collect(Collectors.toMap(
@@ -183,7 +201,9 @@ public class PeptideProteinMapping {
      *
      * @return a map of the mapping
      */
-    public static HashMap<String, HashSet<String>> getPeptideProteinMap(ArrayList<PeptideProteinMapping> peptideProteinMappings) {
+    public static HashMap<String, HashSet<String>> getPeptideProteinMap(
+            ArrayList<PeptideProteinMapping> peptideProteinMappings
+    ) {
 
         return peptideProteinMappings.stream()
                 .collect(Collectors.groupingBy(PeptideProteinMapping::getPeptideSequence)).entrySet().stream()
@@ -207,7 +227,9 @@ public class PeptideProteinMapping {
      *
      * @return the variant matches summarized in a map
      */
-    public static HashMap<String, HashMap<Integer, PeptideVariantMatches>> getVariantMatches(ArrayList<PeptideProteinMapping> peptideProteinMappings) {
+    public static HashMap<String, HashMap<Integer, PeptideVariantMatches>> getVariantMatches(
+            ArrayList<PeptideProteinMapping> peptideProteinMappings
+    ) {
 
         HashMap<String, HashMap<Integer, PeptideVariantMatches>> result = new HashMap<>(0);
 
@@ -244,7 +266,7 @@ public class PeptideProteinMapping {
      * @return a list of peptides
      */
     public static Collection<Peptide> getPeptides(
-            ArrayList<PeptideProteinMapping> peptideProteinMappings, 
+            ArrayList<PeptideProteinMapping> peptideProteinMappings,
             SequenceMatchingParameters sequenceMatchingPreferences
     ) {
 
@@ -296,11 +318,20 @@ public class PeptideProteinMapping {
                 }
 
                 peptideIndexes.add(peptideIndex);
-                
+
                 if (peptideProteinMapping.getPeptideVariantMatches() != null) {
 
                     HashMap<String, HashMap<Integer, PeptideVariantMatches>> proteinVariantMap = variantsMap.get(peptideKey);
-                    HashMap<Integer, PeptideVariantMatches> variantIndex = proteinVariantMap.get(proteinAccession);
+
+                    if (proteinVariantMap == null) {
+                        proteinVariantMap = new HashMap<>();
+                    }
+
+                    HashMap<Integer, PeptideVariantMatches> variantIndex = null;
+
+                    if (proteinAccession != null) {
+                        variantIndex = proteinVariantMap.get(proteinAccession);
+                    }
 
                     if (variantIndex == null) {
 
@@ -321,11 +352,14 @@ public class PeptideProteinMapping {
 
             HashMap<String, HashSet<Integer>> proteinMapping = proteinsMap.get(peptideKey);
             TreeMap<String, int[]> proteinMappingArray = new TreeMap<>();
-            for (Entry<String, HashSet<Integer>> e : proteinMapping.entrySet()){
-                int[] i = e.getValue().stream() 
-                            .mapToInt(Integer::intValue) 
-                            .sorted()
-                            .toArray();
+
+            for (Entry<String, HashSet<Integer>> e : proteinMapping.entrySet()) {
+
+                int[] i = e.getValue().stream()
+                        .mapToInt(Integer::intValue)
+                        .sorted()
+                        .toArray();
+
                 proteinMappingArray.put(e.getKey(), i);
             }
 

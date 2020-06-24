@@ -1238,7 +1238,6 @@ public class FMIndexTest extends TestCase {
 
         // TESTMRITESTCKTESTK with two fixed modification at peptide n-terminus and c-terminus
         aminoAcidSequence = new AminoAcidSequence("TEST");
-        Assert.assertTrue(ptmFactory.getModification("Acetylation of peptide N-term") != null);
         nTermGap = ptmFactory.getModification("Acetylation of peptide N-term").getMass() + AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
         cTermGap = ptmFactory.getModification("Amidation of peptide C-term").getMass() + AminoAcid.C.getMonoisotopicMass() + AminoAcid.K.getMonoisotopicMass();
         tag = new Tag(nTermGap, aminoAcidSequence, cTermGap);

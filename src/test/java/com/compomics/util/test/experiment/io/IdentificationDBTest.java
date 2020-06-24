@@ -117,6 +117,8 @@ public class IdentificationDBTest extends TestCase {
             identification = new Identification(objectsDB);
 
             
+            Assert.assertTrue(identification != null);
+            Assert.assertTrue(identification.getSpectrumIdentificationKeys() != null);
             Assert.assertTrue(identification.getSpectrumIdentificationKeys().size() == 1);
 
 
@@ -205,7 +207,7 @@ public class IdentificationDBTest extends TestCase {
             identification.close();
                 
         } finally {
-            IoUtil.deleteDir(dbFolder);
+            //IoUtil.deleteDir(dbFolder);
         }
     }
 }

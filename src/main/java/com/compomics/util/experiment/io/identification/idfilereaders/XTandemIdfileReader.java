@@ -130,7 +130,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     )
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
 
-        // @TODO: use the waiting handler
+        waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+        waitingHandler.setMaxSecondaryProgressCounter(100);
+        
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
         
         HashSet<String> fixedNonTerminalModifications = searchParameters.getModificationParameters().getFixedModifications().stream()
@@ -212,11 +214,14 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
 
         try (SimpleFileReader reader = SimpleFileReader.getFileReader(inputFile)) {
-
+            
             XMLInputFactory factory = XMLInputFactory.newInstance();
             XMLStreamReader parser = factory.createXMLStreamReader(reader.getReader());
 
             while (parser.hasNext()) {
+                
+                double progress = reader.getProgressInPercent();
+                waitingHandler.setSecondaryProgressCounter((int) progress);
 
                 parser.next();
 
@@ -294,6 +299,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 }
             }
 
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+            
             if (expandAaCombinations) {
 
                 for (SpectrumMatch spectrumMatch : allMatches.values()) {

@@ -118,8 +118,8 @@ public class PeptideMapperCLI {
         }
         
         
-        SearchParameters searchParameters = null;
-        SequenceMatchingParameters sequenceMatchingPreferences = null;
+        IdentificationParameters identificationParameters = new IdentificationParameters();
+        boolean parametersLoaded = false;
         
         ArrayList<File> idFiles = new ArrayList<>();
         
@@ -177,16 +177,13 @@ public class PeptideMapperCLI {
                         }
                     } else if (lowerCaseName.endsWith(".par")) {
 
-                        IdentificationParameters identificationParameters = null;
                         try {
                             identificationParameters = IdentificationParameters.getIdentificationParameters(zippedFile);
+                            parametersLoaded = true;
                         } catch (Exception e) {
                             System.err.println("Error: cound not open or parse parameter file");
                             System.exit(-1);
                         }
-
-                        sequenceMatchingPreferences = identificationParameters.getSequenceMatchingParameters();
-                        searchParameters = identificationParameters.getSearchParameters();
 
                     } else if (lowerCaseName.endsWith(".mgf")){
                         msFileHandler.register(zippedFile, zippedFile.getParentFile(), null);
@@ -194,14 +191,13 @@ public class PeptideMapperCLI {
                 }
             }
             
-            if (searchParameters == null) {
-                searchParameters = new SearchParameters();
-                searchParameters.setModificationParameters(new ModificationParameters());
-                searchParameters.setFragmentIonAccuracy(0.02);
-                searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
-                sequenceMatchingPreferences = new SequenceMatchingParameters();
-                sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
-                sequenceMatchingPreferences.setLimitX(0.25);
+            if (!parametersLoaded) {
+                identificationParameters.getSearchParameters().setModificationParameters(new ModificationParameters());
+                identificationParameters.getSearchParameters().setFragmentIonAccuracy(0.02);
+                identificationParameters.getSearchParameters().setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
+                
+                identificationParameters.getSequenceMatchingParameters().setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
+                identificationParameters.getSequenceMatchingParameters().setLimitX(0.25);
             }
             
             ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
@@ -221,8 +217,8 @@ public class PeptideMapperCLI {
                 spectrumMatches.addAll(fileReader.getAllSpectrumMatches(
                     msFileHandler,
                     null,
-                    searchParameters,
-                    sequenceMatchingPreferences,
+                    identificationParameters.getSearchParameters(),
+                    identificationParameters.getSequenceMatchingParameters(),
                     true
                 ));
                 
@@ -318,9 +314,7 @@ public class PeptideMapperCLI {
         }
 
         // read in the parameters
-        SearchParameters searchParameters = null;
-        PeptideVariantsParameters peptideVariantsPreferences = PeptideVariantsParameters.getNoVariantPreferences();
-        SequenceMatchingParameters sequenceMatchingPreferences = null;
+        IdentificationParameters identificationParameters = new IdentificationParameters();
         boolean customParameters = false;
         if (args.length >= 5) {
             int argPos = 4;
@@ -345,7 +339,6 @@ public class PeptideMapperCLI {
                         
                     case "-u":  // use utilities parameter file
                         
-                        IdentificationParameters identificationParameters = null;
                         try {
                             File parameterFile = new File(args[argPos + 1]);
                             identificationParameters = IdentificationParameters.getIdentificationParameters(parameterFile);
@@ -353,10 +346,6 @@ public class PeptideMapperCLI {
                             System.err.println("Error: cound not open or parse parameter file");
                             System.exit(-1);
                         }
-
-                        sequenceMatchingPreferences = identificationParameters.getSequenceMatchingParameters();
-                        searchParameters = identificationParameters.getSearchParameters();
-                        peptideVariantsPreferences = identificationParameters.getPeptideVariantsParameters();
                         customParameters = true;
                         argPos += 2;
                         break;
@@ -369,24 +358,20 @@ public class PeptideMapperCLI {
 
         }
         if (!customParameters) {
-            searchParameters = new SearchParameters();
-            searchParameters.setModificationParameters(new ModificationParameters());
-            searchParameters.setFragmentIonAccuracy(0.02);
-            searchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
-            sequenceMatchingPreferences = new SequenceMatchingParameters();
-            sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
-            sequenceMatchingPreferences.setLimitX(0.25);
+            identificationParameters.getSearchParameters().setModificationParameters(new ModificationParameters());
+            identificationParameters.getSearchParameters().setFragmentIonAccuracy(0.02);
+            identificationParameters.getSearchParameters().setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);
+            identificationParameters.getSequenceMatchingParameters().setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
+            identificationParameters.getSequenceMatchingParameters().setLimitX(0.25);
         }
-        if (searchParameters != null) searchParameters.setFlanking(flanking);
+        identificationParameters.getSearchParameters().setFlanking(flanking);
         
         runMapping(fastaFile,
                    waitingHandlerCLIImpl,
-                   peptideVariantsPreferences,
-                   searchParameters,
+                   identificationParameters,
                    inputFileName,
                    outputFileName,
                    nCores,
-                   sequenceMatchingPreferences,
                    peptideMapping);
     }
     
@@ -424,12 +409,10 @@ public class PeptideMapperCLI {
         
     public static void runMapping(File fastaFile,
                                   WaitingHandlerCLIImpl waitingHandlerCLIImpl,
-                                  PeptideVariantsParameters peptideVariantsPreferences,
-                                  SearchParameters searchParameters,
+                                  IdentificationParameters identificationParameters,
                                   String inputFileName,
                                   String outputFileName,
                                   int nCores,
-                                  SequenceMatchingParameters sequenceMatchingPreferences,
                                   boolean peptideMapping){
         
         
@@ -439,7 +422,7 @@ public class PeptideMapperCLI {
         System.out.println("Start indexing fasta file");
         long startTimeIndex = System.nanoTime();
         try {
-            peptideMapper = new FMIndex(fastaFile, null, waitingHandlerCLIImpl, true, peptideVariantsPreferences, searchParameters);
+            peptideMapper = new FMIndex(fastaFile, null, waitingHandlerCLIImpl, true, identificationParameters);
         } catch (Exception e) {
             handleError(outputFileName, "Error: cound not index the fasta file", e);
         } catch (OutOfMemoryError e){
@@ -482,7 +465,7 @@ public class PeptideMapperCLI {
             ArrayList<MappingWorker> workers = new ArrayList<>();
             ExecutorService importPool = Executors.newFixedThreadPool(nCores);
             for (int i = 0; i < nCores; ++i){
-                MappingWorker mw = new MappingWorker(waitingHandlerCLIImpl, peptideMapper, sequenceMatchingPreferences, br, writer, peptideMapping, searchParameters.getFlanking());
+                MappingWorker mw = new MappingWorker(waitingHandlerCLIImpl, peptideMapper, identificationParameters, br, writer, peptideMapping);
                 importPool.submit(mw);
                 workers.add(mw);
             };

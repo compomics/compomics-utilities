@@ -151,12 +151,12 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     ) {
         if (displayProgress) {
             // invoke later to give time for components to update
-            SwingUtilities.invokeLater(
-                    new Runnable() {
-                public void run() {
+//            SwingUtilities.invokeLater(
+//                    new Runnable() {
+//                public void run() {
                     progressBar.setValue(value);
-                }
-            });
+//                }
+//            });
         }
     }
 

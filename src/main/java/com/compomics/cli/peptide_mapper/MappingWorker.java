@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.regex.Pattern;
 import com.compomics.util.experiment.identification.utils.PeptideUtils;
+import com.compomics.util.parameters.identification.IdentificationParameters;
 
 /**
  *
@@ -38,18 +39,17 @@ public class MappingWorker implements Runnable {
 
     public MappingWorker(WaitingHandlerCLIImpl waitingHandlerCLIImpl,
                   FastaMapper peptideMapper,
-                  SequenceMatchingParameters sequenceMatchingPreferences,
+                  IdentificationParameters identificationParameters,
                   BufferedReader br,
                   PrintWriter writer,
-                  boolean peptideMapping,
-                  boolean flanking
+                  boolean peptideMapping
                   ){
         this.waitingHandlerCLIImpl = waitingHandlerCLIImpl;
         this.peptideMapper = peptideMapper;
-        this.sequenceMatchingPreferences = sequenceMatchingPreferences;
+        this.sequenceMatchingPreferences = identificationParameters.getSequenceMatchingParameters();
         this.br = br;
         this.writer = writer;
-        this.flanking = flanking;
+        this.flanking = identificationParameters.getSearchParameters().getFlanking();
         this.peptideMapping = peptideMapping;
     }
     

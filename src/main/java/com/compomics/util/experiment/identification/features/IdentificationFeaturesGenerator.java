@@ -1168,7 +1168,7 @@ public class IdentificationFeaturesGenerator {
 
             }
 
-            return result;
+            return result; // @TODO: round to a certain number of decimals?
 
         } else {
 
@@ -1200,7 +1200,7 @@ public class IdentificationFeaturesGenerator {
 
             }
 
-            return result;
+            return result; // @TODO: round to a certain number of decimals?
 
         }
     }

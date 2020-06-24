@@ -46,6 +46,7 @@ import java.util.TreeSet;
 import org.jsuffixarrays.*;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters.VariantType;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -74,6 +75,10 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      * Maximal number of PTMs per peptide.
      */
     public int maxPTMsPerPeptide = 3;
+    /**
+     * Flag for only considering tryptic digested peptides.
+     */
+    public boolean onlyTrypticPeptides = false;
     /**
      * Character defining as delimiter between protein sequences.
      */
@@ -568,9 +573,9 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         if (searchParameters != null) {
             massTolerance = searchParameters.getFragmentIonAccuracy();
             massAccuracyType = searchParameters.getFragmentAccuracyType();
-            init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters, peptideVariantsPreferences);
+            init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters, peptideVariantsPreferences, null);
         } else {
-            init(fastaFile, fastaParameters, waitingHandler, displayProgress, null, peptideVariantsPreferences);
+            init(fastaFile, fastaParameters, waitingHandler, displayProgress, null, peptideVariantsPreferences, null);
         }
     }
 
@@ -589,8 +594,30 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      * the FASTA file
      */
     public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, SearchParameters searchParameters, PeptideVariantsParameters peptideVariantsPreferences) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
-        init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters, peptideVariantsPreferences);
+        init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters, peptideVariantsPreferences, null);
     }
+    
+    
+    
+
+    /**
+     * Constructor. If modification settings are provided the index will contain
+     * modification information, ignored if null.
+     *
+     * @param fastaFile the FASTA file to index
+     * @param fastaParameters the parameters for the FASTA file parsing
+     * @param waitingHandler the waiting handler
+     * @param displayProgress if true, the progress is displayed
+     * @param identificationParameters contains all identification parameters
+     *
+     * @throws IOException exception thrown if an error occurs while iterating
+     * the FASTA file
+     */
+    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, IdentificationParameters identificationParameters) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
+        init(fastaFile, fastaParameters, waitingHandler, displayProgress, identificationParameters.getSearchParameters(), identificationParameters.getPeptideVariantsParameters(), identificationParameters.getSequenceMatchingParameters());
+    }
+    
+    
 
     /**
      * Init function only called by the constructors. If modification settings
@@ -603,12 +630,13 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
      * @param displayProgress if true, the progress is displayed
      * @param searchParameters the search parameters
      * @param peptideVariantsPreferences contains all parameters for variants
+     * @param sequenceMatchingParameters contains all parameters for sequence matching
      * @param massTolerance the mass tolerance
      *
      * @throws IOException exception thrown if an error occurs while iterating
      * the FASTA file.
      */
-    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, SearchParameters searchParameters, PeptideVariantsParameters peptideVariantsPreferences) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
+    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, SearchParameters searchParameters, PeptideVariantsParameters peptideVariantsPreferences, SequenceMatchingParameters sequenceMatchingParameters) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
 
         // load all variant preferences
         maxNumberVariants = peptideVariantsPreferences.getnVariants();
@@ -617,6 +645,11 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         maxNumberDeletions = peptideVariantsPreferences.getnAaDeletions();
         maxNumberSubstitutions = peptideVariantsPreferences.getnAaSubstitutions();
         SNPs = peptideVariantsPreferences.getFixedVariants();
+        
+        if (sequenceMatchingParameters != null){
+            maxPTMsPerPeptide = sequenceMatchingParameters.getMaxPtmsPerTagPeptide();
+            onlyTrypticPeptides = sequenceMatchingParameters.isEnzymaticTagsOnly();
+        }
 
         TreeSet<Character> aaGroups = new TreeSet<>();
         aaGroups.add('B');
@@ -3889,6 +3922,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                         }
                                     }
                                 }
+                                
 
                                 if (xMassDiff < -massTolerance) {
                                     if (newMass - computeMassTolerance(massTolerance, combinationMass) + negativeModificationMass <= combinationMass) {
@@ -3898,6 +3932,8 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     if (newNumX > 0 && !withinMass) {
                                         continue;
                                     }
+                                    //if (onlyTrypticPeptides && CTermDirection && !(newCell.character == 'K' || newCell.character == 'R')) continue;
+                                    
                                     MatrixContent newEndCell = new MatrixContent(leftIndex, rightIndex, '\0', newCell, 0, null, null, length + 1, 0, k, modificationMatchEnd, null, -1);
                                     newEndCell.numPTMs += 1;
                                     if (modificationMatchEndEnd == null) {
@@ -3915,6 +3951,7 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
                                     if (newNumX > 0 && !withinMass) {
                                         continue;
                                     }
+                                    // if (onlyTrypticPeptides && CTermDirection && !(newCell.character == 'K' || newCell.character == 'R')) continue;
                                     matrix[k + 1].add(newCell);
                                     matrix[k + 1].getLast().numX = 0;
                                     if (withinMass) {
@@ -4564,10 +4601,11 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
         if (cached == null) {
             // Map Reverse
-            if (!hasCTermDirection) {
-                mappingSequenceAndMasses(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed);
-            } else {
+            //if (hasCTermDirection || (onlyTrypticPeptides && towardsC)) {
+            if (hasCTermDirection) {
                 mappingSequenceAndMasses(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed, towardsC);
+            } else {
+                mappingSequenceAndMasses(combinationsReversed, matrixReversed, lessReversed, occurrenceReversed);
             }
 
             // Traceback Reverse
@@ -4636,10 +4674,11 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
 
         if (!matrix[0].isEmpty()) {
             // Map towards NTerm
-            if (!hasNTermDirection) {
-                mappingSequenceAndMasses(combinations, matrix, lessPrimary, occurrencePrimary);
-            } else {
+            //if (hasNTermDirection || (onlyTrypticPeptides && !towardsC)) {
+            if (hasNTermDirection) {
                 mappingSequenceAndMasses(combinations, matrix, lessPrimary, occurrencePrimary, !towardsC);
+            } else {
+                mappingSequenceAndMasses(combinations, matrix, lessPrimary, occurrencePrimary);
             }
         }
 

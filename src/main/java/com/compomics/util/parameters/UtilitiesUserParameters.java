@@ -187,6 +187,11 @@ public class UtilitiesUserParameters {
      * output.
      */
     private boolean outputData = false;
+    /** 
+     * Indicates whether mgf file/s should be written out of the zip file
+     * when the output is zipped.
+     */
+    private boolean outputMgf = false;
     /**
      * Indicates whether the date should be included in the output.
      */
@@ -1006,6 +1011,28 @@ public class UtilitiesUserParameters {
      */
     public void setOutputData(boolean outputData) {
         this.outputData = outputData;
+    }
+    
+    /**
+     * Indicates whether mgf file/s should be included out of the zip file
+     * when SearchGUI output is zipped.
+     *
+     * @return a boolean indicating whether a mgf file should be included out of 
+     * the zip file when SearchGUI output is zipped.
+     */
+    public boolean outputMgf() {
+        return outputMgf;
+    }
+
+    /**
+     * Sets whether mgf file/s should be included out of the zip file
+     * when SearchGUI output is zipped.
+     *
+     * @param outputMgf a boolean indicating whether a mgf file should be included out of 
+     * the zip file when SearchGUI output is zipped.
+     */
+    public void setOutputMgf(boolean outputMgf) {
+        this.outputMgf = outputMgf;
     }
 
     /**

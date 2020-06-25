@@ -398,7 +398,7 @@ public class TagSpectrumAnnotator extends SpectrumAnnotator {
 
             for (Ion.IonType ionType : ionTypes.keySet()) {
 
-                HashMap<Integer, ArrayList<Ion>> ionMap = theoreticalFragmentIons.get(ionType.index);
+                HashMap<Integer, ArrayList<Ion>> ionMap = (HashMap<Integer, ArrayList<Ion>>) theoreticalFragmentIons.get(ionType.index);
 
                 if (ionMap != null) {
 

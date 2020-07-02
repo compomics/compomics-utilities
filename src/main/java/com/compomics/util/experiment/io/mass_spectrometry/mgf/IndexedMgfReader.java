@@ -37,10 +37,10 @@ public class IndexedMgfReader {
      * @throws IOException Exception thrown whenever an error occurs while
      * reading the file
      */
-    public static MgfIndex getIndexMap(
+    public static MgfIndex getMgfIndex(
             File mgfFile
     ) throws FileNotFoundException, IOException {
-        return getMgfIndex(mgfFile, null);
+        return IndexedMgfReader.getMgfIndex(mgfFile, null);
     }
 
     /**

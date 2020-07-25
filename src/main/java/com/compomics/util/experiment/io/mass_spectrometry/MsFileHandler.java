@@ -105,7 +105,16 @@ public class MsFileHandler implements SpectrumProvider {
                 cmsFolder
         );
 
-        filePathMap.put(spectrumFileNameWithoutExtension, msFile.getAbsolutePath());
+        // it may happen that we try to register one cms file and its source spectrum file,
+        // which usually have the same name but different extension (ie: mgf). 
+        // As we remove the extension, they would
+        // have the same key and we may lost the source file if we don't check it firstly
+        if (filePathMap.get(spectrumFileNameWithoutExtension) == null ||
+                (filePathMap.get(spectrumFileNameWithoutExtension) != null && 
+                !msFile.getAbsolutePath().endsWith(".cms")) ){
+            filePathMap.put(spectrumFileNameWithoutExtension, msFile.getAbsolutePath());
+        }
+        
         cmsFilePathMap.put(spectrumFileNameWithoutExtension, cmsFilePath);
 
         File cmsFile = new File(cmsFilePath);

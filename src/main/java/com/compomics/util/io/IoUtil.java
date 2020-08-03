@@ -8,11 +8,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import org.apache.commons.codec.binary.Base64;
@@ -154,8 +156,8 @@ public class IoUtil {
             }
         }
 
-        try ( FileChannel inChannel = new FileInputStream(in).getChannel()) {
-            try ( FileChannel outChannel = new FileOutputStream(out).getChannel()) {
+        try (FileChannel inChannel = new FileInputStream(in).getChannel()) {
+            try (FileChannel outChannel = new FileOutputStream(out).getChannel()) {
 
                 long bytesCopied = 0;
 
@@ -498,15 +500,41 @@ public class IoUtil {
             return;
         }
 
+        boolean isOldJDK = System.getProperty("java.specification.version", "99").startsWith("1.");
+
         try {
 
-            Method cleaner = buffer.getClass().getMethod("cleaner");
-            cleaner.setAccessible(true);
-            Method clean = Class.forName("sun.misc.Cleaner").getMethod("clean");
-            clean.setAccessible(true);
-            clean.invoke(cleaner.invoke(buffer));
+            if (isOldJDK) {
+
+                Method cleaner = buffer.getClass().getMethod("cleaner");
+                cleaner.setAccessible(true);
+                Method clean = Class.forName("sun.misc.Cleaner").getMethod("clean");
+                clean.setAccessible(true);
+                clean.invoke(cleaner.invoke(buffer));
+
+            } else {
+
+                Class unsafeClass;
+
+                try {
+                    unsafeClass = Class.forName("sun.misc.Unsafe");
+                } catch (Exception ex) {
+                    // jdk.internal.misc.Unsafe doesn't yet have an invokeCleaner() method,
+                    // but that method should be added if sun.misc.Unsafe is removed.
+                    unsafeClass = Class.forName("jdk.internal.misc.Unsafe");
+                }
+
+                Method clean = unsafeClass.getMethod("invokeCleaner", ByteBuffer.class);
+                clean.setAccessible(true);
+                Field theUnsafeField = unsafeClass.getDeclaredField("theUnsafe");
+                theUnsafeField.setAccessible(true);
+                Object theUnsafe = theUnsafeField.get(null);
+                clean.invoke(theUnsafe, buffer);
+
+            }
 
         } catch (Exception ex) {
+
         }
     }
 

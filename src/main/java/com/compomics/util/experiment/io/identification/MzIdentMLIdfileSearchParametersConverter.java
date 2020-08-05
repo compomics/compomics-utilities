@@ -24,12 +24,6 @@ import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
 
     /**
-     * Empty default constructor
-     */
-    public MzIdentMLIdfileSearchParametersConverter() {
-    }
-
-    /**
      * Constructor.
      *
      * @param mzIdentMLFile the mzIdentML file
@@ -47,9 +41,10 @@ public class MzIdentMLIdfileSearchParametersConverter extends ExperimentObject {
 
         String parametersReport = "<br><b><u>Extracted Search Parameters</u></b><br>";
 
+        // @TODO: implement our own parser as this one does not work on Java 11...
+        
         // unmarshal the mzid file
-        MzIdentMLUnmarshaller unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile); // @TODO: implement our own parser
-        //MzIdentMLUnmarshaller unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile, true); // @TODO: figure out when to use in memory processing
+        MzIdentMLUnmarshaller unmarshaller = new MzIdentMLUnmarshaller(mzIdentMLFile);
 
         if (waitingHandler != null && waitingHandler.isRunCanceled()) {
             mzIdentMLFile = null;

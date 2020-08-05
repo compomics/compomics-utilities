@@ -266,10 +266,10 @@ public class CossIdfileReader implements IdfileReader {
                     // get the coss score and convert it to e-value like
                     String scoreAsText = elements[cossScoreIndex];
                     double cossRawScore = Util.readDoubleAsString(scoreAsText);
-                    //double cossTransformedScore = Math.pow(10, -cossRawScore);
+                    double cossTransformedScore = Math.pow(10, -cossRawScore);
 
                     // coss fdr value
-                    double cossFdrValue = Util.readDoubleAsString(elements[validationFdrIndex]);   
+                    //double cossFdrValue = Util.readDoubleAsString(elements[validationFdrIndex]);   
 
                     // get and process the modifications
                     String modifications = elements[modificationsIndex].trim();
@@ -387,7 +387,8 @@ public class CossIdfileReader implements IdfileReader {
                             rank,
                             Advocate.coss.getIndex(),
                             charge,
-                            cossFdrValue, //cossTransformedScore
+                            //cossFdrValue
+                            cossTransformedScore,
                             IoUtil.getFileName(cossTsvFile)
                     );
 

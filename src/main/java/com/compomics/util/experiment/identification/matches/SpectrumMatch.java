@@ -26,7 +26,7 @@ public class SpectrumMatch extends IdentificationMatch {
      */
     private long key;
     /**
-     * The name of the file containing the spectrum.
+     * The name of the file (without extension) containing the spectrum.
      */
     private String spectrumFile;
     /**

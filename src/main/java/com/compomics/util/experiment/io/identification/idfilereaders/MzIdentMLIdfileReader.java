@@ -715,7 +715,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
             }
 
             //String fileName = new File(new URI(location)).getName(); // @TODO: check if this work cross platform... (if it does the above code could be replaced)
-            spectrumFileNameMap.put(id, fileName);
+            spectrumFileNameMap.put(id, IoUtil.removeExtension(fileName));
         }
     }
 
@@ -754,7 +754,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
         // get the spectrum index and potentially the spectrum name
         if (spectrumId.startsWith("index=")) { // @TODO: support more index types
             Integer spectrumIndex = Integer.valueOf(spectrumId.substring(spectrumId.indexOf("=") + 1));
-            spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[spectrumIndex];
+            spectrumTitle = spectrumProvider.getSpectrumTitles(IoUtil.removeExtension(spectrumFileName))[spectrumIndex];
         }
 
         // set up the spectrum match

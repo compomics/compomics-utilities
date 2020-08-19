@@ -11,7 +11,7 @@ import java.util.HashSet;
  * @author Marc Vaudel
  */
 public class IdentificationKeys extends ExperimentObject {
-    
+
     /**
      * Key to use in the database.
      */
@@ -33,7 +33,8 @@ public class IdentificationKeys extends ExperimentObject {
      */
     public final HashMap<String, HashSet<Long>> proteinMap = new HashMap<>();
     /**
-     * The spectrum files that were used for the psms.
+     * The names of the spectrum files (without extensions) that were used for
+     * the PSMs.
      */
     public ArrayList<String> fractions = new ArrayList<>();
 

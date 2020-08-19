@@ -194,7 +194,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
 
             String line;
 
-            // get the name of the mgf file
+            // get the name of the spectrum file
             String fileName = IoUtil.getFileName(tideTsvFile);
             String spectrumFileName = IoUtil.removeExtension(getMgfFileName(fileName));
 
@@ -234,7 +234,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                         }
                     }
 
-                    String spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[scanNumber]; // @TODO: does not work for mzML files
+                    String spectrumTitle = spectrumProvider.getSpectrumTitles(IoUtil.removeExtension(spectrumFileName))[scanNumber]; // @TODO: does not work for mzML files
                     Long tempSpectrumMatchKey = ExperimentObject.asLong(String.join("", spectrumFileName, spectrumTitle));
                     SpectrumMatch currentMatch = tempSpectrumMatchesMap.get(tempSpectrumMatchKey);
 

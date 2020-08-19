@@ -479,7 +479,7 @@ public class CmsFileReader implements SpectrumProvider {
     }
 
     @Override
-    public String[] getFileNames() {
+    public String[] getOrderedFileNamesWithoutExtensions() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -6,6 +6,7 @@ import com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfIndex;
 import com.compomics.util.experiment.io.mass_spectrometry.mgf.IndexedMgfReader;
 import com.compomics.util.experiment.io.mass_spectrometry.mgf.MgfFileIterator;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.io.IoUtil;
 import java.io.File;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class MsFilePerformance {
             }
 
             String fileName = mgfFile.getName();
+            String fileNameWithoutExtension = IoUtil.removeExtension(fileName);
 
             long mgfIndexStart = Instant.now().getEpochSecond();
             BufferedRandomAccessFile raf = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100);
@@ -63,7 +65,7 @@ public class MsFilePerformance {
             long cmsFileEnd = Instant.now().getEpochSecond();
             long cmsCreationTime = cmsFileEnd - cmsFileStart;
 
-            CmsFileReader cmsFileReader = msFileHandler.getReader(fileName);
+            CmsFileReader cmsFileReader = msFileHandler.getReader(fileNameWithoutExtension);
 
             if (mgfIndexTitles.size() != cmsFileReader.titles.length) {
 
@@ -90,13 +92,13 @@ public class MsFilePerformance {
 
                         long mgfReadStart = Instant.now().getEpochSecond();
                         long index = mgfIndex.getIndex(title);
-                        Spectrum mgfSpectrum = MgfIndex.getSpectrum(raf, index, fileName);
+                        Spectrum mgfSpectrum = MgfIndex.getSpectrum(raf, index);
                         long mgfReadEnd = Instant.now().getEpochSecond();
 
                         mgfRead += mgfReadEnd - mgfReadStart;
 
                         long cmsReadStart = Instant.now().getEpochSecond();
-                        Spectrum cmsSpectrum = msFileHandler.getSpectrum(fileName, title);
+                        Spectrum cmsSpectrum = msFileHandler.getSpectrum(fileNameWithoutExtension, title);
                         long cmsReadEnd = Instant.now().getEpochSecond();
 
                         cmsRead += cmsReadEnd - cmsReadStart;
@@ -117,7 +119,7 @@ public class MsFilePerformance {
                 long cmsReadParallelStart = Instant.now().getEpochSecond();
                 mgfIndexTitles.parallelStream()
                         .forEach(
-                                title -> msFileHandler.getSpectrum(fileName, title)
+                                title -> msFileHandler.getSpectrum(fileNameWithoutExtension, title)
                         );
                 long cmsReadParallelEnd = Instant.now().getEpochSecond();
 
@@ -136,19 +138,19 @@ public class MsFilePerformance {
                 mgfIteration += mgfIterationEnd - mgfIterationStart;
                 
                 long cmsIterationStart = Instant.now().getEpochSecond();
-                Arrays.stream(msFileHandler.getSpectrumTitles(fileName))
+                Arrays.stream(msFileHandler.getSpectrumTitles(fileNameWithoutExtension))
                         .forEach(
-                                spectrumTitle -> msFileHandler.getSpectrum(fileName, spectrumTitle)
+                                spectrumTitle -> msFileHandler.getSpectrum(fileNameWithoutExtension, spectrumTitle)
                         );
                 long cmsIterationEnd = Instant.now().getEpochSecond();
                 
                 cmsIteration += cmsIterationEnd - cmsIterationStart;
                 
                 long cmsIterationParallelStart = Instant.now().getEpochSecond();
-                Arrays.stream(msFileHandler.getSpectrumTitles(fileName))
+                Arrays.stream(msFileHandler.getSpectrumTitles(fileNameWithoutExtension))
                         .parallel()
                         .forEach(
-                                spectrumTitle -> msFileHandler.getSpectrum(fileName, spectrumTitle)
+                                spectrumTitle -> msFileHandler.getSpectrum(fileNameWithoutExtension, spectrumTitle)
                         );
                 long cmsIterationParallelEnd = Instant.now().getEpochSecond();
                 

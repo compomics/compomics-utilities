@@ -167,14 +167,14 @@ public class CommandLineUtils {
      * Returns a list of files as imported from the command line option.
      *
      * @param optionInput the command line option
-     * @param fileExtentions the file extensions to be considered
+     * @param fileExtensions the file extensions to be considered
      *
      * @return a list of file candidates
      *
      * @throws FileNotFoundException exception thrown whenever a file is not
      * found
      */
-    public static ArrayList<File> getFiles(String optionInput, ArrayList<String> fileExtentions) throws FileNotFoundException {
+    public static ArrayList<File> getFiles(String optionInput, ArrayList<String> fileExtensions) throws FileNotFoundException {
 
         ArrayList<File> result = new ArrayList<>();
         ArrayList<String> files = splitInput(optionInput);
@@ -187,8 +187,8 @@ public class CommandLineUtils {
                 if (testFile.isDirectory()) {
                     for (File childFile : testFile.listFiles()) {
                         String fileName = IoUtil.getFileName(childFile.getAbsolutePath());
-                        for (String extention : fileExtentions) {
-                            if (fileName.toLowerCase().endsWith(extention.toLowerCase())) {
+                        for (String extension : fileExtensions) {
+                            if (fileName.toLowerCase().endsWith(extension.toLowerCase())) {
                                 if (childFile.exists()) {
                                     result.add(childFile);
                                     break;
@@ -200,8 +200,8 @@ public class CommandLineUtils {
                     }
                 } else {
                     String fileName = IoUtil.getFileName(testFile.getAbsolutePath());
-                    for (String extention : fileExtentions) {
-                        if (fileName.toLowerCase().endsWith(extention.toLowerCase())) {
+                    for (String extension : fileExtensions) {
+                        if (fileName.toLowerCase().endsWith(extension.toLowerCase())) {
                             result.add(testFile);
                             break;
                         }
@@ -212,8 +212,8 @@ public class CommandLineUtils {
             }
         } else {
             for (String file : files) {
-                for (String extention : fileExtentions) {
-                    if (file.toLowerCase().endsWith(extention.toLowerCase())) {
+                for (String extension : fileExtensions) {
+                    if (file.toLowerCase().endsWith(extension.toLowerCase())) {
                         File testFile = new File(file);
                         if (testFile.exists()) {
                             result.add(testFile);

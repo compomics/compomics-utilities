@@ -499,16 +499,17 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param bufferedRandomAccessFile The random access file of the inspected
      * mgf file
      * @param index The index where to start looking for the spectrum
-     * @param fileName The name of the MGF file
      * 
      * @return The next spectrum encountered
      * 
      * @throws IOException Exception thrown whenever an error is encountered
      * while reading the spectrum
      */
-    public static Spectrum getSpectrum(BufferedRandomAccessFile bufferedRandomAccessFile, long index, String fileName) throws IOException {
+    public static Spectrum getSpectrum(
+            BufferedRandomAccessFile bufferedRandomAccessFile, 
+            long index
+    ) throws IOException {
 
-        // @TODO get fileName from the random access file?
         bufferedRandomAccessFile.seek(index);
         double precursorMz = 0, precursorIntensity = 0, rt = -1.0, rt1 = -1, rt2 = -1;
         int[] precursorCharges = null;
@@ -528,7 +529,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
             if (line.startsWith("BEGIN IONS")) {
                 insideSpectrum = true;
                 mzList = new ArrayList<>();
-        intensityList = new ArrayList<>();
+                intensityList = new ArrayList<>();
             } else if (line.startsWith("TITLE")) {
                 insideSpectrum = true;
                 spectrumTitle = line.substring(line.indexOf('=') + 1);

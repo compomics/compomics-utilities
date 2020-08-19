@@ -10,7 +10,6 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.io.IoUtil;
 import static com.compomics.util.io.IoUtil.ENCODING;
@@ -59,14 +58,14 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) 
+    )
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        
+
         return getAllSpectrumMatches(
-                spectrumProvider, 
-                waitingHandler, 
-                searchParameters, 
-                null, 
+                spectrumProvider,
+                waitingHandler,
+                searchParameters,
+                null,
                 false
         );
     }
@@ -78,19 +77,19 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) 
+    )
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (identificationFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
-            
+
         String fileName = IoUtil.getFileName(identificationFile);
         String mgfFileName = getMgfFileName(fileName);
 
         ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
 
-        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(identificationFile)) {
+        try (SimpleFileReader reader = SimpleFileReader.getFileReader(identificationFile)) {
 
             SpectrumMatch currentMatch = null;
             int rank = 1;
@@ -111,7 +110,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
                     // remove any html from the title
                     String decodedTitle = URLDecoder.decode(spectrumTitle, ENCODING);
-                    
+
                     currentMatch = new SpectrumMatch(mgfFileName, decodedTitle);
 
                 } else if (line.charAt(0) == 'P') {
@@ -133,28 +132,28 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
     /**
      * Returns the spectrum file name.This method assumes that the pNovo output
- file is the mgf file name + ".pnovo.txt"
+     * file is the mgf file name + ".pnovo.txt"
      *
      * @param fileName the name of the results file.
-     * 
+     *
      * @return The spectrum file name.
      */
     public static String getMgfFileName(String fileName) {
-        
+
         if (fileName.endsWith(".pnovo.txt")) {
-        
+
             return fileName.substring(0, fileName.length() - 10) + ".mgf";
-        
+
         } else if (fileName.endsWith(".pnovo.txt.gz")) {
-        
+
             return fileName.substring(0, fileName.length() - 13) + ".mgf";
-            
+
         } else {
-            
+
             throw new IllegalArgumentException("Unexpected file extension. Expected: .pnovo.txt or .pnovo.txt.gz. File name: " + fileName + ".");
-            
+
         }
-    
+
     }
 
     @Override
@@ -164,7 +163,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
     @Override
     public void close() throws IOException {
-        
+
     }
 
     /**

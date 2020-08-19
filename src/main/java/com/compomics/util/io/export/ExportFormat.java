@@ -25,9 +25,9 @@ public enum ExportFormat {
      */
     public final String name;
     /**
-     * The extention to use for this format.
+     * The extension to use for this format.
      */
-    public final String extention;
+    public final String extension;
     /**
      * Description of the format.
      */
@@ -38,13 +38,13 @@ public enum ExportFormat {
      *
      * @param index The index of the format
      * @param name The name of the format
-     * @param extention The extention to use for this format
+     * @param extension The extension to use for this format
      * @param description Description of the format
      */
-    private ExportFormat(int index, String name, String extention, String description) {
+    private ExportFormat(int index, String name, String extension, String description) {
         this.index = index;
         this.name = name;
-        this.extention = extention;
+        this.extension = extension;
         this.description = description;
     }
     /**
@@ -71,7 +71,7 @@ public enum ExportFormat {
             } else {
                 options.append(", ");
             }
-            options.append(exportFormat.extention).append(": ").append(exportFormat.description);
+            options.append(exportFormat.extension).append(": ").append(exportFormat.description);
             if (exportFormat == commandLineDefaultOption) {
                 options.append(" (default)");
             }
@@ -89,7 +89,7 @@ public enum ExportFormat {
      */
     public static ExportFormat getFormatFromCommandLineOption(String commandLineOption) {
         for (ExportFormat exportFormat : values()) {
-            if (commandLineOption.equals(exportFormat.extention)) {
+            if (commandLineOption.equals(exportFormat.extension)) {
                 return exportFormat;
             }
         }
@@ -102,7 +102,7 @@ public enum ExportFormat {
     private ExportFormat() {
         index = 0;
         name = "";
-        extention = "";
+        extension = "";
         description = "";
     }
 }

@@ -179,6 +179,13 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onlyTrypticPeptides">onlyTrypticPeptides</a></span></code></th>
+<td class="colLast">
+<div class="block">Flag for only considering tryptic digested peptides.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>static char</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#SENTINEL">SENTINEL</a></span></code></th>
 <td class="colLast">
@@ -224,6 +231,16 @@ boolean&nbsp;displayProgress,
 </td>
 </tr>
 <tr class="altColor">
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.io.File,com.compomics.util.experiment.io.biology.protein.FastaParameters,com.compomics.util.waiting.WaitingHandler,boolean,com.compomics.util.parameters.identification.IdentificationParameters)">FMIndex</a></span>&#8203;(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;fastaFile,
+<a href="../../../io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a>&nbsp;fastaParameters,
+<a href="../../../../waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
+boolean&nbsp;displayProgress,
+<a href="../../../../parameters/identification/IdentificationParameters.html" title="class in com.compomics.util.parameters.identification">IdentificationParameters</a>&nbsp;identificationParameters)</code></th>
+<td class="colLast">
+<div class="block">Constructor.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.io.File,com.compomics.util.experiment.io.biology.protein.FastaParameters,com.compomics.util.waiting.WaitingHandler,boolean,com.compomics.util.parameters.identification.search.SearchParameters,com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters)">FMIndex</a></span>&#8203;(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;fastaFile,
 <a href="../../../io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a>&nbsp;fastaParameters,
 <a href="../../../../waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
@@ -542,6 +559,13 @@ int&nbsp;numX)</code></th>
 </li>
 <li class="blockList">
 <section class="detail">
+<h3><a id="onlyTrypticPeptides">onlyTrypticPeptides</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">onlyTrypticPeptides</span></div>
+<div class="block">Flag for only considering tryptic digested peptides.</div>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
 <h3><a id="DELIMITER">DELIMITER</a></h3>
 <div class="memberSignature"><span class="modifiers">public static</span>&nbsp;<span class="returnType">char</span>&nbsp;<span class="memberName">DELIMITER</span></div>
 <div class="block">Character defining as delimiter between protein sequences.</div>
@@ -661,6 +685,36 @@ boolean&nbsp;displayProgress,
 <dd><code>displayProgress</code> - if true, the progress is displayed</dd>
 <dd><code>searchParameters</code> - the search parameters</dd>
 <dd><code>peptideVariantsPreferences</code> - contains all parameters for variants</dd>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink">IOException</a></code> - exception thrown if an error occurs while iterating
+ the FASTA file</dd>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/OutOfMemoryError.html?is-external=true" title="class or interface in java.lang" class="externalLink">OutOfMemoryError</a></code></dd>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink">RuntimeException</a></code></dd>
+<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang" class="externalLink">IllegalArgumentException</a></code></dd>
+</dl>
+</section>
+</li>
+<li class="blockList">
+<section class="detail">
+<h3><a id="&lt;init&gt;(java.io.File,com.compomics.util.experiment.io.biology.protein.FastaParameters,com.compomics.util.waiting.WaitingHandler,boolean,com.compomics.util.parameters.identification.IdentificationParameters)">FMIndex</a></h3>
+<div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">FMIndex</span>&#8203;(<span class="arguments"><a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;fastaFile,
+<a href="../../../io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a>&nbsp;fastaParameters,
+<a href="../../../../waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
+boolean&nbsp;displayProgress,
+<a href="../../../../parameters/identification/IdentificationParameters.html" title="class in com.compomics.util.parameters.identification">IdentificationParameters</a>&nbsp;identificationParameters)</span>
+        throws <span class="exceptions"><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink">IOException</a>,
+<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/OutOfMemoryError.html?is-external=true" title="class or interface in java.lang" class="externalLink">OutOfMemoryError</a>,
+<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink">RuntimeException</a>,
+<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang" class="externalLink">IllegalArgumentException</a></span></div>
+<div class="block">Constructor. If modification settings are provided the index will contain
+ modification information, ignored if null.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>fastaFile</code> - the FASTA file to index</dd>
+<dd><code>fastaParameters</code> - the parameters for the FASTA file parsing</dd>
+<dd><code>waitingHandler</code> - the waiting handler</dd>
+<dd><code>displayProgress</code> - if true, the progress is displayed</dd>
+<dd><code>identificationParameters</code> - contains all identification parameters</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink">IOException</a></code> - exception thrown if an error occurs while iterating
  the FASTA file</dd>

@@ -68,7 +68,6 @@ public interface MsFileIterator extends AutoCloseable {
                 extension -> fileName.toLowerCase().endsWith(extension))) {
 
             return new MzmlFileIterator(file, waitingHandler);
-            //return new MzmlFileIteratorJmzML(file, waitingHandler); // uses jmzml, but does not work on Java 11 or newer
 
         } else if (fileName.toLowerCase().endsWith(CmsFileUtils.EXTENSION)) {
 

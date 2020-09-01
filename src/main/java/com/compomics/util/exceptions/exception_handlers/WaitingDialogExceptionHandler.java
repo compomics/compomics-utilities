@@ -50,7 +50,7 @@ public class WaitingDialogExceptionHandler extends ExceptionHandler {
     protected void notifyUser(Exception e) {
         waitingDialog.appendReport("An error occurred: " + e.getLocalizedMessage(), true, true);
         if (getExceptionType(e).equals("Protein not found")) {
-            waitingDialog.appendReport("Please see the database help page (https://compomics.github.io/projects/searchgui/wiki/databasehelp.html).", true, true);
+            waitingDialog.appendReport("Please see the database help page (https://compomics.github.io/projects/searchgui/wiki/DatabaseHelp.html).", true, true);
         } else {
             if (toolIssuesPage != null) {
                 waitingDialog.appendReport("Please contact the developers (" + toolIssuesPage + ").", true, true);

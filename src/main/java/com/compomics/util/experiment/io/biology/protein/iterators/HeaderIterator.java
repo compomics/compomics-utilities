@@ -64,9 +64,11 @@ public class HeaderIterator {
             while ((line = simpleFileReader.readLine()) != null) {
 
                 // progress update
-                double progress = simpleFileReader.getProgressInPercent();
-                waitingHandler.setSecondaryProgressCounter((int) progress);
-                
+                if (waitingHandler != null) {
+                    double progress = simpleFileReader.getProgressInPercent();
+                    waitingHandler.setSecondaryProgressCounter((int) progress);
+                }
+
                 line = line.trim();
 
                 if (line.length() > 0) {
@@ -74,10 +76,16 @@ public class HeaderIterator {
                     if (line.charAt(0) == '>') {
 
                         bufferingMutex.release();
-                        
+
                         return line;
 
                     }
+                }
+
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+
+                    return null;
+
                 }
             }
 
@@ -94,20 +102,20 @@ public class HeaderIterator {
 
         }
     }
-    
+
     /**
      * Closes the iterator.
      */
     public void close() {
-        
+
         try {
-            
+
             simpleFileReader.close();
-            
+
         } catch (Exception e) {
-            
+
             e.printStackTrace();
-            
+
         }
     }
 

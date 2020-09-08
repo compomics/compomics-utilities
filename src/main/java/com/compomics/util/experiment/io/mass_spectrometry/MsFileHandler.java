@@ -39,7 +39,7 @@ public class MsFileHandler implements SpectrumProvider {
     /**
      * Array of the file names (without extensions) ordered alphabetically.
      */
-    private String[] orderedFileNames = new String[0];
+    private String[] orderedFileNamesWithoutExtensions = new String[0];
 
     /**
      * Constructor.
@@ -95,7 +95,7 @@ public class MsFileHandler implements SpectrumProvider {
 
         String spectrumFileNameWithoutExtension = IoUtil.removeExtension(msFile.getName());
 
-        orderedFileNames = Stream.concat(Arrays.stream(orderedFileNames), Stream.of(spectrumFileNameWithoutExtension))
+        orderedFileNamesWithoutExtensions = Stream.concat(Arrays.stream(orderedFileNamesWithoutExtensions), Stream.of(spectrumFileNameWithoutExtension))
                 .distinct()
                 .sorted()
                 .toArray(String[]::new);
@@ -105,6 +105,7 @@ public class MsFileHandler implements SpectrumProvider {
                 cmsFolder
         );
 
+        
         filePathMap.put(spectrumFileNameWithoutExtension, msFile.getAbsolutePath());
         cmsFilePathMap.put(spectrumFileNameWithoutExtension, cmsFilePath);
 
@@ -226,23 +227,24 @@ public class MsFileHandler implements SpectrumProvider {
     /**
      * Returns the cms file reader for the given ms file. Null if not set.
      *
-     * @param fileName The name of the ms file without file extension.
+     * @param fileNameWithoutExtension The name of the ms file without file
+     * extension.
      *
      * @return The cms file reader.
      */
     public CmsFileReader getReader(
-            String fileName
+            String fileNameWithoutExtension
     ) {
-        return cmsFileReaderMap.get(fileName);
+        return cmsFileReaderMap.get(fileNameWithoutExtension);
     }
 
     @Override
     public Spectrum getSpectrum(
-            String fileName,
+            String fileNameWithoutExtension,
             String spectrumTitle
     ) {
 
-        CmsFileReader reader = cmsFileReaderMap.get(IoUtil.removeExtension(fileName));
+        CmsFileReader reader = cmsFileReaderMap.get(fileNameWithoutExtension);
 
         return reader == null ? null : reader.getSpectrum(spectrumTitle);
 
@@ -250,11 +252,11 @@ public class MsFileHandler implements SpectrumProvider {
 
     @Override
     public Precursor getPrecursor(
-            String fileName,
+            String fileNameWithoutExtension,
             String spectrumTitle
     ) {
 
-        CmsFileReader reader = cmsFileReaderMap.get(IoUtil.removeExtension(fileName));
+        CmsFileReader reader = cmsFileReaderMap.get(fileNameWithoutExtension);
 
         return reader == null ? null : reader.getPrecursor(spectrumTitle);
 
@@ -262,11 +264,11 @@ public class MsFileHandler implements SpectrumProvider {
 
     @Override
     public double getPrecursorMz(
-            String fileName,
+            String fileNameWithoutExtension,
             String spectrumTitle
     ) {
 
-        CmsFileReader reader = cmsFileReaderMap.get(IoUtil.removeExtension(fileName));
+        CmsFileReader reader = cmsFileReaderMap.get(fileNameWithoutExtension);
 
         return reader == null ? Double.NaN : reader.getPrecursorMz(spectrumTitle);
 
@@ -274,11 +276,11 @@ public class MsFileHandler implements SpectrumProvider {
 
     @Override
     public double getPrecursorRt(
-            String fileName,
+            String fileNameWithoutExtension,
             String spectrumTitle
     ) {
 
-        CmsFileReader reader = cmsFileReaderMap.get(IoUtil.removeExtension(fileName));
+        CmsFileReader reader = cmsFileReaderMap.get(fileNameWithoutExtension);
 
         return reader == null ? Double.NaN : reader.getPrecursorRt(spectrumTitle);
 
@@ -286,11 +288,11 @@ public class MsFileHandler implements SpectrumProvider {
 
     @Override
     public double[][] getPeaks(
-            String fileName,
+            String fileNameWithoutExtension,
             String spectrumTitle
     ) {
 
-        CmsFileReader reader = cmsFileReaderMap.get(IoUtil.removeExtension(fileName));
+        CmsFileReader reader = cmsFileReaderMap.get(fileNameWithoutExtension);
 
         if (reader != null) {
 
@@ -302,9 +304,9 @@ public class MsFileHandler implements SpectrumProvider {
     }
 
     @Override
-    public double getMinPrecMz(String fileName) {
+    public double getMinPrecMz(String fileNameWithoutExtension) {
 
-        CmsFileReader reader = cmsFileReaderMap.get(IoUtil.removeExtension(fileName));
+        CmsFileReader reader = cmsFileReaderMap.get(fileNameWithoutExtension);
 
         if (reader != null) {
 
@@ -316,9 +318,9 @@ public class MsFileHandler implements SpectrumProvider {
     }
 
     @Override
-    public double getMaxPrecMz(String fileName) {
+    public double getMaxPrecMz(String fileNameWithoutExtension) {
 
-        CmsFileReader reader = cmsFileReaderMap.get(IoUtil.removeExtension(fileName));
+        CmsFileReader reader = cmsFileReaderMap.get(fileNameWithoutExtension);
 
         if (reader != null) {
 
@@ -330,9 +332,9 @@ public class MsFileHandler implements SpectrumProvider {
     }
 
     @Override
-    public double getMaxPrecInt(String fileName) {
+    public double getMaxPrecInt(String fileNameWithoutExtension) {
 
-        CmsFileReader reader = cmsFileReaderMap.get(IoUtil.removeExtension(fileName));
+        CmsFileReader reader = cmsFileReaderMap.get(fileNameWithoutExtension);
 
         if (reader != null) {
 
@@ -344,9 +346,9 @@ public class MsFileHandler implements SpectrumProvider {
     }
 
     @Override
-    public double getMaxPrecRT(String fileName) {
+    public double getMaxPrecRT(String fileNameWithoutExtension) {
 
-        CmsFileReader reader = cmsFileReaderMap.get(IoUtil.removeExtension(fileName));
+        CmsFileReader reader = cmsFileReaderMap.get(fileNameWithoutExtension);
 
         if (reader != null) {
 
@@ -402,9 +404,9 @@ public class MsFileHandler implements SpectrumProvider {
     }
 
     @Override
-    public String[] getFileNames() {
+    public String[] getOrderedFileNamesWithoutExtensions() {
 
-        return orderedFileNames;
+        return orderedFileNamesWithoutExtensions;
 
     }
 
@@ -433,8 +435,7 @@ public class MsFileHandler implements SpectrumProvider {
 
     @Override
     public String[] getSpectrumTitles(String fileName) {
-
-        CmsFileReader reader = cmsFileReaderMap.get(IoUtil.removeExtension(IoUtil.getFileName(fileName)));
+        CmsFileReader reader = cmsFileReaderMap.get(IoUtil.getFileName(fileName));
         return reader == null ? null : reader.titles;
 
     }

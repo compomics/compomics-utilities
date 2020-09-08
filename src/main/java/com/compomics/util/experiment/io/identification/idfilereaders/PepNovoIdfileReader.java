@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.io.identification.idfilereaders;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.atoms.Atom;
@@ -14,7 +13,6 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails;
 import com.compomics.util.io.IoUtil;
@@ -81,7 +79,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) 
+    )
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         return getAllSpectrumMatches(
@@ -100,19 +98,19 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) 
+    )
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (identificationFile == null) {
             throw new IllegalStateException("The identification file was not set. Please use the appropriate constructor.");
         }
-            
+
         String fileName = IoUtil.getFileName(identificationFile);
         String mgfFileName = getMgfFileName(fileName);
 
         ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
 
-        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(identificationFile)) {
+        try (SimpleFileReader reader = SimpleFileReader.getFileReader(identificationFile)) {
 
             SpectrumMatch currentMatch = null;
             int rank = 1;
@@ -131,7 +129,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
                     String[] temp = line.split("\\s+");
                     StringBuilder sb = new StringBuilder(line.length());
                     sb.append(temp[3]);
-                    for (int i = 4 ; i < temp.length ; i++) {
+                    for (int i = 4; i < temp.length; i++) {
                         sb.append(" ").append(temp[i]);
                     }
                     String formatted = sb.toString();
@@ -178,26 +176,26 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
     /**
      * Returns the spectrum file name.This method assumes that the PepNovo
- output file is the mgf file name + ".out"
+     * output file is the mgf file name + ".out"
      *
      * @param fileName the name of the results file
-     * 
+     *
      * @return the spectrum file name
      */
     public static String getMgfFileName(String fileName) {
-        
+
         if (fileName.endsWith(".out.gz")) {
-            
+
             return fileName.substring(0, fileName.length() - 7);
-            
+
         } else if (fileName.endsWith(".out")) {
-            
+
             return fileName.substring(0, fileName.length() - 4);
-            
+
         } else {
-            
+
             throw new IllegalArgumentException("Unexpected file extension. Expected: .out or .out.gz. File name: " + fileName + ".");
-            
+
         }
     }
 
@@ -208,7 +206,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
     @Override
     public void close() throws IOException {
-        
+
     }
 
     /**

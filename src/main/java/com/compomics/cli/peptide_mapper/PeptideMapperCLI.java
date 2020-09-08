@@ -185,6 +185,7 @@ public class PeptideMapperCLI {
                             System.exit(-1);
                         }
 
+
                     } else if (lowerCaseName.endsWith(".mgf")){
                         msFileHandler.register(zippedFile, zippedFile.getParentFile(), null);
                     }
@@ -198,6 +199,7 @@ public class PeptideMapperCLI {
                 
                 identificationParameters.getSequenceMatchingParameters().setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
                 identificationParameters.getSequenceMatchingParameters().setLimitX(0.25);
+
             }
             
             ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();

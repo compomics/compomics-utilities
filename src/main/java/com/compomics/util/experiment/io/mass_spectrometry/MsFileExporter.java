@@ -37,7 +37,7 @@ public class MsFileExporter {
      * Writes the spectra of a file in the given format.
      *
      * @param spectrumProvider The spectrum provider to use to get the spectra.
-     * @param fileName The name of the file to export.
+     * @param fileNameWithoutExtension The name of the file to export.
      * @param destinationFile The file where to write.
      * @param format The format to write in.
      * @param searchParameters The search parameters.
@@ -46,7 +46,7 @@ public class MsFileExporter {
      */
     public static void writeMsFile(
             SpectrumProvider spectrumProvider,
-            String fileName,
+            String fileNameWithoutExtension,
             File destinationFile,
             Format format,
             SearchParameters searchParameters,
@@ -56,15 +56,15 @@ public class MsFileExporter {
         switch (format) {
 
             case mgf:
-                writeMgfFile(spectrumProvider, fileName, destinationFile, waitingHandler);
+                writeMgfFile(spectrumProvider, fileNameWithoutExtension, destinationFile, waitingHandler);
                 return;
 
             case apl:
-                writeAplFile(spectrumProvider, fileName, destinationFile, searchParameters, waitingHandler);
+                writeAplFile(spectrumProvider, fileNameWithoutExtension, destinationFile, searchParameters, waitingHandler);
                 return;
 
             case ms2:
-                writeMs2File(spectrumProvider, fileName, destinationFile, waitingHandler);
+                writeMs2File(spectrumProvider, fileNameWithoutExtension, destinationFile, waitingHandler);
                 return;
 
             default:
@@ -78,7 +78,7 @@ public class MsFileExporter {
      * Writes the spectra of a file in the Andromeda peak list (apl) format.
      *
      * @param spectrumProvider The spectrum provider to use to get the spectra.
-     * @param fileName The name of the file to export.
+     * @param fileNameWithoutExtension The name of the file to export.
      * @param destinationFile The file where to write.
      * @param searchParameters The search parameters.
      * @param waitingHandler The waiting handler to use to inform on progress
@@ -86,7 +86,7 @@ public class MsFileExporter {
      */
     public static void writeAplFile(
             SpectrumProvider spectrumProvider,
-            String fileName,
+            String fileNameWithoutExtension,
             File destinationFile,
             SearchParameters searchParameters,
             WaitingHandler waitingHandler
@@ -95,10 +95,10 @@ public class MsFileExporter {
         AndromedaParameters andromedaParameters = 
                 (AndromedaParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.andromeda.getIndex());
 
-        String[] spectrumTitles = spectrumProvider.getSpectrumTitles(fileName);
+        String[] spectrumTitles = spectrumProvider.getSpectrumTitles(fileNameWithoutExtension);
 
         if (spectrumTitles == null) {
-            throw new IllegalArgumentException(fileName + " not loaded.");
+            throw new IllegalArgumentException(fileNameWithoutExtension + " not loaded.");
         }
 
         // sort the spectra on ascending precursor mass
@@ -107,7 +107,7 @@ public class MsFileExporter {
 
         for (String spectrumTitle : spectrumTitles) {
 
-            Spectrum spectrum = spectrumProvider.getSpectrum(fileName, spectrumTitle);
+            Spectrum spectrum = spectrumProvider.getSpectrum(fileNameWithoutExtension, spectrumTitle);
             Precursor precursor = spectrum.getPrecursor();
 
             int[] charges = spectrum.getPrecursor().possibleCharges;
@@ -149,7 +149,7 @@ public class MsFileExporter {
 
             for (String spectrumTitle : tempSpectrumTitles.keySet()) {
 
-                Spectrum spectrum = spectrumProvider.getSpectrum(fileName, spectrumTitle);
+                Spectrum spectrum = spectrumProvider.getSpectrum(fileNameWithoutExtension, spectrumTitle);
 
                 writer.writeSpectrum(
                         spectrumTitle,
@@ -175,24 +175,24 @@ public class MsFileExporter {
      * Writes the spectra of a file in the Mascot Generic File (mgf) format.
      *
      * @param spectrumProvider The spectrum provider to use to get the spectra.
-     * @param fileName The name of the file to export.
+     * @param fileNameWithoutExtension The name of the file to export.
      * @param destinationFile The file where to write.
      * @param waitingHandler The waiting handler to use to inform on progress
      * and allow cancelling.
      */
     public static void writeMgfFile(
             SpectrumProvider spectrumProvider,
-            String fileName,
+            String fileNameWithoutExtension,
             File destinationFile,
             WaitingHandler waitingHandler
     ) {
 
-        String[] spectrumTitles = spectrumProvider.getSpectrumTitles(fileName);
+        String[] spectrumTitles = spectrumProvider.getSpectrumTitles(fileNameWithoutExtension);
 
         if (spectrumTitles == null) {
 
             throw new IllegalArgumentException(
-                    fileName + " not loaded."
+                    fileNameWithoutExtension + " not loaded."
             );
         }
 
@@ -203,7 +203,7 @@ public class MsFileExporter {
 
         for (String spectrumTitle : spectrumTitles) {
 
-            Spectrum spectrum = spectrumProvider.getSpectrum(fileName, spectrumTitle);
+            Spectrum spectrum = spectrumProvider.getSpectrum(fileNameWithoutExtension, spectrumTitle);
 
             writer.writeSpectrum(spectrumTitle, spectrum);
 
@@ -226,24 +226,24 @@ public class MsFileExporter {
      * Writes the spectra of a file in the ms2 format.
      *
      * @param spectrumProvider The spectrum provider to use to get the spectra.
-     * @param fileName The name of the file to export.
+     * @param fileNameWithoutExtension The name of the file to export.
      * @param destinationFile The file where to write.
      * @param waitingHandler The waiting handler to use to inform on progress
      * and allow cancelling.
      */
     public static void writeMs2File(
             SpectrumProvider spectrumProvider,
-            String fileName,
+            String fileNameWithoutExtension,
             File destinationFile,
             WaitingHandler waitingHandler
     ) {
 
-        String[] spectrumTitles = spectrumProvider.getSpectrumTitles(fileName);
+        String[] spectrumTitles = spectrumProvider.getSpectrumTitles(fileNameWithoutExtension);
 
         if (spectrumTitles == null) {
 
             throw new IllegalArgumentException(
-                    fileName + " not loaded."
+                    fileNameWithoutExtension + " not loaded."
             );
         }
 
@@ -257,7 +257,7 @@ public class MsFileExporter {
         for (int i = 0; i < spectrumTitles.length; i++) {
 
             String spectrumTitle = spectrumTitles[i];
-            Spectrum spectrum = spectrumProvider.getSpectrum(fileName, spectrumTitle);
+            Spectrum spectrum = spectrumProvider.getSpectrum(fileNameWithoutExtension, spectrumTitle);
             writer.writeSpectrum(spectrum, i);
 
             waitingHandler.increaseSecondaryProgressCounter();

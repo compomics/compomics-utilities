@@ -70,7 +70,7 @@ public class CommandLineParser {
     }
 
     /**
-     * <a name="optionConstr"></a> This constructor requests the command-line
+     * This constructor requests the command-line
      * String[] as well as a String[] with a list of options which in turn take
      * a parameter.
      *

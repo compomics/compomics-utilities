@@ -1,36 +1,70 @@
 package com.compomics.util.experiment.io.mass_spectrometry.mzml;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.LoggerContext;
 import java.io.File;
 import com.compomics.util.experiment.io.mass_spectrometry.MsFileIterator;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.waiting.WaitingHandler;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import org.slf4j.LoggerFactory;
-import uk.ac.ebi.jmzml.MzMLElement;
-import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
-import uk.ac.ebi.jmzml.model.mzml.CVParam;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import org.apache.commons.codec.binary.Base64;
 
 /**
- * An iterator of the spectra in an mzml file.
+ * An iterator of the spectra in an mzml file. Based on code from jmzML.
  *
  * @author Harald Barsnes
  */
 public class MzmlFileIterator implements MsFileIterator {
 
     /**
-     * The mzML unmarshaler.
+     * The supported precision types for the binary data as defined in the mzML
+     * specifications and the PSI-MS ontology.
      */
-    private MzMLUnmarshaller mzmlUnmarshaler;
+    public enum Precision {
+        /**
+         * Corresponds to the PSI-MS ontology term "MS:1000521" / "32-bit float"
+         * and binary data will be represented in the Java primitive: float
+         */
+        FLOAT32BIT,
+        /**
+         * Corresponds to the PSI-MS ontology term "MS:1000523" / "64-bit float"
+         * and binary data will be represented in the Java primitive: double
+         */
+        FLOAT64BIT,
+        /**
+         * Corresponds to the PSI-MS ontology term "MS:1000519" / "32-bit
+         * integer" and binary data will be represented in the Java primitive:
+         * int
+         */
+        INT32BIT,
+        /**
+         * Corresponds to the PSI-MS ontology term "MS:1000522" / "64-bit
+         * integer" and binary data will be represented in the Java primitive:
+         * long
+         */
+        INT64BIT,
+        /**
+         * Corresponds to the PSI-MS ontology term "MS:1001479" /
+         * "null-terminated ASCII string" and binary data will be represented in
+         * the Java type: String
+         */
+        NTSTRING
+    }
+
     /**
-     * The spectrum iterator.
+     * The reader going through the file.
      */
-    private Iterator<uk.ac.ebi.jmzml.model.mzml.Spectrum> iterator;
+    private final SimpleFileReader reader;
     /**
      * The waiting handler used to provide progress feedback and cancel the
      * process.
@@ -40,15 +74,10 @@ public class MzmlFileIterator implements MsFileIterator {
      * The spectrum read in the last call of the next method.
      */
     private Spectrum spectrum = null;
-
     /**
-     * Empty default constructor.
+     * The XML parser.
      */
-    public MzmlFileIterator() {
-        mzmlUnmarshaler = null;
-        iterator = null;
-        waitingHandler = null;
-    }
+    private XMLStreamReader parser;
 
     /**
      * Constructor.
@@ -58,31 +87,54 @@ public class MzmlFileIterator implements MsFileIterator {
      */
     public MzmlFileIterator(File mzmlFile, WaitingHandler waitingHandler) {
 
-        this.waitingHandler = waitingHandler;
+        reader = SimpleFileReader.getFileReader(mzmlFile);
+        XMLInputFactory factory = XMLInputFactory.newInstance();
 
-        // turn off all the logs to speed up the parsing
-        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        try {
+            parser = factory.createXMLStreamReader(reader.getReader());
 
-        ch.qos.logback.classic.Logger logger = loggerContext.getLogger("psidev.psi.tools.xxindex.FastXmlElementExtractor");
-        logger.setLevel(Level.toLevel("ERROR"));
+            boolean spectrumListFound = false;
 
-        logger = loggerContext.getLogger("psidev.psi.tools.xxindex.index");
-        logger.setLevel(Level.toLevel("ERROR"));
+            // move to the spectrum list
+            while (parser.hasNext() && !spectrumListFound) {
 
-        logger = loggerContext.getLogger("uk.ac.ebi.jmzml");
-        logger.setLevel(Level.toLevel("ERROR"));
+                double progress = reader.getProgressInPercent();
+                waitingHandler.setSecondaryProgressCounter((int) progress);
 
-        mzmlUnmarshaler = new MzMLUnmarshaller(mzmlFile);
+                parser.next();
 
-        if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressCounter(mzmlUnmarshaler.getSpectrumIDs().size());
+                switch (parser.getEventType()) {
+
+                    case XMLStreamConstants.START_ELEMENT:
+
+                        String element = parser.getLocalName();
+
+                        if (element.equalsIgnoreCase("spectrumList")) {
+                            spectrumListFound = true;
+                        }
+
+                        break;
+
+                    default:
+                        break;
+                }
+
+            }
+
+            if (!spectrumListFound) {
+                throw new IllegalArgumentException("Spectrum list not found when parsing mzML file!");
+            }
+
+        } catch (XMLStreamException ex) {
+            ex.printStackTrace();
+            throw new IllegalArgumentException("An exception was thrown when trying to create the mzML parser.");
         }
 
-        iterator = mzmlUnmarshaler.unmarshalCollectionFromXpath(
-                MzMLElement.Spectrum.getXpath(),
-                uk.ac.ebi.jmzml.model.mzml.Spectrum.class
-        );
+        this.waitingHandler = waitingHandler;
+
+        waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+        waitingHandler.setMaxSecondaryProgressCounter(100);
+
     }
 
     @Override
@@ -90,120 +142,203 @@ public class MzmlFileIterator implements MsFileIterator {
 
         spectrum = null;
 
-        if (iterator.hasNext()) {
+        try {
 
-            uk.ac.ebi.jmzml.model.mzml.Spectrum mzmlSpectrum = null;
-            boolean ms2Spectrum = false;
+            while (parser.hasNext()) {
 
-            while (!ms2Spectrum && iterator.hasNext()) {
+                double progress = reader.getProgressInPercent();
+                waitingHandler.setSecondaryProgressCounter((int) progress);
 
-                mzmlSpectrum = iterator.next();
+                parser.next();
 
-                // check the ms level
-                List<CVParam> spectrumCvParams = mzmlSpectrum.getCvParam();
-                Iterator<CVParam> spectrumCvParamsIterator = spectrumCvParams.iterator();
+                switch (parser.getEventType()) {
 
-                while (spectrumCvParamsIterator.hasNext()) {
+                    case XMLStreamConstants.START_ELEMENT:
 
-                    CVParam tempCvParam = spectrumCvParamsIterator.next();
+                        String element = parser.getLocalName();
 
-                    if (tempCvParam.getAccession().equalsIgnoreCase("MS:1000511")
-                            && Integer.valueOf(tempCvParam.getValue()) == 2) {
-                        ms2Spectrum = true;
+                        if (element.equalsIgnoreCase("spectrum")) {
+
+                            String id = parser.getAttributeValue("", "id");
+
+                            int spectrumLevel = parseSpectrum();
+
+                            if (spectrumLevel == 2) {
+                                return id;
+                            }
+
+                        }
+
                         break;
-                    }
+
+                    default:
+                        break;
                 }
 
-                if (waitingHandler != null) {
-                    waitingHandler.increaseSecondaryProgressCounter();
-                }
             }
 
-            if (ms2Spectrum && mzmlSpectrum != null) {
-
-                double retentionTimeInSeconds = -1.0;
-
-                // get the retention time
-                if (mzmlSpectrum.getScanList().getCount() > 0) {
-                    Iterator<CVParam> scanCvParamIterator
-                            = mzmlSpectrum.getScanList().getScan().get(0).getCvParam().iterator();
-
-                    while (scanCvParamIterator.hasNext()) {
-
-                        CVParam tempCvParam = scanCvParamIterator.next();
-
-                        if (tempCvParam.getAccession().equalsIgnoreCase("MS:1000016")) {
-                            if (tempCvParam.getUnitName().equalsIgnoreCase("minute")) {
-                                retentionTimeInSeconds = Double.valueOf(tempCvParam.getValue()) * 60;
-                            } else if (tempCvParam.getUnitName().equalsIgnoreCase("second")) {
-                                retentionTimeInSeconds = Double.valueOf(tempCvParam.getValue());
-                            }
-                        }
-                    }
-                }
-
-                // get the precursor m/z, charge and intensity
-                ArrayList<Integer> possibleChargesAsArray = new ArrayList<>(); // @TODO: can there be more than one..?
-                double precursorMz = 0.0;
-                double precursorIntensity = 0.0;
-
-                if (mzmlSpectrum.getPrecursorList().getCount() > 0) {
-                    uk.ac.ebi.jmzml.model.mzml.Precursor mzMlPrecursor
-                            = mzmlSpectrum.getPrecursorList().getPrecursor().get(0);
-
-                    if (mzMlPrecursor.getSelectedIonList().getCount() > 0) {
-                        Iterator<CVParam> selectedIonCvTerms = mzmlSpectrum.getPrecursorList().getPrecursor().get(0).getSelectedIonList().getSelectedIon().get(0).getCvParam().iterator();
-
-                        while (selectedIonCvTerms.hasNext()) {
-                            CVParam tempCvParam = selectedIonCvTerms.next();
-
-                            if (tempCvParam.getAccession().equalsIgnoreCase("MS:1000041")) {
-                                possibleChargesAsArray.add(Integer.valueOf(tempCvParam.getValue()));
-                            } else if (tempCvParam.getAccession().equalsIgnoreCase("MS:1000744")) {
-                                precursorMz = Double.valueOf(tempCvParam.getValue());
-                            } else if (tempCvParam.getAccession().equalsIgnoreCase("MS:1000042")) {
-                                precursorIntensity = Double.valueOf(tempCvParam.getValue()); // @TODO: why is this different from the mgf intensity?
-                            }
-                        }
-                    }
-                }
-
-                Precursor precursor = new Precursor(retentionTimeInSeconds, precursorMz, precursorIntensity, possibleChargesAsArray.stream().mapToInt(i -> i).toArray());
-
-                double[] mzArray = new double[0];
-                double[] intensityArray = new double[0];
-
-                for (BinaryDataArray binaryDataArray : mzmlSpectrum.getBinaryDataArrayList().getBinaryDataArray()) {
-
-                    BinaryDataArray.DataType type = binaryDataArray.getDataType();
-
-                    if (type.equals(BinaryDataArray.DataType.MZ_VALUES)) {
-                        mzArray = new double[binaryDataArray.getArrayLength()];
-                        Number[] tempNumbers = binaryDataArray.getBinaryDataAsNumberArray();
-
-                        for (int i = 0; i < binaryDataArray.getArrayLength(); i++) {
-                            mzArray[i] = tempNumbers[i].doubleValue();
-                        }
-                    }
-
-                    if (type.equals(BinaryDataArray.DataType.INTENSITY)) {
-                        intensityArray = new double[binaryDataArray.getArrayLength()];
-                        Number[] tempNumbers = binaryDataArray.getBinaryDataAsNumberArray();
-
-                        for (int i = 0; i < binaryDataArray.getArrayLength(); i++) {
-                            intensityArray[i] = tempNumbers[i].doubleValue();
-                        }
-                    }
-
-                }
-
-                spectrum = new Spectrum(precursor, mzArray, intensityArray);
-
-                return mzmlSpectrum.getId();
-            }
+        } catch (XMLStreamException ex) {
+            ex.printStackTrace();
+            throw new IllegalArgumentException("An exception was thrown when trying to parse the mzML file.");
         }
 
         return null;
+    }
+
+    /**
+     * Parse a spectrum and return the ms level. Note that only MS2 spectra are
+     * parsed.
+     *
+     * @return the ms level
+     * @throws XMLStreamException thrown if an XMLStreamException occurs
+     */
+    private int parseSpectrum() throws XMLStreamException {
+
+        int spectrumLevel = -1;
+        double retentionTimeInSeconds = -1.0;
+        ArrayList<Integer> possibleChargesAsArray = new ArrayList<>(); // @TODO: can there be more than one..?
+        double precursorMz = 0.0;
+        double precursorIntensity = 0.0;
+        double[] mzArray = new double[0];
+        double[] intensityArray = new double[0];
+        boolean mzArrayValues = true;
+        Precision precision = Precision.FLOAT64BIT;
+        String compression = "MS:1000574";
+
+        while (parser.hasNext()) {
+
+            parser.next();
+
+            switch (parser.getEventType()) {
+
+                case XMLStreamConstants.END_ELEMENT:
+
+                    if ("spectrum".equalsIgnoreCase(parser.getLocalName())) {
+
+                        if (spectrumLevel == 2) {
+                            Precursor precursor = new Precursor(retentionTimeInSeconds, precursorMz, precursorIntensity, possibleChargesAsArray.stream().mapToInt(i -> i).toArray());
+                            spectrum = new Spectrum(precursor, mzArray, intensityArray);
+                        }
+
+                        return spectrumLevel;
+                    }
+
+                    break;
+
+                case XMLStreamConstants.START_ELEMENT:
+
+                    switch (parser.getLocalName().toLowerCase()) {
+
+                        case "cvparam":
+
+                            if (parser.getAttributeValue("", "accession") != null) {
+
+                                String accession = parser.getAttributeValue("", "accession");
+                                String value = parser.getAttributeValue("", "value");
+
+                                if (accession.equalsIgnoreCase("MS:1000511")) {
+
+                                    spectrumLevel = Integer.parseInt(value);
+
+                                } else if (accession.equalsIgnoreCase("MS:1000016")) {
+
+                                    if (parser.getAttributeValue("", "unitName").equalsIgnoreCase("minute")) {
+                                        retentionTimeInSeconds = Double.valueOf(value) * 60;
+                                    } else if (parser.getAttributeValue("", "unitName").equalsIgnoreCase("second")) {
+                                        retentionTimeInSeconds = Double.valueOf(value);
+                                    }
+
+                                } else if (accession.equalsIgnoreCase("MS:1000041")) {
+
+                                    possibleChargesAsArray.add(Integer.valueOf(value));
+
+                                } else if (accession.equalsIgnoreCase("MS:1000744")) {
+
+                                    precursorMz = Double.valueOf(value);
+
+                                } else if (accession.equalsIgnoreCase("MS:1000042")) {
+
+                                    precursorIntensity = Double.valueOf(value);
+
+                                } else if (accession.equalsIgnoreCase("MS:1000514")) {
+
+                                    mzArrayValues = true;
+
+                                } else if (accession.equalsIgnoreCase("MS:1000515")) {
+
+                                    mzArrayValues = false;
+
+                                } else if (accession.equalsIgnoreCase("MS:1000521")) {
+
+                                    precision = Precision.FLOAT32BIT;
+
+                                } else if (accession.equalsIgnoreCase("MS:1000523")) {
+
+                                    precision = Precision.FLOAT64BIT;
+
+                                } else if (accession.equalsIgnoreCase("MS:1000519")) {
+
+                                    precision = Precision.INT32BIT;
+
+                                } else if (accession.equalsIgnoreCase("MS:1000522")) {
+
+                                    precision = Precision.INT64BIT;
+
+                                } else if (accession.equalsIgnoreCase("MS:1001479")) {
+
+                                    precision = Precision.NTSTRING;
+
+                                } else if (accession.equalsIgnoreCase("MS:1000574")
+                                        || accession.equalsIgnoreCase("MS:1000576")
+                                        || accession.equalsIgnoreCase("MS:1002312")
+                                        || accession.equalsIgnoreCase("MS:1002314")
+                                        || accession.equalsIgnoreCase("MS:1002313")) {
+
+                                    compression = accession;
+
+                                }
+
+                            }
+
+                            break;
+
+                        case "binary":
+
+                            if (spectrumLevel == 2) {
+
+                                String binaryAsText = parser.getElementText();
+                                byte[] binaryDataArray = Base64.decodeBase64(binaryAsText.getBytes());
+
+                                if (mzArrayValues) {
+                                    Number[] tempNumbers = getBinaryDataAsNumberArray(compression, precision, binaryDataArray);
+                                    mzArray = new double[tempNumbers.length];
+                                    for (int i = 0; i < tempNumbers.length; i++) {
+                                        mzArray[i] = tempNumbers[i].doubleValue();
+                                    }
+                                } else {
+                                    Number[] tempNumbers = getBinaryDataAsNumberArray(compression, precision, binaryDataArray);
+                                    intensityArray = new double[tempNumbers.length];
+                                    for (int i = 0; i < tempNumbers.length; i++) {
+                                        intensityArray[i] = tempNumbers[i].doubleValue();
+                                    }
+                                }
+                            }
+
+                            break;
+
+                        default:
+
+                            break;
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        return spectrumLevel;
     }
 
     @Override
@@ -213,6 +348,186 @@ public class MzmlFileIterator implements MsFileIterator {
 
     @Override
     public void close() {
-        // @TODO: there does not seem to be any close for the mzml unmarshaler..?
+        try {
+            parser.close();
+        } catch (XMLStreamException ex) {
+            ex.printStackTrace();
+            throw new IllegalArgumentException("An exception was thrown when closing the mzML parser.");
+        }
+        reader.close();
+    }
+
+    /**
+     * Reads true if the binary data is compressed.
+     *
+     * @param compression the compression level
+     *
+     * @return true if the data is compressed
+     */
+    public boolean needsUncompressing(String compression) {
+
+        return compression.equalsIgnoreCase("MS:1000574");
+
+    }
+
+    /**
+     * Retrieve the binary data as an array of numeric values.
+     *
+     * @param compression the compression accession number
+     * @param precision the precision type
+     * @param binary the binary data, base64 encoded
+     *
+     * @return a Number array representation of the binary data
+     */
+    public Number[] getBinaryDataAsNumberArray(String compression, Precision precision, byte[] binary) {
+
+        // decompression of the data
+        byte[] data;
+        if (needsUncompressing(compression)) {
+            data = decompress(binary);
+        } else {
+            data = binary;
+        }
+
+        Number[] dataArray;
+
+        // if data has been numpress compressed, do the decompression
+        if (compression.equalsIgnoreCase("MS:1002312")
+                || compression.equalsIgnoreCase("MS:1002314")
+                || compression.equalsIgnoreCase("MS:1002313")) {
+            dataArray = MSNumpress.decode(compression, data);
+            return dataArray;
+        }
+
+        // if not, apply the specified precision when converting into numeric values        
+        switch (precision) {
+            case FLOAT64BIT:
+                dataArray = convertData(data, Precision.FLOAT64BIT);
+                break;
+            case FLOAT32BIT:
+                dataArray = convertData(data, Precision.FLOAT32BIT);
+                break;
+            case INT64BIT:
+                dataArray = convertData(data, Precision.INT64BIT);
+                break;
+            case INT32BIT:
+                dataArray = convertData(data, Precision.INT32BIT);
+                break;
+            case NTSTRING:
+                throw new IllegalArgumentException("Precision " + Precision.NTSTRING + " is not supported in this method!");
+            default:
+                throw new IllegalStateException("Not supported Precision in BinaryDataArray: " + precision);
+        }
+
+        return dataArray;
+    }
+
+    /**
+     * Convert the binary data.
+     *
+     * @param data the binary data to convert
+     * @param precision the precision
+     * @return
+     */
+    private Number[] convertData(byte[] data, Precision precision) {
+
+        int step;
+
+        switch (precision) {
+            case FLOAT64BIT:
+            case INT64BIT:
+                step = 8;
+                break;
+            case FLOAT32BIT:
+            case INT32BIT:
+                step = 4;
+                break;
+            default:
+                step = -1;
+        }
+
+        // create a Number array of sufficient size
+        Number[] resultArray = new Number[data.length / step];
+
+        // create a buffer around the data array for easier retrieval
+        ByteBuffer bb = ByteBuffer.wrap(data);
+        bb.order(ByteOrder.LITTLE_ENDIAN); // the order is always LITTLE_ENDIAN
+
+        // progress in steps of 4/8 bytes according to the set step
+        for (int indexOut = 0; indexOut < data.length; indexOut += step) {
+
+            // Note that the 'getFloat(index)' and getInt(index) methods read the next 4 bytes
+            // and the 'getDouble(index)' and getLong(index) methods read the next 8 bytes.
+            Number num;
+
+            switch (precision) {
+                case FLOAT64BIT:
+                    num = bb.getDouble(indexOut);
+                    break;
+                case INT64BIT:
+                    num = bb.getLong(indexOut);
+                    break;
+                case FLOAT32BIT:
+                    num = bb.getFloat(indexOut);
+                    break;
+                case INT32BIT:
+                    num = bb.getInt(indexOut);
+                    break;
+                default:
+                    num = null;
+            }
+
+            resultArray[indexOut / step] = num;
+        }
+
+        return resultArray;
+    }
+
+    /**
+     * Decompress the data.
+     *
+     * @param compressedData the compressed data
+     * @return the decompressed data
+     */
+    private byte[] decompress(byte[] compressedData) {
+
+        byte[] decompressedData;
+
+        // using a ByteArrayOutputStream to not having to define the result array size beforehand
+        Inflater decompressor = new Inflater();
+
+        decompressor.setInput(compressedData);
+
+        // create an expandable byte array to hold the decompressed data
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(compressedData.length);
+        byte[] buf = new byte[1024];
+
+        while (!decompressor.finished()) {
+            try {
+                int count = decompressor.inflate(buf);
+                if (count == 0 && decompressor.needsInput()) {
+                    break;
+                }
+                bos.write(buf, 0, count);
+            } catch (DataFormatException e) {
+                throw new IllegalStateException("Encountered wrong data format "
+                        + "while trying to decompress binary data!", e);
+            }
+        }
+
+        try {
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // get the decompressed data
+        decompressedData = bos.toByteArray();
+
+        if (decompressedData == null) {
+            throw new IllegalStateException("Decompression of binary data produced no result (null)!");
+        }
+
+        return decompressedData;
     }
 }

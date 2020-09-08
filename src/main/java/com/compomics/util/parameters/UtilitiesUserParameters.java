@@ -119,15 +119,15 @@ public class UtilitiesUserParameters {
     /**
      * The user last used database folder.
      */
-    private File dbFolder = null;
+    private String dbFolder = null;
     /**
      * The user last used spectrum folder.
      */
-    private File spectrumFolder = null;
+    private String spectrumFolder = null;
     /**
      * The user last used output folder.
      */
-    private File outputFolder = null;
+    private String outputFolder = null;
     /**
      * The list of already read tweets.
      */
@@ -267,7 +267,7 @@ public class UtilitiesUserParameters {
         }
         return sparklineColorNotFound;
     }
-    
+
     /**
      * Setter for the not found sparkline color.
      *
@@ -576,65 +576,66 @@ public class UtilitiesUserParameters {
     }
 
     /**
-     * Convenience method saving the user parameters. Exceptions are ignored silently and written to the stack trace.
+     * Convenience method saving the user parameters. Exceptions are ignored
+     * silently and written to the stack trace.
      *
      * @param userParameters the user preferences
      */
     public static void saveUserParameters(UtilitiesUserParameters userParameters) {
 
         try {
-            
+
             File file = new File(USER_PARAMETERS_FILE);
-            
+
             if (!file.getParentFile().exists()) {
-                
+
                 file.getParentFile().mkdir();
-                
+
             }
-            
+
             JsonMarshaller marshaller = new JsonMarshaller();
             marshaller.saveObjectToJson(userParameters, file);
-            
+
         } catch (Exception e) {
-            
+
             System.err.println("An error occurred while saving " + USER_PARAMETERS_FILE + ".");
             e.printStackTrace();
-            
+
         }
     }
 
     /**
-     * Loads the user parameters. If an error is encountered, parameters are
-     * set back to default.
+     * Loads the user parameters. If an error is encountered, parameters are set
+     * back to default.
      *
      * @return returns the utilities user preferences
      */
     public static UtilitiesUserParameters loadUserParameters() {
-        
+
         UtilitiesUserParameters userParameters;
-        
+
         File file = new File(UtilitiesUserParameters.USER_PARAMETERS_FILE);
 
         if (!file.exists()) {
-            
+
             userParameters = new UtilitiesUserParameters();
             UtilitiesUserParameters.saveUserParameters(userParameters);
-            
+
         } else {
-            
+
             try {
-                
-            JsonMarshaller marshaller = new JsonMarshaller();
-            userParameters = (UtilitiesUserParameters) marshaller.fromJson(UtilitiesUserParameters.class, file);
-                
+
+                JsonMarshaller marshaller = new JsonMarshaller();
+                userParameters = (UtilitiesUserParameters) marshaller.fromJson(UtilitiesUserParameters.class, file);
+
             } catch (Exception e) {
-                
+
                 System.err.println("An error occurred while loading " + UtilitiesUserParameters.USER_PARAMETERS_FILE + ". Parameters set back to default.");
                 e.printStackTrace();
-                
+
                 userParameters = new UtilitiesUserParameters();
                 UtilitiesUserParameters.saveUserParameters(userParameters);
-                
+
             }
         }
 
@@ -665,7 +666,7 @@ public class UtilitiesUserParameters {
      * @return the last used database folder
      */
     public File getDbFolder() {
-        return dbFolder;
+        return dbFolder != null ? new File(dbFolder) : null;
     }
 
     /**
@@ -674,16 +675,16 @@ public class UtilitiesUserParameters {
      * @param dbFolder the last used database folder
      */
     public void setDbFolder(File dbFolder) {
-        this.dbFolder = dbFolder;
+        this.dbFolder = dbFolder.getAbsolutePath();
     }
-    
+
     /**
      * Returns the last used spectrum folder. Null if not set.
      *
      * @return the last used spectrum folder
      */
     public File getSpectrumFolder() {
-        return spectrumFolder;
+        return spectrumFolder != null ? new File(spectrumFolder) : null;
     }
 
     /**
@@ -692,16 +693,16 @@ public class UtilitiesUserParameters {
      * @param spectrumFolder the last used spectrum folder
      */
     public void setSpectrumFolder(File spectrumFolder) {
-        this.spectrumFolder = spectrumFolder;
+        this.spectrumFolder = spectrumFolder.getAbsolutePath();
     }
-    
+
     /**
      * Returns the last used output folder. Null if not set.
      *
      * @return the last used output folder
      */
     public File getOutputFolder() {
-        return outputFolder;
+        return outputFolder != null ? new File(outputFolder) : null;
     }
 
     /**
@@ -710,7 +711,7 @@ public class UtilitiesUserParameters {
      * @param outputFolder the last used output folder
      */
     public void setOutputFolder(File outputFolder) {
-        this.outputFolder = outputFolder;
+        this.outputFolder = outputFolder.getAbsolutePath();
     }
 
     /**
@@ -968,8 +969,9 @@ public class UtilitiesUserParameters {
 
     /**
      * Indicates whether identification files should be gzipped.
-     * 
-     * @return A boolean indicating whether identification files should be gzipped.
+     *
+     * @return A boolean indicating whether identification files should be
+     * gzipped.
      */
     public boolean isGzip() {
         return gzip;
@@ -977,14 +979,13 @@ public class UtilitiesUserParameters {
 
     /**
      * Sets whether identification files should be gzipped.
-     * 
-     * @param gzip A boolean indicating whether identification files should be gzipped.
+     *
+     * @param gzip A boolean indicating whether identification files should be
+     * gzipped.
      */
     public void setGzip(boolean gzip) {
         this.gzip = gzip;
     }
-    
-    
 
     /**
      * Indicates whether data should be copied along with the identification
@@ -1085,7 +1086,7 @@ public class UtilitiesUserParameters {
     public void setMinSpectrumChargeRange(int minSpectrumChargeRange) {
         this.minSpectrumChargeRange = minSpectrumChargeRange;
     }
-    
+
     /**
      * Returns the maximum charge added when the charge is missing for a given
      * spectrum.
@@ -1106,10 +1107,10 @@ public class UtilitiesUserParameters {
     public void setMaxSpectrumChargeRange(int maxSpectrumChargeRange) {
         this.maxSpectrumChargeRange = maxSpectrumChargeRange;
     }
-    
+
     /**
      * Returns the folder where FASTA files summary statistics are stored.
-     * 
+     *
      * @return the folder where FASTA files summary statistics are stored
      */
     public File getDbSummaryFolder() {

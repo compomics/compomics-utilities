@@ -42,9 +42,7 @@ import java.util.Map.Entry;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.xmlpull.v1.XmlPullParserException;
-import com.compomics.cli.peptide_mapper.PeptideMapperCLI;
 import com.compomics.util.parameters.identification.IdentificationParameters;
-import java.io.IOException;
         
         
 /**
@@ -71,7 +69,6 @@ public class FMIndexTest extends TestCase {
             tagToProteinMappingWithVariantsGeneric();
             tagToProteinMappingWithVariantsSpecific();
             tagToProteinMappingWithVariantsFixed();
-            
             //mapperTest();
         }
         catch(Exception e){
@@ -300,7 +297,6 @@ public class FMIndexTest extends TestCase {
         SequenceMatchingParameters sequenceMatchingPreferences = new SequenceMatchingParameters();
         sequenceMatchingPreferences.setSequenceMatchingType(SequenceMatchingParameters.MatchingType.indistiguishableAminoAcids);
         sequenceMatchingPreferences.setLimitX(0.25);
-
         fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, null);
         peptideProteinMappings = fmIndex.getProteinMapping("ECTQDRGKTAFTEAVLLP", sequenceMatchingPreferences);
         Assert.assertTrue(!peptideProteinMappings.isEmpty());
@@ -761,6 +757,7 @@ public class FMIndexTest extends TestCase {
         searchParameters.setFragmentIonAccuracy(5.);
         
         
+        
         // TESTMRITESTCKTESTK with no modifications
         aminoAcidSequence = new AminoAcidSequence("TEST");
         nTermGap = AminoAcid.L.getMonoisotopicMass() + AminoAcid.R.getMonoisotopicMass() + AminoAcid.M.getMonoisotopicMass() + AminoAcid.T.getMonoisotopicMass();
@@ -793,6 +790,7 @@ public class FMIndexTest extends TestCase {
         peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);
         Assert.assertTrue(peptideProteinMappings.isEmpty());
         */
+
         
         
         

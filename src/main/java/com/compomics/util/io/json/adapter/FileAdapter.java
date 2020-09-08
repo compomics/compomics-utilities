@@ -16,7 +16,7 @@ import java.io.IOException;
 public class FileAdapter extends TypeAdapter {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public FileAdapter() {
     }

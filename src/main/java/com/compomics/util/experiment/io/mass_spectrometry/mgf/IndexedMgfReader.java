@@ -29,15 +29,15 @@ public class IndexedMgfReader {
      * Returns the index of all spectra in the given mgf file.
      *
      * @param mgfFile the given mgf file
-     * 
+     *
      * @return the index of all spectra
-     * 
+     *
      * @throws FileNotFoundException Exception thrown whenever the file is not
      * found
      * @throws IOException Exception thrown whenever an error occurs while
      * reading the file
      */
-    public static MgfIndex getIndexMap(
+    public static MgfIndex getMgfIndex(
             File mgfFile
     ) throws FileNotFoundException, IOException {
         return getMgfIndex(mgfFile, null);
@@ -48,16 +48,16 @@ public class IndexedMgfReader {
      *
      * @param mgfFile the given MGF file
      * @param waitingHandler a waitingHandler showing the progress
-     * 
+     *
      * @return the index of all spectra
-     * 
+     *
      * @throws FileNotFoundException Exception thrown whenever the file is not
      * found
      * @throws IOException Exception thrown whenever an error occurs while
      * reading the file
      */
     public static MgfIndex getMgfIndex(
-            File mgfFile, 
+            File mgfFile,
             WaitingHandler waitingHandler
     ) throws FileNotFoundException, IOException {
 
@@ -78,7 +78,7 @@ public class IndexedMgfReader {
         boolean peakPicked;
         boolean precursorChargesMissing;
 
-        try ( BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100)) {
+        try (BufferedRandomAccessFile bufferedRandomAccessFile = new BufferedRandomAccessFile(mgfFile, "r", 1024 * 100)) {
 
             long currentIndex = 0;
             int peakCount = 0;
@@ -282,8 +282,8 @@ public class IndexedMgfReader {
      * while reading the spectrum
      */
     public static Spectrum getSpectrum(
-            BufferedRandomAccessFile bufferedRandomAccessFile, 
-            long index, 
+            BufferedRandomAccessFile bufferedRandomAccessFile,
+            long index,
             String fileName
     ) throws IOException {
 
@@ -470,8 +470,8 @@ public class IndexedMgfReader {
      * the spectrum
      */
     public static Precursor getPrecursor(
-            BufferedRandomAccessFile bufferedRandomAccessFile, 
-            long index, 
+            BufferedRandomAccessFile bufferedRandomAccessFile,
+            long index,
             String fileName
     ) throws IOException {
 

@@ -498,7 +498,7 @@ public class DirecTagIdfileReader implements IdfileReader {
                 result = parseResults(
                         reader,
                         spectrumProvider.getSpectrumTitles(
-                                getInputFile().getName()
+                                IoUtil.removeExtension(getInputFile().getName())
                         )
                 );
             }

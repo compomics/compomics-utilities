@@ -524,7 +524,7 @@ public class PepxmlIdfileReader implements IdfileReader {
         
         } else {
             
-            spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[index];
+            spectrumTitle = spectrumProvider.getSpectrumTitles(IoUtil.removeExtension(spectrumFileName))[index];
             
         }
         
@@ -548,7 +548,7 @@ public class PepxmlIdfileReader implements IdfileReader {
             boolean overwriteExtension
     ) throws XmlPullParserException, IOException {
 
-        // Something like  <msms_run_summary base_name="D:\path\filename" raw_data="extention"> is expected 
+        // Something like  <msms_run_summary base_name="D:\path\filename" raw_data="extension"> is expected 
         String path = "";
         for (int i = 0; i < parser.getAttributeCount(); i++) {
             String name = parser.getAttributeName(i);
@@ -564,7 +564,7 @@ public class PepxmlIdfileReader implements IdfileReader {
         }
 
         File spectrumFile = new File(path);
-        spectrumFileName = IoUtil.removeExtension(IoUtil.getFileName(spectrumFile));
+        spectrumFileName = IoUtil.getFileName(spectrumFile);
         
     }
 

@@ -1701,6 +1701,37 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 </ul>
 </li>
+<li class="blockList"><a id="com.compomics.util.experiment.biology.atoms.AtomChain">
+<!--   -->
+</a>
+<h3>Class <a href="com/compomics/util/experiment/biology/atoms/AtomChain.html" title="class in com.compomics.util.experiment.biology.atoms">com.compomics.util.experiment.biology.atoms.AtomChain</a> extends <a href="com/compomics/util/db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a> implements Serializable</h3>
+<dl class="nameValue">
+<dt>serialVersionUID:</dt>
+<dd>2222259572093523514L</dd>
+</dl>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>atomChain</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util" class="externalLink">ArrayList</a>&lt;<a href="com/compomics/util/experiment/biology/atoms/AtomImpl.html" title="class in com.compomics.util.experiment.biology.atoms">AtomImpl</a>&gt; atomChain</pre>
+<div class="block">The chain of atoms.</div>
+</li>
+<li class="blockList">
+<h4>mass</h4>
+<pre>double mass</pre>
+<div class="block">The mass of the atom chain.</div>
+</li>
+<li class="blockListLast">
+<h4>stringValue</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> stringValue</pre>
+<div class="block">Cache for the string value.</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="blockList"><a id="com.compomics.util.experiment.biology.atoms.ElementaryElement">
 <!--   -->
 </a>
@@ -2560,7 +2591,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>fractions</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util" class="externalLink">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a>&gt; fractions</pre>
-<div class="block">The spectrum files that were used for the psms.</div>
+<div class="block">The names of the spectrum files (without extensions) that were used for
+ the PSMs.</div>
 </li>
 <li class="blockList">
 <h4>peptideIdentification</h4>
@@ -3077,7 +3109,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>spectrumFile</h4>
 <pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> spectrumFile</pre>
-<div class="block">The name of the file containing the spectrum.</div>
+<div class="block">The name of the file (without extension) containing the spectrum.</div>
 </li>
 <li class="blockList">
 <h4>spectrumtitle</h4>
@@ -3802,6 +3834,38 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <!--   -->
 </a>
 <h3>Class <a href="com/compomics/util/experiment/io/identification/MzIdentMLIdfileSearchParametersConverter.html" title="class in com.compomics.util.experiment.io.identification">com.compomics.util.experiment.io.identification.MzIdentMLIdfileSearchParametersConverter</a> extends <a href="com/compomics/util/experiment/personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a> implements Serializable</h3>
+<ul class="blockList">
+<li class="blockList">
+<h3>Serialized Fields</h3>
+<ul class="blockList">
+<li class="blockList">
+<h4>mzIdentMLFile</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a> mzIdentMLFile</pre>
+<div class="block">The mzIdentML file.</div>
+</li>
+<li class="blockList">
+<h4>parametersReport</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> parametersReport</pre>
+<div class="block">The parameters report.</div>
+</li>
+<li class="blockList">
+<h4>searchParameters</h4>
+<pre><a href="com/compomics/util/parameters/identification/search/SearchParameters.html" title="class in com.compomics.util.parameters.identification.search">SearchParameters</a> searchParameters</pre>
+<div class="block">The search parameters.</div>
+</li>
+<li class="blockList">
+<h4>species</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> species</pre>
+<div class="block">The species.</div>
+</li>
+<li class="blockListLast">
+<h4>waitingHandler</h4>
+<pre><a href="com/compomics/util/waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a> waitingHandler</pre>
+<div class="block">The waiting handler.</div>
+</li>
+</ul>
+</li>
+</ul>
 </li>
 </ul>
 </section>
@@ -3912,8 +3976,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">The spectrum number.</div>
 </li>
 <li class="blockListLast">
-<h4>SpectrumFileName</h4>
-<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> SpectrumFileName</pre>
+<h4>spectrumFileName</h4>
+<pre><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang" class="externalLink">String</a> spectrumFileName</pre>
 <div class="block">The PSM filename.</div>
 </li>
 </ul>

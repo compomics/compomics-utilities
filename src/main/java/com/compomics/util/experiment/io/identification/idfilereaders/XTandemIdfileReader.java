@@ -56,7 +56,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     /**
      * The PSM filename.
      */
-    private String SpectrumFileName;
+    private String spectrumFileName;
     /**
      * The software version.
      */
@@ -130,7 +130,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     )
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XMLStreamException {
 
-        // @TODO: use the waiting handler
+        waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+        waitingHandler.setMaxSecondaryProgressCounter(100);
+        
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
         
         HashSet<String> fixedNonTerminalModifications = searchParameters.getModificationParameters().getFixedModifications().stream()
@@ -212,11 +214,14 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
         }
 
         try (SimpleFileReader reader = SimpleFileReader.getFileReader(inputFile)) {
-
+            
             XMLInputFactory factory = XMLInputFactory.newInstance();
             XMLStreamReader parser = factory.createXMLStreamReader(reader.getReader());
 
             while (parser.hasNext()) {
+                
+                double progress = reader.getProgressInPercent();
+                waitingHandler.setSecondaryProgressCounter((int) progress);
 
                 parser.next();
 
@@ -254,7 +259,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                                 case "model":
 
                                     int id = Integer.parseInt(parser.getAttributeValue("", "id"));
-                                    SpectrumMatch spectrumMatch = new SpectrumMatch(SpectrumFileName, Integer.toString(id));
+                                    SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumFileName, Integer.toString(id));
                                     allMatches.put(id, spectrumMatch);
                                     double expect = Double.parseDouble(parser.getAttributeValue("", "expect"));
 
@@ -281,9 +286,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                         } else if (element.equalsIgnoreCase("bioml")) {
 
-                            SpectrumFileName = parser.getAttributeValue("", "label");
-                            SpectrumFileName = SpectrumFileName.split("'")[1];
-                            SpectrumFileName = (new File(SpectrumFileName.replaceAll("\\\\", "/"))).getName();
+                            spectrumFileName = parser.getAttributeValue("", "label");
+                            spectrumFileName = spectrumFileName.split("'")[1];
+                            spectrumFileName = (new File(spectrumFileName.replaceAll("\\\\", "/"))).getName();
 
                         }
 
@@ -294,6 +299,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                 }
             }
 
+            waitingHandler.setSecondaryProgressCounterIndeterminate(true);
+            
             if (expandAaCombinations) {
 
                 for (SpectrumMatch spectrumMatch : allMatches.values()) {

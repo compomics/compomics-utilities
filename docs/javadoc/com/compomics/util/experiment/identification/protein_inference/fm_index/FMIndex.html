@@ -271,17 +271,6 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
 <div class="block">Constructor.</div>
 </td>
 </tr>
-<tr class="rowColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.io.File,com.compomics.util.experiment.io.biology.protein.FastaParameters,com.compomics.util.waiting.WaitingHandler,boolean,com.compomics.util.parameters.identification.search.SearchParameters,com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters)">FMIndex</a></span>&#8203;(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;fastaFile,
-       <a href="../../../io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a>&nbsp;fastaParameters,
-       <a href="../../../../waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-       boolean&nbsp;displayProgress,
-       <a href="../../../../parameters/identification/search/SearchParameters.html" title="class in com.compomics.util.parameters.identification.search">SearchParameters</a>&nbsp;searchParameters,
-       <a href="../../../../parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a>&nbsp;peptideVariantsPreferences)</code></th>
-<td class="colLast">
-<div class="block">Constructor.</div>
-</td>
-</tr>
 </table>
 </li>
 </ul>
@@ -717,41 +706,6 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink">IOException</a></code> - exception thrown if an error occurs while iterating
  the FASTA file.</dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/OutOfMemoryError.html?is-external=true" title="class or interface in java.lang" class="externalLink">OutOfMemoryError</a></code></dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink">RuntimeException</a></code></dd>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang" class="externalLink">IllegalArgumentException</a></code></dd>
-</dl>
-</li>
-</ul>
-<a id="&lt;init&gt;(java.io.File,com.compomics.util.experiment.io.biology.protein.FastaParameters,com.compomics.util.waiting.WaitingHandler,boolean,com.compomics.util.parameters.identification.search.SearchParameters,com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>FMIndex</h4>
-<pre>public&nbsp;FMIndex&#8203;(<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a>&nbsp;fastaFile,
-               <a href="../../../io/biology/protein/FastaParameters.html" title="class in com.compomics.util.experiment.io.biology.protein">FastaParameters</a>&nbsp;fastaParameters,
-               <a href="../../../../waiting/WaitingHandler.html" title="interface in com.compomics.util.waiting">WaitingHandler</a>&nbsp;waitingHandler,
-               boolean&nbsp;displayProgress,
-               <a href="../../../../parameters/identification/search/SearchParameters.html" title="class in com.compomics.util.parameters.identification.search">SearchParameters</a>&nbsp;searchParameters,
-               <a href="../../../../parameters/identification/advanced/PeptideVariantsParameters.html" title="class in com.compomics.util.parameters.identification.advanced">PeptideVariantsParameters</a>&nbsp;peptideVariantsPreferences)
-        throws <a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink">IOException</a>,
-               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/OutOfMemoryError.html?is-external=true" title="class or interface in java.lang" class="externalLink">OutOfMemoryError</a>,
-               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink">RuntimeException</a>,
-               <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang" class="externalLink">IllegalArgumentException</a></pre>
-<div class="block">Constructor. If modification settings are provided the index will contain
- modification information, ignored if null.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>fastaFile</code> - the FASTA file to index</dd>
-<dd><code>fastaParameters</code> - the parameters for the FASTA file parsing</dd>
-<dd><code>waitingHandler</code> - the waiting handler</dd>
-<dd><code>displayProgress</code> - if true, the progress is displayed</dd>
-<dd><code>searchParameters</code> - the search parameters</dd>
-<dd><code>peptideVariantsPreferences</code> - contains all parameters for variants</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io" class="externalLink">IOException</a></code> - exception thrown if an error occurs while iterating
- the FASTA file</dd>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/OutOfMemoryError.html?is-external=true" title="class or interface in java.lang" class="externalLink">OutOfMemoryError</a></code></dd>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/RuntimeException.html?is-external=true" title="class or interface in java.lang" class="externalLink">RuntimeException</a></code></dd>
 <dd><code><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/IllegalArgumentException.html?is-external=true" title="class or interface in java.lang" class="externalLink">IllegalArgumentException</a></code></dd>

@@ -185,16 +185,20 @@ public class NovorIdfileReader implements IdfileReader {
 
             // get the variable modifications
             HashMap<Integer, String> variableModificationsMap = new HashMap<>();
-            String[] tempVariable = variableModificationsLine.split(", ");
-            for (int i = 0; i < tempVariable.length; i++) {
-                variableModificationsMap.put(i, tempVariable[i]);
+            if (!variableModificationsLine.isEmpty()) {
+                String[] tempVariable = variableModificationsLine.split(", ");
+                for (int i = 0; i < tempVariable.length; i++) {
+                    variableModificationsMap.put(i, tempVariable[i]);
+                }
             }
 
             // get the fixed modifications
             HashMap<Integer, String> fixedModificationsMap = new HashMap<>();
-            String[] tempFixed = fixedModificationsLine.split(", ");
-            for (int i = 0; i < tempFixed.length; i++) {
-                fixedModificationsMap.put(variableModificationsMap.size() + i, tempFixed[i]);
+            if (!fixedModificationsLine.isEmpty()) {
+                String[] tempFixed = fixedModificationsLine.split(", ");
+                for (int i = 0; i < tempFixed.length; i++) {
+                    fixedModificationsMap.put(variableModificationsMap.size() + i, tempFixed[i]);
+                }
             }
 
             String headerString = line.substring(1).trim();
@@ -274,7 +278,7 @@ public class NovorIdfileReader implements IdfileReader {
                     aminoAcidScores.add(aminoAcidScoresAsList);
 
                     // get the name of the spectrum file
-                    String spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[id - 1];
+                    String spectrumTitle = spectrumProvider.getSpectrumTitles(IoUtil.removeExtension(spectrumFileName))[id - 1];
 
                     // set up the yet empty spectrum match, or add to the current match
                     if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {

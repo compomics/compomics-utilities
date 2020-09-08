@@ -579,23 +579,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         }
     }
 
-    /**
-     * Constructor. If modification settings are provided the index will contain
-     * modification information, ignored if null.
-     *
-     * @param fastaFile the FASTA file to index
-     * @param fastaParameters the parameters for the FASTA file parsing
-     * @param waitingHandler the waiting handler
-     * @param displayProgress if true, the progress is displayed
-     * @param searchParameters the search parameters
-     * @param peptideVariantsPreferences contains all parameters for variants
-     *
-     * @throws IOException exception thrown if an error occurs while iterating
-     * the FASTA file
-     */
-    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, SearchParameters searchParameters, PeptideVariantsParameters peptideVariantsPreferences) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
-        init(fastaFile, fastaParameters, waitingHandler, displayProgress, searchParameters, peptideVariantsPreferences, null);
-    }
     
     
     
@@ -616,8 +599,6 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
     public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, IdentificationParameters identificationParameters) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
         init(fastaFile, fastaParameters, waitingHandler, displayProgress, identificationParameters.getSearchParameters(), identificationParameters.getPeptideVariantsParameters(), identificationParameters.getSequenceMatchingParameters());
     }
-    
-    
 
     /**
      * Init function only called by the constructors. If modification settings
@@ -4462,12 +4443,48 @@ public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsPro
         ArrayList<PeptideProteinMapping> allMatches = new ArrayList<>(1);
         if (variantMatchingType != VariantType.NO_VARIANT) {
             for (int i = 0; i < indexParts; ++i) {
-                allMatches.addAll(getProteinMappingWithVariants(tag, sequenceMatchingPreferences, i));
+                if (!onlyTrypticPeptides){
+                    allMatches.addAll(getProteinMappingWithVariants(tag, sequenceMatchingPreferences, i));
+                }
+                else {
+                    Tag Ktag = new Tag(tag);
+                    int l = Ktag.getContent().size();
+                    if (Ktag.getContent().get(l - 1) instanceof MassGap){
+                        ((MassGap)Ktag.getContent().get(l - 1)).setMass(((MassGap)Ktag.getContent().get(l - 1)).getMass() - aaMasses['K']);
+                        Ktag.getContent().add(new AminoAcidSequence("K"));
+                    }
+                    allMatches.addAll(getProteinMappingWithVariants(Ktag, sequenceMatchingPreferences, i));
+                    
+                    Tag Rtag = new Tag(tag);
+                    if (Rtag.getContent().get(l - 1) instanceof MassGap){
+                        ((MassGap)Rtag.getContent().get(l - 1)).setMass(((MassGap)Rtag.getContent().get(l - 1)).getMass() - aaMasses['R']);
+                        Rtag.getContent().add(new AminoAcidSequence("R"));
+                    }
+                    allMatches.addAll(getProteinMappingWithVariants(Rtag, sequenceMatchingPreferences, i));
+                }
             }
             return allMatches;
         } else {
             for (int i = 0; i < indexParts; ++i) {
-                allMatches.addAll(getProteinMappingWithoutVariants(tag, sequenceMatchingPreferences, i));
+                if (!onlyTrypticPeptides){
+                    allMatches.addAll(getProteinMappingWithoutVariants(tag, sequenceMatchingPreferences, i));
+                }
+                else {
+                    Tag Ktag = new Tag(tag);
+                    int l = Ktag.getContent().size();
+                    if (Ktag.getContent().get(l - 1) instanceof MassGap){
+                        ((MassGap)Ktag.getContent().get(l - 1)).setMass(((MassGap)Ktag.getContent().get(l - 1)).getMass() - aaMasses['K']);
+                        Ktag.getContent().add(new AminoAcidSequence("K"));
+                    }
+                    allMatches.addAll(getProteinMappingWithoutVariants(Ktag, sequenceMatchingPreferences, i));
+                    
+                    Tag Rtag = new Tag(tag);
+                    if (Rtag.getContent().get(l - 1) instanceof MassGap){
+                        ((MassGap)Rtag.getContent().get(l - 1)).setMass(((MassGap)Rtag.getContent().get(l - 1)).getMass() - aaMasses['R']);
+                        Rtag.getContent().add(new AminoAcidSequence("R"));
+                    }
+                    allMatches.addAll(getProteinMappingWithoutVariants(Rtag, sequenceMatchingPreferences, i));
+                }
             }
             return allMatches;
         }

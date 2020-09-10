@@ -1,5 +1,6 @@
 package com.compomics.util.parameters.identification.search;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.stream.Stream;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ModificationParameters {
+public class ModificationParameters extends DbObject {
 
     /**
      * Serial version number for serialization compatibility.

@@ -143,7 +143,10 @@ public class FMIndexTest extends TestCase {
         ptmSettings.addVariableModification(ptmFactory.getModification("Acetylation of protein N-term"));
         searchParameters.setModificationParameters(ptmSettings);
         
+        
         fmIndex = new FMIndex(fastaFile, fastaParameters, waitingHandlerCLIImpl, false, peptideVariantsPreferences, searchParameters);
+        
+        
                 
         try {
             peptideProteinMappings = fmIndex.getProteinMapping(tag, sequenceMatchingPreferences);

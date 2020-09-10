@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology.atoms;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.atoms.impl.Calcium;
 import com.compomics.util.experiment.biology.atoms.impl.Carbon;
 import com.compomics.util.experiment.biology.atoms.impl.Copper;
@@ -18,7 +19,6 @@ import com.compomics.util.experiment.biology.atoms.impl.Selenium;
 import com.compomics.util.experiment.biology.atoms.impl.Sodium;
 import com.compomics.util.experiment.biology.atoms.impl.Sulfur;
 import com.compomics.util.experiment.biology.atoms.impl.Zinc;
-import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,7 +28,7 @@ import java.util.HashMap;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public abstract class Atom extends ExperimentObject {
+public abstract class Atom extends DbObject {
 
     /**
      * Empty default constructor

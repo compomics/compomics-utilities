@@ -1,5 +1,6 @@
 package com.compomics.util.parameters.identification.tool_specific;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 
@@ -8,7 +9,7 @@ import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmP
  *
  * @author Marc Vaudel
  */
-public class XtandemParameters implements IdentificationAlgorithmParameter {
+public class XtandemParameters extends DbObject implements IdentificationAlgorithmParameter {
 
     /**
      * Version number for deserialization.

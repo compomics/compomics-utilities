@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.spectrum_annotation;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +11,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class NeutralLossesMap {
+public class NeutralLossesMap extends DbObject {
 
     /**
      * The version UID for Serialization/Deserialization compatibility.

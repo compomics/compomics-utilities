@@ -1,5 +1,6 @@
 package com.compomics.util.parameters.identification.tool_specific;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.HashMap;
  *
  * @author Harald Barsnes
  */
-public class NovorParameters implements IdentificationAlgorithmParameter {
+public class NovorParameters extends DbObject implements IdentificationAlgorithmParameter {
 
     /**
      * Version number for deserialization.

@@ -1,5 +1,6 @@
 package com.compomics.util.pride.prideobjects;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.pride.PrideObject;
 
 /**
@@ -7,7 +8,7 @@ import com.compomics.util.pride.PrideObject;
  *
  * @author Harald Barsnes
  */
-public class Reference implements PrideObject {
+public class Reference extends DbObject implements PrideObject {
 
     /**
      * Empty default constructor

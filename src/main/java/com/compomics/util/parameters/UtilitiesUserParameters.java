@@ -1,5 +1,6 @@
 package com.compomics.util.parameters;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.parameters.searchgui.OutputParameters;
 import com.compomics.util.io.file.LastSelectedFolder;
 import com.compomics.util.io.json.JsonMarshaller;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class UtilitiesUserParameters {
+public class UtilitiesUserParameters extends DbObject {
 
     /**
      * Serial version UID for post-serialization compatibility.

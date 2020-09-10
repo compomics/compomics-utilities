@@ -1,5 +1,6 @@
 package com.compomics.util.parameters.identification.tool_specific;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
@@ -10,7 +11,7 @@ import com.compomics.util.parameters.identification.search.DigestionParameters;
  *
  * @author Harald Barsnes
  */
-public class MyriMatchParameters implements IdentificationAlgorithmParameter {
+public class MyriMatchParameters extends DbObject implements IdentificationAlgorithmParameter {
 
     /**
      * Version number for deserialization.

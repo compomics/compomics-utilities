@@ -1,5 +1,6 @@
 package com.compomics.util.parameters.identification.tool_specific;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.experiment.mass_spectrometry.FragmentationMethod;
@@ -11,7 +12,7 @@ import java.util.HashMap;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class AndromedaParameters implements IdentificationAlgorithmParameter {
+public class AndromedaParameters extends DbObject implements IdentificationAlgorithmParameter {
 
     /**
      * Version number for deserialization.

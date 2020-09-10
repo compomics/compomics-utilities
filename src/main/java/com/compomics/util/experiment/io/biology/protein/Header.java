@@ -12,6 +12,7 @@
  */
 package com.compomics.util.experiment.io.biology.protein;
 
+import com.compomics.util.db.object.DbObject;
 import org.apache.log4j.Logger;
 
 import java.util.StringTokenizer;
@@ -27,7 +28,7 @@ import java.util.StringTokenizer;
  * @author Harald Barsnes
  * @author Marc Vaudel
  */
-public class Header implements Cloneable {
+public class Header extends DbObject implements Cloneable {
 
     /**
      * The version UID for Serialization/Deserialization compatibility.

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.filtering;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.filtering.FilterItemComparator;
 import com.compomics.util.experiment.biology.genes.GeneMaps;
 import com.compomics.util.experiment.filtering.Filter;
@@ -20,7 +21,7 @@ import java.util.Map.Entry;
  *
  * @author Marc Vaudel
  */
-public abstract class MatchFilter implements Filter {
+public abstract class MatchFilter extends DbObject implements Filter {
 
     /**
      * Empty default constructor

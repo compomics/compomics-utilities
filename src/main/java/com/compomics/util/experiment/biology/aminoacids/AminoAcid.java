@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.biology.aminoacids;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.aminoacids.impl.Proline;
 import com.compomics.util.experiment.biology.aminoacids.impl.Glycine;
 import com.compomics.util.experiment.biology.aminoacids.impl.GlutamicAcid;
@@ -38,7 +39,7 @@ import java.util.List;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public abstract class AminoAcid {
+public abstract class AminoAcid extends DbObject {
 
     /**
      * Empty default constructor.

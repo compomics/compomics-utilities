@@ -55,6 +55,10 @@ public class ObjectsDB {
      */
     private int currentAdded = 0;
     /**
+     * keys stored in the backend
+     */
+    private HashSet<Long> keysInBackend = new HashSet<>();
+    /**
      * Empty default constructor.
      */
     public ObjectsDB() {
@@ -331,6 +335,22 @@ public class ObjectsDB {
             if (rs.next()){
                 FSTObjectInput in = new FSTObjectInput(rs.getBinaryStream("data"));
                 object = in.readObject();
+                
+                /*
+                ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
+                ObjectInput in = null;
+                try {
+                  in = new ObjectInputStream(bis);
+                  object = in.readObject(); 
+                } finally {
+                  try {
+                    if (in != null) {
+                      in.close();
+                    }
+                  } catch (IOException ex) {
+                  }
+                }
+                */
             }
         }
         catch(Exception ex){
@@ -359,10 +379,11 @@ public class ObjectsDB {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " loading " + keys.size() + " objects");
         }
-
+        
 
         HashMap<Long, Object> objectsNotInCache = new HashMap<>();
         for (long objectKey : keys) {
+            
 
             if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                 return;
@@ -371,7 +392,9 @@ public class ObjectsDB {
 
             if (!objectsCache.inCache(objectKey)) {
                 Object obj = loadFromDB(objectKey);
-                if (obj != null) objectsNotInCache.put(objectKey, obj);
+                if (obj != null){
+                    objectsNotInCache.put(objectKey, obj);
+                }
             }
 
         }
@@ -408,6 +431,25 @@ public class ObjectsDB {
                 FSTObjectInput in = new FSTObjectInput(rs.getBinaryStream("data"));
                 long objectKey = rs.getLong("id");
                 Object object = in.readObject();
+                
+                
+                /*
+                ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
+                ObjectInput in = null;
+                Object object = null;
+                try {
+                  in = new ObjectInputStream(bis);
+                  object = in.readObject(); 
+                } finally {
+                  try {
+                    if (in != null) {
+                      in.close();
+                    }
+                  } catch (IOException ex) {
+                  }
+                }
+                */
+                
                 objectsNotInCache.put(objectKey, object);
             }
         }
@@ -439,7 +481,9 @@ public class ObjectsDB {
 
         if (obj == null) {
             obj = loadFromDB(objectKey);
-            if (obj != null) objectsCache.addObject(objectKey, obj, true, false);
+            if (obj != null){
+                objectsCache.addObject(objectKey, obj, true, false);
+            }
         }
         
         return obj;
@@ -501,7 +545,9 @@ public class ObjectsDB {
 
             if (obj == null) {
                 obj = loadFromDB(objectKey);
-                if (obj != null) objectsNotInCache.put(objectKey, obj);
+                if (obj != null){
+                    objectsNotInCache.put(objectKey, obj);
+                }
             }
 
             retrievingObjects.add(obj);
@@ -517,7 +563,7 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " | retrieving one object with key: " + objectKey);
         }
 
-        objectsCache.addObject(objectKey, object, inDB(objectKey), true);
+        objectsCache.addObject(objectKey, object, inBackend(objectKey), true);
     }
     
     
@@ -559,7 +605,33 @@ public class ObjectsDB {
                 FSTObjectInput in = new FSTObjectInput(rs.getBinaryStream("data"));
                 long objectKey = rs.getLong("id");
                 Object object = in.readObject();
-                if (!objectInCache.contains(objectKey)) objectsNotInCache.put(objectKey, object);
+                
+                
+                /*
+                ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
+                ObjectInput in = null;
+                Object object = null;
+                try {
+                  in = new ObjectInputStream(bis);
+                  object = in.readObject(); 
+                } finally {
+                  try {
+                    if (in != null) {
+                      in.close();
+                    }
+                  } catch (IOException ex) {
+                  }
+                }
+                
+                
+                */
+                
+                
+                
+                
+                if (!objectInCache.contains(objectKey)){
+                    objectsNotInCache.put(objectKey, object);
+                }
                 retrievingObjects.add(object);
             }
         }
@@ -665,7 +737,20 @@ public class ObjectsDB {
         }
         
         if (objectsCache.inCache(objectKey)) return true;
-        
+        return inBackend(objectKey);
+    }
+    
+    
+    /**
+     * Indicates whether an object is loaded in the backend.
+     *
+     * @param objectKey the object key
+     *
+     * @return a boolean indicating whether an object is loaded
+     */
+    public boolean inBackend(long objectKey) {
+        return keysInBackend.contains(objectKey);
+        /*
         boolean result = false;
         try {
             dbMutex.acquire();
@@ -684,7 +769,22 @@ public class ObjectsDB {
         }
 
         return result;
+        */
     }
+    
+    
+    
+    
+    /**
+     * Returns the keys in backend set
+     * 
+     *  @return the keys in backend set
+     */
+    public HashSet<Long> getKeysInBackend(){
+        return keysInBackend;
+    }
+    
+    
 
     /**
      * Indicates whether the connection to the DB is active.
@@ -813,6 +913,18 @@ public class ObjectsDB {
                 sql = "CREATE INDEX `data_class_index` ON `data` (`class` ASC);";
                 stmt.execute(sql);
                 connection.commit();
+            }
+            else {
+                try {
+                    PreparedStatement pstmt = connection.prepareStatement("SELECT id FROM data");
+                    ResultSet rsId = pstmt.executeQuery();
+                    if (rsId.next()){
+                        keysInBackend.add(rsId.getLong("id"));
+                    }
+                }
+                catch(Exception ex){
+                    ex.printStackTrace();
+                }
             }
         }
         catch(Exception ex){

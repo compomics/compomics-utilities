@@ -2,6 +2,9 @@ package com.compomics.util.db.object;
 
 import static com.compomics.util.db.object.DbMutex.loadObjectMutex;
 import com.compomics.util.waiting.WaitingHandler;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
@@ -291,6 +294,8 @@ public class ObjectsCache {
                 e.printStackTrace();
             }
             
+            HashSet<Long> keysInBackend = objectsDB.getKeysInBackend();
+            
             Set<Long> removeKeys = new HashSet<Long>();
             
             int i = 0;
@@ -311,17 +316,47 @@ public class ObjectsCache {
                 obj.edited = false;
                 
                 byte barray[] = conf.asByteArray(obj.object);
+                
+                
+                /*
+                byte[] barray = null;
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ObjectOutputStream out = null;
+                try {
+                  out = new ObjectOutputStream(bos);   
+                  out.writeObject(obj.object);
+                  out.flush();
+                  barray = bos.toByteArray();
+                }
+                catch (IOException ex){
+                    ex.printStackTrace();
+                    System.exit(-1);
+                }
+                finally {
+                  try {
+                    bos.close();
+                  } catch (IOException ex) {
+                    // ignore close exception
+                  }
+                }
+                
+                */
+                
+                
+                
+                
                 try {
                     if (obj.inDB){
                         psUpdate.setBytes(1, barray);
-                        psUpdate.setLong(2, ((DbObject)obj.object).getId());
+                        psUpdate.setLong(2, key);
                         psUpdate.addBatch();
                     }
                     else {
-                        psInsert.setLong(1, ((DbObject)obj.object).getId());
+                        psInsert.setLong(1, key);
                         psInsert.setString(2, obj.object.getClass().getSimpleName());
                         psInsert.setBytes(3, barray);
                         psInsert.addBatch();
+                        keysInBackend.add(key);
                     }
                     obj.inDB = true;
                 }

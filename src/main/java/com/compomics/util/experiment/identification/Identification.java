@@ -807,7 +807,6 @@ public class Identification extends ExperimentObject {
     public ProteinMatchesIterator getProteinMatchesIterator(
             WaitingHandler waitingHandler
     ) {
-
         return new ProteinMatchesIterator(this, waitingHandler, false);
 
     }

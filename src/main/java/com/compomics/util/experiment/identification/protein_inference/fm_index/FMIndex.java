@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.Util;
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.proteins.Protein;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
@@ -69,7 +70,7 @@ import java.util.zip.CRC32;
  * @author Dominik Kopczynski
  * @author Marc Vaudel
  */
-public class FMIndex implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
+public class FMIndex extends DbObject implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
 
     /**
      * Maximal number of PTMs per peptide.

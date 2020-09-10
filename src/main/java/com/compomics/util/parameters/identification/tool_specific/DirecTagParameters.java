@@ -1,5 +1,6 @@
 package com.compomics.util.parameters.identification.tool_specific;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * @author Thilo Muth
  * @author Harald Barsnes
  */
-public class DirecTagParameters implements IdentificationAlgorithmParameter {
+public class DirecTagParameters extends DbObject implements IdentificationAlgorithmParameter {
 
     // @TODO: options not implemented: OutputSuffix, StartSpectraScanNum, EndSpectraScanNum 
     //        (advanced: ClassSizeMultiplier, NumBatches, ThreadCountMultiplier, UseMultipleProcessors)

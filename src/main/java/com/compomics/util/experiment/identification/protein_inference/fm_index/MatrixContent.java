@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.HashMap;
  *
  * @author Dominik Kopczynski
  */
-public class MatrixContent {
+public class MatrixContent extends DbObject {
 
     /**
      * Empty default constructor.

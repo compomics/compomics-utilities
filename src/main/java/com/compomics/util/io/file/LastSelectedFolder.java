@@ -1,5 +1,6 @@
 package com.compomics.util.io.file;
 
+import com.compomics.util.db.object.DbObject;
 import java.util.HashMap;
 
 /**
@@ -7,7 +8,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class LastSelectedFolder {
+public class LastSelectedFolder extends DbObject {
 
     /**
      * Serial version UID for backward compatibility.

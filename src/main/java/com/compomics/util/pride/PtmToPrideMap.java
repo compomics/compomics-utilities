@@ -1,5 +1,6 @@
 package com.compomics.util.pride;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import java.io.FileNotFoundException;
@@ -12,7 +13,7 @@ import java.util.HashMap;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class PtmToPrideMap {
+public class PtmToPrideMap extends DbObject {
 
     /**
      * Serial number for backward compatibility.

@@ -9,16 +9,15 @@ import com.compomics.util.experiment.identification.spectrum_assumptions.Peptide
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.experiment.identification.matches_iterators.ProteinMatchesIterator;
 import com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails;
 import com.compomics.util.io.IoUtil;
 import junit.framework.Assert;
 
-import java.io.File;
+import java.io.*;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.TreeMap;
+import java.util.*;
 import junit.framework.TestCase;
 
 /**
@@ -27,7 +26,7 @@ import junit.framework.TestCase;
  */
 public class IdentificationDBTest extends TestCase {
 
-    public void testDB() throws SQLException, IOException, ClassNotFoundException, SQLException, ClassNotFoundException, InterruptedException {
+    public void teestDB() throws SQLException, IOException, ClassNotFoundException, SQLException, ClassNotFoundException, InterruptedException {
 
         String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
         path = path.substring(0, path.indexOf("/target/"));
@@ -47,7 +46,12 @@ public class IdentificationDBTest extends TestCase {
             String spectrumFile = "spectrum_file";
             String spectrumTitle = "spectrum_title";
             String projectParametersTitle = "project_parameters_title";
-            long spectrumMatchKey = SpectrumMatch.getKey(spectrumFile, spectrumTitle);
+            
+            
+            
+            
+            
+            
             String peptideSequence = "PEPTIDE";
             String proteinAccession = "test_protein";
 
@@ -57,6 +61,7 @@ public class IdentificationDBTest extends TestCase {
 
             Peptide peptide = new Peptide(peptideSequence);
             SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumFile, spectrumTitle);
+            long spectrumMatchKey = testSpectrumMatch.getKey();
             testSpectrumMatch.addPeptideAssumption(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), 1, 0.1, "no file"));
             identification.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);
 
@@ -209,5 +214,86 @@ public class IdentificationDBTest extends TestCase {
         } finally {
             //IoUtil.deleteDir(dbFolder);
         }
+    }
+    
+    
+    
+    
+    public void testMassiveDB() throws SQLException, IOException, ClassNotFoundException, SQLException, ClassNotFoundException, InterruptedException {
+        
+        String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
+        path = path.substring(0, path.indexOf("/target/"));
+        path += "/src/test/resources/experiment/identificationDB";
+        
+        File dbFolder = new File(path);
+        if (!dbFolder.exists()) {
+            dbFolder.mkdir();
+        }
+        
+
+        try {
+            ObjectsDB objectsDB = new ObjectsDB(path, "experimentMassiveTestDB.sqlite", true);
+            Identification identification = new Identification(objectsDB);
+            
+            HashSet<String> accessions = new HashSet<>();
+            long testProtKey = 0;
+            
+            for (int i = 0; i < 10000; ++i){
+                String accession = "PX" + Integer.toString(i);
+                accessions.add(accession);
+                ProteinMatch testProteinMatch = new ProteinMatch(accession);
+                if (i == 0) testProtKey = testProteinMatch.getKey();
+                identification.addObject(testProteinMatch.getKey(), testProteinMatch);
+            
+            }
+            
+            identification.getObjectsDB().lock(null);
+            IoUtil.copyFile(identification.getObjectsDB().getDbFile(), new File(path + "/copy.sqlite"));
+            identification.getObjectsDB().unlock();
+            identification.close();
+            
+            
+            System.out.println("stored");
+            
+            
+            objectsDB = new ObjectsDB(path, "copy.sqlite", false);
+            identification = new Identification(objectsDB);
+            
+            identification.loadObjects(ProteinMatch.class, null, false);
+            
+            
+            Peptide peptide = new Peptide("TTTTTTTTTTTTTTTTK");
+            PeptideMatch testPeptideMatch = new PeptideMatch(peptide, peptide.getKey(), 0);
+            long pKey = testPeptideMatch.getKey();
+            identification.addPeptideMatch(pKey, testPeptideMatch);
+            
+            
+            ProteinMatch proteinMatch = identification.getProteinMatch(testProtKey);
+            proteinMatch.addPeptideMatchKey(pKey);
+            
+            
+            identification.loadObjects(ProteinMatch.class, null, false);
+            
+            Assert.assertTrue(proteinMatch.getPeptideCount() == 1);
+            Assert.assertTrue(proteinMatch.getPeptideMatchesKeys()[0] == pKey);
+            
+            ProteinMatchesIterator pmi = identification.getProteinMatchesIterator(null);
+            
+            while (true){
+                ProteinMatch pm = pmi.next();
+                if (pm == null) break;
+                
+                String acc = pm.getAccessions()[0];
+                Assert.assertTrue(accessions.contains(acc));
+            }
+            
+            
+            
+            identification.close();
+                
+        } finally {
+            //IoUtil.deleteDir(dbFolder);
+        }
+            
     }
 }

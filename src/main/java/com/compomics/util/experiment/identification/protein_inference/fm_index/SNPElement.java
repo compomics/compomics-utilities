@@ -5,11 +5,13 @@
  */
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
+import com.compomics.util.db.object.DbObject;
+
 /**
  *
  * @author dominik.kopczynski
  */
-public class SNPElement {
+public class SNPElement extends DbObject  {
     public int position;
     public char sourceAA;
     public char targetAA;

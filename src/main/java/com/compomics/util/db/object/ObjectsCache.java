@@ -75,7 +75,7 @@ public class ObjectsCache {
      * Number of objects that should at least be kept.
      */
     private final int keepObjectsThreshold = 10000;
-    static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
+    //static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
     
 
     /**
@@ -315,7 +315,7 @@ public class ObjectsCache {
                 
                 obj.edited = false;
                 
-                byte barray[] = conf.asByteArray(obj.object);
+                byte barray[] = objectsDB.conf.asByteArray(obj.object);
                 
                 
                 /*

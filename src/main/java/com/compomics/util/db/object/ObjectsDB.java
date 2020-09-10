@@ -45,7 +45,7 @@ public class ObjectsDB {
     /**
      * Configuration for fast serialization.
      */
-    private static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
+    public static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
     /**
      * HashMap to map hash IDs of entries into DB ids.
      */

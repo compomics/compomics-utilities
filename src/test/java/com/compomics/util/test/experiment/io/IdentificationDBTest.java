@@ -248,16 +248,12 @@ public class IdentificationDBTest extends TestCase {
             }
             
             identification.getObjectsDB().lock(null);
-            IoUtil.copyFile(identification.getObjectsDB().getDbFile(), new File(path + "/copy.sqlite"));
             identification.getObjectsDB().unlock();
-            identification.close();
             
             
             System.out.println("stored");
             
             
-            objectsDB = new ObjectsDB(path, "copy.sqlite", false);
-            identification = new Identification(objectsDB);
             
             identification.loadObjects(ProteinMatch.class, null, false);
             

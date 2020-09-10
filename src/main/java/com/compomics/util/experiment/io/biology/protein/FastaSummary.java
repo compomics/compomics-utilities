@@ -307,8 +307,10 @@ public class FastaSummary {
         HeaderIterator headerIterator = new HeaderIterator(fastaFile);
         String fastaHeader;
         
-        waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-        waitingHandler.setMaxSecondaryProgressCounter(100);
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(100);
+        }
 
         while ((fastaHeader = headerIterator.getNextHeader(waitingHandler)) != null) {
 

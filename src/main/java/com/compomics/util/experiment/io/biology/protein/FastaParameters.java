@@ -184,22 +184,6 @@ public class FastaParameters extends DbObject {
      * Infers the parameters used to parse the file.
      *
      * @param fastaFilePath path to a FASTA file
-     *
-     * @return returns FASTA parameters inferred from the file
-     *
-     * @throws IOException exception thrown if an error occurred while iterating
-     * the file
-     */
-    public static FastaParameters inferParameters(String fastaFilePath) throws IOException {
-
-        return inferParameters(fastaFilePath, null);
-
-    }
-
-    /**
-     * Infers the parameters used to parse the file.
-     *
-     * @param fastaFilePath path to a FASTA file
      * @param waitingHandler a handler to allow canceling the import
      *
      * @return returns FASTA parameters inferred from the file

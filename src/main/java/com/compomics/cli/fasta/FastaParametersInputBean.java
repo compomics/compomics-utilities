@@ -1,10 +1,10 @@
 package com.compomics.cli.fasta;
 
 import com.compomics.software.cli.CommandParameter;
-import com.compomics.util.Util;
 import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import com.compomics.util.io.IoUtil;
+import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -58,10 +58,11 @@ public class FastaParametersInputBean {
      * @param aLine the command line
      * @param fastaFile the FASTA file to infer the parameters from if not
      * provided in the command line arguments
+     * @param waitingHandler the waiting handler
      *
      * @throws IOException if an error occurs while reading or writing a file.
      */
-    public FastaParametersInputBean(CommandLine aLine, File fastaFile) throws IOException {
+    public FastaParametersInputBean(CommandLine aLine, File fastaFile, WaitingHandler waitingHandler) throws IOException {
 
         FastaParameters tempFastaParameters = new FastaParameters();
         FastaParameters inferredParameters = null;
@@ -76,7 +77,7 @@ public class FastaParametersInputBean {
 
         } else {
 
-            inferredParameters = FastaParameters.inferParameters(fastaFile.getAbsolutePath());
+            inferredParameters = FastaParameters.inferParameters(fastaFile.getAbsolutePath(), waitingHandler);
             tempFastaParameters.setDecoyFlag(inferredParameters.getDecoyFlag());
             
         }
@@ -96,12 +97,12 @@ public class FastaParametersInputBean {
         } else {
 
             if (inferredParameters==null)
-                inferredParameters = FastaParameters.inferParameters(fastaFile.getAbsolutePath());
+                inferredParameters = FastaParameters.inferParameters(fastaFile.getAbsolutePath(), waitingHandler);
             
             tempFastaParameters.setDecoySuffix(inferredParameters.isDecoySuffix());
         }
 
-        FastaSummary fastaSummary = FastaSummary.getSummary(fastaFile.getAbsolutePath(), tempFastaParameters, null);
+        FastaSummary fastaSummary = FastaSummary.getSummary(fastaFile.getAbsolutePath(), tempFastaParameters, waitingHandler);
 
         if (aLine.hasOption(FastaParametersCLIParams.NAME.id)) {
 

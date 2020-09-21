@@ -1,5 +1,6 @@
 package com.compomics.util.parameters.identification.tool_specific;
 
+import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.modifications.ModificationCategory;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
@@ -11,7 +12,7 @@ import java.util.Arrays;
  *
  * @author Harald Barsnes
  */
-public class MetaMorpheusParameters implements IdentificationAlgorithmParameter {
+public class MetaMorpheusParameters extends DbObject implements IdentificationAlgorithmParameter {
 
     /**
      * The available decoy types.

@@ -4,7 +4,7 @@
  * Contact: lennart.martens AT UGent.be (' AT ' to be replaced with '@')
  */
 
-/*
+ /*
  * Created by IntelliJ IDEA.
  * User: Lennart
  * Date: 7-okt-02
@@ -249,7 +249,7 @@ public class Header implements Cloneable {
                     // We expect to see either two or at least four or more tokens.
                     int tokenCount = lSt.countTokens();
                     if (tokenCount == 3) {
-                        result.databaseType = ProteinDatabase.NCBI;
+                        result.databaseType = ProteinDatabase.NCBI_old;
                         result.iID = lSt.nextToken();
                         result.iAccession = lSt.nextToken();
                         // Check for the presence of a location.
@@ -268,7 +268,7 @@ public class Header implements Cloneable {
                         throw new IllegalArgumentException("Non-standard or false NCBInr header passed. "
                                 + "Expecting something like: '>gi|xxxxx|xx|xxxxx|(x) xxxx xxx xxxx ...', received '" + aFASTAHeader + "'.");
                     } else {
-                        result.databaseType = ProteinDatabase.NCBI;
+                        result.databaseType = ProteinDatabase.NCBI_old;
                         result.iID = lSt.nextToken();
                         result.iAccession = lSt.nextToken();
                         // Check for the presence of a location.
@@ -605,30 +605,30 @@ public class Header implements Cloneable {
 
                     // try to get the gene name and taxonomy
                     parseUniProtDescription(result);
-                }  else if (aFASTAHeader.matches("^en\\|[^|]*\\|.*")) {
-                        // Ensembl Genomes header
-                        // Is formatted something like this:
-                        //  >en|CCF76815|pCol1B9_SL1344:3971-4420 conserved hypothetical plasmid protein
-                        String tempHeader = aFASTAHeader.substring(3);
-                        result.iAccession = tempHeader.substring(0, tempHeader.indexOf("|")).trim();
-                        // See if there is location information.
-                        if (result.iAccession.matches("[^\\(]+\\([\\d]+ [\\d]+\\)$")) {
-                            int openBracket = result.iAccession.indexOf("(");
-                            result.iStart = Integer.parseInt(result.iAccession.substring(openBracket + 1, result.iAccession.indexOf(" ", openBracket)).trim());
-                            result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf(" ", openBracket), result.iAccession.indexOf(")")).trim());
-                            result.iAccession = result.iAccession.substring(0, openBracket).trim();
-                        } else if (result.iAccession.matches("[^\\(]+\\([\\d]+-[\\d]+\\)$")) {
-                            int openBracket = result.iAccession.indexOf("(");
-                            result.iStart = Integer.parseInt(result.iAccession.substring(openBracket + 1, result.iAccession.indexOf("-", openBracket)).trim());
-                            result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket) + 1, result.iAccession.indexOf(")")).trim());
-                            result.iAccession = result.iAccession.substring(0, openBracket).trim();
-                        }
-                        result.databaseType = ProteinDatabase.EnsemblGenomes;
-                        result.iID = "en";
-                        result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
+                } else if (aFASTAHeader.matches("^en\\|[^|]*\\|.*")) {
+                    // Ensembl Genomes header
+                    // Is formatted something like this:
+                    //  >en|CCF76815|pCol1B9_SL1344:3971-4420 conserved hypothetical plasmid protein
+                    String tempHeader = aFASTAHeader.substring(3);
+                    result.iAccession = tempHeader.substring(0, tempHeader.indexOf("|")).trim();
+                    // See if there is location information.
+                    if (result.iAccession.matches("[^\\(]+\\([\\d]+ [\\d]+\\)$")) {
+                        int openBracket = result.iAccession.indexOf("(");
+                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket + 1, result.iAccession.indexOf(" ", openBracket)).trim());
+                        result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf(" ", openBracket), result.iAccession.indexOf(")")).trim());
+                        result.iAccession = result.iAccession.substring(0, openBracket).trim();
+                    } else if (result.iAccession.matches("[^\\(]+\\([\\d]+-[\\d]+\\)$")) {
+                        int openBracket = result.iAccession.indexOf("(");
+                        result.iStart = Integer.parseInt(result.iAccession.substring(openBracket + 1, result.iAccession.indexOf("-", openBracket)).trim());
+                        result.iEnd = Integer.parseInt(result.iAccession.substring(result.iAccession.indexOf("-", openBracket) + 1, result.iAccession.indexOf(")")).trim());
+                        result.iAccession = result.iAccession.substring(0, openBracket).trim();
+                    }
+                    result.databaseType = ProteinDatabase.EnsemblGenomes;
+                    result.iID = "en";
+                    result.iDescription = tempHeader.substring(tempHeader.indexOf("|") + 1);
 
-                        // try to get the gene name and taxonomy
-                        parseUniProtDescription(result);
+                    // try to get the gene name and taxonomy
+                    parseUniProtDescription(result);
 
                 } else if (aFASTAHeader.startsWith("nxp|NX_") && aFASTAHeader.split("\\|").length == 5) { // @TODO: replace by regular expression?
                     // header should look like this:
@@ -842,8 +842,19 @@ public class Header implements Cloneable {
                         result.iEnd = Integer.parseInt(temp.substring(minus + 1, end));
                     }
                     result.iDescription = aFASTAHeader.substring(accessionEndLoc).trim();
+                } else if (aFASTAHeader.matches(".*\\.[\\d]+ .*")) {
+                    // new NCBI format without the gi tag:
+                    // >AHG90838.1 Malate dehydrogenase [Gemmatirosa kalamazoonesis]
+
+                    int accessionEndLoc = aFASTAHeader.indexOf(" ");
+                    result.iAccession = aFASTAHeader.substring(0, accessionEndLoc).trim();
+                    result.iDescription = aFASTAHeader.substring(accessionEndLoc + 1).trim();
+
+                    result.databaseType = ProteinDatabase.NCBI_new;
+                    result.iID = "";
                 } else {
-                    // Okay, try the often-used 'generic' approach. If this fails, we go to the worse-case scenario, ie. do not process at all.
+                    // Okay, try the often-used 'generic' approach. 
+                    // If this fails, we go to the worse-case scenario, ie. do not process at all.
                     // Testing for this is somewhat more complicated.
 
                     // Often used simple header; looks like:
@@ -854,6 +865,8 @@ public class Header implements Cloneable {
                     result.databaseType = ProteinDatabase.Generic_Header;
                     int accessionEndLoc = aFASTAHeader.indexOf(" ");
 
+                    // @TODO: add support for parsing NCBI headers such as:
+                    //        >WP_031551166.1 tRNA (cytidine(34)-2'-O)-methyltransferase [Oribacterium sp. FC2011]
                     // Temporary storage variables.
                     int startSecAcc = -1;
                     int endSecAcc = -1;
@@ -947,7 +960,7 @@ public class Header implements Cloneable {
 
     /**
      * Returns the ID.
-     * 
+     *
      * @return the ID
      */
     public String getID() {
@@ -956,7 +969,7 @@ public class Header implements Cloneable {
 
     /**
      * Sets the ID. Null if not set.
-     * 
+     *
      * @param aID the ID
      */
     public void setID(String aID) {
@@ -965,7 +978,7 @@ public class Header implements Cloneable {
 
     /**
      * Returns the foreign ID. Null if not set.
-     * 
+     *
      * @return the foreign ID
      */
     public String getForeignID() {
@@ -974,7 +987,7 @@ public class Header implements Cloneable {
 
     /**
      * Sets the foreign ID.
-     * 
+     *
      * @param aForeignID the foreign ID
      */
     public void setForeignID(String aForeignID) {
@@ -983,7 +996,7 @@ public class Header implements Cloneable {
 
     /**
      * Returns the accession. Null if not set.
-     * 
+     *
      * @return the accession
      */
     public String getAccession() {
@@ -992,7 +1005,7 @@ public class Header implements Cloneable {
 
     /**
      * Sets the accession.
-     * 
+     *
      * @param aAccession the accession
      */
     public void setAccession(String aAccession) {
@@ -1015,7 +1028,7 @@ public class Header implements Cloneable {
 
     /**
      * Returns the database type as inferred from the header structure.
-     * 
+     *
      * @return the database type
      */
     public ProteinDatabase getDatabaseType() {
@@ -1024,7 +1037,7 @@ public class Header implements Cloneable {
 
     /**
      * Sets the database type.
-     * 
+     *
      * @param aDatabaseType the database type
      */
     public void setDatabaseType(ProteinDatabase aDatabaseType) {
@@ -1033,7 +1046,7 @@ public class Header implements Cloneable {
 
     /**
      * Returns the foreign accession. Null if not set.
-     * 
+     *
      * @return the foreign accession
      */
     public String getForeignAccession() {
@@ -1042,7 +1055,7 @@ public class Header implements Cloneable {
 
     /**
      * Sets the foreign accession.
-     * 
+     *
      * @param aForeignAccession the foreign accession
      */
     public void setForeignAccession(String aForeignAccession) {
@@ -1051,7 +1064,7 @@ public class Header implements Cloneable {
 
     /**
      * Returns the description. Null if not set.
-     * 
+     *
      * @return the description
      */
     public String getDescription() {
@@ -1060,7 +1073,7 @@ public class Header implements Cloneable {
 
     /**
      * Sets the description.
-     * 
+     *
      * @param aDescription the description
      */
     public void setDescription(String aDescription) {
@@ -1069,7 +1082,7 @@ public class Header implements Cloneable {
 
     /**
      * Returns the short description. Null if not set.
-     * 
+     *
      * @return the short description
      */
     public String getDescriptionShort() {
@@ -1078,7 +1091,7 @@ public class Header implements Cloneable {
 
     /**
      * Sets the short description.
-     * 
+     *
      * @param aDescriptionShort the short description
      */
     public void setDescriptionShort(String aDescriptionShort) {
@@ -1087,7 +1100,7 @@ public class Header implements Cloneable {
 
     /**
      * Returns the protein name as inferred from the description.
-     * 
+     *
      * @return the protein name
      */
     public String getDescriptionProteinName() {
@@ -1096,7 +1109,7 @@ public class Header implements Cloneable {
 
     /**
      * Sets the protein name.
-     * 
+     *
      * @param aDescriptionProteinName the protein name
      */
     public void setDescriptionProteinName(String aDescriptionProteinName) {
@@ -1105,7 +1118,7 @@ public class Header implements Cloneable {
 
     /**
      * Returns the gene name.
-     * 
+     *
      * @return the gene name
      */
     public String getGeneName() {
@@ -1114,7 +1127,7 @@ public class Header implements Cloneable {
 
     /**
      * Set the gene name.
-     * 
+     *
      * @param aGeneName the gene name
      */
     public void setGeneName(String aGeneName) {
@@ -1122,8 +1135,9 @@ public class Header implements Cloneable {
     }
 
     /**
-     * Returns the protein evidence level as indexed in UniProt. Null if not available.
-     * 
+     * Returns the protein evidence level as indexed in UniProt. Null if not
+     * available.
+     *
      * @return the protein evidence level
      */
     public Integer getProteinEvidence() {
@@ -1132,7 +1146,7 @@ public class Header implements Cloneable {
 
     /**
      * Sets the protein evidence level.
-     * 
+     *
      * @param aProteinEvidence the protein evidence level
      */
     public void setProteinEvidence(Integer aProteinEvidence) {
@@ -1141,7 +1155,7 @@ public class Header implements Cloneable {
 
     /**
      * Returns the taxonomy.
-     * 
+     *
      * @return the taxonomy
      */
     public String getTaxonomy() {
@@ -1150,7 +1164,7 @@ public class Header implements Cloneable {
 
     /**
      * Sets the taxonomy.
-     * 
+     *
      * @param aTaxonomy the taxonomy
      */
     public void setTaxonomy(String aTaxonomy) {
@@ -1159,7 +1173,7 @@ public class Header implements Cloneable {
 
     /**
      * Returns the foreign description.
-     * 
+     *
      * @return the foreign description
      */
     public String getForeignDescription() {
@@ -1168,7 +1182,7 @@ public class Header implements Cloneable {
 
     /**
      * Sets the foreign description.
-     * 
+     *
      * @param aForeignDescription the foreign description
      */
     public void setForeignDescription(String aForeignDescription) {
@@ -1177,7 +1191,7 @@ public class Header implements Cloneable {
 
     /**
      * Returns the rest of the header.
-     * 
+     *
      * @return the rest of the header
      */
     public String getRest() {
@@ -1186,7 +1200,7 @@ public class Header implements Cloneable {
 
     /**
      * Sets the rest of the header.
-     * 
+     *
      * @param aRest the rest of the header
      */
     public void setRest(String aRest) {
@@ -1195,7 +1209,7 @@ public class Header implements Cloneable {
 
     /**
      * Returns the entire header.
-     * 
+     *
      * @return the entire header
      */
     public String getRawHeader() {
@@ -1204,7 +1218,7 @@ public class Header implements Cloneable {
 
     /**
      * Sets the entire header.
-     * 
+     *
      * @param aRawHeader the entire header
      */
     public void setRawHeader(String aRawHeader) {
@@ -1224,7 +1238,7 @@ public class Header implements Cloneable {
         if (databaseType == ProteinDatabase.UniProt) {
 
             // get the default simple header
-            return  iDescriptionShort + " (" + iDescriptionProteinName + ")";
+            return iDescriptionShort + " (" + iDescriptionProteinName + ")";
 
         } else if (iDescription != null) {
             return iDescription;
@@ -1274,7 +1288,7 @@ public class Header implements Cloneable {
                         || this.databaseType == ProteinDatabase.EnsemblGenomes) {
                     // FASTA entry with pipe ('|') separating core header from description.
                     result.append("|").append(this.iDescription);
-                } else if (this.databaseType == ProteinDatabase.NCBI) {
+                } else if (this.databaseType == ProteinDatabase.NCBI_old) {
                     // NCBI entry.
                     result.append("|");
                     // See if we have a foreign ID.
@@ -1596,7 +1610,8 @@ public class Header implements Cloneable {
                 return "UniProtKB";
             case Unknown:
                 return "Unknown";
-            case NCBI:
+            case NCBI_old:
+            case NCBI_new:
                 return "NCBI";
             case IPI:
                 return "IPI (deprecated)";
@@ -1684,7 +1699,7 @@ public class Header implements Cloneable {
             int proteinEvidenceStartIndex = header.iDescription.indexOf(" PE=");
 
             int taxonomyEndIndex;
-            
+
             // have to check if OX, GN or PE is in the header
             if (ncbiTaxIdStartIndex != -1) {
                 taxonomyEndIndex = ncbiTaxIdStartIndex;
@@ -1705,12 +1720,11 @@ public class Header implements Cloneable {
         }
     }
 
-
     /**
      * Return the UniProt protein evidence type as text.
      *
      * @param type the type of evidence
-     * 
+     *
      * @return the protein evidence type as text
      */
     public static String getProteinEvidencAsString(Integer type) {
@@ -1730,19 +1744,19 @@ public class Header implements Cloneable {
                 return null;
         }
     }
-    
+
     /**
      * Returns the header in generic format.
-     * 
+     *
      * @return the header in generic format
      */
     public String asGenericHeader() {
-        
+
         StringBuilder sb = new StringBuilder();
-        
+
         sb.append(">generic|").append(getAccession()).append("|").append(getDescription());
-        
+
         return sb.toString();
-        
+
     }
 }

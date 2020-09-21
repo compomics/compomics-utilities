@@ -510,7 +510,7 @@ public class MassCalc {
             Iterator iter = tMasses.keySet().iterator();
             while (iter.hasNext()) {
                 Object o = iter.next();
-                lMasses.put(o, new Double((String) tMasses.get(o)));
+                lMasses.put(o, Double.valueOf((String) tMasses.get(o)));
             }
 
         } catch (IOException ioe) {

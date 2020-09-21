@@ -128,12 +128,12 @@ public class DasFeature {
         this.type = iFeature.substring(iFeature.indexOf(">", iFeature.indexOf("<TYPE")) + 1, iFeature.indexOf("</TYPE"));
         this.methodId = iFeature.substring(iFeature.indexOf("id=", iFeature.indexOf("<METHOD")) + 4, iFeature.indexOf("\">", iFeature.indexOf("<METHOD")));
         this.method = iFeature.substring(iFeature.indexOf(">", iFeature.indexOf("<METHOD")) + 1, iFeature.indexOf("</METHOD"));
-        Integer strt = new Integer(iFeature.substring(iFeature.indexOf(">", iFeature.indexOf("<START")) + 1, iFeature.indexOf("</START")));
+        Integer strt = Integer.valueOf(iFeature.substring(iFeature.indexOf(">", iFeature.indexOf("<START")) + 1, iFeature.indexOf("</START")));
         this.start = strt;
-        Integer nd = new Integer(iFeature.substring(iFeature.indexOf(">", iFeature.indexOf("<END")) + 1, iFeature.indexOf("</END")));
+        Integer nd = Integer.valueOf(iFeature.substring(iFeature.indexOf(">", iFeature.indexOf("<END")) + 1, iFeature.indexOf("</END")));
         this.end = nd;
         if (iFeature.contains("score")) {
-            Double scr = new Double(iFeature.substring(iFeature.indexOf(">", iFeature.indexOf("<SCORE")) + 1, iFeature.indexOf("</SCORE")));
+            Double scr = Double.valueOf(iFeature.substring(iFeature.indexOf(">", iFeature.indexOf("<SCORE")) + 1, iFeature.indexOf("</SCORE")));
             this.score = scr;
         }
 

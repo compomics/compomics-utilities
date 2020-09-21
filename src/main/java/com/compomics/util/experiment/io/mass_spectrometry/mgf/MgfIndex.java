@@ -560,10 +560,10 @@ public class MgfIndex extends ExperimentObject implements Serializable {
                         if (tempRt.startsWith("PT") && tempRt.endsWith("S")) {
                             tempRt = tempRt.substring(2, tempRt.length() - 1);
                         }
-                        rt = new Double(tempRt);
+                        rt = Double.valueOf(tempRt);
                     } else if (rtWindow.length == 2) {
-                        rt1 = new Double(rtWindow[0]);
-                        rt2 = new Double(rtWindow[1]);
+                        rt1 = Double.valueOf(rtWindow[0]);
+                        rt2 = Double.valueOf(rtWindow[1]);
                     }
                 } catch (Exception e) {
                     System.out.println("An exception was thrown when trying to decode the retention time: " + spectrumTitle);

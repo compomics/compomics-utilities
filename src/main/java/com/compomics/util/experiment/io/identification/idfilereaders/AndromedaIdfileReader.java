@@ -196,7 +196,7 @@ public class AndromedaIdfileReader implements IdfileReader {
         Peptide peptide = new Peptide(sequence, modMatches.toArray(new ModificationMatch[modMatches.size()]), true);
 
         int charge = Integer.parseInt(temp[6]);
-        Double score = new Double(temp[1]);
+        Double score = Double.valueOf(temp[1]);
         Double p = FastMath.pow(10, -(score / 10));
         PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.andromeda.getIndex(), charge, p, fileName);
         peptideAssumption.setRawScore(score);

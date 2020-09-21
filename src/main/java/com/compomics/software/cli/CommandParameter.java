@@ -1,6 +1,5 @@
 package com.compomics.software.cli;
 
-import com.compomics.util.Util;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.io.File;
@@ -30,7 +29,7 @@ public class CommandParameter {
     public static boolean inIntegerRange(String argType, String arg, int minValue, int maxValue) {
         boolean valid = true;
         try {
-            int value = new Integer(arg);
+            int value = Integer.valueOf(arg);
             if (value < minValue || value > maxValue) {
                 System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Not in the range [" + minValue + " - " + maxValue + "]." + System.getProperty("line.separator"));
                 valid = false;
@@ -57,7 +56,7 @@ public class CommandParameter {
     public static boolean inDoubleRange(String argType, String arg, double minValue, double maxValue) {
         boolean valid = true;
         try {
-            double value = new Double(arg);
+            double value = Double.valueOf(arg);
             if (value < minValue || value > maxValue) {
                 System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Not in the range [" + minValue + " - " + maxValue + "]." + System.getProperty("line.separator"));
                 valid = false;
@@ -121,7 +120,7 @@ public class CommandParameter {
     public static boolean isBooleanInput(String argType, String arg) {
         boolean valid = true;
         try {
-            int value = new Integer(arg);
+            int value = Integer.valueOf(arg);
             if (value != 0 && value != 1) {
                 System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Found " + value + " where 0 or 1 was expected." + System.getProperty("line.separator"));
                 valid = false;
@@ -146,7 +145,7 @@ public class CommandParameter {
     public static boolean isInteger(String argType, String arg) {
         boolean valid = true;
         try {
-            new Integer(arg);
+            Integer.valueOf(arg);
         } catch (NumberFormatException e) {
             System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Not an integer value!" + System.getProperty("line.separator"));
             valid = false;
@@ -182,7 +181,7 @@ public class CommandParameter {
     public static boolean isDouble(String argType, String arg) {
         boolean valid = true;
         try {
-            new Double(arg);
+            Double.valueOf(arg);
         } catch (NumberFormatException e) {
             System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Not a floating value!" + System.getProperty("line.separator"));
             valid = false;
@@ -204,7 +203,7 @@ public class CommandParameter {
     public static boolean isPositiveDouble(String argType, String arg, boolean allowZero) {
         boolean valid = true;
         try {
-            double value = new Double(arg);
+            double value = Double.valueOf(arg);
             if (allowZero) {
                 if (value < 0) {
                     System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Negative value found." + System.getProperty("line.separator"));
@@ -235,7 +234,7 @@ public class CommandParameter {
     public static boolean isPositiveInteger(String argType, String arg, boolean allowZero) {
         boolean valid = true;
         try {
-            int value = new Integer(arg);
+            int value = Integer.valueOf(arg);
             if (allowZero) {
                 if (value < 0) {
                     System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Negative value found." + System.getProperty("line.separator"));

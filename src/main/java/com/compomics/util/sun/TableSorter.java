@@ -366,7 +366,7 @@ public class TableSorter extends TableMap {
                 } else {
                     if (column != -1) {
                         //logger.info("Sorting ...");
-                        int shiftPressed = e.getModifiers()&InputEvent.SHIFT_MASK;
+                        int shiftPressed = e.getModifiersEx()&InputEvent.SHIFT_DOWN_MASK;
                         boolean ascending = (shiftPressed == 0);
                         sorter.sortByColumn(column, ascending);
                     }

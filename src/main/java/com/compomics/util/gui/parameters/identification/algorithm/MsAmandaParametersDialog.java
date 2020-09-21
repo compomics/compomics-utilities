@@ -183,7 +183,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
 
         String input = maxRankTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxRank(new Integer(input));
+            result.setMaxRank(Integer.valueOf(input));
         }
 
         result.setMonoIsotopic(monoIsotopicCmb.getSelectedIndex() == 0);
@@ -197,21 +197,21 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
 
         input = minPeptideLengthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPeptideLength(new Integer(input));
+            result.setMinPeptideLength(Integer.valueOf(input));
         }
         input = maxPeptideLengthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxPeptideLength(new Integer(input));
+            result.setMaxPeptideLength(Integer.valueOf(input));
         }
 
         input = maxProteinsLoadedTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxLoadedProteins(new Integer(input));
+            result.setMaxLoadedProteins(Integer.valueOf(input));
         }
 
         input = maxSpectraLoadedTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxLoadedSpectra(new Integer(input));
+            result.setMaxLoadedSpectra(Integer.valueOf(input));
         }
         
         result.setOutputFormat((String) outputFormatCmb.getSelectedItem());
@@ -730,7 +730,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         // check if the max proteins in memory value is in the range (1000 - 500 000)
         if (valid) {
             try {
-                Integer value = new Integer(maxProteinsLoadedTxt.getText());
+                Integer value = Integer.valueOf(maxProteinsLoadedTxt.getText());
                 if (value < 1000 || value > 500000) {
                     if (showMessage && valid) {
                         JOptionPane.showMessageDialog(this, "Please select an integer in the range (1000 - 500 000) for Max Proteins Loaded into Memory.",
@@ -748,7 +748,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         // check if the max spectra in memory value is in the range (1000 - 500 000)
         if (valid) {
             try {
-                Integer value = new Integer(maxSpectraLoadedTxt.getText());
+                Integer value = Integer.valueOf(maxSpectraLoadedTxt.getText());
                 if (value < 1000 || value > 500000) {
                     if (showMessage && valid) {
                         JOptionPane.showMessageDialog(this, "Please select an integer in the range (1000 - 500 000) for Max Spectra Loaded into Memory.",

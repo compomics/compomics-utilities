@@ -5,8 +5,8 @@ import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 
 /**
@@ -60,7 +60,7 @@ public class ModificationsCLI {
         try {
             Options lOptions = new Options();
             ModificationsCLIParams.createOptionsCLI(lOptions);
-            BasicParser parser = new BasicParser();
+            DefaultParser parser = new DefaultParser();
             CommandLine line = parser.parse(lOptions, args);
 
             if (!ModificationsCLIInputBean.isValidStartup(line)) {

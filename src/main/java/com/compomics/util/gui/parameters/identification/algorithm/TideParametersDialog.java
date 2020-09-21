@@ -295,20 +295,20 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
 
         String input = minPepLengthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPeptideLength(new Integer(input));
+            result.setMinPeptideLength(Integer.valueOf(input));
         }
         input = maxPepLengthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxPeptideLength(new Integer(input));
+            result.setMaxPeptideLength(Integer.valueOf(input));
         }
 
         input = minPrecursorMassTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPrecursorMass(new Double(input));
+            result.setMinPrecursorMass(Double.valueOf(input));
         }
         input = maxPrecursorMassTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxPrecursorMass(new Double(input));
+            result.setMaxPrecursorMass(Double.valueOf(input));
         }
 
         result.setMonoisotopicPrecursor(monoPrecursorCmb.getSelectedIndex() == 0);
@@ -316,12 +316,12 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
 
         input = maxPtmsTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxVariableModificationsPerPeptide(new Integer(input));
+            result.setMaxVariableModificationsPerPeptide(Integer.valueOf(input));
         }
 
         input = maxVariablePtmsPerTypeTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxVariableModificationsPerTypePerPeptide(new Integer(input));
+            result.setMaxVariableModificationsPerTypePerPeptide(Integer.valueOf(input));
         }
 
         result.setDigestionType((String) enzymeTypeCmb.getSelectedItem());
@@ -332,7 +332,7 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
 
         input = decoySeedTxt.getText().trim();
         if (!input.equals("")) {
-            result.setDecoySeed(new Integer(input));
+            result.setDecoySeed(Integer.valueOf(input));
         }
 
         result.setComputeExactPValues(exactPvalueCombo.getSelectedIndex() == 0);
@@ -340,16 +340,16 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
 
         input = minSpectrumMzTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinSpectrumMz(new Double(input));
+            result.setMinSpectrumMz(Double.valueOf(input));
         }
         input = maxSpectrumMzTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxSpectrumMz(new Double(input));
+            result.setMaxSpectrumMz(Double.valueOf(input));
         }
 
         input = minPeaksTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinSpectrumPeaks(new Integer(input));
+            result.setMinSpectrumPeaks(Integer.valueOf(input));
         }
 
         result.setSpectrumCharges((String) chargesCombo.getSelectedItem());
@@ -357,7 +357,7 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
 
         input = removePrecursorPeakToleranceTxt.getText().trim();
         if (!input.equals("")) {
-            result.setRemovePrecursorTolerance(new Double(input));
+            result.setRemovePrecursorTolerance(Double.valueOf(input));
         }
 
         result.setUseFlankingPeaks(useFlankingCmb.getSelectedIndex() == 0);
@@ -365,17 +365,17 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
 
         input = mzBinWidthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMzBinWidth(new Double(input));
+            result.setMzBinWidth(Double.valueOf(input));
         }
 
         input = mzBinOffsetTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMzBinOffset(new Double(input));
+            result.setMzBinOffset(Double.valueOf(input));
         }
 
         input = numberMatchesTxt.getText().trim();
         if (!input.equals("")) {
-            result.setNumberOfSpectrumMatches(new Integer(input));
+            result.setNumberOfSpectrumMatches(Integer.valueOf(input));
         }
 
         int selectedIndex = outputFormatCombo.getSelectedIndex();

@@ -53,7 +53,7 @@ public class TestMassCalc extends TestCase {
             Iterator iter = p.keySet().iterator();
             while (iter.hasNext()) {
                 String formula = (String) iter.next();
-                double mass = (new Double(p.getProperty(formula))).doubleValue();
+                double mass = (Double.valueOf(p.getProperty(formula))).doubleValue();
                 Assert.assertEquals(mass, mc.calculateMass(formula), 1e-10);
             }
         } catch (UnknownElementMassException uem) {
@@ -116,9 +116,9 @@ public class TestMassCalc extends TestCase {
     public void testSelfDefinedHashMapList() {
         try {
             HashMap hm = new HashMap(3);
-            hm.put("R", new Double(4));
-            hm.put("W", new Double(2));
-            hm.put("X", new Double(1));
+            hm.put("R", Double.valueOf(4));
+            hm.put("W", Double.valueOf(2));
+            hm.put("X", Double.valueOf(1));
             MassCalc mc = new MassCalc(hm);
             Assert.assertEquals(7.0, mc.calculateMass("RWX"), 1e-10);
             Assert.assertEquals(5.0, mc.calculateMass("RX"), 1e-10);
@@ -148,7 +148,7 @@ public class TestMassCalc extends TestCase {
             Iterator it = elProps.keySet().iterator();
             while (it.hasNext()) {
                 Object o = it.next();
-                hm.put(o, new Double(elProps.getProperty((String) o)));
+                hm.put(o, Double.valueOf(elProps.getProperty((String) o)));
             }
 
             MassCalc mc = new MassCalc(MassCalc.MONOELEMENTS, hm);
@@ -161,7 +161,7 @@ public class TestMassCalc extends TestCase {
             it = aaProps.keySet().iterator();
             while (it.hasNext()) {
                 Object o = it.next();
-                hm.put(o, new Double(aaProps.getProperty((String) o)));
+                hm.put(o, Double.valueOf(aaProps.getProperty((String) o)));
             }
 
             mc = new MassCalc(MassCalc.MONOAA, hm);

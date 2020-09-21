@@ -921,7 +921,7 @@ public class FragmentIonTable extends JTable {
             String[] ionTypeSplit = ionType.split("_");
 
             String ion = ionTypeSplit[0];
-            Integer ionNumber = new Integer(ionTypeSplit[1]);
+            Integer ionNumber = Integer.valueOf(ionTypeSplit[1]);
 
             ArrayList<Double> allCurrentIonValues = values.get(ionType);
             SummaryStatistics stats = new SummaryStatistics();

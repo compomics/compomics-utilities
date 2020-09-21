@@ -67,7 +67,7 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
      */
     private boolean validateInput() {
         try {
-            Integer value = new Integer(memoryTxt.getText().trim());
+            Integer value = Integer.valueOf(memoryTxt.getText().trim());
 
             if (value <= 0) {
                 JOptionPane.showMessageDialog(this,
@@ -241,7 +241,7 @@ public class JavaMemoryDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         if (validateInput()) {
 
-            int newValue = new Integer(memoryTxt.getText().trim());
+            int newValue = Integer.valueOf(memoryTxt.getText().trim());
 
             if (newValue != javaHomeOrMemoryDialogParent.getUtilitiesUserParameters().getMemoryParameter()) {
 

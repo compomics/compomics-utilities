@@ -145,7 +145,7 @@ public class MatchesImportParametersDialog extends javax.swing.JDialog {
         try {
             String input = nAAminTxt.getText();
             if (!input.equals("")) {
-                new Integer(input);
+                Integer.valueOf(input);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please verify the input for the minimal peptide length.",
@@ -156,7 +156,7 @@ public class MatchesImportParametersDialog extends javax.swing.JDialog {
         try {
             String input = nAAmaxTxt.getText();
             if (!input.equals("")) {
-                new Integer(input);
+                Integer.valueOf(input);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please verify the input for the maximal peptide length.",
@@ -167,7 +167,7 @@ public class MatchesImportParametersDialog extends javax.swing.JDialog {
         try {
             String input = precDevTxt.getText();
             if (!input.equals("")) {
-                new Double(input);
+                Double.valueOf(input);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please verify the input for the precursor maximal deviation.",
@@ -179,7 +179,7 @@ public class MatchesImportParametersDialog extends javax.swing.JDialog {
         try {
             String input = minMissedCleavagesTxt.getText();
             if (!input.equals("")) {
-                minCleavages = new Integer(input);
+                minCleavages = Integer.valueOf(input);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please verify the input for the minimum number of missed cleavages.",
@@ -191,7 +191,7 @@ public class MatchesImportParametersDialog extends javax.swing.JDialog {
         try {
             String input = maxMissedCleavagesTxt.getText();
             if (!input.equals("")) {
-                maxCleavages = new Integer(input);
+                maxCleavages = Integer.valueOf(input);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please verify the input for the maximum number of missed cleavages.",
@@ -209,7 +209,7 @@ public class MatchesImportParametersDialog extends javax.swing.JDialog {
         try {
             String input = minIsotopesTxt.getText();
             if (!input.equals("")) {
-                minIsotopes = new Integer(input);
+                minIsotopes = Integer.valueOf(input);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please verify the input for the minimum number of isotopes.",
@@ -221,7 +221,7 @@ public class MatchesImportParametersDialog extends javax.swing.JDialog {
         try {
             String input = maxIsotopesTxt.getText();
             if (!input.equals("")) {
-                maxIsotopes = new Integer(input);
+                maxIsotopes = Integer.valueOf(input);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Please verify the input for the maximum number of isotopes.",
@@ -257,19 +257,19 @@ public class MatchesImportParametersDialog extends javax.swing.JDialog {
         int nAAmin = -1;
         String input = nAAminTxt.getText();
         if (!input.equals("")) {
-            nAAmin = new Integer(input);
+            nAAmin = Integer.valueOf(input);
         }
 
         int nAAmax = -1;
         input = nAAmaxTxt.getText();
         if (!input.equals("")) {
-            nAAmax = new Integer(input);
+            nAAmax = Integer.valueOf(input);
         }
 
         double precDev = -1;
         input = precDevTxt.getText();
         if (!input.equals("")) {
-            precDev = new Double(input);
+            precDev = Double.valueOf(input);
         }
 
         boolean ppm = unitCmb.getSelectedIndex() == 0;
@@ -278,25 +278,25 @@ public class MatchesImportParametersDialog extends javax.swing.JDialog {
         Integer minMissedCleavages = null;
         input = minMissedCleavagesTxt.getText();
         if (!input.equals("")) {
-            minMissedCleavages = new Integer(input);
+            minMissedCleavages = Integer.valueOf(input);
         }
 
         Integer maxMissedCleavages = null;
         input = maxMissedCleavagesTxt.getText();
         if (!input.equals("")) {
-            maxMissedCleavages = new Integer(input);
+            maxMissedCleavages = Integer.valueOf(input);
         }
 
         Integer minIsotopes = null;
         input = minIsotopesTxt.getText();
         if (!input.equals("")) {
-            minIsotopes = new Integer(input);
+            minIsotopes = Integer.valueOf(input);
         }
 
         Integer maxIsotopes = null;
         input = maxIsotopesTxt.getText();
         if (!input.equals("")) {
-            maxIsotopes = new Integer(input);
+            maxIsotopes = Integer.valueOf(input);
         }
 
         PeptideAssumptionFilter idFilter = new PeptideAssumptionFilter(

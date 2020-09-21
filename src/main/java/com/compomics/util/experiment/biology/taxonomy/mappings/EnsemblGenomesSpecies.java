@@ -113,7 +113,7 @@ public class EnsemblGenomesSpecies {
 
                     if (line.length() > 0) {
                         String[] elements = line.split(SEPARATOR);
-                        Integer id = new Integer(elements[3].trim());
+                        Integer id = Integer.valueOf(elements[3].trim());
                         String name = elements[0].trim();
                         String division = elements[2].trim();
                         String assembly = elements[4].trim();

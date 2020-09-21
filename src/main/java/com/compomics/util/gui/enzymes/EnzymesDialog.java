@@ -739,7 +739,7 @@ public class EnzymesDialog extends javax.swing.JDialog {
                     return getValueAt(i, columnIndex).getClass();
                 }
             }
-            return (new Double(0.0)).getClass();
+            return (Double.valueOf(0.0)).getClass();
         }
 
         @Override

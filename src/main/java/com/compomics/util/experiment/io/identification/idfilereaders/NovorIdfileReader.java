@@ -314,21 +314,21 @@ public class NovorIdfileReader implements IdfileReader {
                                 String currentMod = peptideSequenceWithMods.substring(modStart, modEnd);
 
                                 if (currentMod.toLowerCase().startsWith("n-term|")) {
-                                    int currentModAsInt = new Integer(currentMod.substring("n-term|".length()));
+                                    int currentModAsInt = Integer.valueOf(currentMod.substring("n-term|".length()));
                                     if (variableModificationsMap.containsKey(currentModAsInt)) {
                                         utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), 1));
                                     } else if (novorParameters.getNovorPtmMap() == null) {
                                         throw new IllegalArgumentException("Unknown PTM! Please check the Novor results file.");
                                     }
                                 } else if (currentMod.toLowerCase().startsWith("c-term|")) {
-                                    int currentModAsInt = new Integer(currentMod.substring("c-term|".length()));
+                                    int currentModAsInt = Integer.valueOf(currentMod.substring("c-term|".length()));
                                     if (variableModificationsMap.containsKey(currentModAsInt)) {
                                         utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), peptideSequence.length()));
                                     } else if (novorParameters.getNovorPtmMap() == null) {
                                         throw new IllegalArgumentException("Unknown PTM! Please check the Novor results file.");
                                     }
                                 } else {
-                                    int currentModAsInt = new Integer(currentMod);
+                                    int currentModAsInt = Integer.valueOf(currentMod);
                                     if (variableModificationsMap.containsKey(currentModAsInt)) {
                                         utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), peptideSequence.length()));
                                     } else if (novorParameters.getNovorPtmMap() == null) {

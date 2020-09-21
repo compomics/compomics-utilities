@@ -4,6 +4,7 @@ import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import java.awt.Color;
 import java.io.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -310,7 +311,7 @@ public class Util {
             double d,
             int places
     ) {
-        return (new BigDecimal(String.valueOf(d)).setScale(places, BigDecimal.ROUND_FLOOR)).doubleValue();
+        return (new BigDecimal(String.valueOf(d)).setScale(places, RoundingMode.FLOOR)).doubleValue();
     }
 
     /**

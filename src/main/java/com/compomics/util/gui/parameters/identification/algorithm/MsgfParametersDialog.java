@@ -163,15 +163,15 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
 
         String input = minPepLengthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPeptideLength(new Integer(input));
+            result.setMinPeptideLength(Integer.valueOf(input));
         }
         input = maxPepLengthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxPeptideLength(new Integer(input));
+            result.setMaxPeptideLength(Integer.valueOf(input));
         }
         input = numberMatchesTxt.getText().trim();
         if (!input.equals("")) {
-            result.setNumberOfSpectrumMarches(new Integer(input));
+            result.setNumberOfSpectrumMarches(Integer.valueOf(input));
         }
 
         result.setAdditionalOutput(additionalOutputCmb.getSelectedIndex() == 0);
@@ -179,12 +179,12 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         result.setNumberTolerableTermini(terminiCmb.getSelectedIndex());
         input = maxPtmsTxt.getText().trim();
         if (!input.equals("")) {
-            result.setNumberOfModificationsPerPeptide(new Integer(input));
+            result.setNumberOfModificationsPerPeptide(Integer.valueOf(input));
         }
         
         input = numberOfTasksTxt.getText().trim();
         if (!input.equals("") && !numberOfTasksTxt.getText().trim().equalsIgnoreCase("default")) {
-            result.setNumberOfTasks(new Integer(input));
+            result.setNumberOfTasks(Integer.valueOf(input));
         } else {
             result.setNumberOfTasks(null);
         }

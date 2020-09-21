@@ -255,7 +255,7 @@ public class ReporterMethodFactory extends ExperimentObject {
             }
             if (parser.getName().equals("monoisotopicMz")) {
                 type = parser.next();
-                Double monoisotopicMass = new Double(parser.getText().trim());
+                Double monoisotopicMass = Double.valueOf(parser.getText().trim());
                 reporterIon = new ReporterIon(reagentName, monoisotopicMass - ElementaryIon.proton.getTheoreticMass());
 
                 // minus 2
@@ -274,7 +274,7 @@ public class ReporterMethodFactory extends ExperimentObject {
             reagent.setReporterIon(reporterIon);
 
             type = parser.next();
-            Double correctionFactor = new Double(parser.getText().trim());
+            Double correctionFactor = Double.valueOf(parser.getText().trim());
             reagent.setMinus2(correctionFactor);
 
             // minus 1
@@ -285,7 +285,7 @@ public class ReporterMethodFactory extends ExperimentObject {
                 }
             }
             type = parser.next();
-            correctionFactor = new Double(parser.getText().trim());
+            correctionFactor = Double.valueOf(parser.getText().trim());
             reagent.setMinus1(correctionFactor);
 
             // ref
@@ -296,7 +296,7 @@ public class ReporterMethodFactory extends ExperimentObject {
                 }
             }
             type = parser.next();
-            correctionFactor = new Double(parser.getText().trim());
+            correctionFactor = Double.valueOf(parser.getText().trim());
             reagent.setRef(correctionFactor);
 
             // plus 1
@@ -307,7 +307,7 @@ public class ReporterMethodFactory extends ExperimentObject {
                 }
             }
             type = parser.next();
-            correctionFactor = new Double(parser.getText().trim());
+            correctionFactor = Double.valueOf(parser.getText().trim());
             reagent.setPlus1(correctionFactor);
 
             // plus 2
@@ -318,7 +318,7 @@ public class ReporterMethodFactory extends ExperimentObject {
                 }
             }
             type = parser.next();
-            correctionFactor = new Double(parser.getText().trim());
+            correctionFactor = Double.valueOf(parser.getText().trim());
             reagent.setPlus2(correctionFactor);
 
             // add the reagent to the list

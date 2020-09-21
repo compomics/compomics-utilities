@@ -1162,7 +1162,7 @@ public class IdentificationFeaturesGenerator {
 
             }
 
-            if (new Double(result).isInfinite() || new Double(result).isNaN()) {
+            if (Double.valueOf(result).isInfinite() || Double.valueOf(result).isNaN()) {
 
                 result = 0.0;
 
@@ -1194,7 +1194,7 @@ public class IdentificationFeaturesGenerator {
 
             }
 
-            if (new Double(result).isInfinite() || new Double(result).isNaN()) {
+            if (Double.valueOf(result).isInfinite() || Double.valueOf(result).isNaN()) {
 
                 result = 0.0;
 

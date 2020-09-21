@@ -484,8 +484,8 @@ public class UtilitiesDemo extends javax.swing.JFrame {
                     throw new IOException("Error reading chromatogram file - incorrect number of peak paramaters!");
                 }
 
-                xValuesAsArray.add(new Double(peakDetails[0]));
-                yValuesAsArray.add(new Double(peakDetails[1]));
+                xValuesAsArray.add(Double.valueOf(peakDetails[0]));
+                yValuesAsArray.add(Double.valueOf(peakDetails[1]));
 
                 currentLine = b.readLine();
             }

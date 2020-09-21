@@ -342,11 +342,11 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         tempMetaMorpheusParameters.setMinAllowedIntensityRatioToBasePeak(Double.valueOf(input));
         input = windowWidthThompsonTxt.getText().trim();
         if (!input.equals("")) {
-            tempMetaMorpheusParameters.setWindowWidthThomsons(new Double(input));
+            tempMetaMorpheusParameters.setWindowWidthThomsons(Double.valueOf(input));
         }
         input = numberOfWindowsTxt.getText().trim();
         if (!input.equals("")) {
-            tempMetaMorpheusParameters.setNumberOfWindows(new Integer(input));
+            tempMetaMorpheusParameters.setNumberOfWindows(Integer.valueOf(input));
         }
         tempMetaMorpheusParameters.setNormalizePeaksAcrossAllWindows(normalizePeaksAcrossAllWindowsCmb.getSelectedIndex() == 0);
         tempMetaMorpheusParameters.setModPeptidesAreDifferent(modifiedPeptidesAreDifferentCmb.getSelectedIndex() == 0);

@@ -177,30 +177,30 @@ public class MyriMatchParametersDialog extends javax.swing.JDialog implements Al
 
         String input = minPepLengthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPeptideLength(new Integer(input));
+            result.setMinPeptideLength(Integer.valueOf(input));
         }
         input = maxPepLengthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxPeptideLength(new Integer(input));
+            result.setMaxPeptideLength(Integer.valueOf(input));
         }
 
         input = minPrecursorMassTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPrecursorMass(new Double(input));
+            result.setMinPrecursorMass(Double.valueOf(input));
         }
         input = maxPrecursorMassTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxPrecursorMass(new Double(input));
+            result.setMaxPrecursorMass(Double.valueOf(input));
         }
 
         input = numberMatchesTxt.getText().trim();
         if (!input.equals("")) {
-            result.setNumberOfSpectrumMatches(new Integer(input));
+            result.setNumberOfSpectrumMatches(Integer.valueOf(input));
         }
 
         input = maxPtmsTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxDynamicMods(new Integer(input));
+            result.setMaxDynamicMods(Integer.valueOf(input));
         }
 
         result.setFragmentationRule((String) fragmentationMethodCmb.getSelectedItem());
@@ -210,27 +210,27 @@ public class MyriMatchParametersDialog extends javax.swing.JDialog implements Al
 
         input = ticCutoffPercentageTxt.getText().trim();
         if (!input.equals("")) {
-            result.setTicCutoffPercentage(new Double(input));
+            result.setTicCutoffPercentage(Double.valueOf(input));
         }
 
         input = numIntensityClassesTxt.getText().trim();
         if (!input.equals("")) {
-            result.setNumIntensityClasses(new Integer(input));
+            result.setNumIntensityClasses(Integer.valueOf(input));
         }
 
         input = classSizeMultiplierTxt.getText().trim();
         if (!input.equals("")) {
-            result.setClassSizeMultiplier(new Integer(input));
+            result.setClassSizeMultiplier(Integer.valueOf(input));
         }
 
         input = numbBatchesTxt.getText().trim();
         if (!input.equals("")) {
-            result.setNumberOfBatches(new Integer(input));
+            result.setNumberOfBatches(Integer.valueOf(input));
         }
 
         input = maxPeakCountTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxPeakCount(new Integer(input));
+            result.setMaxPeakCount(Integer.valueOf(input));
         }
 
         result.setOutputFormat((String) outputFormatCmb.getSelectedItem());

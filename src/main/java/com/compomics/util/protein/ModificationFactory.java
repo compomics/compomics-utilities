@@ -576,7 +576,7 @@ public class ModificationFactory {
             } catch (NumberFormatException nfe) {
                 throw new IOException("The content of the monoisotopicmassdeltas row could not be parsed from (a String + '_' + a double)!");
             }
-            mappings.put(residue, new Double(mono));
+            mappings.put(residue, Double.valueOf(mono));
             keys.add(residue);
         }
 

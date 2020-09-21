@@ -1683,9 +1683,9 @@ public class Header extends DbObject implements Cloneable {
             int evidenceEndIndex = header.iDescription.indexOf(" ", evidenceStartIndex);
 
             if (evidenceEndIndex != -1) {
-                header.iProteinEvidence = new Integer(header.iDescription.substring(evidenceStartIndex, evidenceEndIndex));
+                header.iProteinEvidence = Integer.valueOf(header.iDescription.substring(evidenceStartIndex, evidenceEndIndex));
             } else {
-                header.iProteinEvidence = new Integer(header.iDescription.substring(evidenceStartIndex));
+                header.iProteinEvidence = Integer.valueOf(header.iDescription.substring(evidenceStartIndex));
             }
 
             // http://www.uniprot.org/manual/protein_existence

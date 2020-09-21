@@ -5,8 +5,8 @@ import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 
 /**
@@ -62,7 +62,7 @@ public class EnzymesCLI {
         try {
             Options lOptions = new Options();
             EnzymesCLIParams.createOptionsCLI(lOptions);
-            BasicParser parser = new BasicParser();
+            DefaultParser parser = new DefaultParser();
             CommandLine line = parser.parse(lOptions, args);
 
             if (!EnzymesCLIInputBean.isValidStartup(line)) {

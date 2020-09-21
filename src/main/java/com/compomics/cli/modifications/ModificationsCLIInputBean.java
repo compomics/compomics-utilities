@@ -76,8 +76,8 @@ public class ModificationsCLIInputBean {
         if (aLine.hasOption(ModificationsCLIParams.NAME.id)) {
 
             String modName = aLine.getOptionValue(ModificationsCLIParams.NAME.id);
-            int modType = new Integer(aLine.getOptionValue(ModificationsCLIParams.TYPE.id));
-            int modCategory = new Integer(aLine.getOptionValue(ModificationsCLIParams.CATEGORY.id));
+            int modType = Integer.valueOf(aLine.getOptionValue(ModificationsCLIParams.TYPE.id));
+            int modCategory = Integer.valueOf(aLine.getOptionValue(ModificationsCLIParams.CATEGORY.id));
 
             AtomChain atomChainAdded = null;
             if (aLine.hasOption(ModificationsCLIParams.COMPOSITION_ADDED.id)) {
@@ -98,7 +98,7 @@ public class ModificationsCLIInputBean {
                 Integer target = 0;
                 if (aLine.hasOption(ModificationsCLIParams.PATTERN_INDEX.id)) {
                     arg = aLine.getOptionValue(ModificationsCLIParams.PATTERN_INDEX.id);
-                    target = new Integer(arg);
+                    target = Integer.valueOf(arg);
                 }
                 aminoAcidPattern.setTarget(target);
             }
@@ -249,7 +249,7 @@ public class ModificationsCLIInputBean {
             if (!CommandParameter.isPositiveInteger(ModificationsCLIParams.TYPE.id, arg, true)) {
                 return false;
             }
-            Integer type = new Integer(arg);
+            Integer type = Integer.valueOf(arg);
             if (type >= ModificationType.values().length || type < 0) {
                 System.out.println(System.getProperty("line.separator")
                         + "No modification type found for index " + type + "."

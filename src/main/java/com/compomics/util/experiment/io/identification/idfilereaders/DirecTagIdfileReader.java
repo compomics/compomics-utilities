@@ -213,7 +213,7 @@ public class DirecTagIdfileReader implements IdfileReader {
 
                     try {
 
-                        taggingTimeSeconds = new Double(line);
+                        taggingTimeSeconds = Double.valueOf(line);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -226,7 +226,7 @@ public class DirecTagIdfileReader implements IdfileReader {
 
                     try {
 
-                        nProcessingNode = new Integer(line);
+                        nProcessingNode = Integer.valueOf(line);
 
                     } catch (Exception e) {
                         // ignore
@@ -527,7 +527,7 @@ public class DirecTagIdfileReader implements IdfileReader {
         if (cGapIndex == null) {
             throw new IllegalArgumentException("Column cTerminusMass not found.");
         }
-        Double cGap = new Double(components[cGapIndex]);
+        Double cGap = Double.valueOf(components[cGapIndex]);
         if (cGap > 0 && cGap < cTermCorrection) {
             throw new IllegalArgumentException("Incompatible c-term gap " + cGap);
         } else if (cGap > 0) {
@@ -537,7 +537,7 @@ public class DirecTagIdfileReader implements IdfileReader {
         if (nGapIndex == null) {
             throw new IllegalArgumentException("Column nTerminusMass not found.");
         }
-        Double nGap = new Double(components[nGapIndex]);
+        Double nGap = Double.valueOf(components[nGapIndex]);
         Integer tagIndex = tagLineContent.get("Tag");
         if (tagIndex == null) {
             throw new IllegalArgumentException("Column Tag not found.");
@@ -554,7 +554,7 @@ public class DirecTagIdfileReader implements IdfileReader {
                 try {
                     // modified residue
                     String modIndexString = charAtI + "";
-                    int modIndex = new Integer(modIndexString);
+                    int modIndex = Integer.valueOf(modIndexString);
                     String utilitiesPtm = direcTagParameters.getUtilitiesModificationName(modIndex);
                     modificationMatches.put(i + 1, new ModificationMatch(utilitiesPtm, i + 1));
                     residues.append(dynamicModsResidues.get(modIndexString.charAt(0)));
@@ -574,13 +574,13 @@ public class DirecTagIdfileReader implements IdfileReader {
         if (chargeIndex == null) {
             throw new IllegalArgumentException("Column TagChargeState not found.");
         }
-        int charge = new Integer(components[chargeIndex]);
+        int charge = Integer.valueOf(components[chargeIndex]);
 
         Integer eValueIndex = tagLineContent.get("Total");
         if (eValueIndex == null) {
             throw new IllegalArgumentException("Column Total not found.");
         }
-        double eValue = new Double(components[eValueIndex]);
+        double eValue = Double.valueOf(components[eValueIndex]);
 
         return new TagAssumption(Advocate.direcTag.getIndex(), rank, tag, charge, eValue);
     }

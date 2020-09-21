@@ -37,12 +37,6 @@ import javax.swing.table.TableCellRenderer;
 public abstract class SelfUpdatingTableModel extends DefaultTableModel {
 
     /**
-     * Empty default constructor
-     */
-    public SelfUpdatingTableModel() {
-    }
-
-    /**
      * The view start index of the rows being loaded.
      */
     private int rowStartLoading = -1;

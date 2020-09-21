@@ -169,7 +169,7 @@ public class IonFactory {
      * modification parameters
      * @param sequenceProvider a protein sequence provider
      * @param modificationsSequenceMatchingParameters the sequence matching
-     * paramters to use for modifications
+     * parameters to use for modifications
      *
      * @return the expected fragment ions
      */
@@ -234,7 +234,16 @@ public class IonFactory {
 
         HashSet<String> allModifications = new HashSet<>(1);
 
-        String[] variableModNames = peptide.getIndexedVariableModifications();
+        String[] variableModNames = null;
+        
+        // @TODO: quick fix that ought to be replaced when the ptm scoring code had been rewritten
+        try {
+            variableModNames = peptide.getIndexedVariableModifications();
+        } catch (IllegalArgumentException e) {
+            // illegal peptide, i.e. more than one modification on the same site
+            return result;
+        }
+
         Modification[] variableModifications = new Modification[variableModNames.length];
 
         String[] fixedModNames = peptide.getFixedModifications(

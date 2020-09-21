@@ -54,7 +54,7 @@ public class ModificationScoring extends ExperimentObject {
      * The separator used to separate locations in the modification location
      * key.
      */
-    public static final String separator = "|";
+    public static final String SEPARATOR = "|";
     /**
      * The retained PTM site assignment.
      */
@@ -90,12 +90,14 @@ public class ModificationScoring extends ExperimentObject {
      * @return a set of sites where a score is available
      */
     public Set<Integer> getScoredSites() {
+
         Set<Integer> dSites = getDSites();
         Set<Integer> pSites = getProbabilisticSites();
         Set<Integer> result = new HashSet<>(dSites.size() + pSites.size());
         result.addAll(dSites);
         result.addAll(pSites);
         return result;
+
     }
 
     /**
@@ -105,10 +107,13 @@ public class ModificationScoring extends ExperimentObject {
      * @param score the delta score
      */
     public void setDeltaScore(int site, double score) {
+
         if (deltaScoresAtAA == null) {
             deltaScoresAtAA = new HashMap<>(1);
         }
+
         deltaScoresAtAA.put(site, score);
+
     }
 
     /**
@@ -118,15 +123,19 @@ public class ModificationScoring extends ExperimentObject {
      * @return the attached delta score. 0 if not found.
      */
     public double getDeltaScore(int site) {
+
         if (deltaScoresAtAA == null) {
             return 0.0;
         }
+
         Double score = deltaScoresAtAA.get(site);
+
         if (score == null) {
             return 0.0;
         } else {
             return score;
         }
+
     }
 
     /**
@@ -136,10 +145,13 @@ public class ModificationScoring extends ExperimentObject {
      * @param score the delta score
      */
     public void setProbabilisticScore(int site, double score) {
+
         if (probabilisticScoresAtAA == null) {
             probabilisticScoresAtAA = new HashMap<>(1);
         }
+
         probabilisticScoresAtAA.put(site, score);
+
     }
 
     /**
@@ -149,15 +161,19 @@ public class ModificationScoring extends ExperimentObject {
      * @return the attached probabilistic score. 0 if not found.
      */
     public double getProbabilisticScore(int site) {
+
         if (probabilisticScoresAtAA == null) {
             return 0.0;
         }
+
         Double score = probabilisticScoresAtAA.get(site);
+
         if (score == null) {
             return 0.0;
         } else {
             return score;
         }
+
     }
 
     /**
@@ -166,10 +182,13 @@ public class ModificationScoring extends ExperimentObject {
      * @return a set of sites where a probabilistic score is available
      */
     public Set<Integer> getProbabilisticSites() {
+
         if (probabilisticScoresAtAA == null) {
             return new HashSet<>(0);
         }
+
         return probabilisticScoresAtAA.keySet();
+
     }
 
     /**
@@ -180,29 +199,43 @@ public class ModificationScoring extends ExperimentObject {
      * @return a list of sites where the probabilistic score was used
      */
     public ArrayList<Integer> getOrderedProbabilisticSites() {
+
         HashMap<Double, ArrayList<Integer>> siteMap = new HashMap<>(1);
+
         if (probabilisticScoresAtAA != null) {
+
             for (int site : probabilisticScoresAtAA.keySet()) {
+
                 double score = probabilisticScoresAtAA.get(site);
                 ArrayList<Integer> sitesAtAA = siteMap.get(score);
+
                 if (sitesAtAA == null) {
                     sitesAtAA = new ArrayList<>();
                     siteMap.put(score, sitesAtAA);
                 }
+
                 sitesAtAA.add(site);
             }
+
         }
+
         ArrayList<Double> scores = new ArrayList<>(siteMap.keySet());
         Collections.sort(scores, Collections.reverseOrder());
         ArrayList<Integer> result = new ArrayList<>();
+
         for (double score : scores) {
+
             ArrayList<Integer> sites = siteMap.get(score);
+
             if (sites.size() > 2) {
                 Collections.shuffle(sites);
             }
+
             result.addAll(sites);
         }
+
         return result;
+
     }
 
     /**
@@ -211,10 +244,13 @@ public class ModificationScoring extends ExperimentObject {
      * @return a set of sites where a D-score is available
      */
     public Set<Integer> getDSites() {
+
         if (deltaScoresAtAA == null) {
             return new HashSet<>(0);
         }
+
         return deltaScoresAtAA.keySet();
+
     }
 
     /**
@@ -225,61 +261,89 @@ public class ModificationScoring extends ExperimentObject {
      * @return a list of sites where the D-score was used
      */
     public ArrayList<Integer> getOrderedDSites() {
+
         HashMap<Double, ArrayList<Integer>> siteMap = new HashMap<>(1);
+
         if (deltaScoresAtAA != null) {
+
             for (int site : deltaScoresAtAA.keySet()) {
+
                 double score = deltaScoresAtAA.get(site);
                 ArrayList<Integer> sitesAtAA = siteMap.get(score);
+
                 if (sitesAtAA == null) {
                     sitesAtAA = new ArrayList<>();
                     siteMap.put(score, sitesAtAA);
                 }
+
                 sitesAtAA.add(site);
             }
         }
+
         ArrayList<Double> scores = new ArrayList<>(siteMap.keySet());
         Collections.sort(scores, Collections.reverseOrder());
         ArrayList<Integer> result = new ArrayList<>();
+
         for (double score : scores) {
+
             ArrayList<Integer> sites = siteMap.get(score);
+
             if (sites.size() > 2) {
                 Collections.shuffle(sites);
             }
+
             result.addAll(sites);
         }
+
         return result;
+
     }
 
     /**
-     * Adds all scorings from another score if better.
+     * Adds all scores from another score if better.
      *
      * @param anotherScore another score
      */
     public void addAll(ModificationScoring anotherScore) {
+
         for (int position : anotherScore.getDSites()) {
+
             double newScore = anotherScore.getDeltaScore(position);
+
             if (getDeltaScore(position) < newScore) {
                 setDeltaScore(position, newScore);
             }
+
         }
+
         for (int position : anotherScore.getProbabilisticSites()) {
+
             double newScore = anotherScore.getProbabilisticScore(position);
+
             if (getProbabilisticScore(position) < newScore) {
                 setProbabilisticScore(position, newScore);
             }
+
         }
+
         HashMap<Integer, Integer> map = anotherScore.getPtmLocationAtAA();
+
         if (ptmLocationAtAA == null) {
             ptmLocationAtAA = new HashMap<>(map.size());
         }
+
         for (int otherSite : map.keySet()) {
+
             Integer currentSiteConfidence = ptmLocationAtAA.get(otherSite);
+
             if (currentSiteConfidence == null) {
                 ptmLocationAtAA.put(otherSite, map.get(otherSite));
             } else {
                 ptmLocationAtAA.put(otherSite, Math.max(currentSiteConfidence, map.get(otherSite)));
             }
+
         }
+
     }
 
     /**
@@ -290,10 +354,13 @@ public class ModificationScoring extends ExperimentObject {
      * @param confidenceLevel the confidence level
      */
     public void setSiteConfidence(int site, int confidenceLevel) {
+
         if (ptmLocationAtAA == null) {
             ptmLocationAtAA = new HashMap<>(1);
         }
+
         ptmLocationAtAA.put(site, confidenceLevel);
+
     }
 
     /**
@@ -302,10 +369,13 @@ public class ModificationScoring extends ExperimentObject {
      * @return the map of the localization
      */
     public HashMap<Integer, Integer> getPtmLocationAtAA() {
+
         if (ptmLocationAtAA == null) {
             return new HashMap<>(0);
         }
+
         return ptmLocationAtAA;
+
     }
 
     /**
@@ -314,10 +384,13 @@ public class ModificationScoring extends ExperimentObject {
      * @return the sites of all localized PTMs
      */
     public Set<Integer> getAllPtmLocations() {
+
         if (ptmLocationAtAA == null) {
             return new HashSet<>(0);
         }
+
         return ptmLocationAtAA.keySet();
+
     }
 
     /**
@@ -326,9 +399,11 @@ public class ModificationScoring extends ExperimentObject {
      * @return sites of all localized PTMs ordered increasingly
      */
     public ArrayList<Integer> getOrderedPtmLocations() {
+
         ArrayList<Integer> result = new ArrayList<>(getAllPtmLocations());
         Collections.sort(result);
         return result;
+
     }
 
     /**
@@ -340,14 +415,19 @@ public class ModificationScoring extends ExperimentObject {
      * fields
      */
     public int getLocalizationConfidence(int site) {
+
         if (ptmLocationAtAA == null) {
             return NOT_FOUND;
         }
+
         Integer confidence = ptmLocationAtAA.get(site);
+
         if (confidence == null) {
             confidence = NOT_FOUND;
         }
+
         return confidence;
+
     }
 
     /**
@@ -356,16 +436,23 @@ public class ModificationScoring extends ExperimentObject {
      * @return the minimal confidence among the PTM sites of this scoring
      */
     public int getMinimalLocalizationConfidence() {
+
         if (ptmLocationAtAA == null || ptmLocationAtAA.isEmpty()) {
             return NOT_FOUND;
         }
+
         int minConfidence = VERY_CONFIDENT;
+
         for (int confidence : ptmLocationAtAA.values()) {
+
             if (confidence < minConfidence) {
                 confidence = minConfidence;
             }
+
         }
+
         return minConfidence;
+
     }
 
     /**
@@ -374,10 +461,12 @@ public class ModificationScoring extends ExperimentObject {
      * @return the confidently and very confidently localized PTMs
      */
     public ArrayList<Integer> getConfidentPtmLocations() {
+
         ArrayList<Integer> result = new ArrayList<>();
         result.addAll(getPtmLocations(CONFIDENT));
         result.addAll(getPtmLocations(VERY_CONFIDENT));
         return result;
+
     }
 
     /**
@@ -386,11 +475,13 @@ public class ModificationScoring extends ExperimentObject {
      * @return the not found, randomly or doubtfully localized PTMs
      */
     public ArrayList<Integer> getSecondaryPtmLocations() {
+
         ArrayList<Integer> result = new ArrayList<>();
         result.addAll(getPtmLocations(NOT_FOUND));
         result.addAll(getPtmLocations(RANDOM));
         result.addAll(getPtmLocations(DOUBTFUL));
         return result;
+
     }
 
     /**
@@ -402,15 +493,22 @@ public class ModificationScoring extends ExperimentObject {
      * @return the PTM locations at the given confidence level
      */
     public ArrayList<Integer> getPtmLocations(int confidenceLevel) {
+
         ArrayList<Integer> result = new ArrayList<>(1);
+
         if (ptmLocationAtAA != null) {
+
             for (int site : ptmLocationAtAA.keySet()) {
+
                 if (confidenceLevel == ptmLocationAtAA.get(site)) {
                     result.add(site);
                 }
             }
+
         }
+
         return result;
+
     }
 
     /**
@@ -419,6 +517,7 @@ public class ModificationScoring extends ExperimentObject {
      * @return an array with all confidence levels as string
      */
     public static String[] getPossibleConfidenceLevels() {
+
         String[] result = new String[5];
         result[0] = "Not Found";
         result[1] = "Random";
@@ -426,6 +525,7 @@ public class ModificationScoring extends ExperimentObject {
         result[3] = "Confident";
         result[4] = "Very Confident";
         return result;
+
     }
 
     /**
@@ -435,6 +535,7 @@ public class ModificationScoring extends ExperimentObject {
      * @return the corresponding string
      */
     public static String getConfidenceLevel(int index) {
+
         switch (index) {
             case -1:
                 return "Not Found";
@@ -449,5 +550,7 @@ public class ModificationScoring extends ExperimentObject {
             default:
                 return "";
         }
+
     }
+
 }

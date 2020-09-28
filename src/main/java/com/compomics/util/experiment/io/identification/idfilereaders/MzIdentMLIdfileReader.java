@@ -715,7 +715,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
             }
 
             //String fileName = new File(new URI(location)).getName(); // @TODO: check if this work cross platform... (if it does the above code could be replaced)
-            spectrumFileNameMap.put(id, IoUtil.removeExtension(fileName));
+            spectrumFileNameMap.put(id, fileName);
         }
     }
 

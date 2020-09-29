@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.biology.genes;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.genes.ensembl.EnsemblVersion;
 import com.compomics.util.experiment.biology.genes.ensembl.GeneMapping;
 import com.compomics.util.experiment.biology.genes.go.GoMapping;

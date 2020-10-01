@@ -242,28 +242,28 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
 
         String input = minPeaksTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPeaks(new Integer(input));
+            result.setMinPeaks(Integer.valueOf(input));
         }
 
         input = minPeakIntensityTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPeakIntensity(new Double(input));
+            result.setMinPeakIntensity(Double.valueOf(input));
         }
 
         result.setRemovePrecursor(removePrecursorPeakCombo.getSelectedIndex());
 
         input = removePrecursorPeakToleranceTxt.getText().trim();
         if (!input.equals("")) {
-            result.setRemovePrecursorTolerance(new Double(input));
+            result.setRemovePrecursorTolerance(Double.valueOf(input));
         }
 
         input = clearMzRangeLowerTxt.getText().trim();
         if (!input.equals("")) {
-            result.setLowerClearMzRange(new Double(input));
+            result.setLowerClearMzRange(Double.valueOf(input));
         }
         input = clearMzRangeUpperTxt.getText().trim();
         if (!input.equals("")) {
-            result.setUpperClearMzRange(new Double(input));
+            result.setUpperClearMzRange(Double.valueOf(input));
         }
 
         int selectedIndex = enzymeTypeCmb.getSelectedIndex();
@@ -281,33 +281,33 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
 
         input = minPrecursorMassTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPrecursorMass(new Double(input));
+            result.setMinPrecursorMass(Double.valueOf(input));
         }
         input = maxPrecursorMassTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxPrecursorMass(new Double(input));
+            result.setMaxPrecursorMass(Double.valueOf(input));
         }
 
         input = numberMatchesTxt.getText().trim();
         if (!input.equals("")) {
-            result.setNumberOfSpectrumMatches(new Integer(input));
+            result.setNumberOfSpectrumMatches(Integer.valueOf(input));
         }
 
         input = maxFragmentChargeTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxFragmentCharge(new Integer(input));
+            result.setMaxFragmentCharge(Integer.valueOf(input));
         }
 
         result.setRemoveMethionine(removeMethionineCmb.getSelectedIndex() == 0);
 
         input = batchSizeTxt.getText().trim();
         if (!input.equals("")) {
-            result.setBatchSize(new Integer(input));
+            result.setBatchSize(Integer.valueOf(input));
         }
 
         input = maxPtmsTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxVariableMods(new Integer(input));
+            result.setMaxVariableMods(Integer.valueOf(input));
         }
 
         result.setRequireVariableMods(requireVariablePtmCmb.getSelectedIndex() == 0);
@@ -316,12 +316,12 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
 
         input = fragmentBinOffsetTxt.getText().trim();
         if (!input.equals("")) {
-            result.setFragmentBinOffset(new Double(input));
+            result.setFragmentBinOffset(Double.valueOf(input));
         }
 
         input = fragmentBinOffsetTxt.getText().trim();
         if (!input.equals("")) {
-            result.setFragmentBinOffset(new Double(input));
+            result.setFragmentBinOffset(Double.valueOf(input));
         }
 
         result.setSelectedOutputFormat((CometOutputFormat) outputFormatCmb.getSelectedItem());

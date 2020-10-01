@@ -243,7 +243,7 @@ public class CommandLineUtils {
 
         for (String component : aString.split(separator)) {
             try {
-                Integer input = new Integer(component.trim());
+                Integer input = Integer.valueOf(component.trim());
                 result.add(input);
             } catch (Exception e) {
                 throw new IllegalArgumentException("Cannot parse "
@@ -268,7 +268,7 @@ public class CommandLineUtils {
         ArrayList<Double> result = new ArrayList<>();
 
         for (String component : aString.split(separator)) {
-            result.add(new Double(component.trim()));
+            result.add(Double.valueOf(component.trim()));
         }
 
         return result;

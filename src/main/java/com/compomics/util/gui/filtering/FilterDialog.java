@@ -451,7 +451,7 @@ public class FilterDialog extends javax.swing.JDialog {
         }
         if (filterItemName != null) {
             FilterItemComparator filterItemComparator = FilterItemComparator.equal;
-            Object value = new Double(0);
+            Object value = Double.valueOf(0);
             matchFilter.setFilterItem(filterItemName, filterItemComparator, value);
             updateTable();
         }
@@ -618,7 +618,7 @@ public class FilterDialog extends javax.swing.JDialog {
             return new HashSet<>(0);
         } else {
             return Arrays.stream(text.split(";"))
-                    .map(key -> new Long(key))
+                    .map(key -> Long.valueOf(key))
                     .collect(Collectors.toCollection(HashSet::new));
         }
     }
@@ -646,7 +646,7 @@ public class FilterDialog extends javax.swing.JDialog {
         if (filterItem.isNumber()) {
             String stringValue = value.toString();
             try {
-                new Double(stringValue);
+                Double.valueOf(stringValue);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, stringValue + " cannot be used for item " + filterItem.getName() + ", number expected.", "File Not Found", JOptionPane.WARNING_MESSAGE);
                 return false;

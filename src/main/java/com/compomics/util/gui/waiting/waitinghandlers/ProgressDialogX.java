@@ -150,13 +150,7 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
             final int value
     ) {
         if (displayProgress) {
-            // invoke later to give time for components to update
-            SwingUtilities.invokeLater(
-                    new Runnable() {
-                public void run() {
-                    progressBar.setValue(value);
-                }
-            });
+            progressBar.setValue(value);
         }
     }
 
@@ -297,17 +291,13 @@ public class ProgressDialogX extends javax.swing.JDialog implements WaitingHandl
     ) {
         
         mutex.acquire();
-        final int newValue = progressBar.getValue() + increment;
-        mutex.release();
+        final int newValue = progressBar.getValue() + increment; // @TODO: does not work as wanted...
         
         if (displayProgress) {
-            // invoke later to give time for components to update
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    progressBar.setValue(newValue);
-                }
-            });
+            progressBar.setValue(newValue);
         }
+        
+        mutex.release();
     }
 
     @Override

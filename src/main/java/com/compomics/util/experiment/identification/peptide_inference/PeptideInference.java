@@ -125,12 +125,13 @@ public class PeptideInference {
     }
 
     /**
-     * Infers the PTM localization and its confidence for the best match of
-     * the given spectrum for PTMs of the (exact) given mass.
-     * 
+     * Infers the PTM localization and its confidence for the best match of the
+     * given spectrum for PTMs of the (exact) given mass.
+     *
      * @param modMass The mass of the modifications to inspect.
      * @param spectrumKey The key of the spectrum to process.
-     * @param confidentPeptideInference PSMs with confidently localized PTMs in a map: PTM mass, peptide sequence, spectrum keys.
+     * @param confidentPeptideInference PSMs with confidently localized PTMs in
+     * a map: PTM mass, peptide sequence, spectrum keys.
      * @param identification The identification object containing the matches.
      * @param identificationParameters The identification parameters of the
      * project.
@@ -154,7 +155,7 @@ public class PeptideInference {
 
         Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
         String sequence = peptide.getSequence();
-        
+
         int nMod = getNMod(
                 peptide,
                 modMass,
@@ -162,14 +163,13 @@ public class PeptideInference {
         );
 
         HashSet<Integer> oldLocalization = getModificationSites(peptide, modMass, modificationProvider);
-
         HashSet<Integer> newLocalizationCandidates = new HashSet<>(nMod - oldLocalization.size());
-
         HashMap<String, HashSet<Long>> modConfidentPeptides = confidentPeptideInference.get(modMass);
 
         if (modConfidentPeptides != null) {
 
-            // See if we can explain this peptide by another already identified peptide with the same number of modifications (the two peptides will be merged)
+            // See if we can explain this peptide by another already identified peptide 
+            // with the same number of modifications (the two peptides will be merged)
             findConfidentPeptideAndMerge(
                     oldLocalization,
                     newLocalizationCandidates,
@@ -217,13 +217,15 @@ public class PeptideInference {
     }
 
     /**
-     * Returns the modification sites for the modifications of the given mass on the given peptide.
-     * 
+     * Returns the modification sites for the modifications of the given mass on
+     * the given peptide.
+     *
      * @param peptide The peptide of interest.
      * @param modMass The mass of the modifications of interest.
      * @param modificationProvider The modification provider to use.
-     * 
-     * @return The modification sites for the modifications of the given mass on the given peptide.
+     *
+     * @return The modification sites for the modifications of the given mass on
+     * the given peptide.
      */
     private HashSet<Integer> getModificationSites(
             Peptide peptide,
@@ -246,13 +248,15 @@ public class PeptideInference {
     }
 
     /**
-     * Returns the number of modifications of the given mass on the given peptide.
-     * 
+     * Returns the number of modifications of the given mass on the given
+     * peptide.
+     *
      * @param peptide The peptide of interest.
      * @param modMass The mass of the modifications of interest.
      * @param modificationProvider The modification provider to use.
-     * 
-     * @return The number of modifications of the given mass on the given peptide.
+     *
+     * @return The number of modifications of the given mass on the given
+     * peptide.
      */
     private int getNMod(
             Peptide peptide,
@@ -270,14 +274,17 @@ public class PeptideInference {
     }
 
     /**
-     * Find whether peptides with the same sequence and confidently localized modifications can be used to infer the localization of non-confident modification sites, and merge the peptides if one explains another.
-     * 
+     * Find whether peptides with the same sequence and confidently localized
+     * modifications can be used to infer the localization of non-confident
+     * modification sites, and merge the peptides if one explains another.
+     *
      * @param oldLocalization The list of previous modification sites.
      * @param newLocalizationCandidates The list of new modification sites.
      * @param sequence The peptide sequence.
      * @param modMass The mass of the modification of interest.
      * @param nMod The number of modifications of the given mass.
-     * @param modConfidentPeptides Map of the keys of peptides with confidently localized modifications.
+     * @param modConfidentPeptides Map of the keys of peptides with confidently
+     * localized modifications.
      * @param identification The identification object containing the matches.
      * @param modificationProvider The modification provider to use.
      */
@@ -339,7 +346,9 @@ public class PeptideInference {
 
             if (oldLocalization.size() + newLocalizationCandidates.size() < nMod) {
 
-                // we cannot merge this peptide, see whether we can explain the remaining modifications using peptides with the same sequence but other modification profile
+                // we cannot merge this peptide, see whether we can explain 
+                // the remaining modifications using peptides with the same 
+                // sequence but other modification profile
                 for (long tempKey : keys) {
 
                     SpectrumMatch secondaryMatch = (SpectrumMatch) identification.retrieveObject(tempKey);
@@ -372,18 +381,21 @@ public class PeptideInference {
         }
     }
 
-
     /**
-     * Find whether peptides with the overlapping sequence and confidently localized modifications can be used to infer the localization of non-confident modification sites.
-     * 
+     * Find whether peptides with the overlapping sequence and confidently
+     * localized modifications can be used to infer the localization of
+     * non-confident modification sites.
+     *
      * @param oldLocalization The list of previous modification sites.
      * @param newLocalizationCandidates The list of new modification sites.
      * @param peptide The peptide of interest.
      * @param modMass The mass of the modification of interest.
-     * @param confidentPeptideInference Map of the keys of peptides with confidently localized modifications.
+     * @param confidentPeptideInference Map of the keys of peptides with
+     * confidently localized modifications.
      * @param identification The identification object containing the matches.
      * @param searchParameters The search parameters.
-     * @param modificationSequenceMatchingParameters The modification sequence matching parameters.
+     * @param modificationSequenceMatchingParameters The modification sequence
+     * matching parameters.
      * @param sequenceProvider The sequence provider to use.
      * @param modificationProvider The modification provider to use.
      */
@@ -584,14 +596,15 @@ public class PeptideInference {
 
     /**
      * Selects modification sites among the possible new localization.
-     * 
+     *
      * @param spectrumMatch The spectrum match.
      * @param peptide The peptide of interest.
      * @param newLocalizationCandidates The new localization sites.
-     * @param modMass The mass of the modification to 
+     * @param modMass The mass of the modification to
      * @param nMod The number of modifications on the peptide with this mass.
      * @param searchParameters The search parameters.
-     * @param modificationSequenceMatchingParameters The modification sequence matching parameters.
+     * @param modificationSequenceMatchingParameters The modification sequence
+     * matching parameters.
      * @param sequenceProvider The sequence provider to use.
      * @param modificationProvider The modification provider to use.
      */
@@ -633,7 +646,13 @@ public class PeptideInference {
 
             if (modificationMatch == null) {
 
-                throw new IllegalArgumentException("No modification match found at site " + oldLocalization + " in spectrum " + spectrumMatch.getKey() + ".");
+                throw new IllegalArgumentException(
+                        "No modification match found at site "
+                        + oldLocalization
+                        + " in spectrum "
+                        + spectrumMatch.getKey()
+                        + "."
+                );
 
             }
 
@@ -666,7 +685,15 @@ public class PeptideInference {
 
                     if (candidateName == null) {
 
-                        throw new IllegalArgumentException("No PTM found for site " + newLocalization + " on  peptide " + peptide.getSequence() + " in spectrum " + spectrumMatch.getKey() + ".");
+                        throw new IllegalArgumentException(
+                                "No PTM found for site "
+                                + newLocalization
+                                + " on  peptide "
+                                + peptide.getSequence()
+                                + " in spectrum "
+                                + spectrumMatch.getKey()
+                                + "."
+                        );
 
                     }
 
@@ -693,13 +720,16 @@ public class PeptideInference {
 
     /**
      * Fills the maps of peptides with localized modifications.
-     * 
+     *
      * @param spectrumMatch The spectrum match to inspect.
-     * @param confidentPeptideInference The map of peptides with confidently localized sites.
-     * @param notConfidentPeptideInference The map of peptides with non-confidently localized sites.
+     * @param confidentPeptideInference The map of peptides with confidently
+     * localized sites.
+     * @param notConfidentPeptideInference The map of peptides with
+     * non-confidently localized sites.
      * @param modificationParameters The modification parameters.
      * @param modificationProvider The modification provider to use.
-     * @param waitingHandler The waiting handler used to provide feedback on progress.
+     * @param waitingHandler The waiting handler used to provide feedback on
+     * progress.
      */
     private void fillConfidentMaps(
             SpectrumMatch spectrumMatch,
@@ -712,7 +742,7 @@ public class PeptideInference {
 
         boolean variableAA = false;
         Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
-        
+
         for (ModificationMatch modificationMatch : peptide.getVariableModifications()) {
 
             String modName = modificationMatch.getModification();
@@ -733,7 +763,9 @@ public class PeptideInference {
 
                         Modification otherModification = modificationProvider.getModification(otherModName);
 
-                        if (otherModification.getMass() == modMass && modification.getModificationType() != otherModification.getModificationType()) {
+                        if (otherModification.getMass() == modMass
+                                && modification.getModificationType()
+                                != otherModification.getModificationType()) {
 
                             variableAA = true;
                             break;
@@ -763,7 +795,9 @@ public class PeptideInference {
 
                             Modification otherModification = modificationProvider.getModification(otherModName);
 
-                            if (otherModification.getMass() == modMass && modification.getModificationType() != otherModification.getModificationType()) {
+                            if (otherModification.getMass() == modMass
+                                    && modification.getModificationType()
+                                    != otherModification.getModificationType()) {
 
                                 maybeNotTerminal = true;
                                 break;

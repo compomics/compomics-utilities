@@ -356,24 +356,24 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
         XtandemParameters result = new XtandemParameters();
         String input = dynamicRangeTxt.getText().trim();
         if (!input.equals("")) {
-            result.setDynamicRange(new Double(input));
+            result.setDynamicRange(Double.valueOf(input));
         }
         input = nPeaksTxt.getText().trim();
         if (!input.equals("")) {
-            result.setnPeaks(new Integer(input));
+            result.setnPeaks(Integer.valueOf(input));
         }
         input = minFragmentMzTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinFragmentMz(new Double(input));
+            result.setMinFragmentMz(Double.valueOf(input));
         }
         input = minPeaksTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPeaksPerSpectrum(new Integer(input));
+            result.setMinPeaksPerSpectrum(Integer.valueOf(input));
         }
         result.setUseNoiseSuppression(noiseSuppressionCmb.getSelectedIndex() == 0);
         input = minPrecMassTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPrecursorMass(new Double(input));
+            result.setMinPrecursorMass(Double.valueOf(input));
         }
         result.setParentMonoisotopicMassIsotopeError(parentMonoisotopicMassIsotopeErrorCmb.getSelectedIndex() == 0);
         result.setProteinQuickAcetyl(quickAcetylCmb.getSelectedIndex() == 0);
@@ -382,7 +382,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
         result.setRefine(refinementCmb.getSelectedIndex() == 0);
         input = maxEValueRefineTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaximumExpectationValueRefinement(new Double(input));
+            result.setMaximumExpectationValueRefinement(Double.valueOf(input));
         }
         result.setRefineUnanticipatedCleavages(unanticipatedCleavageCmb.getSelectedIndex() == 0);
         result.setRefineSemi(semiEnzymaticCmb.getSelectedIndex() == 0);
@@ -392,7 +392,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
         result.setRefineSpectrumSynthesis(spectrumSynthesisCmb.getSelectedIndex() == 0);
         input = eValueTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxEValue(new Double(input));
+            result.setMaxEValue(Double.valueOf(input));
         }
         result.setOutputResults((String) outputResultsCmb.getSelectedItem());
         result.setOutputProteins(outputProteinsCmb.getSelectedIndex() == 0);
@@ -405,7 +405,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
         }
         input = modificationComplexityTxt.getText().trim();
         if (!input.equals("")) {
-            result.setProteinPtmComplexity(new Double(input));
+            result.setProteinPtmComplexity(Double.valueOf(input));
         }
 
         return result;
@@ -2622,7 +2622,7 @@ public class XTandemParametersDialog extends javax.swing.JDialog implements Algo
         // check if the modification complexity value is in the range (0.0-12.0)
         if (valid) {
             try {
-                Double value = new Double(modificationComplexityTxt.getText());
+                Double value = Double.valueOf(modificationComplexityTxt.getText());
                 if (value > 12) {
                     if (showMessage && valid) {
                         JOptionPane.showMessageDialog(this, "Please select a number in the range (0.0-12.0) for Modification complexity.",

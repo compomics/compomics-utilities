@@ -1055,7 +1055,7 @@ public class OmssaParameters extends ExperimentObject implements IdentificationA
                 parser.next();
                 String numberString = parser.getText();
                 try {
-                    number = new Integer(numberString);
+                    number = Integer.valueOf(numberString);
                 } catch (NumberFormatException nfe) {
                     throw new XmlPullParserException("Found non-parseable text '" + numberString
                             + "' for the value of the 'MSMod' tag on line " + parser.getLineNumber() + ".");

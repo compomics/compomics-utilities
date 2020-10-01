@@ -80,7 +80,7 @@ public class UniprotTaxonomy {
                     if (line.length() > 0) {
 
                         String[] elements = line.split(SEPARATOR);
-                        Integer id = new Integer(elements[0].trim());
+                        Integer id = Integer.valueOf(elements[0].trim());
                         String latinName = elements[2].trim();
                         String commonName = elements[3].trim();
 
@@ -130,7 +130,7 @@ public class UniprotTaxonomy {
                 if (line.length() > 0) {
                     
                     String[] elements = line.split(SEPARATOR);
-                    Integer id = new Integer(elements[0].trim());
+                    Integer id = Integer.valueOf(elements[0].trim());
                     String latinName = elements[2].trim();
                     String commonName = elements[3].trim();
                     

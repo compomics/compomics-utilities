@@ -142,21 +142,21 @@ public class Export {
 
                 // write as pdf
                 Transcoder pdfTranscoder = new PDFTranscoder();
-                pdfTranscoder.addTranscodingHint(PDFTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float(0.084666f));
+                pdfTranscoder.addTranscodingHint(PDFTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, 0.084666f);
                 pdfTranscoder.transcode(svgInputFile, output);
 
             } else if (imageType == ImageType.JPEG) {
 
                 // write as jpeg
                 Transcoder jpegTranscoder = new JPEGTranscoder();
-                jpegTranscoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(1.0));
+                jpegTranscoder.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, 1.0);
                 jpegTranscoder.transcode(svgInputFile, output);
 
             } else if (imageType == ImageType.TIFF) {
 
                 // write as tiff
                 Transcoder tiffTranscoder = new TIFFTranscoder();
-                tiffTranscoder.addTranscodingHint(TIFFTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float(0.084666f));
+                tiffTranscoder.addTranscodingHint(TIFFTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, 0.084666f);
                 tiffTranscoder.addTranscodingHint(TIFFTranscoder.KEY_FORCE_TRANSPARENT_WHITE, true);
                 tiffTranscoder.transcode(svgInputFile, output);
 
@@ -164,7 +164,7 @@ public class Export {
 
                 // write as png
                 Transcoder pngTranscoder = new PNGTranscoder();
-                pngTranscoder.addTranscodingHint(PNGTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, new Float(0.084666f));
+                pngTranscoder.addTranscodingHint(PNGTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER, 0.084666f);
                 pngTranscoder.transcode(svgInputFile, output);
 
             }

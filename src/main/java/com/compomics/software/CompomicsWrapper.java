@@ -805,7 +805,7 @@ public class CompomicsWrapper {
                             }
                             if (input) {
                                 try {
-                                    userParameters.setMemoryParameter(new Integer(currentOption));
+                                    userParameters.setMemoryParameter(Integer.valueOf(currentOption));
                                     UtilitiesUserParameters.saveUserParameters(userParameters);
                                     if (bw != null) {
                                         bw.write("New memory setting saved: " + userParameters.getMemoryParameter() + System.getProperty("line.separator"));

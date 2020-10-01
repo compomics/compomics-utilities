@@ -74,7 +74,7 @@ public class EnsemblSpecies {
                         String assembly = elements[3].trim();
 
                         if (!id.equals("") && !id.equals("-")) {
-                            Integer taxon = new Integer(id);
+                            Integer taxon = Integer.valueOf(id);
                             if (!scientificName.equals("-")) {
                                 idToNameMap.put(taxon, scientificName);
                             }

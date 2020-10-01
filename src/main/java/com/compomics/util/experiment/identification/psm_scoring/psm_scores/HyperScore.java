@@ -356,10 +356,10 @@ public class HyperScore {
                 currentSum += nInBin;
             }
             if (currentSum > 0) {
-                Double xValue = new Double(bin);
+                Double xValue = Double.valueOf(bin);
                 xValue = FastMath.log10(xValue);
                 evalueFunctionX.add(xValue);
-                Double yValue = new Double(currentSum);
+                Double yValue = Double.valueOf(currentSum);
                 yValue = FastMath.log10(yValue);
                 evalueFunctionY.add(yValue);
             }
@@ -408,7 +408,7 @@ public class HyperScore {
                     double eValue = getInterpolation(logScore, a, b);
                     result.put(hyperScore, eValue);
                 } else {
-                    Double eValue = new Double(hyperScores.size());
+                    Double eValue = Double.valueOf(hyperScores.size());
                     result.put(hyperScore, eValue);
                 }
             }

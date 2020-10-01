@@ -345,7 +345,7 @@ public class ProteinSequencePane {
 
                 String[] tempMod = mods[j].split("\\|");
 
-                int index = new Integer(tempMod[0]);
+                int index = Integer.valueOf(tempMod[0]);
 
                 String psiMod = tempMod[1];
 
@@ -635,8 +635,8 @@ public class ProteinSequencePane {
 
             String[] tempValue = value[j].split("\\|");
 
-            int start = new Integer(tempValue[0]);
-            int end = new Integer(tempValue[1]);
+            int start = Integer.valueOf(tempValue[0]);
+            int end = Integer.valueOf(tempValue[1]);
 
             String sequence = "";
             

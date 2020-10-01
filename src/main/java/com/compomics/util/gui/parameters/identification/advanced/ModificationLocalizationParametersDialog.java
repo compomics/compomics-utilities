@@ -146,7 +146,7 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
     public boolean validateInput() {
         try {
             if (scoreCmb.getSelectedItem() != ModificationLocalizationScore.None) {
-                Double temp = new Double(thresholdTxt.getText().trim());
+                Double temp = Double.valueOf(thresholdTxt.getText().trim());
                 if (temp < 0 || temp > 100) {
                     JOptionPane.showMessageDialog(this, "Please verify the input for the score threshold.",
                             "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -196,7 +196,7 @@ public class ModificationLocalizationParametersDialog extends javax.swing.JDialo
         ptmScoringPreferences.setProbabilisticScoreNeutralLosses(neutralLossesCmb.getSelectedIndex() == 0);
         
         if (!thresholdTxt.getText().isEmpty()) {
-            ptmScoringPreferences.setProbabilisticScoreThreshold(new Double(thresholdTxt.getText().trim()));
+            ptmScoringPreferences.setProbabilisticScoreThreshold(Double.valueOf(thresholdTxt.getText().trim()));
         }
 
         ptmScoringPreferences.setAlignNonConfidentModifications(alignOnConfidentCmb.getSelectedIndex() == 0);

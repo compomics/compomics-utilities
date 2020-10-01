@@ -214,9 +214,9 @@ public class OnyaseIdfileReader implements IdfileReader {
                 String sequence = lineSplit[3];
                 ModificationMatch[] modificationMatches = getModificationMatches(lineSplit[4]);
                 Peptide peptide = new Peptide(sequence, modificationMatches);
-                Integer charge = new Integer(lineSplit[5]);
-                Double score = new Double(lineSplit[6]);
-                Double eValue = new Double(lineSplit[7]);
+                Integer charge = Integer.valueOf(lineSplit[5]);
+                Double score = Double.valueOf(lineSplit[6]);
+                Double eValue = Double.valueOf(lineSplit[7]);
                 PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, -1, Advocate.onyaseEngine.getIndex(), charge, eValue, resultFileName);
                 peptideAssumption.setRawScore(score);
                 spectrumMatch.addPeptideAssumption(Advocate.onyaseEngine.getIndex(), peptideAssumption);

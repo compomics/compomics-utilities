@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.biology.genes;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.genes.ensembl.EnsemblVersion;
 import com.compomics.util.experiment.biology.genes.ensembl.GeneMapping;
 import com.compomics.util.experiment.biology.genes.go.GoMapping;
@@ -846,7 +845,7 @@ public class ProteinGeneDetailsProvider {
                     String speciesAtLine = splittedLine[0];
                     if (speciesAtLine.equals(species)) {
                         String[] ensemblVersionSplit = splittedLine[1].split(" ");
-                        version = new Integer(ensemblVersionSplit[1]);
+                        version = Integer.valueOf(ensemblVersionSplit[1]);
                     }
                 }
             } finally {
@@ -1100,7 +1099,7 @@ public class ProteinGeneDetailsProvider {
             Integer currentEnsemblVersion;
 
             try {
-                currentEnsemblVersion = new Integer(currentEnsemblVersionAsString);
+                currentEnsemblVersion = Integer.valueOf(currentEnsemblVersionAsString);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 currentEnsemblVersion = latestEnsemblVersion;

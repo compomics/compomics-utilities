@@ -10,7 +10,6 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 
 
-
 import java.sql.*;
 import java.util.Map.Entry;
 
@@ -57,9 +56,10 @@ public class ObjectsDB {
      */
     private int currentAdded = 0;
     /**
-     * keys stored in the backend
+     * Keys stored in the backend.
      */
     private HashSet<Long> keysInBackend = new HashSet<>();
+
     /**
      * Empty default constructor.
      */
@@ -107,19 +107,16 @@ public class ObjectsDB {
 
             }
         }
-        
+
         File dbFile = getDbFile();
-        if (dbFile.exists() && overwrite){
+        if (dbFile.exists() && overwrite) {
             dbFile.delete();
         }
-        
-        
 
         establishConnection();
         objectsCache = new ObjectsCache(this);
 
     }
-
 
     /**
      * Committing all changes into the database.
@@ -128,16 +125,13 @@ public class ObjectsDB {
         try {
             dbMutex.acquire();
             connection.commit();
-        } 
-        catch(Exception e){
+        } catch (Exception e) {
 
-        }
-        finally {
+        } finally {
             dbMutex.release();
         }
 
     }
-
 
     /**
      * Getter for the current number of added objects.
@@ -147,7 +141,6 @@ public class ObjectsDB {
     public int getCurrentAdded() {
         return currentAdded;
     }
-
 
     /**
      * Getter for the database file.
@@ -224,9 +217,6 @@ public class ObjectsDB {
         objectsCache.addObject(objectKey, object, false, true);
     }
 
-    
-    
-    
     /**
      * Returns an iterator of all objects of a given class.
      *
@@ -245,40 +235,47 @@ public class ObjectsDB {
      * @return the iterator
      */
     public HashSet<Long> getClassObjectIDs(Class className, String filters) {
+
         HashSet<Long> cacheIDs = objectsCache.getClassInCache(className);
         HashSet<Long> classObjectIds;
-        if (cacheIDs != null) classObjectIds = new HashSet<>(cacheIDs);
-        else classObjectIds = new HashSet<>();
-        
-        
+
+        if (cacheIDs != null) {
+            classObjectIds = new HashSet<>(cacheIDs);
+        } else {
+            classObjectIds = new HashSet<>();
+        }
+
         String sqlQuery = "SELECT id FROM data WHERE class = ?";
-        if (filters != null){
+
+        if (filters != null) {
             sqlQuery += " AND " + filters;
         }
+
         sqlQuery += ";";
-        
+
         try {
+
             dbMutex.acquire();
-            PreparedStatement pstmt  = connection.prepareStatement(sqlQuery);
-            
+            PreparedStatement pstmt = connection.prepareStatement(sqlQuery);
+
             // set the value
             pstmt.setString(1, className.getName());
             //
-            ResultSet rs  = pstmt.executeQuery();
-            
+            ResultSet rs = pstmt.executeQuery();
+
             // loop through the result set
             while (rs.next()) {
                 classObjectIds.add(rs.getLong("id"));
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             dbMutex.release();
         }
+
         return classObjectIds;
     }
-    
 
     /**
      * Inserts a set of objects in the given table.
@@ -290,11 +287,10 @@ public class ObjectsDB {
      * method should be displayed on the waiting handler
      */
     public void insertObjects(
-            HashMap<Long, Object> objects, 
-            WaitingHandler waitingHandler, 
+            HashMap<Long, Object> objects,
+            WaitingHandler waitingHandler,
             boolean displayProgress
     ) {
-
 
         for (Entry<Long, Object> entry : objects.entrySet()) {
 
@@ -308,7 +304,13 @@ public class ObjectsDB {
             }
 
             if (debugInteractions) {
-                System.out.println(System.currentTimeMillis() + " Inserting single object, table: " + object.getClass().getName() + ", key: " + objectKey);
+                System.out.println(
+                        System.currentTimeMillis()
+                        + " Inserting single object, table: "
+                        + object.getClass().getName()
+                        + ", key: "
+                        + objectKey
+                );
             }
 
             ((ExperimentObject) object).setId(objectKey);
@@ -317,17 +319,15 @@ public class ObjectsDB {
         currentAdded += objects.size();
         objectsCache.addObjects(objects, false, true);
 
-    
     }
-    
-    
+
     /**
      * Loads objects from the database according to their unique key
      *
      * @param objectKey the keys of the objects to load
      * @return object the object loaded from the database
      */
-    private Object loadFromDB(long objectKey){
+    private Object loadFromDB(long objectKey) {
         Object object = null;
 
         try {
@@ -346,17 +346,14 @@ public class ObjectsDB {
                 bis.close();
                 
             }
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             dbMutex.release();
         }
+
         return object;
     }
-    
-    
 
     /**
      * Loads objects from a table in the cache.
@@ -369,24 +366,23 @@ public class ObjectsDB {
      */
     public void loadObjects(Collection<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) {
 
-
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " loading " + keys.size() + " objects");
         }
-        
 
         HashMap<Long, Object> objectsNotInCache = new HashMap<>();
+
         for (long objectKey : keys) {
-            
 
             if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                 return;
             }
 
-
             if (!objectsCache.inCache(objectKey)) {
+
                 Object obj = loadFromDB(objectKey);
-                if (obj != null){
+
+                if (obj != null) {
                     objectsNotInCache.put(objectKey, obj);
                 }
             }
@@ -407,22 +403,24 @@ public class ObjectsDB {
      */
     public void loadObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
 
-
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " loading all " + className.getName() + " objects");
         }
 
         HashMap<Long, Object> objectsNotInCache = new HashMap<>();
+
         try {
+
             dbMutex.acquire();
             PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM data WHERE class = ?;");
             pstmt.setString(1, className.getName());
             ResultSet rs = pstmt.executeQuery();
-            while (rs.next()){
+
+            while (rs.next()) {
+
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return;
                 }
-                
                 
                 ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
                 Input input = new Input(bis);
@@ -436,14 +434,12 @@ public class ObjectsDB {
                 
                 objectsNotInCache.put(objectKey, object);
             }
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             dbMutex.release();
         }
-        
+
         objectsCache.addObjects(objectsNotInCache, true, false);
     }
 
@@ -464,12 +460,15 @@ public class ObjectsDB {
         obj = objectsCache.getObject(objectKey);
 
         if (obj == null) {
+
             obj = loadFromDB(objectKey);
-            if (obj != null){
+
+            if (obj != null) {
                 objectsCache.addObject(objectKey, obj, true, false);
             }
+
         }
-        
+
         return obj;
     }
 
@@ -484,9 +483,6 @@ public class ObjectsDB {
     public int getNumber(Class className) {
         return getClassObjectIDs(className).size();
     }
-    
-    
-    
 
     /**
      * Triggers a dump of all objects within the cache into the database.
@@ -497,8 +493,6 @@ public class ObjectsDB {
         dbMutex.release();
     }
 
-    
-    
     /**
      * Retrieves some objects from the database or cache.
      *
@@ -521,6 +515,7 @@ public class ObjectsDB {
         HashMap<Long, Object> objectsNotInCache = new HashMap<>();
 
         for (long objectKey : keys) {
+
             if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                 return retrievingObjects;
             }
@@ -528,10 +523,13 @@ public class ObjectsDB {
             Object obj = objectsCache.getObject(objectKey);
 
             if (obj == null) {
+
                 obj = loadFromDB(objectKey);
-                if (obj != null){
+
+                if (obj != null) {
                     objectsNotInCache.put(objectKey, obj);
                 }
+
             }
 
             retrievingObjects.add(obj);
@@ -540,17 +538,15 @@ public class ObjectsDB {
         objectsCache.addObjects(objectsNotInCache, true, false);
         return retrievingObjects;
     }
-    
-    
-    public void updateObject(long objectKey, Object object){
+
+    public void updateObject(long objectKey, Object object) {
+
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " | retrieving one object with key: " + objectKey);
         }
 
         objectsCache.addObject(objectKey, object, inBackend(objectKey), true);
     }
-    
-    
 
     /**
      * Retrieves all objects from a given class.
@@ -564,29 +560,30 @@ public class ObjectsDB {
      * @return the list of objects
      */
     public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
-        
+
         ArrayList<Object> retrievingObjects = new ArrayList<>();
         HashMap<Long, Object> objectsNotInCache = new HashMap<>();
         HashSet<Long> objectInCache = objectsCache.getClassInCache(className);
         objectInCache.forEach(key -> {
             retrievingObjects.add(objectsCache.getObject(key));
         });
-        
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
         }
-        
+
         try {
+
             dbMutex.acquire();
             PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM data WHERE class = ?;");
             pstmt.setString(1, className.getName());
             ResultSet rs = pstmt.executeQuery();
-            while (rs.next()){
+
+            while (rs.next()) {
+
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return retrievingObjects;
                 }
-                
                 
                 
                 ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
@@ -604,14 +601,12 @@ public class ObjectsDB {
                 }
                 retrievingObjects.add(object);
             }
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             dbMutex.release();
         }
-        
+
         objectsCache.addObjects(objectsNotInCache, true, false);
         return retrievingObjects;
     }
@@ -632,22 +627,24 @@ public class ObjectsDB {
         }
 
         try {
+
             dbMutex.acquire();
             PreparedStatement pstmt = connection.prepareStatement("DELETE FROM data WHERE id = ?;");
+
             for (long key : keys) {
 
-                if (waitingHandler.isRunCanceled())  break;
+                if (waitingHandler.isRunCanceled()) {
+                    break;
+                }
 
                 objectsCache.removeObject(key);
                 pstmt.setLong(1, key);
                 pstmt.executeUpdate();
 
             }
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             dbMutex.release();
         }
 
@@ -660,23 +657,19 @@ public class ObjectsDB {
      */
     public void removeObject(long key) {
 
-
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " removing object: " + key);
         }
 
-        
         try {
             objectsCache.removeObject(key);
             dbMutex.acquire();
             PreparedStatement pstmt = connection.prepareStatement("DELETE FROM data WHERE id = ?;");
             pstmt.setLong(1, key);
             pstmt.executeUpdate();
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             dbMutex.release();
         }
 
@@ -705,12 +698,14 @@ public class ObjectsDB {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Checking db content,  key: " + objectKey);
         }
-        
-        if (objectsCache.inCache(objectKey)) return true;
+
+        if (objectsCache.inCache(objectKey)) {
+            return true;
+        }
+
         return inBackend(objectKey);
     }
-    
-    
+
     /**
      * Indicates whether an object is loaded in the backend.
      *
@@ -739,22 +734,17 @@ public class ObjectsDB {
         }
 
         return result;
-        */
+         */
     }
-    
-    
-    
-    
+
     /**
-     * Returns the keys in backend set
-     * 
-     *  @return the keys in backend set
+     * Returns the keys in backend set.
+     *
+     * @return the keys in backend set
      */
-    public HashSet<Long> getKeysInBackend(){
+    public HashSet<Long> getKeysInBackend() {
         return keysInBackend;
     }
-    
-    
 
     /**
      * Indicates whether the connection to the DB is active.
@@ -781,9 +771,7 @@ public class ObjectsDB {
         }
 
         connectionActive = false;
-
         objectsCache.saveCache(waitingHandler, true);
-
         dbMutex.release();
 
     }
@@ -830,11 +818,9 @@ public class ObjectsDB {
 
             connectionActive = false;
             connection.close();
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             dbMutex.release();
         }
 
@@ -842,7 +828,6 @@ public class ObjectsDB {
 
     /**
      * Establishes connection to the database.
-     *
      */
     public void establishConnection() {
 
@@ -854,53 +839,47 @@ public class ObjectsDB {
 
         try {
             dbMutex.acquire();
-            
+
             // Connect with the database
             connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile.getAbsolutePath());
             connection.setAutoCommit(false);
-            
-            
+
             boolean insertTables = true;
             PreparedStatement pst = connection.prepareStatement("SELECT * FROM sqlite_master WHERE type = 'table'");
             ResultSet rs = pst.executeQuery();
-            while (rs.next()){
-                if (rs.getString("name").equals("data")){
+            while (rs.next()) {
+                if (rs.getString("name").equals("data")) {
                     insertTables = false;
                     break;
                 }
             }
             connection.commit();
-            
-            
-            if (insertTables){
+
+            if (insertTables) {
                 String sql = "CREATE TABLE `data` (`id` INTEGER, `class` TEXT, `data` BLOB, PRIMARY KEY(id));";
                 Statement stmt = connection.createStatement();
                 stmt.execute(sql);
-                
+
                 sql = "CREATE INDEX `data_id_index` ON `data` (`id` ASC);";
                 stmt.execute(sql);
-                
+
                 sql = "CREATE INDEX `data_class_index` ON `data` (`class` ASC);";
                 stmt.execute(sql);
                 connection.commit();
-            }
-            else {
+            } else {
                 try {
                     PreparedStatement pstmt = connection.prepareStatement("SELECT id FROM data");
                     ResultSet rsId = pstmt.executeQuery();
-                    if (rsId.next()){
+                    if (rsId.next()) {
                         keysInBackend.add(rsId.getLong("id"));
                     }
-                }
-                catch(Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
+        } finally {
             dbMutex.release();
         }
 

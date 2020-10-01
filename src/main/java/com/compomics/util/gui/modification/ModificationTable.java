@@ -558,7 +558,7 @@ public class ModificationTable extends JTable {
 
             for (int frequency : histogram) {
                 if (frequency > 0) {
-                    data.add(new Double(frequency));
+                    data.add(Double.valueOf(frequency));
 
                     if (frequency > maxAreaChartValue) {
                         maxAreaChartValue = frequency;

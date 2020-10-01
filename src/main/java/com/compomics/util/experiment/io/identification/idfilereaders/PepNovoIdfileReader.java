@@ -227,17 +227,17 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
         String[] lineComponents = line.trim().split("\t");
 
-        Double rankScore = new Double(lineComponents[1]);
-        Double pepNovoScore = new Double(lineComponents[2]);
-        Double nGap = new Double(lineComponents[3]);
-        Double cGap = new Double(lineComponents[4]);
+        Double rankScore = Double.valueOf(lineComponents[1]);
+        Double pepNovoScore = Double.valueOf(lineComponents[2]);
+        Double nGap = Double.valueOf(lineComponents[3]);
+        Double cGap = Double.valueOf(lineComponents[4]);
         if (cGap > 0 && cGap < cTermCorrection) {
             throw new IllegalArgumentException("Incompatible c-term gap " + cGap);
         } else if (cGap > 0) {
             cGap -= cTermCorrection;
         }
-        Double mH = new Double(lineComponents[5]);
-        Integer charge = new Integer(lineComponents[6]);
+        Double mH = Double.valueOf(lineComponents[5]);
+        Integer charge = Integer.valueOf(lineComponents[6]);
         String pepNovoSequence = lineComponents[7];
         String sequence = "";
         ArrayList<ModificationMatch> modificationMatches = new ArrayList<>();
@@ -269,7 +269,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
                     modificationMass += aa;
                 } else {
                     try {
-                        new Integer(aa);
+                        Integer.valueOf(aa);
                         modificationMass += aa;
                     } catch (Exception e) {
                         if (!modificationMass.equals("")) {

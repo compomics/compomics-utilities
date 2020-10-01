@@ -2231,14 +2231,14 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             digestionPreferences.setSpecificity(enzymeName, (DigestionParameters.Specificity) specificityComboBox.getSelectedItem());
 
             // max missed cleavages
-            digestionPreferences.setnMissedCleavages(enzymeName, new Integer(maxMissedCleavagesTxt.getText().trim()));
+            digestionPreferences.setnMissedCleavages(enzymeName, Integer.valueOf(maxMissedCleavagesTxt.getText().trim()));
         }
 
         // save the digestion settings
         tempSearchParameters.setDigestionParameters(digestionPreferences);
 
         // Precursor m/z tolerance
-        tempSearchParameters.setPrecursorAccuracy(new Double(precursorIonAccuracyTxt.getText().trim()));
+        tempSearchParameters.setPrecursorAccuracy(Double.valueOf(precursorIonAccuracyTxt.getText().trim()));
         if (precursorIonUnit.getSelectedIndex() == 0) {
             tempSearchParameters.setPrecursorAccuracyType(SearchParameters.MassAccuracyType.PPM);
         } else {
@@ -2246,7 +2246,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         }
 
         // Fragment m/z tolerance
-        tempSearchParameters.setFragmentIonAccuracy(new Double(fragmentIonAccuracyTxt.getText().trim()));
+        tempSearchParameters.setFragmentIonAccuracy(Double.valueOf(fragmentIonAccuracyTxt.getText().trim()));
         if (fragmentIonUnit.getSelectedIndex() == 0) {
             tempSearchParameters.setFragmentAccuracyType(SearchParameters.MassAccuracyType.PPM);
         } else {
@@ -2302,14 +2302,14 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         ionType = PeptideFragmentIon.getIonType(fragmentIon2Cmb.getSelectedItem().toString().trim());
         selectedRewindIons.add(ionType);
         tempSearchParameters.setRewindIons(selectedRewindIons);
-        tempSearchParameters.setFragmentIonAccuracy(new Double(fragmentIonAccuracyTxt.getText().trim()));
-        int charge = new Integer(minPrecursorChargeTxt.getText().trim());
+        tempSearchParameters.setFragmentIonAccuracy(Double.valueOf(fragmentIonAccuracyTxt.getText().trim()));
+        int charge = Integer.valueOf(minPrecursorChargeTxt.getText().trim());
         tempSearchParameters.setMinChargeSearched(charge);
-        charge = new Integer(maxPrecursorChargeTxt.getText().trim());
+        charge = Integer.valueOf(maxPrecursorChargeTxt.getText().trim());
         tempSearchParameters.setMaxChargeSearched(charge);
-        Integer minIsotope = new Integer(isotopeMinTxt.getText());
+        Integer minIsotope = Integer.valueOf(isotopeMinTxt.getText());
         tempSearchParameters.setMinIsotopicCorrection(minIsotope);
-        Integer maxIsotope = new Integer(isotopeMaxTxt.getText());
+        Integer maxIsotope = Integer.valueOf(isotopeMaxTxt.getText());
         tempSearchParameters.setMaxIsotopicCorrection(maxIsotope);
 
         // Adapt X!Tandem options

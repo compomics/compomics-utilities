@@ -160,7 +160,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                         if (attributeName.equals("assumed_charge")) {
                             String value = parser.getAttributeValue(i);
                             try {
-                                currentCharge = new Integer(value.trim());
+                                currentCharge = Integer.valueOf(value.trim());
                             } catch (Exception e) {
                                 throw new IllegalArgumentException("Charge " + value + " could not be parsed. Integer expected.");
                             }
@@ -288,7 +288,7 @@ public class PepxmlIdfileReader implements IdfileReader {
             if (name.equals("hit_rank")) {
                 String value = parser.getAttributeValue(i);
                 try {
-                    rank = new Integer(value.trim());
+                    rank = Integer.valueOf(value.trim());
                 } catch (Exception e) {
                     throw new IllegalArgumentException("An error occurred while parsing rank " + value + ". Integer expected.");
                 }
@@ -311,7 +311,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                     String value = parser.getAttributeValue(i).trim();
                     Double terminalMass = null;
                     try {
-                        terminalMass = new Double(value);
+                        terminalMass = Double.valueOf(value);
                     } catch (Exception e) {
                         throw new IllegalArgumentException("An error occurred while parsing modification terminal mass " + value + ". Number expected.");
                     }
@@ -363,7 +363,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                             if (attributeName.equals("position")) {
                                 String value = parser.getAttributeValue(i);
                                 try {
-                                    site = new Integer(value);
+                                    site = Integer.valueOf(value);
                                 } catch (Exception e) {
                                     throw new IllegalArgumentException("An error occurred while parsing modification position " + value + ". Integer expected.");
                                 }
@@ -376,7 +376,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                                 if (attributeName.equals("mass")) {
                                     String value = parser.getAttributeValue(i);
                                     try {
-                                        modifiedAaMass = new Double(value);
+                                        modifiedAaMass = Double.valueOf(value);
                                     } catch (Exception e) {
                                         throw new IllegalArgumentException("An error occurred while parsing modification mass " + value + ". Number expected.");
                                     }
@@ -446,7 +446,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                     if (name != null && value != null) {
                         if (name.equals("expect") || name.equals("Morpheus Score")) { // @TODO: what about the IdentiPy hyperscore (IdentiPy:hyperscore (MS:1002989)) and/or IdentiPy:RHNS (MS:1002988)?
                             try {
-                                score = new Double(value);
+                                score = Double.valueOf(value);
                             } catch (Exception e) {
                                 throw new IllegalArgumentException("Impossible to parse expectation value " + value + ". Number expected.");
                             }
@@ -503,7 +503,7 @@ public class PepxmlIdfileReader implements IdfileReader {
             } else if (name.equals("index")) {
                 String value = parser.getAttributeValue(i);
                 try {
-                    index = new Integer(value.trim());
+                    index = Integer.valueOf(value.trim());
                 } catch (Exception e) {
                     throw new IllegalArgumentException("An error occurred while parsing index " + value + ". Integer expected.");
                 }
@@ -621,9 +621,9 @@ public class PepxmlIdfileReader implements IdfileReader {
                         if (name.equals("aminoacid")) {
                             aminoacid = parser.getAttributeValue(i).charAt(0);
                         } else if (name.equals("massdiff")) {
-                            massDiff = new Double(parser.getAttributeValue(i));
+                            massDiff = Double.valueOf(parser.getAttributeValue(i));
                         } else if (name.equals("mass")) {
-                            mass = new Double(parser.getAttributeValue(i));
+                            mass = Double.valueOf(parser.getAttributeValue(i));
                         } else if (name.equals("variable")) {
                             String variableAsString = parser.getAttributeValue(i);
                             if (variableAsString.equalsIgnoreCase("Y")) {
@@ -662,7 +662,7 @@ public class PepxmlIdfileReader implements IdfileReader {
                                 terminus = terminusAsString;
                             }
                         } else if (name.equals("mass")) {
-                            mass = new Double(parser.getAttributeValue(i));
+                            mass = Double.valueOf(parser.getAttributeValue(i));
                         } else if (name.equals("variable")) {
                             String variableAsString = parser.getAttributeValue(i);
                             if (variableAsString.equalsIgnoreCase("Y")) {

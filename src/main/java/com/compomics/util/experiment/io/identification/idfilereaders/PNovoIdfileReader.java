@@ -184,7 +184,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
 
         String[] lineComponents = line.trim().split("\t");
 
-        Double pNovoScore = new Double(lineComponents[2]);
+        Double pNovoScore = Double.valueOf(lineComponents[2]);
         String pNovoSequence = lineComponents[1];
         String peptideSequence = "";
         ArrayList<ModificationMatch> modificationMatches = new ArrayList<>();

@@ -17,6 +17,7 @@ import com.compomics.util.interfaces.Sequence;
 import com.compomics.util.interfaces.Modification;
 import com.compomics.util.general.MassCalc;
 import com.compomics.util.general.UnknownElementMassException;
+import java.math.RoundingMode;
 
 
 /*
@@ -689,7 +690,7 @@ public class AASequenceImpl implements Sequence {
         temp /= additions;
 
         BigDecimal bd = new BigDecimal(temp);
-        bd = bd.setScale(3, BigDecimal.ROUND_HALF_EVEN);
+        bd = bd.setScale(3, RoundingMode.HALF_EVEN);
 
         return bd.doubleValue();
     }

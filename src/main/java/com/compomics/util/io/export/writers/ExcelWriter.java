@@ -226,7 +226,7 @@ public class ExcelWriter extends ExportWriter {
         cellNumber++;
         String content = currentCellContent.toString();
         try {
-            Double value = new Double(content);
+            Double value = Double.valueOf(content);
             cell.setCellValue(value);
             //cell.setCellType(Cell.CELL_TYPE_NUMERIC);
         } catch (Exception e) {

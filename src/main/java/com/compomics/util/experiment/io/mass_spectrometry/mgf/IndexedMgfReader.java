@@ -182,7 +182,7 @@ public class IndexedMgfReader {
                             if (tempRt.startsWith("PT") && tempRt.endsWith("S")) {
                                 tempRt = tempRt.substring(2, tempRt.length() - 1);
                             }
-                            double rt = new Double(tempRt);
+                            double rt = Double.valueOf(tempRt);
                             if (rt > maxRT) {
                                 maxRT = rt;
                             }
@@ -190,14 +190,14 @@ public class IndexedMgfReader {
                                 minRT = rt;
                             }
                         } else if (rtWindow.length == 2 && !rtWindow[0].equals("")) {
-                            double rt1 = new Double(rtWindow[0]);
+                            double rt1 = Double.valueOf(rtWindow[0]);
                             if (rt1 > maxRT) {
                                 maxRT = rt1;
                             }
                             if (rt1 < minRT) {
                                 minRT = rt1;
                             }
-                            double rt2 = new Double(rtWindow[1]);
+                            double rt2 = Double.valueOf(rtWindow[1]);
                             if (rt2 > maxRT) {
                                 maxRT = rt2;
                             }
@@ -222,8 +222,8 @@ public class IndexedMgfReader {
                 } else if (insideSpectrum && !line.equals("")) {
                     try {
                         String values[] = line.split("\\s+");
-                        //Double mz = new Double(values[0]);
-                        Double intensity = new Double(values[1]);
+                        //Double mz = Double.valueOf(values[0]);
+                        Double intensity = Double.valueOf(values[1]);
                         if (peakPicked && intensity == 0) {
                             peakPicked = false;
                         }
@@ -338,10 +338,10 @@ public class IndexedMgfReader {
                         if (tempRt.startsWith("PT") && tempRt.endsWith("S")) {
                             tempRt = tempRt.substring(2, tempRt.length() - 1);
                         }
-                        rt = new Double(tempRt);
+                        rt = Double.valueOf(tempRt);
                     } else if (rtWindow.length == 2) {
-                        rt1 = new Double(rtWindow[0]);
-                        rt2 = new Double(rtWindow[1]);
+                        rt1 = Double.valueOf(rtWindow[0]);
+                        rt2 = Double.valueOf(rtWindow[1]);
                     }
                 } catch (Exception e) {
                     System.out.println("An exception was thrown when trying to decode the retention time: " + spectrumTitle);
@@ -516,10 +516,10 @@ public class IndexedMgfReader {
                         if (tempRt.startsWith("PT") && tempRt.endsWith("S")) { // possible fix for values like RTINSECONDS=PT121.250000S
                             tempRt = tempRt.substring(2, tempRt.length() - 1);
                         }
-                        rt = new Double(tempRt);
+                        rt = Double.valueOf(tempRt);
                     } else if (rtWindow.length == 2) {
-                        rt1 = new Double(rtWindow[0]);
-                        rt2 = new Double(rtWindow[1]);
+                        rt1 = Double.valueOf(rtWindow[0]);
+                        rt2 = Double.valueOf(rtWindow[1]);
                     }
                 } catch (Exception e) {
                     System.out.println("An exception was thrown when trying to decode the retention time: " + title);

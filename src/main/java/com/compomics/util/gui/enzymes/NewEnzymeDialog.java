@@ -203,7 +203,7 @@ public class NewEnzymeDialog extends javax.swing.JDialog {
         // check that the psi-ms cv term accesion is an integer
         if (!psiMsAccessionJTextField.getText().trim().isEmpty()) {
             try {
-                new Integer(psiMsAccessionJTextField.getText().trim());
+                Integer.valueOf(psiMsAccessionJTextField.getText().trim());
             } catch (NumberFormatException e) {
                 if (showMessage && !error) {
                     JOptionPane.showMessageDialog(this,
@@ -548,7 +548,7 @@ public class NewEnzymeDialog extends javax.swing.JDialog {
             // create the psi-ms cv term
             CvTerm psiMsCvTerm = null;
             if (!psiMsAccessionJTextField.getText().trim().isEmpty()) {
-                int psiMsAccession = new Integer(psiMsAccessionJTextField.getText().trim());
+                int psiMsAccession = Integer.valueOf(psiMsAccessionJTextField.getText().trim());
                 psiMsCvTerm = new CvTerm("MS", "MS:" + psiMsAccession, nameTxt.getText().trim(), null);
             }
 

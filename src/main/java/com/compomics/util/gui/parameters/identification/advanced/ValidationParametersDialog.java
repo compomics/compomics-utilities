@@ -113,9 +113,9 @@ public class ValidationParametersDialog extends javax.swing.JDialog {
      */
     public IdMatchValidationParameters getIdMatchValidationPreferences() {
         IdMatchValidationParameters idMatchValidationPreferences = new IdMatchValidationParameters();
-        idMatchValidationPreferences.setDefaultProteinFDR(new Double(proteinFdrTxt.getText().trim()));
-        idMatchValidationPreferences.setDefaultPeptideFDR(new Double(peptideFdrTxt.getText().trim()));
-        idMatchValidationPreferences.setDefaultPsmFDR(new Double(psmFdrTxt.getText().trim()));
+        idMatchValidationPreferences.setDefaultProteinFDR(Double.valueOf(proteinFdrTxt.getText().trim()));
+        idMatchValidationPreferences.setDefaultPeptideFDR(Double.valueOf(peptideFdrTxt.getText().trim()));
+        idMatchValidationPreferences.setDefaultPsmFDR(Double.valueOf(psmFdrTxt.getText().trim()));
         return idMatchValidationPreferences;
     }
 
@@ -126,7 +126,7 @@ public class ValidationParametersDialog extends javax.swing.JDialog {
      */
     public boolean validateInput() {
         try {
-            Double temp = new Double(proteinFdrTxt.getText().trim());
+            Double temp = Double.valueOf(proteinFdrTxt.getText().trim());
             if (temp < 0 || temp > 100) {
                 JOptionPane.showMessageDialog(this, "Please verify the input for the protein FDR.",
                         "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -140,7 +140,7 @@ public class ValidationParametersDialog extends javax.swing.JDialog {
             return false;
         }
         try {
-            Double temp = new Double(peptideFdrTxt.getText().trim());
+            Double temp = Double.valueOf(peptideFdrTxt.getText().trim());
             if (temp < 0 || temp > 100) {
                 JOptionPane.showMessageDialog(this, "Please verify the input for the peptide FDR.",
                         "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -154,7 +154,7 @@ public class ValidationParametersDialog extends javax.swing.JDialog {
             return false;
         }
         try {
-            Double temp = new Double(psmFdrTxt.getText().trim());
+            Double temp = Double.valueOf(psmFdrTxt.getText().trim());
             if (temp < 0 || temp > 100) {
                 JOptionPane.showMessageDialog(this, "Please verify the input for the PSM FDR.",
                         "Input Error", JOptionPane.ERROR_MESSAGE);

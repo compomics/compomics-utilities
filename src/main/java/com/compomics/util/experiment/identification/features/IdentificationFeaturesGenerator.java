@@ -1162,13 +1162,13 @@ public class IdentificationFeaturesGenerator {
 
             }
 
-            if (new Double(result).isInfinite() || new Double(result).isNaN()) {
+            if (Double.valueOf(result).isInfinite() || Double.valueOf(result).isNaN()) {
 
                 result = 0.0;
 
             }
 
-            return result;
+            return result; // @TODO: round to a certain number of decimals?
 
         } else {
 
@@ -1194,13 +1194,13 @@ public class IdentificationFeaturesGenerator {
 
             }
 
-            if (new Double(result).isInfinite() || new Double(result).isNaN()) {
+            if (Double.valueOf(result).isInfinite() || Double.valueOf(result).isNaN()) {
 
                 result = 0.0;
 
             }
 
-            return result;
+            return result; // @TODO: round to a certain number of decimals?
 
         }
     }

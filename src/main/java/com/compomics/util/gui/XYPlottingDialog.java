@@ -1196,7 +1196,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
             String value = JOptionPane.showInputDialog(this, "Select the bubble size.", bubbleSize);
             if (value != null) {
                 try {
-                    bubbleSize = new Double(value);
+                    bubbleSize = Double.valueOf(value);
                     updatePlot();
                 } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(this, "Bubble size has to be a number.", "Bubble Size Error", JOptionPane.ERROR_MESSAGE);
@@ -1235,7 +1235,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         String value = JOptionPane.showInputDialog(this, "Select the bubble scaling factor.\nA value of 1 means no scaling.", bubbleScalingFactor);
         if (value != null) {
             try {
-                double tempBubbleScalingFactor = new Double(value);
+                double tempBubbleScalingFactor = Double.valueOf(value);
                 if (tempBubbleScalingFactor > 0) {
                     bubbleScalingFactor = tempBubbleScalingFactor;
                     updatePlot();

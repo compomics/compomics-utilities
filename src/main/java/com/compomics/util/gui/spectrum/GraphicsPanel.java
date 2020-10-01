@@ -11,6 +11,7 @@ import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.ArrayList;
@@ -138,7 +139,7 @@ public abstract class GraphicsPanel extends JPanel {
                     Iterator iter = temp.keySet().iterator();
                     while (iter.hasNext()) {
                         String key = (String) iter.next();
-                        iKnownMassDeltas.put(new Double(key), temp.getProperty(key));
+                        iKnownMassDeltas.put(Double.valueOf(key), temp.getProperty(key));
                     }
                 }
             }
@@ -2073,7 +2074,7 @@ public abstract class GraphicsPanel extends JPanel {
 
         // add the peaks to the dataset
         for (int i = 0; i < aXAxisData.length; i++) {
-            peaks.put(new Double(aXAxisData[i]), new Double(aYAxisData[i]));
+            peaks.put(Double.valueOf(aXAxisData[i]), Double.valueOf(aYAxisData[i]));
         }
 
         // add the new dataset
@@ -2136,7 +2137,7 @@ public abstract class GraphicsPanel extends JPanel {
 
         // add the peaks to the dataset
         for (int i = 0; i < aXAxisData.length; i++) {
-            peaks.put(new Double(aXAxisData[i]), new Double(aYAxisData[i]));
+            peaks.put(aXAxisData[i], aYAxisData[i]);
         }
 
         // add the new dataset
@@ -2311,7 +2312,7 @@ public abstract class GraphicsPanel extends JPanel {
                 // This will be displayed on the bottom line.
                 String resolution = "";
                 if (showResolution) {
-                    resolution = "Resolution: " + new BigDecimal(iXScaleUnit).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                    resolution = "Resolution: " + new BigDecimal(iXScaleUnit).setScale(2, RoundingMode.HALF_UP).toString();
                 }
 
                 // Also print the MS level and precursor MZ and charge (if known, '?' otherwise).
@@ -2872,7 +2873,7 @@ public abstract class GraphicsPanel extends JPanel {
 
         // Now the real x-value difference as a String.
         double delta = Math.abs(xAxisData.get(aFirstDatasetIndex)[aFirstIndex] - xAxisData.get(aSecondDatasetIndex)[aSecondIndex]);
-        String deltaMass = new BigDecimal(delta).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+        String deltaMass = new BigDecimal(delta).setScale(2, RoundingMode.HALF_UP).toString();
         String deNovoTag = this.findDeltaMassMatches(delta, deltaMassWindow);
 
         int deNovoTagWidth = g.getFontMetrics().stringWidth(deNovoTag);

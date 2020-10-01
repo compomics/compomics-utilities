@@ -189,14 +189,16 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
             // check if all the required headers are found
             if (scanNumberIndex == -1 || chargeIndex == -1
                     || xcorrRank == -1 || sequenceIndex == -1) {
-                throw new IllegalArgumentException("Mandatory columns are missing in the Tide tsv file. Please check the file!");
+                throw new IllegalArgumentException(
+                        "Mandatory columns are missing in the Tide tsv file. Please check the file!"
+                );
             }
 
             String line;
 
             // get the name of the spectrum file
             String fileName = IoUtil.getFileName(tideTsvFile);
-            String spectrumFileName = IoUtil.removeExtension(getMgfFileName(fileName));
+            String spectrumFileName = getMgfFileName(fileName);
 
             // required map given that the tide output is _not_ sorted on scan index
             HashMap<Long, SpectrumMatch> tempSpectrumMatchesMap = new HashMap<>();
@@ -337,7 +339,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
     }
 
     /**
-     * Returns the spectrum file name.This method assumes that the PepNovo
+     * Returns the spectrum file name. This method assumes that the PepNovo
      * output file is the mgf file name + "tide-search.target.txt"
      *
      * @param fileName the name of the results file
@@ -356,7 +358,12 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
 
         } else {
 
-            throw new IllegalArgumentException("Unexpected file extension. Expected: tide-search.target.txt or tide-search.target.txt.gz. File name: " + fileName + ".");
+            throw new IllegalArgumentException(
+                    "Unexpected file extension. Expected: tide-search.target.txt "
+                    + "or tide-search.target.txt.gz. File name: "
+                    + fileName
+                    + "."
+            );
 
         }
     }

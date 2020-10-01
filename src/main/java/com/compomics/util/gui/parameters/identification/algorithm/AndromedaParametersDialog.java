@@ -195,23 +195,23 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
 
         String input = minPepLengthNoEnzymeTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPeptideLengthNoEnzyme(new Integer(input));
+            result.setMinPeptideLengthNoEnzyme(Integer.valueOf(input));
         }
         input = maxPepLengthNoEnzymeTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxPeptideLengthNoEnzyme(new Integer(input));
+            result.setMaxPeptideLengthNoEnzyme(Integer.valueOf(input));
         }
         input = maxPeptideMassTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxPeptideMass(new Double(input));
+            result.setMaxPeptideMass(Double.valueOf(input));
         }
         input = numberMatchesTxt.getText().trim();
         if (!input.equals("")) {
-            result.setNumberOfCandidates(new Integer(input));
+            result.setNumberOfCandidates(Integer.valueOf(input));
         }
         input = maxPtmsTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxNumberOfModifications(new Integer(input));
+            result.setMaxNumberOfModifications(Integer.valueOf(input));
         }
 
         switch (fragMethodCmb.getSelectedIndex()) {
@@ -236,15 +236,15 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
 
         input = maxCombinationsTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxCombinations(new Integer(input));
+            result.setMaxCombinations(Integer.valueOf(input));
         }
         input = topPeaksTxt.getText().trim();
         if (!input.equals("")) {
-            result.setTopPeaks(new Integer(input));
+            result.setTopPeaks(Integer.valueOf(input));
         }
         input = topPeaksWindowTxt.getText().trim();
         if (!input.equals("")) {
-            result.setTopPeaksWindow(new Integer(input));
+            result.setTopPeaksWindow(Integer.valueOf(input));
         }
 
         result.setDecoyMode((AndromedaDecoyMode) decoyModeCmb.getSelectedItem());

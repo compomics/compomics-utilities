@@ -2,9 +2,6 @@ package com.compomics.util.db.object;
 
 import static com.compomics.util.db.object.DbMutex.loadObjectMutex;
 import com.compomics.util.waiting.WaitingHandler;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
@@ -14,6 +11,7 @@ import java.util.Set;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import java.io.ByteArrayOutputStream;
 import static java.lang.System.out;
 import java.lang.reflect.Field;
 
@@ -29,32 +27,6 @@ import java.lang.reflect.Field;
  */
 public class ObjectsCache {
 
-    public class ObjectsCacheElement {
-        public Object object;
-        public boolean inDB;
-        public boolean edited;
-        
-        
-        
-        public ObjectsCacheElement(Object object){
-            this(object, false, true);
-        }
-        
-        public ObjectsCacheElement(Object object, boolean inDB, boolean edited){
-            this.object = object;
-            this.inDB = inDB;
-            this.edited = edited;
-        }
-    }
-    
-    
-    
-    /**
-     * Empty default constructor
-     */
-    public ObjectsCache() {
-    }
-
     /**
      * Share of the memory to be used.
      */
@@ -64,7 +36,7 @@ public class ObjectsCache {
      */
     private final HashMap<Long, ObjectsCacheElement> loadedObjects = new HashMap<>();
     /**
-     * HashMap to store the class type of the objects in cache
+     * HashMap to store the class type of the objects in cache.
      */
     private HashMap<Class, HashSet<Long>> classMap = new HashMap<>();
     /**
@@ -79,7 +51,6 @@ public class ObjectsCache {
      * Number of objects that should at least be kept.
      */
     private final int keepObjectsThreshold = 10000;
-    
 
     /**
      * Constructor.
@@ -118,12 +89,15 @@ public class ObjectsCache {
      * emptying the cache
      */
     public void setMemoryShare(double memoryShare) {
+
         this.memoryShare = memoryShare;
+
         try {
             updateCache();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     /**
@@ -142,7 +116,6 @@ public class ObjectsCache {
 
         return object;
     }
-    
 
     /**
      * Removes an object from the cache.
@@ -151,13 +124,12 @@ public class ObjectsCache {
      */
     public void removeObject(long objectKey) {
 
-        
         if (!readOnly) {
             if (loadedObjects.containsKey(objectKey)) {
                 Object object = getObject(objectKey);
                 classMap.get(object.getClass()).remove(objectKey);
                 loadedObjects.remove(objectKey);
-                
+
             }
         }
     }
@@ -187,20 +159,21 @@ public class ObjectsCache {
     public void addObject(long objectKey, Object object, boolean inDB, boolean edited) {
 
         if (!readOnly) {
-            
+
             if (!loadedObjects.containsKey(objectKey)) {
                 loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
-            }
-            else {
+            } else {
                 loadedObjects.get(objectKey).object = object;
                 loadedObjects.get(objectKey).inDB = inDB;
                 loadedObjects.get(objectKey).edited = edited;
             }
-            if (!classMap.containsKey(object.getClass())){
+
+            if (!classMap.containsKey(object.getClass())) {
                 classMap.put(object.getClass(), new HashSet<>());
             }
+
             classMap.get(object.getClass()).add(objectKey);
-            
+
             updateCache();
         }
 
@@ -231,21 +204,24 @@ public class ObjectsCache {
     public void addObjects(HashMap<Long, Object> objects, boolean inDB, boolean edited) {
 
         if (!readOnly) {
-            for (Entry<Long, Object>kv : objects.entrySet()){
+
+            for (Entry<Long, Object> kv : objects.entrySet()) {
+
                 long objectKey = kv.getKey();
                 Object object = kv.getValue();
+
                 if (!loadedObjects.containsKey(objectKey)) {
                     loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
-                }
-                else {
+                } else {
                     loadedObjects.get(objectKey).object = object;
                     loadedObjects.get(objectKey).inDB = inDB;
                     loadedObjects.get(objectKey).edited = edited;
                 }
-                
-                if (!classMap.containsKey(object.getClass())){
+
+                if (!classMap.containsKey(object.getClass())) {
                     classMap.put(object.getClass(), new HashSet<>());
                 }
+
                 classMap.get(object.getClass()).add(objectKey);
             }
 
@@ -262,7 +238,8 @@ public class ObjectsCache {
      * is lower than 75% of the heap
      */
     private boolean memoryCheck() {
-        return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() < (long) (memoryShare * Runtime.getRuntime().maxMemory());
+        return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
+                < (long) (memoryShare * Runtime.getRuntime().maxMemory());
     }
 
     /**
@@ -287,24 +264,28 @@ public class ObjectsCache {
         Kryo kryo = objectsDB.kryo;
 
         if (!readOnly) {
+
             Connection connection = objectsDB.getDB();
             PreparedStatement psInsert = null, psUpdate = null;
+
             try {
                 psInsert = connection.prepareStatement("INSERT INTO data (id, class, data) VALUES (?, ?, ?);");
                 psUpdate = connection.prepareStatement("UPDATE data SET data = ? WHERE id = ?;");
-    
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            
+
             HashSet<Long> keysInBackend = objectsDB.getKeysInBackend();
-            
+
             Set<Long> removeKeys = new HashSet<Long>();
-            
+
             int i = 0;
-            for (Entry<Long, ObjectsCacheElement> entry : loadedObjects.entrySet()){
-                if (numLastEntries <= i++) break;
+
+            for (Entry<Long, ObjectsCacheElement> entry : loadedObjects.entrySet()) {
+
+                if (numLastEntries <= i++) {
+                    break;
+                }
 
                 if (waitingHandler != null) {
                     waitingHandler.increaseSecondaryProgressCounter();
@@ -315,10 +296,8 @@ public class ObjectsCache {
                 }
                 long key = entry.getKey();
                 
-                
                 ObjectsCacheElement obj = loadedObjects.get(key);
                 obj.edited = false;
-                
                 
                 try {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -333,8 +312,7 @@ public class ObjectsCache {
                         psUpdate.setBytes(1, barray);
                         psUpdate.setLong(2, key);
                         psUpdate.addBatch();
-                    }
-                    else {
+                    } else {
                         psInsert.setLong(1, key);
                         psInsert.setString(2, obj.object.getClass().getName());
                         psInsert.setBytes(3, barray);
@@ -342,11 +320,10 @@ public class ObjectsCache {
                         keysInBackend.add(key);
                     }
                     obj.inDB = true;
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                    
+
                 if (clearEntries) {
                     removeKeys.add(key);
                     classMap.get(obj.object.getClass()).remove(key);
@@ -358,13 +335,13 @@ public class ObjectsCache {
                 loadObjectMutex.acquire();
                 psInsert.executeBatch();
                 psUpdate.executeBatch();
-                if (removeKeys.size() > 0) loadedObjects.keySet().removeAll(removeKeys);
+                if (removeKeys.size() > 0) {
+                    loadedObjects.keySet().removeAll(removeKeys);
+                }
                 connection.commit();
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-            }
-            finally {
+            } finally {
                 loadObjectMutex.release();
             }
 
@@ -445,11 +422,56 @@ public class ObjectsCache {
      */
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
-
     }
-    
-    
-    public HashSet<Long> getClassInCache(Class className){
+
+    /**
+     * Returns the class type of the objects in cache.
+     *
+     * @param className the class name
+     * @return the class type of the objects in cache
+     */
+    public HashSet<Long> getClassInCache(Class className) {
         return classMap.get(className);
+    }
+
+    /**
+     * Objects cache element.
+     */
+    public class ObjectsCacheElement {
+
+        /**
+         * The object.
+         */
+        public Object object;
+        /**
+         * The database state.
+         */
+        public boolean inDB;
+        /**
+         * The edited state.
+         */
+        public boolean edited;
+
+        /**
+         * Constructor.
+         *
+         * @param object the object
+         */
+        public ObjectsCacheElement(Object object) {
+            this(object, false, true);
+        }
+
+        /**
+         * Constructor.
+         *
+         * @param object the object
+         * @param inDB the database state
+         * @param edited the edited state
+         */
+        public ObjectsCacheElement(Object object, boolean inDB, boolean edited) {
+            this.object = object;
+            this.inDB = inDB;
+            this.edited = edited;
+        }
     }
 }

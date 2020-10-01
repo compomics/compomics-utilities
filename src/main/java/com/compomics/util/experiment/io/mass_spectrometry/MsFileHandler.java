@@ -435,6 +435,7 @@ public class MsFileHandler implements SpectrumProvider {
 
     @Override
     public String[] getSpectrumTitles(String fileName) {
+
         CmsFileReader reader = cmsFileReaderMap.get(IoUtil.getFileName(fileName));
         return reader == null ? null : reader.titles;
 

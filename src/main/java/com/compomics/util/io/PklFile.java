@@ -81,9 +81,9 @@ public class PklFile {
             throw new IOException("File is not a PKL file - incorrect number of precursor paramaters!");
         }
 
-        precursorMz = new Double(precursorDetails[0]);
-        precursorIntensity = new Double(precursorDetails[1]);
-        precurorCharge = new Integer(precursorDetails[2]);
+        precursorMz = Double.valueOf(precursorDetails[0]);
+        precursorIntensity = Double.valueOf(precursorDetails[1]);
+        precurorCharge = Integer.valueOf(precursorDetails[2]);
 
         HashMap<Double, Double> peaks = new HashMap<>();
 
@@ -96,7 +96,7 @@ public class PklFile {
                 throw new IOException("File is not a PKL file - incorrect number of peak paramaters!");
             }
             
-            peaks.put(new Double(peakDetails[0]), new Double(peakDetails[1]));
+            peaks.put(Double.valueOf(peakDetails[0]), Double.valueOf(peakDetails[1]));
             peakLine = b.readLine();
         }
 

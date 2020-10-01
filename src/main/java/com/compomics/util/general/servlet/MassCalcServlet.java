@@ -320,7 +320,7 @@ public class MassCalcServlet extends HttpServlet {
         while (st.hasMoreTokens()) {
             String key = st.nextToken();
 
-            Double value = new Double(st.nextToken());
+            Double value = Double.valueOf(st.nextToken());
             toReturn.put(key, value);
         }
 

@@ -500,7 +500,7 @@ public class ModificationDialog extends javax.swing.JDialog {
         // check that the unimod cv term accesion is an integer
         if (!unimodAccessionJTextField.getText().trim().isEmpty()) {
             try {
-                new Integer(unimodAccessionJTextField.getText().trim());
+                Integer.valueOf(unimodAccessionJTextField.getText().trim());
             } catch (NumberFormatException e) {
                 if (showMessage && !error) {
                     JOptionPane.showMessageDialog(this, "Please provide the Unimod accession number as an integer.", "Unimod Accession", JOptionPane.WARNING_MESSAGE);
@@ -514,7 +514,7 @@ public class ModificationDialog extends javax.swing.JDialog {
 
         if (!psiModAccessionJTextField.getText().trim().isEmpty()) {
             try {
-                new Integer(psiModAccessionJTextField.getText().trim());
+                Integer.valueOf(psiModAccessionJTextField.getText().trim());
             } catch (NumberFormatException e) {
                 if (showMessage && !error) {
                     JOptionPane.showMessageDialog(this, "Please provide the PSI-MOD accession number as an integer.", "PSI-MOD Accession", JOptionPane.WARNING_MESSAGE);
@@ -1233,7 +1233,7 @@ public class ModificationDialog extends javax.swing.JDialog {
                 boolean cvTermOk = true;
                 if (!unimodNameJTextField.getText().trim().isEmpty()) {
                     try {
-                        new Integer(unimodAccessionJTextField.getText().trim());
+                        Integer.valueOf(unimodAccessionJTextField.getText().trim());
                     } catch (NumberFormatException e) {
                         JOptionPane.showMessageDialog(this,
                                 "Please provide the Unimod accession number as an integer.",
@@ -1260,7 +1260,7 @@ public class ModificationDialog extends javax.swing.JDialog {
                 // create the unimod cv term
                 CvTerm unimodCvTerm = null;
                 if (cvTermOk) {
-                    int unimodAccession = new Integer(unimodAccessionJTextField.getText().trim());
+                    int unimodAccession = Integer.valueOf(unimodAccessionJTextField.getText().trim());
                     unimodCvTerm = new CvTerm("UNIMOD", "UNIMOD:" + unimodAccession, unimodNameJTextField.getText().trim(), null);
                 }
 
@@ -1268,7 +1268,7 @@ public class ModificationDialog extends javax.swing.JDialog {
                 cvTermOk = true;
                 if (!psiModNameJTextField.getText().trim().isEmpty()) {
                     try {
-                        new Integer(psiModAccessionJTextField.getText().trim());
+                        Integer.valueOf(psiModAccessionJTextField.getText().trim());
                     } catch (NumberFormatException e) {
                         JOptionPane.showMessageDialog(this, "Please provide the PSI-MOD accession number as an integer.", "PSI-MOD Accession", JOptionPane.WARNING_MESSAGE);
                         cvTermOk = false;
@@ -1293,7 +1293,7 @@ public class ModificationDialog extends javax.swing.JDialog {
                 // create the psi-mod cv term
                 CvTerm psiModCvTerm = null;
                 if (cvTermOk) {
-                    int psiModAccession = new Integer(psiModAccessionJTextField.getText().trim());
+                    int psiModAccession = Integer.valueOf(psiModAccessionJTextField.getText().trim());
                     psiModCvTerm = new CvTerm("MOD", "MOD:" + psiModAccession, psiModNameJTextField.getText().trim(), null);
                 }
 

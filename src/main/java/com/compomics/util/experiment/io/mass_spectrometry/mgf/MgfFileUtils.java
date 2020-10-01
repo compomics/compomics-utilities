@@ -415,7 +415,7 @@ public class MgfFileUtils {
                         }
                         if (peak) {
                             try {
-                                Double intensity = new Double(split[1]);
+                                Double intensity = Double.valueOf(split[1]);
                                 if (intensity == 0.0) {
                                     zero = true;
                                 }

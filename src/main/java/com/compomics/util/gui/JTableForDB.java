@@ -252,7 +252,7 @@ public class JTableForDB extends AlternateRowColoursJTable {
                 TableCellRenderer comp = getCellRenderer(row, col);
 
                 // Right-click means: goto formatted results for datfile or server.
-                if(e.getModifiers() == MouseEvent.BUTTON3_MASK || e.getModifiers() == MouseEvent.BUTTON2_MASK) {
+                if(e.getModifiersEx() == MouseEvent.BUTTON3_DOWN_MASK || e.getModifiersEx() == MouseEvent.BUTTON2_DOWN_MASK) {
                     if(JTableForDB.this.rowSelectionAllowed) {
                         JTableForDB.this.setRowSelectionInterval(row, row);
                     } else {

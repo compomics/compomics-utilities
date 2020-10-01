@@ -241,7 +241,7 @@ public class DigestionParameters extends ExperimentObject {
      */
     public boolean hasEnzymes() {
         
-        readDBMode();
+        
         
         return enzymes != null && !enzymes.isEmpty();
     }
@@ -253,7 +253,7 @@ public class DigestionParameters extends ExperimentObject {
      */
     public ArrayList<Enzyme> getEnzymes() {
         
-        readDBMode();
+        
         
         return enzymes;
     }
@@ -264,7 +264,7 @@ public class DigestionParameters extends ExperimentObject {
      * @param enzymes the enzymes used for digestion in a list
      */
     public void setEnzymes(ArrayList<Enzyme> enzymes) {
-        readDBMode();
+        
         this.enzymes = enzymes;
     }
 
@@ -275,7 +275,7 @@ public class DigestionParameters extends ExperimentObject {
      * @param enzyme an enzyme used for digestion.
      */
     public void addEnzyme(Enzyme enzyme) {
-        readDBMode();
+        
         if (enzymes == null) {
             enzymes = new ArrayList<>(1);
         }
@@ -288,7 +288,7 @@ public class DigestionParameters extends ExperimentObject {
      * Clears the parameters.
      */
     public void clear() {
-        readDBMode();
+        
         cleavageParameter = null;
         enzymes = null;
         nMissedCleavages = null;
@@ -299,7 +299,7 @@ public class DigestionParameters extends ExperimentObject {
      * Clears the enzymes set including specificity and missed cleavages.
      */
     public void clearEnzymes() {
-        readDBMode();
+        
         enzymes = null;
         nMissedCleavages = null;
         specificity = null;
@@ -315,7 +315,7 @@ public class DigestionParameters extends ExperimentObject {
      */
     public Integer getnMissedCleavages(String enzymeName) {
         
-        readDBMode();
+        
         
         if (nMissedCleavages == null) {
             return null;
@@ -330,7 +330,7 @@ public class DigestionParameters extends ExperimentObject {
      * @param enzymeMissedCleavages the number of allowed missed cleavages
      */
     public void setnMissedCleavages(String enzymeName, int enzymeMissedCleavages) {
-        readDBMode();
+        
         if (nMissedCleavages == null) {
             nMissedCleavages = new HashMap<>(1);
         }
@@ -346,7 +346,7 @@ public class DigestionParameters extends ExperimentObject {
      */
     public Specificity getSpecificity(String enzymeName) {
         
-        readDBMode();
+        
         
         if (specificity == null) {
             return null;
@@ -362,7 +362,7 @@ public class DigestionParameters extends ExperimentObject {
      * @param enzymeSpecificity the expected specificity of the enzyme
      */
     public void setSpecificity(String enzymeName, Specificity enzymeSpecificity) {
-        readDBMode();
+        
         if (specificity == null) {
             specificity = new HashMap<>(1);
         }
@@ -376,7 +376,7 @@ public class DigestionParameters extends ExperimentObject {
      */
     public CleavageParameter getCleavageParameter() {
         
-        readDBMode();
+        
         
         return cleavageParameter;
     }
@@ -387,7 +387,7 @@ public class DigestionParameters extends ExperimentObject {
      * @param cleavageParameter the cleavage parameters
      */
     public void setCleavageParameter(CleavageParameter cleavageParameter) {
-        readDBMode();
+        
         this.cleavageParameter = cleavageParameter;
     }
 
@@ -398,7 +398,7 @@ public class DigestionParameters extends ExperimentObject {
      */
     public String getShortDescription() {
         
-        readDBMode();
+        
         
         DigestionParameters defaultParameters = DigestionParameters.getDefaultParameters();
         StringBuilder stringBuilder = new StringBuilder();
@@ -445,7 +445,7 @@ public class DigestionParameters extends ExperimentObject {
      */
     public boolean isSameAs(DigestionParameters otherDigestionParameters) {
         
-        readDBMode();
+        
         
         if (cleavageParameter != otherDigestionParameters.getCleavageParameter()) {
             return false;
@@ -488,7 +488,7 @@ public class DigestionParameters extends ExperimentObject {
      */
     public String getXTandemFormat() {
         
-        readDBMode();
+        
         
 
         switch (cleavageParameter) {
@@ -559,7 +559,7 @@ public class DigestionParameters extends ExperimentObject {
      */
     public String getMyriMatchFormat() {
         
-        readDBMode();
+        
         
 
         // example: trypsin corresponds to "[|R|K . . ]"

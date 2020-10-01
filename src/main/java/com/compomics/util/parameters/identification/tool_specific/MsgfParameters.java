@@ -1,6 +1,6 @@
 package com.compomics.util.parameters.identification.tool_specific;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 
@@ -9,7 +9,7 @@ import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmP
  *
  * @author Harald Barsnes
  */
-public class MsgfParameters extends DbObject implements IdentificationAlgorithmParameter {
+public class MsgfParameters extends ExperimentObject implements IdentificationAlgorithmParameter {
 
     /**
      * Version number for deserialization.

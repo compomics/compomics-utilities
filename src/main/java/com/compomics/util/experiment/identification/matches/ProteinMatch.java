@@ -40,6 +40,10 @@ public class ProteinMatch extends IdentificationMatch {
      * Boolean indicating whether the protein match is decoy.
      */
     private boolean decoy;
+    
+    
+    private ProteinMatch p = null;
+    
 
     /**
      * Constructor for the protein match.
@@ -99,7 +103,7 @@ public class ProteinMatch extends IdentificationMatch {
             String[] newAccessions
     ) {
 
-        writeDBMode();
+        
 
         this.accessions = newAccessions;
         leadingAccession = accessions[0];
@@ -114,7 +118,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public String[] getAccessions() {
 
-        readDBMode();
+        
 
         return accessions;
     }
@@ -126,7 +130,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public String getLeadingAccession() {
 
-        readDBMode();
+        
 
         return leadingAccession;
 
@@ -139,7 +143,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void setLeadingAccession(String leadingAccession) {
 
-        writeDBMode();
+        
 
         this.leadingAccession = leadingAccession;
     }
@@ -151,7 +155,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public boolean isDecoy() {
 
-        readDBMode();
+        
 
         return decoy;
 
@@ -164,7 +168,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void setDecoy(boolean decoy) {
 
-        writeDBMode();
+        
 
         this.decoy = decoy;
 
@@ -177,7 +181,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public long[] getPeptideMatchesKeys() {
 
-        readDBMode();
+        
 
         return peptideMatchesKeys;
     }
@@ -189,7 +193,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void addPeptideMatchKey(long peptideMatchKey) {
 
-        writeDBMode();
+        
 
         peptideMatchesKeys = Arrays.copyOf(peptideMatchesKeys, peptideMatchesKeys.length + 1);
         peptideMatchesKeys[peptideMatchesKeys.length - 1] = peptideMatchKey;
@@ -203,7 +207,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void addPeptideMatchKeys(long[] newKeys) {
 
-        writeDBMode();
+        
 
         peptideMatchesKeys = LongStream.concat(Arrays.stream(peptideMatchesKeys),
                 Arrays.stream(newKeys))
@@ -219,7 +223,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void setPeptideMatchesKeys(long[] peptideMatchKeys) {
 
-        writeDBMode();
+        
 
         peptideMatchesKeys = peptideMatchKeys;
     }
@@ -231,7 +235,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public int getPeptideCount() {
 
-        readDBMode();
+        
 
         return peptideMatchesKeys.length;
     }
@@ -239,7 +243,7 @@ public class ProteinMatch extends IdentificationMatch {
     @Override
     public long getKey() {
 
-        readDBMode();
+        
 
         return matchKey;
     }
@@ -249,7 +253,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     private void setMatchKey() {
 
-        writeDBMode();
+        
 
         matchKey = ExperimentObject.asLong(
                 Arrays.stream(accessions)
@@ -280,7 +284,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public int getNProteins() {
 
-        readDBMode();
+        
 
         return accessions.length;
     }
@@ -296,7 +300,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public boolean contains(String aProtein) {
 
-        readDBMode();
+        
 
         return Arrays.stream(accessions)
                 .anyMatch(accession -> accession.equals(aProtein));

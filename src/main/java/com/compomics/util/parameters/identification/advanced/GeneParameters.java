@@ -1,6 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import java.util.Map.Entry;
@@ -12,7 +12,7 @@ import java.util.TreeMap;
  * @author Harald Barsnes
  * @author Marc Vaudel
  */
-public class GeneParameters extends DbObject {
+public class GeneParameters extends ExperimentObject {
 
     /**
      * If true the gene mappings will auto update.
@@ -49,7 +49,7 @@ public class GeneParameters extends DbObject {
      * @return a boolean indicating whether gene mappings should be used
      */
     public Boolean getUseGeneMapping() {
-        readDBMode();
+        
         if (useGeneMapping == null) {
             useGeneMapping = true;
         }
@@ -63,7 +63,7 @@ public class GeneParameters extends DbObject {
      * be used
      */
     public void setUseGeneMapping(Boolean useGeneMapping) {
-        writeDBMode();
+        
         this.useGeneMapping = useGeneMapping;
     }
 
@@ -74,7 +74,7 @@ public class GeneParameters extends DbObject {
      * automatically updated
      */
     public Boolean getAutoUpdate() {
-        readDBMode();
+        
         if (autoUpdate == null) {
             autoUpdate = true;
         }
@@ -88,7 +88,7 @@ public class GeneParameters extends DbObject {
      * be automatically updated
      */
     public void setAutoUpdate(Boolean autoUpdate) {
-        writeDBMode();
+        
         this.autoUpdate = autoUpdate;
     }
 
@@ -101,7 +101,7 @@ public class GeneParameters extends DbObject {
      * as these ones.
      */
     public boolean equals(GeneParameters genePreferences) {
-        readDBMode();
+        
         return getAutoUpdate().equals(genePreferences.getAutoUpdate());
     }
 
@@ -111,7 +111,7 @@ public class GeneParameters extends DbObject {
      * @return the taxon of the species selected as background species
      */
     public Integer getBackgroundSpecies() {
-        readDBMode();
+        
         return backgroundSpecies;
     }
 
@@ -122,7 +122,7 @@ public class GeneParameters extends DbObject {
      * background species
      */
     public void setBackgroundSpecies(Integer selectedBackgroundSpecies) {
-        writeDBMode();
+        
         this.backgroundSpecies = selectedBackgroundSpecies;
     }
 
@@ -133,7 +133,7 @@ public class GeneParameters extends DbObject {
      */
     public void setBackgroundSpeciesFromFastaSummary(FastaSummary fastaSummary) {
 
-        writeDBMode();
+        
 
         SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
 
@@ -185,7 +185,7 @@ public class GeneParameters extends DbObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        readDBMode();
+        
 
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();

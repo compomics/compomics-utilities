@@ -26,7 +26,7 @@ import junit.framework.TestCase;
  */
 public class IdentificationDBTest extends TestCase {
 
-    public void teestDB() throws SQLException, IOException, ClassNotFoundException, SQLException, ClassNotFoundException, InterruptedException {
+    public void testDB() throws SQLException, IOException, ClassNotFoundException, SQLException, ClassNotFoundException, InterruptedException {
 
         String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
         path = path.substring(0, path.indexOf("/target/"));
@@ -39,7 +39,7 @@ public class IdentificationDBTest extends TestCase {
         
 
         try {
-            ObjectsDB objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", true);
+            ObjectsDB objectsDB = new ObjectsDB(path, "experimentTestDB.sqlite", true);
 
             Identification identification = new Identification(objectsDB);
                 
@@ -88,10 +88,11 @@ public class IdentificationDBTest extends TestCase {
             
             
             
-            objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", false);
+            objectsDB = new ObjectsDB(path, "experimentTestDB.sqlite", false);
             identification = new Identification(objectsDB);
 
             testSpectrumMatch = (SpectrumMatch) identification.retrieveObject(spectrumMatchKey);
+            Assert.assertTrue(testSpectrumMatch != null);
             Assert.assertTrue(testSpectrumMatch.getKey() == spectrumMatchKey);
 
             HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> assumptionsMap = testSpectrumMatch.getPeptideAssumptionsMap();
@@ -118,7 +119,7 @@ public class IdentificationDBTest extends TestCase {
             
             
             
-            objectsDB = new ObjectsDB(path, "experimentTestDB.zdb", false);
+            objectsDB = new ObjectsDB(path, "experimentTestDB.sqlite", false);
             identification = new Identification(objectsDB);
 
             
@@ -219,7 +220,7 @@ public class IdentificationDBTest extends TestCase {
     
     
     
-    public void testMassiveDB() throws SQLException, IOException, ClassNotFoundException, SQLException, ClassNotFoundException, InterruptedException {
+    public void teestMassiveDB() throws SQLException, IOException, ClassNotFoundException, SQLException, ClassNotFoundException, InterruptedException {
         
         String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
         path = path.substring(0, path.indexOf("/target/"));
@@ -288,7 +289,7 @@ public class IdentificationDBTest extends TestCase {
             identification.close();
                 
         } finally {
-            //IoUtil.deleteDir(dbFolder);
+            IoUtil.deleteDir(dbFolder);
         }
             
     }

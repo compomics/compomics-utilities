@@ -68,7 +68,7 @@ public class Spectrum extends ExperimentObject {
      * @return the peak list as an array list formatted as text
      */
     public String getPeakListAsString() {
-        readDBMode();
+        
 
         return IntStream.range(0, mz.length)
                 .mapToObj(
@@ -85,7 +85,7 @@ public class Spectrum extends ExperimentObject {
      * @return the total intensity. 0 if no peak.
      */
     public double getTotalIntensity() {
-        readDBMode();
+        
 
         return Arrays.stream(intensity)
                 .sum();
@@ -98,7 +98,7 @@ public class Spectrum extends ExperimentObject {
      * @return the max intensity value. 0 if no peak.
      */
     public double getMaxIntensity() {
-        readDBMode();
+        
 
         return Arrays.stream(intensity)
                 .max()
@@ -112,7 +112,7 @@ public class Spectrum extends ExperimentObject {
      * @return the max mz value
      */
     public double getMaxMz() {
-        readDBMode();
+        
 
         return mz[mz.length - 1];
 
@@ -124,7 +124,7 @@ public class Spectrum extends ExperimentObject {
      * @return the min mz value
      */
     public double getMinMz() {
-        readDBMode();
+        
 
         return mz[0];
 
@@ -137,7 +137,7 @@ public class Spectrum extends ExperimentObject {
      */
     public Precursor getPrecursor() {
 
-        readDBMode();
+        
         return precursor;
 
     }

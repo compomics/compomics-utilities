@@ -1,6 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 
 /**
@@ -9,7 +9,7 @@ import com.compomics.util.db.object.DbObject;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ProteinInferenceParameters extends DbObject {
+public class ProteinInferenceParameters extends ExperimentObject {
 
     /**
      * Empty default constructor
@@ -52,7 +52,7 @@ public class ProteinInferenceParameters extends DbObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        readDBMode();
+        
 
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
@@ -75,7 +75,7 @@ public class ProteinInferenceParameters extends DbObject {
      * @return true if the objects have identical settings
      */
     public boolean equals(ProteinInferenceParameters otherProteinInferencePreferences) {
-        readDBMode();
+        
 
         if (otherProteinInferencePreferences == null) {
             return false;
@@ -116,7 +116,7 @@ public class ProteinInferenceParameters extends DbObject {
      * simplified
      */
     public boolean getSimplifyGroups() {
-        readDBMode();
+        
         return simplifyProteinGroups;
     }
 
@@ -128,7 +128,7 @@ public class ProteinInferenceParameters extends DbObject {
      * simplified
      */
     public void setSimplifyGroups(boolean simplifyProteinGroups) {
-        writeDBMode();
+        
         this.simplifyProteinGroups = simplifyProteinGroups;
     }
 
@@ -140,7 +140,7 @@ public class ProteinInferenceParameters extends DbObject {
      * simplified based on the Uniprot evidence level
      */
     public boolean getSimplifyGroupsEvidence() {
-        readDBMode();
+        
         return simplifyGroupsEvidence;
     }
 
@@ -152,7 +152,7 @@ public class ProteinInferenceParameters extends DbObject {
      * simplified based on the Uniprot evidence level
      */
     public void setSimplifyGroupsEvidence(boolean simplifyGroupsEvidence) {
-        writeDBMode();
+        
         this.simplifyGroupsEvidence = simplifyGroupsEvidence;
     }
 
@@ -164,7 +164,7 @@ public class ProteinInferenceParameters extends DbObject {
      * simplified based on the peptide confidence
      */
     public boolean getSimplifyGroupsConfidence() {
-        readDBMode();
+        
         return simplifyGroupsConfidence;
     }
 
@@ -176,7 +176,7 @@ public class ProteinInferenceParameters extends DbObject {
      * simplified based on the peptide confidence level
      */
     public void setSimplifyGroupsConfidence(boolean simplifyGroupsConfidence) {
-        writeDBMode();
+        
         this.simplifyGroupsConfidence = simplifyGroupsConfidence;
     }
 
@@ -186,7 +186,7 @@ public class ProteinInferenceParameters extends DbObject {
      * @return the confidence below which a peptide is considered absent
      */
     public double getConfidenceThreshold() {
-        readDBMode();
+        
         return confidenceThreshold;
     }
 
@@ -196,7 +196,7 @@ public class ProteinInferenceParameters extends DbObject {
      * @param confidenceThreshold the confidence below which a peptide is considered absent
      */
     public void setConfidenceThreshold(double confidenceThreshold) {
-        writeDBMode();
+        
         this.confidenceThreshold = confidenceThreshold;
     }
     
@@ -208,7 +208,7 @@ public class ProteinInferenceParameters extends DbObject {
      * simplified based on the peptide enzymaticity
      */
     public boolean getSimplifyGroupsEnzymaticity() {
-        readDBMode();
+        
         return simplifyGroupsEnzymaticity;
     }
 
@@ -220,7 +220,7 @@ public class ProteinInferenceParameters extends DbObject {
      * simplified based on the peptide enzymaticity
      */
     public void setSimplifyGroupsEnzymaticity(boolean simplifyGroupsEnzymaticity) {
-        writeDBMode();
+        
         this.simplifyGroupsEnzymaticity = simplifyGroupsEnzymaticity;
     }
 
@@ -232,7 +232,7 @@ public class ProteinInferenceParameters extends DbObject {
      * simplified based on the peptide variant matching
      */
     public boolean getSimplifyGroupsVariants() {
-        readDBMode();
+        
         return simplifyGroupsVariants;
     }
 
@@ -244,7 +244,7 @@ public class ProteinInferenceParameters extends DbObject {
      * simplified based on the peptide variant matching
      */
     public void setSimplifyGroupsVariants(boolean simplifyGroupsVariants) {
-        writeDBMode();
+        
         this.simplifyGroupsVariants = simplifyGroupsVariants;
     }
 
@@ -254,7 +254,7 @@ public class ProteinInferenceParameters extends DbObject {
      * @return a boolean indicating whether the protein mapping should be refined based on terminal and pattern modifications
      */
     public boolean isModificationRefinement() {
-        readDBMode();
+        
         return modificationRefinement;
     }
 
@@ -264,7 +264,7 @@ public class ProteinInferenceParameters extends DbObject {
      * @param modificationRefinement a boolean indicating whether the protein mapping should be refined based on terminal and pattern modifications
      */
     public void setModificationRefinement(boolean modificationRefinement) {
-        writeDBMode();
+        
         this.modificationRefinement = modificationRefinement;
     }
     

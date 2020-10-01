@@ -1,9 +1,9 @@
 package com.compomics.util.experiment.biology.atoms;
 
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import com.compomics.util.db.object.DbObject;
 
 /**
  * A chain of atoms.
@@ -11,7 +11,7 @@ import com.compomics.util.db.object.DbObject;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class AtomChain extends DbObject {
+public class AtomChain extends ExperimentObject {
 
     /**
      * Serial number for backward compatibility.

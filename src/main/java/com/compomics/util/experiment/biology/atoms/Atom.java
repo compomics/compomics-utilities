@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.biology.atoms;
 
-import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.atoms.impl.Calcium;
 import com.compomics.util.experiment.biology.atoms.impl.Carbon;
 import com.compomics.util.experiment.biology.atoms.impl.Copper;
@@ -19,6 +18,7 @@ import com.compomics.util.experiment.biology.atoms.impl.Selenium;
 import com.compomics.util.experiment.biology.atoms.impl.Sodium;
 import com.compomics.util.experiment.biology.atoms.impl.Sulfur;
 import com.compomics.util.experiment.biology.atoms.impl.Zinc;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,7 +28,7 @@ import java.util.HashMap;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public abstract class Atom extends DbObject {
+public abstract class Atom extends ExperimentObject {
 
     /**
      * Empty default constructor
@@ -209,7 +209,6 @@ public abstract class Atom extends DbObject {
      * @return the monoisotopic mass in Da
      */
     public double getMonoisotopicMass() {
-        readDBMode();
         return monoisotopicMass;
     }
 
@@ -219,7 +218,6 @@ public abstract class Atom extends DbObject {
      * @return the name of the atom
      */
     public String getName() {
-        readDBMode();
         return name;
     }
 
@@ -229,7 +227,6 @@ public abstract class Atom extends DbObject {
      * @return the symbol for the atom
      */
     public String getLetter() {
-        readDBMode();
         return letter;
     }
 
@@ -240,7 +237,6 @@ public abstract class Atom extends DbObject {
      * @return a list of isotopes for which a mass is available
      */
     public ArrayList<Integer> getImplementedIsotopes() {
-        readDBMode();
         if (isotopeMap != null) {
             return new ArrayList<>(isotopeMap.keySet());
         }
@@ -257,7 +253,6 @@ public abstract class Atom extends DbObject {
      * @return the corresponding mass
      */
     public Double getIsotopeMass(int isotopeNumber) {
-        readDBMode();
         if (isotopeMap != null) {
             return isotopeMap.get(isotopeNumber);
         }
@@ -275,7 +270,6 @@ public abstract class Atom extends DbObject {
      * monoisotopic mass
      */
     public double getDifferenceToMonoisotopic(int isotopeNumber) {
-        readDBMode();
 
         if (!isotopeMap.containsKey(isotopeNumber)) {
             throw new IllegalArgumentException(
@@ -290,7 +284,6 @@ public abstract class Atom extends DbObject {
 
     @Override
     public String toString() {
-        readDBMode();
         return getLetter();
     }
 }

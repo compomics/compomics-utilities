@@ -1,6 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.modification.ModificationLocalizationScore;
 
 /**
@@ -9,7 +9,7 @@ import com.compomics.util.experiment.identification.modification.ModificationLoc
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ModificationLocalizationParameters extends DbObject {
+public class ModificationLocalizationParameters extends ExperimentObject {
 
     /**
      * Boolean indicating whether a probabilistic score is to be calculated.
@@ -60,7 +60,7 @@ public class ModificationLocalizationParameters extends DbObject {
      * is required
      */
     public boolean isProbabilisticScoreCalculation() {
-        readDBMode();
+        
 
         return probabilisticScoreCalculation;
 
@@ -73,7 +73,7 @@ public class ModificationLocalizationParameters extends DbObject {
      * probabilistic modification score is required
      */
     public void setProbabilisticScoreCalculation(boolean probabilisticScoreCalculation) {
-        writeDBMode();
+        
         this.probabilisticScoreCalculation = probabilisticScoreCalculation;
 
     }
@@ -84,7 +84,7 @@ public class ModificationLocalizationParameters extends DbObject {
      * @return the selected probabilistic score
      */
     public ModificationLocalizationScore getSelectedProbabilisticScore() {
-        readDBMode();
+        
 
         return selectedProbabilisticScore;
 
@@ -97,7 +97,7 @@ public class ModificationLocalizationParameters extends DbObject {
      */
     public void setSelectedProbabilisticScore(ModificationLocalizationScore selectedProbabilisticScore) {
 
-        writeDBMode();
+        
         this.selectedProbabilisticScore = selectedProbabilisticScore;
 
     }
@@ -108,7 +108,7 @@ public class ModificationLocalizationParameters extends DbObject {
      * @return The probabilistic score threshold (inclusive).
      */
     public double getProbabilisticScoreThreshold() {
-        readDBMode();
+        
 
         return probabilisticScoreThreshold;
 
@@ -124,7 +124,7 @@ public class ModificationLocalizationParameters extends DbObject {
             double probabilisticScoreThreshold
     ) {
 
-        writeDBMode();
+        
         this.probabilisticScoreThreshold = probabilisticScoreThreshold;
 
     }
@@ -135,7 +135,7 @@ public class ModificationLocalizationParameters extends DbObject {
      * @return the D-score threshold
      */
     public double getDScoreThreshold() {
-        readDBMode();
+        
 
         return dScoreThreshold;
 
@@ -148,7 +148,7 @@ public class ModificationLocalizationParameters extends DbObject {
      */
     public void setDScoreThreshold(double dScoreThreshold) {
 
-        writeDBMode();
+        
         this.dScoreThreshold = dScoreThreshold;
 
     }
@@ -162,7 +162,7 @@ public class ModificationLocalizationParameters extends DbObject {
      * score
      */
     public boolean isProbabilisticScoreNeutralLosses() {
-        readDBMode();
+        
 
         return probabilisticScoreNeutralLosses;
 
@@ -178,7 +178,7 @@ public class ModificationLocalizationParameters extends DbObject {
      */
     public void setProbabilisticScoreNeutralLosses(boolean probabilisticScoreNeutralLosses) {
 
-        writeDBMode();
+        
         this.probabilisticScoreNeutralLosses = probabilisticScoreNeutralLosses;
 
     }
@@ -191,7 +191,7 @@ public class ModificationLocalizationParameters extends DbObject {
      * modifications on amino acid sequences
      */
     public SequenceMatchingParameters getSequenceMatchingParameters() {
-        readDBMode();
+        
 
         return sequenceMatchingParameters;
 
@@ -206,7 +206,7 @@ public class ModificationLocalizationParameters extends DbObject {
      */
     public void setSequenceMatchingParameters(SequenceMatchingParameters sequenceMatchingParameters) {
 
-        writeDBMode();
+        
         this.sequenceMatchingParameters = sequenceMatchingParameters;
 
     }
@@ -219,7 +219,7 @@ public class ModificationLocalizationParameters extends DbObject {
      * modifications should be aligned on the confident sites
      */
     public boolean getAlignNonConfidentModifications() {
-        readDBMode();
+        
 
         return alignNonConfidentModifications;
 
@@ -235,7 +235,7 @@ public class ModificationLocalizationParameters extends DbObject {
      */
     public void setAlignNonConfidentModifications(boolean alignNonConfidentModifications) {
 
-        writeDBMode();
+        
         this.alignNonConfidentModifications = alignNonConfidentModifications;
 
     }
@@ -246,7 +246,7 @@ public class ModificationLocalizationParameters extends DbObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        readDBMode();
+        
 
         String newLine = System.getProperty("line.separator");
 
@@ -269,7 +269,7 @@ public class ModificationLocalizationParameters extends DbObject {
      * @return true if the objects have identical settings
      */
     public boolean equals(ModificationLocalizationParameters otherParameters) {
-        readDBMode();
+        
 
         if (otherParameters == null) {
 

@@ -1,6 +1,6 @@
 package com.compomics.util.parameters.identification.tool_specific;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * @author Marc Vaudel
  */
-public class PepnovoParameters extends DbObject implements IdentificationAlgorithmParameter {
+public class PepnovoParameters extends ExperimentObject implements IdentificationAlgorithmParameter {
 
     /**
      * Version number for deserialization.

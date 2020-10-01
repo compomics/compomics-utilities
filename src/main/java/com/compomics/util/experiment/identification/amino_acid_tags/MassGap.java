@@ -40,14 +40,14 @@ public class MassGap extends ExperimentObject implements TagComponent {
      * @param value the mass of the gap
      */
     public void setMass(double value) {
-        writeDBMode();
+        
         this.value = value;
         sequence = null;
     }
 
     @Override
     public String asSequence() {
-        readDBMode();
+        
         
         if (sequence == null) {
         
@@ -64,19 +64,19 @@ public class MassGap extends ExperimentObject implements TagComponent {
 
     @Override
     public double getMass() {
-        readDBMode();
+        
         return value;
     }
 
     @Override
     public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
-        readDBMode();
+        
         return (anotherCompontent instanceof MassGap) && anotherCompontent.getMass() == value;
     }
 
     @Override
     public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
-        readDBMode();
+        
         return isSameAs(anotherCompontent, sequenceMatchingPreferences);
     }
 }

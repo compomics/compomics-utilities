@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.peptide_shaker;
 
-import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.modifications.ModificationProvider;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.gui.utils.EmptyCollections;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import java.util.TreeSet;
  *
  * @author Marc Vaudel
  */
-public class PSModificationScores extends DbObject implements UrParameter {
+public class PSModificationScores extends ExperimentObject implements UrParameter {
 
     /**
      * Dummy scores.
@@ -65,7 +65,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
             ModificationScoring modificationScoring
     ) {
 
-        writeDBMode();
+        
 
         modificationMap.put(modName, modificationScoring);
 
@@ -83,7 +83,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
             String modName
     ) {
 
-        readDBMode();
+        
 
         return modificationMap.get(modName);
 
@@ -100,7 +100,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
             String modName
     ) {
 
-        readDBMode();
+        
 
         return modificationMap.containsKey(modName);
 
@@ -113,7 +113,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public Set<String> getScoredModifications() {
 
-        readDBMode();
+        
 
         return modificationMap.keySet();
 
@@ -130,7 +130,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
             int modificationSite
     ) {
 
-        writeDBMode();
+        
 
         // add the modification to the site map
         if (mainModificationSites == null) {
@@ -183,7 +183,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
             HashMap<Integer, HashSet<String>> possibleModifications
     ) {
 
-        writeDBMode();
+        
 
         if (ambiguousModificationsByRepresentativeSite == null) {
 
@@ -273,7 +273,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
             ModificationProvider modificationProvider
     ) {
 
-        writeDBMode();
+        
 
         double modMass = modificationProvider.getModification(modName).getMass();
 
@@ -426,7 +426,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
             String modificationName
     ) {
 
-        readDBMode();
+        
 
         return mainModificationSites != null
                 && mainModificationSites.containsKey(site)
@@ -446,7 +446,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
             int site
     ) {
 
-        readDBMode();
+        
 
         return mainModificationSites == null || !mainModificationSites.containsKey(site) ? EmptyCollections.emptyStringSet
                 : mainModificationSites.get(site);
@@ -466,7 +466,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
             int site
     ) {
 
-        readDBMode();
+        
 
         HashMap<Integer, HashSet<String>> modificationsAtSite = getAmbiguousModificationsAtRepresentativeSite(site);
 
@@ -489,7 +489,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
             String modName
     ) {
 
-        readDBMode();
+        
 
         return confidentModificationsByModName == null || !confidentModificationsByModName.containsKey(modName) ? EmptyCollections.emptyIntSet
                 : confidentModificationsByModName.get(modName);
@@ -509,7 +509,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
             int representativeSite
     ) {
 
-        readDBMode();
+        
 
         return ambiguousModificationsByRepresentativeSite == null || !ambiguousModificationsByRepresentativeSite.containsKey(representativeSite)
                 ? new HashMap<>(0)
@@ -530,7 +530,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
             String modName
     ) {
 
-        readDBMode();
+        
 
         return ambiguousModificationsByModName == null ? new HashMap<>(0)
                 : ambiguousModificationsByModName.get(modName);
@@ -544,7 +544,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public TreeSet<Integer> getConfidentSites() {
 
-        readDBMode();
+        
 
         return mainModificationSites == null ? new TreeSet<>()
                 : new TreeSet<>(mainModificationSites.keySet());
@@ -560,7 +560,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public TreeSet<Integer> getRepresentativeSites() {
 
-        readDBMode();
+        
 
         return ambiguousModificationsByRepresentativeSite == null ? EmptyCollections.emptyIntTreeSet
                 : new TreeSet<>(ambiguousModificationsByRepresentativeSite.keySet());
@@ -574,7 +574,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public TreeSet<String> getConfidentlyLocalizedModifications() {
 
-        readDBMode();
+        
 
         return confidentModificationsByModName == null ? EmptyCollections.emptyStringTreeSet
                 : new TreeSet<>(confidentModificationsByModName.keySet());
@@ -588,7 +588,7 @@ public class PSModificationScores extends DbObject implements UrParameter {
      */
     public TreeSet<String> getAmbiguouslyLocalizedModifications() {
 
-        readDBMode();
+        
 
         return ambiguousModificationsByModName == null ? EmptyCollections.emptyStringTreeSet
                 : new TreeSet<>(ambiguousModificationsByModName.keySet());

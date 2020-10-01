@@ -11,7 +11,7 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import com.compomics.util.parameters.identification.advanced.IdMatchValidationParameters;
 import com.compomics.util.experiment.io.parameters.MarshallableParameter;
 import com.compomics.util.experiment.io.parameters.DummyParameters;
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.filtering.PeptideAssumptionFilter;
 import com.compomics.util.experiment.identification.spectrum_annotation.AnnotationParameters;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
@@ -27,7 +27,7 @@ import java.io.IOException;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class IdentificationParameters extends DbObject implements MarshallableParameter {
+public class IdentificationParameters extends ExperimentObject implements MarshallableParameter {
 
     /**
      * Currently supported version number.
@@ -181,7 +181,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the parameters used for the spectrum matching
      */
     public SearchParameters getSearchParameters() {
-        readDBMode();
+        
 
         return searchParameters;
 
@@ -195,7 +195,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     public void setSearchParameters(
             SearchParameters searchParameters
     ) {
-        writeDBMode();
+        
 
         this.searchParameters = searchParameters;
 
@@ -248,7 +248,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the annotation parameters used for identification
      */
     public AnnotationParameters getAnnotationParameters() {
-        readDBMode();
+        
 
         return annotationParameters;
 
@@ -263,7 +263,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     public void setAnnotationParameters(
             AnnotationParameters annotationParameters
     ) {
-        writeDBMode();
+        
 
         this.annotationParameters = annotationParameters;
 
@@ -275,7 +275,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the filter used when importing PSMs
      */
     public PeptideAssumptionFilter getPeptideAssumptionFilter() {
-        readDBMode();
+        
 
         return peptideAssumptionFilter;
 
@@ -289,7 +289,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     public void setPeptideAssumptionFilter(
             PeptideAssumptionFilter peptideAssumptionFilter
     ) {
-        writeDBMode();
+        
 
         this.peptideAssumptionFilter = peptideAssumptionFilter;
 
@@ -301,7 +301,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the scoring parameters used when scoring PSMs
      */
     public PsmScoringParameters getPsmScoringParameters() {
-        readDBMode();
+        
         return psmScoringParameters;
 
     }
@@ -315,7 +315,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     public void setPsmScoringParameters(
             PsmScoringParameters psmScoringParameters
     ) {
-        writeDBMode();
+        
 
         this.psmScoringParameters = psmScoringParameters;
 
@@ -327,7 +327,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the modification localization scoring parameters
      */
     public ModificationLocalizationParameters getModificationLocalizationParameters() {
-        readDBMode();
+        
 
         return modificationLocalizationParameters;
 
@@ -343,7 +343,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
             ModificationLocalizationParameters modificationLocalizationParameters
     ) {
 
-        writeDBMode();
+        
         this.modificationLocalizationParameters = modificationLocalizationParameters;
 
     }
@@ -354,7 +354,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the sequence matching parameters
      */
     public SequenceMatchingParameters getSequenceMatchingParameters() {
-        readDBMode();
+        
 
         return sequenceMatchingParameters;
 
@@ -368,7 +368,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     public void setSequenceMatchingParameters(
             SequenceMatchingParameters sequenceMatchingParameters
     ) {
-        writeDBMode();
+        
 
         this.sequenceMatchingParameters = sequenceMatchingParameters;
 
@@ -380,7 +380,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the peptide variant parameters
      */
     public PeptideVariantsParameters getPeptideVariantsParameters() {
-        readDBMode();
+        
 
         return peptideVariantsParameters;
 
@@ -394,7 +394,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     public void setPeptideVariantsParameters(
             PeptideVariantsParameters peptideVariantsParameters
     ) {
-        writeDBMode();
+        
 
         this.peptideVariantsParameters = peptideVariantsParameters;
 
@@ -406,7 +406,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the identification matches validation parameters
      */
     public IdMatchValidationParameters getIdValidationParameters() {
-        readDBMode();
+        
 
         return idValidationParameters;
 
@@ -421,7 +421,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     public void setIdValidationParameters(
             IdMatchValidationParameters idValidationParameters
     ) {
-        writeDBMode();
+        
 
         this.idValidationParameters = idValidationParameters;
 
@@ -433,7 +433,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the protein inference parameters
      */
     public ProteinInferenceParameters getProteinInferenceParameters() {
-        readDBMode();
+        
 
         return proteinInferenceParameters;
 
@@ -447,7 +447,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     public void setProteinInferenceParameters(
             ProteinInferenceParameters proteinInferenceParameters
     ) {
-        writeDBMode();
+        
 
         this.proteinInferenceParameters = proteinInferenceParameters;
 
@@ -459,7 +459,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the gene parameters
      */
     public GeneParameters getGeneParameters() {
-        readDBMode();
+        
 
         return geneParameters;
 
@@ -473,7 +473,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     public void setGeneParameters(
             GeneParameters geneParameters
     ) {
-        writeDBMode();
+        
 
         this.geneParameters = geneParameters;
 
@@ -485,7 +485,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the fraction parameters
      */
     public FractionParameters getFractionParameters() {
-        readDBMode();
+        
 
         return fractionParameters;
 
@@ -499,7 +499,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     public void setFractionParameters(
             FractionParameters fractionParameters
     ) {
-        writeDBMode();
+        
 
         this.fractionParameters = fractionParameters;
 
@@ -511,7 +511,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the FASTA processing parameters
      */
     public FastaParameters getFastaParameters() {
-        readDBMode();
+        
 
         return fastaParameters;
 
@@ -525,7 +525,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     public void setFastaParameters(
             FastaParameters fastaParameters
     ) {
-        writeDBMode();
+        
 
         this.fastaParameters = fastaParameters;
 
@@ -644,7 +644,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the name of the parameters
      */
     public String getName() {
-        readDBMode();
+        
 
         return name;
 
@@ -656,7 +656,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @param name the name of the parameters
      */
     public void setName(String name) {
-        writeDBMode();
+        
 
         this.name = name;
 
@@ -668,7 +668,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @return the description of the parameters
      */
     public String getDescription() {
-        readDBMode();
+        
 
         return description;
 
@@ -681,7 +681,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * generated
      */
     public boolean getDefaultDescription() {
-        readDBMode();
+        
 
         return defaultDescription;
 
@@ -695,7 +695,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * is automatically generated
      */
     public void setDescription(String description, boolean automaticallyGenerated) {
-        writeDBMode();
+        
 
         this.description = description;
         this.defaultDescription = automaticallyGenerated;
@@ -708,7 +708,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      * @param searchParameters the parameters used for the search
      */
     public void setParametersFromSearch(SearchParameters searchParameters) {
-        writeDBMode();
+        
 
         setSearchParameters(searchParameters);
         annotationParameters = new AnnotationParameters();
@@ -795,7 +795,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
 
     @Override
     public void setType() {
-        writeDBMode();
+        
 
         marshallableParameterType = Type.identification_parameters.name();
 
@@ -804,7 +804,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
     @Override
     public Type getType() {
 
-        readDBMode();
+        
 
         if (marshallableParameterType == null) {
 
@@ -827,7 +827,7 @@ public class IdentificationParameters extends DbObject implements MarshallablePa
      */
     public boolean equals(IdentificationParameters otherIdentificationParameters) {
 
-        readDBMode();
+        
 
         if (otherIdentificationParameters == null) {
             return false;

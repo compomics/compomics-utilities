@@ -60,7 +60,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public String getModification() {
         
-        readDBMode();
+        
         
         return modification;
     }
@@ -72,7 +72,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public void setModification(String modName) {
         
-        writeDBMode();
+        
         
         this.modification = modName;
     }
@@ -87,7 +87,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public int getSite() {
         
-        readDBMode();
+        
         
         return modifiedSite;
     }
@@ -99,7 +99,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public void setSite(int site) {
         
-        writeDBMode();
+        
         
         this.modifiedSite = site;
     }
@@ -113,7 +113,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public boolean getConfident() {
         
-        readDBMode();
+        
         
         return confident;
     }
@@ -126,7 +126,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public void setConfident(boolean confident) {
         
-        writeDBMode();
+        
         
         this.confident = confident;
     }
@@ -140,7 +140,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public boolean getInferred() {
         
-        readDBMode();
+        
         
         return inferred;
     }
@@ -153,7 +153,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public void setInferred(boolean inferred) {
         
-        writeDBMode();
+        
         
         this.inferred = inferred;
     }
@@ -170,7 +170,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public boolean isSameAs(ModificationMatch anotherModificationMatch) {
         
-        readDBMode();
+        
         
         return modification.equals(anotherModificationMatch.getModification());
         
@@ -183,7 +183,7 @@ public class ModificationMatch extends ExperimentObject {
      */
     public ModificationMatch clone() {
         
-        readDBMode();
+        
         
         ModificationMatch newMatch = new ModificationMatch(modification, modifiedSite);
         newMatch.setConfident(confident);

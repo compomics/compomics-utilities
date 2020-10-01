@@ -56,7 +56,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the identification rank
      */
     public int getRank() {
-        readDBMode();
+        
         return rank;
     }
 
@@ -68,7 +68,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public void setRank(
             int rank
     ) {
-        writeDBMode();
+        
         this.rank = rank;
     }
 
@@ -78,7 +78,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the advocate index
      */
     public int getAdvocate() {
-        readDBMode();
+        
         return advocate;
     }
     
@@ -90,7 +90,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public void setAdvocate(
             int advocate
     ){
-        writeDBMode();
+        
         this.advocate = advocate;
     }
 
@@ -100,7 +100,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the score
      */
     public double getScore() {
-        readDBMode();
+        
         return score;
     }
 
@@ -113,7 +113,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public void setScore(
             double score
     ) {
-        writeDBMode();
+        
         this.score = score;
     }
 
@@ -123,7 +123,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the identification file
      */
     public String getIdentificationFile() {
-        readDBMode();
+        
         return identificationFile;
     }
     
@@ -135,7 +135,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public void setIdentificationFile(
             String identificationFile
     ){
-        writeDBMode();
+        
         this.identificationFile = identificationFile;
     }
 
@@ -145,7 +145,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the charge used for identification
      */
     public int getIdentificationCharge() {
-        readDBMode();
+        
         return identificationCharge;
     }
 
@@ -157,7 +157,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     public void setIdentificationCharge(
             int identificationCharge
     ) {
-        writeDBMode();
+        
         this.identificationCharge = identificationCharge;
     }
 
@@ -174,7 +174,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the theoretic m/z
      */
     public double getTheoreticMz() {
-        readDBMode();
+        
         return (getTheoreticMass() + ElementaryIon.proton.getTheoreticMass() * identificationCharge) / identificationCharge;
     }
 
@@ -199,7 +199,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
             int maxIsotope
     ) {
         
-        readDBMode();
+        
         
         IonMatch ionMatch = getPrecursorMatch(measuredMZ, 0.0);
         
@@ -225,7 +225,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
             int maxIsotope
     ) {
         
-        readDBMode();
+        
         
         IonMatch ionMatch = getPrecursorMatch(measuredMZ, 0.0);
         
@@ -249,7 +249,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
             double precursorIntensity
     ) {
     
-        readDBMode();
+        
         
         return new IonMatch(
                 precursorMz,
@@ -268,7 +268,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      */
     public double getRawScore() {
         
-        readDBMode();
+        
         
         return rawScore;
     
@@ -283,7 +283,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
             double rawScore
     ) {
     
-        writeDBMode();
+        
         
         this.rawScore = rawScore;
     
@@ -297,7 +297,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @return the amino acid scores
      */
     public ArrayList<double[]> getAminoAcidScores() {
-        readDBMode();
+        
         return aminoAcidScores;
     }
 
@@ -312,7 +312,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
             ArrayList<double[]> aminoAcidScores
     ) {
     
-        writeDBMode();
+        
         
         this.aminoAcidScores = aminoAcidScores;
     

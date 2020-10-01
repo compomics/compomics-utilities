@@ -49,13 +49,13 @@ public class Peak extends ExperimentObject {
      * @return true if the peak has the same mz and intensity
      */
     public boolean isSameAs(Peak aPeak) {
-        readDBMode();
+        
         return mz == aPeak.mz && intensity == aPeak.intensity;
     }
 
     @Override
     public int hashCode() {
-        readDBMode();
+        
         int hash = 3;
         hash = 97 * hash + (int) (Double.doubleToLongBits(this.mz) ^ (Double.doubleToLongBits(this.mz) >>> 32));
         hash = 97 * hash + (int) (Double.doubleToLongBits(this.intensity) ^ (Double.doubleToLongBits(this.intensity) >>> 32));
@@ -64,7 +64,7 @@ public class Peak extends ExperimentObject {
 
     @Override
     public boolean equals(Object obj) {
-        readDBMode();
+        
         if (obj == null) {
             return false;
         }
@@ -89,7 +89,7 @@ public class Peak extends ExperimentObject {
      * @return the mass of the compound with the given charge
      */
     public double getMass(int chargeValue) {
-        readDBMode();
+        
         return mz * chargeValue - chargeValue * ElementaryIon.proton.getTheoreticMass();
     }
 
@@ -128,7 +128,7 @@ public class Peak extends ExperimentObject {
     
     @Override
     public String toString() {
-        readDBMode();
+        
         
         StringBuilder sb = new StringBuilder(15);
         

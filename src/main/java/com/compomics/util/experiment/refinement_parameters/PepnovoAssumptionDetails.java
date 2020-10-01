@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.refinement_parameters;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 
 /**
@@ -9,7 +9,7 @@ import com.compomics.util.experiment.personalization.UrParameter;
  *
  * @author Marc Vaudel
  */
-public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
+public class PepnovoAssumptionDetails extends ExperimentObject implements UrParameter {
 
     /**
      * Serial number used for serialization and object key.
@@ -38,7 +38,7 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
     public double getRankScore() {
         
         
-        readDBMode();
+        
         
         
         return rankScore;
@@ -52,7 +52,7 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
     public void setRankScore(double rankScore) {
         
         
-        writeDBMode();
+        
         
         
         this.rankScore = rankScore;
@@ -65,7 +65,7 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
      */
     public double getMH() {
         
-        readDBMode();
+        
         
         return mH;
     }
@@ -78,7 +78,7 @@ public class PepnovoAssumptionDetails extends DbObject implements UrParameter {
     public void setMH(double mH) {
         
         
-        writeDBMode();
+        
         
         
         this.mH = mH;

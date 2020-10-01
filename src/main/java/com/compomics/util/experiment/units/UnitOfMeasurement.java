@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.units;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 
 /**
@@ -8,7 +8,7 @@ import com.compomics.util.db.object.DbObject;
  *
  * @author Marc Vaudel
  */
-public class UnitOfMeasurement extends DbObject {
+public class UnitOfMeasurement extends ExperimentObject {
 
     /**
      * Empty default constructor
@@ -70,7 +70,7 @@ public class UnitOfMeasurement extends DbObject {
      * @return the full name of the unit
      */
     public String getFullName() {
-        readDBMode();
+        
         return fullName;
     }
 
@@ -80,7 +80,7 @@ public class UnitOfMeasurement extends DbObject {
      * @return the abbreviated name of the unit
      */
     public String getAbbreviation() {
-        readDBMode();
+        
         return abbreviation;
     }
 
@@ -90,7 +90,7 @@ public class UnitOfMeasurement extends DbObject {
      * @return the metrics prefix
      */
     public MetricsPrefix getMetricsPrefix() {
-        readDBMode();
+        
         return metricsPrefix;
     }
 
@@ -100,7 +100,7 @@ public class UnitOfMeasurement extends DbObject {
      * @return the name to display
      */
     public String getDisplayName() {
-        readDBMode();
+        
         if (metricsPrefix == null) {
             return abbreviation;
         }
@@ -120,7 +120,7 @@ public class UnitOfMeasurement extends DbObject {
      * @return a boolean indicating whether the given unit of measurement is the same as another
      */
     public boolean isSameAs(UnitOfMeasurement unitOfMeasurement) {
-        readDBMode();
+        
         if (getMetricsPrefix() == null && unitOfMeasurement.getMetricsPrefix() != null
                 || getMetricsPrefix() != null && unitOfMeasurement.getMetricsPrefix() == null) {
             return false;

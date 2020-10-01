@@ -223,7 +223,7 @@ public class Peptide extends ExperimentObject {
      */
     private void sanityCheck() {
 
-        writeDBMode();
+        
 
         sequence = sequence.replaceAll("[#*$%&]", "");
 
@@ -268,7 +268,7 @@ public class Peptide extends ExperimentObject {
             double mass
     ) {
 
-        writeDBMode();
+        
 
         this.mass = mass;
     }
@@ -282,7 +282,7 @@ public class Peptide extends ExperimentObject {
             long key
     ) {
 
-        writeDBMode();
+        
 
         this.key = key;
     }
@@ -295,7 +295,7 @@ public class Peptide extends ExperimentObject {
      */
     public TreeMap<String, int[]> getProteinMapping() {
 
-        readDBMode();
+        
 
         return proteinMapping;
     }
@@ -310,7 +310,7 @@ public class Peptide extends ExperimentObject {
             TreeMap<String, int[]> proteinMapping
     ) {
 
-        writeDBMode();
+        
 
         this.proteinMapping = proteinMapping;
 
@@ -325,7 +325,7 @@ public class Peptide extends ExperimentObject {
             HashMap<String, HashMap<Integer, PeptideVariantMatches>> variantMatches
     ) {
 
-        writeDBMode();
+        
 
         this.variantMatches = variantMatches;
     }
@@ -338,7 +338,7 @@ public class Peptide extends ExperimentObject {
      */
     public HashMap<String, HashMap<Integer, PeptideVariantMatches>> getVariantMatches() {
 
-        readDBMode();
+        
 
         return variantMatches;
     }
@@ -375,7 +375,7 @@ public class Peptide extends ExperimentObject {
             SequenceMatchingParameters modificationSequenceMatchingParameters
     ) {
 
-        readDBMode();
+        
 
         if (mass < 0) {
 
@@ -396,7 +396,7 @@ public class Peptide extends ExperimentObject {
      */
     public ModificationMatch[] getVariableModifications() {
 
-        readDBMode();
+        
 
         return variableModifications == null ? NO_MOD : variableModifications;
     }
@@ -514,7 +514,7 @@ public class Peptide extends ExperimentObject {
             ModificationMatch[] variableModifications
     ) {
 
-        writeDBMode();
+        
 
         this.variableModifications = variableModifications;
 
@@ -527,7 +527,7 @@ public class Peptide extends ExperimentObject {
      */
     public void clearVariableModifications() {
 
-        writeDBMode();
+        
 
         variableModifications = null;
 
@@ -542,7 +542,7 @@ public class Peptide extends ExperimentObject {
      */
     public void addVariableModification(ModificationMatch modificationMatch) {
 
-        writeDBMode();
+        
 
         variableModifications = variableModifications == null
                 ? new ModificationMatch[1]
@@ -560,7 +560,7 @@ public class Peptide extends ExperimentObject {
      */
     public void clearVariantMatches() {
 
-        writeDBMode();
+        
 
         if (variantMatches != null) {
 
@@ -582,7 +582,7 @@ public class Peptide extends ExperimentObject {
             int peptideStart
     ) {
 
-        readDBMode();
+        
 
         int peptideEnd = peptideStart + sequence.length() - 1;
 
@@ -612,7 +612,7 @@ public class Peptide extends ExperimentObject {
      */
     public String getSequence() {
 
-        readDBMode();
+        
 
         return sequence;
     }
@@ -626,7 +626,7 @@ public class Peptide extends ExperimentObject {
             String sequence
     ) {
 
-        writeDBMode();
+        
 
         this.sequence = sequence;
     }
@@ -642,7 +642,7 @@ public class Peptide extends ExperimentObject {
             Enzyme enzyme
     ) {
 
-        readDBMode();
+        
 
         return enzyme.getNmissedCleavages(sequence);
     }
@@ -660,7 +660,7 @@ public class Peptide extends ExperimentObject {
             DigestionParameters digestionPreferences
     ) {
 
-        readDBMode();
+        
 
         return digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme
                 ? digestionPreferences.getEnzymes().stream()
@@ -678,7 +678,7 @@ public class Peptide extends ExperimentObject {
      */
     public long getMatchingKey() {
 
-        readDBMode();
+        
 
         return matchingKey;
     }
@@ -692,7 +692,7 @@ public class Peptide extends ExperimentObject {
             long matchingKey
     ) {
 
-        writeDBMode();
+        
 
         this.matchingKey = matchingKey;
     }
@@ -711,7 +711,7 @@ public class Peptide extends ExperimentObject {
             SequenceMatchingParameters sequenceMatchingPreferences
     ) {
 
-        readDBMode();
+        
 
         if (!keySet) {
 
@@ -737,7 +737,7 @@ public class Peptide extends ExperimentObject {
      */
     public long getKey() {
 
-        readDBMode();
+        
 
         return key;
     }
@@ -802,7 +802,7 @@ public class Peptide extends ExperimentObject {
             double modificationMass
     ) {
 
-        readDBMode();
+        
 
         return variableModifications == null ? 0 : (int) Arrays.stream(variableModifications)
                 .map(
@@ -821,7 +821,7 @@ public class Peptide extends ExperimentObject {
      */
     public int getNVariableModifications() {
 
-        readDBMode();
+        
 
         return variableModifications == null ? 0 : variableModifications.length;
     }
@@ -845,7 +845,7 @@ public class Peptide extends ExperimentObject {
             int peptideStart
     ) {
 
-        readDBMode();
+        
 
         ArrayList<Integer> possibleSites = new ArrayList<>(1);
 
@@ -1042,7 +1042,7 @@ public class Peptide extends ExperimentObject {
             SequenceMatchingParameters sequenceMatchingPreferences
     ) {
 
-        readDBMode();
+        
 
         return isSameSequence(anotherPeptide, sequenceMatchingPreferences) && isSameModificationStatus(anotherPeptide);
     }
@@ -1062,7 +1062,7 @@ public class Peptide extends ExperimentObject {
             SequenceMatchingParameters sequenceMatchingPreferences
     ) {
 
-        readDBMode();
+        
 
         String otherSequence = anotherPeptide.getSequence();
 
@@ -1094,7 +1094,7 @@ public class Peptide extends ExperimentObject {
             Peptide anotherPeptide
     ) {
 
-        readDBMode();
+        
 
         if (getNVariableModifications() != anotherPeptide.getNVariableModifications()) {
             return false;
@@ -1146,7 +1146,7 @@ public class Peptide extends ExperimentObject {
             ArrayList<String> modifications
     ) {
 
-        readDBMode();
+        
 
         if (getNVariableModifications() != anotherPeptide.getNVariableModifications()) {
             return false;
@@ -1233,7 +1233,7 @@ public class Peptide extends ExperimentObject {
             Peptide anotherPeptide
     ) {
 
-        readDBMode();
+        
 
         if (getNVariableModifications() != anotherPeptide.getNVariableModifications()) {
             return false;
@@ -1301,7 +1301,7 @@ public class Peptide extends ExperimentObject {
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
-        readDBMode();
+        
 
         if (variableModifications != null) {
 
@@ -1381,7 +1381,7 @@ public class Peptide extends ExperimentObject {
             SequenceMatchingParameters modificationSequenceMatchingParameters
     ) {
 
-        readDBMode();
+        
 
         double tempMass = StandardMasses.h2o.mass
                 + sequence.chars()

@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
 import com.compomics.util.Util;
-import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.proteins.Protein;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
@@ -49,9 +48,14 @@ import com.compomics.util.experiment.identification.protein_inference.FastaMappe
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters.VariantType;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
@@ -59,6 +63,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.stream.Collectors;
@@ -70,7 +75,7 @@ import java.util.zip.CRC32;
  * @author Dominik Kopczynski
  * @author Marc Vaudel
  */
-public class FMIndex extends DbObject implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
+public class FMIndex extends ExperimentObject implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
 
     /**
      * Maximal number of PTMs per peptide.
@@ -189,7 +194,7 @@ public class FMIndex extends DbObject implements FastaMapper, SequenceProvider, 
      * Characters that can be substituted by Z.
      */
     private final int[] ZSubstitutions = new int[]{'E', 'Q'};
-
+    
     private ArrayList<String> fmodc = null; // @TODO: add JavaDoc
     private ArrayList<Double> fmodcMass = null;
 
@@ -1079,6 +1084,7 @@ public class FMIndex extends DbObject implements FastaMapper, SequenceProvider, 
         }
 
         // compute a checksum of the fasta file
+        /*
         final int Buffer_size = 16 * 1024;
         long fastaCRC = 0;
         try (FileInputStream in = new FileInputStream(fastaFile);) {
@@ -1104,23 +1110,30 @@ public class FMIndex extends DbObject implements FastaMapper, SequenceProvider, 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
 
         // check if fasta file has an FMIndex
         String fastaExtension = getFileExtension(fastaFile);
         File FMFile = new File(fastaFile.getAbsolutePath().replace(fastaExtension, ".fmi"));
         boolean loadFasta = true;
+        
+        
+        
         if (FMFile.exists()) {
+            
+            
             DataInputStream is = new DataInputStream(new BufferedInputStream(new FileInputStream(FMFile.getAbsolutePath()), 1024 * 1024));
             ObjectInputStream ois = null;
-
             try {
                 ois = new ObjectInputStream(is);
-                String indexVersion = ois.readUTF();
-                if (indexVersion.equals(Util.getVersion())) {
+                //String indexVersion = ois.readUTF();
+                //if (indexVersion.equals(Util.getVersion())) {
+                    /*
                     long crc = ois.readLong();
                     if (crc != fastaCRC) {
                         throw new Exception();
                     }
+                    */
                     indexParts = ois.readInt();
                     indexStringLengths = (ArrayList<Integer>) ois.readObject();
                     suffixArraysPrimary = (ArrayList<int[]>) ois.readObject();
@@ -1134,13 +1147,14 @@ public class FMIndex extends DbObject implements FastaMapper, SequenceProvider, 
                     accessionMetaData = (HashMap<String, AccessionMetaData>) ois.readObject();
 
                     loadFasta = false;
-                }
+                //}
             } catch (Exception e) {
             } finally {
                 if (ois != null) {
                     ois.close();
                 }
             }
+            
         }
         if (loadFasta) {
             // reading all proteins in a first pass to get information about number and total length
@@ -1330,8 +1344,8 @@ public class FMIndex extends DbObject implements FastaMapper, SequenceProvider, 
         if (loadFasta) {
             DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(FMFile.getAbsolutePath())));
             ObjectOutputStream oos = new ObjectOutputStream(os);
-            oos.writeUTF(Util.getVersion());
-            oos.writeLong(fastaCRC);
+            //oos.writeUTF(Util.getVersion());
+            //oos.writeLong(fastaCRC);
             oos.writeInt(indexParts);
             oos.writeObject(indexStringLengths);
             oos.writeObject(suffixArraysPrimary);

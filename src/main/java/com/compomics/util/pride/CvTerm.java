@@ -55,7 +55,7 @@ public class CvTerm extends ExperimentObject {
      */
     public String getOntology() {
         
-        readDBMode();
+        
         
         return ontology;
     }
@@ -66,7 +66,7 @@ public class CvTerm extends ExperimentObject {
      * @param ontology the ontology to set
      */
     public void setOntology(String ontology) {
-        writeDBMode();
+        
         this.ontology = ontology;
     }
 
@@ -77,7 +77,7 @@ public class CvTerm extends ExperimentObject {
      */
     public String getAccession() {
         
-        readDBMode();
+        
         
         return accession;
     }
@@ -88,7 +88,7 @@ public class CvTerm extends ExperimentObject {
      * @param accession the accession to set
      */
     public void setAccession(String accession) {
-        writeDBMode();
+        
         this.accession = accession;
     }
 
@@ -99,7 +99,7 @@ public class CvTerm extends ExperimentObject {
      */
     public String getName() {
         
-        readDBMode();
+        
         
         return name;
     }
@@ -110,7 +110,7 @@ public class CvTerm extends ExperimentObject {
      * @param name the name to set
      */
     public void setName(String name) {
-        writeDBMode();
+        
         this.name = name;
     }
 
@@ -121,7 +121,7 @@ public class CvTerm extends ExperimentObject {
      */
     public String getValue() {
         
-        readDBMode();
+        
         
         return value;
     }
@@ -132,7 +132,7 @@ public class CvTerm extends ExperimentObject {
      * @param value the value to set
      */
     public void setValue(String value) {
-        writeDBMode();
+        
         this.value = value;
     }
 }

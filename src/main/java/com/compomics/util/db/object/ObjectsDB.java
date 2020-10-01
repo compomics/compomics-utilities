@@ -1,16 +1,18 @@
 package com.compomics.util.db.object;
 
 import static com.compomics.util.db.object.DbMutex.dbMutex;
+import com.compomics.util.experiment.identification.matches.ProteinMatch;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.util.*;
-import org.nustaq.serialization.FSTConfiguration;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
 
 
 
 import java.sql.*;
 import java.util.Map.Entry;
-import org.nustaq.serialization.FSTObjectInput;
 
 /**
  * A database which can easily be used to store objects.
@@ -45,7 +47,7 @@ public class ObjectsDB {
     /**
      * Configuration for fast serialization.
      */
-    public static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
+    public Kryo kryo;
     /**
      * HashMap to map hash IDs of entries into DB ids.
      */
@@ -90,6 +92,8 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " Creating database");
 
         }
+        kryo = new Kryo();
+        kryo.setRegistrationRequired(false);
 
         this.path = path;
         this.dbName = dbName;
@@ -209,14 +213,14 @@ public class ObjectsDB {
     public void insertObject(long objectKey, Object object) {
 
         if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Inserting single object " + object.getClass().getSimpleName() + ", key: " + objectKey);
+            System.out.println(System.currentTimeMillis() + " Inserting single object " + object.getClass().getName() + ", key: " + objectKey);
         }
 
         if (object == null) {
             throw new IllegalArgumentException("error: null insertion: " + objectKey);
         }
 
-        ((DbObject) object).setId(objectKey);
+        ((ExperimentObject) object).setId(objectKey);
         objectsCache.addObject(objectKey, object, false, true);
     }
 
@@ -258,7 +262,7 @@ public class ObjectsDB {
             PreparedStatement pstmt  = connection.prepareStatement(sqlQuery);
             
             // set the value
-            pstmt.setString(1, className.getSimpleName());
+            pstmt.setString(1, className.getName());
             //
             ResultSet rs  = pstmt.executeQuery();
             
@@ -307,7 +311,7 @@ public class ObjectsDB {
                 System.out.println(System.currentTimeMillis() + " Inserting single object, table: " + object.getClass().getName() + ", key: " + objectKey);
             }
 
-            ((DbObject) object).setId(objectKey);
+            ((ExperimentObject) object).setId(objectKey);
         }
 
         currentAdded += objects.size();
@@ -325,32 +329,22 @@ public class ObjectsDB {
      */
     private Object loadFromDB(long objectKey){
         Object object = null;
-        
 
         try {
             dbMutex.acquire();
-            PreparedStatement pstmt = connection.prepareStatement("SELECT data FROM data WHERE id = ?;");
+            PreparedStatement pstmt = connection.prepareStatement("SELECT class, data FROM data WHERE id = ?;");
             pstmt.setLong(1, objectKey);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()){
-                FSTObjectInput in = new FSTObjectInput(rs.getBinaryStream("data"));
-                object = in.readObject();
-                
-                /*
+             
+                ProteinMatch prmIn = null;
                 ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
-                ObjectInput in = null;
-                try {
-                  in = new ObjectInputStream(bis);
-                  object = in.readObject(); 
-                } finally {
-                  try {
-                    if (in != null) {
-                      in.close();
-                    }
-                  } catch (IOException ex) {
-                  }
-                }
-                */
+                Input input = new Input(bis);
+                Class<?> c = Class.forName(rs.getString("class"));
+                object = kryo.readObject(input, c);
+                input.close();
+                bis.close();
+                
             }
         }
         catch(Exception ex){
@@ -415,40 +409,30 @@ public class ObjectsDB {
 
 
         if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " loading all " + className.getSimpleName() + " objects");
+            System.out.println(System.currentTimeMillis() + " loading all " + className.getName() + " objects");
         }
 
         HashMap<Long, Object> objectsNotInCache = new HashMap<>();
         try {
             dbMutex.acquire();
-            PreparedStatement pstmt = connection.prepareStatement("SELECT id, data FROM data WHERE class = ?;");
-            pstmt.setString(1, className.getSimpleName());
+            PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM data WHERE class = ?;");
+            pstmt.setString(1, className.getName());
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()){
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return;
                 }
-                FSTObjectInput in = new FSTObjectInput(rs.getBinaryStream("data"));
-                long objectKey = rs.getLong("id");
-                Object object = in.readObject();
                 
                 
-                /*
                 ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
-                ObjectInput in = null;
-                Object object = null;
-                try {
-                  in = new ObjectInputStream(bis);
-                  object = in.readObject(); 
-                } finally {
-                  try {
-                    if (in != null) {
-                      in.close();
-                    }
-                  } catch (IOException ex) {
-                  }
-                }
-                */
+                Input input = new Input(bis);
+                Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
+                input.close();
+                bis.close();
+                
+                long objectKey = rs.getLong("id");
+                
+                
                 
                 objectsNotInCache.put(objectKey, object);
             }
@@ -595,39 +579,25 @@ public class ObjectsDB {
         
         try {
             dbMutex.acquire();
-            PreparedStatement pstmt = connection.prepareStatement("SELECT id, data FROM data WHERE class = ?;");
-            pstmt.setString(1, className.getSimpleName());
+            PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM data WHERE class = ?;");
+            pstmt.setString(1, className.getName());
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()){
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return retrievingObjects;
                 }
-                FSTObjectInput in = new FSTObjectInput(rs.getBinaryStream("data"));
-                long objectKey = rs.getLong("id");
-                Object object = in.readObject();
                 
                 
-                /*
+                
                 ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
-                ObjectInput in = null;
-                Object object = null;
-                try {
-                  in = new ObjectInputStream(bis);
-                  object = in.readObject(); 
-                } finally {
-                  try {
-                    if (in != null) {
-                      in.close();
-                    }
-                  } catch (IOException ex) {
-                  }
-                }
-                
-                
-                */
+                Input input = new Input(bis);
+                Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
+                input.close();
+                bis.close();
                 
                 
                 
+                long objectKey = rs.getLong("id");
                 
                 if (!objectInCache.contains(objectKey)){
                     objectsNotInCache.put(objectKey, object);

@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 
 /**
@@ -8,7 +8,7 @@ import java.util.ArrayList;
  *
  * @author Dominik Kopczynski
  */
-public class CacheElement extends DbObject {
+public class CacheElement extends ExperimentObject {
 
     Double massFirst;
     String sequence;

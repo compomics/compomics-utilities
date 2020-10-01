@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.personalization;
 
-import com.compomics.util.db.object.DbObject;
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
@@ -9,12 +9,48 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public abstract class ExperimentObject extends DbObject {
+public abstract class ExperimentObject implements Serializable {
 
+    
+    /**
+     * Unique identifier.
+     */
+    private long id;
+    
+    
     /**
      * Empty default constructor
      */
     public ExperimentObject() {
+    }
+    
+    
+    
+    /**
+     * Returns the id of the object.
+     * 
+     * @return the id of the object
+     */
+    public long getId(){
+        
+        //
+        
+        return id;
+    
+    }
+    
+    
+    /**
+     * Sets the id of the object.
+     * 
+     * @param id the id of the object
+     */
+    public void setId(long id){
+        
+        //
+        
+        this.id = id;
+    
     }
 
     /**
@@ -68,7 +104,7 @@ public abstract class ExperimentObject extends DbObject {
      * @param parameter the parameter
      */
     public void addUrParam(UrParameter parameter) {
-        writeDBMode();
+        
         
         if (urParams == null) {
             
@@ -86,7 +122,7 @@ public abstract class ExperimentObject extends DbObject {
      * @param paramterKey the key of the parameter
      */
     public void removeUrParam(long paramterKey) {
-        writeDBMode();
+        
         
         if (urParams != null) {
             
@@ -99,7 +135,7 @@ public abstract class ExperimentObject extends DbObject {
      * Creates the parameters map unless done by another thread already.
      */
     private synchronized void createParamsMap() {
-        writeDBMode();
+        
         
         if (urParams == null) {
             
@@ -116,7 +152,7 @@ public abstract class ExperimentObject extends DbObject {
      * @return the value stored. Null if not found.
      */
     public UrParameter getUrParam(UrParameter parameter) {
-        readDBMode();
+        
         
         if (urParams == null) {
             
@@ -131,7 +167,7 @@ public abstract class ExperimentObject extends DbObject {
      * Clears the loaded parameters.
      */
     public void clearParametersMap() {
-        writeDBMode();
+        
         
         urParams = null;
     }
@@ -142,7 +178,7 @@ public abstract class ExperimentObject extends DbObject {
      * @param urParams the user parameters map
      */
     public void setUrParams(HashMap<Long, UrParameter> urParams){
-        writeDBMode();
+        
         
         this.urParams = urParams;
     }
@@ -153,7 +189,7 @@ public abstract class ExperimentObject extends DbObject {
      * @return the user parameters map
      */
     public HashMap<Long, UrParameter> getUrParams(){
-        readDBMode();
+        
         
         return urParams;
     }

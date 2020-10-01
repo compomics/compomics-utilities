@@ -1,6 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.filtering.Filter;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class ValidationQcParameters extends DbObject {
+public class ValidationQcParameters extends ExperimentObject {
 
     /**
      * Indicates whether the database size should be checked.
@@ -101,7 +101,7 @@ public class ValidationQcParameters extends DbObject {
      * @return true if the database size should be checked
      */
     public boolean isDbSize() {
-        readDBMode();
+        
         return dbSize;
     }
 
@@ -112,7 +112,7 @@ public class ValidationQcParameters extends DbObject {
      * checked
      */
     public void setDbSize(boolean dbSize) {
-        writeDBMode();
+        
         this.dbSize = dbSize;
     }
 
@@ -124,7 +124,7 @@ public class ValidationQcParameters extends DbObject {
      * checked
      */
     public boolean isFirstDecoy() {
-        readDBMode();
+        
         return firstDecoy;
     }
 
@@ -135,7 +135,7 @@ public class ValidationQcParameters extends DbObject {
      * the first decoy should be checked.
      */
     public void setFirstDecoy(boolean firstDecoy) {
-        writeDBMode();
+        
         this.firstDecoy = firstDecoy;
     }
 
@@ -148,7 +148,7 @@ public class ValidationQcParameters extends DbObject {
      * @return the margin to the threshold to use as factor of the resolution
      */
     public Double getConfidenceMargin() {
-        readDBMode();
+        
         return confidenceMargin;
     }
 
@@ -161,7 +161,7 @@ public class ValidationQcParameters extends DbObject {
      * the resolution
      */
     public void setConfidenceMargin(Double confidenceMargin) {
-        writeDBMode();
+        
         this.confidenceMargin = confidenceMargin;
     }
 
@@ -171,7 +171,7 @@ public class ValidationQcParameters extends DbObject {
      * @return the list of PSM quality filters
      */
     public ArrayList<Filter> getPsmFilters() {
-        readDBMode();
+        
         return psmFilters;
     }
 
@@ -181,7 +181,7 @@ public class ValidationQcParameters extends DbObject {
      * @param psmFilters the list of PSM quality filters
      */
     public void setPsmFilters(ArrayList<Filter> psmFilters) {
-        writeDBMode();
+        
         this.psmFilters = psmFilters;
     }
 
@@ -191,7 +191,7 @@ public class ValidationQcParameters extends DbObject {
      * @return the list of peptide quality filters
      */
     public ArrayList<Filter> getPeptideFilters() {
-        readDBMode();
+        
         return peptideFilters;
     }
 
@@ -201,7 +201,7 @@ public class ValidationQcParameters extends DbObject {
      * @param peptideFilters the list of peptide quality filters
      */
     public void setPeptideFilters(ArrayList<Filter> peptideFilters) {
-        writeDBMode();
+        
         this.peptideFilters = peptideFilters;
     }
 
@@ -211,7 +211,7 @@ public class ValidationQcParameters extends DbObject {
      * @return the list of peptide quality filters
      */
     public ArrayList<Filter> getProteinFilters() {
-        readDBMode();
+        
         return proteinFilters;
     }
 
@@ -221,7 +221,7 @@ public class ValidationQcParameters extends DbObject {
      * @param proteinFilters the list of protein quality filters
      */
     public void setProteinFilters(ArrayList<Filter> proteinFilters) {
-        writeDBMode();
+        
         this.proteinFilters = proteinFilters;
     }
 
@@ -234,7 +234,7 @@ public class ValidationQcParameters extends DbObject {
     public boolean isSameAs(
             ValidationQcParameters validationQCPreferences
     ) {
-        readDBMode();
+        
 
         if (dbSize != validationQCPreferences.isDbSize()) {
             return false;
@@ -360,7 +360,7 @@ public class ValidationQcParameters extends DbObject {
      */
     public String getShortDescription() {
 
-        readDBMode();
+        
 
         String newLine = System.getProperty("line.separator");
 

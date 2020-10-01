@@ -94,18 +94,18 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @return the peptide
      */
     public Peptide getPeptide() {
-        readDBMode();
+        
         return peptide;
     }
     
     public void setPeptide(Peptide peptide){
-        writeDBMode();
+        
         this.peptide = peptide;
     }
 
     @Override
     public double getTheoreticMass() {
-        readDBMode();
+        
         return peptide.getMass();
     }
 }

@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.matches_iterators;
 
-import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.identification.Identification;
 import com.compomics.util.waiting.WaitingHandler;
 import java.util.ArrayList;

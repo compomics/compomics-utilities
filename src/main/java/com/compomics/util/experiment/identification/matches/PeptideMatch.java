@@ -29,7 +29,7 @@ public class PeptideMatch extends IdentificationMatch {
     public long getKey() {
         
         
-        readDBMode();
+        
         
         
         return key;
@@ -43,7 +43,7 @@ public class PeptideMatch extends IdentificationMatch {
     public void setKey(long newKey) {
         
         
-        writeDBMode();
+        
         
         
         this.key = newKey;
@@ -69,7 +69,7 @@ public class PeptideMatch extends IdentificationMatch {
     public PeptideMatch(Peptide peptide, long matchKey, long spectrumMatchKey) {
         
         
-        writeDBMode();
+        
         
         
         this.peptide = peptide;
@@ -88,7 +88,7 @@ public class PeptideMatch extends IdentificationMatch {
     public Peptide getPeptide() {
         
         
-        readDBMode();
+        
         
         
         return peptide;
@@ -102,7 +102,7 @@ public class PeptideMatch extends IdentificationMatch {
     public void setPeptide(Peptide peptide) {
         
         
-        writeDBMode();
+        
         
         
         this.peptide = peptide;
@@ -116,7 +116,7 @@ public class PeptideMatch extends IdentificationMatch {
     public long[] getSpectrumMatchesKeys() {
         
         
-        readDBMode();
+        
         
         
         return spectrumMatchesKeys;
@@ -131,7 +131,7 @@ public class PeptideMatch extends IdentificationMatch {
     public void setSpectrumMatchesKeys(long[] spectrumMatchesKeys) {
         
         
-        writeDBMode();
+        
         
         
         this.spectrumMatchesKeys = spectrumMatchesKeys;
@@ -146,7 +146,7 @@ public class PeptideMatch extends IdentificationMatch {
     public void addSpectrumMatchKey(long spectrumMatchKey) {
         
         
-        writeDBMode();
+        
         
         
         spectrumMatchesKeys =  Arrays.copyOf(spectrumMatchesKeys, spectrumMatchesKeys.length + 1);
@@ -163,7 +163,7 @@ public class PeptideMatch extends IdentificationMatch {
     public int getSpectrumCount() {
         
         
-        readDBMode();
+        
         
         
         return spectrumMatchesKeys.length;

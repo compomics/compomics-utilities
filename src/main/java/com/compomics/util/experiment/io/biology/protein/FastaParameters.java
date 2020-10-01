@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.io.biology.protein;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.io.biology.protein.iterators.HeaderIterator;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
@@ -12,7 +12,7 @@ import java.io.IOException;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class FastaParameters extends DbObject {
+public class FastaParameters extends ExperimentObject {
 
     /**
      * The version UID for serialization/deserialization compatibility.
@@ -58,7 +58,7 @@ public class FastaParameters extends DbObject {
      * as target-decoy or only target
      */
     public boolean isTargetDecoy() {
-        readDBMode();
+        
         return targetDecoy;
     }
 
@@ -70,7 +70,7 @@ public class FastaParameters extends DbObject {
      * target-decoy or only target
      */
     public void setTargetDecoy(boolean targetDecoy) {
-        writeDBMode();
+        
         this.targetDecoy = targetDecoy;
     }
 
@@ -80,7 +80,7 @@ public class FastaParameters extends DbObject {
      * @return the decoy flag
      */
     public String getDecoyFlag() {
-        readDBMode();
+        
         return decoyFlag;
     }
 
@@ -90,7 +90,7 @@ public class FastaParameters extends DbObject {
      * @param decoyFlag the decoy flag
      */
     public void setDecoyFlag(String decoyFlag) {
-        writeDBMode();
+        
         this.decoyFlag = decoyFlag;
     }
 
@@ -102,7 +102,7 @@ public class FastaParameters extends DbObject {
      * prefix
      */
     public boolean isDecoySuffix() {
-        readDBMode();
+        
         return decoySuffix;
     }
 
@@ -112,7 +112,7 @@ public class FastaParameters extends DbObject {
      * @param decoySuffix whether the decoy flag is a suffix or a prefix
      */
     public void setDecoySuffix(boolean decoySuffix) {
-        writeDBMode();
+        
         this.decoySuffix = decoySuffix;
     }
 
@@ -122,7 +122,7 @@ public class FastaParameters extends DbObject {
      * @return the targetDecoyFileNameSuffix
      */
     public String getTargetDecoyFileNameSuffix() {
-        readDBMode();
+        
         return targetDecoyFileNameTag;
     }
 
@@ -132,7 +132,7 @@ public class FastaParameters extends DbObject {
      * @param targetDecoyFileNameSuffix the targetDecoyFileNameSuffix to set
      */
     public void setTargetDecoyFileNameSuffix(String targetDecoyFileNameSuffix) {
-        writeDBMode();
+        
         this.targetDecoyFileNameTag = targetDecoyFileNameSuffix;
     }
 
@@ -147,7 +147,7 @@ public class FastaParameters extends DbObject {
      */
     public boolean isSameAs(FastaParameters fastaParameters) {
 
-        readDBMode();
+        
 
         if (targetDecoy != fastaParameters.isTargetDecoy()) {
 
@@ -316,7 +316,7 @@ public class FastaParameters extends DbObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        readDBMode();
+        
 
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();

@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.filtering;
 
-import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.filtering.FilterItemComparator;
 import com.compomics.util.experiment.biology.genes.GeneMaps;
 import com.compomics.util.experiment.filtering.Filter;
@@ -10,6 +9,7 @@ import com.compomics.util.experiment.identification.features.IdentificationFeatu
 import com.compomics.util.experiment.io.biology.protein.ProteinDetailsProvider;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.IdentificationParameters;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ import java.util.Map.Entry;
  *
  * @author Marc Vaudel
  */
-public abstract class MatchFilter extends DbObject implements Filter {
+public abstract class MatchFilter extends ExperimentObject implements Filter {
 
     /**
      * Empty default constructor

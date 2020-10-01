@@ -66,7 +66,7 @@ public class IonMatch extends ExperimentObject {
      * @return the absolute matching error
      */
     public double getAbsoluteError() {
-        readDBMode();
+        
         double theoreticMz = ion.getTheoreticMz(charge);
         return peakMz - theoreticMz;
     }
@@ -83,7 +83,7 @@ public class IonMatch extends ExperimentObject {
             int minIsotope,
             int maxIsotope
     ) {
-        readDBMode();
+        
         double theoreticMz = ion.getTheoreticMz(charge);
         double measuredMz = peakMz;
         measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge;
@@ -96,7 +96,7 @@ public class IonMatch extends ExperimentObject {
      * @return the relative matching error
      */
     public double getRelativeError() {
-        readDBMode();
+        
         double theoreticMz = ion.getTheoreticMz(charge);
         return ((peakMz - theoreticMz) * 1000000) / theoreticMz;
     }
@@ -113,7 +113,7 @@ public class IonMatch extends ExperimentObject {
             int minIsotope,
             int maxIsotope
     ) {
-        readDBMode();
+        
         double theoreticMz = ion.getTheoreticMz(charge);
         double measuredMz = peakMz;
         measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge;
@@ -135,7 +135,7 @@ public class IonMatch extends ExperimentObject {
             int minIsotope,
             int maxIsotope
     ) {
-        readDBMode();
+        
         double experimentalMass = peakMz * charge - charge * ElementaryIon.proton.getTheoreticMass();
         double result = (experimentalMass - ion.getTheoreticMass()) / Atom.C.getDifferenceToMonoisotopic(1);
         return Math.min(Math.max((int) Math.round(result), minIsotope), maxIsotope);
@@ -172,7 +172,7 @@ public class IonMatch extends ExperimentObject {
     public double getError(
             boolean isPpm
     ) {
-        readDBMode();
+        
 
         return isPpm ? getRelativeError() : getAbsoluteError();
 
@@ -184,7 +184,7 @@ public class IonMatch extends ExperimentObject {
      * @return the annotation to use for the given ion match
      */
     public String getPeakAnnotation() {
-        readDBMode();
+        
         return getPeakAnnotation(
                 false,
                 ion,
@@ -466,7 +466,7 @@ public class IonMatch extends ExperimentObject {
     public String getPeakAnnotation(
             boolean html
     ) {
-        readDBMode();
+        
         return getPeakAnnotation(
                 html,
                 ion,
@@ -480,7 +480,7 @@ public class IonMatch extends ExperimentObject {
      * @return the pride CV term for the ion match m/z
      */
     public CvTerm getMZPrideCvTerm() {
-        readDBMode();
+        
         return new CvTerm(
                 "PRIDE",
                 "PRIDE:0000188",
@@ -495,7 +495,7 @@ public class IonMatch extends ExperimentObject {
      * @return the pride CV term for the ion match intensity
      */
     public CvTerm getIntensityPrideCvTerm() {
-        readDBMode();
+        
         return new CvTerm(
                 "PRIDE", 
                 "PRIDE:0000189", 
@@ -516,7 +516,7 @@ public class IonMatch extends ExperimentObject {
             int minIsotope, 
             int maxIsotope
     ) {
-        readDBMode();
+        
         return new CvTerm(
                 "PRIDE", 
                 "PRIDE:0000190", 
@@ -536,7 +536,7 @@ public class IonMatch extends ExperimentObject {
      * @return the pride CV term for the ion match charge
      */
     public CvTerm getChargePrideCvTerm() {
-        readDBMode();
+        
         return new CvTerm(
                 "PRIDE", 
                 "PRIDE:0000204", 

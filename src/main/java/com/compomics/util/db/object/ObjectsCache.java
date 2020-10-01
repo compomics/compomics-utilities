@@ -11,7 +11,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.nustaq.serialization.FSTConfiguration;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import static java.lang.System.out;
+import java.lang.reflect.Field;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
@@ -75,7 +79,6 @@ public class ObjectsCache {
      * Number of objects that should at least be kept.
      */
     private final int keepObjectsThreshold = 10000;
-    //static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
     
 
     /**
@@ -281,6 +284,7 @@ public class ObjectsCache {
      * cleared from the cache
      */
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) {
+        Kryo kryo = objectsDB.kryo;
 
         if (!readOnly) {
             Connection connection = objectsDB.getDB();
@@ -311,41 +315,20 @@ public class ObjectsCache {
                 }
                 long key = entry.getKey();
                 
-                ObjectsCacheElement obj = loadedObjects.get(key);
                 
+                ObjectsCacheElement obj = loadedObjects.get(key);
                 obj.edited = false;
                 
-                byte barray[] = objectsDB.conf.asByteArray(obj.object);
-                
-                
-                /*
-                byte[] barray = null;
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                ObjectOutputStream out = null;
-                try {
-                  out = new ObjectOutputStream(bos);   
-                  out.writeObject(obj.object);
-                  out.flush();
-                  barray = bos.toByteArray();
-                }
-                catch (IOException ex){
-                    ex.printStackTrace();
-                    System.exit(-1);
-                }
-                finally {
-                  try {
-                    bos.close();
-                  } catch (IOException ex) {
-                    // ignore close exception
-                  }
-                }
-                
-                */
-                
-                
-                
                 
                 try {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    Output output = new Output(baos);
+                    kryo.writeObject(output, obj.object);
+                    output.close();
+                    byte[] barray = baos.toByteArray();
+                    baos.close();
+                    
+                    
                     if (obj.inDB){
                         psUpdate.setBytes(1, barray);
                         psUpdate.setLong(2, key);
@@ -353,7 +336,7 @@ public class ObjectsCache {
                     }
                     else {
                         psInsert.setLong(1, key);
-                        psInsert.setString(2, obj.object.getClass().getSimpleName());
+                        psInsert.setString(2, obj.object.getClass().getName());
                         psInsert.setBytes(3, barray);
                         psInsert.addBatch();
                         keysInBackend.add(key);

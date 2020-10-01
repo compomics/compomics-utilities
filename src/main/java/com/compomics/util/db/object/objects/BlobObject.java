@@ -1,6 +1,6 @@
 package com.compomics.util.db.object.objects;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,7 +13,7 @@ import java.io.ObjectOutputStream;
  *
  * @author dominik.kopczynski
  */
-public class BlobObject extends DbObject {
+public class BlobObject extends ExperimentObject {
     
     /**
      * Byte representation of the blob.
@@ -64,7 +64,6 @@ public class BlobObject extends DbObject {
      * @param blob the blob as byte array
      */
     public void setBlob(byte[] blob){
-        writeDBMode();
         this.blob = blob;
     }
     
@@ -74,7 +73,6 @@ public class BlobObject extends DbObject {
      * @return the byte representation of the object
      */
     public byte[] getBlob(){
-        readDBMode();
         return blob;
     }
     
@@ -86,8 +84,6 @@ public class BlobObject extends DbObject {
      * @throws IOException exception thrown whenever an error occurred while reading the object from its byte representation
      */
     public Object unBlob() throws IOException {
-        
-        readDBMode();
         
         Object object;
         ByteArrayInputStream bais = new ByteArrayInputStream(blob);

@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.biology.aminoacids;
 
-import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.aminoacids.impl.Proline;
 import com.compomics.util.experiment.biology.aminoacids.impl.Glycine;
 import com.compomics.util.experiment.biology.aminoacids.impl.GlutamicAcid;
@@ -28,6 +27,7 @@ import com.compomics.util.experiment.biology.aminoacids.impl.Z;
 import com.compomics.util.experiment.biology.aminoacids.impl.X;
 import com.compomics.util.experiment.biology.aminoacids.impl.Asparagine;
 import com.compomics.util.experiment.biology.atoms.AtomChain;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +39,7 @@ import java.util.List;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public abstract class AminoAcid extends DbObject {
+public abstract class AminoAcid extends ExperimentObject {
 
     /**
      * Empty default constructor.

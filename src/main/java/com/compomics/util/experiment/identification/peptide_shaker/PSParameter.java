@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.peptide_shaker;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.experiment.identification.validation.MatchValidationLevel;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import org.apache.commons.math.util.FastMath;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class PSParameter extends DbObject implements UrParameter {
+public class PSParameter extends ExperimentObject implements UrParameter {
 
     /**
      * Serial version UID for post-serialization compatibility.
@@ -140,7 +140,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public double getProbability() {
 
-        readDBMode();
+        
 
         return probability;
 
@@ -153,7 +153,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setProbability(double probability) {
 
-        writeDBMode();
+        
 
         this.probability = probability;
 
@@ -161,7 +161,7 @@ public class PSParameter extends DbObject implements UrParameter {
 
     public void setGroupClass(int groupClass) {
 
-        writeDBMode();
+        
 
         this.proteinInferenceGroupClass = groupClass;
 
@@ -174,7 +174,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public double getScore() {
 
-        readDBMode();
+        
 
         return score;
 
@@ -198,7 +198,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setScore(double score) {
 
-        writeDBMode();
+        
 
         this.score = score;
 
@@ -211,7 +211,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public double getConfidence() {
 
-        readDBMode();
+        
 
         double confidence = 100.0 * (1 - probability);
 
@@ -230,7 +230,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getAlgorithmDeltaPEP() {
 
-        readDBMode();
+        
 
         return algorithmDeltaPEP;
 
@@ -247,7 +247,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setAlgorithmDeltaPEP(double deltaPEP) {
 
-        writeDBMode();
+        
 
         this.algorithmDeltaPEP = deltaPEP;
 
@@ -264,7 +264,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public double getDeltaPEP() {
 
-        readDBMode();
+        
 
         return deltaPEP;
 
@@ -281,7 +281,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setDeltaPEP(double deltaPEP) {
 
-        writeDBMode();
+        
 
         this.deltaPEP = deltaPEP;
 
@@ -294,7 +294,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setQcFilters(HashMap<String, Boolean> qcFilters) {
 
-        writeDBMode();
+        
 
         this.qcFilters = qcFilters;
 
@@ -307,7 +307,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public MatchValidationLevel getMatchValidationLevel() {
 
-        readDBMode();
+        
 
         return matchValidationLevel;
 
@@ -320,7 +320,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setMatchValidationLevel(MatchValidationLevel matchValidationLevel) {
 
-        writeDBMode();
+        
 
         this.matchValidationLevel = matchValidationLevel;
 
@@ -333,7 +333,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setHidden(boolean hidden) {
 
-        writeDBMode();
+        
 
         this.hidden = hidden;
 
@@ -346,7 +346,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public boolean getHidden() {
 
-        readDBMode();
+        
 
         return hidden;
 
@@ -359,7 +359,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setStarred(boolean starred) {
 
-        writeDBMode();
+        
 
         this.starred = starred;
 
@@ -372,7 +372,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public boolean getStarred() {
 
-        readDBMode();
+        
 
         return starred;
 
@@ -385,7 +385,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public int getProteinInferenceGroupClass() {
 
-        readDBMode();
+        
 
         return proteinInferenceGroupClass;
 
@@ -399,7 +399,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public String getProteinInferenceClassAsString() {
 
-        readDBMode();
+        
 
         return getProteinInferenceClassAsString(proteinInferenceGroupClass);
 
@@ -448,7 +448,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setProteinInferenceClass(int groupClass) {
 
-        writeDBMode();
+        
 
         this.proteinInferenceGroupClass = groupClass;
 
@@ -461,7 +461,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Integer> getValidatedPeptidesPerFraction() {
 
-        readDBMode();
+        
 
         return validatedPeptidesPerFraction;
 
@@ -474,7 +474,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Integer> getValidatedSpectraPerFraction() {
 
-        readDBMode();
+        
 
         return validatedSpectraPerFraction;
     }
@@ -487,7 +487,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setFractionScore(String fraction, double confidence) {
 
-        writeDBMode();
+        
 
         if (fractionScore == null) {
 
@@ -506,7 +506,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setFractionScore(HashMap<String, Double> fractionScore) {
 
-        writeDBMode();
+        
 
         this.fractionScore = fractionScore;
 
@@ -521,7 +521,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getFractionScore(String fraction) {
 
-        readDBMode();
+        
 
         if (fractionScore == null) {
 
@@ -540,7 +540,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Set<String> getFractions() {
 
-        readDBMode();
+        
 
         return fractionScore == null ? null
                 : fractionScore.keySet();
@@ -554,7 +554,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Double> getFractionScore() {
 
-        readDBMode();
+        
 
         return fractionScore;
 
@@ -568,7 +568,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setFractionPEP(String fraction, Double confidence) {
 
-        writeDBMode();
+        
 
         if (fractionPEP == null) {
 
@@ -582,7 +582,7 @@ public class PSParameter extends DbObject implements UrParameter {
 
     public void setFractionPEP(HashMap<String, Double> fractionPEP) {
 
-        writeDBMode();
+        
 
         this.fractionPEP = fractionPEP;
 
@@ -596,7 +596,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getFractionPEP(String fraction) {
 
-        readDBMode();
+        
 
         return fractionPEP == null ? null : fractionPEP.get(fraction);
 
@@ -609,7 +609,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Double> getFractionPEP() {
 
-        readDBMode();
+        
 
         return fractionPEP;
 
@@ -624,7 +624,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getFractionConfidence(String fraction) {
 
-        readDBMode();
+        
 
         return fractionPEP == null || fractionPEP.get(fraction) == null ? null
                 : 100 * (1 - fractionPEP.get(fraction));
@@ -641,7 +641,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public int getFractionValidatedPeptides(String fraction) {
 
-        readDBMode();
+        
 
         return validatedPeptidesPerFraction == null || validatedPeptidesPerFraction.get(fraction) == null ? 0
                 : validatedPeptidesPerFraction.get(fraction);
@@ -656,7 +656,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setValidatedPeptidesPerFraction(HashMap<String, Integer> validatedPeptidesPerFraction) {
 
-        writeDBMode();
+        
 
         this.validatedPeptidesPerFraction = validatedPeptidesPerFraction;
 
@@ -671,7 +671,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Integer getFractionValidatedSpectra(String fraction) {
 
-        readDBMode();
+        
         
         return validatedSpectraPerFraction == null || validatedSpectraPerFraction.get(fraction) == null ? 0
                 : validatedSpectraPerFraction.get(fraction);
@@ -685,7 +685,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setValidatedSpectraPepFraction(HashMap<String, Integer> validatedSpectraPerFraction) {
 
-        writeDBMode();
+        
 
         this.validatedSpectraPerFraction = validatedSpectraPerFraction;
 
@@ -699,7 +699,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public ArrayList<Double> getPrecursorIntensityPerFraction(String fraction) {
 
-        readDBMode();
+        
 
         return precursorIntensityPerFraction == null ? new ArrayList<>(0)
                 : precursorIntensityPerFraction.get(fraction);
@@ -713,7 +713,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, ArrayList<Double>> getPrecursorIntensityPerFraction() {
 
-        readDBMode();
+        
 
         return precursorIntensityPerFraction;
 
@@ -727,7 +727,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setPrecursorIntensityAveragePerFraction(HashMap<String, Double> precursorIntensityAveragePerFraction) {
 
-        writeDBMode();
+        
 
         this.precursorIntensityAveragePerFraction = precursorIntensityAveragePerFraction;
 
@@ -741,7 +741,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setPrecursorIntensitySummedPerFraction(HashMap<String, Double> precursorIntensitySummedPerFraction) {
 
-        writeDBMode();
+        
 
         this.precursorIntensitySummedPerFraction = precursorIntensitySummedPerFraction;
 
@@ -755,7 +755,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setPrecursorIntensityPerFraction(HashMap<String, ArrayList<Double>> precursorIntensityPerFraction) {
 
-        writeDBMode();
+        
 
         this.precursorIntensityPerFraction = precursorIntensityPerFraction;
 
@@ -801,7 +801,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getPrecursorIntensityAveragePerFraction(String fraction) {
 
-        readDBMode();
+        
 
         return precursorIntensityAveragePerFraction == null ? null
                 : precursorIntensityAveragePerFraction.get(fraction);
@@ -815,7 +815,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Double> getPrecursorIntensityAveragePerFraction() {
 
-        readDBMode();
+        
 
         return precursorIntensityAveragePerFraction;
 
@@ -830,7 +830,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getPrecursorIntensitySummedPerFraction(String fraction) {
 
-        readDBMode();
+        
 
         return precursorIntensitySummedPerFraction == null ? null
                 : precursorIntensitySummedPerFraction.get(fraction);
@@ -844,7 +844,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Double> getPrecursorIntensitySummedPerFraction() {
 
-        readDBMode();
+        
 
         return precursorIntensitySummedPerFraction;
 
@@ -858,7 +858,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public boolean getManualValidation() {
 
-        readDBMode();
+        
 
         return manualValidation;
 
@@ -872,7 +872,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setManualValidation(boolean manualValidation) {
 
-        writeDBMode();
+        
 
         this.manualValidation = manualValidation;
 
@@ -886,7 +886,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setQcResult(String criterion, boolean validated) {
 
-        writeDBMode();
+        
 
         if (qcFilters == null) {
 
@@ -907,7 +907,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Boolean isQcPassed(String criterion) {
 
-        readDBMode();
+        
 
         return qcFilters == null ? null
                 : qcFilters.get(criterion);
@@ -921,7 +921,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Set<String> getQcCriteria() {
 
-        readDBMode();
+        
 
         return qcFilters == null ? new HashSet<>(0)
                 : qcFilters.keySet();
@@ -934,7 +934,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<String, Boolean> getQcFilters() {
 
-        readDBMode();
+        
 
         return qcFilters;
 
@@ -945,7 +945,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void resetQcResults() {
 
-        writeDBMode();
+        
 
         if (qcFilters == null) {
 
@@ -966,7 +966,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public boolean hasQcFilters() {
 
-        readDBMode();
+        
 
         return qcFilters != null && !qcFilters.isEmpty();
 
@@ -980,7 +980,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public void setIntermediateScore(Integer scoreId, Double score) {
 
-        writeDBMode();
+        
 
         if (intermediateScores == null) {
 
@@ -994,7 +994,7 @@ public class PSParameter extends DbObject implements UrParameter {
 
     public void setIntermediateScores(HashMap<Integer, Double> intermediateScores) {
 
-        writeDBMode();
+        
 
         this.intermediateScores = intermediateScores;
 
@@ -1005,7 +1005,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public synchronized void createIntermediateScoreMap() {
 
-        writeDBMode();
+        
 
         if (intermediateScores == null) {
 
@@ -1023,7 +1023,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public Double getIntermediateScore(int scoreId) {
 
-        readDBMode();
+        
 
         return intermediateScores == null ? null
                 : intermediateScores.get(scoreId);
@@ -1037,7 +1037,7 @@ public class PSParameter extends DbObject implements UrParameter {
      */
     public HashMap<Integer, Double> getIntermediateScores() {
 
-        readDBMode();
+        
 
         return intermediateScores;
 

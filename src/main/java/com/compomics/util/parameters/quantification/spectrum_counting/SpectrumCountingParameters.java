@@ -1,6 +1,6 @@
 package com.compomics.util.parameters.quantification.spectrum_counting;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.validation.MatchValidationLevel;
 import com.compomics.util.experiment.quantification.spectrumcounting.SpectrumCountingMethod;
 import com.compomics.util.experiment.units.MetricsPrefix;
@@ -13,7 +13,7 @@ import com.compomics.util.experiment.units.UnitOfMeasurement;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class SpectrumCountingParameters extends DbObject {
+public class SpectrumCountingParameters extends ExperimentObject {
 
     /**
      * The reference total mass to use for normalization in μg.
@@ -67,7 +67,7 @@ public class SpectrumCountingParameters extends DbObject {
      * @return the current spectrum counting method
      */
     public SpectrumCountingMethod getSelectedMethod() {
-        readDBMode();
+        
         return selectedMethod;
     }
 
@@ -77,7 +77,7 @@ public class SpectrumCountingParameters extends DbObject {
      * @param selectedMethod the spectral counting method
      */
     public void setSelectedMethod(SpectrumCountingMethod selectedMethod) {
-        writeDBMode();
+        
         this.selectedMethod = selectedMethod;
     }
 
@@ -88,7 +88,7 @@ public class SpectrumCountingParameters extends DbObject {
      * @return the lowest validation level considered
      */
     public Integer getMatchValidationLevel() {
-        readDBMode();
+        
         return matchValidationLevel;
     }
 
@@ -99,7 +99,7 @@ public class SpectrumCountingParameters extends DbObject {
      * @param matchValidationLevel the lowest validation level to consider
      */
     public void setMatchValidationLevel(Integer matchValidationLevel) {
-        writeDBMode();
+        
         this.matchValidationLevel = matchValidationLevel;
     }
 
@@ -112,7 +112,7 @@ public class SpectrumCountingParameters extends DbObject {
      * preferences is the same as this one
      */
     public boolean isSameAs(SpectrumCountingParameters anotherSpectrumCountingPreferences) {
-        readDBMode();
+        
         if (!getNormalize() && anotherSpectrumCountingPreferences.getNormalize()
                 || getNormalize() && !anotherSpectrumCountingPreferences.getNormalize()) {
             return false;
@@ -140,7 +140,7 @@ public class SpectrumCountingParameters extends DbObject {
      * @return the reference total mass to use for normalization in μg
      */
     public Double getReferenceMass() {
-        readDBMode();
+        
         return referenceMass;
     }
 
@@ -151,7 +151,7 @@ public class SpectrumCountingParameters extends DbObject {
      * μg
      */
     public void setReferenceMass(Double referenceMass) {
-        writeDBMode();
+        
         this.referenceMass = referenceMass;
     }
 
@@ -161,7 +161,7 @@ public class SpectrumCountingParameters extends DbObject {
      * @return the unit used for normalization
      */
     public UnitOfMeasurement getUnit() {
-        readDBMode();
+        
         return unit;
     }
 
@@ -171,7 +171,7 @@ public class SpectrumCountingParameters extends DbObject {
      * @param unit the unit used for normalization
      */
     public void setUnit(UnitOfMeasurement unit) {
-        writeDBMode();
+        
         this.unit = unit;
     }
 
@@ -181,7 +181,7 @@ public class SpectrumCountingParameters extends DbObject {
      * @return true if the spectrum counting index should be normalized
      */
     public Boolean getNormalize() {
-        readDBMode();
+        
         return normalize;
     }
 
@@ -192,7 +192,7 @@ public class SpectrumCountingParameters extends DbObject {
      * should be normalized
      */
     public void setNormalize(Boolean normalize) {
-        writeDBMode();
+        
         this.normalize = normalize;
     }
 }

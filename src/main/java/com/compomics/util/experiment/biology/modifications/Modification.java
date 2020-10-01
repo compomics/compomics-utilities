@@ -168,7 +168,6 @@ public class Modification extends ExperimentObject {
      * @return the modification type
      */
     public ModificationType getModificationType() {
-        readDBMode();
         return modificationType;
     }
 
@@ -178,7 +177,6 @@ public class Modification extends ExperimentObject {
      * @return the modification name
      */
     public String getName() {
-        readDBMode();
         return name;
     }
 
@@ -188,7 +186,7 @@ public class Modification extends ExperimentObject {
      * @param name the modification name
      */
     public void setName(String name) {
-        writeDBMode();
+        
         this.name = name;
     }
 
@@ -198,7 +196,7 @@ public class Modification extends ExperimentObject {
      * @return the short modification name
      */
     public String getShortName() {
-        readDBMode();
+        
         return shortName;
     }
 
@@ -208,7 +206,7 @@ public class Modification extends ExperimentObject {
      * @param shortName the modification name
      */
     public void setShortName(String shortName) {
-        writeDBMode();
+        
         this.shortName = shortName;
     }
 
@@ -218,7 +216,7 @@ public class Modification extends ExperimentObject {
      * @return the mass difference induced by the modification
      */
     public double getMass() {
-        readDBMode();
+        
         if (mass == null) {
             estimateMass();
         }
@@ -230,7 +228,7 @@ public class Modification extends ExperimentObject {
      * attribute.
      */
     private synchronized void estimateMass() {
-        readDBMode();
+        
         if (mass == null) {
             Double tempMass = 0.0;
             if (atomChainAdded != null) {
@@ -249,7 +247,7 @@ public class Modification extends ExperimentObject {
      * @return the ambiguity key
      */
     public String getAmbiguityKey() {
-        readDBMode();
+        
 
         if (ambiguityKey == null) {
             setAmbiguityKey();
@@ -262,7 +260,7 @@ public class Modification extends ExperimentObject {
      * Sets the ambiguity key.
      */
     private void setAmbiguityKey() {
-        writeDBMode();
+        
         this.ambiguityKey = Double.toString(getMass());
     }
 
@@ -273,7 +271,7 @@ public class Modification extends ExperimentObject {
      * @return the rounded mass difference induced by the modification
      */
     public double getRoundedMass(int numberOfDecimals) {
-        readDBMode();
+        
         double roundedMass = getMass();
         return Util.roundDouble(roundedMass, numberOfDecimals);
     }
@@ -285,7 +283,7 @@ public class Modification extends ExperimentObject {
      * @return the rounded mass difference induced by the modification
      */
     public double getRoundedMass() {
-        readDBMode();
+        
         return getRoundedMass(NUMBER_OF_ROUNDED_DECIMALS);
     }
 
@@ -295,7 +293,7 @@ public class Modification extends ExperimentObject {
      * @return the atom chain added
      */
     public AtomChain getAtomChainAdded() {
-        readDBMode();
+        
         return atomChainAdded;
     }
 
@@ -305,7 +303,7 @@ public class Modification extends ExperimentObject {
      * @param atomChainAdded the atom chain added
      */
     public void setAtomChainAdded(AtomChain atomChainAdded) {
-        writeDBMode();
+        
         this.atomChainAdded = atomChainAdded;
         mass = null;
     }
@@ -316,7 +314,7 @@ public class Modification extends ExperimentObject {
      * @return the atom chain removed
      */
     public AtomChain getAtomChainRemoved() {
-        readDBMode();
+        
         return atomChainRemoved;
     }
 
@@ -326,7 +324,7 @@ public class Modification extends ExperimentObject {
      * @param atomChainRemoved the atom chain removed
      */
     public void setAtomChainRemoved(AtomChain atomChainRemoved) {
-        writeDBMode();
+        
         this.atomChainRemoved = atomChainRemoved;
         mass = null;
     }
@@ -341,7 +339,7 @@ public class Modification extends ExperimentObject {
      * the other one
      */
     public boolean isSameAtomicComposition(Modification anotherModification) { // @TODO: can probably be simplified now that the atom chains cannot be null?
-        readDBMode();
+        
         if (atomChainAdded != null && !atomChainAdded.isSameCompositionAs(anotherModification.getAtomChainAdded())
                 || atomChainRemoved != null && !atomChainRemoved.isSameCompositionAs(anotherModification.getAtomChainRemoved())) {
             return false;
@@ -364,7 +362,7 @@ public class Modification extends ExperimentObject {
      * the other one
      */
     public boolean isSamePattern(Modification anotherModification) { // @TODO: can probably be simplified now that the patterns cannot be null?
-        readDBMode();
+        
         if (pattern == null && anotherModification.getPattern() != null && anotherModification.getPattern().length() > 0) {
             return false;
         }
@@ -383,7 +381,7 @@ public class Modification extends ExperimentObject {
      */
     public boolean isSameAs(Modification anotherModification) {
 
-        readDBMode();
+        
 
         if (modificationType != anotherModification.getModificationType()) {
 //            System.out.println("type difference");
@@ -421,7 +419,7 @@ public class Modification extends ExperimentObject {
      * @return the neutral losses possibly encountered with this modification
      */
     public ArrayList<NeutralLoss> getNeutralLosses() {
-        readDBMode();
+        
         return neutralLosses;
     }
 
@@ -432,7 +430,7 @@ public class Modification extends ExperimentObject {
      * modification
      */
     public void setNeutralLosses(ArrayList<NeutralLoss> neutralLosses) {
-        writeDBMode();
+        
         this.neutralLosses = neutralLosses;
     }
 
@@ -451,7 +449,7 @@ public class Modification extends ExperimentObject {
      * @return the reporter ions possibly encountered with this modification
      */
     public ArrayList<ReporterIon> getReporterIons() {
-        readDBMode();
+        
         return reporterIons;
     }
 
@@ -462,7 +460,7 @@ public class Modification extends ExperimentObject {
      * modification
      */
     public void setReporterIons(ArrayList<ReporterIon> reporterIons) {
-        writeDBMode();
+        
         this.reporterIons = reporterIons;
     }
 
@@ -481,7 +479,7 @@ public class Modification extends ExperimentObject {
      * @return the amino acid pattern targeted by this modification
      */
     public AminoAcidPattern getPattern() {
-        readDBMode();
+        
         return pattern;
     }
 
@@ -491,7 +489,7 @@ public class Modification extends ExperimentObject {
      * @param pattern the amino acid pattern targeted by this modification
      */
     public void setPattern(AminoAcidPattern pattern) {
-        writeDBMode();
+        
         this.pattern = pattern;
     }
 
@@ -504,7 +502,7 @@ public class Modification extends ExperimentObject {
      * standard search engines
      */
     public boolean isStandardSearch() {
-        readDBMode();
+        
         return pattern == null || pattern.length() == 1;
     }
 
@@ -514,7 +512,7 @@ public class Modification extends ExperimentObject {
      * @return information about the modification as an HTML tooltip
      */
     public String getHtmlTooltip() {
-        readDBMode();
+        
 
         if (modificationType == null) {
             return null;
@@ -570,7 +568,7 @@ public class Modification extends ExperimentObject {
      * @return the Unimod cvTerm
      */
     public CvTerm getUnimodCvTerm() {
-        readDBMode();
+        
         return unimodCvTerm;
     }
 
@@ -580,7 +578,7 @@ public class Modification extends ExperimentObject {
      * @param cvTerm the cvTerm to set
      */
     public void setUnimodCvTerm(CvTerm cvTerm) {
-        writeDBMode();
+        
         this.unimodCvTerm = cvTerm;
     }
 
@@ -590,7 +588,7 @@ public class Modification extends ExperimentObject {
      * @return the PSI-MOD cvTerm
      */
     public CvTerm getPsiModCvTerm() {
-        readDBMode();
+        
         return psiModCvTerm;
     }
 
@@ -600,7 +598,7 @@ public class Modification extends ExperimentObject {
      * @param cvTerm the cvTerm to set
      */
     public void setPsiModCvTerm(CvTerm cvTerm) {
-        writeDBMode();
+        
         this.psiModCvTerm = cvTerm;
     }
 
@@ -624,7 +622,7 @@ public class Modification extends ExperimentObject {
 
     @Override
     public String toString() {
-        readDBMode();
+        
 
         String target = "";
         switch (modificationType) {

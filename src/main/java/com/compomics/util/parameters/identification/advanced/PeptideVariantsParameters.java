@@ -1,6 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.biology.variants.AaSubstitutionMatrix;
 import com.compomics.util.experiment.identification.protein_inference.fm_index.SNPElement;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class PeptideVariantsParameters extends DbObject {
+public class PeptideVariantsParameters extends ExperimentObject {
 
     /** 
      * Enum indicating all three variant types
@@ -64,7 +64,7 @@ public class PeptideVariantsParameters extends DbObject {
      * @return the number of amino acid deletions allowed
      */
     public int getnAaDeletions() {
-        readDBMode();
+        
         return nAaDeletions;
     }
 
@@ -74,7 +74,7 @@ public class PeptideVariantsParameters extends DbObject {
      * @param nAaDeletions the number of amino acid deletions allowed
      */
     public void setnAaDeletions(int nAaDeletions) {
-        writeDBMode();
+        
         this.nAaDeletions = nAaDeletions;
     }
 
@@ -84,7 +84,7 @@ public class PeptideVariantsParameters extends DbObject {
      * @return the number of amino acid insertions allowed
      */
     public int getnAaInsertions() {
-        readDBMode();
+        
         return nAaInsertions;
     }
 
@@ -94,7 +94,7 @@ public class PeptideVariantsParameters extends DbObject {
      * @param nAaInsertions the number of amino acid insertions allowed
      */
     public void setnAaInsertions(int nAaInsertions) {
-        writeDBMode();
+        
         this.nAaInsertions = nAaInsertions;
     }
 
@@ -104,7 +104,7 @@ public class PeptideVariantsParameters extends DbObject {
      * @return the number of amino acid substitutions allowed
      */
     public int getnAaSubstitutions() {
-        readDBMode();
+        
         return nAaSubstitutions;
     }
 
@@ -114,7 +114,7 @@ public class PeptideVariantsParameters extends DbObject {
      * @param nAaSubstitutions the number of amino acid substitutions allowed
      */
     public void setnAaSubstitutions(int nAaSubstitutions) {
-        writeDBMode();
+        
         this.nAaSubstitutions = nAaSubstitutions;
     }
 
@@ -124,7 +124,7 @@ public class PeptideVariantsParameters extends DbObject {
      * @return the number of amino acid swaps allowed
      */
     public int getnAaSwap() {
-        readDBMode();
+        
         return nAaSwap;
     }
 
@@ -134,7 +134,7 @@ public class PeptideVariantsParameters extends DbObject {
      * @param nAaSwap the number of amino acid swaps allowed
      */
     public void setnAaSwap(int nAaSwap) {
-        writeDBMode();
+        
         this.nAaSwap = nAaSwap;
     }
 
@@ -144,7 +144,7 @@ public class PeptideVariantsParameters extends DbObject {
      * @return the amino acid substitution matrix to use
      */
     public AaSubstitutionMatrix getAaSubstitutionMatrix() {
-        readDBMode();
+        
         return aaSubstitutionMatrix;
     }
 
@@ -154,7 +154,7 @@ public class PeptideVariantsParameters extends DbObject {
      * @param aaSubstitutionMatrix the amino acid substitution matrix to use
      */
     public void setAaSubstitutionMatrix(AaSubstitutionMatrix aaSubstitutionMatrix) {
-        writeDBMode();
+        
         this.aaSubstitutionMatrix = aaSubstitutionMatrix;
     }
 
@@ -165,7 +165,7 @@ public class PeptideVariantsParameters extends DbObject {
      * limitations should be used
      */
     public VariantType getVariantType() {
-        readDBMode();
+        
         return variantType;
     }
 
@@ -176,7 +176,7 @@ public class PeptideVariantsParameters extends DbObject {
      * count limitations should be used
      */
     public void setVatiantType(VariantType variantType) {
-        writeDBMode();
+        
         this.variantType = variantType;
     }
 
@@ -186,7 +186,7 @@ public class PeptideVariantsParameters extends DbObject {
      * @return the total number of variants allowed
      */
     public int getnVariants() {
-        readDBMode();
+        
         return nVariants;
     }
 
@@ -196,7 +196,7 @@ public class PeptideVariantsParameters extends DbObject {
      * @param nVariants the total number of variants allowed
      */
     public void setnVariants(int nVariants) {
-        writeDBMode();
+        
         this.nVariants = nVariants;
     }
 
@@ -210,7 +210,7 @@ public class PeptideVariantsParameters extends DbObject {
      * one
      */
     public boolean isSameAs(PeptideVariantsParameters peptideVariantsPreferences) {
-        readDBMode();
+        
         if (nAaDeletions != peptideVariantsPreferences.getnAaDeletions()) {
             return false;
         }
@@ -238,7 +238,7 @@ public class PeptideVariantsParameters extends DbObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        readDBMode();
+        
 
         String newLine = System.getProperty("line.separator");
 

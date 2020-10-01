@@ -95,9 +95,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return the sequence as String
      */
     public String getSequence() {
-
-        
-        readDBMode();
         
 
         setSequenceStringBuilder(false);
@@ -116,9 +113,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * letter code
      */
     public char charAt(int aa) {
-
-        
-        readDBMode();
         
 
         setSequenceStringBuilder(false);
@@ -137,10 +131,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public AminoAcid getAminoAcidAt(int aa) {
 
-        
-        readDBMode();
-        
-
         return AminoAcid.getAminoAcid(charAt(aa));
 
     }
@@ -150,11 +140,7 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      *
      * @param aminoAcidSequence the sequence
      */
-    public void setSequence(String aminoAcidSequence) {
-
-        
-        writeDBMode();
-        
+    public void setSequence(String aminoAcidSequence) {        
 
         sequenceStringBuilder = null;
 
@@ -171,10 +157,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public void setAaAtIndex(int index, char aa) {
 
-        
-        writeDBMode();
-        
-
         setSequenceStringBuilder(true);
         sequenceStringBuilder.setCharAt(index, aa);
 
@@ -184,11 +166,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * Loads the sequence in the string builder.
      */
     private void setSequenceStringBuilder(boolean stringbuilder) {
-
-        
-        writeDBMode();
-        
-
         if (stringbuilder && sequenceStringBuilder == null) {
 
             if (sequence != null) {
@@ -215,10 +192,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public void emptyInternalCaches() {
 
-        
-        writeDBMode();
-        
-
         sequenceStringBuilder = null;
 
     }
@@ -233,10 +206,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * amino acid sequence
      */
     public boolean matchesIn(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
-
-        
-        readDBMode();
-        
 
         return firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
 
@@ -253,9 +222,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public boolean matchesIn(AminoAcidSequence aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
 
-        
-        readDBMode();
-        
 
         return matchesIn(aminoAcidSequence.getSequence(), sequenceMatchingPreferences);
 
@@ -273,10 +239,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public boolean matches(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
 
-        
-        readDBMode();
-        
-
         return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingPreferences) >= 0;
 
     }
@@ -293,10 +255,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public boolean matches(AminoAcidSequence aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
 
-        
-        readDBMode();
-        
-
         return matches(aminoAcidSequence.getSequence(), sequenceMatchingPreferences);
 
     }
@@ -312,10 +270,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public int firstIndex(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
 
-        
-        readDBMode();
-        
-
         return AminoAcidPattern.getAminoAcidPatternFromString(sequence).firstIndex(aminoAcidSequence, sequenceMatchingPreferences, 0);
 
     }
@@ -326,10 +280,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return the length of the sequence in amino acids
      */
     public int length() {
-
-        
-        readDBMode();
-        
 
         if (sequence != null) {
 
@@ -353,9 +303,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public void appendCTerm(AminoAcidSequence otherSequence) {
 
-        
-        writeDBMode();
-        
         setSequenceStringBuilder(true);
 
         int previousLength = length();
@@ -393,10 +340,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public void appendCTerm(String otherSequence) {
 
-        
-        writeDBMode();
-        
-
         setSequenceStringBuilder(true);
         sequenceStringBuilder.append(otherSequence);
 
@@ -410,10 +353,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param otherSequence the other sequence to insert.
      */
     public void insert(int offset, AminoAcidSequence otherSequence) {
-
-        
-        writeDBMode();
-        
 
         setSequenceStringBuilder(true);
         sequenceStringBuilder.insert(0, otherSequence.getSequence());
@@ -462,10 +401,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public void insert(int offset, String otherSequence) {
 
-        
-        writeDBMode();
-        
-
         setSequenceStringBuilder(true);
         sequenceStringBuilder.insert(offset, otherSequence);
 
@@ -478,10 +413,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param otherSequence the other sequence to append.
      */
     public void appendNTerm(AminoAcidSequence otherSequence) {
-
-        
-        writeDBMode();
-        
 
         insert(0, otherSequence);
 
@@ -496,10 +427,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public void appendNTerm(String otherSequence) {
 
-        
-        writeDBMode();
-        
-
         insert(0, otherSequence);
 
     }
@@ -511,10 +438,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return the modifications matches as found by the search engine
      */
     public ModificationMatch[] getVariableModifications() {
-
-        
-        readDBMode();
-        
 
         return variableModifications == null ? noMod : variableModifications;
 
@@ -561,10 +484,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public void addVariableModification(ModificationMatch modificationMatch) {
 
-        
-        writeDBMode();
-        
-
         variableModifications = variableModifications == null ? new ModificationMatch[1] : Arrays.copyOf(variableModifications, variableModifications.length + 1);
 
         variableModifications[variableModifications.length - 1] = modificationMatch;
@@ -577,11 +496,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @param variableModifications the modifications
      */
     public void setVariableModifications(ModificationMatch[] variableModifications) {
-
-        
-        writeDBMode();
-        
-
         this.variableModifications = variableModifications;
 
     }
@@ -647,11 +561,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * @return true if the other AminoAcidPattern targets the same sequence
      */
     public boolean isSameAs(AminoAcidSequence anotherSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
-
-        
-        readDBMode();
-        
-
         if (!isSameSequenceAndModificationStatusAs(anotherSequence, sequenceMatchingPreferences)) {
 
             return false;
@@ -700,10 +609,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      */
     public boolean isSameSequenceAndModificationStatusAs(AminoAcidSequence anotherSequence, SequenceMatchingParameters sequenceMatchingPreferences) {
 
-        
-        readDBMode();
-        
-
         if (!matches(anotherSequence, sequenceMatchingPreferences)) {
             return false;
         }
@@ -740,11 +645,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
      * pattern
      */
     public AminoAcidSequence reverse() {
-
-        
-        readDBMode();
-        
-
         setSequenceStringBuilder(false);
         AminoAcidSequence newSequence = new AminoAcidSequence((new StringBuilder(sequence)).reverse().toString());
 
@@ -914,10 +814,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     @Override
     public String toString() {
 
-        
-        readDBMode();
-        
-
         setSequenceStringBuilder(false);
 
         return sequence;
@@ -927,10 +823,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     @Override
     public String asSequence() {
 
-        
-        readDBMode();
-        
-
         setSequenceStringBuilder(false);
 
         return sequence;
@@ -939,11 +831,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
     @Override
     public double getMass() {
-
-        
-        readDBMode();
-        
-
         setSequenceStringBuilder(false);
 
         double mass = CharBuffer.wrap(sequence.toCharArray()).chars()
@@ -967,10 +854,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
     @Override
     public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
 
-        
-        readDBMode();
-        
-
         if (!(anotherCompontent instanceof AminoAcidSequence)) {
 
             return false;
@@ -985,10 +868,6 @@ public class AminoAcidSequence extends ExperimentObject implements TagComponent 
 
     @Override
     public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
-
-        
-        readDBMode();
-        
 
         if (!(anotherCompontent instanceof AminoAcidSequence)) {
 

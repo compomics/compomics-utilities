@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification.peptide_shaker;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.math.statistics.distributions.NonSymmetricalNormalDistribution;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class Metrics extends DbObject {
+public class Metrics extends ExperimentObject {
 
     /**
      * The maximal peptide precursor error in Da in all PSMs (only the best
@@ -135,7 +135,7 @@ public class Metrics extends DbObject {
      * @return the found charges.
      */
     public int[] getFoundCharges() {
-        readDBMode();
+        
         return foundCharges;
     }
 
@@ -143,7 +143,7 @@ public class Metrics extends DbObject {
      * Clears the found charges.
      */
     public void clearFoundCharges() {
-        writeDBMode();
+        
         foundCharges = new int[0];
     }
 
@@ -153,7 +153,7 @@ public class Metrics extends DbObject {
      * @param foundCharges the new charge to add
      */
     public void addFoundCharges(HashSet<Integer> foundCharges) {
-        writeDBMode();
+        
         this.foundCharges = IntStream.concat(Arrays.stream(this.foundCharges), foundCharges.stream().mapToInt(a -> a))
                 .distinct()
                 .sorted()
@@ -166,7 +166,7 @@ public class Metrics extends DbObject {
      * @return the maximal charge
      */
     public int getMaxCharge() {
-        readDBMode();
+        
         
         return foundCharges[foundCharges.length-1];
         
@@ -178,7 +178,7 @@ public class Metrics extends DbObject {
      * @return the max peptide precursor mass error in Dalton
      */
     public double getMaxPeptidePrecursorErrorDa() {
-        readDBMode();
+        
         return maxPrecursorErrorDa;
     }
 
@@ -188,7 +188,7 @@ public class Metrics extends DbObject {
      * @param maxPeptidePrecursorErrorDa the mass error to set
      */
     public void setMaxPeptidePrecursorErrorDa(double maxPeptidePrecursorErrorDa) {
-        writeDBMode();
+        
         this.maxPrecursorErrorDa = maxPeptidePrecursorErrorDa;
     }
 
@@ -198,7 +198,7 @@ public class Metrics extends DbObject {
      * @return the max peptide precursor mass error in ppm
      */
     public double getMaxPeptidePrecursorErrorPpm() {
-        readDBMode();
+        
         return maxPrecursorErrorPpm;
     }
 
@@ -209,7 +209,7 @@ public class Metrics extends DbObject {
      * in ppm
      */
     public void setMaxPeptidePrecursorErrorPpm(double maxPeptidePrecursorErrorPpm) {
-        writeDBMode();
+        
         this.maxPrecursorErrorPpm = maxPeptidePrecursorErrorPpm;
     }
 
@@ -219,7 +219,7 @@ public class Metrics extends DbObject {
      * @return the max tag precursor mass error in Dalton
      */
     public double getMaxTagPrecursorErrorDa() {
-        readDBMode();
+        
         return maxTagPrecursorErrorDa;
     }
 
@@ -229,7 +229,7 @@ public class Metrics extends DbObject {
      * @param maxTagPrecursorErrorDa the mass error to set
      */
     public void setMaxTagPrecursorErrorDa(double maxTagPrecursorErrorDa) {
-        writeDBMode();
+        
         this.maxTagPrecursorErrorDa = maxTagPrecursorErrorDa;
     }
 
@@ -239,7 +239,7 @@ public class Metrics extends DbObject {
      * @return the max tag precursor mass error in ppm
      */
     public double getMaxTagPrecursorErrorPpm() {
-        readDBMode();
+        
         return maxTagPrecursorErrorPpm;
     }
 
@@ -249,7 +249,7 @@ public class Metrics extends DbObject {
      * @param maxTagPrecursorErrorPpm the max tag precursor mass error in ppm
      */
     public void setMaxTagPrecursorErrorPpm(double maxTagPrecursorErrorPpm) {
-        writeDBMode();
+        
         this.maxTagPrecursorErrorPpm = maxTagPrecursorErrorPpm;
     }
 
@@ -259,7 +259,7 @@ public class Metrics extends DbObject {
      * @return the molecular weight of the fattest protein in the dataset
      */
     public Double getMaxMW() {
-        readDBMode();
+        
         return maxMW;
     }
 
@@ -269,7 +269,7 @@ public class Metrics extends DbObject {
      * @param maxMW the molecular weight of the fattest protein in the dataset
      */
     public void setMaxMW(Double maxMW) {
-        writeDBMode();
+        
         this.maxMW = maxMW;
     }
 
@@ -279,7 +279,7 @@ public class Metrics extends DbObject {
      * @return the maximal number of peptides among the proteins of the dataset
      */
     public Integer getMaxNPeptides() {
-        readDBMode();
+        
         return maxNPeptides;
     }
 
@@ -290,7 +290,7 @@ public class Metrics extends DbObject {
      * dataset
      */
     public void setMaxNPeptides(Integer maxNPeptides) {
-        writeDBMode();
+        
         this.maxNPeptides = maxNPeptides;
     }
 
@@ -300,7 +300,7 @@ public class Metrics extends DbObject {
      * @return the the maximal number of PSMs among the proteins of the dataset
      */
     public Integer getMaxNPsms() {
-        readDBMode();
+        
         return maxNPsms;
     }
 
@@ -311,7 +311,7 @@ public class Metrics extends DbObject {
      * dataset
      */
     public void setMaxNPsms(Integer maxNSpectra) {
-        writeDBMode();
+        
         this.maxNPsms = maxNSpectra;
     }
 
@@ -323,7 +323,7 @@ public class Metrics extends DbObject {
      * dataset
      */
     public Double getMaxSpectrumCounting() {
-        readDBMode();
+        
         return maxSpectrumCounting;
     }
 
@@ -334,7 +334,7 @@ public class Metrics extends DbObject {
      * proteins of the dataset
      */
     public void setMaxSpectrumCounting(Double maxSpectrumCounting) {
-        writeDBMode();
+        
         this.maxSpectrumCounting = maxSpectrumCounting;
     }
 
@@ -344,7 +344,7 @@ public class Metrics extends DbObject {
      * @return the list of ordered protein keys
      */
     public long[] getProteinKeys() {
-        readDBMode();
+        
         return proteinKeys;
     }
 
@@ -354,7 +354,7 @@ public class Metrics extends DbObject {
      * @param proteinKeys the list of ordered protein keys
      */
     public void setProteinKeys(long[] proteinKeys) {
-        writeDBMode();
+        
         this.proteinKeys = proteinKeys;
     }
 
@@ -364,7 +364,7 @@ public class Metrics extends DbObject {
      * @param maxProteinAccessionLength the length to set
      */
     public void setMaxProteinAccessionLength(int maxProteinAccessionLength) {
-        writeDBMode();
+        
         this.maxProteinAccessionLength = maxProteinAccessionLength;
     }
 
@@ -374,7 +374,7 @@ public class Metrics extends DbObject {
      * @return the max protein accession length
      */
     public Integer getMaxProteinAccessionLength() {
-        readDBMode();
+        
             return maxProteinAccessionLength;
     }
 
@@ -384,7 +384,7 @@ public class Metrics extends DbObject {
      * @return the number of validated proteins
      */
     public Integer getnValidatedProteins() {
-        readDBMode();
+        
         return nValidatedProteins;
     }
 
@@ -394,7 +394,7 @@ public class Metrics extends DbObject {
      * @param nValidatedProteins the number of validated proteins
      */
     public void setnValidatedProteins(int nValidatedProteins) {
-        writeDBMode();
+        
         this.nValidatedProteins = nValidatedProteins;
     }
 
@@ -404,7 +404,7 @@ public class Metrics extends DbObject {
      * @return the number of confident proteins
      */
     public Integer getnConfidentProteins() {
-        readDBMode();
+        
         return nConfidentProteins;
     }
 
@@ -414,7 +414,7 @@ public class Metrics extends DbObject {
      * @param nConfidentProteins the number of confident proteins
      */
     public void setnConfidentProteins(int nConfidentProteins) {
-        writeDBMode();
+        
         this.nConfidentProteins = nConfidentProteins;
     }
 
@@ -424,7 +424,7 @@ public class Metrics extends DbObject {
      * @return the names of the variable modifications found in the dataset
      */
     public TreeSet<String> getFoundModifications() {
-        readDBMode();
+        
         return foundModifications;
         
     }
@@ -436,7 +436,7 @@ public class Metrics extends DbObject {
      * dataset
      */
     public void setFoundModifications(TreeSet<String> foundModifications) {
-        writeDBMode();
+        
         this.foundModifications = foundModifications;
         
     }
@@ -448,7 +448,7 @@ public class Metrics extends DbObject {
      * @param fractionPsmMatches the fraction PSM matches
      */
     public void setFractionPsmMatches(HashMap<String, ArrayList<Long>> fractionPsmMatches) {
-        writeDBMode();
+        
         this.fractionPsmMatches = fractionPsmMatches;
     
     }
@@ -460,7 +460,7 @@ public class Metrics extends DbObject {
      * @return he list of fraction PSM matches
      */
     public HashMap<String, ArrayList<Long>> getFractionPsmMatches() {
-        readDBMode();
+        
         return fractionPsmMatches;
             
     }
@@ -472,7 +472,7 @@ public class Metrics extends DbObject {
      * fraction map
      */
     public void setTotalPeptidesPerFraction(HashMap<String, Integer> totalPeptidesPerFractions) {
-        writeDBMode();
+        
         this.totalPeptidesPerFractions = totalPeptidesPerFractions;
     }
 
@@ -484,7 +484,7 @@ public class Metrics extends DbObject {
      * have not been set
      */
     public HashMap<String, Integer> getTotalPeptidesPerFraction() {
-        readDBMode();
+        
         return totalPeptidesPerFractions;
     }
 
@@ -495,7 +495,7 @@ public class Metrics extends DbObject {
      * @return the observed average molecular masses for each fraction
      */
     public HashMap<String, ArrayList<Double>> getObservedFractionalMassesAll() {
-        readDBMode();
+        
         if (observedFractionalMassesAll != null) {
             return observedFractionalMassesAll;
         } else {
@@ -510,7 +510,7 @@ public class Metrics extends DbObject {
      * @param observedFractionalMassesAll the observedFractionalMasses to set
      */
     public void setObservedFractionalMassesAll(HashMap<String, ArrayList<Double>> observedFractionalMassesAll) {
-        writeDBMode();
+        
         this.observedFractionalMassesAll = observedFractionalMassesAll;
     }
 
@@ -520,7 +520,7 @@ public class Metrics extends DbObject {
      * @return the maxValidatedPeptidesPerFraction
      */
     public Integer getMaxValidatedPeptidesPerFraction() {
-        readDBMode();
+        
         return maxValidatedPeptidesPerFraction;
     }
 
@@ -531,7 +531,7 @@ public class Metrics extends DbObject {
      * maxValidatedPeptidesPerFraction to set
      */
     public void setMaxValidatedPeptidesPerFraction(Integer maxValidatedPeptidesPerFraction) {
-        writeDBMode();
+        
         this.maxValidatedPeptidesPerFraction = maxValidatedPeptidesPerFraction;
     }
 
@@ -541,7 +541,7 @@ public class Metrics extends DbObject {
      * @return the maxValidatedSpectraPerFraction
      */
     public Integer getMaxValidatedSpectraPerFraction() {
-        readDBMode();
+        
         return maxValidatedSpectraPerFraction;
     }
 
@@ -552,7 +552,7 @@ public class Metrics extends DbObject {
      * to set
      */
     public void setMaxValidatedSpectraPerFraction(Integer maxValidatedSpectraPerFraction) {
-        writeDBMode();
+        
         this.maxValidatedSpectraPerFraction = maxValidatedSpectraPerFraction;
     }
 
@@ -562,7 +562,7 @@ public class Metrics extends DbObject {
      * @return the maxProteinAveragePrecursorIntensity
      */
     public Double getMaxProteinAveragePrecursorIntensity() {
-        readDBMode();
+        
         return maxProteinAveragePrecursorIntensity;
     }
 
@@ -573,7 +573,7 @@ public class Metrics extends DbObject {
      * maxProteinAveragePrecursorIntensity to set
      */
     public void setMaxProteinAveragePrecursorIntensity(Double maxProteinAveragePrecursorIntensity) {
-        writeDBMode();
+        
         this.maxProteinAveragePrecursorIntensity = maxProteinAveragePrecursorIntensity;
     }
 
@@ -583,7 +583,7 @@ public class Metrics extends DbObject {
      * @return the maxProteinSummedPrecursorIntensity
      */
     public Double getMaxProteinSummedPrecursorIntensity() {
-        readDBMode();
+        
         return maxProteinSummedPrecursorIntensity;
     }
 
@@ -594,7 +594,7 @@ public class Metrics extends DbObject {
      * maxProteinSummedPrecursorIntensity to set
      */
     public void setMaxProteinSummedPrecursorIntensity(Double maxProteinSummedPrecursorIntensity) {
-        writeDBMode();
+        
         this.maxProteinSummedPrecursorIntensity = maxProteinSummedPrecursorIntensity;
     }
 
@@ -604,7 +604,7 @@ public class Metrics extends DbObject {
      * @return the distribution of validated peptide lengths
      */
     public NonSymmetricalNormalDistribution getPeptideLengthDistribution() {
-        readDBMode();
+        
         return peptideLengthDistribution;
     }
 
@@ -615,7 +615,7 @@ public class Metrics extends DbObject {
      * lengths
      */
     public void setPeptideLengthDistribution(NonSymmetricalNormalDistribution peptideLengthDistribution) {
-        writeDBMode();
+        
         this.peptideLengthDistribution = peptideLengthDistribution;
     }
 
@@ -625,7 +625,7 @@ public class Metrics extends DbObject {
      * @return the total spectrum counting masses
      */
     public Double getTotalSpectrumCountingMass() {
-        readDBMode();
+        
         return totalSpectrumCountingMass;
     }
 
@@ -635,7 +635,7 @@ public class Metrics extends DbObject {
      * @param totalSpectrumCountingMass the total spectrum counting masses
      */
     public void setTotalSpectrumCountingMass(double totalSpectrumCountingMass) {
-        writeDBMode();
+        
         this.totalSpectrumCountingMass = totalSpectrumCountingMass;
     }
 
@@ -645,7 +645,7 @@ public class Metrics extends DbObject {
      * @return the total spectrum counting
      */
     public Double getTotalSpectrumCounting() {
-        readDBMode();
+        
         return totalSpectrumCounting;
     }
 
@@ -655,7 +655,7 @@ public class Metrics extends DbObject {
      * @param totalSpectrumCountingIndexes the total spectrum counting
      */
     public void setTotalSpectrumCounting(Double totalSpectrumCountingIndexes) {
-        writeDBMode();
+        
         this.totalSpectrumCounting = totalSpectrumCountingIndexes;
     }
 
@@ -665,7 +665,7 @@ public class Metrics extends DbObject {
      * @return the keys of the validated target protein matches
      */
     public long[] getValidatedTargetProteinKeys() {
-        readDBMode();
+        
         return validatedTargetProteinKeys;
     }
 
@@ -675,7 +675,7 @@ public class Metrics extends DbObject {
      * @param validatedTargetProteinKeys the keys of the validated target protein matches
      */
     public void setValidatedTargetProteinKeys(long[] validatedTargetProteinKeys) {
-        writeDBMode();
+        
         this.validatedTargetProteinKeys = validatedTargetProteinKeys;
     }
 

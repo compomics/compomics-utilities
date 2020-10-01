@@ -2,7 +2,6 @@ package com.compomics.util.experiment.identification.filtering;
 
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.Util;
-import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
@@ -11,6 +10,7 @@ import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.utils.ProteinUtils;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import java.util.Arrays;
@@ -22,7 +22,7 @@ import java.util.TreeMap;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class PeptideAssumptionFilter extends DbObject {
+public class PeptideAssumptionFilter extends ExperimentObject {
 
     /**
      * The minimal peptide length allowed.
@@ -135,7 +135,7 @@ public class PeptideAssumptionFilter extends DbObject {
     public void setFilterFromSearchParameters(
             SearchParameters searchParameters
     ) {
-        writeDBMode();
+        
 
         this.isPpm = searchParameters.isPrecursorAccuracyTypePpm();
         this.maxMassDeviation = searchParameters.getPrecursorAccuracy();
@@ -162,7 +162,7 @@ public class PeptideAssumptionFilter extends DbObject {
             DigestionParameters digestionPreferences
     ) {
         
-        readDBMode();
+        
 
         String peptideSequence = peptide.getSequence();
         int sequenceLength = peptideSequence.length();
@@ -217,7 +217,7 @@ public class PeptideAssumptionFilter extends DbObject {
             SequenceProvider sequenceProvider
     ) {
 
-        readDBMode();
+        
         TreeMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
         if (proteinMapping != null && proteinMapping.size() > 1) {
@@ -267,7 +267,7 @@ public class PeptideAssumptionFilter extends DbObject {
             ModificationParameters modificationProfile
     ) {
 
-        readDBMode();
+        
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
         // check if a modification could not be parsed
@@ -307,7 +307,7 @@ public class PeptideAssumptionFilter extends DbObject {
             SearchParameters searchParameters
     ) {
 
-        readDBMode();
+        
         double precursorMz = spectrumProvider.getPrecursorMz(
                 spectrumFile, 
                 spectrumTitle
@@ -344,7 +344,7 @@ public class PeptideAssumptionFilter extends DbObject {
      * removed
      */
     public boolean removeUnknownModifications() {
-        readDBMode();
+        
 
         return unknownModification;
 
@@ -358,7 +358,7 @@ public class PeptideAssumptionFilter extends DbObject {
     public void setRemoveUnknownModifications(
             boolean unknownModification
     ) {
-        writeDBMode();
+        
         this.unknownModification = unknownModification;
 
     }
@@ -370,7 +370,7 @@ public class PeptideAssumptionFilter extends DbObject {
      * or Dalton (false)
      */
     public boolean isIsPpm() {
-        readDBMode();
+        
         return isPpm;
     }
 
@@ -383,7 +383,7 @@ public class PeptideAssumptionFilter extends DbObject {
     public void setIsPpm(
             boolean isPpm
     ) {
-        writeDBMode();
+        
         this.isPpm = isPpm;
     }
 
@@ -393,7 +393,7 @@ public class PeptideAssumptionFilter extends DbObject {
      * @return the maximal mass deviation allowed
      */
     public double getMaxMzDeviation() {
-        readDBMode();
+        
         return maxMassDeviation;
     }
 
@@ -405,7 +405,7 @@ public class PeptideAssumptionFilter extends DbObject {
     public void setMaxMzDeviation(
             double maxMzDeviation
     ) {
-        writeDBMode();
+        
         this.maxMassDeviation = maxMzDeviation;
     }
 
@@ -415,7 +415,7 @@ public class PeptideAssumptionFilter extends DbObject {
      * @return the maximal peptide length allowed
      */
     public int getMaxPepLength() {
-        readDBMode();
+        
         return maxPepLength;
     }
 
@@ -427,7 +427,7 @@ public class PeptideAssumptionFilter extends DbObject {
     public void setMaxPepLength(
             int maxPepLength
     ) {
-        writeDBMode();
+        
         this.maxPepLength = maxPepLength;
     }
 
@@ -437,7 +437,7 @@ public class PeptideAssumptionFilter extends DbObject {
      * @return the maximal peptide length allowed
      */
     public int getMinPepLength() {
-        readDBMode();
+        
         return minPepLength;
     }
 
@@ -449,7 +449,7 @@ public class PeptideAssumptionFilter extends DbObject {
     public void setMinPepLength(
             int minPepLength
     ) {
-        writeDBMode();
+        
         this.minPepLength = minPepLength;
     }
 
@@ -459,7 +459,7 @@ public class PeptideAssumptionFilter extends DbObject {
      * @return the minimal number of isotopes allowed
      */
     public Integer getMinIsotopes() {
-        readDBMode();
+        
         return minIsotopes;
     }
 
@@ -471,7 +471,7 @@ public class PeptideAssumptionFilter extends DbObject {
     public void setMinIsotopes(
             Integer minIsotopes
     ) {
-        writeDBMode();
+        
         this.minIsotopes = minIsotopes;
     }
 
@@ -481,7 +481,7 @@ public class PeptideAssumptionFilter extends DbObject {
      * @return the maximal number of isotopes allowed
      */
     public Integer getMaxIsotopes() {
-        readDBMode();
+        
         return maxIsotopes;
     }
 
@@ -493,7 +493,7 @@ public class PeptideAssumptionFilter extends DbObject {
     public void setMaxIsotopes(
             Integer maxIsotopes
     ) {
-        writeDBMode();
+        
         this.maxIsotopes = maxIsotopes;
     }
 
@@ -507,7 +507,7 @@ public class PeptideAssumptionFilter extends DbObject {
     public boolean isSameAs(
             PeptideAssumptionFilter anotherFilter
     ) {
-        readDBMode();
+        
 
         if (minMissedCleavages != null && anotherFilter.getMinMissedCleavages() != null) {
             if (!minMissedCleavages.equals(anotherFilter.getMinMissedCleavages())) {
@@ -568,7 +568,7 @@ public class PeptideAssumptionFilter extends DbObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        readDBMode();
+        
 
         String newLine = System.getProperty("line.separator");
 
@@ -636,7 +636,7 @@ public class PeptideAssumptionFilter extends DbObject {
      * @return the minMissedCleavages
      */
     public Integer getMinMissedCleavages() {
-        readDBMode();
+        
         return minMissedCleavages;
     }
 
@@ -648,7 +648,7 @@ public class PeptideAssumptionFilter extends DbObject {
     public void setMinMissedCleavages(
             Integer minMissedCleavages
     ) {
-        writeDBMode();
+        
         this.minMissedCleavages = minMissedCleavages;
     }
 
@@ -658,7 +658,7 @@ public class PeptideAssumptionFilter extends DbObject {
      * @return the maxMissedCleavages
      */
     public Integer getMaxMissedCleavages() {
-        readDBMode();
+        
         return maxMissedCleavages;
     }
 
@@ -670,7 +670,7 @@ public class PeptideAssumptionFilter extends DbObject {
     public void setMaxMissedCleavages(
             Integer maxMissedCleavages
     ) {
-        writeDBMode();
+        
         this.maxMissedCleavages = maxMissedCleavages;
     }
 }

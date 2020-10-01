@@ -1,6 +1,6 @@
 package com.compomics.util.math.statistics.distributions;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.math.BasicMathFunctions;
 import com.compomics.util.math.statistics.Distribution;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import org.apache.commons.math.distribution.NormalDistributionImpl;
  *
  * @author Marc Vaudel
  */
-public class NormalDistribution extends DbObject implements Distribution {
+public class NormalDistribution extends ExperimentObject implements Distribution {
 
     /**
      * Empty default constructor
@@ -87,7 +87,7 @@ public class NormalDistribution extends DbObject implements Distribution {
 
     @Override
     public double getProbabilityAt(double x) {
-        readDBMode();
+        
 
         if (std > 0) {
 
@@ -113,7 +113,7 @@ public class NormalDistribution extends DbObject implements Distribution {
 
     @Override
     public double getMaxValueForProbability(double p) {
-        readDBMode();
+        
 
         if (std > 0) {
 
@@ -141,7 +141,7 @@ public class NormalDistribution extends DbObject implements Distribution {
 
     @Override
     public double getMinValueForProbability(double p) {
-        readDBMode();
+        
 
         if (std > 0) {
 
@@ -168,7 +168,7 @@ public class NormalDistribution extends DbObject implements Distribution {
 
     @Override
     public double getCumulativeProbabilityAt(double x) {
-        readDBMode();
+        
 
         if (std > 0) {
 
@@ -198,7 +198,7 @@ public class NormalDistribution extends DbObject implements Distribution {
 
     @Override
     public double getValueAtCumulativeProbability(double p) {
-        readDBMode();
+        
 
         if (std > 0) {
 
@@ -235,7 +235,7 @@ public class NormalDistribution extends DbObject implements Distribution {
     @Override
     public double getDescendingCumulativeProbabilityAt(double x) {
         
-        readDBMode();
+        
 
         if (std > 0) {
 
@@ -263,7 +263,7 @@ public class NormalDistribution extends DbObject implements Distribution {
 
     @Override
     public double getSmallestCumulativeProbabilityAt(double x) {
-        readDBMode();
+        
 
         return x > mean
                 ? getDescendingCumulativeProbabilityAt(x)
@@ -273,7 +273,7 @@ public class NormalDistribution extends DbObject implements Distribution {
 
     @Override
     public double getValueAtDescendingCumulativeProbability(double p) {
-        readDBMode();
+        
 
         if (std > 0) {
 

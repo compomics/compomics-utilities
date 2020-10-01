@@ -1,13 +1,13 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * The tag element.
  *
  * @author Dominik Kopczynski
  */
-public class TagElement extends DbObject  {
+public class TagElement extends ExperimentObject  {
  
     boolean isMass;
     String sequence;

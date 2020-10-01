@@ -1,7 +1,7 @@
 package com.compomics.util.experiment.identification.matches;
 
-import com.compomics.util.db.object.DbObject;
 import com.compomics.util.experiment.biology.variants.Variant;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.HashMap;
 
 /**
@@ -10,7 +10,7 @@ import java.util.HashMap;
  * @author Marc Vaudel
  * @author Dominik Kopczynski
  */
-public class PeptideVariantMatches extends DbObject {
+public class PeptideVariantMatches extends ExperimentObject {
 
     /**
      * Empty default constructor

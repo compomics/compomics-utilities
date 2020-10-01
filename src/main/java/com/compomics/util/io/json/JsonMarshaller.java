@@ -53,7 +53,7 @@ public class JsonMarshaller extends ExperimentObject {
      */
     protected void init() {
 
-        writeDBMode();
+        
         builder.registerTypeAdapter(File.class, new FileAdapter());
         builder.registerTypeAdapter(Color.class, new ColorAdapter());
 
@@ -88,7 +88,7 @@ public class JsonMarshaller extends ExperimentObject {
      */
     public String toJson(Object anObject) {
 
-        readDBMode();
+        
         return gson.toJson(anObject);
 
     }
@@ -104,7 +104,7 @@ public class JsonMarshaller extends ExperimentObject {
      */
     public void saveObjectToJson(Object anObject, File jsonFile) throws IOException {
 
-        writeDBMode();
+        
         BufferedWriter out = new BufferedWriter(new FileWriter(jsonFile));
 
         try {
@@ -125,7 +125,7 @@ public class JsonMarshaller extends ExperimentObject {
      */
     public Object fromJson(Class objectType, String jsonString) {
 
-        readDBMode();
+        
         return gson.fromJson(jsonString, objectType);
 
     }
@@ -143,7 +143,7 @@ public class JsonMarshaller extends ExperimentObject {
      */
     public Object fromJson(Class objectType, File jsonFile) throws IOException {
 
-        readDBMode();
+        
 
         String jsonString = getJsonStringFromFile(jsonFile);
         return gson.fromJson(jsonString, objectType);
@@ -163,7 +163,7 @@ public class JsonMarshaller extends ExperimentObject {
      */
     public Object fromJson(Class objectType, URL jsonURL) throws IOException {
 
-        readDBMode();
+        
         return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
 
     }
@@ -178,7 +178,7 @@ public class JsonMarshaller extends ExperimentObject {
      */
     public Object fromJson(Type objectType, String jsonString) {
 
-        readDBMode();
+        
         return gson.fromJson(jsonString, objectType);
 
     }
@@ -214,7 +214,7 @@ public class JsonMarshaller extends ExperimentObject {
      */
     public Object fromJson(Type objectType, URL jsonURL) throws IOException {
 
-        readDBMode();
+        
         return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
 
     }
@@ -232,7 +232,7 @@ public class JsonMarshaller extends ExperimentObject {
      */
     protected String getJsonStringFromFile(File jsonFile) throws FileNotFoundException, IOException {
 
-        readDBMode();
+        
 
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile)));

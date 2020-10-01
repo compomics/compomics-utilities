@@ -39,7 +39,7 @@ public class IdentificationMethod extends ExperimentObject {
      * @param index the index of the method as indexed by the static fields
      */
     public IdentificationMethod(int index) {
-        readDBMode();
+        
         this.index = index;
     }
 
@@ -48,7 +48,7 @@ public class IdentificationMethod extends ExperimentObject {
      * @return the index of the identification method
      */
     public int getIndex() {
-        readDBMode();
+        
         return index;
     }
 }

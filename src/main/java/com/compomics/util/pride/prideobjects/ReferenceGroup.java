@@ -1,6 +1,6 @@
 package com.compomics.util.pride.prideobjects;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.PrideObject;
 import java.util.ArrayList;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
  *
  * @author Harald Barsnes
  */
-public class ReferenceGroup extends DbObject implements PrideObject {
+public class ReferenceGroup extends ExperimentObject implements PrideObject {
 
     /**
      * Empty default constructor
@@ -43,7 +43,7 @@ public class ReferenceGroup extends DbObject implements PrideObject {
      * @return the name
      */
     public ArrayList<Reference> getReferences() {
-        readDBMode();
+        
         return references;
     }
 
@@ -53,7 +53,7 @@ public class ReferenceGroup extends DbObject implements PrideObject {
      * @param references the references
      */
     public void setReferences(ArrayList<Reference> references) {
-        writeDBMode();
+        
         this.references = references;
     }
 
@@ -63,7 +63,7 @@ public class ReferenceGroup extends DbObject implements PrideObject {
      * @return the group name
      */
     public String getName() {
-        readDBMode();
+        
         return groupName;
     }
 
@@ -73,7 +73,7 @@ public class ReferenceGroup extends DbObject implements PrideObject {
      * @param groupName the group name to set
      */
     public void setName(String groupName) {
-        writeDBMode();
+        
         this.groupName = groupName;
     }
     
@@ -88,7 +88,7 @@ public class ReferenceGroup extends DbObject implements PrideObject {
     }
 
     public String getFileName() {
-        readDBMode();
+        
         return groupName;
     }
 }

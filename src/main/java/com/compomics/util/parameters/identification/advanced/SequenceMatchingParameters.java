@@ -1,6 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * The sequence matching options.
@@ -8,7 +8,7 @@ import com.compomics.util.db.object.DbObject;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class SequenceMatchingParameters extends DbObject {
+public class SequenceMatchingParameters extends ExperimentObject {
 
     /**
      * The different types of amino acid matching.
@@ -161,7 +161,7 @@ public class SequenceMatchingParameters extends DbObject {
      */
     public MatchingType getSequenceMatchingType() {
 
-        readDBMode();
+        
         return sequenceMatchingType;
 
     }
@@ -173,7 +173,7 @@ public class SequenceMatchingParameters extends DbObject {
      */
     public void setSequenceMatchingType(MatchingType sequenceMatchingType) {
 
-        writeDBMode();
+        
         this.sequenceMatchingType = sequenceMatchingType;
 
     }
@@ -186,7 +186,7 @@ public class SequenceMatchingParameters extends DbObject {
      */
     public double getLimitX() {
 
-        readDBMode();
+        
         return limitX;
 
     }
@@ -198,7 +198,7 @@ public class SequenceMatchingParameters extends DbObject {
      */
     public void setLimitX(double limitX) {
 
-        writeDBMode();
+        
         this.limitX = limitX;
 
     }
@@ -215,7 +215,7 @@ public class SequenceMatchingParameters extends DbObject {
      */
     public boolean isSameAs(SequenceMatchingParameters sequenceMatchingPreferences) {
 
-        readDBMode();
+        
 
         if (sequenceMatchingType != sequenceMatchingPreferences.getSequenceMatchingType()) {
             return false;
@@ -243,7 +243,7 @@ public class SequenceMatchingParameters extends DbObject {
      */
     public String getShortDescription() {
 
-        readDBMode();
+        
 
         String newLine = System.getProperty("line.separator");
 

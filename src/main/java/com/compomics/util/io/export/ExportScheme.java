@@ -1,6 +1,6 @@
 package com.compomics.util.io.export;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,7 +9,7 @@ import java.util.HashMap;
  *
  * @author Marc Vaudel
  */
-public class ExportScheme extends DbObject {
+public class ExportScheme extends ExperimentObject {
 
     /**
      * Serial number for backward compatibility.

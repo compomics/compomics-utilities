@@ -1,6 +1,6 @@
 package com.compomics.util.general;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 /**
  * Convenience class allowing the boxing of an object.
@@ -9,7 +9,7 @@ import com.compomics.util.db.object.DbObject;
  *
  * @param <K> the type of object to box
  */
-public class BoxedObject<K> extends DbObject {
+public class BoxedObject<K> extends ExperimentObject {
 
     /**
      * The object to box.
@@ -37,7 +37,7 @@ public class BoxedObject<K> extends DbObject {
      * @return the boxed object
      */
     public K getObject() {
-        readDBMode();
+        
         return object;
     }
 
@@ -47,7 +47,7 @@ public class BoxedObject<K> extends DbObject {
      * @param object the boxed object
      */
     public void setObject(K object) {
-        writeDBMode();
+        
         this.object = object;
     }
 }

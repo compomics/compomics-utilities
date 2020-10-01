@@ -51,18 +51,18 @@ public class TagAssumption extends SpectrumIdentificationAssumption {
      * @return the tag of this assumption
      */
     public Tag getTag() {
-        readDBMode();
+        
         return tag;
     }
     
     public void setTag(Tag tag){
-        writeDBMode();
+        
         this.tag = tag;
     }
 
     @Override
     public double getTheoreticMass() {
-        readDBMode();
+        
         return tag.getMass();
     }
 
@@ -76,7 +76,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption {
      * @return the theoretic mass of the tag
      */
     public double getTheoreticMass(boolean includeCTermGap, boolean includeNTermGap) {
-        readDBMode();
+        
         return tag.getMass(includeCTermGap, includeNTermGap);
     }
 
@@ -90,7 +90,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption {
      * @return the theoretic mass of the tag
      */
     public double getTheoreticMz(boolean includeCTermGap, boolean includeNTermGap) {
-        readDBMode();
+        
         return (getTheoreticMass(includeCTermGap, includeNTermGap) + identificationCharge * ElementaryIon.proton.getTheoreticMass()) / identificationCharge;
     }
 
@@ -109,7 +109,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption {
      */
     public ArrayList<TagAssumption> getPossibleTags(boolean forwardIon, int minCharge, int maxCharge, int maxIsotope) {
         
-        readDBMode();
+        
         
         ArrayList<TagAssumption> results = new ArrayList<>();
         double refMz = getTheoreticMz(true, true);
@@ -161,13 +161,13 @@ public class TagAssumption extends SpectrumIdentificationAssumption {
      * of this tag
      */
     public TagAssumption reverse(boolean yIon) {
-        readDBMode();
+        
         return new TagAssumption(advocate, rank, tag.reverse(yIon), identificationCharge, score);
     }
 
     @Override
     public String toString() {
-        readDBMode();
+        
         return tag.asSequence() + ", " + Charge.toString(identificationCharge) + " (" + score + ")";
     }
 }

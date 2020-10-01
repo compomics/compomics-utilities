@@ -1,7 +1,7 @@
 package com.compomics.util.parameters.identification.advanced;
 
 import com.compomics.util.Util;
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.psm_scoring.PsmScore;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.Set;
  *
  * @author Marc Vaudel
  */
-public class PsmScoringParameters extends DbObject {
+public class PsmScoringParameters extends ExperimentObject {
 
     /**
      * The scores used to score the spectrum matches for every advocate in a
@@ -45,7 +45,7 @@ public class PsmScoringParameters extends DbObject {
      * @param scoreId the index of the score
      */
     public void addScore(Integer advocateId, Integer scoreId) {
-        writeDBMode();
+        
         if (spectrumMatchingScores == null) {
             spectrumMatchingScores = new HashMap<>();
         }
@@ -63,7 +63,7 @@ public class PsmScoringParameters extends DbObject {
      * @param advocateId the score for the given algorithm
      */
     public void clearScores(Integer advocateId) {
-        writeDBMode();
+        
         if (spectrumMatchingScores != null) {
             spectrumMatchingScores.remove(advocateId);
         }
@@ -73,7 +73,7 @@ public class PsmScoringParameters extends DbObject {
      * Clears all scores.
      */
     public void clearAllScores() {
-        writeDBMode();
+        
         spectrumMatchingScores.clear();
     }
 
@@ -85,7 +85,7 @@ public class PsmScoringParameters extends DbObject {
      * @return the index of the score
      */
     public HashSet<Integer> getScoreForAlgorithm(int advocateId) {
-        readDBMode();
+        
         
         if (spectrumMatchingScores == null) {
         
@@ -105,7 +105,7 @@ public class PsmScoringParameters extends DbObject {
      * @return a boolean indicating whether a score computation is needed
      */
     public boolean isScoringNeeded(int advocate) {
-        readDBMode();
+        
         boolean scoreSet = false;
         if (spectrumMatchingScores != null && !spectrumMatchingScores.isEmpty()) {
             HashSet<Integer> scores = spectrumMatchingScores.get(advocate);
@@ -140,7 +140,7 @@ public class PsmScoringParameters extends DbObject {
      * @return the advocates with a specific scoring
      */
     public Set<Integer> getAdvocates() {
-        readDBMode();
+        
         if (spectrumMatchingScores == null) {
             return new HashSet<>(0);
         }
@@ -155,7 +155,7 @@ public class PsmScoringParameters extends DbObject {
      * @return a boolean indicating whether a score computation is needed
      */
     public boolean isScoringNeeded(ArrayList<Integer> advocates) {
-        readDBMode();
+        
         if (spectrumMatchingScores != null && !spectrumMatchingScores.isEmpty()) {
             for (Integer advocate : advocates) {
                 if (PsmScoringParameters.this.isScoringNeeded(advocate)) {
@@ -174,7 +174,7 @@ public class PsmScoringParameters extends DbObject {
      * @return a boolean indicating whether a score computation is needed
      */
     public boolean isTargetDecoyNeededForPsmScoring(ArrayList<Integer> advocates) {
-        readDBMode();
+        
         if (spectrumMatchingScores != null && !spectrumMatchingScores.isEmpty()) {
             for (Integer advocate : advocates) {
                 HashSet<Integer> scores = spectrumMatchingScores.get(advocate);
@@ -192,7 +192,7 @@ public class PsmScoringParameters extends DbObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        readDBMode();
+        
 
         String newLine = System.getProperty("line.separator");
 
@@ -237,7 +237,7 @@ public class PsmScoringParameters extends DbObject {
      * @return true if the objects have identical settings
      */
     public boolean equals(PsmScoringParameters otherPsmScoringPreferences) {
-        readDBMode();
+        
 
         if (otherPsmScoringPreferences == null) {
             return false;
@@ -270,7 +270,7 @@ public class PsmScoringParameters extends DbObject {
      * @return the default scores
      */
     public HashSet<Integer> getDefaultScores() {
-        readDBMode();
+        
         if (defaultScores == null) { // Backward compatibility
             setDefaultScores();
         }
@@ -281,7 +281,7 @@ public class PsmScoringParameters extends DbObject {
      * Sets the scores to use by default.
      */
     private void setDefaultScores() {
-        writeDBMode();
+        
 
         // Use only the native score by default
         defaultScores = new HashSet<>(1);
@@ -306,7 +306,7 @@ public class PsmScoringParameters extends DbObject {
      * size of the score histogram
      */
     public int getDecoysInFirstBin() {
-        readDBMode();
+        
         return minDecoysInBin;
     }
 
@@ -318,7 +318,7 @@ public class PsmScoringParameters extends DbObject {
      * to set the bin size of the score histogram
      */
     public void setDecoysInFirstBin(Integer decoysInFirstBin) {
-        writeDBMode();
+        
         this.minDecoysInBin = decoysInFirstBin;
     }
 }

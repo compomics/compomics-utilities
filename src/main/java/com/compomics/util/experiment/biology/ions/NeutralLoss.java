@@ -183,7 +183,6 @@ public class NeutralLoss extends ExperimentObject {
      * @return the CV term for the neutral loss.
      */
     public CvTerm getPsiMsCvTerm() {
-        readDBMode();
         if (psiCvTerm != null) {
             return psiCvTerm;
         }
@@ -197,7 +196,6 @@ public class NeutralLoss extends ExperimentObject {
      * @return a boolean indicating whether the neutral loss is fixed or not
      */
     public boolean isFixed() {
-        readDBMode();
         return fixed;
     }
 
@@ -209,7 +207,6 @@ public class NeutralLoss extends ExperimentObject {
     public void setFixed(
             boolean fixed
     ) {
-        writeDBMode();
         this.fixed = fixed;
     }
 
@@ -219,7 +216,6 @@ public class NeutralLoss extends ExperimentObject {
      * @return The composition of the loss
      */
     public AtomChain getComposition() {
-        readDBMode();
         return composition;
     }
 
@@ -231,7 +227,6 @@ public class NeutralLoss extends ExperimentObject {
     public void setComposition(
             AtomChain composition
     ) {
-        writeDBMode();
         this.composition = composition;
     }
 
@@ -242,8 +237,7 @@ public class NeutralLoss extends ExperimentObject {
      * @return the mass of the neutral loss
      */
     public double getMass() {
-        readDBMode();
-            return composition.getMass();
+        return composition.getMass();
     }
 
     /**
@@ -258,13 +252,11 @@ public class NeutralLoss extends ExperimentObject {
     public boolean isSameAs(
             NeutralLoss anotherNeutralLoss
     ) {
-        readDBMode();
         return anotherNeutralLoss.name.equals(name);
     }
 
     @Override
     public NeutralLoss clone() {
-        readDBMode();
         return new NeutralLoss(name, composition.clone(), fixed, aminoAcids, false);
     }
 }

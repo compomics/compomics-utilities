@@ -1,6 +1,6 @@
 package com.compomics.util.parameters.identification.tool_specific;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmParameter;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
@@ -20,7 +20,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
  *
  * @author Marc Vaudel
  */
-public class OmssaParameters extends DbObject implements IdentificationAlgorithmParameter {
+public class OmssaParameters extends ExperimentObject implements IdentificationAlgorithmParameter {
 
     /**
      * Version number for deserialization.

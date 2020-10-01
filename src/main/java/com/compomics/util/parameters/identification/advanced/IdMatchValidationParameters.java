@@ -1,6 +1,6 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 
 
 /**
@@ -9,7 +9,7 @@ import com.compomics.util.db.object.DbObject;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class IdMatchValidationParameters extends DbObject {
+public class IdMatchValidationParameters extends ExperimentObject {
 
     /**
      * The default protein FDR.
@@ -57,7 +57,7 @@ public class IdMatchValidationParameters extends DbObject {
      * @return the default protein FDR
      */
     public double getDefaultProteinFDR() {
-        readDBMode();
+        
 
         return defaultProteinFDR;
 
@@ -69,7 +69,7 @@ public class IdMatchValidationParameters extends DbObject {
      * @param defaultProteinFDR the default protein FDR
      */
     public void setDefaultProteinFDR(double defaultProteinFDR) {
-        writeDBMode();
+        
 
         this.defaultProteinFDR = defaultProteinFDR;
 
@@ -81,7 +81,7 @@ public class IdMatchValidationParameters extends DbObject {
      * @return the default peptide FDR
      */
     public double getDefaultPeptideFDR() {
-        readDBMode();
+        
 
         return defaultPeptideFDR;
 
@@ -93,7 +93,7 @@ public class IdMatchValidationParameters extends DbObject {
      * @param defaultPeptideFDR the default peptide FDR
      */
     public void setDefaultPeptideFDR(double defaultPeptideFDR) {
-        writeDBMode();
+        
 
         this.defaultPeptideFDR = defaultPeptideFDR;
 
@@ -105,7 +105,7 @@ public class IdMatchValidationParameters extends DbObject {
      * @return the default PSM FDR
      */
     public double getDefaultPsmFDR() {
-        readDBMode();
+        
 
         return defaultPsmFDR;
 
@@ -117,7 +117,7 @@ public class IdMatchValidationParameters extends DbObject {
      * @param defaultPsmFDR the default PSM FDR
      */
     public void setDefaultPsmFDR(double defaultPsmFDR) {
-        writeDBMode();
+        
 
         this.defaultPsmFDR = defaultPsmFDR;
 
@@ -129,7 +129,7 @@ public class IdMatchValidationParameters extends DbObject {
      * @return the validation QC preferences
      */
     public ValidationQcParameters getValidationQCParameters() {
-        readDBMode();
+        
 
         return validationQCPreferences;
 
@@ -141,7 +141,7 @@ public class IdMatchValidationParameters extends DbObject {
      * @param validationQCPreferences the validation QC preferences
      */
     public void setValidationQCParameters(ValidationQcParameters validationQCPreferences) {
-        writeDBMode();
+        
 
         this.validationQCPreferences = validationQCPreferences;
 
@@ -153,7 +153,7 @@ public class IdMatchValidationParameters extends DbObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        readDBMode();
+        
 
         String newLine = System.getProperty("line.separator");
 
@@ -176,7 +176,7 @@ public class IdMatchValidationParameters extends DbObject {
      * @return true if the objects have identical settings
      */
     public boolean equals(IdMatchValidationParameters otherIdMatchValidationPreferences) {
-        readDBMode();
+        
 
         if (otherIdMatchValidationPreferences == null) {
             return false;

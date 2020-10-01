@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.biology.atoms;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
+
 
 /**
  * Class for a specific atom.
@@ -8,7 +9,7 @@ import com.compomics.util.db.object.DbObject;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class AtomImpl extends DbObject {
+public class AtomImpl extends ExperimentObject {
 
     /**
      * Serial number for backward compatibility.

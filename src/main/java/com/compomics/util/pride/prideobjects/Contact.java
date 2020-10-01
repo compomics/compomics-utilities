@@ -1,6 +1,6 @@
 package com.compomics.util.pride.prideobjects;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.PrideObject;
 
 /**
@@ -8,7 +8,7 @@ import com.compomics.util.pride.PrideObject;
  *
  * @author Harald Barsnes
  */
-public class Contact extends DbObject implements PrideObject {
+public class Contact extends ExperimentObject implements PrideObject {
 
     /**
      * Empty default constructor

@@ -1,6 +1,6 @@
 package com.compomics.util.experiment.identification;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,7 +12,7 @@ import java.util.Iterator;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class Advocate extends DbObject {
+public class Advocate extends ExperimentObject {
 
     /**
      * Empty default constructor
@@ -258,7 +258,7 @@ public class Advocate extends DbObject {
      * @return the index of the advocate
      */
     public int getIndex() {
-        readDBMode();
+        
         return index;
     }
 
@@ -268,7 +268,7 @@ public class Advocate extends DbObject {
      * @return the name of the advocate
      */
     public String getName() {
-        readDBMode();
+        
         return name;
     }
 
@@ -278,7 +278,7 @@ public class Advocate extends DbObject {
      * @return the type of advocate
      */
     public AdvocateType getType() {
-        readDBMode();
+        
         return type;
     }
 
@@ -288,13 +288,13 @@ public class Advocate extends DbObject {
      * @return the color of the advocate
      */
     public Color getColor() {
-        readDBMode();
+        
         return color;
     }
 
     @Override
     public String toString() {
-        readDBMode();
+        
         return name;
     }
 
@@ -444,7 +444,7 @@ public class Advocate extends DbObject {
      * @return the PubMed id of the reference of the advocate of interest
      */
     public String getPmid() {
-        readDBMode();
+        
         if (this == mascot) {
             return "10612281";
         } else if (this == omssa) {

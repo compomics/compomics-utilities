@@ -124,7 +124,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang" class="externalLink">java.lang.Object</a></li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../db/object/DbObject.html" title="class in com.compomics.util.db.object">com.compomics.util.db.object.DbObject</a></li>
+<li><a href="../../../personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">com.compomics.util.experiment.personalization.ExperimentObject</a></li>
 <li>
 <ul class="inheritance">
 <li>com.compomics.util.experiment.identification.protein_inference.fm_index.FMIndex</li>
@@ -142,7 +142,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 <hr>
 <pre>public class <span class="typeNameLabel">FMIndex</span>
-extends <a href="../../../../db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a>
+extends <a href="../../../personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a>
 implements <a href="../FastaMapper.html" title="interface in com.compomics.util.experiment.identification.protein_inference">FastaMapper</a>, <a href="../../../io/biology/protein/SequenceProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">SequenceProvider</a>, <a href="../../../io/biology/protein/ProteinDetailsProvider.html" title="interface in com.compomics.util.experiment.io.biology.protein">ProteinDetailsProvider</a></pre>
 <div class="block">The FM index.</div>
 <dl>
@@ -179,55 +179,62 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fmiFastaFile">fmiFastaFile</a></span></code></th>
+<td class="colLast">
+<div class="block">The fmi fasta file</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util" class="externalLink">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#indexStringLengths">indexStringLengths</a></span></code></th>
 <td class="colLast">
 <div class="block">Length of the indexed string (all concatenated protein sequences).</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util" class="externalLink">ArrayList</a>&lt;int[]&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lessTablesPrimary">lessTablesPrimary</a></span></code></th>
 <td class="colLast">
 <div class="block">Less table for doing an update step according to the LF step.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util" class="externalLink">ArrayList</a>&lt;int[]&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#lessTablesReversed">lessTablesReversed</a></span></code></th>
 <td class="colLast">
 <div class="block">Less table for doing an update step according to the LF step reversed.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#maxPTMsPerPeptide">maxPTMsPerPeptide</a></span></code></th>
 <td class="colLast">
 <div class="block">Maximal number of PTMs per peptide.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util" class="externalLink">ArrayList</a>&lt;<a href="WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#occurrenceTablesPrimary">occurrenceTablesPrimary</a></span></code></th>
 <td class="colLast">
 <div class="block">Wavelet tree for storing the burrows wheeler transform.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util" class="externalLink">ArrayList</a>&lt;<a href="WaveletTree.html" title="class in com.compomics.util.experiment.identification.protein_inference.fm_index">WaveletTree</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#occurrenceTablesReversed">occurrenceTablesReversed</a></span></code></th>
 <td class="colLast">
 <div class="block">Wavelet tree for storing the burrows wheeler transform reversed.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onlyTrypticPeptides">onlyTrypticPeptides</a></span></code></th>
 <td class="colLast">
 <div class="block">Flag for only considering tryptic digested peptides.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static char</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#SENTINEL">SENTINEL</a></span></code></th>
 <td class="colLast">
@@ -235,6 +242,13 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
 </td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a id="fields.inherited.from.class.com.compomics.util.experiment.personalization.ExperimentObject">
+<!--   -->
+</a>
+<h3>Fields inherited from class&nbsp;com.compomics.util.experiment.personalization.<a href="../../../personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></h3>
+<code><a href="../../../personalization/ExperimentObject.html#NO_KEY">NO_KEY</a></code></li>
+</ul>
 </li>
 </ul>
 </section>
@@ -552,11 +566,11 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a id="methods.inherited.from.class.com.compomics.util.db.object.DbObject">
+<li class="blockList"><a id="methods.inherited.from.class.com.compomics.util.experiment.personalization.ExperimentObject">
 <!--   -->
 </a>
-<h3>Methods inherited from class&nbsp;com.compomics.util.db.object.<a href="../../../../db/object/DbObject.html" title="class in com.compomics.util.db.object">DbObject</a></h3>
-<code><a href="../../../../db/object/DbObject.html#getId()">getId</a>, <a href="../../../../db/object/DbObject.html#readDBMode()">readDBMode</a>, <a href="../../../../db/object/DbObject.html#setId(long)">setId</a>, <a href="../../../../db/object/DbObject.html#writeDBMode()">writeDBMode</a></code></li>
+<h3>Methods inherited from class&nbsp;com.compomics.util.experiment.personalization.<a href="../../../personalization/ExperimentObject.html" title="class in com.compomics.util.experiment.personalization">ExperimentObject</a></h3>
+<code><a href="../../../personalization/ExperimentObject.html#addUrParam(com.compomics.util.experiment.personalization.UrParameter)">addUrParam</a>, <a href="../../../personalization/ExperimentObject.html#asLong(java.lang.String)">asLong</a>, <a href="../../../personalization/ExperimentObject.html#clearParametersMap()">clearParametersMap</a>, <a href="../../../personalization/ExperimentObject.html#getId()">getId</a>, <a href="../../../personalization/ExperimentObject.html#getUrParam(com.compomics.util.experiment.personalization.UrParameter)">getUrParam</a>, <a href="../../../personalization/ExperimentObject.html#getUrParams()">getUrParams</a>, <a href="../../../personalization/ExperimentObject.html#removeUrParam(long)">removeUrParam</a>, <a href="../../../personalization/ExperimentObject.html#setId(long)">setId</a>, <a href="../../../personalization/ExperimentObject.html#setUrParams(java.util.HashMap)">setUrParams</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -664,11 +678,21 @@ implements <a href="../FastaMapper.html" title="interface in com.compomics.util.
 <a id="indexStringLengths">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>indexStringLengths</h4>
 <pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/util/ArrayList.html?is-external=true" title="class or interface in java.util" class="externalLink">ArrayList</a>&lt;<a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Integer.html?is-external=true" title="class or interface in java.lang" class="externalLink">Integer</a>&gt; indexStringLengths</pre>
 <div class="block">Length of the indexed string (all concatenated protein sequences).</div>
+</li>
+</ul>
+<a id="fmiFastaFile">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>fmiFastaFile</h4>
+<pre>public&nbsp;<a href="http://docs.oracle.com/javase/7/docs/api/java/io/File.html?is-external=true" title="class or interface in java.io" class="externalLink">File</a> fmiFastaFile</pre>
+<div class="block">The fmi fasta file</div>
 </li>
 </ul>
 </li>

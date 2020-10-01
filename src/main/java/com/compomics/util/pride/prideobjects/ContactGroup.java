@@ -1,6 +1,6 @@
 package com.compomics.util.pride.prideobjects;
 
-import com.compomics.util.db.object.DbObject;
+import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.pride.PrideObject;
 import java.util.ArrayList;
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
  *
  * @author Harald Barsnes
  */
-public class ContactGroup extends DbObject implements PrideObject {
+public class ContactGroup extends ExperimentObject implements PrideObject {
 
     /**
      * Empty default constructor
@@ -43,7 +43,7 @@ public class ContactGroup extends DbObject implements PrideObject {
      * @return the name
      */
     public ArrayList<Contact> getContacts() {
-        readDBMode();
+        
         return contacts;
     }
 
@@ -53,7 +53,7 @@ public class ContactGroup extends DbObject implements PrideObject {
      * @param contacts the contacts
      */
     public void setContacts(ArrayList<Contact> contacts) {
-        writeDBMode();
+        
         this.contacts = contacts;
     }
 
@@ -63,7 +63,7 @@ public class ContactGroup extends DbObject implements PrideObject {
      * @return the group name
      */
     public String getName() {
-        readDBMode();
+        
         return groupName;
     }
 
@@ -73,12 +73,12 @@ public class ContactGroup extends DbObject implements PrideObject {
      * @param groupName the group name to set
      */
     public void setName(String groupName) {
-        writeDBMode();
+        
         this.groupName = groupName;
     }
 
     public String getFileName() {
-        readDBMode();
+        
         return groupName;
     }
 }

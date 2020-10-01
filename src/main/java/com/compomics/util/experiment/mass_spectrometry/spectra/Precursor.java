@@ -112,7 +112,7 @@ public class Precursor extends ExperimentObject {
      * @return the retention time in minutes
      */
     public double getRtInMinutes() {
-        readDBMode();
+        
         return rt / 60;
     }
 
@@ -123,7 +123,7 @@ public class Precursor extends ExperimentObject {
      */
     public String getPossibleChargesAsString() {
 
-        readDBMode();
+        
 
         return Arrays.stream(possibleCharges)
                 .mapToObj(
@@ -144,7 +144,7 @@ public class Precursor extends ExperimentObject {
             int chargeValue
     ) {
 
-        readDBMode();
+        
         return mz * chargeValue - chargeValue * ElementaryIon.proton.getTheoreticMass();
 
     }

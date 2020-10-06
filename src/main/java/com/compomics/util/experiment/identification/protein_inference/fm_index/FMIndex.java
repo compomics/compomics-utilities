@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.proteins.Protein;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
@@ -48,14 +47,9 @@ import com.compomics.util.experiment.identification.protein_inference.FastaMappe
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters.VariantType;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
@@ -63,11 +57,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Field;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 import java.util.stream.Collectors;
-import java.util.zip.CRC32;
 
 /**
  * The FM index.

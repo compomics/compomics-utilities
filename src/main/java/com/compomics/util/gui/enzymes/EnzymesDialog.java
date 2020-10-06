@@ -367,7 +367,7 @@ public class EnzymesDialog extends javax.swing.JDialog {
 
                 String tempValue = (String) enzymesTable.getValueAt(row, column);
 
-                if (tempValue.lastIndexOf("<html>") != -1) {
+                if (tempValue.lastIndexOf("<a href=\"") != -1) {
                     this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
                 } else {
                     this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -412,7 +412,7 @@ public class EnzymesDialog extends javax.swing.JDialog {
             if (column == enzymesTable.getColumn("PSI-MOD").getModelIndex()
                     && evt.getButton() == MouseEvent.BUTTON1
                         && enzymesTable.getValueAt(row, column) != null
-                        && ((String) enzymesTable.getValueAt(row, column)).lastIndexOf("<html>") != -1) {
+                        && ((String) enzymesTable.getValueAt(row, column)).lastIndexOf("<a href=\"") != -1) {
 
                     String link = (String) enzymesTable.getValueAt(row, column);
                     link = link.substring(link.indexOf("\"") + 1);

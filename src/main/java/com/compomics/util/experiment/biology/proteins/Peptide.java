@@ -886,11 +886,13 @@ public class Peptide extends ExperimentObject {
                     Character aa = sequence.charAt(sequence.length() - 1);
 
                     if (aminoAcidPattern.length() == 1) {
+
                         if (targetedAA.contains(aa)) {
 
                             possibleSites.add(sequence.length());
 
                         }
+
                     } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, peptideEnd)) {
 
                         possibleSites.add(sequence.length());
@@ -907,11 +909,13 @@ public class Peptide extends ExperimentObject {
                 Character aa = sequence.charAt(sequence.length() - 1);
 
                 if (aminoAcidPattern.length() == 1) {
+
                     if (targetedAA.contains(aa)) {
 
                         possibleSites.add(sequence.length());
 
                     }
+
                 } else {
 
                     peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
@@ -934,11 +938,13 @@ public class Peptide extends ExperimentObject {
 
                     aa = sequence.charAt(0);
                     if (aminoAcidPattern.length() == 1) {
+
                         if (targetedAA.contains(aa)) {
 
                             possibleSites.add(1);
 
                         }
+
                     } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, 0)) {
 
                         possibleSites.add(1);
@@ -955,11 +961,13 @@ public class Peptide extends ExperimentObject {
                 aa = sequence.charAt(0);
 
                 if (aminoAcidPattern.length() == 1) {
+
                     if (targetedAA.contains(aa)) {
 
                         possibleSites.add(1);
 
                     }
+
                 } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, 0)) {
 
                     possibleSites.add(1);
@@ -1047,6 +1055,7 @@ public class Peptide extends ExperimentObject {
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
         ModificationMatch[] modificationMatches1 = getVariableModifications();
+
         Map<Double, Long> masses1 = Arrays.stream(modificationMatches1)
                 .collect(
                         Collectors.groupingBy(
@@ -1055,6 +1064,7 @@ public class Peptide extends ExperimentObject {
                 );
 
         ModificationMatch[] modificationMatches2 = anotherPeptide.getVariableModifications();
+
         Map<Double, Long> masses2 = Arrays.stream(modificationMatches2)
                 .collect(
                         Collectors.groupingBy(
@@ -1342,6 +1352,7 @@ public class Peptide extends ExperimentObject {
                 sequenceProvider,
                 modificationSequenceMatchingParameters
         );
+
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
         tempMass += Arrays.stream(fixedModifications)

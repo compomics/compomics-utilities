@@ -653,7 +653,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
                 if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex()
                         || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) && evt.getButton() == MouseEvent.BUTTON1
                         && defaultModificationsTable.getValueAt(row, column) != null
-                        && ((String) defaultModificationsTable.getValueAt(row, column)).lastIndexOf("<html>") != -1) {
+                        && ((String) defaultModificationsTable.getValueAt(row, column)).lastIndexOf("<a href=\"") != -1) {
 
                     String link = (String) defaultModificationsTable.getValueAt(row, column);
                     link = link.substring(link.indexOf("\"") + 1);
@@ -684,7 +684,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
                 String tempValue = (String) defaultModificationsTable.getValueAt(row, column);
 
-                if (tempValue.lastIndexOf("<html>") != -1) {
+                if (tempValue.lastIndexOf("<a href=\"") != -1) {
                     this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
                 } else {
                     this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -881,7 +881,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
             if (column == defaultModificationsTable.getColumn("Unimod").getModelIndex() || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) {
                 // open protein link in web browser
                 if ((column == defaultModificationsTable.getColumn("Unimod").getModelIndex() || column == defaultModificationsTable.getColumn("PSI-MOD").getModelIndex()) && evt.getButton() == MouseEvent.BUTTON1
-                        && ((String) userModificationsTable.getValueAt(row, column)).lastIndexOf("<html>") != -1) {
+                        && ((String) userModificationsTable.getValueAt(row, column)).lastIndexOf("<a href=\"") != -1) {
 
                     String link = (String) userModificationsTable.getValueAt(row, column);
                     link = link.substring(link.indexOf("\"") + 1);
@@ -910,7 +910,7 @@ public class ModificationsDialog extends javax.swing.JDialog {
 
                 String tempValue = (String) userModificationsTable.getValueAt(row, column);
 
-                if (tempValue.lastIndexOf("<html>") != -1) {
+                if (tempValue.lastIndexOf("<a href=\"") != -1) {
                     this.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
                 } else {
                     this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));

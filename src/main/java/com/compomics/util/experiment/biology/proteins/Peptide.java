@@ -223,8 +223,6 @@ public class Peptide extends ExperimentObject {
      */
     private void sanityCheck() {
 
-        
-
         sequence = sequence.replaceAll("[#*$%&]", "");
 
         if (variableModifications != null) {
@@ -268,8 +266,6 @@ public class Peptide extends ExperimentObject {
             double mass
     ) {
 
-        
-
         this.mass = mass;
     }
 
@@ -282,8 +278,6 @@ public class Peptide extends ExperimentObject {
             long key
     ) {
 
-        
-
         this.key = key;
     }
 
@@ -294,8 +288,6 @@ public class Peptide extends ExperimentObject {
      * @return the proteins mapping
      */
     public TreeMap<String, int[]> getProteinMapping() {
-
-        
 
         return proteinMapping;
     }
@@ -310,8 +302,6 @@ public class Peptide extends ExperimentObject {
             TreeMap<String, int[]> proteinMapping
     ) {
 
-        
-
         this.proteinMapping = proteinMapping;
 
     }
@@ -325,8 +315,6 @@ public class Peptide extends ExperimentObject {
             HashMap<String, HashMap<Integer, PeptideVariantMatches>> variantMatches
     ) {
 
-        
-
         this.variantMatches = variantMatches;
     }
 
@@ -337,8 +325,6 @@ public class Peptide extends ExperimentObject {
      * @return the sequence variant matches of this peptide
      */
     public HashMap<String, HashMap<Integer, PeptideVariantMatches>> getVariantMatches() {
-
-        
 
         return variantMatches;
     }
@@ -375,8 +361,6 @@ public class Peptide extends ExperimentObject {
             SequenceMatchingParameters modificationSequenceMatchingParameters
     ) {
 
-        
-
         if (mass < 0) {
 
             estimateTheoreticMass(
@@ -395,8 +379,6 @@ public class Peptide extends ExperimentObject {
      * @return the variable modifications
      */
     public ModificationMatch[] getVariableModifications() {
-
-        
 
         return variableModifications == null ? NO_MOD : variableModifications;
     }
@@ -514,8 +496,6 @@ public class Peptide extends ExperimentObject {
             ModificationMatch[] variableModifications
     ) {
 
-        
-
         this.variableModifications = variableModifications;
 
         setMass(-1.0);
@@ -526,8 +506,6 @@ public class Peptide extends ExperimentObject {
      * Clears the variable modifications.
      */
     public void clearVariableModifications() {
-
-        
 
         variableModifications = null;
 
@@ -541,8 +519,6 @@ public class Peptide extends ExperimentObject {
      * @param modificationMatch the modification match to add
      */
     public void addVariableModification(ModificationMatch modificationMatch) {
-
-        
 
         variableModifications = variableModifications == null
                 ? new ModificationMatch[1]
@@ -559,8 +535,6 @@ public class Peptide extends ExperimentObject {
      * Clears the list of imported variant matches.
      */
     public void clearVariantMatches() {
-
-        
 
         if (variantMatches != null) {
 
@@ -581,8 +555,6 @@ public class Peptide extends ExperimentObject {
             String proteinAccession,
             int peptideStart
     ) {
-
-        
 
         int peptideEnd = peptideStart + sequence.length() - 1;
 
@@ -612,8 +584,6 @@ public class Peptide extends ExperimentObject {
      */
     public String getSequence() {
 
-        
-
         return sequence;
     }
 
@@ -625,8 +595,6 @@ public class Peptide extends ExperimentObject {
     public void setSequence(
             String sequence
     ) {
-
-        
 
         this.sequence = sequence;
     }
@@ -641,8 +609,6 @@ public class Peptide extends ExperimentObject {
     public int getNMissedCleavages(
             Enzyme enzyme
     ) {
-
-        
 
         return enzyme.getNmissedCleavages(sequence);
     }
@@ -660,8 +626,6 @@ public class Peptide extends ExperimentObject {
             DigestionParameters digestionPreferences
     ) {
 
-        
-
         return digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme
                 ? digestionPreferences.getEnzymes().stream()
                         .mapToInt(
@@ -678,8 +642,6 @@ public class Peptide extends ExperimentObject {
      */
     public long getMatchingKey() {
 
-        
-
         return matchingKey;
     }
 
@@ -691,8 +653,6 @@ public class Peptide extends ExperimentObject {
     public void setMatchingKey(
             long matchingKey
     ) {
-
-        
 
         this.matchingKey = matchingKey;
     }
@@ -710,8 +670,6 @@ public class Peptide extends ExperimentObject {
     public long getMatchingKey(
             SequenceMatchingParameters sequenceMatchingPreferences
     ) {
-
-        
 
         if (!keySet) {
 
@@ -736,8 +694,6 @@ public class Peptide extends ExperimentObject {
      * @return the key of the peptide
      */
     public long getKey() {
-
-        
 
         return key;
     }
@@ -802,8 +758,6 @@ public class Peptide extends ExperimentObject {
             double modificationMass
     ) {
 
-        
-
         return variableModifications == null ? 0 : (int) Arrays.stream(variableModifications)
                 .map(
                         modificationMatch -> ModificationFactory.getInstance().getModification(modificationMatch.getModification())
@@ -820,8 +774,6 @@ public class Peptide extends ExperimentObject {
      * @return the number of modifications carried by this peptide
      */
     public int getNVariableModifications() {
-
-        
 
         return variableModifications == null ? 0 : variableModifications.length;
     }
@@ -844,8 +796,6 @@ public class Peptide extends ExperimentObject {
             String proteinSequence,
             int peptideStart
     ) {
-
-        
 
         ArrayList<Integer> possibleSites = new ArrayList<>(1);
 
@@ -936,11 +886,13 @@ public class Peptide extends ExperimentObject {
                     Character aa = sequence.charAt(sequence.length() - 1);
 
                     if (aminoAcidPattern.length() == 1) {
+
                         if (targetedAA.contains(aa)) {
 
                             possibleSites.add(sequence.length());
 
                         }
+
                     } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, peptideEnd)) {
 
                         possibleSites.add(sequence.length());
@@ -957,11 +909,13 @@ public class Peptide extends ExperimentObject {
                 Character aa = sequence.charAt(sequence.length() - 1);
 
                 if (aminoAcidPattern.length() == 1) {
+
                     if (targetedAA.contains(aa)) {
 
                         possibleSites.add(sequence.length());
 
                     }
+
                 } else {
 
                     peptideEnd = getPeptideEnd(proteinSequence, peptideStart);
@@ -984,11 +938,13 @@ public class Peptide extends ExperimentObject {
 
                     aa = sequence.charAt(0);
                     if (aminoAcidPattern.length() == 1) {
+
                         if (targetedAA.contains(aa)) {
 
                             possibleSites.add(1);
 
                         }
+
                     } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, 0)) {
 
                         possibleSites.add(1);
@@ -1005,11 +961,13 @@ public class Peptide extends ExperimentObject {
                 aa = sequence.charAt(0);
 
                 if (aminoAcidPattern.length() == 1) {
+
                     if (targetedAA.contains(aa)) {
 
                         possibleSites.add(1);
 
                     }
+
                 } else if (targetedAA.contains(aa) && aminoAcidPattern.matchesAt(proteinSequence, SequenceMatchingParameters.DEFAULT_STRING_MATCHING, 0)) {
 
                     possibleSites.add(1);
@@ -1042,8 +1000,6 @@ public class Peptide extends ExperimentObject {
             SequenceMatchingParameters sequenceMatchingPreferences
     ) {
 
-        
-
         return isSameSequence(anotherPeptide, sequenceMatchingPreferences) && isSameModificationStatus(anotherPeptide);
     }
 
@@ -1061,8 +1017,6 @@ public class Peptide extends ExperimentObject {
             Peptide anotherPeptide,
             SequenceMatchingParameters sequenceMatchingPreferences
     ) {
-
-        
 
         String otherSequence = anotherPeptide.getSequence();
 
@@ -1094,8 +1048,6 @@ public class Peptide extends ExperimentObject {
             Peptide anotherPeptide
     ) {
 
-        
-
         if (getNVariableModifications() != anotherPeptide.getNVariableModifications()) {
             return false;
         }
@@ -1103,6 +1055,7 @@ public class Peptide extends ExperimentObject {
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
         ModificationMatch[] modificationMatches1 = getVariableModifications();
+
         Map<Double, Long> masses1 = Arrays.stream(modificationMatches1)
                 .collect(
                         Collectors.groupingBy(
@@ -1111,6 +1064,7 @@ public class Peptide extends ExperimentObject {
                 );
 
         ModificationMatch[] modificationMatches2 = anotherPeptide.getVariableModifications();
+
         Map<Double, Long> masses2 = Arrays.stream(modificationMatches2)
                 .collect(
                         Collectors.groupingBy(
@@ -1145,8 +1099,6 @@ public class Peptide extends ExperimentObject {
             Peptide anotherPeptide,
             ArrayList<String> modifications
     ) {
-
-        
 
         if (getNVariableModifications() != anotherPeptide.getNVariableModifications()) {
             return false;
@@ -1233,8 +1185,6 @@ public class Peptide extends ExperimentObject {
             Peptide anotherPeptide
     ) {
 
-        
-
         if (getNVariableModifications() != anotherPeptide.getNVariableModifications()) {
             return false;
         }
@@ -1300,8 +1250,6 @@ public class Peptide extends ExperimentObject {
         String[] fixedModificationSites = new String[sequence.length() + 2];
 
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
-
-        
 
         if (variableModifications != null) {
 
@@ -1381,8 +1329,6 @@ public class Peptide extends ExperimentObject {
             SequenceMatchingParameters modificationSequenceMatchingParameters
     ) {
 
-        
-
         double tempMass = StandardMasses.h2o.mass
                 + sequence.chars()
                         .mapToDouble(
@@ -1406,6 +1352,7 @@ public class Peptide extends ExperimentObject {
                 sequenceProvider,
                 modificationSequenceMatchingParameters
         );
+
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
         tempMass += Arrays.stream(fixedModifications)

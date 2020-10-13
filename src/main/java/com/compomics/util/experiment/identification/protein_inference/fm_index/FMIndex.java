@@ -66,7 +66,10 @@ import java.util.stream.Collectors;
  * @author Marc Vaudel
  */
 public class FMIndex extends ExperimentObject implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
-
+    /**
+     * FMIndex version number
+     */
+    private static final String fmIndexVersionNumber = "v1.0.0";
     /**
      * Maximal number of PTMs per peptide.
      */
@@ -1116,14 +1119,8 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
             ObjectInputStream ois = null;
             try {
                 ois = new ObjectInputStream(is);
-                //String indexVersion = ois.readUTF();
-                //if (indexVersion.equals(Util.getVersion())) {
-                    /*
-                    long crc = ois.readLong();
-                    if (crc != fastaCRC) {
-                        throw new Exception();
-                    }
-                    */
+                String loadedVersionNumber = ois.readUTF();
+                if (fmIndexVersionNumber.equals(loadedVersionNumber)){
                     indexParts = ois.readInt();
                     indexStringLengths = (ArrayList<Integer>) ois.readObject();
                     suffixArraysPrimary = (ArrayList<int[]>) ois.readObject();
@@ -1137,7 +1134,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                     accessionMetaData = (HashMap<String, AccessionMetaData>) ois.readObject();
 
                     loadFasta = false;
-                //}
+                }
             } catch (Exception e) {
             } finally {
                 if (ois != null) {
@@ -1334,8 +1331,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
         if (loadFasta) {
             DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(FMFile.getAbsolutePath())));
             ObjectOutputStream oos = new ObjectOutputStream(os);
-            //oos.writeUTF(Util.getVersion());
-            //oos.writeLong(fastaCRC);
+            oos.writeUTF(fmIndexVersionNumber);
             oos.writeInt(indexParts);
             oos.writeObject(indexStringLengths);
             oos.writeObject(suffixArraysPrimary);

@@ -2,13 +2,16 @@ package com.compomics.util.experiment.io.identification.idfilereaders;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.parameters.identification.tool_specific.NovorParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
+import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.io.IoUtil;
@@ -21,6 +24,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Iterator;
 import javax.xml.bind.JAXBException;
 
 /**
@@ -42,6 +46,10 @@ public class NovorIdfileReader implements IdfileReader {
      * The Novor csv file.
      */
     private File novorCsvFile;
+    /**
+     * The modification factory.
+     */
+    private final ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -86,7 +94,7 @@ public class NovorIdfileReader implements IdfileReader {
      */
     private void extractVersionNumber() throws IOException {
 
-        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(novorCsvFile)) {
+        try (SimpleFileReader reader = SimpleFileReader.getFileReader(novorCsvFile)) {
 
             String line = reader.readLine();
             boolean versionNumberFound = false;
@@ -118,14 +126,14 @@ public class NovorIdfileReader implements IdfileReader {
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) 
+    )
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        
+
         return getAllSpectrumMatches(
                 spectrumProvider,
-                waitingHandler, 
-                searchParameters, 
-                null, 
+                waitingHandler,
+                searchParameters,
+                null,
                 true
         );
     }
@@ -137,7 +145,7 @@ public class NovorIdfileReader implements IdfileReader {
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) 
+    )
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
 //        int tagMapKeyLength = 0;
@@ -150,7 +158,7 @@ public class NovorIdfileReader implements IdfileReader {
 
         ArrayList<SpectrumMatch> result = new ArrayList<>();
 
-        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(novorCsvFile)) {
+        try (SimpleFileReader reader = SimpleFileReader.getFileReader(novorCsvFile)) {
 
             String inputFile = null;
             String fixedModificationsLine = null;
@@ -267,6 +275,7 @@ public class NovorIdfileReader implements IdfileReader {
 
                     // get the novor e-value
                     //double novorEValue = Math.pow(10, -novorScore); // convert novor score to e-value // @TODO: is this correct?
+
                     // amino acids scores
                     String aminoAcidScoresAsString = elements[aaScoreIndex];
                     String[] tempAminoAcidScores = aminoAcidScoresAsString.split("-");
@@ -290,11 +299,11 @@ public class NovorIdfileReader implements IdfileReader {
 
                         currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
                         currentSpectrumTitle = spectrumTitle;
-                        
+
                     }
 
                     // get the modifications
-                    ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<>();
+                    HashMap<Integer, ArrayList<String>> utilitiesModificationsMap = new HashMap();
 
                     String peptideSequence;
 
@@ -309,31 +318,59 @@ public class NovorIdfileReader implements IdfileReader {
                             char currentChar = peptideSequenceWithMods.charAt(i);
 
                             if (currentChar == '(') {
+
                                 int modStart = i + 1;
                                 int modEnd = peptideSequenceWithMods.indexOf(")", i + 1);
                                 String currentMod = peptideSequenceWithMods.substring(modStart, modEnd);
 
                                 if (currentMod.toLowerCase().startsWith("n-term|")) {
+
                                     int currentModAsInt = Integer.valueOf(currentMod.substring("n-term|".length()));
+
                                     if (variableModificationsMap.containsKey(currentModAsInt)) {
-                                        utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), 1));
+
+                                        if (!utilitiesModificationsMap.containsKey(1)) {
+                                            utilitiesModificationsMap.put(1, new ArrayList<>());
+                                        }
+
+                                        utilitiesModificationsMap.get(1).add(variableModificationsMap.get(currentModAsInt));
+
                                     } else if (novorParameters.getNovorPtmMap() == null) {
                                         throw new IllegalArgumentException("Unknown PTM! Please check the Novor results file.");
                                     }
+
                                 } else if (currentMod.toLowerCase().startsWith("c-term|")) {
+
                                     int currentModAsInt = Integer.valueOf(currentMod.substring("c-term|".length()));
+
                                     if (variableModificationsMap.containsKey(currentModAsInt)) {
-                                        utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), peptideSequence.length()));
+
+                                        if (!utilitiesModificationsMap.containsKey(peptideSequence.length())) {
+                                            utilitiesModificationsMap.put(peptideSequence.length(), new ArrayList<>());
+                                        }
+
+                                        utilitiesModificationsMap.get(peptideSequence.length()).add(variableModificationsMap.get(currentModAsInt));
+
                                     } else if (novorParameters.getNovorPtmMap() == null) {
                                         throw new IllegalArgumentException("Unknown PTM! Please check the Novor results file.");
                                     }
+
                                 } else {
+
                                     int currentModAsInt = Integer.valueOf(currentMod);
+
                                     if (variableModificationsMap.containsKey(currentModAsInt)) {
-                                        utilitiesModifications.add(new ModificationMatch(variableModificationsMap.get(currentModAsInt), peptideSequence.length()));
+
+                                        if (!utilitiesModificationsMap.containsKey(peptideSequence.length())) {
+                                            utilitiesModificationsMap.put(peptideSequence.length(), new ArrayList<>());
+                                        }
+
+                                        utilitiesModificationsMap.get(peptideSequence.length()).add(variableModificationsMap.get(currentModAsInt));
+
                                     } else if (novorParameters.getNovorPtmMap() == null) {
                                         throw new IllegalArgumentException("Unknown PTM! Please check the Novor results file.");
                                     }
+
                                 }
 
                                 i = modEnd;
@@ -345,55 +382,215 @@ public class NovorIdfileReader implements IdfileReader {
                         peptideSequence = peptideSequenceWithMods;
                     }
 
-                    //@TODO: do we want to leave the option of using tags?
-                    // create the tag assumption
-//                AminoAcidSequence aminoAcidSequence = new AminoAcidSequence(peptideSequence);
-//                for (ModificationMatch modificationMatch : utilitiesModifications) {
-//                    aminoAcidSequence.addModificationMatch(modificationMatch.getModificationSite(), modificationMatch);
-//                }
-//                Tag tag = new Tag(0, aminoAcidSequence, 0);
-//                TagAssumption tagAssumption = new TagAssumption(Advocate.novor.getIndex(), 1, tag, peptideCharge, novorScore);
-//                tagAssumption.setAminoAcidScores(aminoAcidScores);
-////                //tagAssumption.setRawScore(novorScore);
-//
-//                currentMatch.addHit(Advocate.novor.getIndex(), tagAssumption, true);
-//
-//                if (sequenceMatchingPreferences != null) {
-//                    HashMap<Integer, HashMap<String, ArrayList<TagAssumption>>> matchTagMap = currentMatch.getTagAssumptionsMap(tagMapKeyLength, sequenceMatchingPreferences);
-//                    for (HashMap<String, ArrayList<TagAssumption>> advocateMap : matchTagMap.values()) {
-//                        for (String key : advocateMap.keySet()) {
-//                            ArrayList<SpectrumMatch> tagMatches = tagsMap.get(key);
-//                            if (tagMatches == null) {
-//                                tagMatches = new ArrayList<SpectrumMatch>();
-//                                tagsMap.put(key, tagMatches);
-//                            }
-//                            tagMatches.add(currentMatch);
-//                        }
-//                    }
-//                }
-                    // Create the peptide assumption
-                    Peptide peptide = new Peptide(peptideSequence, utilitiesModifications.toArray(new ModificationMatch[utilitiesModifications.size()]), true);
-                    PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, 1, Advocate.novor.getIndex(), charge, novorScore, novorCsvFile.getName());
-                    peptideAssumption.setAminoAcidScores(aminoAcidScores);
-                    //peptideAssumption.setRawScore(novorScore);
-                    if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
+                    Tag tag = new Tag();
 
-                        ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
+                    int scoreCutOff = 30; // @TODO: should not be hardcoded!
+                    int minAminoAcidTagLength = 3; // @TODO: should not be hardcoded!
+                    boolean hasAminoAcids = false, hasMassGaps = false;
+                    int maxAminoAcidTagLength = 0;
 
-                        for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
+                    String currentSequence = "";
+                    Boolean lastIndexWasAminoAcid = null;
 
-                            ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
-                                    .map(modificationMatch -> modificationMatch.clone())
-                                    .toArray(ModificationMatch[]::new);
+                    // convert peptide into tag
+                    for (int i = 0; i < aminoAcidScoresAsList.length; i++) {
 
-                            Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
-                            PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
-                            currentMatch.addPeptideAssumption(Advocate.novor.getIndex(), newAssumption);
+                        double aaScore = aminoAcidScoresAsList[i];
+
+                        if (aaScore >= scoreCutOff) {
+                            hasAminoAcids = true;
+                        }
+
+                        if (aaScore < scoreCutOff) {
+                            hasMassGaps = true;
+                        }
+
+                        if (lastIndexWasAminoAcid == null
+                                || (aaScore >= scoreCutOff && lastIndexWasAminoAcid)
+                                || (aaScore < scoreCutOff && !lastIndexWasAminoAcid)) {
+
+                            currentSequence += peptideSequence.charAt(i);
+
+                        } else {
+
+                            if (lastIndexWasAminoAcid) {
+
+                                boolean isModified = false;
+
+                                ArrayList<ModificationMatch> modMatches = new ArrayList<>();
+
+                                for (int j = i - currentSequence.length(); j < i; j++) {
+
+                                    if (utilitiesModificationsMap.containsKey(j + 1)) {
+
+                                        for (String tempMod : utilitiesModificationsMap.get(j + 1)) {
+                                            modMatches.add(new ModificationMatch(tempMod, j + 1 - (i - currentSequence.length())));
+                                        }
+
+                                        isModified = true;
+                                    }
+                                }
+
+                                if (isModified) {
+                                    ModificationMatch[] tempList = modMatches.toArray(new ModificationMatch[modMatches.size()]);
+                                    tag.addAminoAcidSequence(new AminoAcidSequence(currentSequence, tempList));
+                                } else {
+                                    tag.addAminoAcidSequence(new AminoAcidSequence(currentSequence));
+                                }
+
+                                if (currentSequence.length() > maxAminoAcidTagLength) {
+                                    maxAminoAcidTagLength = currentSequence.length();
+                                }
+
+                                currentSequence = "" + peptideSequence.charAt(i);
+
+                            } else {
+
+                                double modMass = 0.0;
+
+                                for (int j = i - currentSequence.length(); j < i; j++) {
+
+                                    if (utilitiesModificationsMap.containsKey(j + 1)) {
+
+                                        for (String tempMod : utilitiesModificationsMap.get(j + 1)) {
+                                            modMass += modificationFactory.getModification(tempMod).getMass();
+                                        }
+
+                                    }
+                                }
+
+                                tag.addMassGap(new AminoAcidSequence(currentSequence).getMass() + modMass);
+                                currentSequence = "" + peptideSequence.charAt(i);
+                            }
 
                         }
 
+                        lastIndexWasAminoAcid = aaScore >= scoreCutOff;
+
+                    }
+
+                    if (!currentSequence.isEmpty()) {
+                        
+                        if (lastIndexWasAminoAcid) {
+
+                            boolean isModified = false;
+
+                            ArrayList<ModificationMatch> modMatches = new ArrayList<>();
+
+                            for (int i = 0; i < currentSequence.length(); i++) {
+
+                                if (utilitiesModificationsMap.containsKey(i + 1)) {
+
+                                    for (String tempMod : utilitiesModificationsMap.get(i + 1)) {
+                                        modMatches.add(new ModificationMatch(tempMod, i + 1));
+                                    }
+
+                                    isModified = true;
+                                }
+                            }
+
+                            if (isModified) {
+                                ModificationMatch[] tempList = modMatches.toArray(new ModificationMatch[modMatches.size()]);
+                                tag.addAminoAcidSequence(new AminoAcidSequence(currentSequence, tempList));
+                            } else {
+                                tag.addAminoAcidSequence(new AminoAcidSequence(currentSequence));
+                            }
+
+                            if (currentSequence.length() > maxAminoAcidTagLength) {
+                                maxAminoAcidTagLength = currentSequence.length();
+                            }
+
+                            currentSequence = "";
+                        } else {
+
+                            double modMass = 0.0;
+
+                            for (int i = 0; i < currentSequence.length(); i++) {
+
+                                if (utilitiesModificationsMap.containsKey(i + 1)) {
+
+                                    for (String tempMod : utilitiesModificationsMap.get(i + 1)) {
+                                        modMass += modificationFactory.getModification(tempMod).getMass();
+                                    }
+
+                                }
+                            }
+
+                            tag.addMassGap(new AminoAcidSequence(currentSequence).getMass() + modMass);
+
+                            currentSequence = "";
+                        }
+                    }
+
+                    if (hasAminoAcids && hasMassGaps && maxAminoAcidTagLength >= minAminoAcidTagLength) {
+
+                        TagAssumption tagAssumption = new TagAssumption(Advocate.novor.getIndex(), 1, tag, charge, novorScore);
+                        currentMatch.addTagAssumption(Advocate.novor.getIndex(), tagAssumption);
+
                     } else {
-                        currentMatch.addPeptideAssumption(Advocate.novor.getIndex(), peptideAssumption);
+
+                        // convert the data structure of the modifications
+                        ArrayList<ModificationMatch> utilitiesModificationMatches = new ArrayList<>();
+                        Iterator<Integer> iterator = utilitiesModificationsMap.keySet().iterator();
+
+                        while (iterator.hasNext()) {
+
+                            int target = iterator.next();
+
+                            ArrayList<String> tempMods = utilitiesModificationsMap.get(target);
+
+                            for (String tempMod : tempMods) {
+                                utilitiesModificationMatches.add(new ModificationMatch(tempMod, target));
+                            }
+
+                        }
+
+                        // create the peptide assumption
+                        Peptide peptide = new Peptide(
+                                peptideSequence,
+                                utilitiesModificationMatches.toArray(new ModificationMatch[utilitiesModificationsMap.size()]),
+                                true
+                        );
+
+                        PeptideAssumption peptideAssumption = new PeptideAssumption(
+                                peptide,
+                                1,
+                                Advocate.novor.getIndex(),
+                                charge,
+                                novorScore,
+                                novorCsvFile.getName()
+                        );
+
+                        peptideAssumption.setAminoAcidScores(aminoAcidScores);
+
+                        if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
+
+                            ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
+
+                            for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
+
+                                ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
+                                        .map(modificationMatch -> modificationMatch.clone())
+                                        .toArray(ModificationMatch[]::new);
+
+                                Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
+
+                                PeptideAssumption newAssumption = new PeptideAssumption(
+                                        newPeptide,
+                                        peptideAssumption.getRank(),
+                                        peptideAssumption.getAdvocate(),
+                                        peptideAssumption.getIdentificationCharge(),
+                                        peptideAssumption.getScore(),
+                                        peptideAssumption.getIdentificationFile()
+                                );
+
+                                currentMatch.addPeptideAssumption(Advocate.novor.getIndex(), newAssumption);
+
+                            }
+
+                        } else {
+                            currentMatch.addPeptideAssumption(Advocate.novor.getIndex(), peptideAssumption);
+                        }
                     }
                 }
             }
@@ -424,6 +621,6 @@ public class NovorIdfileReader implements IdfileReader {
 
     @Override
     public boolean hasDeNovoTags() {
-        return false;
+        return true;
     }
 }

@@ -1,20 +1,16 @@
 package com.compomics.util.experiment.identification.amino_acid_tags;
 
+import com.compomics.util.Util;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 
 /**
  * An undefined mass gap.
  *
- * @author Marc
+ * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class MassGap extends ExperimentObject implements TagComponent {
-
-    /**
-     * Empty default constructor
-     */
-    public MassGap() {
-    }
 
     /**
      * The value of the mass gap.
@@ -26,12 +22,20 @@ public class MassGap extends ExperimentObject implements TagComponent {
     private String sequence = null;
 
     /**
+     * Empty default constructor.
+     */
+    public MassGap() {
+    }
+
+    /**
      * Constructor.
      *
      * @param value the value of the mass gap
      */
     public MassGap(double value) {
+
         this.value = value;
+
     }
 
     /**
@@ -40,43 +44,51 @@ public class MassGap extends ExperimentObject implements TagComponent {
      * @param value the mass of the gap
      */
     public void setMass(double value) {
-        
+
         this.value = value;
         sequence = null;
+
     }
 
     @Override
     public String asSequence() {
-        
-        
+
         if (sequence == null) {
-        
-            String valueAsString = Double.toString(value);
+
+            String valueAsString = Double.toString(Util.roundDouble(value, 2));
             StringBuilder stringBuilder = new StringBuilder(valueAsString.length() + 2);
-            stringBuilder.append('<').append(valueAsString).append('>');
+            stringBuilder.append('[').append(valueAsString).append(']');
             sequence = stringBuilder.toString();
-            
+
         }
-        
+
         return sequence;
-    
+
     }
 
     @Override
     public double getMass() {
-        
+
         return value;
     }
 
     @Override
-    public boolean isSameAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
-        
+    public boolean isSameAs(
+            TagComponent anotherCompontent,
+            SequenceMatchingParameters sequenceMatchingPreferences
+    ) {
+
         return (anotherCompontent instanceof MassGap) && anotherCompontent.getMass() == value;
+
     }
 
     @Override
-    public boolean isSameSequenceAndModificationStatusAs(TagComponent anotherCompontent, SequenceMatchingParameters sequenceMatchingPreferences) {
-        
+    public boolean isSameSequenceAndModificationStatusAs(
+            TagComponent anotherCompontent,
+            SequenceMatchingParameters sequenceMatchingPreferences
+    ) {
+
         return isSameAs(anotherCompontent, sequenceMatchingPreferences);
+
     }
 }

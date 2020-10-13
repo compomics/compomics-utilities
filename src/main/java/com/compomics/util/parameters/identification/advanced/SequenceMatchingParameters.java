@@ -115,6 +115,15 @@ public class SequenceMatchingParameters extends ExperimentObject {
      */
     private int maxPtmsPerTagPeptide = 3;
     /**
+     * The minimum amino acid score [0-100]. Used when converting Novor peptides
+     * into tags.
+     */
+    private Integer minAminoAcidScore = 30;
+    /**
+     * The minimum tag length. Used when converting Novor peptides into tags.
+     */
+    private Integer minTagLength = 3;
+    /**
      * Default string matching.
      */
     public static final SequenceMatchingParameters DEFAULT_STRING_MATCHING = getStringMatching();
@@ -161,7 +170,6 @@ public class SequenceMatchingParameters extends ExperimentObject {
      */
     public MatchingType getSequenceMatchingType() {
 
-        
         return sequenceMatchingType;
 
     }
@@ -173,7 +181,6 @@ public class SequenceMatchingParameters extends ExperimentObject {
      */
     public void setSequenceMatchingType(MatchingType sequenceMatchingType) {
 
-        
         this.sequenceMatchingType = sequenceMatchingType;
 
     }
@@ -186,7 +193,6 @@ public class SequenceMatchingParameters extends ExperimentObject {
      */
     public double getLimitX() {
 
-        
         return limitX;
 
     }
@@ -198,7 +204,6 @@ public class SequenceMatchingParameters extends ExperimentObject {
      */
     public void setLimitX(double limitX) {
 
-        
         this.limitX = limitX;
 
     }
@@ -214,8 +219,6 @@ public class SequenceMatchingParameters extends ExperimentObject {
      * one
      */
     public boolean isSameAs(SequenceMatchingParameters sequenceMatchingPreferences) {
-
-        
 
         if (sequenceMatchingType != sequenceMatchingPreferences.getSequenceMatchingType()) {
             return false;
@@ -233,6 +236,14 @@ public class SequenceMatchingParameters extends ExperimentObject {
             return false;
         }
 
+        if (getMinAminoAcidScore() != sequenceMatchingPreferences.getMinAminoAcidScore()) {
+            return false;
+        }
+
+        if (getMinTagLength() != sequenceMatchingPreferences.getMinTagLength()) {
+            return false;
+        }
+
         return true;
     }
 
@@ -243,8 +254,6 @@ public class SequenceMatchingParameters extends ExperimentObject {
      */
     public String getShortDescription() {
 
-        
-
         String newLine = System.getProperty("line.separator");
 
         StringBuilder output = new StringBuilder();
@@ -253,6 +262,8 @@ public class SequenceMatchingParameters extends ExperimentObject {
         output.append("Max share of x's: ").append(limitX).append(".").append(newLine);
         output.append("Enzymatic tags matching: ").append(isEnzymaticTagsOnly()).append(".").append(newLine);
         output.append("Max PTMs per tag: ").append(getMaxPtmsPerTagPeptide()).append(".");
+        output.append("Min amino acid score: ").append(getMinAminoAcidScore()).append(".");
+        output.append("Min tag length: ").append(getMinTagLength()).append(".");
 
         return output.toString();
     }
@@ -304,6 +315,58 @@ public class SequenceMatchingParameters extends ExperimentObject {
     public void setMaxPtmsPerTagPeptide(int numberOfPtmsPerTagPeptide) {
 
         this.maxPtmsPerTagPeptide = numberOfPtmsPerTagPeptide;
+
+    }
+
+    /**
+     * Returns the minimum amino acid score.
+     *
+     * @return the minAminoAcidScore
+     */
+    public int getMinAminoAcidScore() {
+
+        if (minAminoAcidScore == null) {
+            minAminoAcidScore = 30;
+        }
+        
+        return minAminoAcidScore;
+
+    }
+
+    /**
+     * Set the minimum amino acid score.
+     *
+     * @param minAminoAcidScore the minAminoAcidScore to set
+     */
+    public void setMinAminoAcidScore(int minAminoAcidScore) {
+
+        this.minAminoAcidScore = minAminoAcidScore;
+
+    }
+
+    /**
+     * Returns the minimum tag length.
+     *
+     * @return the minTagLength
+     */
+    public int getMinTagLength() {
+
+        if (minAminoAcidScore == null) {
+            minAminoAcidScore = 3;
+        }
+        
+        return minTagLength;
+
+    }
+
+    /**
+     * Set the minimum tag length.
+     *
+     * @param minTagLength the minTagLength to set
+     */
+    public void setMinTagLength(int minTagLength) {
+
+        this.minTagLength = minTagLength;
 
     }
 }

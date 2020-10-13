@@ -384,8 +384,6 @@ public class NovorIdfileReader implements IdfileReader {
 
                     Tag tag = new Tag();
 
-                    int scoreCutOff = 30; // @TODO: should not be hardcoded!
-                    int minAminoAcidTagLength = 3; // @TODO: should not be hardcoded!
                     boolean hasAminoAcids = false, hasMassGaps = false;
                     int maxAminoAcidTagLength = 0;
 
@@ -397,17 +395,17 @@ public class NovorIdfileReader implements IdfileReader {
 
                         double aaScore = aminoAcidScoresAsList[i];
 
-                        if (aaScore >= scoreCutOff) {
+                        if (aaScore >= sequenceMatchingPreferences.getMinAminoAcidScore()) {
                             hasAminoAcids = true;
                         }
 
-                        if (aaScore < scoreCutOff) {
+                        if (aaScore < sequenceMatchingPreferences.getMinAminoAcidScore()) {
                             hasMassGaps = true;
                         }
 
                         if (lastIndexWasAminoAcid == null
-                                || (aaScore >= scoreCutOff && lastIndexWasAminoAcid)
-                                || (aaScore < scoreCutOff && !lastIndexWasAminoAcid)) {
+                                || (aaScore >= sequenceMatchingPreferences.getMinAminoAcidScore() && lastIndexWasAminoAcid)
+                                || (aaScore < sequenceMatchingPreferences.getMinAminoAcidScore() && !lastIndexWasAminoAcid)) {
 
                             currentSequence += peptideSequence.charAt(i);
 
@@ -465,7 +463,7 @@ public class NovorIdfileReader implements IdfileReader {
 
                         }
 
-                        lastIndexWasAminoAcid = aaScore >= scoreCutOff;
+                        lastIndexWasAminoAcid = aaScore >= sequenceMatchingPreferences.getMinAminoAcidScore();
 
                     }
 
@@ -522,7 +520,7 @@ public class NovorIdfileReader implements IdfileReader {
                         }
                     }
 
-                    if (hasAminoAcids && hasMassGaps && maxAminoAcidTagLength >= minAminoAcidTagLength) {
+                    if (hasAminoAcids && hasMassGaps && maxAminoAcidTagLength >= sequenceMatchingPreferences.getMinTagLength()) {
 
                         TagAssumption tagAssumption = new TagAssumption(Advocate.novor.getIndex(), 1, tag, charge, novorScore);
                         currentMatch.addTagAssumption(Advocate.novor.getIndex(), tagAssumption);

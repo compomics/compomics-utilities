@@ -1945,7 +1945,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                                 // match
                                 if (aminoAcid == aminoAcidCheck) {
                                     if (leftIndex <= rightIndex) {
-                                        backwardList[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-'));
+                                        backwardList[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, -1, length + 1, numVariants, '-'));
                                     }
                                 } // check for SNPs
                                 else {
@@ -1965,7 +1965,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
 
                                                 final int leftIndexSNP = selectSNP;
                                                 final int rightIndexSNP = selectSNP;
-                                                backwardList[j + 1].add(new MatrixContent(leftIndexSNP, rightIndexSNP, aminoAcidCheck, content, numX, length + 1, numVariants + 1, (char) aminoAcid));
+                                                backwardList[j + 1].add(new MatrixContent(leftIndexSNP, rightIndexSNP, aminoAcidCheck, content, numX, -1, length + 1, numVariants + 1, (char) aminoAcid));
                                             }
                                         }
                                     }
@@ -2114,13 +2114,13 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                                 }
 
                                 // match
-                                backwardList[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-'));
+                                backwardList[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, -1, length + 1, numVariants, '-'));
                             }
 
                             if (numVariants < maxNumberVariants && c == 0) {
                                 // insertion
                                 if (numVariants < maxNumberVariants) {
-                                    backwardMatrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newNumX, length + 1, numVariants + 1, '*'));
+                                    backwardMatrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newNumX, -1, length + 1, numVariants + 1, '*'));
                                 }
 
                                 // deletion and substitution
@@ -2136,11 +2136,11 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
 
                                     if (errorNewNumX <= xNumLimit) {
                                         // deletion
-                                        backwardMatrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0]));
+                                        backwardMatrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, -1, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0]));
 
                                         // substitution
                                         if (aminoAcid != errorAminoAcid) {
-                                            backwardMatrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, length + 1, numVariants + 1, (char) errorAminoAcid));
+                                            backwardMatrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, -1, length + 1, numVariants + 1, (char) errorAminoAcid));
                                         }
                                     }
                                 }
@@ -2696,14 +2696,15 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
 
                             // match
                             if (leftIndex <= rightIndex) {
-                                row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-'));
+                                int modification = combination.modifications != null ? combination.modifications[c] : -1;
+                                row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, modification, length + 1, numVariants, '-'));
                             }
 
                             // variants
                             if (numVariants < maxNumberVariants && c == 0) {
                                 // insertion
                                 if (numVariants < maxNumberVariants) {
-                                    matrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newNumX, length + 1, numVariants + 1, '*'));
+                                    matrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newNumX, -1, length + 1, numVariants + 1, '*'));
                                 }
 
                                 // deletion and substitution
@@ -2722,11 +2723,11 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                                     final int errorRightIndex = errorLessValue + borders[2] - 1;
 
                                     // deletion
-                                    matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0]));
+                                    matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, -1, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0]));
 
                                     // substitution
                                     if (aminoAcid != errorAminoAcid && substitutionMatrix[errorAminoAcid][aminoAcid]) {
-                                        matrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, length + 1, numVariants + 1, (char) errorAminoAcid));
+                                        matrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, -1, length + 1, numVariants + 1, (char) errorAminoAcid));
                                     }
                                 }
                             }
@@ -2852,14 +2853,15 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
 
                             // match
                             if (leftIndex <= rightIndex) {
-                                row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-'));
+                                int modification = combination.modifications != null ? combination.modifications[c] : -1;
+                                row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, modification, length + 1, numVariants, '-'));
                             }
 
                             // variants
                             if (numVariants < maxNumberVariants && c == 0) {
                                 // insertion
                                 if (numVariants < maxNumberVariants) {
-                                    matrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newNumX, length + 1, numVariants + 1, '*'));
+                                    matrix[k + 1][j + 1].add(new MatrixContent(leftIndexOld, rightIndexOld, aminoAcid, content, newNumX, -1, length + 1, numVariants + 1, '*'));
                                 }
 
                                 // deletion and substitution
@@ -2878,11 +2880,11 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                                     final int errorRightIndex = errorLessValue + borders[2] - 1;
 
                                     // deletion
-                                    matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0]));
+                                    matrix[k + 1][j].add(new MatrixContent(errorLeftIndex, errorRightIndex, '*', content, errorNewNumX, -1, length, numVariants + 1, Character.toChars(errorAminoAcid + 32)[0]));
 
                                     // substitution
                                     if (aminoAcid != errorAminoAcid && substitutionMatrix[errorAminoAcid][aminoAcid]) {
-                                        matrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, length + 1, numVariants + 1, (char) errorAminoAcid));
+                                        matrix[k + 1][j + 1].add(new MatrixContent(errorLeftIndex, errorRightIndex, aminoAcid, content, errorNewNumX, -1, length + 1, numVariants + 1, (char) errorAminoAcid));
                                     }
                                 }
                             }
@@ -3045,6 +3047,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
 
                         for (int c = 0; c < combinationSequence.length(); ++c) {
                             final int aminoAcidCheck = combinationSequence.charAt(c);
+                            
                             final int newNumX = numX + ((aminoAcidCheck == 'X') ? 1 : 0);
                             if (newNumX > xNumLimit) {
                                 continue;
@@ -3067,7 +3070,8 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                                 // match
                                 if (aminoAcid == aminoAcidCheck) {
                                     if (leftIndex <= rightIndex) {
-                                        row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-'));
+                                        int modification = combination.modifications != null ? combination.modifications[c] : -1;
+                                        row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, modification, length + 1, numVariants, '-'));
                                     }
                                 } // check for SNPs
                                 else {
@@ -3083,9 +3087,9 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                                                 final int rightIndexSNP = variant[2];
                                                 if (variant[0] == aminoAcid) {
                                                     if (variant[1] == '*') {
-                                                        row[j].add(new MatrixContent(leftIndexSNP, rightIndexSNP, '*', content, numX, length, numVariants + 1, Character.toChars((char) aminoAcid + 32)[0]));
+                                                        row[j].add(new MatrixContent(leftIndexSNP, rightIndexSNP, '*', content, numX, -1, length, numVariants + 1, Character.toChars((char) aminoAcid + 32)[0]));
                                                     } else if (variant[1] == aminoAcidCheck) {
-                                                        row[j + 1].add(new MatrixContent(leftIndexSNP, rightIndexSNP, variant[1], content, numX, length + 1, numVariants + 1, (char) aminoAcid));
+                                                        row[j + 1].add(new MatrixContent(leftIndexSNP, rightIndexSNP, variant[1], content, numX, -1, length + 1, numVariants + 1, (char) aminoAcid));
                                                     }
                                                 }
                                             }
@@ -3106,7 +3110,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                                         final int leftIndexIns = variant[2];
                                         final int rightIndexIns = variant[2];
                                         if (variant[0] == '*' && variant[1] == aminoAcidCheck) {
-                                            row[j + 1].add(new MatrixContent(leftIndexIns, rightIndexIns, variant[1], content, numX, length + 1, numVariants + 1, '*'));
+                                            row[j + 1].add(new MatrixContent(leftIndexIns, rightIndexIns, variant[1], content, numX, -1, length + 1, numVariants + 1, '*'));
                                         }
                                     }
                                 }
@@ -3295,7 +3299,8 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                                 // match
                                 if (aminoAcid == aminoAcidCheck) {
                                     if (leftIndex <= rightIndex) {
-                                        row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, length + 1, numVariants, '-'));
+                                        int modification = combination.modifications != null ? combination.modifications[c] : -1;
+                                        row[j + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, content, newNumX, modification, length + 1, numVariants, '-'));
                                     }
                                 } // check for SNPs
                                 else {
@@ -3311,9 +3316,9 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                                                 final int rightIndexSNP = variant[2];
                                                 if (variant[0] == aminoAcid) {
                                                     if (variant[1] == '*') {
-                                                        row[j].add(new MatrixContent(leftIndexSNP, rightIndexSNP, '*', content, numX, length, numVariants + 1, Character.toChars((char) aminoAcid + 32)[0]));
+                                                        row[j].add(new MatrixContent(leftIndexSNP, rightIndexSNP, '*', content, numX, -1, length, numVariants + 1, Character.toChars((char) aminoAcid + 32)[0]));
                                                     } else if (variant[1] == aminoAcidCheck) {
-                                                        row[j + 1].add(new MatrixContent(leftIndexSNP, rightIndexSNP, variant[1], content, numX, length + 1, numVariants + 1, (char) aminoAcid));
+                                                        row[j + 1].add(new MatrixContent(leftIndexSNP, rightIndexSNP, variant[1], content, numX, -1, length + 1, numVariants + 1, (char) aminoAcid));
                                                     }
                                                 }
                                             }
@@ -3334,7 +3339,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                                         final int leftIndexIns = variant[2];
                                         final int rightIndexIns = variant[2];
                                         if (variant[0] == '*' && variant[1] == aminoAcidCheck) {
-                                            row[j + 1].add(new MatrixContent(leftIndexIns, rightIndexIns, variant[1], content, numX, length + 1, numVariants + 1, '*'));
+                                            row[j + 1].add(new MatrixContent(leftIndexIns, rightIndexIns, variant[1], content, numX, -1, length + 1, numVariants + 1, '*'));
                                         }
                                     }
                                 }
@@ -4017,12 +4022,13 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                         final int[] range = occurrence.singleRangeQuery(leftIndexOld - 1, rightIndexOld, aminoAcidSearch);
                         final int leftIndex = lessValue + range[0];
                         final int rightIndex = lessValue + range[1] - 1;
+                        int modification = combination.modifications != null ? combination.modifications[i] : -1;
                         int newNumX = cell.numX + ((aminoAcidSearch == 'X') ? 1 : 0);
                         if (leftIndex <= rightIndex && newNumX <= xNumLimit) {
                             if (k < combinations.length - 1 && combinations[k].isMass != combinations[k + 1].isMass) {
                                 newNumX = 0;
                             }
-                            matrix[k + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, length + 1, newNumX, -1, aminoAcidSearch, k));
+                            matrix[k + 1].add(new MatrixContent(leftIndex, rightIndex, aminoAcid, cell, 0, length + 1, newNumX, modification, aminoAcidSearch, k));
                         }
                     }
                 }
@@ -4607,9 +4613,11 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                 // initialize modifications list
                 int len = tag.getContent().get(i).asSequence().length();
                 Integer[] modificationsList = new Integer[len];
-                int ii = 0;
-                for (int mod : tagElements[i].modifications){
-                    modificationsList[ii++] = mod;
+                int ii = len - 1;
+                if (tagElements[i].modifications != null){
+                    for (int mod : tagElements[i].modifications){
+                        modificationsList[ii--] = mod;
+                    }
                 }
                 
                 refTagContent[j] = new TagElement(tagElements[i].isMass, sequenceReversed, tagElements[i].mass, tagElements[i].xNumLimit, modificationsList);
@@ -5054,8 +5062,31 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                 tagElements[i] = new TagElement(true, "", tag.getContent().get(i).getMass(), 0);
 
             } else if (tag.getContent().get(i) instanceof AminoAcidSequence) {
+                
+                // initialize modifications list
+                int len = tag.getContent().get(i).asSequence().length();
+                Integer[] modificationsList = new Integer[len];
+                for (int ii = 0; ii < len; ++ii){
+                    modificationsList[ii] = -1;
+                }
+                
+                for (ModificationMatch mm : ((AminoAcidSequence)tag.getContent().get(i)).getVariableModifications()){
+                    String modString = mm.getModification();
+                    if (!modificationLabelsToId.containsKey(modString)){
+                        System.out.println("Warning: modification '" + modString + "' is not registered in FM index, will be ignored.");
+                    }
+                    else {
+                        int site = mm.getSite() - 1;
+                        if (site < 0 || len <= site){
+                            System.out.println("Worninng: incorrect declaration of modification site.");
+                        }
+                        else {
+                            modificationsList[site] = modificationLabelsToId.get(modString);
+                        }
+                    }
+                }
 
-                tagElements[i] = new TagElement(false, tag.getContent().get(i).asSequence(), 0., (int) (xLimit * tag.getContent().get(i).asSequence().length()));
+                tagElements[i] = new TagElement(false, tag.getContent().get(i).asSequence(), 0., (int) (xLimit * tag.getContent().get(i).asSequence().length()), modificationsList);
 
                 if (maxSequencePosition == -1 || tagElements[i].sequence.length() < tagElements[i].sequence.length()) {
 
@@ -5097,7 +5128,18 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
             for (int i = tagElements.length - 1, j = 0; i >= 0; --i, ++j) {
 
                 String sequenceReversed = (new StringBuilder(tagElements[i].sequence).reverse()).toString();
-                refTagContent[j] = new TagElement(tagElements[i].isMass, sequenceReversed, tagElements[i].mass, tagElements[i].xNumLimit);
+                
+                // initialize modifications list
+                int len = tag.getContent().get(i).asSequence().length();
+                Integer[] modificationsList = new Integer[len];
+                if (tagElements[i].modifications != null){
+                    int ii = len - 1;
+                    for (int mod : tagElements[i].modifications){
+                        modificationsList[ii--] = mod;
+                    }
+                }
+                
+                refTagContent[j] = new TagElement(tagElements[i].isMass, sequenceReversed, tagElements[i].mass, tagElements[i].xNumLimit, modificationsList);
 
             }
 

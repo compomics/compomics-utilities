@@ -254,11 +254,12 @@ public class MatrixContent extends ExperimentObject {
      * @param character current character stored
      * @param previousContent previous matrix content
      * @param numX number of current X amino acids
+     * @param modificationPos
      * @param length length of the current peptide
      * @param numVariants number of edit operations
      * @param variant type of edit operation
      */
-    public MatrixContent(int left, int right, int character, MatrixContent previousContent, int numX, int length, int numVariants, char variant) {
+    public MatrixContent(int left, int right, int character, MatrixContent previousContent, int numX, int modificationPos, int length, int numVariants, char variant) {
         this.left = left;
         this.right = right;
         this.character = character;
@@ -269,7 +270,7 @@ public class MatrixContent extends ExperimentObject {
         this.numX = numX;
         this.modification = null;
         this.modifications = null;
-        this.modificationPos = -1;
+        this.modificationPos = modificationPos;
         this.numVariants = numVariants;
         this.numSpecificVariants = new int[]{0, 0, 0};
         this.variant = variant;

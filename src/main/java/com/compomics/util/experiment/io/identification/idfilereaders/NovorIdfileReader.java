@@ -274,7 +274,7 @@ public class NovorIdfileReader implements IdfileReader {
                     double novorScore = Util.readDoubleAsString(scoreAsText);
 
                     // get the novor e-value
-                    //double novorEValue = Math.pow(10, -novorScore); // convert novor score to e-value // @TODO: is this correct?
+                    double novorEValue = Math.pow(10, -novorScore); // convert novor score to e-value
 
                     // amino acids scores
                     String aminoAcidScoresAsString = elements[aaScoreIndex];
@@ -522,7 +522,9 @@ public class NovorIdfileReader implements IdfileReader {
 
                     if (hasAminoAcids && hasMassGaps && maxAminoAcidTagLength >= sequenceMatchingPreferences.getMinTagLength()) {
 
-                        TagAssumption tagAssumption = new TagAssumption(Advocate.novor.getIndex(), 1, tag, charge, novorScore);
+                        TagAssumption tagAssumption = new TagAssumption(Advocate.novor.getIndex(), 1, tag, charge, novorEValue);
+                        tagAssumption.setRawScore(novorScore);
+                        //tagAssumption.setAminoAcidScores(aminoAcidScores); // @TODO: would have to done relative to the tags i guess..?
                         currentMatch.addTagAssumption(Advocate.novor.getIndex(), tagAssumption);
 
                     } else {
@@ -555,10 +557,11 @@ public class NovorIdfileReader implements IdfileReader {
                                 1,
                                 Advocate.novor.getIndex(),
                                 charge,
-                                novorScore,
+                                novorEValue,
                                 novorCsvFile.getName()
                         );
 
+                        peptideAssumption.setRawScore(novorScore);
                         peptideAssumption.setAminoAcidScores(aminoAcidScores);
 
                         if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {

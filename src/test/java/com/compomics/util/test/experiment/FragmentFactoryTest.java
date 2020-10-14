@@ -12,7 +12,7 @@ import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 
 import java.util.ArrayList;

@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import org.xmlpull.v1.XmlPullParserException;
 import com.compomics.util.parameters.identification.IdentificationParameters;

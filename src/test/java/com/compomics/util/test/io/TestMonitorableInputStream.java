@@ -14,7 +14,7 @@ package com.compomics.util.test.io;
 
 import com.compomics.util.io.file.MonitorableInputStream;
 import com.compomics.util.junit.TestCaseLM;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 

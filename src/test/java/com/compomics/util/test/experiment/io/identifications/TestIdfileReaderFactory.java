@@ -7,7 +7,7 @@ import com.compomics.util.experiment.io.identification.IdfileReaderFactory;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.waiting.WaitingHandler;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 
 import java.io.File;

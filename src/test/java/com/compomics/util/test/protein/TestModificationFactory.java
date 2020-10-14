@@ -15,7 +15,7 @@ package com.compomics.util.test.protein;
 import com.compomics.util.interfaces.Modification;
 import com.compomics.util.junit.TestCaseLM;
 import com.compomics.util.protein.ModificationFactory;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 

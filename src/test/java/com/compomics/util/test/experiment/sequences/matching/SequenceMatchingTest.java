@@ -5,7 +5,7 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 
 /**

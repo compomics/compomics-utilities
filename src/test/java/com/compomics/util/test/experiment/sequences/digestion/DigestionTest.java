@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import java.io.IOException;
 import java.util.HashSet;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import org.xmlpull.v1.XmlPullParserException;
 

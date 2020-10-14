@@ -8,7 +8,7 @@ import com.compomics.util.experiment.identification.protein_sequences.digestion.
 import com.compomics.util.parameters.identification.search.DigestionParameters;
 import java.io.IOException;
 import java.util.ArrayList;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import org.xmlpull.v1.XmlPullParserException;
 

@@ -1,8 +1,8 @@
 package com.compomics.util.test.math;
 
 import com.compomics.util.math.statistics.distributions.BinomialDistribution;
-import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.junit.Assert;
 
 /**
  * Test for the probability calculation of the binomial distribution.

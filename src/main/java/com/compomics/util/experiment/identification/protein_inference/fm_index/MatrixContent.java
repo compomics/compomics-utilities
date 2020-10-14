@@ -254,7 +254,7 @@ public class MatrixContent extends ExperimentObject {
      * @param character current character stored
      * @param previousContent previous matrix content
      * @param numX number of current X amino acids
-     * @param modificationPos
+     * @param modificationPos modification positions
      * @param length length of the current peptide
      * @param numVariants number of edit operations
      * @param variant type of edit operation

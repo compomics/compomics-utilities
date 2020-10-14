@@ -15,7 +15,7 @@ package com.compomics.util.test.protein;
 import com.compomics.util.enumeration.MolecularElement;
 import com.compomics.util.protein.AASequenceImpl;
 import com.compomics.util.protein.MolecularFormula;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 

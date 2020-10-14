@@ -13,7 +13,7 @@
 package com.compomics.util.test.protein;
 
 import com.compomics.util.experiment.io.biology.protein.Header;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 

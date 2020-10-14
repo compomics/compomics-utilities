@@ -4,7 +4,7 @@ import com.compomics.util.math.BigFunctions;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import org.apache.commons.math.util.FastMath;
 

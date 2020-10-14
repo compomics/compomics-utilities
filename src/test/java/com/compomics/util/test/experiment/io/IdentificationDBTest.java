@@ -12,7 +12,7 @@ import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.matches_iterators.ProteinMatchesIterator;
 import com.compomics.util.experiment.refinement_parameters.PepnovoAssumptionDetails;
 import com.compomics.util.io.IoUtil;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import java.io.*;
 import java.io.IOException;

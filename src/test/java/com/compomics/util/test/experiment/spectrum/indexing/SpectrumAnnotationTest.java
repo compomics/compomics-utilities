@@ -1,7 +1,7 @@
 package com.compomics.util.test.experiment.spectrum.indexing;
 
 import com.compomics.util.experiment.mass_spectrometry.indexes.SpectrumIndex;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 
 /**

@@ -7,7 +7,7 @@
 package com.compomics.util.test.general;
 
 import com.compomics.util.general.CommandLineParser;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 

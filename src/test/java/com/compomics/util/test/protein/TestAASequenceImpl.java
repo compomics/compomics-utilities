@@ -12,7 +12,7 @@ import com.compomics.util.interfaces.Sequence;
 import com.compomics.util.protein.AASequenceImpl;
 import com.compomics.util.protein.ModificationFactory;
 import com.compomics.util.protein.ModificationImplementation;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 
@@ -72,7 +72,7 @@ public class TestAASequenceImpl extends TestCase {
         AASequenceImpl seq = new AASequenceImpl(seqString);
         Assert.assertEquals(71, seq.getMolecularFormula().getElementCount(MolecularElement.H));
         Assert.assertEquals(47, seq.getMolecularFormula().getElementCount(MolecularElement.C));
-        Assert.assertEquals(0.10799336006817777, seq.getIsotopicDistribution().getPercTot()[2]);
+        Assert.assertEquals(0.10799336006817777, seq.getIsotopicDistribution().getPercTot()[2], 0);
     }
 
     /**

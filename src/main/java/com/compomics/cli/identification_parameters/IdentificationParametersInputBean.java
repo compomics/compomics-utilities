@@ -1829,6 +1829,18 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_AMINO_ACID_SCORE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_AMINO_ACID_SCORE.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_AMINO_ACID_SCORE.id, arg, true)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_TAG_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_TAG_LENGTH.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_TAG_LENGTH.id, arg, true)) {
+                return false;
+            }
+        }
         Integer min = null;
         if (aLine.hasOption(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MIN.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MIN.id);
@@ -3902,6 +3914,16 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MAX_PTMS_PER_TAG.id);
             Integer intValue = Integer.valueOf(arg);
             sequenceMatchingPreferences.setMaxPtmsPerTagPeptide(intValue);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_AMINO_ACID_SCORE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_AMINO_ACID_SCORE.id);
+            Integer intValue = Integer.valueOf(arg);
+            sequenceMatchingPreferences.setMinAminoAcidScore(intValue);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_TAG_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_TAG_LENGTH.id);
+            Integer intValue = Integer.valueOf(arg);
+            sequenceMatchingPreferences.setMinTagLength(intValue);
         }
 
         //////////////////////////////////

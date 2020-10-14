@@ -17,12 +17,6 @@ import javax.swing.SwingConstants;
 public class SequenceMatchingParametersDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public SequenceMatchingParametersDialog() {
-    }
-
-    /**
      * The parent frame.
      */
     private java.awt.Frame parentFrame;
@@ -128,6 +122,8 @@ public class SequenceMatchingParametersDialog extends javax.swing.JDialog {
         }
 
         maxPtmsPerTagTextField.setText(sequenceMatchingPreferences.getMaxPtmsPerTagPeptide() + "");
+        minAaScoreSpinner.setValue(sequenceMatchingPreferences.getMinAminoAcidScore());
+        minTagLengthTextField.setText(sequenceMatchingPreferences.getMinTagLength() + "");
 
     }
 
@@ -154,6 +150,8 @@ public class SequenceMatchingParametersDialog extends javax.swing.JDialog {
         sequenceMatchingPreferences.setLimitX((Double) xSpinner.getValue());
         sequenceMatchingPreferences.setEnzymaticTagsOnly(tagMatchingCmb.getSelectedIndex() == 1);
         sequenceMatchingPreferences.setMaxPtmsPerTagPeptide(Integer.parseInt(maxPtmsPerTagTextField.getText()));
+        sequenceMatchingPreferences.setMinAminoAcidScore((Integer) minAaScoreSpinner.getValue());
+        sequenceMatchingPreferences.setMinTagLength(Integer.parseInt(minTagLengthTextField.getText()));
         return sequenceMatchingPreferences;
 
     }
@@ -167,10 +165,17 @@ public class SequenceMatchingParametersDialog extends javax.swing.JDialog {
      */
     public boolean validateInput(boolean showMessage) {
 
-        boolean valid = GuiUtilities.validateIntegerInput(
+        boolean valid = true;
+        
+        valid = GuiUtilities.validateIntegerInput(
                 this, maxPtmsPerTagLbl, maxPtmsPerTagTextField,
                 "max PTMs per tag", "Max PTMs per Tag Error",
-                true, showMessage, true);
+                true, showMessage, valid);
+        
+        valid = GuiUtilities.validateIntegerInput(
+                this, minTagLengthLbl, minTagLengthTextField,
+                "min tag length", "Min Tag Length Error",
+                true, showMessage, valid);
 
         okButton.setEnabled(valid);
 
@@ -199,6 +204,10 @@ public class SequenceMatchingParametersDialog extends javax.swing.JDialog {
         tagMatchingCmb = new javax.swing.JComboBox();
         maxPtmsPerTagLbl = new javax.swing.JLabel();
         maxPtmsPerTagTextField = new javax.swing.JTextField();
+        minAaScoreLbl = new javax.swing.JLabel();
+        minAaScoreSpinner = new javax.swing.JSpinner();
+        minTagLengthLbl = new javax.swing.JLabel();
+        minTagLengthTextField = new javax.swing.JTextField();
         annotationPreferencesHelpJButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -251,6 +260,21 @@ public class SequenceMatchingParametersDialog extends javax.swing.JDialog {
             }
         });
 
+        minAaScoreLbl.setText("Min Amino Acid Score");
+
+        minAaScoreSpinner.setModel(new javax.swing.SpinnerNumberModel(30, 0, 100, 1));
+
+        minTagLengthLbl.setText("Min Tag Length");
+        minTagLengthLbl.setToolTipText("Maximum number of PTMs considered when mapping tags to peptides");
+
+        minTagLengthTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        minTagLengthTextField.setText("3");
+        minTagLengthTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                minTagLengthTextFieldKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout sequenceMatchingPanelLayout = new javax.swing.GroupLayout(sequenceMatchingPanel);
         sequenceMatchingPanel.setLayout(sequenceMatchingPanelLayout);
         sequenceMatchingPanelLayout.setHorizontalGroup(
@@ -261,9 +285,13 @@ public class SequenceMatchingParametersDialog extends javax.swing.JDialog {
                     .addComponent(matchingMethodLbl)
                     .addComponent(xLbl)
                     .addComponent(tagMatchingLbl)
-                    .addComponent(maxPtmsPerTagLbl))
+                    .addComponent(maxPtmsPerTagLbl)
+                    .addComponent(minAaScoreLbl)
+                    .addComponent(minTagLengthLbl))
                 .addGap(18, 18, 18)
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(minTagLengthTextField)
+                    .addComponent(minAaScoreSpinner)
                     .addComponent(tagMatchingCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(matchingCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(xSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
@@ -277,18 +305,26 @@ public class SequenceMatchingParametersDialog extends javax.swing.JDialog {
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(matchingMethodLbl)
                     .addComponent(matchingCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(0, 0, 0)
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(xLbl)
                     .addComponent(xSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tagMatchingLbl)
                     .addComponent(tagMatchingCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxPtmsPerTagTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxPtmsPerTagLbl))
+                .addGap(0, 0, 0)
+                .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(minAaScoreLbl)
+                    .addComponent(minAaScoreSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addGroup(sequenceMatchingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(minTagLengthTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(minTagLengthLbl))
                 .addContainerGap())
         );
 
@@ -442,6 +478,15 @@ public class SequenceMatchingParametersDialog extends javax.swing.JDialog {
         validateInput(false);
     }//GEN-LAST:event_maxPtmsPerTagTextFieldKeyReleased
 
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void minTagLengthTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minTagLengthTextFieldKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_minTagLengthTextFieldKeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton annotationPreferencesHelpJButton;
     private javax.swing.JPanel backgroundPanel;
@@ -450,6 +495,10 @@ public class SequenceMatchingParametersDialog extends javax.swing.JDialog {
     private javax.swing.JLabel matchingMethodLbl;
     private javax.swing.JLabel maxPtmsPerTagLbl;
     private javax.swing.JTextField maxPtmsPerTagTextField;
+    private javax.swing.JLabel minAaScoreLbl;
+    private javax.swing.JSpinner minAaScoreSpinner;
+    private javax.swing.JLabel minTagLengthLbl;
+    private javax.swing.JTextField minTagLengthTextField;
     private javax.swing.JButton okButton;
     private javax.swing.JPanel sequenceMatchingPanel;
     private javax.swing.JComboBox tagMatchingCmb;

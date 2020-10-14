@@ -87,8 +87,6 @@ public class Tag extends ExperimentObject {
      */
     public ArrayList<TagComponent> getContent() {
 
-        
-
         return content;
 
     }
@@ -100,8 +98,6 @@ public class Tag extends ExperimentObject {
      */
     public void setContent(ArrayList<TagComponent> content) {
 
-        
-
         this.content = content;
 
     }
@@ -112,8 +108,6 @@ public class Tag extends ExperimentObject {
      * @param massGap the value of the mass gap
      */
     public void addMassGap(double massGap) {
-
-        
 
         if (massGap != 0) {
 
@@ -128,8 +122,6 @@ public class Tag extends ExperimentObject {
      * @param aminoAcidSequence the amino acid sequence with modifications
      */
     public void addAminoAcidSequence(AminoAcidSequence aminoAcidSequence) {
-
-        
 
         if (aminoAcidSequence.length() > 0) {
 
@@ -159,8 +151,6 @@ public class Tag extends ExperimentObject {
      */
     public String asSequence() {
 
-        
-
         return content.stream()
                 .map(TagComponent::asSequence)
                 .collect(Collectors.joining());
@@ -173,8 +163,6 @@ public class Tag extends ExperimentObject {
      * @return the longest amino acid sequence contained in this tag
      */
     public String getLongestAminoAcidSequence() {
-
-        
 
         String result = "";
         AminoAcidSequence lastAminoAcidSequence = null;
@@ -203,7 +191,11 @@ public class Tag extends ExperimentObject {
 
             } else {
 
-                throw new UnsupportedOperationException("Longest amino acid sequence not implemented for tag component " + tagComponent.getClass() + ".");
+                throw new UnsupportedOperationException(
+                        "Longest amino acid sequence not implemented for tag component "
+                        + tagComponent.getClass()
+                        + "."
+                );
 
             }
         }
@@ -225,8 +217,6 @@ public class Tag extends ExperimentObject {
      */
     public double getMass() {
 
-        
-
         return StandardMasses.h2o.mass
                 + content.stream()
                         .mapToDouble(tagComponent -> tagComponent.getMass())
@@ -245,8 +235,6 @@ public class Tag extends ExperimentObject {
      * @return the theoretic mass of the tag
      */
     public double getMass(boolean includeCTermGap, boolean includeNTermGap) {
-
-        
 
         double mass = getMass();
 
@@ -273,8 +261,6 @@ public class Tag extends ExperimentObject {
      */
     public double getNTerminalGap() {
 
-        
-
         if (content.isEmpty()) {
 
             return 0.0;
@@ -300,8 +286,6 @@ public class Tag extends ExperimentObject {
      * @return the C-terminal gap of the tag
      */
     public double getCTerminalGap() {
-
-        
 
         if (content.isEmpty()) {
 
@@ -343,13 +327,26 @@ public class Tag extends ExperimentObject {
      *
      * @return the modified sequence as a tagged string
      */
-    public String getTaggedModifiedSequence(ModificationParameters modificationProfile,
-            boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps,
-            SequenceMatchingParameters modificationsSequenceMatchingParameters, HashSet<String> displayedModifications) {
+    public String getTaggedModifiedSequence(
+            ModificationParameters modificationProfile,
+            boolean useHtmlColorCoding,
+            boolean includeHtmlStartEndTags,
+            boolean useShortName,
+            boolean includeTerminalGaps,
+            SequenceMatchingParameters modificationsSequenceMatchingParameters,
+            HashSet<String> displayedModifications
+    ) {
 
-        
-
-        return getTaggedModifiedSequence(modificationProfile, this, useHtmlColorCoding, includeHtmlStartEndTags, useShortName, includeTerminalGaps, modificationsSequenceMatchingParameters, displayedModifications);
+        return getTaggedModifiedSequence(
+                modificationProfile,
+                this,
+                useHtmlColorCoding,
+                includeHtmlStartEndTags,
+                useShortName,
+                includeTerminalGaps,
+                modificationsSequenceMatchingParameters,
+                displayedModifications
+        );
 
     }
 
@@ -373,8 +370,16 @@ public class Tag extends ExperimentObject {
      * parameters to use for modifications
      * @param displayedModifications the modifications to display
      */
-    public static String getTaggedModifiedSequence(ModificationParameters modificationParameters, Tag tag,
-            boolean useHtmlColorCoding, boolean includeHtmlStartEndTags, boolean useShortName, boolean includeTerminalGaps, SequenceMatchingParameters modificationsSequenceMatchingParameters, HashSet<String> displayedModifications) {
+    public static String getTaggedModifiedSequence(
+            ModificationParameters modificationParameters,
+            Tag tag,
+            boolean useHtmlColorCoding,
+            boolean includeHtmlStartEndTags,
+            boolean useShortName,
+            boolean includeTerminalGaps,
+            SequenceMatchingParameters modificationsSequenceMatchingParameters,
+            HashSet<String> displayedModifications
+    ) {
 
         StringBuilder modifiedSequence = new StringBuilder();
 
@@ -391,9 +396,9 @@ public class Tag extends ExperimentObject {
             if (tagComponent instanceof AminoAcidSequence) {
 
                 AminoAcidSequence aminoAcidSequence = (AminoAcidSequence) tagComponent;
-                
+
                 String[] variableModifications = aminoAcidSequence.getIndexedVariableModifications();
-                
+
                 // remove the hidden modifications
                 for (int j = 0; j < variableModifications.length; j++) { // @TODO: possible to do this with streams?
                     String tempMod = variableModifications[j];
@@ -401,9 +406,9 @@ public class Tag extends ExperimentObject {
                         variableModifications[j] = null;
                     }
                 }
-                
+
                 String[] fixedModifications = aminoAcidSequence.getFixedModifications(i == 0, i == tag.getContent().size() - 1, modificationParameters, modificationsSequenceMatchingParameters);
-                
+
                 // remove the hidden modifications
                 for (int j = 0; j < fixedModifications.length; j++) { // @TODO: possible to do this with streams?
                     String tempMod = fixedModifications[j];
@@ -411,7 +416,7 @@ public class Tag extends ExperimentObject {
                         fixedModifications[j] = null;
                     }
                 }
-                
+
                 modifiedSequence.append(ModificationUtils.getTaggedModifiedSequence(modificationParameters, aminoAcidSequence.getSequence(), variableModifications, null, null, fixedModifications, useHtmlColorCoding, useShortName));
 
             } else if (tagComponent instanceof MassGap) {
@@ -444,9 +449,11 @@ public class Tag extends ExperimentObject {
      *
      * @return the N-terminal tag of this tag
      */
-    public String getNTerminal(boolean includeTerminalGaps, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
-
-        
+    public String getNTerminal(
+            boolean includeTerminalGaps,
+            ModificationParameters modificationParameters,
+            SequenceMatchingParameters modificationsSequenceMatchingParameters
+    ) {
 
         if (content.isEmpty()) {
             return "";
@@ -491,9 +498,11 @@ public class Tag extends ExperimentObject {
      *
      * @return the C-terminal tag of this tag
      */
-    public String getCTerminal(boolean includeTerminalGaps, ModificationParameters modificationParameters, SequenceMatchingParameters modificationsSequenceMatchingParameters) {
-
-        
+    public String getCTerminal(
+            boolean includeTerminalGaps,
+            ModificationParameters modificationParameters,
+            SequenceMatchingParameters modificationsSequenceMatchingParameters
+    ) {
 
         if (content.isEmpty()) {
 
@@ -538,8 +547,6 @@ public class Tag extends ExperimentObject {
      */
     public int getLengthInAminoAcid() {
 
-        
-
         int length = 0;
 
         for (TagComponent tagComponent : content) {
@@ -575,9 +582,10 @@ public class Tag extends ExperimentObject {
      *
      * @return a list of potential modification sites
      */
-    public ArrayList<Integer> getPotentialModificationSites(Modification modification, SequenceMatchingParameters modificationSequenceMatchingPreferences) {
-
-        
+    public ArrayList<Integer> getPotentialModificationSites(
+            Modification modification,
+            SequenceMatchingParameters modificationSequenceMatchingPreferences
+    ) {
 
         ArrayList<Integer> possibleSites = new ArrayList<>();
         AminoAcidPattern modificationPattern = modification.getPattern();
@@ -707,9 +715,10 @@ public class Tag extends ExperimentObject {
      *
      * @return a boolean indicating whether the tag is the same as another
      */
-    public boolean isSameAs(Tag anotherTag, SequenceMatchingParameters sequenceMatchingPreferences) {
-
-        
+    public boolean isSameAs(
+            Tag anotherTag, 
+            SequenceMatchingParameters sequenceMatchingPreferences
+    ) {
 
         if (content.size() != anotherTag.getContent().size()) {
 
@@ -742,9 +751,10 @@ public class Tag extends ExperimentObject {
      *
      * @return a boolean indicating whether the tag is the same as another
      */
-    public boolean isSameSequenceAndModificationStatusAs(Tag anotherTag, SequenceMatchingParameters sequenceMatchingPreferences) {
-
-        
+    public boolean isSameSequenceAndModificationStatusAs(
+            Tag anotherTag, 
+            SequenceMatchingParameters sequenceMatchingPreferences
+    ) {
 
         if (content.size() != anotherTag.getContent().size()) {
 
@@ -848,8 +858,6 @@ public class Tag extends ExperimentObject {
      */
     public Tag reverse(boolean yIon) {
 
-        
-
         Tag newTag = new Tag();
 
         for (int i = content.size() - 1; i >= 0; i--) {
@@ -909,8 +917,6 @@ public class Tag extends ExperimentObject {
      * @return whether the tag can be reversed
      */
     public boolean canReverse() {
-
-        
 
         TagComponent terminalComponent = content.get(0);
 

@@ -358,6 +358,8 @@ public enum IdentificationParametersCLIParams {
     SEQUENCE_MATCHING_X("sequence_matching_x", "The maximum share of X's in a sequence, 0.25 means 25% of X's, default is 0.25.", false, true),
     SEQUENCE_MATCHING_ENZYMATIC_TAGS("sequence_matching_enzymatic_tags", "Tags should only be mapped to enzymatic peptides. (1: true, 0: false, default is '0')", false, true),
     SEQUENCE_MATCHING_MAX_PTMS_PER_TAG("sequence_matching_max_ptms_per_tag", "The maximum number of PTMs per peptide when mapping tags, default is 3.", false, true),
+    SEQUENCE_MATCHING_MIN_AMINO_ACID_SCORE("sequence_matching_min_amino_acid_score", "The minimum amino acid score when mapping tags, default is 30.", false, true),
+    SEQUENCE_MATCHING_MIN_TAG_LENGTH("sequence_matching_min_tag_length", "The minimum tag length when mapping tags, default is 3.", false, true),
     //////////////////////////////////
     // Import filters
     //////////////////////////////////
@@ -775,6 +777,8 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SEQUENCE_MATCHING_X.id) + " " + IdentificationParametersCLIParams.SEQUENCE_MATCHING_X.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SEQUENCE_MATCHING_ENZYMATIC_TAGS.id) + " " + IdentificationParametersCLIParams.SEQUENCE_MATCHING_ENZYMATIC_TAGS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SEQUENCE_MATCHING_MAX_PTMS_PER_TAG.id) + " " + IdentificationParametersCLIParams.SEQUENCE_MATCHING_MAX_PTMS_PER_TAG.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_AMINO_ACID_SCORE.id) + " " + IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_AMINO_ACID_SCORE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_TAG_LENGTH.id) + " " + IdentificationParametersCLIParams.SEQUENCE_MATCHING_MIN_TAG_LENGTH.description + "\n";
 
         output += "\n\nImport Filters:\n\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MIN.id) + " " + IdentificationParametersCLIParams.IMPORT_PEPTIDE_LENGTH_MIN.description + "\n";

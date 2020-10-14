@@ -67,11 +67,15 @@ public class DigestionParameters extends ExperimentObject {
          * @return the corresponding specificity
          */
         public static Specificity getSpecificity(int index) {
+
             for (Specificity specificity : values()) {
+
                 if (specificity.index == index) {
                     return specificity;
                 }
+
             }
+
             throw new IllegalArgumentException("No specificity found for index " + index + ".");
         }
 
@@ -81,13 +85,19 @@ public class DigestionParameters extends ExperimentObject {
          * @return the different options as command line description
          */
         public static String getCommandLineDescription() {
+
             StringBuilder stringBuilder = new StringBuilder();
+
             for (Specificity specificity : values()) {
+
                 if (stringBuilder.length() > 0) {
                     stringBuilder.append(", ");
                 }
+
                 stringBuilder.append(specificity.index).append(": ").append(specificity.name);
+
             }
+
             return stringBuilder.toString();
         }
 
@@ -143,11 +153,15 @@ public class DigestionParameters extends ExperimentObject {
          * @return the corresponding cleavage parameter
          */
         public static CleavageParameter getCleavageParameters(int index) {
+
             for (CleavageParameter cleavageParameter : values()) {
+
                 if (cleavageParameter.index == index) {
                     return cleavageParameter;
                 }
+
             }
+
             throw new IllegalArgumentException("No cleavage parameter found for index " + index + ".");
         }
 
@@ -157,13 +171,19 @@ public class DigestionParameters extends ExperimentObject {
          * @return the different options as command line description
          */
         public static String getCommandLineDescription() {
+
             StringBuilder stringBuilder = new StringBuilder();
+
             for (CleavageParameter cleavageParameter : values()) {
+
                 if (stringBuilder.length() > 0) {
                     stringBuilder.append(", ");
                 }
+
                 stringBuilder.append(cleavageParameter.index).append(": ").append(cleavageParameter.name);
+
             }
+
             return stringBuilder.toString();
         }
 
@@ -172,6 +192,7 @@ public class DigestionParameters extends ExperimentObject {
             return name;
         }
     }
+
     /**
      * Boolean indicating whether the sample was not digested.
      */
@@ -203,16 +224,23 @@ public class DigestionParameters extends ExperimentObject {
      * @return a new object containing the same parameters
      */
     public static DigestionParameters clone(DigestionParameters digestionParameters) {
+
         DigestionParameters clone = new DigestionParameters();
         clone.setCleavageParameter(digestionParameters.getCleavageParameter());
+
         if (digestionParameters.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
+
             for (Enzyme enzyme : digestionParameters.getEnzymes()) {
+
                 clone.addEnzyme(enzyme);
                 String enzymeName = enzyme.getName();
                 clone.setSpecificity(enzymeName, digestionParameters.getSpecificity(enzymeName));
                 clone.setnMissedCleavages(enzymeName, digestionParameters.getnMissedCleavages(enzymeName));
+
             }
+
         }
+
         return clone;
     }
 
@@ -223,14 +251,17 @@ public class DigestionParameters extends ExperimentObject {
      * @return default digestion parameters
      */
     public static DigestionParameters getDefaultParameters() {
+
         DigestionParameters digestionParameters = new DigestionParameters();
         digestionParameters.setCleavageParameter(CleavageParameter.enzyme);
         String enzymeName = "Trypsin";
         Enzyme trypsin = EnzymeFactory.getInstance().getEnzyme(enzymeName);
+
         if (trypsin != null) { // required if the user deleted trypsin from the factory
             digestionParameters.addEnzyme(trypsin);
             digestionParameters.setnMissedCleavages(enzymeName, 2);
         }
+
         return digestionParameters;
     }
 
@@ -240,10 +271,9 @@ public class DigestionParameters extends ExperimentObject {
      * @return a boolean indicating whether enzyme settings were set
      */
     public boolean hasEnzymes() {
-        
-        
-        
+
         return enzymes != null && !enzymes.isEmpty();
+
     }
 
     /**
@@ -252,10 +282,9 @@ public class DigestionParameters extends ExperimentObject {
      * @return the enzymes used for digestion in a list
      */
     public ArrayList<Enzyme> getEnzymes() {
-        
-        
-        
+
         return enzymes;
+
     }
 
     /**
@@ -264,8 +293,9 @@ public class DigestionParameters extends ExperimentObject {
      * @param enzymes the enzymes used for digestion in a list
      */
     public void setEnzymes(ArrayList<Enzyme> enzymes) {
-        
+
         this.enzymes = enzymes;
+
     }
 
     /**
@@ -275,34 +305,38 @@ public class DigestionParameters extends ExperimentObject {
      * @param enzyme an enzyme used for digestion.
      */
     public void addEnzyme(Enzyme enzyme) {
-        
+
         if (enzymes == null) {
             enzymes = new ArrayList<>(1);
         }
+
         enzymes.add(enzyme);
         setSpecificity(enzyme.getName(), Specificity.specific);
         setnMissedCleavages(enzyme.getName(), 0);
+
     }
 
     /**
      * Clears the parameters.
      */
     public void clear() {
-        
+
         cleavageParameter = null;
         enzymes = null;
         nMissedCleavages = null;
         specificity = null;
+
     }
 
     /**
      * Clears the enzymes set including specificity and missed cleavages.
      */
     public void clearEnzymes() {
-        
+
         enzymes = null;
         nMissedCleavages = null;
         specificity = null;
+
     }
 
     /**
@@ -314,13 +348,13 @@ public class DigestionParameters extends ExperimentObject {
      * @return the number of allowed missed cleavages
      */
     public Integer getnMissedCleavages(String enzymeName) {
-        
-        
-        
+
         if (nMissedCleavages == null) {
             return null;
         }
+
         return nMissedCleavages.get(enzymeName);
+
     }
 
     /**
@@ -330,11 +364,13 @@ public class DigestionParameters extends ExperimentObject {
      * @param enzymeMissedCleavages the number of allowed missed cleavages
      */
     public void setnMissedCleavages(String enzymeName, int enzymeMissedCleavages) {
-        
+
         if (nMissedCleavages == null) {
             nMissedCleavages = new HashMap<>(1);
         }
+
         nMissedCleavages.put(enzymeName, enzymeMissedCleavages);
+
     }
 
     /**
@@ -345,14 +381,13 @@ public class DigestionParameters extends ExperimentObject {
      * @return the specificity
      */
     public Specificity getSpecificity(String enzymeName) {
-        
-        
-        
+
         if (specificity == null) {
             return null;
         }
-        Specificity enzymeSpecificity = specificity.get(enzymeName);
-        return enzymeSpecificity;
+
+        return specificity.get(enzymeName);
+
     }
 
     /**
@@ -362,11 +397,13 @@ public class DigestionParameters extends ExperimentObject {
      * @param enzymeSpecificity the expected specificity of the enzyme
      */
     public void setSpecificity(String enzymeName, Specificity enzymeSpecificity) {
-        
+
         if (specificity == null) {
             specificity = new HashMap<>(1);
         }
+
         specificity.put(enzymeName, enzymeSpecificity);
+
     }
 
     /**
@@ -375,10 +412,9 @@ public class DigestionParameters extends ExperimentObject {
      * @return the cleavage parameters
      */
     public CleavageParameter getCleavageParameter() {
-        
-        
-        
+
         return cleavageParameter;
+
     }
 
     /**
@@ -387,8 +423,9 @@ public class DigestionParameters extends ExperimentObject {
      * @param cleavageParameter the cleavage parameters
      */
     public void setCleavageParameter(CleavageParameter cleavageParameter) {
-        
+
         this.cleavageParameter = cleavageParameter;
+
     }
 
     /**
@@ -397,40 +434,54 @@ public class DigestionParameters extends ExperimentObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        
-        
-        
+
         DigestionParameters defaultParameters = DigestionParameters.getDefaultParameters();
         StringBuilder stringBuilder = new StringBuilder();
         String newLine = System.getProperty("line.separator");
+
         if (!defaultParameters.isSameAs(this)) {
+
             stringBuilder.append("Digestion: ");
+
             switch (cleavageParameter) { // @TODO: can be null..?
+
                 case wholeProtein:
                     stringBuilder.append("Whole Protein").append(newLine);
                     break;
+
                 case unSpecific:
                     stringBuilder.append("Unspecific").append(newLine);
                     break;
+
                 case enzyme:
                     for (Enzyme enzyme1 : enzymes) {
+
                         if (stringBuilder.length() > 0) {
                             stringBuilder.append(newLine);
                         }
+
                         Enzyme enzyme = enzyme1;
                         String enzymeName = enzyme.getName();
                         stringBuilder.append(enzymeName).append(", ").append(getSpecificity(enzymeName));
                         Integer nmc = getnMissedCleavages(enzymeName);
+
                         if (nmc != null) {
                             stringBuilder.append(", ").append(nmc).append(" missed cleavages");
                         }
                     }
                     break;
+
                 default:
-                    throw new UnsupportedOperationException("Description not implemented for cleavage parameter " + cleavageParameter + ".");
+                    throw new UnsupportedOperationException(
+                            "Description not implemented for cleavage parameter "
+                            + cleavageParameter
+                            + "."
+                    );
             }
+
             stringBuilder.append(".").append(newLine);
         }
+
         return stringBuilder.toString();
     }
 
@@ -444,40 +495,50 @@ public class DigestionParameters extends ExperimentObject {
      * same as the given other parameters
      */
     public boolean isSameAs(DigestionParameters otherDigestionParameters) {
-        
-        
-        
+
         if (cleavageParameter != otherDigestionParameters.getCleavageParameter()) {
             return false;
         }
+
         ArrayList<Enzyme> otherEnzymes = otherDigestionParameters.getEnzymes();
+
         if ((enzymes != null && otherEnzymes == null)
                 || (enzymes == null && otherEnzymes != null)) {
             return false;
         }
+
         if (enzymes != null && otherEnzymes != null) {
+
             if (enzymes.size() != otherEnzymes.size()) {
                 return false;
             }
+
             ArrayList<String> enzymeNames = new ArrayList<>(enzymes.size());
+
             for (Enzyme enzyme : enzymes) {
                 enzymeNames.add(enzyme.getName());
             }
+
             ArrayList<String> otherNames = new ArrayList<>(otherEnzymes.size());
-            
+
             for (Enzyme enzyme : otherEnzymes) {
                 otherNames.add(enzyme.getName());
             }
+
             if (!Util.sameLists(enzymeNames, otherNames)) {
                 return false;
             }
+
             for (String enzymeName : enzymeNames) {
+
                 if (getSpecificity(enzymeName) != otherDigestionParameters.getSpecificity(enzymeName)
                         || !getnMissedCleavages(enzymeName).equals(otherDigestionParameters.getnMissedCleavages(enzymeName))) {
                     return false;
                 }
+
             }
         }
+
         return true;
     }
 
@@ -487,67 +548,90 @@ public class DigestionParameters extends ExperimentObject {
      * @return the enzyme X!Tandem format as String
      */
     public String getXTandemFormat() {
-        
-        
-        
 
         switch (cleavageParameter) {
+
             case wholeProtein:
                 return "";
+
             case unSpecific:
                 return "[X]|[X]";
+
             case enzyme:
                 StringBuilder result = new StringBuilder();
+
                 for (Enzyme enzyme : enzymes) {
+
                     if (result.length() > 0) {
                         result.append(",");
                     }
+
                     Specificity specificity = getSpecificity(enzyme.getName());
+
                     if (enzyme.getAminoAcidBefore().size() > 0) {
+
                         result.append("[");
+
                         for (Character aa : enzyme.getAminoAcidBefore()) {
                             result.append(aa);
                         }
+
                         result.append("]");
                     }
 
                     if (enzyme.getRestrictionBefore().size() > 0) {
+
                         result.append("{");
+
                         for (Character aa : enzyme.getRestrictionBefore()) {
                             result.append(aa);
                         }
+
                         result.append("}");
                     }
 
-                    if (enzyme.getAminoAcidBefore().isEmpty() && enzyme.getRestrictionBefore().isEmpty()) {
+                    if (enzyme.getAminoAcidBefore().isEmpty()
+                            && enzyme.getRestrictionBefore().isEmpty()) {
                         result.append("[X]");
                     }
 
                     result.append("|");
 
                     if (enzyme.getAminoAcidAfter().size() > 0) {
+
                         result.append("[");
+
                         for (Character aa : enzyme.getAminoAcidAfter()) {
                             result.append(aa);
                         }
+
                         result.append("]");
                     }
 
                     if (enzyme.getRestrictionAfter().size() > 0) {
+
                         result.append("{");
+
                         for (Character aa : enzyme.getRestrictionAfter()) {
                             result.append(aa);
                         }
+
                         result.append("}");
                     }
 
-                    if (enzyme.getAminoAcidAfter().isEmpty() && enzyme.getRestrictionAfter().isEmpty()) {
+                    if (enzyme.getAminoAcidAfter().isEmpty()
+                            && enzyme.getRestrictionAfter().isEmpty()) {
                         result.append("[X]");
                     }
                 }
                 return result.toString();
+
             default:
-                throw new UnsupportedOperationException("X!Tandem format not implemented for cleavage parameter " + cleavageParameter + ".");
+                throw new UnsupportedOperationException(
+                        "X!Tandem format not implemented for cleavage parameter "
+                        + cleavageParameter
+                        + "."
+                );
         }
     }
 
@@ -558,100 +642,145 @@ public class DigestionParameters extends ExperimentObject {
      * @return the enzyme MyriMatch format as String
      */
     public String getMyriMatchFormat() {
-        
-        
-        
 
         // example: trypsin corresponds to "[|R|K . . ]"
         // details: http://htmlpreview.github.io/?https://github.com/ProteoWizard/pwiz/blob/master/pwiz_tools/Bumbershoot/myrimatch/doc/index.html
         String result = "[";
 
         for (Enzyme enzyme : enzymes) {
+
             if (enzyme.getAminoAcidBefore().size() > 0) {
+
                 for (Character aa : enzyme.getAminoAcidBefore()) {
                     result += "|" + aa;
                 }
+
                 result += " ";
+
             } else {
+
                 result += " ";
+
             }
         }
 
         HashSet<Character> commonRestrictionAfter;
+
         if (enzymes.size() == 1) {
+
             commonRestrictionAfter = enzymes.get(0).getRestrictionAfter();
+
         } else {
+
             commonRestrictionAfter = new HashSet<>();
+
             for (Character aa : enzymes.get(0).getRestrictionAfter()) {
+
                 boolean missing = false;
+
                 for (Enzyme enzyme : enzymes) {
+
                     if (!enzyme.getRestrictionAfter().contains(aa)) {
                         missing = true;
                         break;
                     }
                 }
+
                 if (!missing) {
                     commonRestrictionAfter.add(aa);
                 }
             }
         }
+
         if (commonRestrictionAfter.size() > 0) {
+
             String temp = "";
+
             for (Character aa : AminoAcid.getUniqueAminoAcids()) {
+
                 if (!commonRestrictionAfter.contains(aa)) {
+
                     if (!temp.isEmpty()) {
                         temp += "|";
                     }
+
                     temp += aa;
                 }
             }
+
             result += temp + " ";
+
         } else {
             result += ". ";
         }
 
         HashSet<Character> commonRestrictionBefore;
+
         if (enzymes.size() == 1) {
+
             commonRestrictionBefore = enzymes.get(0).getRestrictionBefore();
+
         } else {
+
             commonRestrictionBefore = new HashSet<>();
+
             for (Character aa : enzymes.get(0).getRestrictionBefore()) {
+
                 boolean missing = false;
+
                 for (Enzyme enzyme : enzymes) {
+
                     if (!enzyme.getRestrictionBefore().contains(aa)) {
                         missing = true;
                         break;
                     }
+
                 }
+
                 if (!missing) {
                     commonRestrictionBefore.add(aa);
                 }
             }
         }
+
         if (commonRestrictionBefore.size() > 0) {
+
             String temp = "";
+
             for (Character aa : AminoAcid.getUniqueAminoAcids()) {
+
                 if (!commonRestrictionBefore.contains(aa)) {
+
                     if (!temp.isEmpty()) {
                         temp += "|";
                     }
+
                     temp += aa;
                 }
             }
+
             result += temp + " ";
+
         } else {
             result += ". ";
         }
 
         for (Enzyme enzyme : enzymes) {
+
             if (enzyme.getAminoAcidAfter().size() > 0) {
+
                 String temp = "";
+
                 for (Character aa : enzyme.getAminoAcidAfter()) {
+
                     if (!temp.isEmpty()) {
+
                         temp += "|";
                     }
+
                     temp += aa;
                 }
+
                 result += temp + "|";
             }
         }

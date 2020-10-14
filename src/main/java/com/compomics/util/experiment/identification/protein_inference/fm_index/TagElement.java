@@ -13,6 +13,7 @@ public class TagElement extends ExperimentObject  {
     String sequence;
     double mass;
     int xNumLimit;
+    Integer[] modifications;
 
     /**
      * Constructor.
@@ -27,6 +28,24 @@ public class TagElement extends ExperimentObject  {
         this.sequence = sequence;
         this.mass = mass;
         this.xNumLimit = xNumLimit;
+        this.modifications = null;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param isMass
+     * @param sequence
+     * @param mass
+     * @param xNumLimit
+     * @param modifications
+     */
+    TagElement(boolean isMass, String sequence, double mass, int xNumLimit, Integer[] modifications) {
+        this.isMass = isMass;
+        this.sequence = sequence;
+        this.mass = mass;
+        this.xNumLimit = xNumLimit;
+        this.modifications = modifications;
     }
 
     /**
@@ -41,6 +60,7 @@ public class TagElement extends ExperimentObject  {
         this.sequence = sequence;
         this.mass = mass;
         this.xNumLimit = 0;
+        this.modifications = null;
     }
 
     /**
@@ -55,6 +75,12 @@ public class TagElement extends ExperimentObject  {
             output = String.format("%.5f", mass);
         } else {
             output = sequence;
+            if (modifications != null){
+                for (int i = 0; i < modifications.length; ++i){
+                    int mod = modifications[i];
+                    if (mod != -1) output += ", mod(" + i + "/" + mod + ")";
+                }
+            }
         }
         return output;
     }

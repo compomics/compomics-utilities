@@ -45,7 +45,7 @@ public class TempFilesManager {
 
                 if (tempFolder.exists()) {
 
-                    boolean success = IoUtil.deleteDir(tempFolder); // @TODO: what the file could not be deleted?
+                    boolean success = IoUtil.deleteDir(tempFolder); // @TODO: what if the file could not be deleted?
 
                 }
 

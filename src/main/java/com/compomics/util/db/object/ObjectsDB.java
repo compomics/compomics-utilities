@@ -813,7 +813,7 @@ public class ObjectsDB {
                 System.out.println("closing database");
             }
 
-            objectsCache.saveCache(null, clearing); // @TODO: verify that this is actullly needed (as this looks more like saving?)
+            //objectsCache.saveCache(null, clearing); // @TODO: verify that this is actullly needed (as this looks more like saving?)
             objectsCache.clearCache();
 
             connectionActive = false;

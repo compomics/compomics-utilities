@@ -45,6 +45,7 @@ import java.util.TreeSet;
 import org.jsuffixarrays.*;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.parameters.identification.advanced.PeptideVariantsParameters.VariantType;
 import java.io.BufferedInputStream;
@@ -1121,14 +1122,11 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
         */
 
         // check if fasta file has an FMIndex
-        String fastaExtension = getFileExtension(fastaFile);
+        String fastaExtension = IoUtil.getExtension(fastaFile);
         File FMFile = new File(fastaFile.getAbsolutePath().replace(fastaExtension, ".fmi"));
-        boolean loadFasta = true;
-        
-        
+        boolean loadFasta = true;   
         
         if (FMFile.exists()) {
-            
             
             DataInputStream is = new DataInputStream(new BufferedInputStream(new FileInputStream(FMFile.getAbsolutePath()), 1024 * 1024));
             ObjectInputStream ois = null;
@@ -5584,26 +5582,10 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
 
     }
 
-    public static String getFileExtension(File file) {
-        String extension = "";
-
-        try {
-            if (file != null && file.exists()) {
-                String name = file.getName();
-                extension = name.substring(name.lastIndexOf("."));
-            }
-        } catch (Exception e) {
-            extension = "";
-        }
-
-        return extension;
-
-    }
-
     /**
-     * Reconstructs the fasta file stored in the index
+     * Reconstructs the FASTA file stored in the index
      *
-     * @param file the output fasta file object
+     * @param file the output FASTA file object
      */
     public void reconstructFasta(File file) {
         BufferedWriter writer = null;

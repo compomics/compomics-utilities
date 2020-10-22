@@ -31,27 +31,21 @@ public class IdentificationDBTest extends TestCase {
         String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
         path = path.substring(0, path.indexOf("/target/"));
         path += "/src/test/resources/experiment/identificationDB";
-        
+
         File dbFolder = new File(path);
         if (!dbFolder.exists()) {
             dbFolder.mkdir();
         }
-        
 
         try {
             ObjectsDB objectsDB = new ObjectsDB(path, "experimentTestDB.sqlite", true);
 
             Identification identification = new Identification(objectsDB);
-                
+
             String spectrumFile = "spectrum_file";
             String spectrumTitle = "spectrum_title";
             String projectParametersTitle = "project_parameters_title";
-            
-            
-            
-            
-            
-            
+
             String peptideSequence = "PEPTIDE";
             String proteinAccession = "test_protein";
 
@@ -72,22 +66,16 @@ public class IdentificationDBTest extends TestCase {
             ProteinMatch testProteinMatch = new ProteinMatch(proteinAccession);
             identification.addObject(testProteinMatch.getKey(), testProteinMatch);
 
-
             long peptideMatchKey = testPeptideMatch.getKey();
             long proteinMatchKey = testProteinMatch.getKey();
             Assert.assertTrue(peptideMatchKey != proteinMatchKey);
 
-
-
             ProjectParameters projectParameters = new ProjectParameters(projectParametersTitle);
             identification.addObject(ProjectParameters.key, projectParameters);
 
-
             // closing and reopening database
-            identification.close();
-            
-            
-            
+            identification.close(true);
+
             objectsDB = new ObjectsDB(path, "experimentTestDB.sqlite", false);
             identification = new Identification(objectsDB);
 
@@ -104,29 +92,21 @@ public class IdentificationDBTest extends TestCase {
             Assert.assertTrue(bestAssumptions.size() == 1);
             PeptideAssumption bestAssumption = bestAssumptions.get(0);
             Assert.assertTrue(bestAssumption.getRank() == 1);
-            
+
             //System.out.println(bestAssumption.hasChanged());
-            
             bestAssumption.setRank(2);
             //System.out.println(bestAssumption.hasChanged());
             //identification.updateObject(spectrumMatchKey, testSpectrumMatch);
-            
 
             // closing and reopening database
-            identification.close();
-            
-            
-            
-            
-            
+            identification.close(true);
+
             objectsDB = new ObjectsDB(path, "experimentTestDB.sqlite", false);
             identification = new Identification(objectsDB);
 
-            
             Assert.assertTrue(identification != null);
             Assert.assertTrue(identification.getSpectrumIdentificationKeys() != null);
             Assert.assertTrue(identification.getSpectrumIdentificationKeys().size() == 1);
-
 
             ProjectParameters retrieve = (ProjectParameters) identification.retrieveObject(ProjectParameters.key);
             Assert.assertTrue(retrieve != null);
@@ -142,16 +122,14 @@ public class IdentificationDBTest extends TestCase {
             Assert.assertTrue(mascotScores.size() == 1);
             double bestScore = mascotScores.get(0);
             Assert.assertTrue(bestScore == 0.1);
-            
+
             mascotAssumption = new ArrayList<>(mascotAssumptions.values());
             Assert.assertTrue(mascotAssumption.size() == 1);
             bestAssumptions = mascotAssumption.get(0);
             Assert.assertTrue(bestAssumptions.size() == 1);
             bestAssumption = bestAssumptions.get(0);
             Assert.assertTrue(bestAssumption.getRank() == 2);
-            
-            
-            
+
             bestAssumptions = mascotAssumptions.get(bestScore);
             bestAssumption = (PeptideAssumption) bestAssumptions.get(0);
             Peptide bestPeptide = bestAssumption.getPeptide();
@@ -210,87 +188,79 @@ public class IdentificationDBTest extends TestCase {
             identification.addObject(parametersKey, testParameter);
             testParameter = (PepnovoAssumptionDetails) identification.retrieveObject(parametersKey);
             Assert.assertTrue(testParameter.getRankScore() == testScore);
-            identification.close();
-                
+            identification.close(true);
+
         } finally {
             //IoUtil.deleteDir(dbFolder);
         }
     }
-    
-    
-    
-    
+
     public void teestMassiveDB() throws SQLException, IOException, ClassNotFoundException, SQLException, ClassNotFoundException, InterruptedException {
-        
+
         String path = this.getClass().getResource("IdentificationDBTest.class").getPath();
         path = path.substring(0, path.indexOf("/target/"));
         path += "/src/test/resources/experiment/identificationDB";
-        
+
         File dbFolder = new File(path);
         if (!dbFolder.exists()) {
             dbFolder.mkdir();
         }
-        
 
         try {
             ObjectsDB objectsDB = new ObjectsDB(path, "experimentMassiveTestDB.sqlite", true);
             Identification identification = new Identification(objectsDB);
-            
+
             HashSet<String> accessions = new HashSet<>();
             long testProtKey = 0;
-            
-            for (int i = 0; i < 10000; ++i){
+
+            for (int i = 0; i < 10000; ++i) {
                 String accession = "PX" + Integer.toString(i);
                 accessions.add(accession);
                 ProteinMatch testProteinMatch = new ProteinMatch(accession);
-                if (i == 0) testProtKey = testProteinMatch.getKey();
+                if (i == 0) {
+                    testProtKey = testProteinMatch.getKey();
+                }
                 identification.addObject(testProteinMatch.getKey(), testProteinMatch);
-            
+
             }
-            
+
             identification.getObjectsDB().lock(null);
             identification.getObjectsDB().unlock();
-            
-            
+
             System.out.println("stored");
-            
-            
-            
+
             identification.loadObjects(ProteinMatch.class, null, false);
-            
-            
+
             Peptide peptide = new Peptide("TTTTTTTTTTTTTTTTK");
             PeptideMatch testPeptideMatch = new PeptideMatch(peptide, peptide.getKey(), 0);
             long pKey = testPeptideMatch.getKey();
             identification.addPeptideMatch(pKey, testPeptideMatch);
-            
-            
+
             ProteinMatch proteinMatch = identification.getProteinMatch(testProtKey);
             proteinMatch.addPeptideMatchKey(pKey);
-            
-            
+
             identification.loadObjects(ProteinMatch.class, null, false);
-            
+
             Assert.assertTrue(proteinMatch.getPeptideCount() == 1);
             Assert.assertTrue(proteinMatch.getPeptideMatchesKeys()[0] == pKey);
-            
+
             ProteinMatchesIterator pmi = identification.getProteinMatchesIterator(null);
-            
-            while (true){
+
+            while (true) {
                 ProteinMatch pm = pmi.next();
-                if (pm == null) break;
-                
+                if (pm == null) {
+                    break;
+                }
+
                 String acc = pm.getAccessions()[0];
                 Assert.assertTrue(accessions.contains(acc));
             }
-            
-            
-            
-            identification.close();
-                
+
+            identification.close(true);
+
         } finally {
             IoUtil.deleteDir(dbFolder);
         }
-            
+
     }
 }

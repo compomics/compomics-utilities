@@ -794,17 +794,10 @@ public class ObjectsDB {
 
     /**
      * Closes the db connection.
-     */
-    public void close() {
-        close(true);
-    }
-
-    /**
-     * Closes the db connection.
      *
-     * @param clearing clearing all database structures
+     * @param saveCache clearing all database structures
      */
-    public void close(boolean clearing) {
+    public void close(boolean saveCache) {
 
         try {
             dbMutex.acquire();
@@ -813,7 +806,9 @@ public class ObjectsDB {
                 System.out.println("closing database");
             }
 
-            //objectsCache.saveCache(null, clearing); // @TODO: verify that this is actullly needed (as this looks more like saving?)
+            if (saveCache) {
+                objectsCache.saveCache(null, true);
+            }
             objectsCache.clearCache();
 
             connectionActive = false;

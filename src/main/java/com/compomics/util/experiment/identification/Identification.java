@@ -652,10 +652,11 @@ public class Identification extends ExperimentObject {
 
     /**
      * Closes the database connection.
+     * 
+     * @param saveCache save the cache
      */
-    public void close() {
-        objectsDB.close();
-
+    public void close(boolean saveCache) {
+        objectsDB.close(saveCache);
     }
 
     /**

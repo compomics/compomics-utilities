@@ -160,6 +160,7 @@ public class Header extends ExperimentObject implements Cloneable {
      * parsing
      */
     public static Header parseFromFASTA(String aFASTAHeader) throws StringIndexOutOfBoundsException {
+
         Header result = null;
 
         if (aFASTAHeader == null) {

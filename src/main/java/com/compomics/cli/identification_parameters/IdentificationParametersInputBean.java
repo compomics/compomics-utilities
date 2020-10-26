@@ -1457,16 +1457,17 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id);
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL_TYPE.id);
             List<String> supportedInput = new ArrayList<>();
             for (MetaMorpheusParameters.MetaMorpheusToleranceType searchType : MetaMorpheusParameters.MetaMorpheusToleranceType.values()) {
                 supportedInput.add(searchType.toString());
             }
-            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id, arg, supportedInput)) {
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL_TYPE.id, arg, supportedInput)) {
                 return false;
             }
         }
+        
         if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id);
             if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id, arg)) {

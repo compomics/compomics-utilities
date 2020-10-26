@@ -1401,7 +1401,11 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id);
-            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id, arg)) {
+            List<String> supportedInput = new ArrayList<>();
+            for (MetaMorpheusFragmentationTerminusType type : MetaMorpheusFragmentationTerminusType.values()) {
+                supportedInput.add(type.toString());
+            }
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id, arg,supportedInput)) {
                 return false;
             }
         }

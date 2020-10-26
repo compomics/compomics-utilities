@@ -1573,7 +1573,8 @@ public class IdentificationParametersInputBean {
             for (ModificationCategory modCategory : ModificationCategory.values()) {
                 supportedInput.add(modCategory.toString());
             }
-            for (String arg : combinedArgs.split(",")) {
+            
+            for (String arg : CommandLineUtils.splitInput(combinedArgs)) {
                 if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id, arg, supportedInput)) {
                     return false;
                 }
@@ -3574,7 +3575,7 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id)) {
             String combinedArgs = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id);
             ArrayList<ModificationCategory> gPtmModCategories = new ArrayList<>();
-            for (String arg : combinedArgs.split(",")) {
+            for (String arg : CommandLineUtils.splitInput(combinedArgs)) {
                 for (ModificationCategory category : ModificationCategory.values()) {
                     if (arg.equalsIgnoreCase(category.toString()) 
                             && !gPtmModCategories.contains(category)) {

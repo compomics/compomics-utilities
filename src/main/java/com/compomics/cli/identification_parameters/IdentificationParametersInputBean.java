@@ -1567,14 +1567,18 @@ public class IdentificationParametersInputBean {
             }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id);
+            String combinedArgs = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id);
+            
             List<String> supportedInput = new ArrayList<>();
             for (ModificationCategory modCategory : ModificationCategory.values()) {
                 supportedInput.add(modCategory.toString());
             }
-            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id, arg, supportedInput)) {
-                return false;
+            for (String arg : combinedArgs.split(",")) {
+                if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id, arg, supportedInput)) {
+                    return false;
+                }
             }
+            
         }
         //////////////////////////////////
         // Pepnovo
@@ -3568,14 +3572,17 @@ public class IdentificationParametersInputBean {
             metaMorpheusParameters.setRunGptm(option == 1);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id);
+            String combinedArgs = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id);
             ArrayList<ModificationCategory> gPtmModCategories = new ArrayList<>();
-            for (ModificationCategory category : ModificationCategory.values()) {
-                if (arg.equalsIgnoreCase(category.toString()) 
-                        && !gPtmModCategories.contains(category)) {
-                    gPtmModCategories.add(category);
+            for (String arg : combinedArgs.split(",")) {
+                for (ModificationCategory category : ModificationCategory.values()) {
+                    if (arg.equalsIgnoreCase(category.toString()) 
+                            && !gPtmModCategories.contains(category)) {
+                        gPtmModCategories.add(category);
+                    }
                 }
             }
+            
             metaMorpheusParameters.setGPtmCategories(gPtmModCategories);
         }
 

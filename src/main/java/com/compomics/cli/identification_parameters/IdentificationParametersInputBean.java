@@ -3063,6 +3063,8 @@ public class IdentificationParametersInputBean {
                 cometParameters.setSelectedOutputFormat(CometParameters.CometOutputFormat.SQT);
             } else if (arg.equalsIgnoreCase(CometParameters.CometOutputFormat.TXT.toString())) {
                 cometParameters.setSelectedOutputFormat(CometParameters.CometOutputFormat.TXT);
+            } else if (arg.equalsIgnoreCase(CometParameters.CometOutputFormat.mzIdentML.toString())) {
+                cometParameters.setSelectedOutputFormat(CometParameters.CometOutputFormat.mzIdentML);
             }
         }
 

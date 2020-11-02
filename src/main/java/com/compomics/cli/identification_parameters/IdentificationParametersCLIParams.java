@@ -33,10 +33,10 @@ public enum IdentificationParametersCLIParams {
     IDENTIFICATION_PARAMETERS("id_params", "The identification parameters file to use.", false, true),
     OUT("out", "The destination Identification Parameters file (.par).", true, true),
     //////////////////////////////////
-    // Search Parameters
+    // Spectrum matching parameters
     //////////////////////////////////
     PREC_PPM("prec_ppm", "Precursor ion tolerance unit: ppm (1) or Da (0), default is '1'.", false, true),
-    FRAG_PPM("frag_ppm", "Fragment ion tolerance unit: ppm (1) or Da (0), default is '0'.", false, true),
+    FRAG_PPM("frag_ppm", "Fragment ion tolerance unit: ppm (1) or Da (0), default is '1'.", false, true),
     PREC_TOL("prec_tol", "Precursor ion mass tolerance, default is '10'.", false, true),
     FRAG_TOL("frag_tol", "Fragment ion mass tolerance, default is '0.5'.", false, true),
     DIGESTION("digestion", "The type of digestion to consider: " + DigestionParameters.CleavageParameter.getCommandLineDescription() + ". Default is 0.", false, true),
@@ -195,7 +195,7 @@ public enum IdentificationParametersCLIParams {
     COMET_THEORETICAL_FRAGMENT_IONS("comet_theoretical_fragment_ions", "Comet theoretical_fragment_ions option, it is the correlation score type, 1: true, 0: false, default is '1'.", false, true),
     COMET_FRAGMENT_BIN_OFFSET("comet_frag_bin_offset", "Comet fragment bin offset, default is '0.01'.", false, true),
     COMET_NUM_MATCHES("comet_num_matches", "Comet maximum number of spectrum matches, default is '10'.", false, true),
-    COMET_OUTPUT("comet_output", "Comet output type, PepXML, SQT, TXT or Percolator, default is 'PepXML'.", false, true),
+    COMET_OUTPUT("comet_output", "Comet output type, PepXML, SQT, TXT, Percolator or mzIdentML, default is 'PepXML'.", false, true),
     //////////////////////////////////
     // Tide specific parameters
     //////////////////////////////////
@@ -283,7 +283,7 @@ public enum IdentificationParametersCLIParams {
     META_MORPHEUS_NUM_PEAKS_PER_WINDOWS("meta_morpheus_num_peaks_per_window", "MetaMorpheus number of peaks per window, default is '200'.", false, true),
     META_MORPHEUS_MIN_ALLOWED_INT_RATIO_TO_BASE_PEAK("meta_morpheus_min_allowed_int_ratio_to_base_peak", "MetaMorpheus minium allowed intensity ratio to base peak, default is '0.01'.", false, true),
     META_MORPHEUS_WINDOW_WITH_THOMPSON("meta_morpheus_window_with_thompson", "MetaMorpheus window width in Thompson.", false, true),
-    META_MORPHEUS_NUM_WINDOWS("meta_morpheus_num_windows", "MetaMorpheus number of windows", false, true),
+    META_MORPHEUS_NUM_WINDOWS("meta_morpheus_num_windows", "MetaMorpheus number of windows.", false, true),
     META_MORPHEUS_NORMALIZE_PEAKS_ACROSS_ALL_WINDOWS("meta_morpheus_norm_across_all_windows", "MetaMorpheus normalize peaks across all windows, 1: true, 0: false, default is '0'.", false, true),
     META_MORPHEUS_MOD_PEPTIDES_ARE_DIFFERENT("meta_morpheus_mod_peptides_are_different", "MetaMorpheus modified peptides are different, 1: true, 0: false, default is '0'.", false, true),
     META_MORPHEUS_NO_ONE_HIT_WONDERS("meta_morpheus_no_one_hit_wonders", "MetaMorpheus exclude one hit wonders, 1: true, 0: false, default is '0'.", false, true),

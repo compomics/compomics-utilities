@@ -125,7 +125,7 @@ public class CometParameters extends ExperimentObject implements IdentificationA
      * The available output formats.
      */
     public enum CometOutputFormat {
-        PepXML, SQT, TXT, Percolator;
+        PepXML, SQT, TXT, Percolator, mzIdentML;
     }
     /**
      * A boolean flag this determines whether or not the expectation score

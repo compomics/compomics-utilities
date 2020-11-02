@@ -1401,7 +1401,11 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id);
-            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id, arg)) {
+            List<String> supportedInput = new ArrayList<>();
+            for (MetaMorpheusFragmentationTerminusType type : MetaMorpheusFragmentationTerminusType.values()) {
+                supportedInput.add(type.toString());
+            }
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id, arg,supportedInput)) {
                 return false;
             }
         }
@@ -1457,16 +1461,17 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id);
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL_TYPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL_TYPE.id);
             List<String> supportedInput = new ArrayList<>();
             for (MetaMorpheusParameters.MetaMorpheusToleranceType searchType : MetaMorpheusParameters.MetaMorpheusToleranceType.values()) {
                 supportedInput.add(searchType.toString());
             }
-            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id, arg, supportedInput)) {
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_DECONVOLUTION_MASS_TOL_TYPE.id, arg, supportedInput)) {
                 return false;
             }
         }
+        
         if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id);
             if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id, arg)) {
@@ -1562,14 +1567,19 @@ public class IdentificationParametersInputBean {
             }
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id);
+            String combinedArgs = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id);
+            
             List<String> supportedInput = new ArrayList<>();
             for (ModificationCategory modCategory : ModificationCategory.values()) {
                 supportedInput.add(modCategory.toString());
             }
-            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id, arg, supportedInput)) {
-                return false;
+            
+            for (String arg : CommandLineUtils.splitInput(combinedArgs)) {
+                if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id, arg, supportedInput)) {
+                    return false;
+                }
             }
+            
         }
         //////////////////////////////////
         // Pepnovo
@@ -3565,14 +3575,17 @@ public class IdentificationParametersInputBean {
             metaMorpheusParameters.setRunGptm(option == 1);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id);
+            String combinedArgs = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id);
             ArrayList<ModificationCategory> gPtmModCategories = new ArrayList<>();
-            for (ModificationCategory category : ModificationCategory.values()) {
-                if (arg.equalsIgnoreCase(category.toString()) 
-                        && !gPtmModCategories.contains(category)) {
-                    gPtmModCategories.add(category);
+            for (String arg : CommandLineUtils.splitInput(combinedArgs)) {
+                for (ModificationCategory category : ModificationCategory.values()) {
+                    if (arg.equalsIgnoreCase(category.toString()) 
+                            && !gPtmModCategories.contains(category)) {
+                        gPtmModCategories.add(category);
+                    }
                 }
             }
+            
             metaMorpheusParameters.setGPtmCategories(gPtmModCategories);
         }
 

@@ -90,7 +90,7 @@ public enum ModificationCategory {
 
         for (ModificationCategory modCategory : values()) {
             if (modCategoriesAsString.length() > 0) {
-                modCategoriesAsString.append("; ");
+                modCategoriesAsString.append(", ");
             }
             modCategoriesAsString.append(modCategory);
         }

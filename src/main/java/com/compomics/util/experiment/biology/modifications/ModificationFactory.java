@@ -42,7 +42,7 @@ public class ModificationFactory implements ModificationProvider {
      * The name of the Modification factory back-up file. The version number
      * follows the one of utilities.
      */
-    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.4-beta.json";
+    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.0.json";
     /**
      * A map linking indexes with modifications.
      */

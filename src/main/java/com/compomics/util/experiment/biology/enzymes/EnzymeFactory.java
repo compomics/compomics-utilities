@@ -38,7 +38,7 @@ public class EnzymeFactory {
      * The name of the enzymes factory back-up file. The version number follows
      * the one of utilities.
      */
-    private static final String SERIALIZATION_FILE_NAME = "enzymeFactory-5.0.4-beta.json";
+    private static final String SERIALIZATION_FILE_NAME = "enzymeFactory-5.0.0.json";
 
     /**
      * The factory constructor.

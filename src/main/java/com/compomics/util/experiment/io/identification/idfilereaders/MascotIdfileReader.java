@@ -343,7 +343,7 @@ public class MascotIdfileReader implements IdfileReader {
             if ("title".equals(parts[0])) {
 
                 int specNum = Integer.parseInt(state.substring(5, state.length()));
-                String spectrumTitle = URLDecoder.decode(parts[1], "utf8");
+                String spectrumTitle = URLDecoder.decode(parts[1].trim(), "utf8");
                 SpectrumMatch spectrumMatch = allMatches.get(specNum);
 
                 if (spectrumMatch != null) {

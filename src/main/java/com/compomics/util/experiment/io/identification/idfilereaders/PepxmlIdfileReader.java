@@ -18,6 +18,7 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -508,7 +509,8 @@ public class PepxmlIdfileReader implements IdfileReader {
                     throw new IllegalArgumentException("An error occurred while parsing index " + value + ". Integer expected.");
                 }
             } else if (name.equals("spectrumNativeID")) {
-                spectrumNativeID = parser.getAttributeValue(i);
+                spectrumNativeID = parser.getAttributeValue(i).trim();
+                spectrumNativeID = URLDecoder.decode(spectrumNativeID, "utf-8");
             }
         }
 

@@ -80,7 +80,7 @@ public class MgfFileUtils {
                     } else if (line.startsWith("TITLE")) {
                         currentSpectrum += line + lineBreak;
 
-                        String title = line.substring(line.indexOf('=') + 1);
+                        String title = line.substring(line.indexOf('=') + 1).trim();
 
                         try {
                             title = URLDecoder.decode(title, "utf-8");
@@ -184,7 +184,7 @@ public class MgfFileUtils {
                     } else if (line.startsWith("TITLE")) {
                         currentSpectrum += line + lineBreak;
 
-                        title = line.substring(line.indexOf('=') + 1);
+                        title = line.substring(line.indexOf('=') + 1).trim();
 
                         try {
                             title = URLDecoder.decode(title, "utf-8");
@@ -492,7 +492,7 @@ public class MgfFileUtils {
                             //waitingHandler.setSecondaryProgressCounter((int) (br.getFilePointer() / progressUnit)); // @TODO: use the waitingHandler??
                         }
 
-                        String originalTitle = line.substring(line.indexOf('=') + 1);
+                        String originalTitle = line.substring(line.indexOf('=') + 1).trim();
 
                         try {
                             originalTitle = URLDecoder.decode(originalTitle, "utf-8");

@@ -974,7 +974,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
 
             if (accession != null && name != null && value != null) {
                 if (accession.equalsIgnoreCase("MS:1000796") || name.equalsIgnoreCase("spectrum title")) {
-                    spectrumTitle = value;
+                    spectrumTitle = value.trim();
                     // remove any html from the title
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
                 }

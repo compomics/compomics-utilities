@@ -81,7 +81,7 @@ public class MgfFileIterator implements MsFileIterator {
 
             } else if (line.startsWith("TITLE")) {
 
-                spectrumTitle = line.substring(line.indexOf('=') + 1);
+                spectrumTitle = line.substring(line.indexOf('=') + 1).trim();
 
                 try {
 

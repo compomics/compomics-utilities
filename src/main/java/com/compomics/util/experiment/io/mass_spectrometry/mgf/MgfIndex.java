@@ -532,7 +532,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
                 intensityList = new ArrayList<>();
             } else if (line.startsWith("TITLE")) {
                 insideSpectrum = true;
-                spectrumTitle = line.substring(line.indexOf('=') + 1);
+                spectrumTitle = line.substring(line.indexOf('=') + 1).trim();
                 try {
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
                 } catch (UnsupportedEncodingException e) {

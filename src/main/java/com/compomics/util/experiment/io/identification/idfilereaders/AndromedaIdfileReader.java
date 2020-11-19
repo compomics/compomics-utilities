@@ -107,7 +107,7 @@ public class AndromedaIdfileReader implements IdfileReader {
                     if (!firstSpectrum) {
                         firstSpectrum = true;
                     }
-                    title = line.substring(1);
+                    title = line.substring(1).trim();
                     // remove any html from the title
                     title = URLDecoder.decode(title, "utf-8");
                     spectrumMatch = null;

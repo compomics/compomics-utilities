@@ -240,7 +240,7 @@ public class CossIdfileReader implements IdfileReader {
 
                     // get spectrum file name and title
                     String spectrumFileName = elements[fileIndex];
-                    String spectrumTitle = elements[titleIndex];
+                    String spectrumTitle = elements[titleIndex].trim();
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8"); // remove any html from the title
 
                     // set up the yet empty spectrum match, or add to the current match

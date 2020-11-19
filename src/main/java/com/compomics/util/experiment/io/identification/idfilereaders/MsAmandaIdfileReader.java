@@ -204,7 +204,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
 
                 if (!line.trim().isEmpty()) { // @TODO: make this more robust?
                     //String scanNumber = elements[scanNumberIndex]; // not currently used
-                    String spectrumTitle = elements[titleIndex];
+                    String spectrumTitle = elements[titleIndex].trim();
                     String peptideSequence = elements[sequenceIndex].toUpperCase();
                     String modifications = elements[modificationsIndex].trim();
                     //String proteinAccessions = elements[proteinAccessionsIndex]; // not currently used

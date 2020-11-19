@@ -118,7 +118,7 @@ public class IndexedMgfReader {
                     }
                 } else if (line.startsWith("TITLE")) {
 
-                    title = line.substring(line.indexOf('=') + 1);
+                    title = line.substring(line.indexOf('=') + 1).trim();
 
                     try {
                         title = URLDecoder.decode(title, "utf-8");
@@ -310,7 +310,7 @@ public class IndexedMgfReader {
                 intensityList = new ArrayList<>();
             } else if (line.startsWith("TITLE")) {
                 insideSpectrum = true;
-                spectrumTitle = line.substring(line.indexOf('=') + 1);
+                spectrumTitle = line.substring(line.indexOf('=') + 1).trim();
                 try {
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
                 } catch (UnsupportedEncodingException e) {
@@ -489,7 +489,7 @@ public class IndexedMgfReader {
             }
 
             if (line.startsWith("TITLE")) {
-                title = line.substring(line.indexOf("=") + 1);
+                title = line.substring(line.indexOf("=") + 1).trim();
                 try {
                     title = URLDecoder.decode(title, "utf-8");
                 } catch (UnsupportedEncodingException e) {

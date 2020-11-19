@@ -200,7 +200,7 @@ public class OnyaseIdfileReader implements IdfileReader {
             if (!line.startsWith("#")) {
             
                 String[] lineSplit = line.split(separatorString);
-                String spectrumTitle = lineSplit[0];
+                String spectrumTitle = lineSplit[0].trim();
                 spectrumTitle = URLDecoder.decode(spectrumTitle, encoding);
                 SpectrumMatch spectrumMatch = spectrumMatchesMap.get(spectrumTitle);
                 

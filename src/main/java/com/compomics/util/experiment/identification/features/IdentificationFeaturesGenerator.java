@@ -215,7 +215,11 @@ public class IdentificationFeaturesGenerator {
                 .sorted()
                 .toArray();
 
-        setMassErrorDistribution(spectrumFile, precursorMzDeviations);
+        if (precursorMzDeviations.length == 0) {
+            massErrorDistribution.put(spectrumFile, new NonSymmetricalNormalDistribution(0, 0, 0));
+        } else {
+            setMassErrorDistribution(spectrumFile, precursorMzDeviations);
+        }  
 
     }
 

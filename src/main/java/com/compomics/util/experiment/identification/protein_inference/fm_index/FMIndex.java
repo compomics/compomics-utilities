@@ -68,7 +68,7 @@ import java.util.stream.Collectors;
  */
 public class FMIndex extends ExperimentObject implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
     /**
-     * FMIndex version number
+     * FMIndex version number.
      */
     private static final String fmIndexVersionNumber = "v1.0.0";
     /**

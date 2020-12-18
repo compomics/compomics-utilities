@@ -28,7 +28,6 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.xml.stream.XMLStreamException;
 import static com.compomics.software.autoupdater.DownloadLatestZipFromRepo.downloadLatestZipFromRepo;
-import java.nio.file.Paths;
 
 /**
  * A general wrapper for compomics tools. All tools shall contain a
@@ -38,6 +37,7 @@ import java.nio.file.Paths;
  * @author Harald Barsnes
  * @author Marc Vaudel
  * @author Davy Maddelein
+ * @author Carlos Horro
  */
 public class CompomicsWrapper {
 
@@ -663,39 +663,46 @@ public class CompomicsWrapper {
 
         return update;
     }
-    
+
     /**
-     * Check if the application with name condaAppName is running into a Conda environment.
-     * @param condaAppName name of the executable into the Conda environment.
-     * @return true if condaAppName is running into a Conda environment, otherwise it is false.
+     * Check if the application with name condaAppName is running in a Conda
+     * environment.
+     *
+     * @param condaAppName name of the executable in the Conda environment
+     * @return true if condaAppName is running in a Conda environment
      */
-    public static boolean appRunningIntoConda(String condaAppName){
+    public static boolean appRunningIntoConda(String condaAppName) {
+
         String someCondaEnvironmentActivated = System.getenv().get("CONDA_DEFAULT_ENV");
         boolean running = false;
-        if (someCondaEnvironmentActivated != null){
+
+        if (someCondaEnvironmentActivated != null) {
+
             ProcessBuilder processBuilder = new ProcessBuilder();
 
             // bash is only available in Linux and Mac, but, as Bioconda itself
-            // does not support Windows, returning false in windows is adequate too.
-            processBuilder.command("bash", "-c", "which "+condaAppName);
+            // does not support Windows, returning false in windows is adequate too
+            processBuilder.command("bash", "-c", "which " + condaAppName);
+
             try {
                 Process process = processBuilder.start();
-                // which returns 0 only if condaAppName exists
                 int exitVal = process.waitFor();
+
+                // returns 0 only if condaAppName exists
                 if (exitVal == 0) {
                     running = true;
                 }
+
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-                
+
         }
+
         return running;
     }
-    
-         
 
     /**
      * Check if a newer version of the tool is available on GoogleCode, and

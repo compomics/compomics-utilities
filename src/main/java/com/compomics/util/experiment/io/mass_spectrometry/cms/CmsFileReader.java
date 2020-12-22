@@ -83,12 +83,11 @@ public class CmsFileReader implements SpectrumProvider {
      * the file
      */
     public CmsFileReader(
-            File file, 
+            File file,
             WaitingHandler waitingHandler
     ) throws FileNotFoundException, IOException {
 
         // @TODO: use the waiting handler
-        
         raf = new RandomAccessFile(file, "r");
 
         try {
@@ -181,18 +180,22 @@ public class CmsFileReader implements SpectrumProvider {
 
         mutex.release();
 
-        int uncompressedLength = nPeaks * 2 * Double.BYTES;
-
-        byte[] uncompressedSpectrum = uncompress(compressedSpectrum, uncompressedLength);
-        ByteBuffer byteBuffer = ByteBuffer.wrap(uncompressedSpectrum);
-
         double[] mz = new double[nPeaks];
         double[] intensity = new double[nPeaks];
 
-        for (int i = 0; i < nPeaks; i++) {
+        if (nPeaks > 0) {
 
-            mz[i] = byteBuffer.getDouble();
-            intensity[i] = byteBuffer.getDouble();
+            int uncompressedLength = nPeaks * 2 * Double.BYTES;
+
+            byte[] uncompressedSpectrum = uncompress(compressedSpectrum, uncompressedLength);
+            ByteBuffer byteBuffer = ByteBuffer.wrap(uncompressedSpectrum);
+
+            for (int i = 0; i < nPeaks; i++) {
+
+                mz[i] = byteBuffer.getDouble();
+                intensity[i] = byteBuffer.getDouble();
+
+            }
 
         }
 

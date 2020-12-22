@@ -102,74 +102,80 @@ public class CmsFileWriter implements AutoCloseable {
 
         int nPeaks = spectrum.mz.length;
 
-        // make sure that empty spectra are not indexed
-        // (as this results in an endless loop when compressing the data)
+        indexes.add((int) index);
+        titles.add(spectrumTitle);
+
+        Precursor precursor = spectrum.precursor;
+        double precursorMz = precursor == null ? Double.NaN : precursor.mz;
+        double precursorRt = precursor == null ? Double.NaN : precursor.rt;
+        double precursorIntensity = precursor == null ? Double.NaN : precursor.intensity;
+        int[] possibleCharges = precursor == null ? new int[0] : precursor.possibleCharges;
+
+        ByteBuffer buffer = ByteBuffer.allocate(2 * nPeaks * Double.BYTES);
+
+        for (int i = 0; i < nPeaks; i++) {
+
+            buffer.putDouble(spectrum.mz[i]);
+            buffer.putDouble(spectrum.intensity[i]);
+
+        }
+
+        TempByteArray compressedData;
+
+        // make sure that only non-empty spectra are compressed
         if (nPeaks > 0) {
 
-            indexes.add((int) index);
-            titles.add(spectrumTitle);
+            compressedData = compress(buffer.array());
 
-            Precursor precursor = spectrum.precursor;
-            double precursorMz = precursor == null ? Double.NaN : precursor.mz;
-            double precursorRt = precursor == null ? Double.NaN : precursor.rt;
-            double precursorIntensity = precursor == null ? Double.NaN : precursor.intensity;
-            int[] possibleCharges = precursor == null ? new int[0] : precursor.possibleCharges;
+        } else {
 
-            ByteBuffer buffer = ByteBuffer.allocate(2 * nPeaks * Double.BYTES);
-
-            for (int i = 0; i < nPeaks; i++) {
-
-                buffer.putDouble(spectrum.mz[i]);
-                buffer.putDouble(spectrum.intensity[i]);
-
-            }
-
-            TempByteArray compressedData = compress(buffer.array());
-
-            buffer = ByteBuffer.allocate(3 * Double.BYTES + (3 + possibleCharges.length) * Integer.BYTES + compressedData.length);
-            buffer
-                    .putDouble(precursorMz)
-                    .putDouble(precursorRt)
-                    .putDouble(precursorIntensity)
-                    .putInt(compressedData.length)
-                    .putInt(nPeaks)
-                    .put(compressedData.array, 0, compressedData.length)
-                    .putInt(possibleCharges.length);
-
-            for (int charge : possibleCharges) {
-
-                buffer.putInt(charge);
-
-            }
-
-            byte[] arrayToWrite = buffer.array();
-
-            raf.write(arrayToWrite, 0, arrayToWrite.length);
-
-            if (minMz > precursorMz) {
-
-                minMz = precursorMz;
-
-            }
-
-            if (maxMz < precursorMz) {
-
-                maxMz = precursorMz;
-
-            }
-
-            if (maxInt < precursorIntensity) {
-
-                maxInt = precursorIntensity;
-
-            }
-
-            if (maxRt < precursorRt) {
-
-                maxRt = precursorRt;
-
-            }
+            compressedData = new TempByteArray(buffer.array(), 0);
         }
+
+        buffer = ByteBuffer.allocate(3 * Double.BYTES + (3 + possibleCharges.length) * Integer.BYTES + compressedData.length);
+        buffer
+                .putDouble(precursorMz)
+                .putDouble(precursorRt)
+                .putDouble(precursorIntensity)
+                .putInt(compressedData.length)
+                .putInt(nPeaks)
+                .put(compressedData.array, 0, compressedData.length)
+                .putInt(possibleCharges.length);
+
+        for (int charge : possibleCharges) {
+
+            buffer.putInt(charge);
+
+        }
+
+        byte[] arrayToWrite = buffer.array();
+
+        raf.write(arrayToWrite, 0, arrayToWrite.length);
+
+        if (minMz > precursorMz) {
+
+            minMz = precursorMz;
+
+        }
+
+        if (maxMz < precursorMz) {
+
+            maxMz = precursorMz;
+
+        }
+
+        if (maxInt < precursorIntensity) {
+
+            maxInt = precursorIntensity;
+
+        }
+
+        if (maxRt < precursorRt) {
+
+            maxRt = precursorRt;
+
+        }
+
     }
 
     /**

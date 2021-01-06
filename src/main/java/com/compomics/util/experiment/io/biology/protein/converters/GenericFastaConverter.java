@@ -13,14 +13,9 @@ import java.io.IOException;
  * This converter writes a FASTA file with standardized headers.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class GenericFastaConverter {
-
-    /**
-     * Empty default constructor
-     */
-    public GenericFastaConverter() {
-    }
 
     /**
      * Appends decoy sequences to the provided FASTA file.
@@ -35,6 +30,10 @@ public class GenericFastaConverter {
      */
     public static void convertFile(File fastaIn, File fastaOut, WaitingHandler waitingHandler) throws IOException {
 
+        if (!fastaOut.getParentFile().exists()) {
+            fastaOut.getParentFile().mkdirs();
+        }
+        
         FastaIterator fastaIterator = new FastaIterator(fastaIn);
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(fastaOut))) {

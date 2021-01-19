@@ -8,8 +8,6 @@ import java.io.*;
 import java.util.*;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
-
-
 import java.sql.*;
 import java.util.Map.Entry;
 
@@ -88,10 +86,9 @@ public class ObjectsDB {
     public ObjectsDB(String path, String dbName, boolean overwrite) {
 
         if (debugInteractions) {
-
             System.out.println(System.currentTimeMillis() + " Creating database");
-
         }
+
         kryo = new Kryo();
         kryo.setRegistrationRequired(false);
 
@@ -206,7 +203,12 @@ public class ObjectsDB {
     public void insertObject(long objectKey, Object object) {
 
         if (debugInteractions) {
-            System.out.println(System.currentTimeMillis() + " Inserting single object " + object.getClass().getName() + ", key: " + objectKey);
+            System.out.println(System.currentTimeMillis()
+                    + " Inserting single object "
+                    + object.getClass().getName()
+                    + ", key: "
+                    + objectKey
+            );
         }
 
         if (object == null) {
@@ -322,7 +324,7 @@ public class ObjectsDB {
     }
 
     /**
-     * Loads objects from the database according to their unique key
+     * Loads objects from the database according to their unique key.
      *
      * @param objectKey the keys of the objects to load
      * @return object the object loaded from the database
@@ -335,8 +337,8 @@ public class ObjectsDB {
             PreparedStatement pstmt = connection.prepareStatement("SELECT class, data FROM data WHERE id = ?;");
             pstmt.setLong(1, objectKey);
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next()){
-             
+            if (rs.next()) {
+
                 ProteinMatch prmIn = null;
                 ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
                 Input input = new Input(bis);
@@ -344,7 +346,7 @@ public class ObjectsDB {
                 object = kryo.readObject(input, c);
                 input.close();
                 bis.close();
-                
+
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -421,17 +423,15 @@ public class ObjectsDB {
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return;
                 }
-                
+
                 ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
                 Input input = new Input(bis);
                 Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
                 input.close();
                 bis.close();
-                
+
                 long objectKey = rs.getLong("id");
-                
-                
-                
+
                 objectsNotInCache.put(objectKey, object);
             }
         } catch (Exception ex) {
@@ -584,19 +584,16 @@ public class ObjectsDB {
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return retrievingObjects;
                 }
-                
-                
+
                 ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
                 Input input = new Input(bis);
                 Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
                 input.close();
                 bis.close();
-                
-                
-                
+
                 long objectKey = rs.getLong("id");
-                
-                if (!objectInCache.contains(objectKey)){
+
+                if (!objectInCache.contains(objectKey)) {
                     objectsNotInCache.put(objectKey, object);
                 }
                 retrievingObjects.add(object);

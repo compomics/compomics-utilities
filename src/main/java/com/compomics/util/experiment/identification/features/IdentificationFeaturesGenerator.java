@@ -785,9 +785,9 @@ public class IdentificationFeaturesGenerator {
         return digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme
                 ? Arrays.stream(peptideKeys)
                         .filter(
-                                key -> ((PSParameter) (identification.getSpectrumMatch(key)).getUrParam(PSParameter.dummy)).getMatchValidationLevel().isValidated()
+                                key -> ((PSParameter) (identification.getPeptideMatch(key)).getUrParam(PSParameter.dummy)).getMatchValidationLevel().isValidated()
                                 && !PeptideUtils.isEnzymatic(
-                                        identification.getSpectrumMatch(key).getBestPeptideAssumption().getPeptide(),
+                                        identification.getPeptideMatch(key).getPeptide(),
                                         sequenceProvider,
                                         digestionPreferences.getEnzymes()
                                 )

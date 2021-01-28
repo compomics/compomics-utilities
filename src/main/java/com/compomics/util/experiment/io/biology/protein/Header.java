@@ -147,7 +147,24 @@ public class Header extends ExperimentObject implements Cloneable {
      * This variable holds a possible end index for the associated sequence.
      */
     private int iEnd = -1;
-
+    
+    /**
+     * Factory method that constructs a Header with only the rest information
+     * instead of parsing it.
+     *
+     * @param aFASTAHeader the String with the original FASTA header line.
+     * @return Header with the Header instance representing the given header.
+     * @throws StringIndexOutOfBoundsException thrown if issues occur during the
+     * parsing
+     */
+    public static Header createRestHeader(String aFASTAHeader) throws StringIndexOutOfBoundsException {
+        Header result = new Header();
+        
+        result.iRest = (aFASTAHeader != null) ? aFASTAHeader.substring(1) : "";
+        
+        return result;
+    }
+    
     /**
      * Factory method that constructs a Header instance based on a FASTA header
      * line.

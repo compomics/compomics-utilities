@@ -43,7 +43,7 @@ public class PeptideMapperCLI {
     
     public static void printHelp(){
         System.out.println("PeptideMapping: a tool to map peptides or sequence tags against a given proteome.");
-        System.out.println("usage: PeptideMapping -[p|t|c] input-fasta input-peptide/tag-csv output-csv [additonal options]");
+        System.out.println("usage: PeptideMapping -[p|t|x] input-fasta input-peptide/tag-csv output-csv [additonal options]");
         System.out.println();
         System.out.println("Options are:");
         System.out.println("\t-p\tpeptide mapping");
@@ -360,6 +360,9 @@ public class PeptideMapperCLI {
 
         }
         if (!customParameters) {
+            identificationParameters.setSearchParameters(new SearchParameters());
+            identificationParameters.setPeptideVariantsParameters(new PeptideVariantsParameters());
+            identificationParameters.setSequenceMatchingParameters(new SequenceMatchingParameters());
             identificationParameters.getSearchParameters().setModificationParameters(new ModificationParameters());
             identificationParameters.getSearchParameters().setFragmentIonAccuracy(0.02);
             identificationParameters.getSearchParameters().setFragmentAccuracyType(SearchParameters.MassAccuracyType.DA);

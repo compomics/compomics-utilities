@@ -54,4 +54,14 @@
                 <skipTests>true</skipTests>
             </properties>
         </action>
+        <action>
+            <actionName>CUSTOM-skip</actionName>
+            <displayName>skip</displayName>
+            <goals>
+                <goal>skip</goal>
+            </goals>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+        </action>
     </actions>

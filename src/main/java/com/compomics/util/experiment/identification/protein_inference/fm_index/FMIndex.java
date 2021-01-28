@@ -58,6 +58,11 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.util.Map.Entry;
+import java.util.concurrent.Semaphore;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -70,7 +75,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
     /**
      * FMIndex version number.
      */
-    private static final String fmIndexVersionNumber = "v1.0.0";
+    private static final String fmIndexVersionNumber = "v1.1.0";
     /**
      * Maximal number of PTMs per peptide.
      */
@@ -98,7 +103,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
     /**
      * Byte size of index chuck.
      */
-    private final int indexChunkSize = 100 * 1024 * 1024;
+    private final int indexChunkSize = 20 * 1024 * 1024;
     /**
      * Sampled suffix array.
      */
@@ -542,19 +547,26 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
      * @return allocated bytes
      */
     public long getAllocatedBytes() {
-        long bytes = 0;
+        long bytes = indexStringLengths.size() * 4;
         for (int indexPart = 0; indexPart < indexParts; ++indexPart) {
             bytes += occurrenceTablesPrimary.get(indexPart).getAllocatedBytes() + occurrenceTablesReversed.get(indexPart).getAllocatedBytes() + suffixArraysPrimary.get(indexPart).length * 4; // four bytes per int, hopefully
 
-            String[] accessionsPart = accessions.get(indexPart);
-            for (int j = 0; j < accessionsPart.length; ++j) {
-                bytes += accessionsPart[j].length() * 2; // two bytes per character, don't ask me, Java.
+            bytes += lessTablesPrimary.get(indexPart).length * 4;
+            bytes += lessTablesReversed.get(indexPart).length * 4;
+            bytes += boundaries.get(indexPart).length * 4;
+            
+            for (String accession : accessions.get(indexPart)) {
+                bytes += accession.length() * 2; // two bytes per character, don't ask me, Java.
             }
-            for (String accKey : accessionMetaData.keySet()) {
-                bytes += accKey.length() * 2;
-                bytes += accessionMetaData.get(accKey).getHeaderAsString().length() * 2;
-            }
-            bytes += suffixArraysPrimary.get(indexPart).length * 4;
+        }
+        for (String decoy : decoyAccessions){
+            bytes += decoy.length() * 2;
+        }
+
+        
+        for (Entry<String, AccessionMetaData> accEntry : accessionMetaData.entrySet()) {
+            bytes += accEntry.getKey().length() * 2;
+            bytes += accEntry.getValue().getHeaderAsString().length() * 2;
         }
         return bytes;
     }
@@ -573,7 +585,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
      * @throws IOException exception thrown if an error occurs while iterating
      * the FASTA file.
      */
-    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, PeptideVariantsParameters peptideVariantsPreferences, SearchParameters searchParameters) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
+    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, PeptideVariantsParameters peptideVariantsPreferences, SearchParameters searchParameters) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException, InterruptedException {
         if (searchParameters != null) {
             massTolerance = searchParameters.getFragmentIonAccuracy();
             massAccuracyType = searchParameters.getFragmentAccuracyType();
@@ -600,7 +612,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
      * @throws IOException exception thrown if an error occurs while iterating
      * the FASTA file
      */
-    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, IdentificationParameters identificationParameters) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
+    public FMIndex(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, IdentificationParameters identificationParameters) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException, InterruptedException {
         init(fastaFile, fastaParameters, waitingHandler, displayProgress, identificationParameters.getSearchParameters(), identificationParameters.getPeptideVariantsParameters(), identificationParameters.getSequenceMatchingParameters());
     }
 
@@ -621,7 +633,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
      * @throws IOException exception thrown if an error occurs while iterating
      * the FASTA file.
      */
-    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, SearchParameters searchParameters, PeptideVariantsParameters peptideVariantsPreferences, SequenceMatchingParameters sequenceMatchingParameters) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
+    private void init(File fastaFile, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, SearchParameters searchParameters, PeptideVariantsParameters peptideVariantsPreferences, SequenceMatchingParameters sequenceMatchingParameters) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException, InterruptedException {
 
         // load all variant preferences
         maxNumberVariants = peptideVariantsPreferences.getnVariants();
@@ -1091,35 +1103,8 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
         for (int i = 0; i < sortedAas.length; ++i) {
             alphabet[sortedAas[i] >> 6] |= 1L << (sortedAas[i] & 63);
         }
-
-        // compute a checksum of the fasta file
-        /*
-        final int Buffer_size = 16 * 1024;
-        long fastaCRC = 0;
-        try (FileInputStream in = new FileInputStream(fastaFile);) {
-            FileChannel channel = in.getChannel();
-            CRC32 crc = new CRC32();
-            int length = (int) channel.size();
-            MappedByteBuffer mb = channel.map(FileChannel.MapMode.READ_ONLY, 0, length);
-            byte[] bytes = new byte[Buffer_size];
-            int nGet;
-            while (mb.hasRemaining()) {
-                nGet = Math.min(mb.remaining(), Buffer_size);
-                mb.get(bytes, 0, nGet);
-                crc.update(bytes, 0, nGet);
-            }
-            fastaCRC = crc.getValue();
-            if (fastaParameters != null) {
-                fastaCRC += ExperimentObject.asLong(fastaParameters.getShortDescription());
-                fastaCRC += ExperimentObject.asLong(fastaParameters.getTargetDecoyFileNameSuffix());
-                fastaCRC += ExperimentObject.asLong(fastaParameters.getDecoyFlag());
-                fastaCRC += fastaParameters.isDecoySuffix() ? 1 : 0;
-                fastaCRC += fastaParameters.isTargetDecoy() ? 8 : 0;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        */
+        
+        
 
         // check if fasta file has an FMIndex
         String fastaExtension = IoUtil.getExtension(fastaFile);
@@ -1157,45 +1142,155 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
             
         }
         if (loadFasta) {
+            int potentialParts = 1 + (int)((double)fastaFile.length() / (double)indexChunkSize);
+            int maxProgressBar = 11 * potentialParts;
+
+            
+            if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
+                waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+                waitingHandler.setSecondaryProgressCounter(0);
+                waitingHandler.setMaxSecondaryProgressCounter(maxProgressBar);
+            }
+            
             // reading all proteins in a first pass to get information about number and total length
-            ArrayList<Integer> tmpLengths = new ArrayList<>();
-            ArrayList<Integer> tmpProteins = new ArrayList<>();
-            long ticker = indexChunkSize;
+            ArrayList<Protein> proteins = new ArrayList<>();
+            ArrayList<Header> headers = new ArrayList<>();
 
             int indexStringLength = 1;
-            int numProteins = 0;
-            ProteinIterator pi = new FastaIterator(fastaFile);
+            FastaIterator pi = new FastaIterator(fastaFile);
+            int nCores = Runtime.getRuntime().availableProcessors();
+            Object activeThreads = new Object();
+            LinkedList<Thread> threads = new LinkedList<>();
             Protein protein;
+            
             while ((protein = pi.getNextProtein()) != null) {
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return;
                 }
                 int proteinLen = protein.getLength();
+                proteins.add(protein);
+                headers.add(((FastaIterator)pi).getLastHeader());
                 indexStringLength += proteinLen;
-                ++numProteins;
-                if (indexStringLength > ticker) {
-                    tmpLengths.add(indexStringLength);
-                    tmpProteins.add(numProteins);
+                if (indexStringLength > indexChunkSize) {
+                    synchronized(activeThreads){
+                        indexStringLengths.add(null);
+                        boundaries.add(null);
+                        accessions.add(null);
+                        suffixArraysPrimary.add(null);
+                        occurrenceTablesPrimary.add(null);
+                        occurrenceTablesReversed.add(null);
+                        lessTablesPrimary.add(null);
+                        lessTablesReversed.add(null);
+                    }
+                    
+                    Thread t = new Thread(new Runnable() {
+                        
+                        private FMIndex fm = null;
+                        private int indexParts = 0;
+                        private ArrayList<Protein> proteins = null;
+                        private ArrayList<Header> headers = null;
+                        private int indexStringLength = 0;
+                        private long[] alphabet = null;
+                        private FastaParameters fastaParameters = null;
+                        private WaitingHandler waitingHandler = null;
+                        private boolean displayProgress = false;
+                        private Object activeThreads = null;
+                        
+                        public Runnable init(FMIndex fm, int indexParts, ArrayList<Protein> proteins, ArrayList<Header> headers, int indexStringLength, long[] alphabet, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, Object activeThreads){
+                            this.fm = fm;
+                            this.indexParts = indexParts;
+                            this.proteins = proteins;
+                            this.headers = headers;
+                            this.indexStringLength = indexStringLength;
+                            this.alphabet = alphabet;
+                            this.fastaParameters = fastaParameters;
+                            this.waitingHandler = waitingHandler;
+                            this.displayProgress = displayProgress;
+                            this.activeThreads = activeThreads;
+                            return this;
+                        }
+                        
+                        @Override
+                        public void run(){
+                            try {
+                                fm.addDataToIndex(indexParts, proteins, headers, indexStringLength, alphabet, fastaParameters, waitingHandler, displayProgress, activeThreads);
+                            } catch (Exception ex) {
+                                Logger.getLogger(FMIndex.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }.init(this, indexParts, proteins, headers, indexStringLength, alphabet, fastaParameters, waitingHandler, displayProgress, activeThreads));
+                    t.start();
+                    threads.addLast(t);
+                    
+                    indexParts += 1;
+                    proteins = new ArrayList<>();
+                    headers = new ArrayList<>();
+                    
                     indexStringLength = 1;
-                    numProteins = 0;
                 }
+                
+                while (threads.size() >= nCores){
+                    Thread t = threads.pollFirst();
+                    t.join();
+                }
+                
             }
-            tmpLengths.add(indexStringLength);
-            tmpProteins.add(numProteins);
-
-            int maxProgressBar = 11 * tmpLengths.size();
-
-            if (waitingHandler != null && displayProgress && !waitingHandler.isRunCanceled()) {
-                waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-                waitingHandler.setMaxSecondaryProgressCounter(maxProgressBar);
-                waitingHandler.setSecondaryProgressCounter(0);
+            
+            synchronized(activeThreads){
+                indexStringLengths.add(null);
+                boundaries.add(null);
+                accessions.add(null);
+                suffixArraysPrimary.add(null);
+                occurrenceTablesPrimary.add(null);
+                occurrenceTablesReversed.add(null);
+                lessTablesPrimary.add(null);
+                lessTablesReversed.add(null);
             }
+            
+            Thread t = new Thread(new Runnable() {
+                        
+                private FMIndex fm = null;
+                private int indexParts = 0;
+                private ArrayList<Protein> proteins = null;
+                private ArrayList<Header> headers = null;
+                private int indexStringLength = 0;
+                private long[] alphabet = null;
+                private FastaParameters fastaParameters = null;
+                private WaitingHandler waitingHandler = null;
+                private boolean displayProgress = false;
+                private Object activeThreads = null;
 
-            pi = new FastaIterator(fastaFile);
-            for (int i = 0; i < tmpLengths.size(); ++i) {
-                addDataToIndex(pi, tmpLengths.get(i), tmpProteins.get(i), alphabet, fastaParameters, waitingHandler, displayProgress);
+                public Runnable init(FMIndex fm, int indexParts, ArrayList<Protein> proteins, ArrayList<Header> headers, int indexStringLength, long[] alphabet, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, Object activeThreads){
+                    this.fm = fm;
+                    this.indexParts = indexParts;
+                    this.proteins = proteins;
+                    this.headers = headers;
+                    this.indexStringLength = indexStringLength;
+                    this.alphabet = alphabet;
+                    this.fastaParameters = fastaParameters;
+                    this.waitingHandler = waitingHandler;
+                    this.displayProgress = displayProgress;
+                    this.activeThreads = activeThreads;
+                    return this;
+                }
+
+                @Override
+                public void run(){
+                    try {
+                        fm.addDataToIndex(indexParts, proteins, headers, indexStringLength, alphabet, fastaParameters, waitingHandler, displayProgress, activeThreads);
+                    } catch (Exception ex) {
+                        Logger.getLogger(FMIndex.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }.init(this, indexParts, proteins, headers, indexStringLength, alphabet, fastaParameters, waitingHandler, displayProgress, activeThreads));
+            t.start();
+            threads.add(t);
+            indexParts += 1;
+
+            while (!threads.isEmpty()){
+                Thread tt = threads.pollFirst();
+                tt.join();
             }
-
         }
 
         //int lookupLength = ((int) ((LOOKUP_MAX_MASS + computeMassTolerance(massTolerance, LOOKUP_MAX_MASS)) * lookupMultiplier));
@@ -1374,11 +1469,10 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
      * @throws IOException exception thrown if an error occurs while iterating
      * the FASTA file.
      */
-    void addDataToIndex(ProteinIterator pi, int indexStringLength, int numProteins, long[] alphabet, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException {
+    void addDataToIndex(int indexPart, ArrayList<Protein> proteins, ArrayList<Header> headers, int indexStringLength, long[] alphabet, FastaParameters fastaParameters, WaitingHandler waitingHandler, boolean displayProgress, Object activeThreads) throws IOException, OutOfMemoryError, RuntimeException, IllegalArgumentException, InterruptedException {
 
-        indexParts += 1;
+        int numProteins = proteins.size();
         indexStringLength += numProteins + 1; // delimiters between protein sequences + sentinal
-        indexStringLengths.add(indexStringLength);
 
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
@@ -1389,62 +1483,69 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
         T[indexStringLength - 1] = (byte) SENTINEL; // adding the sentinal
 
         int[] bndaries = new int[numProteins + 1];
-        boundaries.add(bndaries);
         String[] accssions = new String[numProteins];
-        int indexPart = accessions.size();
-        accessions.add(accssions);
-        boundaries.get(0)[0] = 1;
 
         // reading proteins in a second pass to store their amino acid sequences and their accession numbers
         int tmpN = 0;
         int tmpNumProtein = 0;
         HashMap<String, Integer> accessionEndings = new HashMap<>();
+        
+        synchronized(activeThreads){
+            indexStringLengths.set(indexPart, indexStringLength);
+            boundaries.set(indexPart, bndaries);
+            accessions.set(indexPart, accssions);
+            boundaries.get(0)[0] = 1;
+        
+        
+            for (int i = 0; i < numProteins; ++i) {
 
-        for (int i = 0; i < numProteins; ++i) {
-
-            if (waitingHandler != null && waitingHandler.isRunCanceled()) {
-                return;
-            }
-
-            Protein currentProtein = pi.getNextProtein();
-
-            if (currentProtein == null) {
-                throw new IllegalArgumentException("More sequences from database requested than contained.");
-            }
-
-            String accession = currentProtein.getAccession();
-            Header headerObject = ((FastaIterator) pi).getLastHeader();
-            String header = (headerObject.getRawHeader().charAt(0) == '>' ? headerObject.getRawHeader().substring(1) : headerObject.getRawHeader());
-            AccessionMetaData accMD = new AccessionMetaData(header);
-            accessionMetaData.put(accession, accMD);
-
-            if (accession == null || accession.equals("")) {
-                accession = header;
-            }
-
-            if (fastaParameters != null && ProteinUtils.isDecoy(accession, fastaParameters)) {
-
-                decoyAccessions.add(accession);
-
-            }
-
-            int proteinLen = currentProtein.getLength();
-
-            T[tmpN++] = (byte) DELIMITER; // adding the delimiters
-            accMD.trueBeginning = tmpN;
-            accessionEndings.put(accession, tmpN + proteinLen);
-
-            for (char c : currentProtein.getSequence().toCharArray()) {
-                if (!(((int) 'A' <= c && c <= (int) 'Z') || ((int) 'a' <= c && c <= (int) 'z'))) {
-                    throw new IllegalArgumentException("Protein sequence of protein '" + header + "' contains invalid character: '" + Character.toString(c) + "'.");
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
+                    return;
                 }
+
+                Protein currentProtein = proteins.get(i);
+
+                if (currentProtein == null) {
+                    throw new IllegalArgumentException("More sequences from database requested than contained.");
+                }
+
+                String accession = currentProtein.getAccession();
+                Header headerObject = headers.get(i);
+                //Header headerObject = ((FastaIterator) pi).getLastHeader();
+                String header = (headerObject.getRawHeader().charAt(0) == '>' ? headerObject.getRawHeader().substring(1) : headerObject.getRawHeader());
+                AccessionMetaData accMD = new AccessionMetaData(header);
+
+
+                accessionMetaData.put(accession, accMD);
+
+                if (accession == null || accession.equals("")) {
+                    accession = header;
+                }
+
+                if (fastaParameters != null && ProteinUtils.isDecoy(accession, fastaParameters)) {
+
+                    decoyAccessions.add(accession);
+
+                }
+
+                int proteinLen = currentProtein.getLength();
+
+                T[tmpN++] = (byte) DELIMITER; // adding the delimiters
+                accMD.trueBeginning = tmpN;
+                accessionEndings.put(accession, tmpN + proteinLen);
+
+                for (char c : currentProtein.getSequence().toCharArray()) {
+                    if (!(((int) 'A' <= c && c <= (int) 'Z') || ((int) 'a' <= c && c <= (int) 'z'))) {
+                        throw new IllegalArgumentException("Protein sequence of protein '" + header + "' contains invalid character: '" + Character.toString(c) + "'.");
+                    }
+                }
+
+                System.arraycopy(currentProtein.getSequence().toUpperCase().getBytes(), 0, T, tmpN, proteinLen);
+                tmpN += proteinLen;
+                accssions[tmpNumProtein++] = accession;
+                bndaries[tmpNumProtein] = tmpN + 1;
+
             }
-
-            System.arraycopy(currentProtein.getSequence().toUpperCase().getBytes(), 0, T, tmpN, proteinLen);
-            tmpN += proteinLen;
-            accssions[tmpNumProtein++] = accession;
-            bndaries[tmpNumProtein] = tmpN + 1;
-
         }
 
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
@@ -1466,17 +1567,20 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
             waitingHandler.increaseSecondaryProgressCounter();
         }
         T_int = null;
+        
 
         // compute end positions of all accessions in the index
         int[] inversedSampledSuffixArray = new int[indexStringLength];
         for (int i = 0; i < indexStringLength; ++i) {
             inversedSampledSuffixArray[suffixArrayPrimary[i]] = i;
         }
-        for (String accession : accessionEndings.keySet()) {
-            int truePos = accessionEndings.get(accession);
-            AccessionMetaData accessionMeta = accessionMetaData.get(accession);
-            accessionMeta.index = inversedSampledSuffixArray[truePos];
-            accessionMeta.indexPart = indexPart;
+        synchronized(activeThreads){
+            for (String accession : accessionEndings.keySet()) {
+                int truePos = accessionEndings.get(accession);
+                AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+                accessionMeta.index = inversedSampledSuffixArray[truePos];
+                accessionMeta.indexPart = indexPart;
+            }
         }
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
@@ -1501,7 +1605,10 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
             }
             sampledSuffixArray[sampledIndex++] = suffixArrayPrimary[i];
         }
-        suffixArraysPrimary.add(sampledSuffixArray);
+        
+        synchronized(activeThreads){
+            suffixArraysPrimary.set(indexPart, sampledSuffixArray);
+        }
 
         if (displayProgress && waitingHandler != null && !waitingHandler.isRunCanceled()) {
             waitingHandler.increaseSecondaryProgressCounter();
@@ -1551,11 +1658,15 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
             waitingHandler.increaseSecondaryProgressCounter();
         }
 
-        occurrenceTablesPrimary.add(occurrenceTablePrimary);
-        occurrenceTablesReversed.add(occurrenceTableReversed);
-        lessTablesPrimary.add(lessTablePrimary);
-        lessTablesReversed.add(lessTableReversed);
+        synchronized(activeThreads){
+            occurrenceTablesPrimary.set(indexPart, occurrenceTablePrimary);
+            occurrenceTablesReversed.set(indexPart, occurrenceTableReversed);
+            lessTablesPrimary.set(indexPart, lessTablePrimary);
+            lessTablesReversed.set(indexPart, lessTableReversed);
+        }
     }
+    
+    
 
     /**
      * Recursive function to compute all possible mass combinations up to a
@@ -5776,7 +5887,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
     public String getDescription(String accession) {
 
         AccessionMetaData accessionMeta = accessionMetaData.get(accession);
-        Header header = accessionMeta.getHeader();
+        Header header = Header.parseFromFASTA(accessionMeta.getHeaderAsString());
         return header.getDescription();
 
     }
@@ -5785,7 +5896,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
     public String getSimpleDescription(String accession) {
 
         AccessionMetaData accessionMeta = accessionMetaData.get(accession);
-        Header header = accessionMeta.getHeader();
+        Header header = Header.parseFromFASTA(accessionMeta.getHeaderAsString());
         return header.getSimpleProteinDescription();
 
     }
@@ -5794,7 +5905,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
     public ProteinDatabase getProteinDatabase(String accession) {
 
         AccessionMetaData accessionMeta = accessionMetaData.get(accession);
-        Header header = accessionMeta.getHeader();
+        Header header = Header.parseFromFASTA(accessionMeta.getHeaderAsString());
         return header.getDatabaseType();
 
     }
@@ -5803,7 +5914,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
     public String getGeneName(String accession) {
 
         AccessionMetaData accessionMeta = accessionMetaData.get(accession);
-        Header header = accessionMeta.getHeader();
+        Header header = Header.parseFromFASTA(accessionMeta.getHeaderAsString());
         return header.getGeneName();
 
     }
@@ -5812,7 +5923,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
     public String getTaxonomy(String accession) {
 
         AccessionMetaData accessionMeta = accessionMetaData.get(accession);
-        Header header = accessionMeta.getHeader();
+        Header header = Header.parseFromFASTA(accessionMeta.getHeaderAsString());
         return header.getTaxonomy();
 
     }
@@ -5821,7 +5932,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
     public Integer getProteinEvidence(String accession) {
 
         AccessionMetaData accessionMeta = accessionMetaData.get(accession);
-        Header header = accessionMeta.getHeader();
+        Header header = Header.parseFromFASTA(accessionMeta.getHeaderAsString());
         return header.getProteinEvidence();
 
     }

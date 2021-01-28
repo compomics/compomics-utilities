@@ -56,6 +56,10 @@ public class FastaIterator implements ProteinIterator {
      * Boolean indicating whether the end of the file has been reached.
      */
     private boolean endOfFileReached = false;
+    /**
+     * Boolean indicating whether parsing the header should be ignored.
+     */
+    private boolean ignoreHeaderCheck = false;
 
     /**
      * Constructor without sanity check.
@@ -67,7 +71,7 @@ public class FastaIterator implements ProteinIterator {
      */
     public FastaIterator(File fastaFile) throws FileNotFoundException {
 
-        this(fastaFile, false);
+        this(fastaFile, false, false);
 
     }
 
@@ -83,9 +87,26 @@ public class FastaIterator implements ProteinIterator {
      */
     public FastaIterator(File fastaFile, boolean sanityCheck) throws FileNotFoundException {
 
-        br = new BufferedReader(new FileReader(fastaFile));
+        br = new BufferedReader(new FileReader(fastaFile), 10 * 1024 * 1024);
         this.sanityCheck = sanityCheck;
+        this.ignoreHeaderCheck = false;
+    }
 
+    /**
+     * Constructor.
+     *
+     * @param fastaFile the FASTA file
+     * @param sanityCheck boolean indicating whether sanity check should be
+     * conducted
+     *
+     * @throws FileNotFoundException exception thrown if the file could not be
+     * found
+     */
+    public FastaIterator(File fastaFile, boolean sanityCheck, boolean ignoreHeaderCheck) throws FileNotFoundException {
+
+        br = new BufferedReader(new FileReader(fastaFile), 10 * 1024 * 1024);
+        this.sanityCheck = sanityCheck;
+        this.ignoreHeaderCheck = ignoreHeaderCheck;
     }
 
     @Override
@@ -110,8 +131,7 @@ public class FastaIterator implements ProteinIterator {
 
                 if (line.length() > 0) {
                     if (line.charAt(0) == '>') {
-
-                        nextHeader = Header.parseFromFASTA(line);
+                        nextHeader = ignoreHeaderCheck ? Header.createRestHeader(line) : Header.parseFromFASTA(line);
 
                         if (header != null) {
 

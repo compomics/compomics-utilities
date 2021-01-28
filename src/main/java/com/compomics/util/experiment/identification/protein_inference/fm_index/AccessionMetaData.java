@@ -16,10 +16,6 @@ public class AccessionMetaData implements Serializable {
      */
     private String headerAsString;
     /**
-     * The header
-     */
-    private Header header = null;
-    /**
      * The index.
      */
     int index;
@@ -48,7 +44,6 @@ public class AccessionMetaData implements Serializable {
         index = accessionMetaData.index;
         indexPart = accessionMetaData.indexPart;
         trueBeginning = accessionMetaData.trueBeginning;
-        header = null;
     }
 
     /**
@@ -73,21 +68,6 @@ public class AccessionMetaData implements Serializable {
         this.index = index;
         this.indexPart = indexPart;
         this.trueBeginning = beginning;
-    }
-
-    /**
-     * Returns the parsed header.
-     *
-     * @return the parsed header
-     */
-    public Header getHeader() {
-
-        if (header == null) {
-            header = Header.parseFromFASTA(headerAsString);
-
-        }
-
-        return header;
     }
 
     /**

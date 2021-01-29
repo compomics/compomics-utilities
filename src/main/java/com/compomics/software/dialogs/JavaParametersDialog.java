@@ -43,7 +43,13 @@ public class JavaParametersDialog extends javax.swing.JDialog {
      * @param welcomeDialog reference to the Welcome Dialog, can be null
      * @param modal if the dialog is to be modal or not
      */
-    public JavaParametersDialog(JFrame parent, JavaHomeOrMemoryDialogParent javaHomeOrMemoryDialogParent, JDialog welcomeDialog, String toolName, boolean modal) {
+    public JavaParametersDialog(
+            JFrame parent, 
+            JavaHomeOrMemoryDialogParent javaHomeOrMemoryDialogParent, 
+            JDialog welcomeDialog, 
+            String toolName, 
+            boolean modal
+    ) {
         super(parent, modal);
         this.frameParent = parent;
         this.javaHomeOrMemoryDialogParent = javaHomeOrMemoryDialogParent;
@@ -59,13 +65,15 @@ public class JavaParametersDialog extends javax.swing.JDialog {
      * Set up the GUI.
      */
     private void setUpGUI() {
+        
         String javaHome = System.getProperty("java.home") + File.separator + "bin" + File.separator;
         javaHomeLabel.setText("<html>" + javaHome + "&nbsp;&nbsp;&nbsp;<a href>Edit</a></u></html>");
 
         String javaVersion = System.getProperty("java.version");
         versionLabel.setText(javaVersion);
 
-        if (javaVersion.startsWith("1.5") || javaVersion.startsWith("1.6")) {
+        if (javaVersion.startsWith("1.5") || javaVersion.startsWith("1.6")
+                || javaVersion.startsWith("1.7") || javaVersion.startsWith("1.8")) {
             versionLabel.setForeground(Color.red);
             javaHomeLabel.setForeground(Color.red);
         }
@@ -80,7 +88,12 @@ public class JavaParametersDialog extends javax.swing.JDialog {
         try {
             UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
             int maxMemory = utilitiesUserPreferences.getMemoryParameter();
-            memoryLabel.setText("<html>" + Util.roundDouble(maxMemory * 0.000976563, 1) + " GB " + "&nbsp;&nbsp;&nbsp;<a href>Edit</a></u></html>");
+            memoryLabel.setText(
+                    "<html>"
+                    + Util.roundDouble(maxMemory * 0.000976563, 1)
+                    + " GB "
+                    + "&nbsp;&nbsp;&nbsp;<a href>Edit</a></u></html>"
+            );
 
             if (maxMemory < 4000) {
                 memoryLabel.setForeground(Color.red);
@@ -140,7 +153,7 @@ public class JavaParametersDialog extends javax.swing.JDialog {
         });
 
         versionRecommendationLabel1.setFont(versionRecommendationLabel1.getFont().deriveFont((versionRecommendationLabel1.getFont().getStyle() | java.awt.Font.ITALIC)));
-        versionRecommendationLabel1.setText("Recommended: Java 1.7 or newer");
+        versionRecommendationLabel1.setText("Required: Java 1.9 or newer");
 
         javax.swing.GroupLayout javaHomePanelLayout = new javax.swing.GroupLayout(javaHomePanel);
         javaHomePanel.setLayout(javaHomePanelLayout);
@@ -149,9 +162,9 @@ public class JavaParametersDialog extends javax.swing.JDialog {
             .addGroup(javaHomePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(javaHomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(versionRecommendationLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         javaHomePanelLayout.setVerticalGroup(
             javaHomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -169,7 +182,7 @@ public class JavaParametersDialog extends javax.swing.JDialog {
         versionLabel.setText("1.7");
 
         versionRecommendationLabel2.setFont(versionRecommendationLabel2.getFont().deriveFont((versionRecommendationLabel2.getFont().getStyle() | java.awt.Font.ITALIC)));
-        versionRecommendationLabel2.setText("Recommended: Java 1.7 or newer");
+        versionRecommendationLabel2.setText("Required: Java 1.9 or newer");
 
         javax.swing.GroupLayout versionPanelLayout = new javax.swing.GroupLayout(versionPanel);
         versionPanel.setLayout(versionPanelLayout);
@@ -178,9 +191,9 @@ public class JavaParametersDialog extends javax.swing.JDialog {
             .addGroup(versionPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(versionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(versionRecommendationLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         versionPanelLayout.setVerticalGroup(
             versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -188,7 +201,7 @@ public class JavaParametersDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(versionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(versionLabel)
-                    .addComponent(versionRecommendationLabel2))
+                    .addComponent(versionRecommendationLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 

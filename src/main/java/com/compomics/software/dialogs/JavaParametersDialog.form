@@ -101,9 +101,9 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="javaHomeLabel" min="-2" pref="355" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="versionRecommendationLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
+                      <Component id="versionRecommendationLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -139,7 +139,7 @@
                     <Font component="versionRecommendationLabel1" italic="true" property="font" relativeSize="true" size="0"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Recommended: Java 1.7 or newer"/>
+                <Property name="text" type="java.lang.String" value="Required: Java 1.9 or newer"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -160,9 +160,9 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="versionLabel" min="-2" pref="355" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="versionRecommendationLabel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
+                      <Component id="versionRecommendationLabel2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -172,7 +172,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="versionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="versionRecommendationLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="versionRecommendationLabel2" alignment="3" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -192,7 +192,7 @@
                     <Font component="versionRecommendationLabel2" italic="true" property="font" relativeSize="true" size="0"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Recommended: Java 1.7 or newer"/>
+                <Property name="text" type="java.lang.String" value="Required: Java 1.9 or newer"/>
               </Properties>
             </Component>
           </SubComponents>

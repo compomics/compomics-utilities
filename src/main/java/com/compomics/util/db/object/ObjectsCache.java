@@ -8,13 +8,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
 import java.io.ByteArrayOutputStream;
 import static java.lang.System.out;
 import java.lang.reflect.Field;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.nustaq.serialization.FSTConfiguration;
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
  * single cache can be used by different databases. This ought not to be
@@ -34,7 +33,7 @@ public class ObjectsCache {
     /**
      * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */
-    private final HashMap<Long, ObjectsCacheElement> loadedObjects = new HashMap<>();
+    private final ConcurrentHashMap<Long, ObjectsCacheElement> loadedObjects = new ConcurrentHashMap<>();
     /**
      * HashMap to store the class type of the objects in cache.
      */
@@ -52,6 +51,7 @@ public class ObjectsCache {
      */
     private final int keepObjectsThreshold = 10000;
 
+    
     /**
      * Constructor.
      *
@@ -261,7 +261,6 @@ public class ObjectsCache {
      * cleared from the cache
      */
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) {
-        Kryo kryo = objectsDB.kryo;
 
         if (!readOnly) {
 
@@ -299,15 +298,9 @@ public class ObjectsCache {
                 ObjectsCacheElement obj = loadedObjects.get(key);
                 obj.edited = false;
                 
-                try {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    Output output = new Output(baos);
-                    kryo.writeObject(output, obj.object);
-                    output.close();
-                    byte[] barray = baos.toByteArray();
-                    baos.close();
-                    
-                    
+                try {                    
+                    byte barray[] = objectsDB.conf.asByteArray(obj.object);
+
                     if (obj.inDB){
                         psUpdate.setBytes(1, barray);
                         psUpdate.setLong(2, key);

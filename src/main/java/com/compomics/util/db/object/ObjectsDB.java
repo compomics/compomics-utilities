@@ -6,10 +6,12 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.util.*;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
 import java.sql.*;
 import java.util.Map.Entry;
+
+import org.nustaq.serialization.FSTObjectInput;
+import org.nustaq.serialization.FSTConfiguration;
+
 
 /**
  * A database which can easily be used to store objects.
@@ -44,7 +46,9 @@ public class ObjectsDB {
     /**
      * Configuration for fast serialization.
      */
-    public Kryo kryo;
+    public static FSTConfiguration conf = FSTConfiguration.createDefaultConfiguration();
+    
+    
     /**
      * HashMap to map hash IDs of entries into DB ids.
      */
@@ -88,9 +92,6 @@ public class ObjectsDB {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Creating database");
         }
-
-        kryo = new Kryo();
-        kryo.setRegistrationRequired(false);
 
         this.path = path;
         this.dbName = dbName;
@@ -339,13 +340,8 @@ public class ObjectsDB {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
 
-                ProteinMatch prmIn = null;
-                ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
-                Input input = new Input(bis);
-                Class<?> c = Class.forName(rs.getString("class"));
-                object = kryo.readObject(input, c);
-                input.close();
-                bis.close();
+                FSTObjectInput in = new FSTObjectInput(rs.getBinaryStream("data"));
+                object = in.readObject();
 
             }
         } catch (Exception ex) {
@@ -424,13 +420,9 @@ public class ObjectsDB {
                     return;
                 }
 
-                ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
-                Input input = new Input(bis);
-                Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
-                input.close();
-                bis.close();
-
+                FSTObjectInput in = new FSTObjectInput(rs.getBinaryStream("data"));
                 long objectKey = rs.getLong("id");
+                Object object = in.readObject();
 
                 objectsNotInCache.put(objectKey, object);
             }
@@ -585,13 +577,10 @@ public class ObjectsDB {
                     return retrievingObjects;
                 }
 
-                ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
-                Input input = new Input(bis);
-                Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
-                input.close();
-                bis.close();
-
+                FSTObjectInput in = new FSTObjectInput(rs.getBinaryStream("data"));
                 long objectKey = rs.getLong("id");
+                Object object = in.readObject();
+                
 
                 if (!objectInCache.contains(objectKey)) {
                     objectsNotInCache.put(objectKey, object);

@@ -297,6 +297,8 @@ public class ObjectsCache {
                         break;
                     }
                 }
+                loadObjectMutex.acquire();
+
                 long key = entry.getKey();
                 
                 ObjectsCacheElement obj = loadedObjects.get(key);
@@ -329,7 +331,6 @@ public class ObjectsCache {
             }
 
             try {
-                loadObjectMutex.acquire();
                 psInsert.executeBatch();
                 psUpdate.executeBatch();
                 if (removeKeys.size() > 0) {

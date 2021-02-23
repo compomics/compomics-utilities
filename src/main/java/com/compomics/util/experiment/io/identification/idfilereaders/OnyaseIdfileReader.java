@@ -88,7 +88,7 @@ public class OnyaseIdfileReader implements IdfileReader {
     /**
      * Encoding for the file, cf the second rule.
      */
-    public static final String encoding = "UTF-8";
+    public static final String ENCODING = "UTF-8";
 
     /**
      * Default constructor instantiation purposes.
@@ -112,7 +112,7 @@ public class OnyaseIdfileReader implements IdfileReader {
         
         InputStream fileStream = new FileInputStream(resultsFile);
         InputStream gzipStream = new GZIPInputStream(fileStream);
-        Reader decoder = new InputStreamReader(gzipStream, encoding);
+        Reader decoder = new InputStreamReader(gzipStream, ENCODING);
         BufferedReader br = new BufferedReader(decoder);
 //        String line;
 //        while ((line = br.readLine()) != null) {
@@ -189,7 +189,7 @@ public class OnyaseIdfileReader implements IdfileReader {
 
         InputStream fileStream = new FileInputStream(resultsFile);
         InputStream gzipStream = new GZIPInputStream(fileStream);
-        Reader decoder = new InputStreamReader(gzipStream, encoding);
+        Reader decoder = new InputStreamReader(gzipStream, ENCODING);
         BufferedReader br = new BufferedReader(decoder);
         br.readLine(); // To remove
 
@@ -201,7 +201,7 @@ public class OnyaseIdfileReader implements IdfileReader {
             
                 String[] lineSplit = line.split(separatorString);
                 String spectrumTitle = lineSplit[0].trim();
-                spectrumTitle = URLDecoder.decode(spectrumTitle, encoding);
+                spectrumTitle = URLDecoder.decode(spectrumTitle, ENCODING);
                 SpectrumMatch spectrumMatch = spectrumMatchesMap.get(spectrumTitle);
                 
                 if (spectrumMatch == null) {
@@ -217,8 +217,15 @@ public class OnyaseIdfileReader implements IdfileReader {
                 Integer charge = Integer.valueOf(lineSplit[5]);
                 Double score = Double.valueOf(lineSplit[6]);
                 Double eValue = Double.valueOf(lineSplit[7]);
-                PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, -1, Advocate.onyaseEngine.getIndex(), charge, eValue, resultFileName);
-                peptideAssumption.setRawScore(score);
+                PeptideAssumption peptideAssumption = new PeptideAssumption(
+                        peptide, 
+                        -1, 
+                        Advocate.onyaseEngine.getIndex(), 
+                        charge, 
+                        score,
+                        eValue, 
+                        resultFileName
+                );
                 spectrumMatch.addPeptideAssumption(Advocate.onyaseEngine.getIndex(), peptideAssumption);
             
             }

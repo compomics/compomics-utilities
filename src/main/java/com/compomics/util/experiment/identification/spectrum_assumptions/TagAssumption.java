@@ -29,19 +29,25 @@ public class TagAssumption extends SpectrumIdentificationAssumption {
     }
 
     /**
-     * Constructor. Note: if PsmScores.scoreRoundingDecimal is not null the scored will be floored accordingly.
+     * Constructor.Note: if PsmScores.scoreRoundingDecimal is not null the
+     * scored will be floored accordingly.
      *
      * @param advocate the advocate supporting this assumption
      * @param rank the rank of the assumption
      * @param tag the identified tag
      * @param identificationCharge the identified charge
-     * @param score the score
+     * @param rawScore the raw score, i.e. the untransformed score given by the
+     * search engine
+     * @param score the (potentially transformed) score, typically a search
+     * engine e-value (whether the score is ascending or descending can be known
+     * from the SearchEngine class)
      */
-    public TagAssumption(int advocate, int rank, Tag tag, int identificationCharge, double score) {
+    public TagAssumption(int advocate, int rank, Tag tag, int identificationCharge, double rawScore, double score) {
         this.advocate = advocate;
         this.rank = rank;
         this.tag = tag;
         this.identificationCharge = identificationCharge;
+        this.rawScore = rawScore;
         this.score = score;
     }
 
@@ -51,18 +57,18 @@ public class TagAssumption extends SpectrumIdentificationAssumption {
      * @return the tag of this assumption
      */
     public Tag getTag() {
-        
+
         return tag;
     }
-    
-    public void setTag(Tag tag){
-        
+
+    public void setTag(Tag tag) {
+
         this.tag = tag;
     }
 
     @Override
     public double getTheoreticMass() {
-        
+
         return tag.getMass();
     }
 
@@ -76,7 +82,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption {
      * @return the theoretic mass of the tag
      */
     public double getTheoreticMass(boolean includeCTermGap, boolean includeNTermGap) {
-        
+
         return tag.getMass(includeCTermGap, includeNTermGap);
     }
 
@@ -90,7 +96,7 @@ public class TagAssumption extends SpectrumIdentificationAssumption {
      * @return the theoretic mass of the tag
      */
     public double getTheoreticMz(boolean includeCTermGap, boolean includeNTermGap) {
-        
+
         return (getTheoreticMass(includeCTermGap, includeNTermGap) + identificationCharge * ElementaryIon.proton.getTheoreticMass()) / identificationCharge;
     }
 
@@ -108,51 +114,49 @@ public class TagAssumption extends SpectrumIdentificationAssumption {
      * by accounting for other charges and isotopes
      */
     public ArrayList<TagAssumption> getPossibleTags(boolean forwardIon, int minCharge, int maxCharge, int maxIsotope) {
-        
-        
-        
+
         ArrayList<TagAssumption> results = new ArrayList<>();
         double refMz = getTheoreticMz(true, true);
         double refMass = getTheoreticMass();
         int refCharge = identificationCharge;
-        
+
         for (int charge = minCharge; charge <= maxCharge; charge++) {
-        
+
             for (int isotope = 0; isotope <= maxIsotope; isotope++) {
-            
+
                 if (charge != refCharge || isotope > 0) {
-                
+
                     double newMass = refMz * charge - charge * ElementaryIon.proton.getTheoreticMass();
                     double deltaMass = newMass - refMass + isotope * Atom.C.getDifferenceToMonoisotopic(1);
                     int index = 0;
-                    
+
                     if (forwardIon) {
-                    
+
                         index = tag.getContent().size() - 1;
-                    
+
                     }
 
                     TagComponent terminalComponent = tag.getContent().get(index);
-                    
+
                     if ((terminalComponent instanceof MassGap) && terminalComponent.getMass() > -deltaMass) {
-                    
+
                         Tag newTag = new Tag(tag);
                         MassGap terminalGap = (MassGap) newTag.getContent().get(index);
                         terminalGap.setMass(terminalComponent.getMass() + deltaMass);
-                        TagAssumption tagAssumption = new TagAssumption(advocate, rank, newTag, charge, score);
+                        TagAssumption tagAssumption = new TagAssumption(advocate, rank, newTag, charge, rawScore, score);
                         results.add(tagAssumption);
-                    
+
                     }
                 }
             }
         }
-        
+
         return results;
-        
+
     }
 
     /**
-     * Retunrs a new TagAssumption instance where the tag is a reversed version
+     * Returns a new TagAssumption instance where the tag is a reversed version
      * of this tag.
      *
      * @param yIon indicates whether the tag is based on y ions
@@ -161,13 +165,13 @@ public class TagAssumption extends SpectrumIdentificationAssumption {
      * of this tag
      */
     public TagAssumption reverse(boolean yIon) {
-        
-        return new TagAssumption(advocate, rank, tag.reverse(yIon), identificationCharge, score);
+
+        return new TagAssumption(advocate, rank, tag.reverse(yIon), identificationCharge, rawScore, score);
     }
 
     @Override
     public String toString() {
-        
+
         return tag.asSequence() + ", " + Charge.toString(identificationCharge) + " (" + score + ")";
     }
 }

@@ -94,7 +94,7 @@ public class AndromedaIdfileReader implements IdfileReader {
         ArrayList<SpectrumMatch> result = new ArrayList<>();
         HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<>();
 
-        try (SimpleFileReader reader = SimpleFileReader.getFileReader(resultsFile)) {
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(resultsFile)) {
 
             String line, title = null;
             SpectrumMatch spectrumMatch = null;
@@ -146,7 +146,15 @@ public class AndromedaIdfileReader implements IdfileReader {
 
                             Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
 
-                            PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
+                            PeptideAssumption newAssumption = new PeptideAssumption(
+                                    newPeptide,
+                                    peptideAssumption.getRank(),
+                                    peptideAssumption.getAdvocate(),
+                                    peptideAssumption.getIdentificationCharge(),
+                                    peptideAssumption.getRawScore(),
+                                    peptideAssumption.getScore(),
+                                    peptideAssumption.getIdentificationFile()
+                            );
                             spectrumMatch.addPeptideAssumption(Advocate.andromeda.getIndex(), newAssumption);
 
                         }
@@ -198,8 +206,17 @@ public class AndromedaIdfileReader implements IdfileReader {
         int charge = Integer.parseInt(temp[6]);
         Double score = Double.valueOf(temp[1]);
         Double p = FastMath.pow(10, -(score / 10));
-        PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, Advocate.andromeda.getIndex(), charge, p, fileName);
-        peptideAssumption.setRawScore(score);
+
+        PeptideAssumption peptideAssumption = new PeptideAssumption(
+                peptide,
+                rank,
+                Advocate.andromeda.getIndex(),
+                charge,
+                score,
+                p,
+                fileName
+        );
+
         return peptideAssumption;
 
     }

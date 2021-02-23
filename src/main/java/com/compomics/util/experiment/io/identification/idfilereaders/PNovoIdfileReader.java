@@ -212,7 +212,14 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
             aminoAcidSequence.addVariableModification(modificationMatch);
         }
         Tag tag = new Tag(0, aminoAcidSequence, 0);
-        TagAssumption tagAssumption = new TagAssumption(Advocate.pNovo.getIndex(), rank, tag, 1, pNovoScore); // @TODO: how to get the charge?
+        TagAssumption tagAssumption = new TagAssumption(
+                Advocate.pNovo.getIndex(), 
+                rank, 
+                tag, 
+                1, 
+                pNovoScore,
+                pNovoScore
+        ); // @TODO: how to get the charge?
 
         return tagAssumption;
     }

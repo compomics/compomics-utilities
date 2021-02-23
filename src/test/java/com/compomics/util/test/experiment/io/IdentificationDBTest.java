@@ -56,7 +56,17 @@ public class IdentificationDBTest extends TestCase {
             Peptide peptide = new Peptide(peptideSequence);
             SpectrumMatch testSpectrumMatch = new SpectrumMatch(spectrumFile, spectrumTitle);
             long spectrumMatchKey = testSpectrumMatch.getKey();
-            testSpectrumMatch.addPeptideAssumption(Advocate.mascot.getIndex(), new PeptideAssumption(peptide, 1, Advocate.mascot.getIndex(), 1, 0.1, "no file"));
+            testSpectrumMatch.addPeptideAssumption(
+                    Advocate.mascot.getIndex(),
+                    new PeptideAssumption(
+                            peptide,
+                            1,
+                            Advocate.mascot.getIndex(),
+                            1,
+                            0.1,
+                            0.1,
+                            "no file")
+            );
             identification.addObject(testSpectrumMatch.getKey(), testSpectrumMatch);
 
             peptide.setProteinMapping(testProteins);

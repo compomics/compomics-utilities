@@ -386,7 +386,7 @@ public class DirecTagIdfileReader implements IdfileReader {
             SimpleFileReader reader,
             String[] spectrumTitles
     ) {
-        
+
         ArrayList<SpectrumMatch> result = new ArrayList<>();
         String spectrumFileName = IoUtil.getFileName(getInputFile());
 
@@ -559,7 +559,12 @@ public class DirecTagIdfileReader implements IdfileReader {
                     modificationMatches.put(i + 1, new ModificationMatch(utilitiesPtm, i + 1));
                     residues.append(dynamicModsResidues.get(modIndexString.charAt(0)));
                 } catch (Exception e1) {
-                    throw new IllegalArgumentException("No amino acid or modification could be mapped to tag component \"" + charAtI + "\" in tag \"" + tagSequence + "\".");
+                    throw new IllegalArgumentException(
+                            "No amino acid or modification could be mapped to tag component \""
+                            + charAtI
+                            + "\" in tag \""
+                            + tagSequence + "\"."
+                    );
                 }
             }
         }
@@ -582,7 +587,7 @@ public class DirecTagIdfileReader implements IdfileReader {
         }
         double eValue = Double.valueOf(components[eValueIndex]);
 
-        return new TagAssumption(Advocate.direcTag.getIndex(), rank, tag, charge, eValue);
+        return new TagAssumption(Advocate.direcTag.getIndex(), rank, tag, charge, eValue, eValue);
     }
 
     /**

@@ -114,7 +114,7 @@ public class MascotIdfileReader implements IdfileReader {
                     break;
                 }
             }
-            int xx = 0;
+
             while ((line = reader.readLine()) != null) {
                 int nameIndex = line.indexOf("name=\"");
                 if (nameIndex < 0) {
@@ -172,7 +172,7 @@ public class MascotIdfileReader implements IdfileReader {
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) 
+    )
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         return getAllSpectrumMatches(
@@ -191,7 +191,7 @@ public class MascotIdfileReader implements IdfileReader {
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) 
+    )
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         if (waitingHandler != null) {
@@ -224,7 +224,16 @@ public class MascotIdfileReader implements IdfileReader {
 
                             Peptide newPeptide = new Peptide(newSequence, newModificationMatches);
 
-                            PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, currentAssumption.getRank(), currentAssumption.getAdvocate(), currentAssumption.getIdentificationCharge(), currentAssumption.getScore(), currentAssumption.getIdentificationFile());
+                            PeptideAssumption newAssumption = new PeptideAssumption(
+                                    newPeptide,
+                                    currentAssumption.getRank(),
+                                    currentAssumption.getAdvocate(),
+                                    currentAssumption.getIdentificationCharge(),
+                                    currentAssumption.getRawScore(),
+                                    currentAssumption.getScore(),
+                                    currentAssumption.getIdentificationFile()
+                            );
+
                             currentMatch.addPeptideAssumption(Advocate.mascot.getIndex(), newAssumption);
 
                             if (waitingHandler != null) {
@@ -499,8 +508,16 @@ public class MascotIdfileReader implements IdfileReader {
             }
 
             Peptide peptide = new Peptide(peptideSequence, foundModifications.toArray(new ModificationMatch[foundModifications.size()]));
-            PeptideAssumption currentAssumption = new PeptideAssumption(peptide, rank, Advocate.mascot.getIndex(), specCharge, expectancy, sourceFile);
-            currentAssumption.setRawScore(ionScore);
+            PeptideAssumption currentAssumption = new PeptideAssumption(
+                    peptide,
+                    rank,
+                    Advocate.mascot.getIndex(),
+                    specCharge,
+                    ionScore,
+                    expectancy,
+                    sourceFile
+            );
+
             currentMatch.addPeptideAssumption(Advocate.mascot.getIndex(), currentAssumption);
 
         }

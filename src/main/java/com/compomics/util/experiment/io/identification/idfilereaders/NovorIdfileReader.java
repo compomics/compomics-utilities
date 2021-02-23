@@ -94,7 +94,7 @@ public class NovorIdfileReader implements IdfileReader {
      */
     private void extractVersionNumber() throws IOException {
 
-        try (SimpleFileReader reader = SimpleFileReader.getFileReader(novorCsvFile)) {
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(novorCsvFile)) {
 
             String line = reader.readLine();
             boolean versionNumberFound = false;
@@ -158,7 +158,7 @@ public class NovorIdfileReader implements IdfileReader {
 
         ArrayList<SpectrumMatch> result = new ArrayList<>();
 
-        try (SimpleFileReader reader = SimpleFileReader.getFileReader(novorCsvFile)) {
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(novorCsvFile)) {
 
             String inputFile = null;
             String fixedModificationsLine = null;
@@ -468,7 +468,7 @@ public class NovorIdfileReader implements IdfileReader {
                     }
 
                     if (!currentSequence.isEmpty()) {
-                        
+
                         if (lastIndexWasAminoAcid) {
 
                             boolean isModified = false;
@@ -522,8 +522,15 @@ public class NovorIdfileReader implements IdfileReader {
 
                     if (hasAminoAcids && hasMassGaps && maxAminoAcidTagLength >= sequenceMatchingPreferences.getMinTagLength()) {
 
-                        TagAssumption tagAssumption = new TagAssumption(Advocate.novor.getIndex(), 1, tag, charge, novorEValue);
-                        tagAssumption.setRawScore(novorScore);
+                        TagAssumption tagAssumption = new TagAssumption(
+                                Advocate.novor.getIndex(),
+                                1,
+                                tag,
+                                charge,
+                                novorScore,
+                                novorEValue
+                        );
+
                         //tagAssumption.setAminoAcidScores(aminoAcidScores); // @TODO: would have to done relative to the tags i guess..?
                         currentMatch.addTagAssumption(Advocate.novor.getIndex(), tagAssumption);
 
@@ -557,11 +564,11 @@ public class NovorIdfileReader implements IdfileReader {
                                 1,
                                 Advocate.novor.getIndex(),
                                 charge,
+                                novorScore,
                                 novorEValue,
                                 novorCsvFile.getName()
                         );
 
-                        peptideAssumption.setRawScore(novorScore);
                         peptideAssumption.setAminoAcidScores(aminoAcidScores);
 
                         if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
@@ -581,6 +588,7 @@ public class NovorIdfileReader implements IdfileReader {
                                         peptideAssumption.getRank(),
                                         peptideAssumption.getAdvocate(),
                                         peptideAssumption.getIdentificationCharge(),
+                                        peptideAssumption.getRawScore(),
                                         peptideAssumption.getScore(),
                                         peptideAssumption.getIdentificationFile()
                                 );

@@ -35,7 +35,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
     /**
      * The software name.
      */
-    private String softwareName = "Tide";
+    private final String softwareName = "Tide";
     /**
      * The softwareVersion.
      */
@@ -130,17 +130,31 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
 
         ArrayList<SpectrumMatch> result = new ArrayList<>();
 
-        try (SimpleFileReader reader = SimpleFileReader.getFileReader(tideTsvFile)) {
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(tideTsvFile)) {
 
             // read the header
             String headerString = reader.readLine();
 
             // parse the header line
             String[] headers = headerString.split("\t");
-            int scanNumberIndex = -1, chargeIndex = -1, precursorMzIndex = -1, spectrumNeutralLossIndex = -1, peptideMassIndex = -1, deltaCnIndex = -1,
-                    spScoreIndex = -1, spRankIndex = -1, exactPValueIndex = -1, xcorrScoreIndex = -1, xcorrRank = -1,
-                    bAndyIonsMatchedIndex = -1, bAndyIonsTotal = -1, distinctMatchesPerSpectrum = -1, sequenceIndex = -1,
-                    cleavageType = -1, proteinId = -1, flankingAa = -1;
+            int scanNumberIndex = -1,
+                    chargeIndex = -1,
+                    precursorMzIndex = -1,
+                    spectrumNeutralLossIndex = -1,
+                    peptideMassIndex = -1,
+                    deltaCnIndex = -1,
+                    spScoreIndex = -1,
+                    spRankIndex = -1,
+                    exactPValueIndex = -1,
+                    xcorrScoreIndex = -1,
+                    xcorrRank = -1,
+                    bAndyIonsMatchedIndex = -1,
+                    bAndyIonsTotal = -1,
+                    distinctMatchesPerSpectrum = -1,
+                    sequenceIndex = -1,
+                    cleavageType = -1,
+                    proteinId = -1,
+                    flankingAa = -1;
 
             // get the column index of the headers
             for (int i = 0; i < headers.length; i++) {
@@ -279,12 +293,10 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                             rank,
                             Advocate.tide.getIndex(),
                             charge,
+                            rawScore,
                             tideEValue,
                             IoUtil.getFileName(tideTsvFile)
                     );
-
-                    // add the raw score
-                    peptideAssumption.setRawScore(rawScore);
 
                     if (expandAaCombinations && AminoAcidSequence.hasCombination(unmodifiedPeptideSequence)) {
 
@@ -297,8 +309,17 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                                     .toArray(ModificationMatch[]::new);
 
                             Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
-                            PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
-                            newAssumption.setRawScore(rawScore);
+
+                            PeptideAssumption newAssumption = new PeptideAssumption(
+                                    newPeptide,
+                                    peptideAssumption.getRank(),
+                                    peptideAssumption.getAdvocate(),
+                                    peptideAssumption.getIdentificationCharge(),
+                                    peptideAssumption.getRawScore(),
+                                    peptideAssumption.getScore(),
+                                    peptideAssumption.getIdentificationFile()
+                            );
+
                             currentMatch.addPeptideAssumption(Advocate.tide.getIndex(), newAssumption);
                         }
                     } else {

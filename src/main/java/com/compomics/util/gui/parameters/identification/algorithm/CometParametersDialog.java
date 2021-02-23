@@ -170,8 +170,8 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         if (cometParameters.getMaxPrecursorMass() != null) {
             maxPrecursorMassTxt.setText(cometParameters.getMaxPrecursorMass() + "");
         }
-        
-        if (cometParameters.getMinPeptideLength()!= null) {
+
+        if (cometParameters.getMinPeptideLength() != null) {
             minPepLengthTxt.setText(cometParameters.getMinPeptideLength() + "");
         }
         if (cometParameters.getMaxPeptideLength() != null) {
@@ -267,14 +267,21 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         }
 
         int selectedIndex = enzymeTypeCmb.getSelectedIndex();
-        if (selectedIndex == 0) {
-            result.setEnzymeType(2);
-        } else if (selectedIndex == 1) {
-            result.setEnzymeType(1);
-        } else if (selectedIndex == 2) {
-            result.setEnzymeType(8);
-        } else if (selectedIndex == 3) {
-            result.setEnzymeType(9);
+        switch (selectedIndex) {
+            case 0:
+                result.setEnzymeType(2);
+                break;
+            case 1:
+                result.setEnzymeType(1);
+                break;
+            case 2:
+                result.setEnzymeType(8);
+                break;
+            case 3:
+                result.setEnzymeType(9);
+                break;
+            default:
+                break;
         }
 
         result.setIsotopeCorrection(isotopeCorrectionCmb.getSelectedIndex());
@@ -288,9 +295,13 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
             result.setMaxPrecursorMass(Double.valueOf(input));
         }
 
-        input = numberMatchesTxt.getText().trim();
+        input = minPepLengthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setNumberOfSpectrumMatches(Integer.valueOf(input));
+            result.setMinPeptideLength(Integer.valueOf(input));
+        }
+        input = maxPepLengthTxt.getText().trim();
+        if (!input.equals("")) {
+            result.setMaxPeptideLength(Integer.valueOf(input));
         }
 
         input = maxFragmentChargeTxt.getText().trim();
@@ -319,9 +330,9 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
             result.setFragmentBinOffset(Double.valueOf(input));
         }
 
-        input = fragmentBinOffsetTxt.getText().trim();
+        input = numberMatchesTxt.getText().trim();
         if (!input.equals("")) {
-            result.setFragmentBinOffset(Double.valueOf(input));
+            result.setNumberOfSpectrumMatches(Integer.valueOf(input));
         }
 
         result.setSelectedOutputFormat((CometOutputFormat) outputFormatCmb.getSelectedItem());
@@ -1167,6 +1178,28 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
                 valid = false;
                 precursorMassLabel.setForeground(Color.RED);
                 precursorMassLabel.setToolTipText("Please select a valid range (upper <= higher)");
+            }
+        } catch (NumberFormatException e) {
+            // ignore, handled above
+        }
+
+        // peptide length range: the min value should be lower than the max value
+        try {
+            double lowValue = Integer.parseInt(minPepLengthTxt.getText().trim());
+            double highValue = Integer.parseInt(maxPepLengthTxt.getText().trim());
+
+            if (lowValue > highValue) {
+                if (showMessage && valid) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "The lower range value has to be smaller than the upper range value.",
+                            "Peptide Length Range Error",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                }
+                valid = false;
+                peptideLengthLabel.setForeground(Color.RED);
+                peptideLengthLabel.setToolTipText("Please select a valid range (upper <= higher)");
             }
         } catch (NumberFormatException e) {
             // ignore, handled above

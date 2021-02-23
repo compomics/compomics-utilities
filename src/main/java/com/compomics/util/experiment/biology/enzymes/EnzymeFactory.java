@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 /**
- * This factory will load enzymes from an XML file and provide them on demand as
+ * This factory will load enzymes from a JSON file and provide them on demand as
  * a standard class.
  *
  * @author Marc Vaudel

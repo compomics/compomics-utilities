@@ -19,7 +19,7 @@ import java.lang.reflect.Type;
 import java.net.URL;
 
 /**
- * This class converts non specific objects to the JSON format and vice versa.
+ * This class converts non-specific objects to the JSON format and vice versa.
  *
  * @author Kenneth Verheggen
  * @author Marc Vaudel
@@ -53,7 +53,6 @@ public class JsonMarshaller extends ExperimentObject {
      */
     protected void init() {
 
-        
         builder.registerTypeAdapter(File.class, new FileAdapter());
         builder.registerTypeAdapter(Color.class, new ColorAdapter());
 
@@ -88,7 +87,6 @@ public class JsonMarshaller extends ExperimentObject {
      */
     public String toJson(Object anObject) {
 
-        
         return gson.toJson(anObject);
 
     }
@@ -104,7 +102,6 @@ public class JsonMarshaller extends ExperimentObject {
      */
     public void saveObjectToJson(Object anObject, File jsonFile) throws IOException {
 
-        
         BufferedWriter out = new BufferedWriter(new FileWriter(jsonFile));
 
         try {
@@ -125,7 +122,6 @@ public class JsonMarshaller extends ExperimentObject {
      */
     public Object fromJson(Class objectType, String jsonString) {
 
-        
         return gson.fromJson(jsonString, objectType);
 
     }
@@ -142,8 +138,6 @@ public class JsonMarshaller extends ExperimentObject {
      * file
      */
     public Object fromJson(Class objectType, File jsonFile) throws IOException {
-
-        
 
         String jsonString = getJsonStringFromFile(jsonFile);
         return gson.fromJson(jsonString, objectType);
@@ -163,7 +157,6 @@ public class JsonMarshaller extends ExperimentObject {
      */
     public Object fromJson(Class objectType, URL jsonURL) throws IOException {
 
-        
         return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
 
     }
@@ -178,7 +171,6 @@ public class JsonMarshaller extends ExperimentObject {
      */
     public Object fromJson(Type objectType, String jsonString) {
 
-        
         return gson.fromJson(jsonString, objectType);
 
     }
@@ -214,7 +206,6 @@ public class JsonMarshaller extends ExperimentObject {
      */
     public Object fromJson(Type objectType, URL jsonURL) throws IOException {
 
-        
         return gson.fromJson(new InputStreamReader(jsonURL.openStream()), objectType);
 
     }
@@ -231,8 +222,6 @@ public class JsonMarshaller extends ExperimentObject {
      * file
      */
     protected String getJsonStringFromFile(File jsonFile) throws FileNotFoundException, IOException {
-
-        
 
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(jsonFile)));

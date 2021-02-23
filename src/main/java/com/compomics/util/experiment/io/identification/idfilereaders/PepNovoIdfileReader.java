@@ -322,7 +322,15 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
             aminoAcidSequence.addVariableModification(modificationMatch);
         }
         Tag tag = new Tag(nGap, aminoAcidSequence, cGap);
-        TagAssumption tagAssumption = new TagAssumption(Advocate.pepnovo.getIndex(), rank, tag, charge, pepNovoScore);
+        TagAssumption tagAssumption = new TagAssumption(
+                Advocate.pepnovo.getIndex(), 
+                rank, 
+                tag, 
+                charge,
+                pepNovoScore,
+                pepNovoScore
+        );
+        
         PepnovoAssumptionDetails pepnovoAssumptionDetails = new PepnovoAssumptionDetails();
         pepnovoAssumptionDetails.setRankScore(rankScore);
         pepnovoAssumptionDetails.setMH(mH);

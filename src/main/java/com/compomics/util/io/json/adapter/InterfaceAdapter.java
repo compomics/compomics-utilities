@@ -17,7 +17,7 @@ import java.lang.reflect.Type;
 public class InterfaceAdapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public InterfaceAdapter() {
     }

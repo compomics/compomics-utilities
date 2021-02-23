@@ -183,7 +183,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
 
             waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 
-            try (SimpleFileReader reader = SimpleFileReader.getFileReader(mzIdentMLFile)) {
+            try ( SimpleFileReader reader = SimpleFileReader.getFileReader(mzIdentMLFile)) {
 
                 int lineCounter = 0;
                 String line = reader.readLine();
@@ -268,7 +268,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
         XmlPullParser parser = factory.newPullParser();
 
         // create a reader for the input file
-        try (SimpleFileReader reader = SimpleFileReader.getFileReader(mzIdentMLFile)) {
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(mzIdentMLFile)) {
 
             // set the XML Pull Parser to read from this reader
             parser.setInput(reader.getReader());
@@ -745,12 +745,12 @@ public class MzIdentMLIdfileReader implements IdfileReader {
         if (spectraDataRef == null || spectrumId == null) {
             throw new IllegalArgumentException("Error parsing SpectrumIdentificationResult!");
         }
-        
+
         String spectrumTitle = null;
 
         // get the spectrum file name
         String spectrumFileName = spectrumFileNameMap.get(spectraDataRef);
-        
+
         // get the spectrum index and potentially the spectrum name
         if (spectrumId.startsWith("index=")) { // @TODO: support more index types
             Integer spectrumIndex = Integer.valueOf(spectrumId.substring(spectrumId.indexOf("=") + 1));
@@ -878,6 +878,10 @@ public class MzIdentMLIdfileReader implements IdfileReader {
             Advocate advocate = tempEValue.getAdvocate();
             Double eValue = tempEValue.getEValue();
             Double rawScore = tempEValue.getRawScore();
+            
+            if (rawScore == null) {
+                rawScore = eValue;
+            }
 
             // get the peptide reference
             if (peptideRef == null) {
@@ -920,11 +924,15 @@ public class MzIdentMLIdfileReader implements IdfileReader {
             Peptide peptide = new Peptide(tempPeptide.getPeptideSequence(), modMatches.toArray(new ModificationMatch[modMatches.size()]), true);
 
             // create the peptide assumption
-            PeptideAssumption peptideAssumption = new PeptideAssumption(peptide, rank, advocate.getIndex(), chargeState, eValue, mzIdentMLFileName);
-
-            if (rawScore != null) {
-                peptideAssumption.setRawScore(rawScore);
-            }
+            PeptideAssumption peptideAssumption = new PeptideAssumption(
+                    peptide,
+                    rank,
+                    advocate.getIndex(),
+                    chargeState,
+                    rawScore,
+                    eValue,
+                    mzIdentMLFileName
+            );
 
             if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideAssumption.getPeptide().getSequence())) {
 
@@ -938,13 +946,15 @@ public class MzIdentMLIdfileReader implements IdfileReader {
 
                     Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
 
-                    PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, peptideAssumption.getRank(), peptideAssumption.getAdvocate(), peptideAssumption.getIdentificationCharge(), peptideAssumption.getScore(), peptideAssumption.getIdentificationFile());
-
-                    if (rawScore != null) {
-
-                        newAssumption.setRawScore(rawScore);
-
-                    }
+                    PeptideAssumption newAssumption = new PeptideAssumption(
+                            newPeptide, 
+                            peptideAssumption.getRank(), 
+                            peptideAssumption.getAdvocate(), 
+                            peptideAssumption.getIdentificationCharge(), 
+                            rawScore,
+                            peptideAssumption.getScore(), 
+                            peptideAssumption.getIdentificationFile()
+                    );
 
                     currentMatch.addPeptideAssumption(advocate.getIndex(), newAssumption);
 

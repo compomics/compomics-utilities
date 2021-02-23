@@ -17,6 +17,12 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
     private Peptide peptide;
 
     /**
+     * Default constructor for the purpose of instantiation.
+     */
+    public PeptideAssumption() {
+    }
+    
+    /**
      * Constructor for a peptide assumption.
      *
      * @param peptide the theoretic peptide
@@ -24,23 +30,27 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @param advocate the advocate used
      * @param identificationCharge the charge used by the search engine for
      * identification
-     * @param score the score, typically a search engine e-value (whether the
-     * score is ascending or descending can be known from the SearchEngine
-     * class)
+     * @param rawScore the raw score, i.e. the untransformed score given by the
+     * search engine
+     * @param score the (potentially transformed) score, typically a search
+     * engine e-value (whether the score is ascending or descending can be known
+     * from the SearchEngine class)
      * @param identificationFile the identification file
      */
     public PeptideAssumption(
-            Peptide peptide, 
-            int rank, 
-            int advocate, 
-            int identificationCharge, 
-            double score, 
+            Peptide peptide,
+            int rank,
+            int advocate,
+            int identificationCharge,
+            double rawScore,
+            double score,
             String identificationFile
     ) {
         this.peptide = peptide;
         super.rank = rank;
         super.advocate = advocate;
         super.identificationCharge = identificationCharge;
+        super.rawScore = rawScore;
         super.score = score;
         super.identificationFile = identificationFile;
     }
@@ -53,20 +63,25 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * @param advocate the advocate used
      * @param identificationCharge the charge used by the search engine for
      * identification
-     * @param score the score (whether the score is ascending or descending can
-     * be known from the SearchEngine class)
+     * @param rawScore the raw score, i.e. the untransformed score given by the
+     * search engine
+     * @param score the (potentially transformed) score, typically a search
+     * engine e-value (whether the score is ascending or descending can be known
+     * from the SearchEngine class)
      */
     public PeptideAssumption(
-            Peptide peptide, 
-            int rank, 
-            int advocate, 
-            int identificationCharge, 
+            Peptide peptide,
+            int rank,
+            int advocate,
+            int identificationCharge,
+            double rawScore,
             double score
     ) {
         this.peptide = peptide;
         super.rank = rank;
         super.advocate = advocate;
         super.identificationCharge = identificationCharge;
+        super.rawScore = rawScore;
         super.score = score;
     }
 
@@ -79,33 +94,36 @@ public class PeptideAssumption extends SpectrumIdentificationAssumption {
      * identification
      */
     public PeptideAssumption(
-            Peptide peptide, 
+            Peptide peptide,
             int identificationCharge
     ) {
         this.peptide = peptide;
         super.identificationCharge = identificationCharge;
     }
     
-    public PeptideAssumption(){}
-
     /**
      * Get the theoretic peptide.
      *
      * @return the peptide
      */
     public Peptide getPeptide() {
-        
+
         return peptide;
     }
-    
-    public void setPeptide(Peptide peptide){
-        
+
+    /**
+     * Returns the peptides.
+     * 
+     * @param peptide the peptide
+     */
+    public void setPeptide(Peptide peptide) {
+
         this.peptide = peptide;
     }
 
     @Override
     public double getTheoreticMass() {
-        
+
         return peptide.getMass();
     }
 }

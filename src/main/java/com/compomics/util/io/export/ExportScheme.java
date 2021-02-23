@@ -92,8 +92,21 @@ public class ExportScheme extends ExperimentObject {
      * included
      * @param includeDecoys Indicates whether decoy matches should be included
      */
-    private ExportScheme(String name, boolean editable, ArrayList<String> sectionList, HashMap<String, ArrayList<ExportFeature>> exportFeatures, String separator,
-            boolean indexes, boolean header, int separationLines, boolean includeSectionTitles, boolean validatedOnly, boolean includeDecoys, String mainTitle) {
+    private ExportScheme(
+            String name,
+            boolean editable,
+            ArrayList<String> sectionList,
+            HashMap<String, ArrayList<ExportFeature>> exportFeatures,
+            String separator,
+            boolean indexes,
+            boolean header,
+            int separationLines,
+            boolean includeSectionTitles,
+            boolean validatedOnly,
+            boolean includeDecoys,
+            String mainTitle
+    ) {
+
         this.sectionList = sectionList;
         exportFeaturesMap.putAll(exportFeatures);
         this.separator = separator;
@@ -126,9 +139,34 @@ public class ExportScheme extends ExperimentObject {
      * included
      * @param includeDecoys Indicates whether decoy matches should be included
      */
-    public ExportScheme(String name, boolean editable, HashMap<String, ArrayList<ExportFeature>> exportFeatures, String separator,
-            boolean indexes, boolean header, int separationLines, boolean includeSectionTitles, boolean validatedOnly, boolean includeDecoys, String mainTitle) {
-        this(name, editable, new ArrayList<String>(exportFeatures.keySet()), exportFeatures, separator, indexes, header, separationLines, includeSectionTitles, validatedOnly, includeDecoys, mainTitle);
+    public ExportScheme(
+            String name,
+            boolean editable,
+            HashMap<String, ArrayList<ExportFeature>> exportFeatures,
+            String separator,
+            boolean indexes,
+            boolean header,
+            int separationLines,
+            boolean includeSectionTitles,
+            boolean validatedOnly,
+            boolean includeDecoys,
+            String mainTitle
+    ) {
+
+        this(
+                name,
+                editable,
+                new ArrayList<String>(exportFeatures.keySet()),
+                exportFeatures,
+                separator,
+                indexes,
+                header,
+                separationLines,
+                includeSectionTitles,
+                validatedOnly,
+                includeDecoys,
+                mainTitle
+        );
     }
 
     /**
@@ -149,9 +187,34 @@ public class ExportScheme extends ExperimentObject {
      * included
      * @param includeDecoys Indicates whether decoy matches should be included
      */
-    public ExportScheme(String name, boolean editable, ArrayList<String> sectionList, HashMap<String, ArrayList<ExportFeature>> exportFeatures, String separator,
-            boolean indexes, boolean header, int separationLines, boolean includeSectionTitles, boolean validatedOnly, boolean includeDecoys) {
-        this(name, editable, sectionList, exportFeatures, separator, indexes, header, separationLines, includeSectionTitles, validatedOnly, includeDecoys, null);
+    public ExportScheme(
+            String name,
+            boolean editable,
+            ArrayList<String> sectionList,
+            HashMap<String, ArrayList<ExportFeature>> exportFeatures,
+            String separator,
+            boolean indexes,
+            boolean header,
+            int separationLines,
+            boolean includeSectionTitles,
+            boolean validatedOnly,
+            boolean includeDecoys
+    ) {
+
+        this(
+                name,
+                editable,
+                sectionList,
+                exportFeatures,
+                separator,
+                indexes,
+                header,
+                separationLines,
+                includeSectionTitles,
+                validatedOnly,
+                includeDecoys,
+                null
+        );
     }
 
     /**
@@ -172,9 +235,33 @@ public class ExportScheme extends ExperimentObject {
      * included
      * @param includeDecoys Indicates whether decoy matches should be included
      */
-    public ExportScheme(String name, boolean editable, HashMap<String, ArrayList<ExportFeature>> exportFeatures, String separator,
-            boolean indexes, boolean header, int separationLines, boolean includeSectionTitles, boolean validatedOnly, boolean includeDecoys) {
-        this(name, editable, new ArrayList<String>(exportFeatures.keySet()), exportFeatures, separator, indexes, header, separationLines, includeSectionTitles, validatedOnly, includeDecoys, null);
+    public ExportScheme(
+            String name,
+            boolean editable,
+            HashMap<String, ArrayList<ExportFeature>> exportFeatures,
+            String separator,
+            boolean indexes,
+            boolean header,
+            int separationLines,
+            boolean includeSectionTitles,
+            boolean validatedOnly,
+            boolean includeDecoys
+    ) {
+
+        this(
+                name,
+                editable,
+                new ArrayList<String>(exportFeatures.keySet()),
+                exportFeatures,
+                separator,
+                indexes,
+                header,
+                separationLines,
+                includeSectionTitles,
+                validatedOnly,
+                includeDecoys,
+                null
+        );
     }
 
     /**

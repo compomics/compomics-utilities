@@ -34,7 +34,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
     /**
      * The software name.
      */
-    private String softwareName = "MS Amanda";
+    private final String softwareName = "MS Amanda";
     /**
      * The softwareVersion.
      */
@@ -110,14 +110,14 @@ public class MsAmandaIdfileReader implements IdfileReader {
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
-    ) 
+    )
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-        
+
         return getAllSpectrumMatches(
                 spectrumProvider,
-                waitingHandler, 
-                searchParameters, 
-                null, 
+                waitingHandler,
+                searchParameters,
+                null,
                 true
         );
     }
@@ -129,7 +129,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
             SearchParameters searchParameters,
             SequenceMatchingParameters sequenceMatchingPreferences,
             boolean expandAaCombinations
-    ) 
+    )
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         ArrayList<SpectrumMatch> result = new ArrayList<>();
@@ -149,9 +149,19 @@ public class MsAmandaIdfileReader implements IdfileReader {
 
             // parse the header line
             String[] headers = headerString.split("\t");
-            int scanNumberIndex = -1, titleIndex = -1, sequenceIndex = -1, modificationsIndex = -1, proteinAccessionsIndex = -1,
-                    amandaScoreIndex = -1, rankIndex = -1, mzIndex = -1, chargeIndex = -1, rtIndex = -1, nrMatchesPeaksIndex = -1,
-                    filenameIndex = -1, amandaWeightedProbabilityIndex = -1;
+            int scanNumberIndex = -1,
+                    titleIndex = -1,
+                    sequenceIndex = -1,
+                    modificationsIndex = -1,
+                    proteinAccessionsIndex = -1,
+                    amandaScoreIndex = -1,
+                    rankIndex = -1,
+                    mzIndex = -1,
+                    chargeIndex = -1,
+                    rtIndex = -1,
+                    nrMatchesPeaksIndex = -1,
+                    filenameIndex = -1,
+                    amandaWeightedProbabilityIndex = -1;
 
             // get the column index of the headers
             for (int i = 0; i < headers.length; i++) {
@@ -243,7 +253,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
 
                         currentMatch = new SpectrumMatch(fileName, spectrumTitle);
                         currentSpectrumTitle = spectrumTitle;
-                        
+
                     }
 
                     // get the modifications
@@ -252,9 +262,8 @@ public class MsAmandaIdfileReader implements IdfileReader {
                     if (!modifications.isEmpty()) {
 
                         String[] modificationsString = modifications.split(";");
-                        for (int i = 0; i < modificationsString.length; i++) {
 
-                            String modificationString = modificationsString[i];
+                        for (String modificationString : modificationsString) {
 
                             try {
                                 // we expect something like this:
@@ -298,14 +307,14 @@ public class MsAmandaIdfileReader implements IdfileReader {
 
                     // create the peptide assumption
                     PeptideAssumption peptideAssumption = new PeptideAssumption(
-                            peptide, 
-                            rank, 
-                            Advocate.msAmanda.getIndex(), 
-                            charge, 
-                            msAmandaTransformedScore, 
+                            peptide,
+                            rank,
+                            Advocate.msAmanda.getIndex(),
+                            charge,
+                            msAmandaRawScore,
+                            msAmandaTransformedScore,
                             IoUtil.getFileName(msAmandaCsvFile)
                     );
-                    peptideAssumption.setRawScore(msAmandaRawScore);
 
                     if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
 
@@ -320,14 +329,15 @@ public class MsAmandaIdfileReader implements IdfileReader {
                             Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
 
                             PeptideAssumption newAssumption = new PeptideAssumption(
-                                    newPeptide, 
-                                    peptideAssumption.getRank(), 
-                                    peptideAssumption.getAdvocate(), 
-                                    peptideAssumption.getIdentificationCharge(), 
-                                    peptideAssumption.getScore(), 
+                                    newPeptide,
+                                    peptideAssumption.getRank(),
+                                    peptideAssumption.getAdvocate(),
+                                    peptideAssumption.getIdentificationCharge(),
+                                    peptideAssumption.getRawScore(),
+                                    peptideAssumption.getScore(),
                                     peptideAssumption.getIdentificationFile()
                             );
-                            newAssumption.setRawScore(msAmandaRawScore);
+
                             currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), newAssumption);
 
                         }

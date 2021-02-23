@@ -387,12 +387,10 @@ public class CossIdfileReader implements IdfileReader {
                             rank,
                             Advocate.coss.getIndex(),
                             charge,
-                            //cossFdrValue
-                            cossTransformedScore,
+                            cossRawScore,
+                            cossTransformedScore, // or cossFdrValue
                             IoUtil.getFileName(cossTsvFile)
                     );
-
-                    peptideAssumption.setRawScore(cossRawScore);
 
                     if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
 
@@ -411,11 +409,11 @@ public class CossIdfileReader implements IdfileReader {
                                     peptideAssumption.getRank(),
                                     peptideAssumption.getAdvocate(),
                                     peptideAssumption.getIdentificationCharge(),
+                                    peptideAssumption.getRawScore(),
                                     peptideAssumption.getScore(),
                                     peptideAssumption.getIdentificationFile()
                             );
 
-                            newAssumption.setRawScore(cossRawScore);
                             currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), newAssumption);
 
                         }

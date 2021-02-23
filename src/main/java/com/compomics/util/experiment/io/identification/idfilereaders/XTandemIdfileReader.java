@@ -50,10 +50,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      */
     private final HashMap<Integer, SpectrumMatch> allMatches = new HashMap<>();
     /**
-     * The spectrum number.
-     */
-    private int specNumber = 0;
-    /**
      * The PSM filename.
      */
     private String spectrumFileName;
@@ -132,9 +128,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
         waitingHandler.setSecondaryProgressCounterIndeterminate(false);
         waitingHandler.setMaxSecondaryProgressCounter(100);
-        
+
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
-        
+
         HashSet<String> fixedNonTerminalModifications = searchParameters.getModificationParameters().getFixedModifications().stream()
                 .map(
                         modName -> modificationFactory.getModification(modName)
@@ -213,13 +209,13 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             }
         }
 
-        try (SimpleFileReader reader = SimpleFileReader.getFileReader(inputFile)) {
-            
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(inputFile)) {
+
             XMLInputFactory factory = XMLInputFactory.newInstance();
             XMLStreamReader parser = factory.createXMLStreamReader(reader.getReader());
 
             while (parser.hasNext()) {
-                
+
                 double progress = reader.getProgressInPercent();
                 waitingHandler.setSecondaryProgressCounter((int) progress);
 
@@ -300,7 +296,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             }
 
             waitingHandler.setSecondaryProgressCounterIndeterminate(true);
-            
+
             if (expandAaCombinations) {
 
                 for (SpectrumMatch spectrumMatch : allMatches.values()) {
@@ -322,8 +318,18 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                                             .toArray(ModificationMatch[]::new);
 
                                     Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches);
-                                    PeptideAssumption newAssumption = new PeptideAssumption(newPeptide, currentAssumption.getRank(), currentAssumption.getAdvocate(), currentAssumption.getIdentificationCharge(), currentAssumption.getScore(), currentAssumption.getIdentificationFile());
-                                    spectrumMatch.addPeptideAssumption(Advocate.mascot.getIndex(), newAssumption);
+
+                                    PeptideAssumption newAssumption = new PeptideAssumption(
+                                            newPeptide,
+                                            currentAssumption.getRank(),
+                                            currentAssumption.getAdvocate(),
+                                            currentAssumption.getIdentificationCharge(),
+                                            currentAssumption.getScore(),
+                                            currentAssumption.getScore(),
+                                            currentAssumption.getIdentificationFile()
+                                    );
+
+                                    spectrumMatch.addPeptideAssumption(Advocate.xtandem.getIndex(), newAssumption);
 
                                 }
                             }
@@ -791,7 +797,16 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             if (adding) {
 
                                 peptide = new Peptide(pepSeq);
-                                PeptideAssumption currentAssumption = new PeptideAssumption(peptide, 1, Advocate.xtandem.getIndex(), 0, expect, inputFile.getName());
+
+                                PeptideAssumption currentAssumption = new PeptideAssumption(
+                                        peptide,
+                                        1, Advocate.xtandem.getIndex(),
+                                        0, 
+                                        expect,
+                                        expect,
+                                        inputFile.getName()
+                                );
+
                                 allMatches.get(id).addPeptideAssumption(Advocate.xtandem.getIndex(), currentAssumption);
                                 pepStart = Integer.parseInt(parser.getAttributeValue("", "start"));
                                 addAA = true;

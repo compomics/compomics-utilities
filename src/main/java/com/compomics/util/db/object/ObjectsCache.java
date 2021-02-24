@@ -332,6 +332,7 @@ public class ObjectsCache {
             }
             
             try {
+                loadObjectMutex.acquire();
                 psInsert.executeBatch();
                 psUpdate.executeBatch();
                 if (removeKeys.size() > 0) {

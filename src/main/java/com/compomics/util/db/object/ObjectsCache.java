@@ -284,7 +284,6 @@ public class ObjectsCache {
 
             int i = 0;
 
-            loadObjectMutex.acquire();
             for (Entry<Long, ObjectsCacheElement> entry : loadedObjects.entrySet()) {
 
                 if (numLastEntries <= i++) {
@@ -298,7 +297,7 @@ public class ObjectsCache {
                         break;
                     }
                 }
-                
+                loadObjectMutex.acquire();
 
                 long key = entry.getKey();
                 
@@ -328,9 +327,10 @@ public class ObjectsCache {
                     removeKeys.add(key);
                     classMap.get(obj.object.getClass()).remove(key);
                 }
+                loadObjectMutex.release();
 
             }
-
+            
             try {
                 psInsert.executeBatch();
                 psUpdate.executeBatch();

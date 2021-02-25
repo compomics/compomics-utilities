@@ -129,12 +129,16 @@ public class ObjectsCache {
 
         if (!readOnly) {
             loadObjectMutex.acquire();
-            if (loadedObjects.containsKey(objectKey)) {
+            boolean contains = loadedObjects.containsKey(objectKey);
+            loadObjectMutex.release();
+            if (contains) {
                 Object object = getObject(objectKey);
+                loadObjectMutex.acquire();
                 classMap.get(object.getClass()).remove(objectKey);
                 loadedObjects.remove(objectKey);
+                loadObjectMutex.release();
             }
-            loadObjectMutex.release();
+            
         }
     }
 

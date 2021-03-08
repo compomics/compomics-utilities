@@ -42,11 +42,16 @@ public class DecoyConverter {
      * @throws IOException exception thrown whenever an error happened while
      * reading or writing a FASTA file
      */
-    public static void appendDecoySequences(File fastaIn, File fastaOut, FastaParameters fastaParameters, WaitingHandler waitingHandler) throws IOException {
+    public static void appendDecoySequences(
+            File fastaIn,
+            File fastaOut,
+            FastaParameters fastaParameters,
+            WaitingHandler waitingHandler
+    ) throws IOException {
 
         FastaIterator fastaIterator = new FastaIterator(fastaIn);
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fastaOut))) {
+        try ( BufferedWriter bw = new BufferedWriter(new FileWriter(fastaOut))) {
 
             Protein protein;
             while ((protein = fastaIterator.getNextProtein()) != null) {
@@ -65,18 +70,22 @@ public class DecoyConverter {
                 bw.newLine();
 
                 int accessionEndIndex = rawHeader.indexOf(accession) + accession.length();
-                
+
                 String part0 = rawHeader.substring(0, rawHeader.indexOf(accession));
                 String part1 = rawHeader.substring(rawHeader.indexOf(accession), accessionEndIndex);
                 String part2 = rawHeader.substring(accessionEndIndex);
 
                 bw.write(part0);
-                if (!fastaParameters.isDecoySuffix())
+                if (!fastaParameters.isDecoySuffix()) {
                     bw.write(fastaParameters.getDecoyFlag());
+                }
                 bw.write(part1);
-                if (fastaParameters.isDecoySuffix())
+
+                if (fastaParameters.isDecoySuffix()) {
                     bw.write(fastaParameters.getDecoyFlag());
+                }
                 bw.write(part2);
+
                 bw.write(fastaParameters.getDecoyFlag());
                 bw.newLine();
 
@@ -154,10 +163,10 @@ public class DecoyConverter {
 
         int nTarget = targetSummary.nTarget;
 
-        return new FastaSummary(targetSummary.getName() + " (target-decoy)", 
-                targetSummary.getDescription(), targetSummary.getVersion(), 
-                newFastaFile, speciesOccurrence, dbOccurrence, nSequences, 
+        return new FastaSummary(targetSummary.getName() + " (target-decoy)",
+                targetSummary.getDescription(), targetSummary.getVersion(),
+                newFastaFile, speciesOccurrence, dbOccurrence, nSequences,
                 nTarget, newFastaFile.lastModified());
-        
+
     }
 }

@@ -323,7 +323,9 @@ public class Header extends ExperimentObject implements Cloneable {
                     }
                     // Take everything from the first '|' we meet after the accession number.
                     result.iDescription = aFASTAHeader.substring(aFASTAHeader.indexOf("|", 5) + 1);
-                } else if (aFASTAHeader.startsWith("HIT")) {
+                } else if (aFASTAHeader.startsWith("HIT")
+                        && aFASTAHeader.lastIndexOf("|") != -1
+                        && aFASTAHeader.lastIndexOf(".") != -1) { // @TODO: replace with regular expression!
                     try {
                         //http://www.h-invitational.jp/
                         // A H-Invitation database entry looks like:
@@ -348,7 +350,9 @@ public class Header extends ExperimentObject implements Cloneable {
                         logger.error(excep.getMessage(), excep);
                         logger.info(aFASTAHeader);
                     }
-                } else if (aFASTAHeader.startsWith("OE")) {
+                } else if (aFASTAHeader.startsWith("OE")
+                        && aFASTAHeader.lastIndexOf("(") != -1
+                        && aFASTAHeader.lastIndexOf(" ") != -1) { // @TODO: replace with regular expression!
                     // Halobacterium header from the Max Planck people.
                     // We need to find two elements:
                     //   - the accession String (easily retrieved as the next String until a space is encountered).

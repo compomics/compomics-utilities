@@ -2648,13 +2648,6 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_FRAGMENTATION.id);
             Integer option = Integer.valueOf(arg);
             msgfParameters.setFragmentationType(option); // @TODO: check for valid index!!
-        } else {
-            Integer instrumentId = msgfParameters.getInstrumentID();
-            if (instrumentId == 1 || instrumentId == 3) {
-                msgfParameters.setFragmentationType(3);
-            } else {
-                msgfParameters.setFragmentationType(0);
-            }
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_PROTOCOL.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_PROTOCOL.id);

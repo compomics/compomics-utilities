@@ -34,7 +34,9 @@ public enum PsProteinFeature implements ExportFeature {
     @SerializedName("PsProteinFeature.gene_name")
     gene_name("Gene Name", "The gene names of the Ensembl gene ID associated to the accession of the leading protein of the group.", false),
     @SerializedName("PsProteinFeature.taxonomy")
-    taxonomy("Taxonomy", "The protein taxonomy for the leading protein of the group.", false),
+    taxonomy("Taxonomy", "The organism taxonomy for the leading protein of the group.", false),
+    @SerializedName("PsProteinFeature.organism_identifier")
+    organism_identifier("Organism Identifier", "The organism identifier for the leading protein of the group.", false),
     @SerializedName("PsProteinFeature.go_accession")
     go_accession("GO Accession", "The accessions of the Gene Ontology terms associated to the accessions of the group.", false),
     @SerializedName("PsProteinFeature.go_description")

@@ -5816,6 +5816,15 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
         return header.getTaxonomy();
 
     }
+    
+    @Override
+    public String getOrganismIdentifier(String accession) {
+
+        AccessionMetaData accessionMeta = accessionMetaData.get(accession);
+        Header header = accessionMeta.getHeader();
+        return header.getOrganismIdentifier();
+
+    }
 
     @Override
     public Integer getProteinEvidence(String accession) {

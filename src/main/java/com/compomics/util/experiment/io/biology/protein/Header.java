@@ -118,6 +118,11 @@ public class Header extends ExperimentObject implements Cloneable {
      */
     private String iTaxonomy = null;
     /**
+     * The the unique identifier of the source organism, assigned by the NCBI.
+     * Note that this is only available for UniProt-based databases.
+     */
+    private String iOrganismIdentifier = null;
+    /**
      * The foreign Description is a description for an entry in another DB. Most
      * notably, the SwissProt short description for an entry that is found
      * within NCBI. <br> The foreign description is an addendum to the foreign
@@ -1178,6 +1183,24 @@ public class Header extends ExperimentObject implements Cloneable {
     }
 
     /**
+     * Returns the organism identifier.
+     *
+     * @return the organism identifier
+     */
+    public String getOrganismIdentifier() {
+        return iOrganismIdentifier;
+    }
+
+    /**
+     * Sets the organism identifier.
+     *
+     * @param aOrganismIdentifier the organism identifier
+     */
+    public void setOrganismIdentifier(String aOrganismIdentifier) {
+        iOrganismIdentifier = aOrganismIdentifier;
+    }
+
+    /**
      * Returns the foreign description.
      *
      * @return the foreign description
@@ -1718,6 +1741,21 @@ public class Header extends ExperimentObject implements Cloneable {
             }
 
             header.iTaxonomy = header.iDescription.substring(taxonomyStartIndex, taxonomyEndIndex);
+
+            if (ncbiTaxIdStartIndex != -1) {
+
+                int ncbiTaxIdEndIndex;
+
+                if (geneNameStartIndex != -1) {
+                    ncbiTaxIdEndIndex = geneNameStartIndex;
+                } else if (proteinEvidenceStartIndex != -1) {
+                    ncbiTaxIdEndIndex = proteinEvidenceStartIndex;
+                } else {
+                    ncbiTaxIdEndIndex = header.iDescription.length();
+                }
+
+                header.iOrganismIdentifier = header.iDescription.substring(ncbiTaxIdStartIndex + 4, ncbiTaxIdEndIndex);
+            }
 
             // now we can also shorten the protein description
             String tempShortHeader = header.iDescription.substring(0, taxonomyStartIndex - 3);

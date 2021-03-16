@@ -122,7 +122,13 @@ public class ProteinGeneDetailsProvider {
      *
      * @return the gene maps for the FASTA file loaded in the factory
      */
-    public GeneMaps getGeneMaps(GeneParameters genePreferences, FastaSummary fastaSummary, SequenceProvider sequenceProvider, ProteinDetailsProvider proteinDetailsProvider, WaitingHandler waitingHandler) {
+    public GeneMaps getGeneMaps(
+            GeneParameters genePreferences,
+            FastaSummary fastaSummary,
+            SequenceProvider sequenceProvider,
+            ProteinDetailsProvider proteinDetailsProvider,
+            WaitingHandler waitingHandler
+    ) {
 
         Collection<String> accessions = sequenceProvider.getAccessions();
 
@@ -335,7 +341,13 @@ public class ProteinGeneDetailsProvider {
      * @throws MalformedURLException if an MalformedURLException occurs
      * @throws IOException if an IOException occurs
      */
-    public boolean downloadGeneSequences(File destinationFile, String ensemblType, String ensemblSchemaName, String ensemblDbName, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
+    public boolean downloadGeneSequences(
+            File destinationFile,
+            String ensemblType,
+            String ensemblSchemaName,
+            String ensemblDbName,
+            WaitingHandler waitingHandler
+    ) throws MalformedURLException, IOException {
 
         // construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -370,7 +382,14 @@ public class ProteinGeneDetailsProvider {
      * @throws MalformedURLException if an MalformedURLException occurs
      * @throws IOException if an IOException occurs
      */
-    public boolean downloadGoMappings(String ensemblType, String ensemblSchemaName, String ensemblDbName, boolean swissProtMapping, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
+    public boolean downloadGoMappings(
+            String ensemblType,
+            String ensemblSchemaName,
+            String ensemblDbName,
+            boolean swissProtMapping,
+            WaitingHandler waitingHandler
+    )
+            throws MalformedURLException, IOException {
 
         String accessionMapping;
 
@@ -412,7 +431,11 @@ public class ProteinGeneDetailsProvider {
      * @throws MalformedURLException if an MalformedURLException occurs
      * @throws IOException if an IOException occurs
      */
-    public boolean queryEnsembl(String requestXml, File destinationFile, String ensemblType) throws MalformedURLException, IOException {
+    public boolean queryEnsembl(
+            String requestXml,
+            File destinationFile,
+            String ensemblType
+    ) throws MalformedURLException, IOException {
         return queryEnsembl(requestXml, destinationFile, ensemblType, null);
     }
 
@@ -430,7 +453,12 @@ public class ProteinGeneDetailsProvider {
      * @throws MalformedURLException if an MalformedURLException occurs
      * @throws IOException if an IOException occurs
      */
-    public boolean queryEnsembl(String requestXml, File destinationFile, String ensemblType, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
+    public boolean queryEnsembl(
+            String requestXml,
+            File destinationFile,
+            String ensemblType,
+            WaitingHandler waitingHandler
+    ) throws MalformedURLException, IOException {
         return queryEnsembl(requestXml, null, destinationFile, ensemblType, waitingHandler);
     }
 
@@ -449,11 +477,18 @@ public class ProteinGeneDetailsProvider {
      * @throws MalformedURLException if an MalformedURLException occurs
      * @throws IOException if an IOException occurs
      */
-    public boolean queryEnsembl(String requestXml, String waitingText, File destinationFile, String ensemblType, WaitingHandler waitingHandler) throws MalformedURLException, IOException {
+    public boolean queryEnsembl(
+            String requestXml,
+            String waitingText,
+            File destinationFile,
+            String ensemblType,
+            WaitingHandler waitingHandler
+    ) throws MalformedURLException, IOException {
 
         if (waitingHandler != null && waitingHandler instanceof ProgressDialogX && waitingText == null) {
             waitingText = "Downloading from Ensembl. Please wait...";
         }
+
         boolean success = true;
 
         int lastThousand = 0;
@@ -563,8 +598,13 @@ public class ProteinGeneDetailsProvider {
      * @throws IOException if an IOException occurs
      * @throws IllegalArgumentException if an IllegalArgumentException occurs
      */
-    public void downloadGeneMappings(String ensemblType, String ensemblSchemaName, String ensemblDatasetName, String ensemblVersion,
-            WaitingHandler waitingHandler) throws MalformedURLException, IOException, IllegalArgumentException {
+    public void downloadGeneMappings(
+            String ensemblType,
+            String ensemblSchemaName,
+            String ensemblDatasetName,
+            String ensemblVersion,
+            WaitingHandler waitingHandler
+    ) throws MalformedURLException, IOException, IllegalArgumentException {
 
         // construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -669,7 +709,12 @@ public class ProteinGeneDetailsProvider {
      * @param updateEqualVersion if true, the version is updated with equal
      * version numbers, false, only update if the new version is newer
      */
-    public void createDefaultGeneMappingFilesGeneric(String jarFilePath, File sourceEnsemblVersionsFile, File sourceGoDomainsFile, boolean updateEqualVersion) {
+    public void createDefaultGeneMappingFilesGeneric(
+            String jarFilePath,
+            File sourceEnsemblVersionsFile,
+            File sourceGoDomainsFile,
+            boolean updateEqualVersion
+    ) {
 
         if (!getGeneMappingFolder().exists()) {
             boolean folderCreated = getGeneMappingFolder().mkdirs();
@@ -799,7 +844,10 @@ public class ProteinGeneDetailsProvider {
      *
      * @throws IOException if an IOException occurs
      */
-    public void updateEnsemblVersion(String ensemblDatasetName, String ensemblVersion) throws IOException {
+    public void updateEnsemblVersion(
+            String ensemblDatasetName,
+            String ensemblVersion
+    ) throws IOException {
 
         if (ensemblVersionsMap == null) {
             ensemblVersionsMap = new HashMap<>();
@@ -833,39 +881,56 @@ public class ProteinGeneDetailsProvider {
      * @throws IOException thrown whenever an error occurred while reading the
      * file
      */
-    public Integer getEnsemblVersionFromFile(File ensemblVersionsFile, String species) throws IOException {
+    public Integer getEnsemblVersionFromFile(
+            File ensemblVersionsFile,
+            String species
+    ) throws IOException {
+
         Integer version = null;
         FileReader r = new FileReader(ensemblVersionsFile);
+
         try {
+
             BufferedReader br = new BufferedReader(r);
+
             try {
+
                 String line;
+
                 while ((line = br.readLine()) != null) {
+
                     String[] splittedLine = line.split(SEPARATOR);
                     String speciesAtLine = splittedLine[0];
+
                     if (speciesAtLine.equals(species)) {
                         String[] ensemblVersionSplit = splittedLine[1].split(" ");
                         version = Integer.valueOf(ensemblVersionSplit[1]);
                     }
+
                 }
             } finally {
                 br.close();
+
             }
+            
         } finally {
             r.close();
         }
+        
         return version;
     }
 
     /**
      * Gets the information contained into the Ensembl species file.
-     * 
+     *
      * @param ensemblVersionsFile the Ensembl species file to read
      * @return The Ensembl versions for each species
      * @throws FileNotFoundException if an FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      */
-    public HashMap<String, String> getEnsemblSpeciesVersions(File ensemblVersionsFile) throws FileNotFoundException, IOException {
+    public HashMap<String, String> getEnsemblSpeciesVersions(
+            File ensemblVersionsFile
+    ) throws FileNotFoundException, IOException {
 
         HashMap<String, String> localEnsemblVersionsMap = new HashMap<String, String>();
 
@@ -903,7 +968,7 @@ public class ProteinGeneDetailsProvider {
     public void loadEnsemblSpeciesVersions(File ensemblVersionsFile) throws IOException {
 
         // load the existing ensembl version numbers
-        try (BufferedReader br = new BufferedReader(new FileReader(ensemblVersionsFile))) {
+        try ( BufferedReader br = new BufferedReader(new FileReader(ensemblVersionsFile))) {
 
             ensemblVersionsMap = new HashMap<>();
             String line = br.readLine();

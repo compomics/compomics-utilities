@@ -51,6 +51,15 @@ public interface ProteinDetailsProvider {
      * @return the taxonomy for the given protein
      */
     public String getTaxonomy(String accession);
+    
+    /**
+     * Returns the organism identifier for the given protein.
+     *
+     * @param accession the accession of the protein
+     *
+     * @return the organism name for the given protein
+     */
+    public String getOrganismIdentifier(String accession);
 
     /**
      * Returns an integer representing the protein evidence level as indexed by

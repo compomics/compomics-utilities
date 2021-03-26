@@ -282,10 +282,10 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the proteins mapping as a map of 0 based indexes for every
+     * Returns the protein mapping as a map of 0-based indexes for every
      * protein accession.
      *
-     * @return the proteins mapping
+     * @return the protein mapping
      */
     public TreeMap<String, int[]> getProteinMapping() {
 
@@ -293,10 +293,10 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Sets the proteins mapping as a map of 0 based indexes for every protein
+     * Sets the protein mapping as a map of 0-based indexes for every protein
      * accession.
      *
-     * @param proteinMapping the proteins mapping
+     * @param proteinMapping the protein mapping
      */
     public void setProteinMapping(
             TreeMap<String, int[]> proteinMapping

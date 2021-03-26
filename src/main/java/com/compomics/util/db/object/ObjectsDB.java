@@ -1,7 +1,6 @@
 package com.compomics.util.db.object;
 
 import static com.compomics.util.db.object.DbMutex.dbMutex;
-import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
@@ -119,6 +118,7 @@ public class ObjectsDB {
      * Committing all changes into the database.
      */
     public void commit() {
+
         try {
             dbMutex.acquire();
             connection.commit();
@@ -330,16 +330,18 @@ public class ObjectsDB {
      * @return object the object loaded from the database
      */
     private Object loadFromDB(long objectKey) {
+
         Object object = null;
 
         try {
+
             dbMutex.acquire();
             PreparedStatement pstmt = connection.prepareStatement("SELECT class, data FROM data WHERE id = ?;");
             pstmt.setLong(1, objectKey);
             ResultSet rs = pstmt.executeQuery();
+
             if (rs.next()) {
 
-                ProteinMatch prmIn = null;
                 ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
                 Input input = new Input(bis);
                 Class<?> c = Class.forName(rs.getString("class"));
@@ -348,6 +350,7 @@ public class ObjectsDB {
                 bis.close();
 
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -434,6 +437,7 @@ public class ObjectsDB {
 
                 objectsNotInCache.put(objectKey, object);
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -451,13 +455,11 @@ public class ObjectsDB {
      */
     public Object retrieveObject(long objectKey) {
 
-        Object obj = null;
-
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " | retrieving one object with key: " + objectKey);
         }
 
-        obj = objectsCache.getObject(objectKey);
+        Object obj = objectsCache.getObject(objectKey);
 
         if (obj == null) {
 
@@ -539,6 +541,12 @@ public class ObjectsDB {
         return retrievingObjects;
     }
 
+    /**
+     * Update the object with the given key.
+     *
+     * @param objectKey the object key
+     * @param object the object
+     */
     public void updateObject(long objectKey, Object object) {
 
         if (debugInteractions) {
@@ -598,6 +606,7 @@ public class ObjectsDB {
                 }
                 retrievingObjects.add(object);
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -639,6 +648,7 @@ public class ObjectsDB {
                 pstmt.executeUpdate();
 
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -659,11 +669,13 @@ public class ObjectsDB {
         }
 
         try {
+
             objectsCache.removeObject(key);
             dbMutex.acquire();
             PreparedStatement pstmt = connection.prepareStatement("DELETE FROM data WHERE id = ?;");
             pstmt.setLong(1, key);
             pstmt.executeUpdate();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -806,10 +818,11 @@ public class ObjectsDB {
             if (saveCache) {
                 objectsCache.saveCache(null, true);
             }
-            objectsCache.clearCache();
 
+            objectsCache.clearCache();
             connectionActive = false;
             connection.close();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -830,6 +843,7 @@ public class ObjectsDB {
         }
 
         try {
+
             dbMutex.acquire();
 
             // Connect with the database
@@ -839,15 +853,18 @@ public class ObjectsDB {
             boolean insertTables = true;
             PreparedStatement pst = connection.prepareStatement("SELECT * FROM sqlite_master WHERE type = 'table'");
             ResultSet rs = pst.executeQuery();
+
             while (rs.next()) {
                 if (rs.getString("name").equals("data")) {
                     insertTables = false;
                     break;
                 }
             }
+
             connection.commit();
 
             if (insertTables) {
+
                 String sql = "CREATE TABLE `data` (`id` INTEGER, `class` TEXT, `data` BLOB, PRIMARY KEY(id));";
                 Statement stmt = connection.createStatement();
                 stmt.execute(sql);
@@ -858,17 +875,24 @@ public class ObjectsDB {
                 sql = "CREATE INDEX `data_class_index` ON `data` (`class` ASC);";
                 stmt.execute(sql);
                 connection.commit();
+
             } else {
+
                 try {
+
                     PreparedStatement pstmt = connection.prepareStatement("SELECT id FROM data");
                     ResultSet rsId = pstmt.executeQuery();
+
                     if (rsId.next()) {
                         keysInBackend.add(rsId.getLong("id"));
                     }
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -876,7 +900,6 @@ public class ObjectsDB {
         }
 
         connectionActive = true;
-
     }
 
     /**

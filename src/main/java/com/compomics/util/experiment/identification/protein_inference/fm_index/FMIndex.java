@@ -67,10 +67,11 @@ import java.util.stream.Collectors;
  * @author Marc Vaudel
  */
 public class FMIndex extends ExperimentObject implements FastaMapper, SequenceProvider, ProteinDetailsProvider {
+
     /**
      * FMIndex version number.
      */
-    private static final String fmIndexVersionNumber = "v1.0.0";
+    private static final String FM_INDEX_VERSION_NUMBER = "v1.0.0";
     /**
      * Maximal number of PTMs per peptide.
      */
@@ -169,11 +170,11 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
      */
     private String[] modifictationLabels = null;
     /**
-     * Dictionary label to internal id
+     * Dictionary label to internal id.
      */
     private HashMap<String, Integer> modificationLabelsToId = new HashMap<>();
     /**
-     * List of all modification flags
+     * List of all modification flags.
      */
     private boolean[] modificationFlags = null;
     /**
@@ -1133,7 +1134,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
             try {
                 ois = new ObjectInputStream(is);
                 String loadedVersionNumber = ois.readUTF();
-                if (fmIndexVersionNumber.equals(loadedVersionNumber)){
+                if (FM_INDEX_VERSION_NUMBER.equals(loadedVersionNumber)){
                     indexParts = ois.readInt();
                     indexStringLengths = (ArrayList<Integer>) ois.readObject();
                     suffixArraysPrimary = (ArrayList<int[]>) ois.readObject();
@@ -1344,7 +1345,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
         if (loadFasta) {
             DataOutputStream os = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(FMFile.getAbsolutePath())));
             ObjectOutputStream oos = new ObjectOutputStream(os);
-            oos.writeUTF(fmIndexVersionNumber);
+            oos.writeUTF(FM_INDEX_VERSION_NUMBER);
             oos.writeInt(indexParts);
             oos.writeObject(indexStringLengths);
             oos.writeObject(suffixArraysPrimary);

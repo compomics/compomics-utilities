@@ -321,9 +321,9 @@ public class FastaSummary {
             String accession = header.getAccessionOrRest();
             
             // check for duplicate headers
-            boolean alreadyAdded = accessionNumbers.add(accession);
+            boolean newAccession = accessionNumbers.add(accession);
             
-            if (alreadyAdded) {
+            if (!newAccession) {
                 throw new IOException("Duplicated accession number: " + accession);
             }
 

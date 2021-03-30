@@ -13,6 +13,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -301,6 +302,7 @@ public class FastaSummary {
 
         TreeMap<String, Integer> speciesOccurrence = new TreeMap<>();
         HashMap<ProteinDatabase, Integer> databaseType = new HashMap<>(1);
+        TreeSet<String> accessionNumbers = new TreeSet<>();
         int nSequences = 0;
         int nTarget = 0;
 
@@ -315,6 +317,15 @@ public class FastaSummary {
         while ((fastaHeader = headerIterator.getNextHeader(waitingHandler)) != null) {
 
             Header header = Header.parseFromFASTA(fastaHeader);
+            
+            String accession = header.getAccessionOrRest();
+            
+            // check for duplicate headers
+            boolean alreadyAdded = accessionNumbers.add(accession);
+            
+            if (alreadyAdded) {
+                throw new IOException("Duplicated accession number: " + accession);
+            }
 
             String species = header.getTaxonomy();
 
@@ -351,8 +362,6 @@ public class FastaSummary {
                 databaseType.put(proteinDatabase, occurrence + 1);
 
             }
-
-            String accession = header.getAccessionOrRest();
 
             if (!ProteinUtils.isDecoy(accession, fastaParameters)) {
 

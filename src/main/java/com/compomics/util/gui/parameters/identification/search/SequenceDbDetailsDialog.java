@@ -522,16 +522,6 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
 
                     }
 
-                } catch (IOException e) {
-                    progressDialog.setRunFinished();
-                    JOptionPane.showMessageDialog(
-                            SequenceDbDetailsDialog.this,
-                            "File " + selectedFastaFile + " not found.",
-                            "FASTA Import Error",
-                            JOptionPane.WARNING_MESSAGE
-                    );
-                    e.printStackTrace();
-                    return;
                 } catch (Exception e) {
                     progressDialog.setRunFinished();
                     JOptionPane.showMessageDialog(

@@ -32,7 +32,7 @@ public class CmsFileUtils {
 
         try {
 
-            String magicName = "CmsFile.1";
+            String magicName = "CmsFile.1.1";
             return magicName.getBytes(ENCODING);
 
         } catch (UnsupportedEncodingException e) {

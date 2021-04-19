@@ -654,6 +654,13 @@
             <type>jar</type>
         </dependency>
         
+        <dependency>
+            <groupId>io.airlift</groupId>
+            <artifactId>aircompressor</artifactId>
+            <version>0.18</version>
+            <type>jar</type>
+        </dependency>
+        
     </dependencies>
 
 

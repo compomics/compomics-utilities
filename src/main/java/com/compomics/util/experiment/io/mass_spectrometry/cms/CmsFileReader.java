@@ -5,8 +5,10 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.IoUtil;
 import static com.compomics.util.io.IoUtil.ENCODING;
+import com.compomics.util.io.compression.ZstdUtils;
 import com.compomics.util.threading.SimpleSemaphore;
 import com.compomics.util.waiting.WaitingHandler;
+import io.airlift.compress.zstd.ZstdDecompressor;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,8 +18,6 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.zip.DataFormatException;
-import java.util.zip.Inflater;
 
 /**
  * Reader for Compomics Mass Spectrometry (cms) files.
@@ -358,35 +358,18 @@ public class CmsFileReader implements SpectrumProvider {
      */
     public static byte[] uncompress(
             byte[] compressedByteArray,
-            int uncompressedLength) {
-
-        try {
-
-            byte[] uncompressedByteAray = new byte[uncompressedLength];
-
-            Inflater inflater = new Inflater(true);
-
-            inflater.setInput(compressedByteArray);
-            int bytesUncompressed = inflater.inflate(uncompressedByteAray);
-
-            if (bytesUncompressed == 0) {
-
-                throw new IllegalArgumentException("Missing input or dictionary.");
-
-            } else if (bytesUncompressed != uncompressedLength) {
-
-//                String debug = new String(uncompressedByteAray, 0, uncompressedByteAray.length, encoding);
-                throw new IllegalArgumentException("Unexpected number of bytes uncompressed " + bytesUncompressed + " (expected: " + uncompressedLength + ")");
-
-            }
+            int uncompressedLength
+    ) {
+            
+            ZstdDecompressor decompressor = new ZstdDecompressor(); // @TODO: consider externalizing, there should be only one per thread. 
+            
+               byte[]  uncompressedByteAray = ZstdUtils.zstdDecompress(
+                        decompressor, 
+                        compressedByteArray, 
+                        uncompressedLength
+                );
 
             return uncompressedByteAray;
-
-        } catch (DataFormatException e) {
-
-            throw new RuntimeException(e);
-
-        }
 
     }
 

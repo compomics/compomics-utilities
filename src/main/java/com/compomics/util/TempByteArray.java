@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.io.mass_spectrometry.cms;
+package com.compomics.util;
 
 /**
  * Convenience class for storing an array buffer and a length.

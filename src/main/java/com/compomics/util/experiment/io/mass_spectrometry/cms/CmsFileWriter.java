@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.io.mass_spectrometry.cms;
 
 import com.compomics.util.ArrayUtil;
+import com.compomics.util.TempByteArray;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,6 +14,10 @@ import static com.compomics.util.io.IoUtil.ENCODING;
 import static com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileUtils.MAGIC_NUMBER;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.io.compression.ZstdUtils;
+import com.compomics.util.threading.SimpleSemaphore;
+import io.airlift.compress.zstd.ZstdCompressor;
+import io.airlift.compress.zstd.ZstdDecompressor;
 
 /**
  * Writer for cms files.
@@ -30,10 +35,6 @@ public class CmsFileWriter implements AutoCloseable {
      * The random access file to write to.
      */
     private final RandomAccessFile raf;
-    /**
-     * The deflater to compress the spectra.
-     */
-    private final Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION, true);
     /**
      * The minimal precursor m/z.
      */
@@ -58,6 +59,10 @@ public class CmsFileWriter implements AutoCloseable {
      * List of the index of the spectra.
      */
     private final ArrayList<Integer> indexes = new ArrayList<>();
+    /**
+     * Zstd compressor.
+     */
+    private final ZstdCompressor compressor = new ZstdCompressor();
 
     /**
      * Constructor.
@@ -205,43 +210,14 @@ public class CmsFileWriter implements AutoCloseable {
      *
      * @return The compressed data.
      */
-    private TempByteArray compress(
+    private synchronized TempByteArray compress(
             byte[] uncompressedData
     ) {
 
-        byte[] compressedData = new byte[uncompressedData.length];
-
-        int outputLength = compressedData.length;
-
-        deflater.setInput(uncompressedData);
-        int compressedByteLength = deflater.deflate(
-                compressedData,
-                0,
-                compressedData.length,
-                Deflater.FULL_FLUSH
+        return ZstdUtils.zstdCompress(
+                compressor,
+                uncompressedData
         );
-        int compressedDataLength = compressedByteLength;
-
-        while (compressedByteLength == outputLength) {
-
-            byte[] output2 = new byte[outputLength];
-            compressedByteLength = deflater.deflate(
-                    output2,
-                    0,
-                    outputLength,
-                    Deflater.FULL_FLUSH
-            );
-
-            compressedData = ArrayUtil.concatenate(
-                    compressedData,
-                    output2,
-                    compressedByteLength
-            );
-            compressedDataLength += compressedByteLength;
-
-        }
-
-        return new TempByteArray(compressedData, compressedDataLength);
 
     }
 
@@ -291,7 +267,6 @@ public class CmsFileWriter implements AutoCloseable {
 
         writeHeaderAndFooter();
 
-        deflater.end();
         raf.close();
 
     }

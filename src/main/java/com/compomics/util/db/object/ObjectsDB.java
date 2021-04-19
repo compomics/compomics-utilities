@@ -9,6 +9,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import java.sql.*;
 import java.util.Map.Entry;
+import org.apache.commons.io.IOUtils;
 
 /**
  * A database which can easily be used to store objects.
@@ -342,7 +343,7 @@ public class ObjectsDB {
 
             if (rs.next()) {
 
-                ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
+                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
                 Input input = new Input(bis);
                 Class<?> c = Class.forName(rs.getString("class"));
                 object = kryo.readObject(input, c);
@@ -427,7 +428,7 @@ public class ObjectsDB {
                     return;
                 }
 
-                ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
+                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
                 Input input = new Input(bis);
                 Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
                 input.close();
@@ -593,7 +594,7 @@ public class ObjectsDB {
                     return retrievingObjects;
                 }
 
-                ByteArrayInputStream bis = new ByteArrayInputStream(rs.getBinaryStream("data").readAllBytes());
+                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
                 Input input = new Input(bis);
                 Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
                 input.close();

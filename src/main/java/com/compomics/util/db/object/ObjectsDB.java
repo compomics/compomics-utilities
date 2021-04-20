@@ -1,15 +1,14 @@
 package com.compomics.util.db.object;
 
 import static com.compomics.util.db.object.DbMutex.dbMutex;
+import com.compomics.util.experiment.identification.matches.ProteinMatch;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.util.*;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
 import java.sql.*;
 import java.util.Map.Entry;
-import org.apache.commons.io.IOUtils;
+
 
 /**
  * A database which can easily be used to store objects.
@@ -41,10 +40,8 @@ public class ObjectsDB {
      * Database persistence manager.
      */
     private Connection connection = null;
-    /**
-     * Configuration for fast serialization.
-     */
-    public Kryo kryo;
+    
+    
     /**
      * HashMap to map hash IDs of entries into DB ids.
      */
@@ -89,9 +86,6 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " Creating database");
         }
 
-        kryo = new Kryo();
-        kryo.setRegistrationRequired(false);
-
         this.path = path;
         this.dbName = dbName;
 
@@ -119,7 +113,6 @@ public class ObjectsDB {
      * Committing all changes into the database.
      */
     public void commit() {
-
         try {
             dbMutex.acquire();
             connection.commit();
@@ -331,27 +324,16 @@ public class ObjectsDB {
      * @return object the object loaded from the database
      */
     private Object loadFromDB(long objectKey) {
-
         Object object = null;
 
         try {
-
             dbMutex.acquire();
             PreparedStatement pstmt = connection.prepareStatement("SELECT class, data FROM data WHERE id = ?;");
             pstmt.setLong(1, objectKey);
             ResultSet rs = pstmt.executeQuery();
-
             if (rs.next()) {
-
-                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
-                Input input = new Input(bis);
-                Class<?> c = Class.forName(rs.getString("class"));
-                object = kryo.readObject(input, c);
-                input.close();
-                bis.close();
-
+                object = ObjectsCache.deserialize(rs.getBinaryStream("data"));
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -421,24 +403,17 @@ public class ObjectsDB {
             PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM data WHERE class = ?;");
             pstmt.setString(1, className.getName());
             ResultSet rs = pstmt.executeQuery();
-
+            Object object = null;
             while (rs.next()) {
 
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return;
                 }
-
-                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
-                Input input = new Input(bis);
-                Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
-                input.close();
-                bis.close();
-
+                object = ObjectsCache.deserialize(rs.getBinaryStream("data"));
                 long objectKey = rs.getLong("id");
 
                 objectsNotInCache.put(objectKey, object);
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -456,11 +431,13 @@ public class ObjectsDB {
      */
     public Object retrieveObject(long objectKey) {
 
+        Object obj = null;
+
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " | retrieving one object with key: " + objectKey);
         }
 
-        Object obj = objectsCache.getObject(objectKey);
+        obj = objectsCache.getObject(objectKey);
 
         if (obj == null) {
 
@@ -587,27 +564,21 @@ public class ObjectsDB {
             PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM data WHERE class = ?;");
             pstmt.setString(1, className.getName());
             ResultSet rs = pstmt.executeQuery();
-
+            Object object = null;
             while (rs.next()) {
 
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return retrievingObjects;
                 }
 
-                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
-                Input input = new Input(bis);
-                Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
-                input.close();
-                bis.close();
-
-                long objectKey = rs.getLong("id");
+                object = ObjectsCache.deserialize(rs.getBinaryStream("data"));
+                long objectKey = rs.getLong("id");                
 
                 if (!objectInCache.contains(objectKey)) {
                     objectsNotInCache.put(objectKey, object);
                 }
                 retrievingObjects.add(object);
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -649,7 +620,6 @@ public class ObjectsDB {
                 pstmt.executeUpdate();
 
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -670,13 +640,11 @@ public class ObjectsDB {
         }
 
         try {
-
             objectsCache.removeObject(key);
             dbMutex.acquire();
             PreparedStatement pstmt = connection.prepareStatement("DELETE FROM data WHERE id = ?;");
             pstmt.setLong(1, key);
             pstmt.executeUpdate();
-
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -819,11 +787,10 @@ public class ObjectsDB {
             if (saveCache) {
                 objectsCache.saveCache(null, true);
             }
-
             objectsCache.clearCache();
+
             connectionActive = false;
             connection.close();
-
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -844,7 +811,6 @@ public class ObjectsDB {
         }
 
         try {
-
             dbMutex.acquire();
 
             // Connect with the database
@@ -854,18 +820,15 @@ public class ObjectsDB {
             boolean insertTables = true;
             PreparedStatement pst = connection.prepareStatement("SELECT * FROM sqlite_master WHERE type = 'table'");
             ResultSet rs = pst.executeQuery();
-
             while (rs.next()) {
                 if (rs.getString("name").equals("data")) {
                     insertTables = false;
                     break;
                 }
             }
-
             connection.commit();
 
             if (insertTables) {
-
                 String sql = "CREATE TABLE `data` (`id` INTEGER, `class` TEXT, `data` BLOB, PRIMARY KEY(id));";
                 Statement stmt = connection.createStatement();
                 stmt.execute(sql);
@@ -876,24 +839,17 @@ public class ObjectsDB {
                 sql = "CREATE INDEX `data_class_index` ON `data` (`class` ASC);";
                 stmt.execute(sql);
                 connection.commit();
-
             } else {
-
                 try {
-
                     PreparedStatement pstmt = connection.prepareStatement("SELECT id FROM data");
                     ResultSet rsId = pstmt.executeQuery();
-
                     if (rsId.next()) {
                         keysInBackend.add(rsId.getLong("id"));
                     }
-
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -901,6 +857,7 @@ public class ObjectsDB {
         }
 
         connectionActive = true;
+
     }
 
     /**

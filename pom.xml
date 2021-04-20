@@ -431,11 +431,6 @@
             <type>jar</type>
         </dependency>
         
-        <dependency>
-            <groupId>com.esotericsoftware</groupId>
-            <artifactId>kryo</artifactId>
-            <version>5.0.0-RC9</version>
-         </dependency>
 
         <!-- This project depends on jgoodies looks -->
         <dependency>

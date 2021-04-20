@@ -2,19 +2,25 @@ package com.compomics.util.db.object;
 
 import static com.compomics.util.db.object.DbMutex.loadObjectMutex;
 import com.compomics.util.waiting.WaitingHandler;
+import java.io.ByteArrayInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import static java.lang.System.out;
 import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
@@ -143,7 +149,6 @@ public class ObjectsCache {
             
         }
     }
-    
 
     /**
      * Adds an object to the cache. The object must not necessarily be in the
@@ -272,7 +277,6 @@ public class ObjectsCache {
      * cleared from the cache
      */
     public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) {
-        Kryo kryo = objectsDB.kryo;
 
         if (!readOnly) {
 
@@ -291,6 +295,7 @@ public class ObjectsCache {
             Set<Long> removeKeys = new HashSet<Long>();
 
             int i = 0;
+            byte barray[] = null;
 
             for (Entry<Long, ObjectsCacheElement> entry : loadedObjects.entrySet()) {
 
@@ -312,14 +317,8 @@ public class ObjectsCache {
                 ObjectsCacheElement obj = loadedObjects.get(key);
                 obj.edited = false;
                 
-                try {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    Output output = new Output(baos);
-                    kryo.writeObject(output, obj.object);
-                    output.close();
-                    byte[] barray = baos.toByteArray();
-                    baos.close();
-                    
+                try {              
+                    barray = serialize(obj.object);
                     
                     if (obj.inDB){
                         psUpdate.setBytes(1, barray);
@@ -344,7 +343,7 @@ public class ObjectsCache {
                 loadObjectMutex.release();
 
             }
-            
+
             try {
                 loadObjectMutex.acquire();
                 psInsert.executeBatch();
@@ -498,5 +497,30 @@ public class ObjectsCache {
             this.inDB = inDB;
             this.edited = edited;
         }
+    }
+    
+    
+    public static byte[] serialize(Object obj) throws IOException {
+        try(ByteArrayOutputStream b = new ByteArrayOutputStream()){
+            try(ObjectOutputStream o = new ObjectOutputStream(b)){
+                o.writeObject(obj);
+            }
+            return b.toByteArray();
+        }
+    }
+
+    public static Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+        try(ByteArrayInputStream b = new ByteArrayInputStream(bytes)){
+            try(ObjectInputStream o = new ObjectInputStream(b)){
+                return o.readObject();
+            }
+        }
+    }
+    
+    public static Object deserialize(InputStream b) throws IOException, ClassNotFoundException {
+        try(ObjectInputStream o = new ObjectInputStream(b)){
+            return o.readObject();
+        }
+        
     }
 }

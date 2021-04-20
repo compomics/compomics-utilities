@@ -14,6 +14,7 @@ import com.esotericsoftware.kryo.io.Output;
 import java.io.ByteArrayOutputStream;
 import static java.lang.System.out;
 import java.lang.reflect.Field;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * An object cache can be combined to an ObjectDB to improve its performance. A
@@ -34,7 +35,7 @@ public class ObjectsCache {
     /**
      * Map of the loaded matches. db &gt; table &gt; object key &gt; object.
      */
-    private final HashMap<Long, ObjectsCacheElement> loadedObjects = new HashMap<>();
+    private final ConcurrentHashMap<Long, ObjectsCacheElement> loadedObjects = new ConcurrentHashMap<>();
     /**
      * HashMap to store the class type of the objects in cache.
      */
@@ -52,6 +53,7 @@ public class ObjectsCache {
      */
     private final int keepObjectsThreshold = 10000;
 
+    
     /**
      * Constructor.
      *
@@ -67,7 +69,10 @@ public class ObjectsCache {
      * @return the cache size in number of objects
      */
     public int getCacheSize() {
-        return loadedObjects.size();
+        loadObjectMutex.acquire();
+        int size = loadedObjects.size();
+        loadObjectMutex.release();
+        return size;
     }
 
     /**
@@ -109,11 +114,11 @@ public class ObjectsCache {
      */
     public Object getObject(long objectKey) {
         Object object = null;
-
+        loadObjectMutex.acquire();
         if (loadedObjects.containsKey(objectKey)) {
             object = loadedObjects.get(objectKey).object;
         }
-
+        loadObjectMutex.release();
         return object;
     }
 
@@ -125,14 +130,20 @@ public class ObjectsCache {
     public void removeObject(long objectKey) {
 
         if (!readOnly) {
-            if (loadedObjects.containsKey(objectKey)) {
+            loadObjectMutex.acquire();
+            boolean contains = loadedObjects.containsKey(objectKey);
+            loadObjectMutex.release();
+            if (contains) {
                 Object object = getObject(objectKey);
+                loadObjectMutex.acquire();
                 classMap.get(object.getClass()).remove(objectKey);
                 loadedObjects.remove(objectKey);
-
+                loadObjectMutex.release();
             }
+            
         }
     }
+    
 
     /**
      * Adds an object to the cache. The object must not necessarily be in the
@@ -159,7 +170,7 @@ public class ObjectsCache {
     public void addObject(long objectKey, Object object, boolean inDB, boolean edited) {
 
         if (!readOnly) {
-
+            loadObjectMutex.acquire();
             if (!loadedObjects.containsKey(objectKey)) {
                 loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
             } else {
@@ -167,7 +178,7 @@ public class ObjectsCache {
                 loadedObjects.get(objectKey).inDB = inDB;
                 loadedObjects.get(objectKey).edited = edited;
             }
-
+            loadObjectMutex.release();
             if (!classMap.containsKey(object.getClass())) {
                 classMap.put(object.getClass(), new HashSet<>());
             }
@@ -209,7 +220,7 @@ public class ObjectsCache {
 
                 long objectKey = kv.getKey();
                 Object object = kv.getValue();
-
+                loadObjectMutex.acquire();
                 if (!loadedObjects.containsKey(objectKey)) {
                     loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
                 } else {
@@ -217,7 +228,7 @@ public class ObjectsCache {
                     loadedObjects.get(objectKey).inDB = inDB;
                     loadedObjects.get(objectKey).edited = edited;
                 }
-
+                loadObjectMutex.release();
                 if (!classMap.containsKey(object.getClass())) {
                     classMap.put(object.getClass(), new HashSet<>());
                 }
@@ -294,6 +305,8 @@ public class ObjectsCache {
                         break;
                     }
                 }
+                loadObjectMutex.acquire();
+
                 long key = entry.getKey();
                 
                 ObjectsCacheElement obj = loadedObjects.get(key);
@@ -328,9 +341,10 @@ public class ObjectsCache {
                     removeKeys.add(key);
                     classMap.get(obj.object.getClass()).remove(key);
                 }
+                loadObjectMutex.release();
 
             }
-
+            
             try {
                 loadObjectMutex.acquire();
                 psInsert.executeBatch();
@@ -355,11 +369,14 @@ public class ObjectsCache {
      * @throws InterruptedException if the thread is interrupted
      */
     private void updateCache() {
+        int cacheSize = getCacheSize();
+        
+        while (cacheSize > keepObjectsThreshold && !memoryCheck()) {
 
-        while (loadedObjects.size() > keepObjectsThreshold && !memoryCheck()) {
-
-            int toRemove = loadedObjects.size() >> 2;
+            int toRemove = cacheSize >> 2;
             saveObjects(toRemove, null, true);
+            cacheSize = getCacheSize();
+
         }
     }
 
@@ -370,7 +387,10 @@ public class ObjectsCache {
      * @return if key in cache
      */
     public boolean inCache(long longKey) {
-        return loadedObjects.containsKey(longKey);
+        loadObjectMutex.acquire();
+        boolean contains = loadedObjects.containsKey(longKey);
+        loadObjectMutex.release();
+        return contains;
     }
 
     /**
@@ -387,8 +407,8 @@ public class ObjectsCache {
             waitingHandler.resetSecondaryProgressCounter();
             waitingHandler.setMaxSecondaryProgressCounter(loadedObjects.size() + 1); // @TODO: can this number get bigger than the max integer value? 
         }
-
-        saveObjects(loadedObjects.size(), waitingHandler, emptyCache);
+        int cacheSize = getCacheSize();
+        saveObjects(cacheSize, waitingHandler, emptyCache);
 
         if (waitingHandler != null) {
 
@@ -404,14 +424,19 @@ public class ObjectsCache {
      * @return a boolean indicating whether the cache is empty
      */
     public boolean isEmpty() {
-        return loadedObjects.isEmpty();
+        loadObjectMutex.acquire();
+        boolean isEmpty = loadedObjects.isEmpty();
+        loadObjectMutex.release();
+        return isEmpty;
     }
 
     /**
      * Clears the cache.
      */
     public void clearCache() {
+        loadObjectMutex.acquire();
         loadedObjects.clear();
+        loadObjectMutex.release();
     }
 
     /**

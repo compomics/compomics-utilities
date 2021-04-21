@@ -153,7 +153,7 @@ public class JavaParametersDialog extends javax.swing.JDialog {
         });
 
         versionRecommendationLabel1.setFont(versionRecommendationLabel1.getFont().deriveFont((versionRecommendationLabel1.getFont().getStyle() | java.awt.Font.ITALIC)));
-        versionRecommendationLabel1.setText("Required: Java 1.9 or newer");
+        versionRecommendationLabel1.setText("Required: Java 1.8 or newer");
 
         javax.swing.GroupLayout javaHomePanelLayout = new javax.swing.GroupLayout(javaHomePanel);
         javaHomePanel.setLayout(javaHomePanelLayout);
@@ -179,10 +179,10 @@ public class JavaParametersDialog extends javax.swing.JDialog {
         versionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Java Version"));
         versionPanel.setOpaque(false);
 
-        versionLabel.setText("1.7");
+        versionLabel.setText("1.8");
 
         versionRecommendationLabel2.setFont(versionRecommendationLabel2.getFont().deriveFont((versionRecommendationLabel2.getFont().getStyle() | java.awt.Font.ITALIC)));
-        versionRecommendationLabel2.setText("Required: Java 1.9 or newer");
+        versionRecommendationLabel2.setText("Required: Java 1.8 or newer");
 
         javax.swing.GroupLayout versionPanelLayout = new javax.swing.GroupLayout(versionPanel);
         versionPanel.setLayout(versionPanelLayout);

@@ -139,7 +139,7 @@
                     <Font component="versionRecommendationLabel1" italic="true" property="font" relativeSize="true" size="0"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Required: Java 1.9 or newer"/>
+                <Property name="text" type="java.lang.String" value="Required: Java 1.8 or newer"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -182,7 +182,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="versionLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="1.7"/>
+                <Property name="text" type="java.lang.String" value="1.8"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="versionRecommendationLabel2">
@@ -192,7 +192,7 @@
                     <Font component="versionRecommendationLabel2" italic="true" property="font" relativeSize="true" size="0"/>
                   </FontInfo>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Required: Java 1.9 or newer"/>
+                <Property name="text" type="java.lang.String" value="Required: Java 1.8 or newer"/>
               </Properties>
             </Component>
           </SubComponents>

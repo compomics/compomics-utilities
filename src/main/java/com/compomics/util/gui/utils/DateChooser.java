@@ -5,7 +5,8 @@
  * Time: 16:23:59
  */
 package com.compomics.util.gui.utils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 /*
  * CVS information:
  *
@@ -34,7 +35,7 @@ public class DateChooser extends JDialog {
     }
 
     // Class specific log4j logger for DateChooser instances.
-    static Logger logger = Logger.getLogger(DateChooser.class);
+    static Logger logger = LogManager.getLogger(DateChooser.class);
 
     private Calendar iSelectedCalendar = null;
 

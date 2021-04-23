@@ -15,7 +15,8 @@ package com.compomics.util.test.protein;
 import com.compomics.util.protein.ModificationImplementation;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 
@@ -35,7 +36,7 @@ import java.util.HashMap;
 public class TestModificationImplementation extends TestCase {
 
     // Class specific log4j logger for TestModificationImplementation instances.
-    Logger logger = Logger.getLogger(TestModificationImplementation.class);
+    Logger logger = LogManager.getLogger(TestModificationImplementation.class);
 
     public TestModificationImplementation() {
         this("Test Scenario for the ModificationImplementation class.");

@@ -86,7 +86,7 @@ public class Modification extends ExperimentObject {
      */
     public Modification() {
     }
-    
+
     /**
      * Constructor for a reference modification.
      *
@@ -186,7 +186,7 @@ public class Modification extends ExperimentObject {
      * @param name the modification name
      */
     public void setName(String name) {
-        
+
         this.name = name;
     }
 
@@ -196,7 +196,7 @@ public class Modification extends ExperimentObject {
      * @return the short modification name
      */
     public String getShortName() {
-        
+
         return shortName;
     }
 
@@ -206,7 +206,7 @@ public class Modification extends ExperimentObject {
      * @param shortName the modification name
      */
     public void setShortName(String shortName) {
-        
+
         this.shortName = shortName;
     }
 
@@ -216,7 +216,7 @@ public class Modification extends ExperimentObject {
      * @return the mass difference induced by the modification
      */
     public double getMass() {
-        
+
         if (mass == null) {
             estimateMass();
         }
@@ -228,7 +228,7 @@ public class Modification extends ExperimentObject {
      * attribute.
      */
     private synchronized void estimateMass() {
-        
+
         if (mass == null) {
             Double tempMass = 0.0;
             if (atomChainAdded != null) {
@@ -247,7 +247,6 @@ public class Modification extends ExperimentObject {
      * @return the ambiguity key
      */
     public String getAmbiguityKey() {
-        
 
         if (ambiguityKey == null) {
             setAmbiguityKey();
@@ -260,7 +259,7 @@ public class Modification extends ExperimentObject {
      * Sets the ambiguity key.
      */
     private void setAmbiguityKey() {
-        
+
         this.ambiguityKey = Double.toString(getMass());
     }
 
@@ -271,7 +270,7 @@ public class Modification extends ExperimentObject {
      * @return the rounded mass difference induced by the modification
      */
     public double getRoundedMass(int numberOfDecimals) {
-        
+
         double roundedMass = getMass();
         return Util.roundDouble(roundedMass, numberOfDecimals);
     }
@@ -283,7 +282,7 @@ public class Modification extends ExperimentObject {
      * @return the rounded mass difference induced by the modification
      */
     public double getRoundedMass() {
-        
+
         return getRoundedMass(NUMBER_OF_ROUNDED_DECIMALS);
     }
 
@@ -293,7 +292,7 @@ public class Modification extends ExperimentObject {
      * @return the atom chain added
      */
     public AtomChain getAtomChainAdded() {
-        
+
         return atomChainAdded;
     }
 
@@ -303,7 +302,7 @@ public class Modification extends ExperimentObject {
      * @param atomChainAdded the atom chain added
      */
     public void setAtomChainAdded(AtomChain atomChainAdded) {
-        
+
         this.atomChainAdded = atomChainAdded;
         mass = null;
     }
@@ -314,7 +313,7 @@ public class Modification extends ExperimentObject {
      * @return the atom chain removed
      */
     public AtomChain getAtomChainRemoved() {
-        
+
         return atomChainRemoved;
     }
 
@@ -324,7 +323,7 @@ public class Modification extends ExperimentObject {
      * @param atomChainRemoved the atom chain removed
      */
     public void setAtomChainRemoved(AtomChain atomChainRemoved) {
-        
+
         this.atomChainRemoved = atomChainRemoved;
         mass = null;
     }
@@ -339,7 +338,7 @@ public class Modification extends ExperimentObject {
      * the other one
      */
     public boolean isSameAtomicComposition(Modification anotherModification) { // @TODO: can probably be simplified now that the atom chains cannot be null?
-        
+
         if (atomChainAdded != null && !atomChainAdded.isSameCompositionAs(anotherModification.getAtomChainAdded())
                 || atomChainRemoved != null && !atomChainRemoved.isSameCompositionAs(anotherModification.getAtomChainRemoved())) {
             return false;
@@ -362,7 +361,7 @@ public class Modification extends ExperimentObject {
      * the other one
      */
     public boolean isSamePattern(Modification anotherModification) { // @TODO: can probably be simplified now that the patterns cannot be null?
-        
+
         if (pattern == null && anotherModification.getPattern() != null && anotherModification.getPattern().length() > 0) {
             return false;
         }
@@ -380,8 +379,6 @@ public class Modification extends ExperimentObject {
      * @return true if the modification is the same as the other one
      */
     public boolean isSameAs(Modification anotherModification) {
-
-        
 
         if (modificationType != anotherModification.getModificationType()) {
 //            System.out.println("type difference");
@@ -419,7 +416,7 @@ public class Modification extends ExperimentObject {
      * @return the neutral losses possibly encountered with this modification
      */
     public ArrayList<NeutralLoss> getNeutralLosses() {
-        
+
         return neutralLosses;
     }
 
@@ -430,7 +427,7 @@ public class Modification extends ExperimentObject {
      * modification
      */
     public void setNeutralLosses(ArrayList<NeutralLoss> neutralLosses) {
-        
+
         this.neutralLosses = neutralLosses;
     }
 
@@ -449,7 +446,7 @@ public class Modification extends ExperimentObject {
      * @return the reporter ions possibly encountered with this modification
      */
     public ArrayList<ReporterIon> getReporterIons() {
-        
+
         return reporterIons;
     }
 
@@ -460,7 +457,7 @@ public class Modification extends ExperimentObject {
      * modification
      */
     public void setReporterIons(ArrayList<ReporterIon> reporterIons) {
-        
+
         this.reporterIons = reporterIons;
     }
 
@@ -479,7 +476,7 @@ public class Modification extends ExperimentObject {
      * @return the amino acid pattern targeted by this modification
      */
     public AminoAcidPattern getPattern() {
-        
+
         return pattern;
     }
 
@@ -489,7 +486,7 @@ public class Modification extends ExperimentObject {
      * @param pattern the amino acid pattern targeted by this modification
      */
     public void setPattern(AminoAcidPattern pattern) {
-        
+
         this.pattern = pattern;
     }
 
@@ -502,8 +499,9 @@ public class Modification extends ExperimentObject {
      * standard search engines
      */
     public boolean isStandardSearch() {
-        
-        return pattern == null || pattern.length() == 1;
+
+        return pattern == null || pattern.length() == 0 || pattern.length() == 1;
+
     }
 
     /**
@@ -512,7 +510,6 @@ public class Modification extends ExperimentObject {
      * @return information about the modification as an HTML tooltip
      */
     public String getHtmlTooltip() {
-        
 
         if (modificationType == null) {
             return null;
@@ -568,7 +565,7 @@ public class Modification extends ExperimentObject {
      * @return the Unimod cvTerm
      */
     public CvTerm getUnimodCvTerm() {
-        
+
         return unimodCvTerm;
     }
 
@@ -578,7 +575,7 @@ public class Modification extends ExperimentObject {
      * @param cvTerm the cvTerm to set
      */
     public void setUnimodCvTerm(CvTerm cvTerm) {
-        
+
         this.unimodCvTerm = cvTerm;
     }
 
@@ -588,7 +585,7 @@ public class Modification extends ExperimentObject {
      * @return the PSI-MOD cvTerm
      */
     public CvTerm getPsiModCvTerm() {
-        
+
         return psiModCvTerm;
     }
 
@@ -598,7 +595,7 @@ public class Modification extends ExperimentObject {
      * @param cvTerm the cvTerm to set
      */
     public void setPsiModCvTerm(CvTerm cvTerm) {
-        
+
         this.psiModCvTerm = cvTerm;
     }
 
@@ -622,7 +619,6 @@ public class Modification extends ExperimentObject {
 
     @Override
     public String toString() {
-        
 
         String target = "";
         switch (modificationType) {

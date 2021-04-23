@@ -18,6 +18,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /*
  * CVS information:
@@ -34,7 +36,7 @@ import java.util.Date;
 public class FileLoggerImplementation implements com.compomics.util.interfaces.Logger {
 
     // Class specific log4j logger for FileLoggerImplementation instances.
-    org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(FileLoggerImplementation.class);
+    Logger logger = LogManager.getLogger(FileLoggerImplementation.class);
 
     /**
      * The BufferedWriter connected to the logfile.

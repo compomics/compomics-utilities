@@ -17,7 +17,8 @@ import com.compomics.util.test.protein.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /*
  * CVS information:
@@ -35,7 +36,7 @@ import org.apache.log4j.Logger;
 public class FullSuite extends TestCase {
 
     // Class specific log4j logger for FullSuite instances.
-    Logger logger = Logger.getLogger(FullSuite.class);
+    Logger logger = LogManager.getLogger(FullSuite.class);
 
     public FullSuite() {
         super("Full test suite for Utilities project.");

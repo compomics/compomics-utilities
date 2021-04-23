@@ -11,7 +11,8 @@
  * Time: 14:24:22
  */
 package com.compomics.util.db.components;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.db.DBMetaData;
 
@@ -37,7 +38,7 @@ public class RetrievableCode {
     }
 
     // Class specific log4j logger for RetrievableCode instances.
-    Logger logger = Logger.getLogger(RetrievableCode.class);
+    Logger logger = LogManager.getLogger(RetrievableCode.class);
 
     /**
      * This String will hold the generated code.

@@ -12,7 +12,8 @@
  */
 package com.compomics.util.gui.renderers;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.*;
@@ -39,7 +40,7 @@ public class TimestampRenderer extends DefaultTableCellRenderer {
     }
 
     // Class specific log4j logger for TimestampRenderer instances.
-    Logger logger = Logger.getLogger(TimestampRenderer.class);
+    Logger logger = LogManager.getLogger(TimestampRenderer.class);
 
     public Component getTableCellRendererComponent(JTable table, Object value,
             boolean isSelected, boolean hasFocus,

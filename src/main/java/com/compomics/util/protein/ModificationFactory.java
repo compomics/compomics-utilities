@@ -11,8 +11,8 @@
  */
 package com.compomics.util.protein;
 
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 import java.sql.*;
@@ -34,7 +34,7 @@ import java.util.*;
 public class ModificationFactory {
 
     // Class specific log4j logger for ModificationFactory instances.
-    static Logger logger = Logger.getLogger(ModificationFactory.class);
+    static Logger logger = LogManager.getLogger(ModificationFactory.class);
     /**
      * Constant for a key in the ModificationFactory.properties file.
      */

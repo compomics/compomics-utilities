@@ -14,7 +14,8 @@ import com.compomics.util.protein.ModificationFactory;
 import com.compomics.util.protein.ModificationImplementation;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.Vector;
@@ -36,7 +37,7 @@ import java.util.Vector;
 public class TestAASequenceImpl extends TestCase {
 
     // Class specific log4j logger for TestAASequenceImpl instances.
-    Logger logger = Logger.getLogger(TestAASequenceImpl.class);
+    Logger logger = LogManager.getLogger(TestAASequenceImpl.class);
 
     public TestAASequenceImpl() {
         this("Test for the AASequenceImpl class.");

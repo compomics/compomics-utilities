@@ -19,7 +19,8 @@ import com.compomics.util.protein.Enzyme;
 import com.compomics.util.protein.RegExEnzyme;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,7 +43,7 @@ import java.util.Vector;
 public class TestMascotEnzymeReader extends TestCase {
 
     // Class specific log4j logger for TestMascotEnzymeReader instances.
-    Logger logger = Logger.getLogger(TestMascotEnzymeReader.class);
+    Logger logger = LogManager.getLogger(TestMascotEnzymeReader.class);
 
     public TestMascotEnzymeReader() {
         this("Test scenario for the MascotEnzymeReader class.");

@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * This factory will provide the appropriate identification file reader for each
@@ -20,7 +21,7 @@ public class IdfileReaderFactory {
     /**
      * Class specific log4j logger for IdfileReaderFactory instances.
      */
-    static Logger logger = Logger.getLogger(IdfileReaderFactory.class);
+    static Logger logger = LogManager.getLogger(IdfileReaderFactory.class);
     /**
      * The factory instance.
      */

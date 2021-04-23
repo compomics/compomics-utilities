@@ -11,7 +11,8 @@
  * Time: 9:48:16
  */
 package com.compomics.util.nucleotide;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.interfaces.Sequence;
 import com.compomics.util.general.MassCalc;
@@ -45,7 +46,7 @@ public class NucleotideSequenceImpl implements Sequence {
     }
 
     // Class specific log4j logger for NucleotideSequenceImpl instances.
-    Logger logger = Logger.getLogger(NucleotideSequenceImpl.class);
+    Logger logger = LogManager.getLogger(NucleotideSequenceImpl.class);
 
     /**
      * The sequence.

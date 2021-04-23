@@ -11,7 +11,8 @@
  * Time: 13:10:11
  */
 package com.compomics.util.io.ftp;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 
@@ -38,7 +39,7 @@ public class FTPClient {
     }
 
     // Class specific log4j logger for FTPClient instances.
-    Logger logger = Logger.getLogger(FTPClient.class);
+    Logger logger = LogManager.getLogger(FTPClient.class);
 
     /**
      * The String with the hostname for the FTP server.

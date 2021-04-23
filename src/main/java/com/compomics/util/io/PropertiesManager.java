@@ -2,12 +2,15 @@ package com.compomics.util.io;
 
 import com.compomics.util.io.file.FileSystemAccessor;
 import com.compomics.util.enumeration.CompomicsTools;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
+import org.apache.logging.log4j.core.appender.RollingFileAppender;
+import org.apache.logging.log4j.core.net.Priority;
 
 /**
  * This class holds all user properties for ms_lims.
@@ -20,7 +23,7 @@ import java.util.Set;
 public class PropertiesManager {
 
     // Class specific log4j logger for PropertiesManager instances.
-    Logger logger = Logger.getLogger(PropertiesManager.class);
+    Logger logger = LogManager.getLogger(PropertiesManager.class);
 
     /**
      * The singleton instance of the ms properties.
@@ -262,48 +265,55 @@ public class PropertiesManager {
      *
      * @param aLogger The logger
      * @param aCompomicsTools The tool
+     * @throws java.io.IOException Thrown as the method is not currently implemented
      */
-    public void updateLog4jConfiguration(final org.apache.log4j.Logger aLogger, CompomicsTools aCompomicsTools) {
-        Properties props = new Properties();
-        try {
-            InputStream configStream = getResource("log4j.properties");
-            props.load(configStream);
-            configStream.close();
-        } catch (IOException e) {
-            System.out.println("Error: Cannot load configuration file ");
-        }
-        String lFileKey = "log4j.appender.file.File";
-        String lOldLogFileName = props.getProperty(lFileKey);
-        String lNewLogFileName = getApplicationFolder(aCompomicsTools).getAbsolutePath() + File.separator + aCompomicsTools.getName() + "-log4j.log";
-        RollingFileAppender lRollingFileAppender = (RollingFileAppender) aLogger.getParent().getAppender("file");
-        lRollingFileAppender.setFile(lNewLogFileName);
-        lRollingFileAppender.activateOptions();
-        lRollingFileAppender.setThreshold(Priority.WARN);
-        File lOldLogFile = new File(lOldLogFileName);
-        if (lOldLogFile.exists()) {
-            lOldLogFile.delete();
-        }
-
-        // Make all remaining System.err go into the logger as well.
-        PrintStream stderrStream = System.err;
-        PrintStream newStderrStream = new PrintStream(stderrStream) {
-
-            @Override
-            public void println(Object x) {
-                if (x instanceof Throwable) {
-                    Throwable t = (Throwable) x;
-                    aLogger.error(t.getMessage());
-                    StackTraceElement[] lElements = t.getStackTrace();
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < lElements.length; i++) {
-                        StackTraceElement lElement = lElements[i];
-                        sb.append(lElement.toString() + "\n");
-                    }
-                    aLogger.error(sb.toString());
-                }
-                super.println(x);
-            }
-        };
-        System.setErr(newStderrStream);
+    public void updateLog4jConfiguration(final Logger aLogger, CompomicsTools aCompomicsTools) throws IOException {
+        
+        throw new IOException("Method not implemented in utilities 5.0.16 and newer. Please reimplement if used.");
+        
+//        Properties props = new Properties();
+//        try {
+//            InputStream configStream = getResource("log4j.properties");
+//            props.load(configStream);
+//            configStream.close();
+//        } catch (IOException e) {
+//            System.out.println("Error: Cannot load configuration file ");
+//        }
+//        String lFileKey = "log4j.appender.file.File";
+//        String lOldLogFileName = props.getProperty(lFileKey);
+//        String lNewLogFileName = getApplicationFolder(aCompomicsTools).getAbsolutePath() + File.separator + aCompomicsTools.getName() + "-log4j.log";
+//        
+//        // @TODO: has to be reimplemented in log4j 2.x if needed!
+//        RollingFileAppender lRollingFileAppender = (RollingFileAppender) aLogger.getParent().getAppender("file");
+//        lRollingFileAppender.setFile(lNewLogFileName);
+//        lRollingFileAppender.activateOptions();
+//        lRollingFileAppender.setThreshold(Priority.WARN);
+//        
+//        File lOldLogFile = new File(lOldLogFileName);
+//        if (lOldLogFile.exists()) {
+//            lOldLogFile.delete();
+//        }
+//
+//        // Make all remaining System.err go into the logger as well.
+//        PrintStream stderrStream = System.err;
+//        PrintStream newStderrStream = new PrintStream(stderrStream) {
+//
+//            @Override
+//            public void println(Object x) {
+//                if (x instanceof Throwable) {
+//                    Throwable t = (Throwable) x;
+//                    aLogger.error(t.getMessage());
+//                    StackTraceElement[] lElements = t.getStackTrace();
+//                    StringBuilder sb = new StringBuilder();
+//                    for (int i = 0; i < lElements.length; i++) {
+//                        StackTraceElement lElement = lElements[i];
+//                        sb.append(lElement.toString() + "\n");
+//                    }
+//                    aLogger.error(sb.toString());
+//                }
+//                super.println(x);
+//            }
+//        };
+//        System.setErr(newStderrStream);
     }
 }

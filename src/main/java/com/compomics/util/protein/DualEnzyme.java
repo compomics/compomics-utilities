@@ -12,7 +12,8 @@
  */
 package com.compomics.util.protein;
 import com.compomics.util.experiment.io.biology.protein.Header;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.*;
 
@@ -41,7 +42,7 @@ public class DualEnzyme extends Enzyme {
     }
 
     // Class specific log4j logger for DualEnzyme instances.
-    static Logger logger = Logger.getLogger(DualEnzyme.class);
+    static Logger logger = LogManager.getLogger(DualEnzyme.class);
 
     /**
      * The HashMap with the cleavables for the N-terminal side of the

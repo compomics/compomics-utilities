@@ -11,7 +11,8 @@
  * Time: 18:05:39
  */
 package com.compomics.util.gui;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +41,7 @@ import java.util.zip.*;
 public class JFrameForBytes extends JFrame {
 
     // Class specific log4j logger for JFrameForBytes instances.
-    Logger logger = Logger.getLogger(JFrameForBytes.class);
+    Logger logger = LogManager.getLogger(JFrameForBytes.class);
 
     /**
      * This byte[] is the data that will be shown.

@@ -16,7 +16,8 @@ import com.jgoodies.looks.FontSets;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.Silver;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -47,7 +48,7 @@ import java.util.Hashtable;
 public class IsotopeDistributionGui extends JFrame {
 
     // Class specific log4j logger for MolecularFormula instances.
-    Logger logger = Logger.getLogger(MolecularFormula.class);
+    Logger logger = LogManager.getLogger(MolecularFormula.class);
 
     //gui objects
     private JTextArea txtSequence;

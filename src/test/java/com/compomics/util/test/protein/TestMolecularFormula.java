@@ -17,7 +17,8 @@ import com.compomics.util.protein.AASequenceImpl;
 import com.compomics.util.protein.MolecularFormula;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 /**
@@ -29,7 +30,7 @@ import org.apache.log4j.Logger;
 public class TestMolecularFormula extends TestCase {
 
     // Class specific log4j logger for TestEnzyme instances.
-    Logger logger = Logger.getLogger(TestMolecularFormula.class);
+    Logger logger = LogManager.getLogger(TestMolecularFormula.class);
 
     public TestMolecularFormula() {
         this("Test scenario for the MolecularFormula class.");

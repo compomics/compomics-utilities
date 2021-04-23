@@ -13,7 +13,8 @@
 package com.compomics.util.experiment.io.biology.protein;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.StringTokenizer;
 
@@ -37,7 +38,7 @@ public class Header extends ExperimentObject implements Cloneable {
     /**
      * Class specific log4j logger for Header instances.
      */
-    static Logger logger = Logger.getLogger(Header.class);
+    static Logger logger = LogManager.getLogger(Header.class);
 
     /**
      * Private constructor to force use of factory methods.

@@ -11,7 +11,8 @@
  * Time: 16:30:42
  */
 package com.compomics.util.db;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.sql.Types;
 
@@ -37,7 +38,7 @@ public class ColumnTypeConverter {
     }
 
     // Class specific log4j logger for ColumnTypeConverter instances.
-    Logger logger = Logger.getLogger(ColumnTypeConverter.class);
+    Logger logger = LogManager.getLogger(ColumnTypeConverter.class);
 
     /**
      * This method converts coded SQL columntypes into

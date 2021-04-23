@@ -5,7 +5,8 @@
  */
 package com.compomics.util.general;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 public class CommandLineParser {
 
     // Class specific log4j logger for CommandLineParser instances.
-    Logger logger = Logger.getLogger(CommandLineParser.class);
+    Logger logger = LogManager.getLogger(CommandLineParser.class);
     /**
      * The command line all parsing will take place on.
      */

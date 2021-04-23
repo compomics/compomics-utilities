@@ -11,7 +11,8 @@
  * Time: 15:28:01
  */
 package com.compomics.util.db.components;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.db.DBMetaData;
 
@@ -37,7 +38,7 @@ public class Constructors {
     }
 
     // Class specific log4j logger for Constructors instances.
-    Logger logger = Logger.getLogger(Constructors.class);
+    Logger logger = LogManager.getLogger(Constructors.class);
 
     /**
      * This String will contain the constructors code.

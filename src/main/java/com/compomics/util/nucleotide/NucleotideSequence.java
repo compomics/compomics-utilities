@@ -11,7 +11,8 @@
  * Time: 11:08:24
  */
 package com.compomics.util.nucleotide;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.experiment.io.biology.protein.Header;
 import com.compomics.util.protein.AASequenceImpl;
@@ -38,7 +39,7 @@ import java.io.PrintWriter;
 public class NucleotideSequence {
 
     // Class specific log4j logger for NucleotideSequence instances.
-    Logger logger = Logger.getLogger(NucleotideSequence.class);
+    Logger logger = LogManager.getLogger(NucleotideSequence.class);
 
     /**
      * Empty default constructor

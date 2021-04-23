@@ -5,7 +5,8 @@
  */
 
 package com.compomics.util.sun;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.swing.table.*; 
 import javax.swing.event.TableModelListener; 
@@ -32,7 +33,7 @@ public class TableMap extends AbstractTableModel implements TableModelListener {
     }
 
     // Class specific log4j logger for TableMap instances.
-    Logger logger = Logger.getLogger(TableMap.class);
+    Logger logger = LogManager.getLogger(TableMap.class);
 
     protected TableModel model;
 

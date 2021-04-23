@@ -12,7 +12,8 @@
  */
 package com.compomics.util.io.file;
 import com.compomics.util.io.ftp.FTPClient;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.interfaces.PickUp;
 
@@ -45,7 +46,7 @@ public class FolderMonitor implements Runnable {
     }
 
     // Class specific log4j logger for FolderMonitor instances.
-    static Logger logger = Logger.getLogger(FolderMonitor.class);
+    static Logger logger = LogManager.getLogger(FolderMonitor.class);
 
     public static final String HOST = "HOST";
     public static final String USER = "USER";

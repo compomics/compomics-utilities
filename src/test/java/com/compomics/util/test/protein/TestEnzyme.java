@@ -17,7 +17,8 @@ import com.compomics.util.protein.Enzyme;
 import com.compomics.util.protein.Protein;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -39,7 +40,7 @@ import java.io.IOException;
 public class TestEnzyme extends TestCase {
 
     // Class specific log4j logger for TestEnzyme instances.
-    Logger logger = Logger.getLogger(TestEnzyme.class);
+    Logger logger = LogManager.getLogger(TestEnzyme.class);
 
     public TestEnzyme() {
         this("Test scenario for the Enzyme class.");

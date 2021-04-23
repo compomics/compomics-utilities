@@ -15,7 +15,8 @@ package com.compomics.util.test.io;
 import com.compomics.util.io.file.FolderMonitor;
 import com.compomics.util.junit.TestCaseLM;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.util.HashMap;
@@ -36,7 +37,7 @@ import java.util.HashMap;
 public class TestFolderMonitor extends TestCase {
 
     // Class specific log4j logger for TestFolderMonitor instances.
-    Logger logger = Logger.getLogger(TestFolderMonitor.class);
+    Logger logger = LogManager.getLogger(TestFolderMonitor.class);
 
     public TestFolderMonitor() {
         this("Test scenario for the FolderMonitor class.");

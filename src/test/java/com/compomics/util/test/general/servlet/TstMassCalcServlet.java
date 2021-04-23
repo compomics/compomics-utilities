@@ -9,7 +9,8 @@ package com.compomics.util.test.general.servlet;
 import com.compomics.util.junit.TestCaseLM;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +34,7 @@ import java.util.Properties;
 public class TstMassCalcServlet extends TestCase {
 
     // Class specific log4j logger for TstMassCalcServlet instances.
-    Logger logger = Logger.getLogger(TstMassCalcServlet.class);
+    Logger logger = LogManager.getLogger(TstMassCalcServlet.class);
 
     public TstMassCalcServlet() {
         super("This class test the MassCalcServlet.");

@@ -6,7 +6,8 @@ import com.compomics.util.protein.Protein;
 import com.compomics.util.protein.RegExEnzyme;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 
@@ -17,7 +18,7 @@ import java.io.*;
 public class TestRegExEnzyme  extends TestCase {
 
     // Class specific log4j logger for TestRegExEnzyme instances.
-    Logger logger = Logger.getLogger(TestRegExEnzyme.class);
+    Logger logger = LogManager.getLogger(TestRegExEnzyme.class);
 
     private static final boolean recordResult = false;
     private static final String resultFileName = "regExEmzymeTest1.fas";

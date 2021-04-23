@@ -11,7 +11,8 @@
  * Time: 7:25:15
  */
 package com.compomics.util.gui;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,7 +37,7 @@ import java.io.PrintWriter;
 public class JExceptionDialog extends JDialog {
 
     // Class specific log4j logger for JExceptionDialog instances.
-    Logger logger = Logger.getLogger(JExceptionDialog.class);
+    Logger logger = LogManager.getLogger(JExceptionDialog.class);
 
     private String[] iMessages = null;
     private Throwable iThrowable = null;

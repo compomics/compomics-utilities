@@ -5,7 +5,8 @@
  */
 package com.compomics.util.general;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 import java.util.Vector;
@@ -47,7 +48,7 @@ import java.text.StringCharacterIterator;
 public class MassCalc {
 
     // Class specific log4j logger for MassCalc instances.
-    static Logger logger = Logger.getLogger(MassCalc.class);
+    static Logger logger = LogManager.getLogger(MassCalc.class);
 
     /**
      * This variable highlights which map was chosen for the element masses.

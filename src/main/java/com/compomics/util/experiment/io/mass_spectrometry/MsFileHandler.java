@@ -105,7 +105,6 @@ public class MsFileHandler implements SpectrumProvider {
                 cmsFolder
         );
 
-        
         filePathMap.put(spectrumFileNameWithoutExtension, msFile.getAbsolutePath());
         cmsFilePathMap.put(spectrumFileNameWithoutExtension, cmsFilePath);
 
@@ -143,7 +142,9 @@ public class MsFileHandler implements SpectrumProvider {
             }
         }
 
-        if (reader == null) {
+        // the latter check is needed in case the cms and the ms file is 
+        // the same file, as outdated cms files can have been deleted above
+        if (reader == null && msFile.exists()) {
 
             writeCmsFile(
                     msFile,
@@ -157,7 +158,9 @@ public class MsFileHandler implements SpectrumProvider {
 
         }
 
-        cmsFileReaderMap.put(spectrumFileNameWithoutExtension, reader);
+        if (reader != null) {
+            cmsFileReaderMap.put(spectrumFileNameWithoutExtension, reader);
+        }
     }
 
     /**
@@ -208,9 +211,9 @@ public class MsFileHandler implements SpectrumProvider {
             WaitingHandler waitingHandler
     ) throws IOException {
 
-        try (MsFileIterator iterator = MsFileIterator.getMsFileIterator(msFile, waitingHandler)) {
+        try ( MsFileIterator iterator = MsFileIterator.getMsFileIterator(msFile, waitingHandler)) {
 
-            try (CmsFileWriter writer = new CmsFileWriter(cmsFile)) {
+            try ( CmsFileWriter writer = new CmsFileWriter(cmsFile)) {
 
                 String spectrumTitle;
                 while ((spectrumTitle = iterator.next()) != null) {

@@ -11,7 +11,8 @@
  * Time: 13:53:50
  */
 package com.compomics.util.io.ftp;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /*
  * CVS information:
@@ -34,7 +35,7 @@ public class FtpLoginException extends FtpProtocolException {
     }
 
     // Class specific log4j logger for FtpLoginException instances.
-    Logger logger = Logger.getLogger(FtpLoginException.class);
+    Logger logger = LogManager.getLogger(FtpLoginException.class);
     
     /**
      * Creates a new FtpLoginException from the given string.

@@ -11,7 +11,8 @@
  * Time: 13:26:33
  */
 package com.compomics.util.gui;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.sun.TableSorter;
 import com.compomics.util.gui.renderers.ByteArrayRenderer;
@@ -46,7 +47,7 @@ import java.awt.event.KeyEvent;
 public class JTableForDB extends AlternateRowColoursJTable {
 
     // Class specific log4j logger for JTableForDB instances.
-    Logger logger = Logger.getLogger(JTableForDB.class);
+    Logger logger = LogManager.getLogger(JTableForDB.class);
 
     /**
      *  This String contains the date and time format.

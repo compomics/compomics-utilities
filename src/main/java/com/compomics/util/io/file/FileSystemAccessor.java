@@ -1,6 +1,7 @@
 package com.compomics.util.io.file;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.compomics.util.enumeration.OperatingSystemEnum;
 import com.compomics.util.io.PropertiesManager;
 
@@ -14,7 +15,7 @@ import java.io.File;
 public class FileSystemAccessor {
 
     // Class specific log4j logger for FileSystemAccessor instances.
-    Logger logger = Logger.getLogger(FileSystemAccessor.class);
+    Logger logger = LogManager.getLogger(FileSystemAccessor.class);
 
     /**
      * Empty constructor.

@@ -5,7 +5,8 @@
  */
 package com.compomics.util.general.servlet;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ import com.compomics.util.general.UnknownElementMassException;
 public class MassCalcServlet extends HttpServlet {
 
     // Class specific log4j logger for MassCalcServlet instances.
-    Logger logger = Logger.getLogger(MassCalcServlet.class);
+    Logger logger = LogManager.getLogger(MassCalcServlet.class);
 
     private static final String SEQUENCE = "SEQUENCE";
     private static final String MASSLISTCHOICE = "MASSLISTCHOICE";

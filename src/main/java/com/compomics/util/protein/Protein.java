@@ -12,7 +12,8 @@
  */
 package com.compomics.util.protein;
 import com.compomics.util.experiment.io.biology.protein.Header;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -44,7 +45,7 @@ public class Protein {
     }
 
     // Class specific log4j logger for Protein instances.
-    Logger logger = Logger.getLogger(Protein.class);
+    Logger logger = LogManager.getLogger(Protein.class);
 
     /**
      * The sequence is a very important element in a Protein instance.

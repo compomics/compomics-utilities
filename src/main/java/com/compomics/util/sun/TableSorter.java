@@ -5,7 +5,8 @@
  */
 
 package com.compomics.util.sun;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.interfaces.TableValueWrapper;
 import java.util.*;
@@ -45,7 +46,7 @@ import javax.swing.table.TableColumnModel;
 public class TableSorter extends TableMap {
 
     // Class specific log4j logger for TableSorter instances.
-    Logger logger = Logger.getLogger(TableSorter.class);
+    Logger logger = LogManager.getLogger(TableSorter.class);
 
     int indexes[];
     Vector sortingColumns = new Vector();

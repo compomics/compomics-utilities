@@ -11,7 +11,8 @@
  * Time: 15:52:54
  */
 package com.compomics.util.db;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.db.components.*;
 
@@ -40,7 +41,7 @@ public class DBAccessor {
     }
 
     // Class specific log4j logger for DBAccessor instances.
-    Logger logger = Logger.getLogger(DBAccessor.class);
+    Logger logger = LogManager.getLogger(DBAccessor.class);
 
     /**
      * The name for the generated class.

@@ -6,7 +6,8 @@
  */
 package com.compomics.util.gui.spectrum;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import java.awt.*;
@@ -34,7 +35,7 @@ public class DefaultSpectrumAnnotation implements SpectrumAnnotation {
     /**
      * Class specific log4j logger for DefaultSpectrumAnnotation instances.
      */
-    Logger logger = Logger.getLogger(DefaultSpectrumAnnotation.class);
+    Logger logger = LogManager.getLogger(DefaultSpectrumAnnotation.class);
     /**
      * The color to use for the annotation.
      */

@@ -11,8 +11,8 @@
  * Time: 18:06:48
  */
 package com.compomics.util.io;
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.protein.Enzyme;
 import com.compomics.util.protein.DualEnzyme;
@@ -48,7 +48,7 @@ public class MascotEnzymeReader {
     }
 
     // Class specific log4j logger for MascotEnzymeReader instances.
-    Logger logger = Logger.getLogger(MascotEnzymeReader.class);
+    Logger logger = LogManager.getLogger(MascotEnzymeReader.class);
 
     /**
      * This HashMap will hold all the Enzyme entries we've found in the file.

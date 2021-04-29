@@ -8,7 +8,8 @@
  */
 package com.compomics.util.gui;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.interfaces.Flamable;
 
@@ -29,7 +30,7 @@ import java.awt.*;
 public abstract class FlamableJFrame extends JFrame implements Flamable {
 
     // Class specific log4j logger for TestFTPClient2 instances.
-    Logger logger = Logger.getLogger(FlamableJFrame.class);
+    Logger logger = LogManager.getLogger(FlamableJFrame.class);
 
     /**
      * Wrapper constructor for that of the superclass.

@@ -16,7 +16,8 @@ import com.compomics.util.io.file.MonitorableInputStream;
 import com.compomics.util.junit.TestCaseLM;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,7 +43,7 @@ import java.util.zip.ZipInputStream;
 public class TestMonitorableInputStream extends TestCase {
 
     // Class specific log4j logger for TestMonitorableInputStream instances.
-    Logger logger = Logger.getLogger(TestMonitorableInputStream.class);
+    Logger logger = LogManager.getLogger(TestMonitorableInputStream.class);
 
     public TestMonitorableInputStream() {
         this("Test scenario for the MonitorableInputStream.");

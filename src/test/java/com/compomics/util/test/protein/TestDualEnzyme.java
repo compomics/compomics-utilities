@@ -17,7 +17,8 @@ import com.compomics.util.protein.Enzyme;
 import com.compomics.util.protein.Protein;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /*
  * CVS information:
@@ -34,7 +35,7 @@ import org.apache.log4j.Logger;
 public class TestDualEnzyme extends TestCase {
 
     // Class specific log4j logger for TestDualEnzyme instances.
-    Logger logger = Logger.getLogger(TestDualEnzyme.class);
+    Logger logger = LogManager.getLogger(TestDualEnzyme.class);
 
     public TestDualEnzyme() {
         this("Test scenario for the DualEnzyme class.");

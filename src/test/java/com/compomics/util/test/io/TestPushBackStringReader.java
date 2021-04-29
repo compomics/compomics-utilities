@@ -15,7 +15,8 @@ package com.compomics.util.test.io;
 import com.compomics.util.io.PushBackStringReader;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /*
  * CVS information:
@@ -33,7 +34,7 @@ import org.apache.log4j.Logger;
 public class TestPushBackStringReader extends TestCase {
 
     // Class specific log4j logger for TestPushBackStringReader instances.
-    Logger logger = Logger.getLogger(TestPushBackStringReader.class);
+    Logger logger = LogManager.getLogger(TestPushBackStringReader.class);
 
     public TestPushBackStringReader() {
         this("Test scenario for the PushBackStringReader");

@@ -11,7 +11,8 @@
  * Time: 15:06:24
  */
 package com.compomics.util.protein;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class ModificationImplementation implements com.compomics.util.interfaces
     }
 
     // Class specific log4j logger for ModificationImplementation instances.
-    Logger logger = Logger.getLogger(ModificationImplementation.class);
+    Logger logger = LogManager.getLogger(ModificationImplementation.class);
 
     /**
      * The ModificationTemplate which holds all the shared information for a modification.

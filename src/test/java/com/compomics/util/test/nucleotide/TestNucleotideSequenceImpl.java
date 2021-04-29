@@ -19,7 +19,8 @@ import com.compomics.util.experiment.io.biology.protein.Header;
 import com.compomics.util.protein.Protein;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.Vector;
@@ -40,7 +41,7 @@ import java.util.Vector;
 public class TestNucleotideSequenceImpl extends TestCase {
 
     // Class specific log4j logger for TestNucleotideSequenceImpl instances.
-    Logger logger = Logger.getLogger(TestNucleotideSequenceImpl.class);
+    Logger logger = LogManager.getLogger(TestNucleotideSequenceImpl.class);
 
     public TestNucleotideSequenceImpl() {
         this("Test scenario for the NucleotideSequenceImpl class.");

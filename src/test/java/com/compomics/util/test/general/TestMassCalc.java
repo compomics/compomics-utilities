@@ -11,7 +11,8 @@ import com.compomics.util.general.UnknownElementMassException;
 import com.compomics.util.junit.TestCaseLM;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,7 +34,7 @@ import java.util.Properties;
 public class TestMassCalc extends TestCase {
 
     // Class specific log4j logger for TestMassCalc instances.
-    Logger logger = Logger.getLogger(TestMassCalc.class);
+    Logger logger = LogManager.getLogger(TestMassCalc.class);
 
     public TestMassCalc() {
         this("Test for the MassCalc class.");

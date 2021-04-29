@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.io.mass_spectrometry.cms;
 
-import com.compomics.util.ArrayUtil;
 import com.compomics.util.TempByteArray;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,15 +8,12 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
-import java.util.zip.Deflater;
 import static com.compomics.util.io.IoUtil.ENCODING;
 import static com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileUtils.MAGIC_NUMBER;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.compression.ZstdUtils;
-import com.compomics.util.threading.SimpleSemaphore;
 import io.airlift.compress.zstd.ZstdCompressor;
-import io.airlift.compress.zstd.ZstdDecompressor;
 
 /**
  * Writer for cms files.
@@ -235,11 +231,13 @@ public class CmsFileWriter implements AutoCloseable {
                 .collect(
                         Collectors.joining(CmsFileUtils.TITLE_SEPARATOR)
                 );
+
         String indexString = indexes.stream()
                 .map(
                         index -> index.toString()
                 )
                 .collect(Collectors.joining(CmsFileUtils.TITLE_SEPARATOR));
+
         String titleIndexString = String.join(CmsFileUtils.TITLE_SEPARATOR,
                 titleString,
                 indexString

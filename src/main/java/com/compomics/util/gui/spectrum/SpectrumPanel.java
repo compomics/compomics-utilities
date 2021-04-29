@@ -16,7 +16,8 @@ import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import com.compomics.util.interfaces.SpectrumFile;
 import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
@@ -46,7 +47,7 @@ public class SpectrumPanel extends GraphicsPanel {
     /**
      * Class specific log4j logger for SpectrumPanel instances.
      */
-    static Logger logger = Logger.getLogger(SpectrumPanel.class);
+    static Logger logger = LogManager.getLogger(SpectrumPanel.class);
     /**
      * The color used for the peaks. Default to red.
      */

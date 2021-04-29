@@ -5,7 +5,8 @@
  * Time: 13:47:48
  */
 package com.compomics.util;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
@@ -34,7 +35,7 @@ import java.util.Vector;
 public class AlternateRowColoursJTable extends JTable {
 
     // Class specific log4j logger for AlternateRowColoursJTable instances.
-    Logger logger = Logger.getLogger(AlternateRowColoursJTable.class);
+    Logger logger = LogManager.getLogger(AlternateRowColoursJTable.class);
 
     /**
      * The background colour for the even rows.

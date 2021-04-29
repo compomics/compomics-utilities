@@ -15,6 +15,8 @@ package com.compomics.util.general;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.io.PrintStream;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /*
  * CVS information:
@@ -31,7 +33,7 @@ import java.io.PrintStream;
 public class DefaultOutputLoggerImplementation implements com.compomics.util.interfaces.Logger {
 
     // Class specific log4j logger for DefaultOutputLoggerImplementation instances.
-    org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(DefaultOutputLoggerImplementation.class);
+    Logger logger = LogManager.getLogger(DefaultOutputLoggerImplementation.class);
 
     /**
      * The output writer for normal and timed messages.

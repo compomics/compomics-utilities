@@ -1,5 +1,6 @@
 package com.compomics.cli.modifications;
 
+import com.compomics.cli.paths.PathSettingsCLI;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import java.io.File;
@@ -13,6 +14,7 @@ import org.apache.commons.cli.Options;
  * Command line to manage the modifications.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ModificationsCLI {
 
@@ -58,10 +60,14 @@ public class ModificationsCLI {
     public static void main(String[] args) {
 
         try {
-            Options lOptions = new Options();
-            ModificationsCLIParams.createOptionsCLI(lOptions);
+            // check if there are updates to the paths
+            String[] nonPathSettingArgsAsList = PathSettingsCLI.extractAndUpdatePathOptions(args);
+
+            // parse the rest of the cptions   
+            Options nonPathOptions = new Options();
+            ModificationsCLIParams.createOptionsCLI(nonPathOptions);
             DefaultParser parser = new DefaultParser();
-            CommandLine line = parser.parse(lOptions, args);
+            CommandLine line = parser.parse(nonPathOptions, nonPathSettingArgsAsList);
 
             if (!ModificationsCLIInputBean.isValidStartup(line)) {
                 PrintWriter lPrintWriter = new PrintWriter(System.out);
@@ -106,7 +112,7 @@ public class ModificationsCLI {
      */
     public Object call() {
 
-        ModificationFactory ptmFactory = null;
+        ModificationFactory ptmFactory;
         File inputFile = modificationsCLIInputBean.getFileIn();
         if (inputFile != null) {
             try {

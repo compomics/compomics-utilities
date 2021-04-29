@@ -3,7 +3,8 @@ package com.compomics.util.test.general;
 import com.compomics.util.general.IsotopicDistribution;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Test for the IsotopicDistribution class.
@@ -14,7 +15,7 @@ import org.apache.log4j.Logger;
 public class TestIsotopicDistributionCalculator extends TestCase {
 
     // Class specific log4j logger for IsotopicDistribution instances.
-    Logger logger = Logger.getLogger(TestMassCalc.class);
+    Logger logger = LogManager.getLogger(TestMassCalc.class);
 
     public TestIsotopicDistributionCalculator() {
         this("Test for the IsotopicDistribution class.");

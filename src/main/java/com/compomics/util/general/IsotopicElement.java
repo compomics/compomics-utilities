@@ -1,7 +1,8 @@
 package com.compomics.util.general;
 
 import com.compomics.util.enumeration.MolecularElement;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 import java.util.Vector;
@@ -18,7 +19,7 @@ import java.util.Vector;
 public class IsotopicElement {
 
     // Class specific log4j logger for AASequenceImpl instances.
-    Logger logger = Logger.getLogger(IsotopicElement.class);
+    Logger logger = LogManager.getLogger(IsotopicElement.class);
 
     /**
      * The element

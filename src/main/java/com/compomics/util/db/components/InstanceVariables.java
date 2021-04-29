@@ -11,7 +11,8 @@
  * Time: 17:19:40
  */
 package com.compomics.util.db.components;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.db.DBMetaData;
 
@@ -36,7 +37,7 @@ public class InstanceVariables {
     }
 
     // Class specific log4j logger for InstanceVariables instances.
-    Logger logger = Logger.getLogger(InstanceVariables.class);
+    Logger logger = LogManager.getLogger(InstanceVariables.class);
 
     /**
      * The Strings that contain the code for the instance variables that will

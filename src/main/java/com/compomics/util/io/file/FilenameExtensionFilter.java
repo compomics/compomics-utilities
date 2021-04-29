@@ -11,7 +11,8 @@
  * Time: 16:11:33
  */
 package com.compomics.util.io.file;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.FilenameFilter;
@@ -38,7 +39,7 @@ public class FilenameExtensionFilter extends FileFilter implements FilenameFilte
     }
 
     // Class specific log4j logger for FilenameExtensionFilter instances.
-    Logger logger = Logger.getLogger(FilenameExtensionFilter.class);
+    Logger logger = LogManager.getLogger(FilenameExtensionFilter.class);
 
     /**
      * This is the extension to filter on.

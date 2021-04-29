@@ -78,7 +78,7 @@ public class BasicMathFunctions {
         } else if (n > 20) {
 
             throw new IllegalArgumentException(
-                    "Factorial only implemented for n <= 20. Reached the maximal capacoty of a long.");
+                    "Factorial only implemented for n <= 20. Reached the maximal capacity of a long.");
 
         } else if (n < 0) {
 

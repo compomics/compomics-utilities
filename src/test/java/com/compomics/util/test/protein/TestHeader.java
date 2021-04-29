@@ -15,7 +15,8 @@ package com.compomics.util.test.protein;
 import com.compomics.util.experiment.io.biology.protein.Header;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /*
  * CVS information:
@@ -33,7 +34,7 @@ import org.apache.log4j.Logger;
 public class TestHeader extends TestCase {
 
     // Class specific log4j logger for TestHeader instances.
-    Logger logger = Logger.getLogger(TestHeader.class);
+    Logger logger = LogManager.getLogger(TestHeader.class);
 
     public TestHeader() {
         this("This is the test scenario for the Header class.");

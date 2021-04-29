@@ -5,7 +5,8 @@
  */
 
 package com.compomics.util.general;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /*
  * CVS information:
@@ -24,7 +25,7 @@ import org.apache.log4j.Logger;
 public class UnknownElementMassException extends Exception {
 
     // Class specific log4j logger for UnknownElementMassException instances.
-    Logger logger = Logger.getLogger(UnknownElementMassException.class);
+    Logger logger = LogManager.getLogger(UnknownElementMassException.class);
     
     /**
      * The element symbol that was not recognized.

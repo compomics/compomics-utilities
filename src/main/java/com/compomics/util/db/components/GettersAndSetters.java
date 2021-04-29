@@ -11,7 +11,8 @@
  * Time: 16:27:25
  */
 package com.compomics.util.db.components;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.db.DBMetaData;
 
@@ -37,7 +38,7 @@ public class GettersAndSetters {
     }
 
     // Class specific log4j logger for GettersAndSetters instances.
-    Logger logger = Logger.getLogger(GettersAndSetters.class);
+    Logger logger = LogManager.getLogger(GettersAndSetters.class);
 
     /**
      * This variable holds all the getters for the DBAccessor object.

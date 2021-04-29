@@ -5,8 +5,8 @@
  * Time: 15:41:18
  */
 package com.compomics.util.gui.utils;
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.enumeration.CompomicsTools;
 import com.compomics.util.gui.JLabelAndComponentPanel;
@@ -44,7 +44,7 @@ public class ConnectionDialog extends JDialog {
     }
 
     // Class specific log4j logger for ConnectionDialog instances.
-    Logger logger = Logger.getLogger(ConnectionDialog.class);
+    Logger logger = LogManager.getLogger(ConnectionDialog.class);
 
     /***
      * ArrayList that holds all the preconfigured connections.

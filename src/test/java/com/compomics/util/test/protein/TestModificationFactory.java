@@ -17,7 +17,8 @@ import com.compomics.util.junit.TestCaseLM;
 import com.compomics.util.protein.ModificationFactory;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -40,7 +41,7 @@ import java.io.StringReader;
 public class TestModificationFactory extends TestCase {
 
     // Class specific log4j logger for TestModificationFactory instances.
-    Logger logger = Logger.getLogger(TestModificationFactory.class);
+    Logger logger = LogManager.getLogger(TestModificationFactory.class);
 
     public TestModificationFactory() {
         this("Test scenario for the ModificationFactory class.");

@@ -153,7 +153,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param targetResidues a list of targeted residues
      */
     public AminoAcidPattern(ArrayList<String> targetResidues) {
-        
+
         ArrayList<Character> aminoAcids = targetResidues.stream()
                 .map(aa -> aa.charAt(0))
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -196,36 +196,36 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return the index of the amino acid of interest in the pattern.
      */
     public int getTarget() {
-        
+
         return 0;
     }
-    
+
     /**
      * Returns the minimal index where amino acids are found.
-     * 
+     *
      * @return the minimal index where amino acids are found
      */
     public int getMinIndex() {
-        
+
         return Math.min(residueTargeted.keySet().stream()
                 .mapToInt(index -> index)
                 .min()
-                .orElse(0)
-                , 0);
+                .orElse(0),
+                 0);
     }
-    
+
     /**
      * Returns the maximal index where amino acids are found.
-     * 
+     *
      * @return the maximal index where amino acids are found
      */
     public int getMaxIndex() {
-        
+
         return Math.max(residueTargeted.keySet().stream()
                 .mapToInt(index -> (int) index)
                 .max()
-                .orElse(0)
-                , 0);
+                .orElse(0),
+                 0);
     }
 
     /**
@@ -234,11 +234,11 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param target the index of the amino acid of interest in the pattern.
      */
     public void setTarget(Integer target) {
-        
+
         if (residueTargeted == null) {
             residueTargeted = new HashMap<>(1);
         }
-        
+
         if (residueTargeted.size() > 0 && !residueTargeted.containsKey(target)) {
             throw new IllegalArgumentException("Target number exceeds residue site for index shifting.");
         }
@@ -472,44 +472,44 @@ public class AminoAcidPattern extends ExperimentObject {
 
         for (int i = 0; i < length(); i++) {
 
-            ArrayList<Character> targetedAas = getTargetedAA(i);
+                ArrayList<Character> targetedAas = getTargetedAA(i);
 
-            if (targetedAas.isEmpty()) {
-                cpt++;
-            } else if (targetedAas.size() > 15) {
-                ArrayList<Character> excludedAas = new ArrayList<>();
-                for (char aa : AminoAcid.getUniqueAminoAcids()) {
-                    if (!targetedAas.contains(aa)) {
-                        excludedAas.add(aa);
+                if (targetedAas.isEmpty()) {
+                    cpt++;
+                } else if (targetedAas.size() > 15) {
+                    ArrayList<Character> excludedAas = new ArrayList<>();
+                    for (char aa : AminoAcid.getUniqueAminoAcids()) {
+                        if (!targetedAas.contains(aa)) {
+                            excludedAas.add(aa);
+                        }
                     }
-                }
-                if (cpt > 0) {
-                    result.append("(").append(cpt).append(")");
-                    cpt = 0;
-                }
-                result.append("{");
-                for (Character aa : excludedAas) {
-                    result.append(aa);
-                }
-                result.append("}");
-            } else {
-                if (cpt > 0) {
-                    result.append("(").append(cpt).append(")");
-                    cpt = 0;
-                }
-                if (!targetedAas.isEmpty()) {
-                    result.append("[");
-                    for (Character aa : targetedAas) {
+                    if (cpt > 0) {
+                        result.append("(").append(cpt).append(")");
+                        cpt = 0;
+                    }
+                    result.append("{");
+                    for (Character aa : excludedAas) {
                         result.append(aa);
                     }
-                    result.append("]");
+                    result.append("}");
+                } else {
+                    if (cpt > 0) {
+                        result.append("(").append(cpt).append(")");
+                        cpt = 0;
+                    }
+                    if (!targetedAas.isEmpty()) {
+                        result.append("[");
+                        for (Character aa : targetedAas) {
+                            result.append(aa);
+                        }
+                        result.append("]");
+                    }
+                }
+
+                if (i == 0) {
+                    result.append("!");
                 }
             }
-
-            if (i == 0) {
-                result.append("!");
-            }
-        }
 
         return result.toString();
     }
@@ -524,17 +524,17 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return a list of indexes where the amino acid pattern was found
      */
     public int[] getIndexes(String input, SequenceMatchingParameters sequenceMatchingParameters) {
-        
+
         ArrayList<Integer> result = new ArrayList<>(1);
         int index = 0;
-        
+
         while ((index = firstIndex(input, sequenceMatchingParameters, index)) >= 0) {
-        
+
             result.add(index + 1);
             index++;
-            
+
         }
-        
+
         return result.stream().mapToInt(a -> a).toArray();
     }
 
@@ -811,7 +811,8 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param aminoAcidSequence the amino acid sequence
      * @param sequenceMatchingParameters the sequence matching preferences
      *
-     * @return a boolean indicating whether the pattern matches the given amino acid sequence
+     * @return a boolean indicating whether the pattern matches the given amino
+     * acid sequence
      */
     public boolean matches(String aminoAcidSequence, SequenceMatchingParameters sequenceMatchingParameters) {
         return length() == aminoAcidSequence.length() && firstIndex(aminoAcidSequence, sequenceMatchingParameters) >= 0;
@@ -823,7 +824,8 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param aminoAcidPattern the amino acid sequence
      * @param sequenceMatchingParameters the sequence matching preferences
      *
-     * @return a boolean indicating whether the pattern matches the given amino acid sequence
+     * @return a boolean indicating whether the pattern matches the given amino
+     * acid sequence
      */
     public boolean matches(AminoAcidPattern aminoAcidPattern, SequenceMatchingParameters sequenceMatchingParameters) {
         return length() == aminoAcidPattern.length() && firstIndex(aminoAcidPattern, sequenceMatchingParameters) >= 0;
@@ -896,11 +898,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @return true if the other AminoAcidPattern targets the same pattern
      */
     public boolean isSameAs(AminoAcidPattern anotherPattern, SequenceMatchingParameters sequenceMatchingParameters) {
-        if (!matches(anotherPattern, sequenceMatchingParameters)) {
-            return false;
-        }
-        
-        return true;
+        return matches(anotherPattern, sequenceMatchingParameters);
     }
 
     /**
@@ -989,7 +987,7 @@ public class AminoAcidPattern extends ExperimentObject {
      * @param otherPattern the other pattern to append.
      */
     public void append(AminoAcidPattern otherPattern) {
-        
+
         int patternLength = length();
         HashMap<Integer, ArrayList<Character>> otherTargetedMap = otherPattern.getAaTargeted();
         if (otherTargetedMap != null) {
@@ -1001,7 +999,7 @@ public class AminoAcidPattern extends ExperimentObject {
                 residueTargeted.put(index, (ArrayList<Character>) otherTargetedMap.get(i).clone());
             }
         }
-        
+
         length = patternLength + otherPattern.length();
     }
 

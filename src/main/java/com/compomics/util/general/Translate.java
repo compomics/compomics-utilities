@@ -11,7 +11,8 @@
  * Time: 18:42:27
  */
 package com.compomics.util.general;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.nucleotide.NucleotideSequenceImpl;
 import com.compomics.util.protein.AASequenceImpl;
@@ -31,7 +32,7 @@ import com.compomics.util.protein.AASequenceImpl;
 public class Translate {
 
     // Class specific log4j logger for Translate instances.
-    static Logger logger = Logger.getLogger(Translate.class);
+    static Logger logger = LogManager.getLogger(Translate.class);
 
     /**
      * Translate a DNA sequence into 6 reading frames.

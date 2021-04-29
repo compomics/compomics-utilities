@@ -18,7 +18,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 import javax.swing.border.EtchedBorder;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * This class provides a JPanel that can display a peptide isotopic distribution.
@@ -37,7 +38,7 @@ public class IsotopicDistributionPanel extends GraphicsPanel {
     }
 
     // Class specific log4j logger for MolecularFormula instances.
-    Logger logger = Logger.getLogger(MolecularFormula.class);
+    Logger logger = LogManager.getLogger(MolecularFormula.class);
     /**
      * The color used for the peaks. Default to red.
      */

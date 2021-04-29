@@ -6,8 +6,8 @@
 
 package com.compomics.util.protein;
 import com.compomics.util.general.IsotopicDistribution;
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.util.*;
@@ -36,7 +36,7 @@ import java.math.RoundingMode;
 public class AASequenceImpl implements Sequence {
 
     // Class specific log4j logger for AASequenceImpl instances.
-    Logger logger = Logger.getLogger(AASequenceImpl.class);
+    Logger logger = LogManager.getLogger(AASequenceImpl.class);
 
     /**
      * The Kyte &amp; Doolittle score for AA residues.

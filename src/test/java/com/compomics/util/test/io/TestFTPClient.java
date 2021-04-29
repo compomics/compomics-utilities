@@ -16,7 +16,8 @@ import com.compomics.util.io.ftp.FTPClient;
 import com.compomics.util.junit.TestCaseLM;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 import java.util.Properties;
@@ -37,7 +38,7 @@ import java.util.Properties;
 public class TestFTPClient extends TestCase {
 
     // Class specific log4j logger for TestFTPClient instances.
-    Logger logger = Logger.getLogger(TestFTPClient.class);
+    Logger logger = LogManager.getLogger(TestFTPClient.class);
 
     private String iServer = null;
     private String iUser = null;

@@ -11,8 +11,8 @@
  * Time: 15:03:58
  */
 package com.compomics.util.protein;
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.*;
 
@@ -39,7 +39,7 @@ public class ModificationTemplate {
     }
 
     // Class specific log4j logger for ModificationTemplate instances.
-    Logger logger = Logger.getLogger(ModificationTemplate.class);
+    Logger logger = LogManager.getLogger(ModificationTemplate.class);
 
     /**
      * This HashMap will contain the following 'key-value' mappings: (key &gt; value) <br>

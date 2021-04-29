@@ -13,7 +13,8 @@
 package com.compomics.util.protein;
 
 import com.compomics.util.experiment.io.biology.protein.Header;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,7 +31,7 @@ import java.util.Vector;
  *
  * @author Lennart Martens
  * @author Harald Barsnes
- * @author MArc Vaudel
+ * @author Marc Vaudel
  */
 public class Enzyme implements Cloneable {
 
@@ -41,7 +42,7 @@ public class Enzyme implements Cloneable {
     }
 
     // Class specific log4j logger for Enzyme instances.
-    Logger logger = Logger.getLogger(Enzyme.class);
+    Logger logger = LogManager.getLogger(Enzyme.class);
     public static final int CTERM = 0; // @TODO: should be replaced by Emnum
     public static final int NTERM = 1; // @TODO: should be replaced by Emnum
     public static final int FULLY_ENZYMATIC = 1; // @TODO: should be replaced by Emnum

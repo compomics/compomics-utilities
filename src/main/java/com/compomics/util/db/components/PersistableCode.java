@@ -11,7 +11,8 @@
  * Time: 15:14:00
  */
 package com.compomics.util.db.components;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.db.DBMetaData;
 
@@ -39,7 +40,7 @@ public class PersistableCode {
     }
 
     // Class specific log4j logger for PersistableCode instances.
-    Logger logger = Logger.getLogger(PersistableCode.class);
+    Logger logger = LogManager.getLogger(PersistableCode.class);
 
     /**
      * This variable holds the generated code.

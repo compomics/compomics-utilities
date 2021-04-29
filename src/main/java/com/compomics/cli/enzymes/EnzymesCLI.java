@@ -1,5 +1,6 @@
 package com.compomics.cli.enzymes;
 
+import com.compomics.cli.paths.PathSettingsCLI;
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import java.io.File;
@@ -13,6 +14,7 @@ import org.apache.commons.cli.Options;
  * Command line to manage the enzymes.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class EnzymesCLI {
 
@@ -60,10 +62,14 @@ public class EnzymesCLI {
     public static void main(String[] args) {
 
         try {
-            Options lOptions = new Options();
-            EnzymesCLIParams.createOptionsCLI(lOptions);
+            // check if there are updates to the paths
+            String[] nonPathSettingArgsAsList = PathSettingsCLI.extractAndUpdatePathOptions(args);
+            
+            // parse the rest of the cptions   
+            Options nonPathOptions = new Options();
+            EnzymesCLIParams.createOptionsCLI(nonPathOptions);
             DefaultParser parser = new DefaultParser();
-            CommandLine line = parser.parse(lOptions, args);
+            CommandLine line = parser.parse(nonPathOptions, nonPathSettingArgsAsList);
 
             if (!EnzymesCLIInputBean.isValidStartup(line)) {
                 PrintWriter lPrintWriter = new PrintWriter(System.out);

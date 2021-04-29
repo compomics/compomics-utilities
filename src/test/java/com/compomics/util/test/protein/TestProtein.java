@@ -18,7 +18,8 @@ import com.compomics.util.experiment.io.biology.protein.Header;
 import com.compomics.util.protein.Protein;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
 
@@ -38,7 +39,7 @@ import java.io.*;
 public class TestProtein extends TestCase {
 
     // Class specific log4j logger for TestProtein instances.
-    Logger logger = Logger.getLogger(TestProtein.class);
+    Logger logger = LogManager.getLogger(TestProtein.class);
 
     public TestProtein() {
         this("The test scenario for the Protein class.");

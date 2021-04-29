@@ -3,7 +3,8 @@ package com.compomics.util.general;
 import com.compomics.util.enumeration.MolecularElement;
 import com.compomics.util.protein.MolecularFormula;
 import org.apache.commons.math.distribution.BinomialDistributionImpl;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Vector;
 
@@ -18,7 +19,7 @@ import java.util.Vector;
 public class IsotopicDistribution {
 
     // Class specific log4j logger for AASequenceImpl instances.
-    Logger logger = Logger.getLogger(IsotopicDistribution.class);
+    Logger logger = LogManager.getLogger(IsotopicDistribution.class);
 
     /**
      * The result of the isotopic distributions calculation. Percentage of the total contribution

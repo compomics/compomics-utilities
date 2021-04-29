@@ -9,7 +9,8 @@ package com.compomics.util.test.general;
 import com.compomics.util.general.CommandLineParser;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 
 /*
@@ -28,7 +29,7 @@ import org.apache.log4j.Logger;
 public class TestCommandLineParser extends TestCase {
     
     // Class specific log4j logger for TestCommandLineParser instances.
-    Logger logger = Logger.getLogger(TestCommandLineParser.class);
+    Logger logger = LogManager.getLogger(TestCommandLineParser.class);
 
     public TestCommandLineParser() {
         this("The test for the CommandLineParser class.");

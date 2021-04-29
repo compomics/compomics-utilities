@@ -16,7 +16,8 @@ import com.compomics.util.io.file.FilenameExtensionFilter;
 import com.compomics.util.junit.TestCaseLM;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 
@@ -36,7 +37,7 @@ import java.io.File;
 public class TestFilenameExtensionFilter extends TestCase {
 
     // Class specific log4j logger for TestFilenameExtensionFilter instances.
-    Logger logger = Logger.getLogger(TestFilenameExtensionFilter.class);
+    Logger logger = LogManager.getLogger(TestFilenameExtensionFilter.class);
 
     public TestFilenameExtensionFilter() {
         this("Test for the FilenameExtensionFilter class.");

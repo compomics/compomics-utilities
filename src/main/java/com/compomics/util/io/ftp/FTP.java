@@ -11,7 +11,8 @@
  * Time: 13:40:47
  */
 package com.compomics.util.io.ftp;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /*
  * CVS information:
@@ -43,7 +44,7 @@ public class FTP {
     }
 
     // Class specific log4j logger for FTP instances.
-    Logger logger = Logger.getLogger(FTP.class);
+    Logger logger = LogManager.getLogger(FTP.class);
 
     /**
      * FTP port to use for connection.

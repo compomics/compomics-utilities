@@ -11,7 +11,8 @@
  * Time: 13:25:54
  */
 package com.compomics.util.db.components;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.compomics.util.db.DBMetaData;
 
@@ -23,7 +24,7 @@ import com.compomics.util.db.DBMetaData;
  */
 
 /**
- * This class genereates the code to make a DBAccessor class an implementation of the Deleteable interface.
+ * This class generates the code to make a DBAccessor class an implementation of the Deleteable interface.
  *
  * @author Lennart Martens
  */
@@ -36,7 +37,7 @@ public class DeleteableCode {
     }
 
     // Class specific log4j logger for DeleteableCode instances.
-    Logger logger = Logger.getLogger(DeleteableCode.class);
+    Logger logger = LogManager.getLogger(DeleteableCode.class);
 
     /**
      * This String will hold the generated code for this component.

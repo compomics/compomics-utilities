@@ -114,6 +114,7 @@ public class ZstdUtils {
 
             } catch (IllegalStateException e) {
 
+                // @TODO: figure out what this extra loop is sometimes needed...
                 if (attempts++ < 10) {
 
                     maxLength *= 2;

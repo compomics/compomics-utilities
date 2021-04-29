@@ -23,10 +23,10 @@ public class ZstdUtils {
             byte[] compressedByteArray,
             int uncompressedLength
     ) {
-        
+
         return zstdDecompress(
-                new ZstdDecompressor(), 
-                compressedByteArray, 
+                new ZstdDecompressor(),
+                compressedByteArray,
                 uncompressedLength
         );
     }
@@ -70,12 +70,12 @@ public class ZstdUtils {
     public static TempByteArray zstdCompress(
             byte[] uncompressedData
     ) {
-        
+
         return zstdCompress(
-                new ZstdCompressor(), 
+                new ZstdCompressor(),
                 uncompressedData
         );
-        
+
     }
 
     /**
@@ -93,19 +93,39 @@ public class ZstdUtils {
 
         int maxLength = (int) compressor.maxCompressedLength(uncompressedData.length);
 
-        byte[] destinationArray = new byte[maxLength];
+        int attempts = 0;
 
-        int compressedArrayLength = (int) compressor.compress(
-                uncompressedData,
-                0,
-                uncompressedData.length,
-                destinationArray,
-                0,
-                maxLength
-        );
+        while (true) {
 
-        return new TempByteArray(destinationArray, compressedArrayLength);
+            try {
 
+                byte[] destinationArray = new byte[maxLength];
+
+                int compressedArrayLength = (int) compressor.compress(
+                        uncompressedData,
+                        0,
+                        uncompressedData.length,
+                        destinationArray,
+                        0,
+                        maxLength
+                );
+
+                return new TempByteArray(destinationArray, compressedArrayLength);
+
+            } catch (IllegalStateException e) {
+
+                if (attempts++ < 10) {
+
+                    maxLength *= 2;
+
+                } else {
+
+                    throw e;
+
+                }
+
+            }
+        }
     }
 
 }

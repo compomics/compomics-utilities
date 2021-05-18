@@ -52,7 +52,38 @@ public class BasicMathFunctions {
     }
 
     /**
-     * Returns n! as a long. Returns null if the capacity of a long is not
+     * Returns n! as a double. Accuracy decreases if the capacity of a long is
+     * not sufficient (i.e. n higher than 20).
+     *
+     * @param n a given integer
+     *
+     * @return the corresponding factorial
+     */
+    public static double factorialDouble(
+            int n
+    ) {
+
+        if (n <= 20) {
+
+            return factorial(n);
+
+        } else {
+
+            double result = factorial(20);
+
+            for (int i = 21; i <= n; i++) {
+
+                result *= i;
+
+            }
+
+            return result;
+
+        }
+    }
+
+    /**
+     * Returns n! as a long. Throws an error if the capacity of a long is not
      * sufficient (i.e. n higher than 20).
      *
      * @param n a given integer
@@ -77,8 +108,7 @@ public class BasicMathFunctions {
 
         } else if (n > 20) {
 
-            throw new IllegalArgumentException(
-                    "Factorial only implemented for n <= 20. Reached the maximal capacity of a long.");
+            throw new IllegalArgumentException("Reached the maximal capacity of a long.");
 
         } else if (n < 0) {
 
@@ -91,12 +121,54 @@ public class BasicMathFunctions {
     }
 
     /**
-     * Returns n!/k!, -1 if it cannot fit in a long.
+     * Returns n!/k! as double. Accuracy decreases if the capacity of a long is
+     * not sufficient
      *
      * @param n n
      * @param k k
      *
-     * @return n!/k!, -1 if it cannot fit in a long.
+     * @return n!/k!.
+     */
+    public static double factorialDouble(
+            int n,
+            int k
+    ) {
+
+        if (n < k) {
+            throw new ArithmeticException("n < k in n!/k!.");
+        }
+        if (n == k) {
+
+            return 1L;
+
+        } else {
+
+            if (n <= 20) {
+
+                return factorial(n, k);
+
+            }
+
+            double result = factorialDouble(20) / factorialDouble(k);
+
+            for (int i = 21; i <= n; i++) {
+
+                result *= i;
+
+            }
+
+            return result;
+
+        }
+    }
+
+    /**
+     * Returns n!/k!, an error is thrown if it cannot fit in a long.
+     *
+     * @param n n
+     * @param k k
+     *
+     * @return n!/k!.
      */
     public static long factorial(
             int n,
@@ -112,7 +184,7 @@ public class BasicMathFunctions {
 
         } else {
 
-            if (n < 20) {
+            if (n <= 20) {
 
                 return factorial(n) / factorial(k);
 
@@ -122,7 +194,7 @@ public class BasicMathFunctions {
 
             if (nMinusOne == -1L || nMinusOne > Long.MAX_VALUE / n) {
 
-                return -1;
+                throw new IllegalArgumentException("Reached the maximal capacity of a long.");
 
             } else {
 
@@ -133,8 +205,72 @@ public class BasicMathFunctions {
     }
 
     /**
+     * Returns the number of k-combinations in a set of n elements. Accuracy
+     * decreases if the capacity of a long is not sufficient
+     *
+     * @param k the number of k-combinations
+     * @param n the number of elements
+     *
+     * @return The number of k-combinations in a set of n elements.
+     */
+    public static double getCombinationDouble(
+            int k,
+            int n
+    ) {
+
+        if (k < n) {
+
+            double kInN = factorialDouble(n, k);
+            double nMinK = factorialDouble(n - k);
+
+            return kInN / nMinK;
+
+        } else if (k == n || k == 0) {
+
+            return 1;
+
+        } else {
+
+            throw new IllegalArgumentException("n>k in combination.");
+
+        }
+    }
+
+    /**
+     * Returns the invert of the number of k-combinations in a set of n
+     * elements. Accuracy decreases if the capacity of a long is not sufficient
+     *
+     * @param k the number of k-combinations
+     * @param n the number of elements
+     *
+     * @return The number of k-combinations in a set of n elements.
+     */
+    public static double getOneOverCombinationDouble(
+            int k,
+            int n
+    ) {
+
+        if (k < n) {
+
+            double kInN = factorialDouble(n, k);
+            double nMinK = factorialDouble(n - k);
+
+            return nMinK / kInN;
+
+        } else if (k == 0 || k == n) {
+
+            return 1;
+
+        } else {
+
+            throw new IllegalArgumentException("n>k in combination.");
+
+        }
+    }
+
+    /**
      * Returns the number of k-combinations in a set of n elements. If n!/k!
-     * cannot fit in a long, -1 is returned.
+     * cannot fit in a long, an error is thrown.
      *
      * @param k the number of k-combinations
      * @param n the number of elements
@@ -142,30 +278,18 @@ public class BasicMathFunctions {
      * @return The number of k-combinations in a set of n elements.
      */
     public static long getCombination(
-            int k, 
+            int k,
             int n
     ) {
 
-        if (k == 0) {
-
-            return 1L;
-
-        } else if (k < n) {
+        if (k < n) {
 
             long kInN = factorial(n, k);
             long nMinK = factorial(n - k);
 
-            if (kInN == -1L || nMinK == -1L) {
+            return kInN / nMinK;
 
-                return -1L;
-
-            } else {
-
-                return kInN / nMinK;
-
-            }
-
-        } else if (k == n) {
+        } else if (k == n || k == 0) {
 
             return 1L;
 

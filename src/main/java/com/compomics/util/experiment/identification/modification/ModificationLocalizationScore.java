@@ -157,7 +157,7 @@ public enum ModificationLocalizationScore {
         switch (this) {
 
             case PhosphoRS:
-                return 1.0 / ((double) BasicMathFunctions.getCombination(nModifications, nSites));
+                return BasicMathFunctions.getOneOverCombinationDouble(nModifications, nSites);
 
             default:
                 throw new UnsupportedOperationException("Threshold not implemented for score " + this + ".");

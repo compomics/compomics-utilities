@@ -136,7 +136,9 @@ public class CommandLineUtils {
      *
      * @return the list of file as string for command line argument
      */
-    public static String getCommandLineArgument(File file) {
+    public static String getCommandLineArgument(
+            File file
+    ) {
         return getQuoteType() + file.getAbsolutePath() + getQuoteType();
     }
 
@@ -148,7 +150,9 @@ public class CommandLineUtils {
      *
      * @return an arraylist containing the results, empty list if empty string
      */
-    public static ArrayList<String> splitInput(String cliInput) {
+    public static ArrayList<String> splitInput(
+            String cliInput
+    ) {
 
         ArrayList<String> results = new ArrayList<>();
 
@@ -174,7 +178,10 @@ public class CommandLineUtils {
      * @throws FileNotFoundException exception thrown whenever a file is not
      * found
      */
-    public static ArrayList<File> getFiles(String optionInput, ArrayList<String> fileExtensions) throws FileNotFoundException {
+    public static ArrayList<File> getFiles(
+            String optionInput, 
+            ArrayList<String> fileExtensions
+    ) throws FileNotFoundException {
 
         ArrayList<File> result = new ArrayList<>();
         ArrayList<String> files = splitInput(optionInput);
@@ -237,7 +244,10 @@ public class CommandLineUtils {
      *
      * @return the list if integers
      */
-    public static ArrayList<Integer> getIntegerListFromString(String aString, String separator) {
+    public static ArrayList<Integer> getIntegerListFromString(
+            String aString, 
+            String separator
+    ) {
 
         ArrayList<Integer> result = new ArrayList<>();
 

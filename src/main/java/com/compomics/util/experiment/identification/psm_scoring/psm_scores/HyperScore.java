@@ -196,8 +196,8 @@ public class HyperScore {
         int nRewind = ionsRewind.size() / (Math.max(charge - 1, 1));
         nForward = nForward > 20 ? 20 : nForward;
         nRewind = nRewind > 20 ? 20 : nRewind;
-        long forwardFactorial = BasicMathFunctions.factorial(nForward);
-        long rewindFactorial = BasicMathFunctions.factorial(nRewind);
+        double forwardFactorial = BasicMathFunctions.factorialDouble(nForward);
+        double rewindFactorial = BasicMathFunctions.factorialDouble(nRewind);
         return xCorr * forwardFactorial * rewindFactorial;
     }
 

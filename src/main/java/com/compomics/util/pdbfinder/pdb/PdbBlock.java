@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.ConnectException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * PdbBlock.
@@ -57,7 +57,7 @@ public class PdbBlock {
 
     /**
      * Constructor.
-     * 
+     *
      * @param aBlock the block
      * @param aStart_protein the protein start position
      * @param aEnd_protein the protein end position
@@ -74,7 +74,7 @@ public class PdbBlock {
 
     /**
      * Returns the block.
-     * 
+     *
      * @return block
      */
     public String getBlock() {
@@ -83,7 +83,7 @@ public class PdbBlock {
 
     /**
      * Sets the block.
-     * 
+     *
      * @param aBlock the block
      */
     public void setBlock(String aBlock) {
@@ -92,7 +92,7 @@ public class PdbBlock {
 
     /**
      * Returns the protein start.
-     * 
+     *
      * @return the protein start
      */
     public int getStartProtein() {
@@ -101,7 +101,7 @@ public class PdbBlock {
 
     /**
      * Set the protein start.
-     * 
+     *
      * @param aStartProtein the protein start
      */
     public void setStartProtein(int aStartProtein) {
@@ -110,7 +110,7 @@ public class PdbBlock {
 
     /**
      * Returns the protein end.
-     * 
+     *
      * @return the protein end
      */
     public int getEndProtein() {
@@ -119,7 +119,7 @@ public class PdbBlock {
 
     /**
      * Set the protein end.
-     * 
+     *
      * @param aEndProtein the protein end
      */
     public void setEndProtein(int aEndProtein) {
@@ -128,7 +128,7 @@ public class PdbBlock {
 
     /**
      * Returns the block start.
-     * 
+     *
      * @return the block start
      */
     public int getStartBlock() {
@@ -137,7 +137,7 @@ public class PdbBlock {
 
     /**
      * Set the block start.
-     * 
+     *
      * @param aStartBlock the start block
      */
     public void setStartBlock(int aStartBlock) {
@@ -146,7 +146,7 @@ public class PdbBlock {
 
     /**
      * Returns the block end.
-     * 
+     *
      * @return the block end
      */
     public int getEndBlock() {
@@ -155,7 +155,7 @@ public class PdbBlock {
 
     /**
      * Set the block end.
-     * 
+     *
      * @param aEndBlock the end block
      */
     public void setEndBlock(int aEndBlock) {
@@ -164,17 +164,18 @@ public class PdbBlock {
 
     /**
      * Returns the difference.
-     * 
+     *
      * @return the difference
      */
     public int getDifference() {
-        int diff = iStartProtein - iStartBlock;
-        return diff;
+        int diff = iStartProtein - iStartBlock; 
+                   
+        return 0;
     }
 
     /**
      * Returns true if there is a selection.
-     * 
+     *
      * @return true if there is a selection.
      */
     public boolean getSelection() {
@@ -183,7 +184,7 @@ public class PdbBlock {
 
     /**
      * Returns the selected positions.
-     * 
+     *
      * @return the selected positions
      */
     public Integer[] getSelectedPositions() {
@@ -192,7 +193,7 @@ public class PdbBlock {
 
     /**
      * Set the selected positions.
-     * 
+     *
      * @param aSelectedPositions the selected positions
      */
     public void setSelectedPositions(Integer[] aSelectedPositions) {
@@ -202,18 +203,19 @@ public class PdbBlock {
 
     /**
      * Get the blocked sequence.
-     * 
+     *
      * @param aPdbAccession the PDB accession
      * @return the blocked sequence
      */
     public String getBlockSequence(String aPdbAccession) {
-        String lUrl = "https://www.rcsb.org/pdb/rest/describePDB?structureId=" + aPdbAccession;
+//        String lUrl = "https://www.rcsb.org/pdb/rest/describePDB?structureId=" + aPdbAccession;
+        String lUrl = "https://www.rcsb.org/fasta/entry/" + aPdbAccession + "/display";
         return readUrl(lUrl, aPdbAccession);
     }
 
     /**
      * Read a URL.
-     * 
+     *
      * @param aUrl the URL
      * @param aPdbAccession the PDB accession
      * @return the sequence
@@ -226,7 +228,7 @@ public class PdbBlock {
         try {
             URL myURL = new URL(aUrl);
             StringBuilder input = new StringBuilder();
-            HttpURLConnection c = (HttpURLConnection) myURL.openConnection();
+            HttpsURLConnection c = (HttpsURLConnection) myURL.openConnection();
             BufferedInputStream in = new BufferedInputStream(c.getInputStream());
             Reader r = new InputStreamReader(in);
 
@@ -238,9 +240,7 @@ public class PdbBlock {
 
             r.close();
             in.close();
-
             lSequence = readFasta(input.toString(), aPdbAccession);
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (ConnectException e) {
@@ -254,7 +254,7 @@ public class PdbBlock {
 
     /**
      * Read a FASTA.
-     * 
+     *
      * @param lFasta the FASTA entry
      * @param aPdbAccession the PDB accession
      * @return the sequence
@@ -266,8 +266,9 @@ public class PdbBlock {
         StringBuilder lSequence = new StringBuilder();
         for (String lLine : lLines) {
             if (lLine.startsWith(">")) {
-                //check if we need to read this
-                if (lLine.contains(aPdbAccession + ":" + iBlock + "|")) {
+                //check if we need to read this                
+//               if (lLine.contains(aPdbAccession + ":" + iBlock + "|")) {
+                if (lLine.split("\\|")[1].contains(iBlock)) {
                     //we need this
                     lSequenceNeeded = true;
                 } else {

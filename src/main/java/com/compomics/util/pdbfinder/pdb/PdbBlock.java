@@ -13,6 +13,7 @@ import javax.net.ssl.HttpsURLConnection;
  * PdbBlock.
  *
  * @author Niklaas Colaert
+ * @author Yehia Farag
  */
 public class PdbBlock {
 
@@ -168,8 +169,7 @@ public class PdbBlock {
      * @return the difference
      */
     public int getDifference() {
-        int diff = iStartProtein - iStartBlock; 
-                   
+        int diff = iStartProtein - iStartBlock;
         return 0;
     }
 
@@ -208,7 +208,6 @@ public class PdbBlock {
      * @return the blocked sequence
      */
     public String getBlockSequence(String aPdbAccession) {
-//        String lUrl = "https://www.rcsb.org/pdb/rest/describePDB?structureId=" + aPdbAccession;
         String lUrl = "https://www.rcsb.org/fasta/entry/" + aPdbAccession + "/display";
         return readUrl(lUrl, aPdbAccession);
     }
@@ -240,7 +239,9 @@ public class PdbBlock {
 
             r.close();
             in.close();
+
             lSequence = readFasta(input.toString(), aPdbAccession);
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (ConnectException e) {
@@ -264,10 +265,10 @@ public class PdbBlock {
         String[] lLines = lFasta.split("\n");
         boolean lSequenceNeeded = false;
         StringBuilder lSequence = new StringBuilder();
+
         for (String lLine : lLines) {
             if (lLine.startsWith(">")) {
-                //check if we need to read this                
-//               if (lLine.contains(aPdbAccession + ":" + iBlock + "|")) {
+                //check if we need to read this
                 if (lLine.split("\\|")[1].contains(iBlock)) {
                     //we need this
                     lSequenceNeeded = true;

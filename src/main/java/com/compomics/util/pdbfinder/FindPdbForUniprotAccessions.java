@@ -22,6 +22,7 @@ import java.util.Vector;
  * Maps UniProt protein accession numbers to PDB file IDs.
  *
  * @author Niklaas Colaert
+ * @author Yehia Farag
  */
 public class FindPdbForUniprotAccessions {
 
@@ -46,7 +47,7 @@ public class FindPdbForUniprotAccessions {
     /**
      * The DAS reader.
      */
-    private DasAnnotationServerAlingmentReader iDasReader;//= new DasAnnotationServerAlingmentReader("empty");
+    private DasAnnotationServerAlingmentReader iDasReader;
     /**
      * The URL.
      */
@@ -79,7 +80,6 @@ public class FindPdbForUniprotAccessions {
             public void run() {
                 try {
                     // find features
-//                    String urlMake = "https://www.rcsb.org/pdb/rest/das/pdb_uniprot_mapping/alignment?query=" + iProteinAccession;
                     String urlMake = "https://www.ebi.ac.uk/pdbe/api/mappings/best_structures/" + iProteinAccession;
                     readUrl(urlMake);
                 } catch (IndexOutOfBoundsException e) {
@@ -87,6 +87,7 @@ public class FindPdbForUniprotAccessions {
                 }
             }
         }, "PdbDownloader");
+
         pdbThread.start();
 
         // wait to make sure that the pdb thread has started
@@ -127,14 +128,12 @@ public class FindPdbForUniprotAccessions {
                     pdbParamToAddBlock = new PdbParameter(pdb, align.getTitle(), align.getExperimentType(), align.getResolution());
                     for (AlignmentBlock alignBlock : align.getAlignmentBlocks()) {
                         PdbBlock block = new PdbBlock(alignBlock.getSpAccession(), alignBlock.getSpStart(), alignBlock.getSpEnd(), alignBlock.getPdbStart(), alignBlock.getPdbEnd());
-//                        PdbBlock block = new PdbBlock(alignBlock.getPdbAccession().substring(5), alignBlock.getSpStart(), alignBlock.getSpEnd(), alignBlock.getPdbStart(), alignBlock.getPdbEnd());
                         pdbParamToAddBlock.addBlock(block);
                     }
                     iPdbs.add(pdbParamToAddBlock);
                 } else {
                     for (AlignmentBlock alignBlock : align.getAlignmentBlocks()) {
                         PdbBlock block = new PdbBlock(alignBlock.getSpAccession(), alignBlock.getSpStart(), alignBlock.getSpEnd(), alignBlock.getPdbStart(), alignBlock.getPdbEnd());
-//                      PdbBlock block = new PdbBlock(alignBlock.getPdbAccession().substring(5), alignBlock.getSpStart(), alignBlock.getSpEnd(), alignBlock.getPdbStart(), alignBlock.getPdbEnd());
                         pdbParamToAddBlock.addBlock(block);
                     }
                 }
@@ -188,6 +187,7 @@ public class FindPdbForUniprotAccessions {
 
             r.close();
             in.close();
+
             iDasReader = new DasAnnotationServerAlingmentReader(input.toString());
             urlRead = true;
         } catch (MalformedURLException e) {

@@ -204,7 +204,6 @@ public class ModificationDialog extends javax.swing.JDialog {
         removeNeutralLoss.setEnabled(editable);
         addReporterIon.setEnabled(editable);
         removerReporterIon.setEnabled(editable);
-        patternTxt.setEditable(editable);
         unimodAccessionJTextField.setEditable(editable);
         unimodNameJTextField.setEditable(editable);
         psiModAccessionJTextField.setEditable(editable);

@@ -570,7 +570,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
             progressDialog.setTitle("Appending Decoy Sequences. Please Wait...");
             progressDialog.setPrimaryProgressCounterIndeterminate(false);
             progressDialog.setPrimaryProgressCounter(0);
-            progressDialog.setMaxPrimaryProgressCounter(fastaSummary.nSequences);
+            progressDialog.setMaxPrimaryProgressCounter(100);
 
             DecoyConverter.appendDecoySequences(originalFastaFile, newFile, fastaParameters, progressDialog);
 
@@ -602,6 +602,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     new String[]{"FASTA Import Error.", "File " + selectedFastaFile + " not found."},
                     "FASTA Import Error", JOptionPane.WARNING_MESSAGE
             );
+
             e.printStackTrace();
 
         } catch (Exception e) {
@@ -613,6 +614,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     "FASTA Import Error",
                     JOptionPane.WARNING_MESSAGE
             );
+
             e.printStackTrace();
 
         }
@@ -653,6 +655,7 @@ public class SequenceDbDetailsDialog extends javax.swing.JDialog {
                     "Please Rename File",
                     JOptionPane.WARNING_MESSAGE
             );
+
             e.printStackTrace();
             success = false;
 

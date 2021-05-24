@@ -50,7 +50,7 @@ public class DecoyConverter {
     ) throws IOException {
 
         FastaIterator fastaIterator = new FastaIterator(fastaIn);
-
+        
         try ( BufferedWriter bw = new BufferedWriter(new FileWriter(fastaOut))) {
 
             Protein protein;
@@ -110,7 +110,8 @@ public class DecoyConverter {
 
                     }
 
-                    waitingHandler.increaseSecondaryProgressCounter();
+                    double progress = fastaIterator.getProgressInPercent();
+                    waitingHandler.setSecondaryProgressCounter((int) progress);
 
                 }
 

@@ -4,26 +4,25 @@ import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.proteins.Protein;
 import com.compomics.util.experiment.io.biology.protein.ProteinIterator;
 import com.compomics.util.experiment.io.biology.protein.Header;
+import static com.compomics.util.io.IoUtil.ENCODING;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.concurrent.Semaphore;
+import org.apache.commons.io.input.CountingInputStream;
 
 /**
  * Iterator for a FASTA file.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class FastaIterator implements ProteinIterator {
-
-    /**
-     * Empty default constructor
-     */
-    public FastaIterator() {
-        br = null;
-        sanityCheck = false;
-    }
 
     /**
      * Mutex for the buffering of the FASTA file.
@@ -32,7 +31,7 @@ public class FastaIterator implements ProteinIterator {
     /**
      * Character forbidden in protein sequences, will be removed.
      */
-    public static final char forbiddenCharacter = '*';
+    public static final char FORBIDDEN_CHARACTER = '*';
     /**
      * Buffered reader for the FASTA file.
      */
@@ -56,6 +55,14 @@ public class FastaIterator implements ProteinIterator {
      * Boolean indicating whether the end of the file has been reached.
      */
     private boolean endOfFileReached = false;
+    /**
+     * The length of the file in bytes.
+     */
+    private final long fileLength;
+    /**
+     * A stream counting the bytes read.
+     */
+    private final CountingInputStream countingInputStream;
 
     /**
      * Constructor without sanity check.
@@ -83,8 +90,32 @@ public class FastaIterator implements ProteinIterator {
      */
     public FastaIterator(File fastaFile, boolean sanityCheck) throws FileNotFoundException {
 
-        br = new BufferedReader(new FileReader(fastaFile));
-        this.sanityCheck = sanityCheck;
+        try {
+
+            InputStream fileStream = new FileInputStream(fastaFile);
+            countingInputStream = new CountingInputStream(fileStream);
+            Reader reader = new InputStreamReader(countingInputStream, ENCODING);
+            br = new BufferedReader(reader);
+
+            fileLength = fastaFile.length();
+            this.sanityCheck = sanityCheck;
+
+        } catch (IOException e) {
+
+            throw new RuntimeException(e);
+
+        }
+
+    }
+
+    /**
+     * Returns the progress reading the file in percent.
+     *
+     * @return The progress reading the file in percent.
+     */
+    public double getProgressInPercent() {
+
+        return 100.0 * ((double) countingInputStream.getByteCount()) / fileLength;
 
     }
 
@@ -106,6 +137,7 @@ public class FastaIterator implements ProteinIterator {
             String line;
 
             while ((line = br.readLine()) != null) {
+
                 line = line.trim();
 
                 if (line.length() > 0) {
@@ -160,12 +192,16 @@ public class FastaIterator implements ProteinIterator {
 
             } else {
 
-                throw new IllegalArgumentException("No sequence found for protein accession " + header.getAccessionOrRest() + ".");
+                throw new IllegalArgumentException(
+                        "No sequence found for protein accession "
+                        + header.getAccessionOrRest()
+                        + "."
+                );
 
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("An error occurred in the fasta file\n\n" + e);
+            throw new RuntimeException("An error occurred in the FASTA file\n\n" + e);
         }
     }
 
@@ -186,7 +222,7 @@ public class FastaIterator implements ProteinIterator {
 
             char charAtI = lineAsCharArray[i];
 
-            if (charAtI != forbiddenCharacter) {
+            if (charAtI != FORBIDDEN_CHARACTER) {
 
                 char upperCase = Character.toUpperCase(charAtI);
                 AminoAcid.getAminoAcid(upperCase);

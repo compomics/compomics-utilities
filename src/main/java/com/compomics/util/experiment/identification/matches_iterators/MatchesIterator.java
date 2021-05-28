@@ -4,7 +4,6 @@ import com.compomics.util.experiment.identification.Identification;
 import com.compomics.util.waiting.WaitingHandler;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
-import java.util.Iterator;
 
 /**
  * An abstract iterator class to iterate identification matches. Note: multiple
@@ -15,41 +14,37 @@ import java.util.Iterator;
  *
  * @author Dominik Kopczynski
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public abstract class MatchesIterator {
 
     /**
-     * Empty default constructor
-     */
-    public MatchesIterator() {
-    }
-    /**
-     * the identification
+     * The identification.
      */
     private Identification identification = null;
     /**
-     * list of potential keys for the iterator, if empty all instances of the
-     * class are being iterated
+     * List of potential keys for the iterator, if empty all instances of the
+     * class are being iterated.
      */
     private long[] keys = null;
     /**
-     * current absolute index
+     * Current absolute index.
      */
     private int index = 0;
     /**
-     * absolute number of the objects in the iterator
+     * Absolute number of the objects in the iterator.
      */
     private int num = 0;
     /**
-     * waiting handler
+     * The waiting handler.
      */
     private WaitingHandler waitingHandler;
     /**
-     * display progress
+     * Display progress.
      */
     private boolean displayProgress;
     /**
-     * list of long keys to iterate
+     * List of long keys to iterate.
      */
     private ArrayList<Long> longKeys = null;
     /**
@@ -67,8 +62,20 @@ public abstract class MatchesIterator {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      */
-    public MatchesIterator(Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
-        this(null, className, identification, waitingHandler, displayProgress, null);
+    public MatchesIterator(
+            Class className,
+            Identification identification,
+            WaitingHandler waitingHandler,
+            boolean displayProgress
+    ) {
+        this(
+                null,
+                className,
+                identification,
+                waitingHandler,
+                displayProgress,
+                null
+        );
     }
 
     /**
@@ -84,20 +91,26 @@ public abstract class MatchesIterator {
      * method should be displayed on the waiting handler
      * @param filters filters for the class
      */
-    public MatchesIterator(long[] keys, Class className, Identification identification, WaitingHandler waitingHandler, boolean displayProgress, String filters) {
-        
+    public MatchesIterator(
+            long[] keys,
+            Class className,
+            Identification identification,
+            WaitingHandler waitingHandler,
+            boolean displayProgress,
+            String filters
+    ) {
+
         if (keys != null) {
-            
+
             num = keys.length;
             this.keys = keys;
-            
+
         } else {
-            
+
             longKeys = new ArrayList<>(identification.getClassObjects(className, filters));
-             
-            
+
             num = longKeys.size();
-            
+
         }
 
         index = 0;
@@ -116,20 +129,20 @@ public abstract class MatchesIterator {
 
         Object obj = null;
         int currentIndex = getIndex();
-        
+
         if (currentIndex < num) {
-            
+
             if (keys == null) {
-                
+
                 obj = identification.retrieveObject(longKeys.get(currentIndex));
-                
+
             } else {
-                
+
                 obj = identification.retrieveObject(keys[currentIndex]);
-                
+
             }
         }
-        
+
         return obj;
     }
 
@@ -139,7 +152,7 @@ public abstract class MatchesIterator {
      * @return the index
      */
     private int getIndex() {
-        
+
         try {
 
             nextMutex.acquire();

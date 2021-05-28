@@ -14,11 +14,6 @@ import com.compomics.util.waiting.WaitingHandler;
 public class SpectrumMatchesIterator extends MatchesIterator {
 
     /**
-     * Empty default constructor
-     */
-    public SpectrumMatchesIterator() {
-    }
-    /**
      * Constructor.
      *
      * @param identification the identification where to get the matches from

@@ -14,12 +14,6 @@ import com.compomics.util.waiting.WaitingHandler;
 public class PeptideMatchesIterator extends MatchesIterator {
 
     /**
-     * Empty default constructor
-     */
-    public PeptideMatchesIterator() {
-    }
-    
-    /**
      * Constructor.
      *
      * @param identification the identification where to get the matches from
@@ -28,24 +22,44 @@ public class PeptideMatchesIterator extends MatchesIterator {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      */
-    public PeptideMatchesIterator(Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
-        this(null, identification, waitingHandler, displayProgress);
+    public PeptideMatchesIterator(
+            Identification identification,
+            WaitingHandler waitingHandler,
+            boolean displayProgress
+    ) {
+        this(
+                null,
+                identification,
+                waitingHandler,
+                displayProgress
+        );
     }
-    
+
     /**
      * Constructor.
      *
      * @param keys the keys of the objects
-     * @param identification the identification where to get the matchesloadPs from
+     * @param identification the identification where to get the matchesloadPs
+     * from
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      */
-    public PeptideMatchesIterator(long[] keys, Identification identification, WaitingHandler waitingHandler, boolean displayProgress) {
-        super(keys, PeptideMatch.class, identification, waitingHandler, displayProgress, null);
+    public PeptideMatchesIterator(
+            long[] keys,
+            Identification identification,
+            WaitingHandler waitingHandler,
+            boolean displayProgress) {
+        super(
+                keys,
+                PeptideMatch.class,
+                identification,
+                waitingHandler,
+                displayProgress,
+                null
+        );
     }
-    
 
     /**
      * Returns the next match and updates the buffer. Null if the iterator is
@@ -54,6 +68,6 @@ public class PeptideMatchesIterator extends MatchesIterator {
      * @return the next match
      */
     public PeptideMatch next() {
-        return (PeptideMatch)nextObject();
+        return (PeptideMatch) nextObject();
     }
 }

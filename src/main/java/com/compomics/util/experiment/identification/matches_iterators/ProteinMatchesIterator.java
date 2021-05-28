@@ -12,12 +12,6 @@ import com.compomics.util.waiting.WaitingHandler;
  * @author Dominik Kopczynski
  */
 public class ProteinMatchesIterator extends MatchesIterator {
-
-    /**
-     * Empty default constructor
-     */
-    public ProteinMatchesIterator() {
-    }
     
     /**
      * Constructor.

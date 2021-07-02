@@ -4,53 +4,44 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 /**
- * This abstract class provides customization facilities. Tool dependent
+ * This abstract class provides customization facilities. Tool-dependent
  * parameters can be added to classes extending this class.
  *
  * @author Marc Vaudel
  */
 public abstract class ExperimentObject implements Serializable {
 
-    
     /**
      * Unique identifier.
      */
     private long id;
-    
-    
+
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public ExperimentObject() {
     }
-    
-    
-    
+
     /**
      * Returns the id of the object.
-     * 
+     *
      * @return the id of the object
      */
-    public long getId(){
-        
-        //
-        
+    public long getId() {
+
         return id;
-    
+
     }
-    
-    
+
     /**
      * Sets the id of the object.
-     * 
+     *
      * @param id the id of the object
      */
-    public void setId(long id){
-        
-        //
-        
+    public void setId(long id) {
+
         this.id = id;
-    
+
     }
 
     /**
@@ -104,93 +95,87 @@ public abstract class ExperimentObject implements Serializable {
      * @param parameter the parameter
      */
     public void addUrParam(UrParameter parameter) {
-        
-        
+
         if (urParams == null) {
-            
+
             createParamsMap();
-            
+
         }
-        
+
         urParams.put(parameter.getParameterKey(), parameter);
-        
+
     }
-    
+
     /**
      * Removes a user parameter from the user parameters map.
-     * 
+     *
      * @param paramterKey the key of the parameter
      */
     public void removeUrParam(long paramterKey) {
-        
-        
+
         if (urParams != null) {
-            
+
             urParams.remove(paramterKey);
-            
-        }
-    }
-    
-    /**
-     * Creates the parameters map unless done by another thread already.
-     */
-    private synchronized void createParamsMap() {
-        
-        
-        if (urParams == null) {
-            
-            urParams = new HashMap<>(1);
-            
+
         }
     }
 
     /**
-     * Returns the refinement parameter of the same type than the one provided. Null if not found.
+     * Creates the parameters map unless done by another thread already.
+     */
+    private synchronized void createParamsMap() {
+
+        if (urParams == null) {
+
+            urParams = new HashMap<>(1);
+
+        }
+    }
+
+    /**
+     * Returns the refinement parameter of the same type than the one provided.
+     * Null if not found.
      *
      * @param parameter the desired parameter
-     * 
+     *
      * @return the value stored. Null if not found.
      */
     public UrParameter getUrParam(UrParameter parameter) {
-        
-        
+
         if (urParams == null) {
-            
+
             return null;
-            
+
         }
-        
+
         return urParams.get(parameter.getParameterKey());
     }
-    
+
     /**
      * Clears the loaded parameters.
      */
     public void clearParametersMap() {
-        
-        
+
         urParams = null;
     }
-    
+
     /**
      * Sets the user parameters map.
-     * 
+     *
      * @param urParams the user parameters map
      */
-    public void setUrParams(HashMap<Long, UrParameter> urParams){
-        
-        
+    public void setUrParams(HashMap<Long, UrParameter> urParams) {
+
         this.urParams = urParams;
     }
-    
+
     /**
      * Returns the user parameters map.
-     * 
+     *
      * @return the user parameters map
      */
-    public HashMap<Long, UrParameter> getUrParams(){
-        
-        
+    public HashMap<Long, UrParameter> getUrParams() {
+
         return urParams;
     }
 
@@ -200,24 +185,24 @@ public abstract class ExperimentObject implements Serializable {
      * dictionaries in constant time.
      *
      * @param key the original key
-     * 
+     *
      * @return the hashed key
      */
     public static long asLong(String key) {
-        
+
         long longKey = 0;
         char[] keyAsArray = key.toCharArray();
-        
+
         for (int i = 0; i < keyAsArray.length; ++i) {
-        
+
             long val = HASHVALUELIST[keyAsArray[i]]; // create a hash val of char
             int sft = ((i * 11) & 63); // determine a shift length of cyclic shift depending on char position in key
             val = (val << sft) | (val >>> (64 - sft)); // do the cyclic shift
             longKey ^= val; // xor it with remaining
-        
+
         }
-        
+
         return longKey;
-    
+
     }
 }

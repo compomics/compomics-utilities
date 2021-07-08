@@ -639,7 +639,7 @@ public class PhosphoRS {
                         modificationParameters,
                         sequenceProvider,
                         modificationSequenceMatchingParameters,
-                        possibleFragmentIons,
+                        profilePossibleFragmentIons,
                         false
                 );
 
@@ -667,8 +667,8 @@ public class PhosphoRS {
                 BasicMathFunctions.checkProbabilityRange(phosphoRsProbability);
                 phosphoRsProbability *= 100.0;
                 profileToScoreMap.put(profileKey, phosphoRsProbability);
-
-            }
+                
+                }
 
         } else if (possibleSites.length == nModification) {
 

@@ -61,11 +61,9 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
      * @param modificationScoring the corresponding scoring
      */
     public void addModificationScoring(
-            String modName, 
+            String modName,
             ModificationScoring modificationScoring
     ) {
-
-        
 
         modificationMap.put(modName, modificationScoring);
 
@@ -83,8 +81,6 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             String modName
     ) {
 
-        
-
         return modificationMap.get(modName);
 
     }
@@ -100,8 +96,6 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             String modName
     ) {
 
-        
-
         return modificationMap.containsKey(modName);
 
     }
@@ -112,8 +106,6 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
      * @return a list of scored modifications
      */
     public Set<String> getScoredModifications() {
-
-        
 
         return modificationMap.keySet();
 
@@ -129,8 +121,6 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             String modName,
             int modificationSite
     ) {
-
-        
 
         // add the modification to the site map
         if (mainModificationSites == null) {
@@ -182,8 +172,6 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             int representativeSite,
             HashMap<Integer, HashSet<String>> possibleModifications
     ) {
-
-        
 
         if (ambiguousModificationsByRepresentativeSite == null) {
 
@@ -272,8 +260,6 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             int nMod,
             ModificationProvider modificationProvider
     ) {
-
-        
 
         double modMass = modificationProvider.getModification(modName).getMass();
 
@@ -406,7 +392,15 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
 
         if (modCount != nMod) {
 
-            throw new IllegalArgumentException("Incorrect number of representative sites for modification of mass " + modMass + ". Expected: " + nMod + ", found: " + modCount + ".");
+            throw new IllegalArgumentException(
+                    "Incorrect number of representative sites for modification of mass "
+                    + modMass
+                    + ". Expected: "
+                    + nMod
+                    + ", found: "
+                    + modCount
+                    + "."
+            );
 
         }
     }
@@ -426,8 +420,6 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             String modificationName
     ) {
 
-        
-
         return mainModificationSites != null
                 && mainModificationSites.containsKey(site)
                 && mainModificationSites.get(site).contains(modificationName);
@@ -446,9 +438,8 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             int site
     ) {
 
-        
-
-        return mainModificationSites == null || !mainModificationSites.containsKey(site) ? EmptyCollections.emptyStringSet
+        return mainModificationSites == null 
+                || !mainModificationSites.containsKey(site) ? EmptyCollections.emptyStringSet
                 : mainModificationSites.get(site);
 
     }
@@ -466,10 +457,7 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             int site
     ) {
 
-        
-
         HashMap<Integer, HashSet<String>> modificationsAtSite = getAmbiguousModificationsAtRepresentativeSite(site);
-
         HashSet<String> modifications = modificationsAtSite.get(site);
 
         return modifications == null ? EmptyCollections.emptyStringSet
@@ -489,9 +477,8 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             String modName
     ) {
 
-        
-
-        return confidentModificationsByModName == null || !confidentModificationsByModName.containsKey(modName) ? EmptyCollections.emptyIntSet
+        return confidentModificationsByModName == null 
+                || !confidentModificationsByModName.containsKey(modName) ? EmptyCollections.emptyIntSet
                 : confidentModificationsByModName.get(modName);
 
     }
@@ -509,9 +496,8 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             int representativeSite
     ) {
 
-        
-
-        return ambiguousModificationsByRepresentativeSite == null || !ambiguousModificationsByRepresentativeSite.containsKey(representativeSite)
+        return ambiguousModificationsByRepresentativeSite == null 
+                || !ambiguousModificationsByRepresentativeSite.containsKey(representativeSite)
                 ? new HashMap<>(0)
                 : ambiguousModificationsByRepresentativeSite.get(representativeSite);
 
@@ -530,8 +516,6 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             String modName
     ) {
 
-        
-
         return ambiguousModificationsByModName == null ? new HashMap<>(0)
                 : ambiguousModificationsByModName.get(modName);
 
@@ -543,8 +527,6 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
      * @return a list of all confident modification sites
      */
     public TreeSet<Integer> getConfidentSites() {
-
-        
 
         return mainModificationSites == null ? new TreeSet<>()
                 : new TreeSet<>(mainModificationSites.keySet());
@@ -560,8 +542,6 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
      */
     public TreeSet<Integer> getRepresentativeSites() {
 
-        
-
         return ambiguousModificationsByRepresentativeSite == null ? EmptyCollections.emptyIntTreeSet
                 : new TreeSet<>(ambiguousModificationsByRepresentativeSite.keySet());
 
@@ -574,8 +554,6 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
      */
     public TreeSet<String> getConfidentlyLocalizedModifications() {
 
-        
-
         return confidentModificationsByModName == null ? EmptyCollections.emptyStringTreeSet
                 : new TreeSet<>(confidentModificationsByModName.keySet());
 
@@ -587,8 +565,6 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
      * @return a list of modifications presenting at least an ambiguous site
      */
     public TreeSet<String> getAmbiguouslyLocalizedModifications() {
-
-        
 
         return ambiguousModificationsByModName == null ? EmptyCollections.emptyStringTreeSet
                 : new TreeSet<>(ambiguousModificationsByModName.keySet());

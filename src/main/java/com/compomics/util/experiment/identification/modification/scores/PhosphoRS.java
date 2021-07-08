@@ -123,11 +123,9 @@ public class PhosphoRS {
             spectrumAnnotator = new PeptideSpectrumAnnotator();
         }
 
-        int nModification = 0;
-
         ModificationMatch[] modificationMatches = peptide.getVariableModifications();
 
-        nModification = (int) Arrays.stream(modificationMatches)
+        int nModification = (int) Arrays.stream(modificationMatches)
                 .filter(
                         modificationMatch -> modifications.stream()
                                 .anyMatch(
@@ -639,7 +637,7 @@ public class PhosphoRS {
                         modificationParameters,
                         sequenceProvider,
                         modificationSequenceMatchingParameters,
-                        profilePossibleFragmentIons,
+                        possibleFragmentIons, // @TODO: should be profilePossibleFragmentIons, but this results in errors downstream
                         false
                 );
 

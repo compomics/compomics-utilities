@@ -110,6 +110,11 @@ public class MetaMorpheusParameters extends ExperimentObject implements Identifi
      */
     private Double maxFragmentSize = 30000.0;
     /**
+     * The minimum allowed internal fragment length. 0 means "no internal
+     * fragments".
+     */
+    private Integer minAllowedInternalFragmentLength = 0;
+    /**
      * Mass difference acceptor type.
      */
     private MetaMorpheusMassDiffAcceptorType massDiffAcceptorType = MetaMorpheusMassDiffAcceptorType.OneMM;
@@ -263,6 +268,9 @@ public class MetaMorpheusParameters extends ExperimentObject implements Identifi
             if (diff > 0.0000000000001) {
                 return false;
             }
+            if (!getMinAllowedInternalFragmentLength().equals(metaMorpheusParameters.getMinAllowedInternalFragmentLength())) {
+                return false;
+            }
             if (massDiffAcceptorType != metaMorpheusParameters.getMassDiffAcceptorType()) {
                 return false;
             }
@@ -399,6 +407,9 @@ public class MetaMorpheusParameters extends ExperimentObject implements Identifi
         output.append("MAX_FRAGMENTATION_SIZE=");
         output.append(getMaxFragmentSize());
         output.append(newLine);
+        output.append("MIN_ALLOWED_INTERNAL_FRAGMENT_LENGTH=");
+        output.append(getMinAllowedInternalFragmentLength());
+        output.append(newLine);
         output.append("MASS_DIFF_ACCEPTOR_TYPE=");
         output.append(getMassDiffAcceptorType());
         output.append(newLine);
@@ -469,16 +480,16 @@ public class MetaMorpheusParameters extends ExperimentObject implements Identifi
         output.append(runGptm());
         output.append(newLine);
         output.append("GPTMS=");
-        
+
         String tempGPtmCategories = "";
-        
+
         for (ModificationCategory tempCategory : gPtmCategories) {
             if (!tempGPtmCategories.isEmpty()) {
                 tempGPtmCategories += ", ";
             }
             tempGPtmCategories += tempCategory;
         }
-        
+
         output.append(tempGPtmCategories);
         output.append(newLine);
 
@@ -681,6 +692,30 @@ public class MetaMorpheusParameters extends ExperimentObject implements Identifi
      */
     public void setMaxFragmentSize(Double maxFragmentSize) {
         this.maxFragmentSize = maxFragmentSize;
+    }
+
+    /**
+     * Returns the minimum allowed internal fragment length. 0 means "no
+     * internal fragments".
+     *
+     * @return the minAllowedInternalFragmentLength
+     */
+    public Integer getMinAllowedInternalFragmentLength() {
+        if (minAllowedInternalFragmentLength == null) {
+            minAllowedInternalFragmentLength = 0;
+        }
+        return minAllowedInternalFragmentLength;
+    }
+
+    /**
+     * Set the minimum allowed internal fragment length. 0 means "no internal
+     * fragments".
+     *
+     * @param minAllowedInternalFragmentLength the
+     * minAllowedInternalFragmentLength to set
+     */
+    public void setMinAllowedInternalFragmentLength(Integer minAllowedInternalFragmentLength) {
+        this.minAllowedInternalFragmentLength = minAllowedInternalFragmentLength;
     }
 
     /**

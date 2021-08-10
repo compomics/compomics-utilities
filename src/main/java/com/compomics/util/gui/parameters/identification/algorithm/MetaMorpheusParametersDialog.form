@@ -75,7 +75,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="tabbedPane" pref="372" max="32767" attributes="0"/>
+                  <Component id="tabbedPane" pref="395" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="jSeparator1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
@@ -170,7 +170,12 @@
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="25" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="minimumAllowedInternalFragmentLengthLbl" max="32767" attributes="1"/>
+                                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                  <Component id="minimumAllowedInternalFragmentLengthTxt" min="-2" pref="185" max="-2" attributes="0"/>
+                              </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="peptideLengthJLabel" alignment="0" min="-2" pref="345" max="-2" attributes="1"/>
@@ -206,7 +211,7 @@
                                   <Component id="maxPepLengthTxt" min="-2" pref="75" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace min="25" pref="25" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -259,6 +264,11 @@
                               <Component id="minPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="maxPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="peptideLengthDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="minimumAllowedInternalFragmentLengthLbl" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="minimumAllowedInternalFragmentLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -398,6 +408,20 @@
                   </Properties>
                   <Events>
                     <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxPepLengthTxtKeyReleased"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="minimumAllowedInternalFragmentLengthLbl">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Minimum Allowed Internal Fragment Length"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="minimumAllowedInternalFragmentLengthTxt">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="text" type="java.lang.String" value="0"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minimumAllowedInternalFragmentLengthTxtKeyReleased"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -1148,7 +1172,7 @@
                               <Component id="runGtpmCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="gPtmScrollPane" pref="267" max="32767" attributes="0"/>
+                          <Component id="gPtmScrollPane" pref="290" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>

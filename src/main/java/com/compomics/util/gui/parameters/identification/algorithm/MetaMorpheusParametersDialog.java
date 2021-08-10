@@ -188,6 +188,7 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         massDiffAcceptorTypeCmb.setSelectedItem(metaMorpheusParameters.getMassDiffAcceptorType());
         minPepLengthTxt.setText(metaMorpheusParameters.getMinPeptideLength() + "");
         maxPepLengthTxt.setText(metaMorpheusParameters.getMaxPeptideLength() + "");
+        minimumAllowedInternalFragmentLengthTxt.setText(metaMorpheusParameters.getMinAllowedInternalFragmentLength() + "");
 
         if (metaMorpheusParameters.getWriteMzId()) {
             writeMzidCmb.setSelectedIndex(0);
@@ -325,6 +326,8 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         tempMetaMorpheusParameters.setMinPeptideLength(Integer.valueOf(input));
         input = maxPepLengthTxt.getText().trim();
         tempMetaMorpheusParameters.setMaxPeptideLength(Integer.valueOf(input));
+        input = minimumAllowedInternalFragmentLengthTxt.getText().trim();
+        tempMetaMorpheusParameters.setMinAllowedInternalFragmentLength(Integer.valueOf(input));
         tempMetaMorpheusParameters.setWriteMzId(writeMzidCmb.getSelectedIndex() == 0);
         tempMetaMorpheusParameters.setWritePepXml(writePepXmlCmb.getSelectedIndex() == 0);
         tempMetaMorpheusParameters.setUseProvidedPrecursorInfo(useProvidedPrecCmb.getSelectedIndex() == 0);
@@ -413,6 +416,8 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         minPepLengthTxt = new javax.swing.JTextField();
         peptideLengthDividerLabel = new javax.swing.JLabel();
         maxPepLengthTxt = new javax.swing.JTextField();
+        minimumAllowedInternalFragmentLengthLbl = new javax.swing.JLabel();
+        minimumAllowedInternalFragmentLengthTxt = new javax.swing.JTextField();
         outputPanel = new javax.swing.JPanel();
         writeMzidLbl = new javax.swing.JLabel();
         writeMzidCmb = new javax.swing.JComboBox();
@@ -596,6 +601,16 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
             }
         });
 
+        minimumAllowedInternalFragmentLengthLbl.setText("Minimum Allowed Internal Fragment Length");
+
+        minimumAllowedInternalFragmentLengthTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        minimumAllowedInternalFragmentLengthTxt.setText("0");
+        minimumAllowedInternalFragmentLengthTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                minimumAllowedInternalFragmentLengthTxtKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
         searchPanel.setLayout(searchPanelLayout);
         searchPanelLayout.setHorizontalGroup(
@@ -606,8 +621,12 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchPanelLayout.createSequentialGroup()
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(searchPanelLayout.createSequentialGroup()
+                        .addComponent(minimumAllowedInternalFragmentLengthLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(minimumAllowedInternalFragmentLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(searchPanelLayout.createSequentialGroup()
                         .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(peptideLengthJLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dissociationTypeLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -626,10 +645,10 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
                             .addComponent(scoreCutoffTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(intitiatorMethBehaviorCombo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(maxNumModPeptideTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(numberOfPartitionsTxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchTypeCombo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dissociationTypeCombo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchPanelLayout.createSequentialGroup()
+                    .addComponent(numberOfPartitionsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchTypeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dissociationTypeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(searchPanelLayout.createSequentialGroup()
                         .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(peptideLengthDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -681,6 +700,10 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
                     .addComponent(minPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(peptideLengthDividerLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(minimumAllowedInternalFragmentLengthLbl)
+                    .addComponent(minimumAllowedInternalFragmentLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -1159,7 +1182,7 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
                     .addComponent(runGptmLbl)
                     .addComponent(runGtpmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(gPtmScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                .addComponent(gPtmScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1189,7 +1212,7 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1419,6 +1442,15 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
     }//GEN-LAST:event_runGtpmCmbActionPerformed
 
     /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void minimumAllowedInternalFragmentLengthTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minimumAllowedInternalFragmentLengthTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_minimumAllowedInternalFragmentLengthTxtKeyReleased
+
+    /**
      * Inspects the parameters validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -1449,6 +1481,7 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
         valid = GuiUtilities.validateIntegerInput(this, maxModIsoformsLbl, maxModIsoformsTxt, "maximum modification isoforms", "Maximum Modification Isoforms Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, minVariantDepthLabel, minVariantDepthTxt, "minimum variant depth", "Minimum Variant Depth Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, maxHetroVariantsLbl, maxHetroVariantsTxt, "maximum hetrozygous variants", "Maximum Hetrozygous Variants Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, minimumAllowedInternalFragmentLengthLbl, minimumAllowedInternalFragmentLengthTxt, "minimum allowed internal fragment length", "Minimum Allowed Internal Fragment Length Error", true, showMessage, valid);
 
         // peptide length: the low value should be lower than the high value
         try {
@@ -1517,6 +1550,8 @@ public class MetaMorpheusParametersDialog extends javax.swing.JDialog implements
     private javax.swing.JTextField minPepLengthTxt;
     private javax.swing.JLabel minVariantDepthLabel;
     private javax.swing.JTextField minVariantDepthTxt;
+    private javax.swing.JLabel minimumAllowedInternalFragmentLengthLbl;
+    private javax.swing.JTextField minimumAllowedInternalFragmentLengthTxt;
     private javax.swing.JComboBox modifiedPeptidesAreDifferentCmb;
     private javax.swing.JLabel modifiedPeptidesAreDifferentLbl;
     private javax.swing.JComboBox normalizePeaksAcrossAllWindowsCmb;

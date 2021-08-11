@@ -1415,6 +1415,12 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INTERNAL_FRAGMENT_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INTERNAL_FRAGMENT_LENGTH.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INTERNAL_FRAGMENT_LENGTH.id, arg, true)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id);
             List<String> supportedInput = new ArrayList<>();
@@ -3442,6 +3448,11 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MAX_FRAGMENTATION_SIZE.id);
             Double option = Double.valueOf(arg);
             metaMorpheusParameters.setMaxFragmentSize(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INTERNAL_FRAGMENT_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INTERNAL_FRAGMENT_LENGTH.id);
+            Integer option = Integer.valueOf(arg);
+            metaMorpheusParameters.setMinAllowedInternalFragmentLength(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id);

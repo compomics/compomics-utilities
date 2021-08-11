@@ -270,6 +270,7 @@ public enum IdentificationParametersCLIParams {
     META_MORPHEUS_USE_DELTA_SCORE("meta_morpheus_use_delta_score", "MetaMorpheus use delta score, 1: true, 0: false, default is '0'.", false, true),
     META_MORPHEUS_FRAGMENTATION_TERMINUS("meta_morpheus_frag_term", "MetaMorpheus fragmentation terminus, Both, N or C, default is 'Both'.", false, true),
     META_MORPHEUS_MAX_FRAGMENTATION_SIZE("meta_morpheus_max_frag_size", "MetaMorpheus maximum fragmentation size, default is '30000'.", false, true),
+    META_MORPHEUS_MIN_ALLOWED_INTERNAL_FRAGMENT_LENGTH("meta_morpheus_min_internal_fragment_length", "MetaMorpheus minimum allowed internal fragment length, default is '0'.", false, true),
     META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE("meta_morpheus_mass_diff_acceptor_type", "MetaMorpheus mass difference acceptor type, Exact, OneMM, TwoMM, ThreeMM, PlusOrMinusThreeMM, ModOpen or Open, default is 'OneMM'.", false, true),
     META_MORPHEUS_WRITE_MZID("meta_morpheus_write_mzid", "MetaMorpheus write mzid, 1: true, 0: false, default is '1'.", false, true),
     META_MORPHEUS_WRITE_PEPXML("meta_morpheus_write_pepxml", "MetaMorpheus write pepxml, 1: true, 0: false, default is '0'.", false, true),
@@ -702,6 +703,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_USE_DELTA_SCORE.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_USE_DELTA_SCORE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_MAX_FRAGMENTATION_SIZE.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MAX_FRAGMENTATION_SIZE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INTERNAL_FRAGMENT_LENGTH.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MIN_ALLOWED_INTERNAL_FRAGMENT_LENGTH.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_WRITE_MZID.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_WRITE_MZID.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_WRITE_PEPXML.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_WRITE_PEPXML.description + "\n";

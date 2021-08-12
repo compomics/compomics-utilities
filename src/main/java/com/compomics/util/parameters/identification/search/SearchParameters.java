@@ -199,7 +199,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
 
     /**
      * Set the advanced settings to the values in the given search parameters
-     * object or to the default values of the advanced settings are not set for
+     * object or to the default values if the advanced settings are not set for
      * a given advocate.
      *
      * @param searchParameters the search parameter to extract the advanced

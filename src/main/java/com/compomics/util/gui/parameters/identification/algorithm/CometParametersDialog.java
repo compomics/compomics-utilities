@@ -22,12 +22,6 @@ import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialo
 public class CometParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
 
     /**
-     * Empty default constructor
-     */
-    public CometParametersDialog() {
-    }
-
-    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;
@@ -773,7 +767,7 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         fragmentBinOffsetLabel.setText("Fragment Bin Offset");
 
         fragmentBinOffsetTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        fragmentBinOffsetTxt.setText("0.4");
+        fragmentBinOffsetTxt.setText("0.0");
         fragmentBinOffsetTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 fragmentBinOffsetTxtKeyReleased(evt);

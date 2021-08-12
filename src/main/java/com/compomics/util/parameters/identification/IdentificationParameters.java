@@ -143,19 +143,19 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @param fastaParameters the FASTA parameters
      */
     public IdentificationParameters(
-            String name, 
+            String name,
             String description,
-            SearchParameters searchParameters, 
+            SearchParameters searchParameters,
             AnnotationParameters annotationParameters,
-            SequenceMatchingParameters sequenceMatchingParameters, 
+            SequenceMatchingParameters sequenceMatchingParameters,
             PeptideVariantsParameters peptideVariantsParameters,
-            GeneParameters geneParameters, 
+            GeneParameters geneParameters,
             PsmScoringParameters psmScoringParameters,
-            PeptideAssumptionFilter peptideAssumptionFilter, 
+            PeptideAssumptionFilter peptideAssumptionFilter,
             ModificationLocalizationParameters ModificationLocalizationParameters,
-            ProteinInferenceParameters proteinInferenceParameters, 
+            ProteinInferenceParameters proteinInferenceParameters,
             IdMatchValidationParameters idValidationParameters,
-            FractionParameters fractionParameters, 
+            FractionParameters fractionParameters,
             FastaParameters fastaParameters
     ) {
 
@@ -181,7 +181,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the parameters used for the spectrum matching
      */
     public SearchParameters getSearchParameters() {
-        
 
         return searchParameters;
 
@@ -195,7 +194,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
     public void setSearchParameters(
             SearchParameters searchParameters
     ) {
-        
 
         this.searchParameters = searchParameters;
 
@@ -216,7 +214,7 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the relative tolerance in ppm
      */
     public static double getPpmTolerance(
-            double daltonTolerance, 
+            double daltonTolerance,
             double refMass
     ) {
 
@@ -234,7 +232,7 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the relative tolerance in ppm
      */
     public static double getDaTolerance(
-            double ppmTolerance, 
+            double ppmTolerance,
             double refMass
     ) {
 
@@ -248,7 +246,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the annotation parameters used for identification
      */
     public AnnotationParameters getAnnotationParameters() {
-        
 
         return annotationParameters;
 
@@ -263,7 +260,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
     public void setAnnotationParameters(
             AnnotationParameters annotationParameters
     ) {
-        
 
         this.annotationParameters = annotationParameters;
 
@@ -275,7 +271,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the filter used when importing PSMs
      */
     public PeptideAssumptionFilter getPeptideAssumptionFilter() {
-        
 
         return peptideAssumptionFilter;
 
@@ -289,7 +284,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
     public void setPeptideAssumptionFilter(
             PeptideAssumptionFilter peptideAssumptionFilter
     ) {
-        
 
         this.peptideAssumptionFilter = peptideAssumptionFilter;
 
@@ -301,7 +295,7 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the scoring parameters used when scoring PSMs
      */
     public PsmScoringParameters getPsmScoringParameters() {
-        
+
         return psmScoringParameters;
 
     }
@@ -315,7 +309,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
     public void setPsmScoringParameters(
             PsmScoringParameters psmScoringParameters
     ) {
-        
 
         this.psmScoringParameters = psmScoringParameters;
 
@@ -327,7 +320,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the modification localization scoring parameters
      */
     public ModificationLocalizationParameters getModificationLocalizationParameters() {
-        
 
         return modificationLocalizationParameters;
 
@@ -343,7 +335,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
             ModificationLocalizationParameters modificationLocalizationParameters
     ) {
 
-        
         this.modificationLocalizationParameters = modificationLocalizationParameters;
 
     }
@@ -354,7 +345,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the sequence matching parameters
      */
     public SequenceMatchingParameters getSequenceMatchingParameters() {
-        
 
         return sequenceMatchingParameters;
 
@@ -368,7 +358,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
     public void setSequenceMatchingParameters(
             SequenceMatchingParameters sequenceMatchingParameters
     ) {
-        
 
         this.sequenceMatchingParameters = sequenceMatchingParameters;
 
@@ -380,7 +369,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the peptide variant parameters
      */
     public PeptideVariantsParameters getPeptideVariantsParameters() {
-        
 
         return peptideVariantsParameters;
 
@@ -394,7 +382,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
     public void setPeptideVariantsParameters(
             PeptideVariantsParameters peptideVariantsParameters
     ) {
-        
 
         this.peptideVariantsParameters = peptideVariantsParameters;
 
@@ -406,7 +393,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the identification matches validation parameters
      */
     public IdMatchValidationParameters getIdValidationParameters() {
-        
 
         return idValidationParameters;
 
@@ -421,7 +407,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
     public void setIdValidationParameters(
             IdMatchValidationParameters idValidationParameters
     ) {
-        
 
         this.idValidationParameters = idValidationParameters;
 
@@ -433,7 +418,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the protein inference parameters
      */
     public ProteinInferenceParameters getProteinInferenceParameters() {
-        
 
         return proteinInferenceParameters;
 
@@ -447,7 +431,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
     public void setProteinInferenceParameters(
             ProteinInferenceParameters proteinInferenceParameters
     ) {
-        
 
         this.proteinInferenceParameters = proteinInferenceParameters;
 
@@ -459,7 +442,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the gene parameters
      */
     public GeneParameters getGeneParameters() {
-        
 
         return geneParameters;
 
@@ -473,7 +455,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
     public void setGeneParameters(
             GeneParameters geneParameters
     ) {
-        
 
         this.geneParameters = geneParameters;
 
@@ -485,7 +466,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the fraction parameters
      */
     public FractionParameters getFractionParameters() {
-        
 
         return fractionParameters;
 
@@ -499,7 +479,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
     public void setFractionParameters(
             FractionParameters fractionParameters
     ) {
-        
 
         this.fractionParameters = fractionParameters;
 
@@ -511,7 +490,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the FASTA processing parameters
      */
     public FastaParameters getFastaParameters() {
-        
 
         return fastaParameters;
 
@@ -525,7 +503,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
     public void setFastaParameters(
             FastaParameters fastaParameters
     ) {
-        
 
         this.fastaParameters = fastaParameters;
 
@@ -644,7 +621,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the name of the parameters
      */
     public String getName() {
-        
 
         return name;
 
@@ -656,7 +632,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @param name the name of the parameters
      */
     public void setName(String name) {
-        
 
         this.name = name;
 
@@ -668,7 +643,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @return the description of the parameters
      */
     public String getDescription() {
-        
 
         return description;
 
@@ -681,7 +655,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * generated
      */
     public boolean getDefaultDescription() {
-        
 
         return defaultDescription;
 
@@ -695,7 +668,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * is automatically generated
      */
     public void setDescription(String description, boolean automaticallyGenerated) {
-        
 
         this.description = description;
         this.defaultDescription = automaticallyGenerated;
@@ -708,7 +680,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * @param searchParameters the parameters used for the search
      */
     public void setParametersFromSearch(SearchParameters searchParameters) {
-        
 
         setSearchParameters(searchParameters);
         annotationParameters = new AnnotationParameters();
@@ -795,7 +766,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
 
     @Override
     public void setType() {
-        
 
         marshallableParameterType = Type.identification_parameters.name();
 
@@ -803,8 +773,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
 
     @Override
     public Type getType() {
-
-        
 
         if (marshallableParameterType == null) {
 
@@ -826,8 +794,6 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * settings
      */
     public boolean equals(IdentificationParameters otherIdentificationParameters) {
-
-        
 
         if (otherIdentificationParameters == null) {
             return false;

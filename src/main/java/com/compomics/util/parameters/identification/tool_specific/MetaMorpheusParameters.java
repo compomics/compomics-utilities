@@ -15,6 +15,11 @@ import java.util.Arrays;
 public class MetaMorpheusParameters extends ExperimentObject implements IdentificationAlgorithmParameter {
 
     /**
+     * Version number for deserialization.
+     */
+    static final long serialVersionUID = 3692530126026333412L;
+
+    /**
      * The available decoy types.
      */
     public enum MetaMorpheusDecoyType {

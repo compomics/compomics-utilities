@@ -296,7 +296,7 @@ public class CossIdfileReader implements IdfileReader {
                                 int modSite = Integer.valueOf(modificationElements[0]);
                                 char target = peptideSequence.charAt(modSite);
 
-                                if (NumberUtils.isNumber(modificationElements[2])) {
+                                if (NumberUtils.isCreatable(modificationElements[2])) {
 
                                     double modMass = Double.parseDouble(modificationElements[2]);
                                     utilitiesModifications.add(new ModificationMatch(modMass + "@" + target, modSite + 1));

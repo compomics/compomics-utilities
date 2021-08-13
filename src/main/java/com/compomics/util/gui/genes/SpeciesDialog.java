@@ -710,7 +710,7 @@ public class SpeciesDialog extends javax.swing.JDialog {
                     Integer currentEnsemblVersion;
 
                     try {
-                        currentEnsemblVersion = new Integer(currentEnsemblVersionAsString);
+                        currentEnsemblVersion = Integer.valueOf(currentEnsemblVersionAsString);
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         currentEnsemblVersion = latestEnsemblVersion;

@@ -50,7 +50,6 @@ public class ObjectsCache {
      */
     private final int keepObjectsThreshold = 10000;
 
-    
     /**
      * Constructor.
      *
@@ -66,9 +65,11 @@ public class ObjectsCache {
      * @return the cache size in number of objects
      */
     public int getCacheSize() {
+
         loadObjectMutex.acquire();
         int size = loadedObjects.size();
         loadObjectMutex.release();
+
         return size;
     }
 
@@ -81,7 +82,9 @@ public class ObjectsCache {
      * cache
      */
     public double getMemoryShare() {
+
         return memoryShare;
+
     }
 
     /**
@@ -103,19 +106,24 @@ public class ObjectsCache {
     }
 
     /**
-     * Returns the objects if present in the cache. Null if not.
+     * Returns the object if present in the cache. Null if not.
      *
      * @param objectKey the key of the object
      *
      * @return the object of interest, null if not present in the cache
      */
     public Object getObject(long objectKey) {
+
         Object object = null;
+
         loadObjectMutex.acquire();
+
         if (loadedObjects.containsKey(objectKey)) {
             object = loadedObjects.get(objectKey).object;
         }
+
         loadObjectMutex.release();
+
         return object;
     }
 
@@ -127,20 +135,23 @@ public class ObjectsCache {
     public void removeObject(long objectKey) {
 
         if (!readOnly) {
+
             loadObjectMutex.acquire();
             boolean contains = loadedObjects.containsKey(objectKey);
             loadObjectMutex.release();
+
             if (contains) {
+
                 Object object = getObject(objectKey);
                 loadObjectMutex.acquire();
                 classMap.get(object.getClass()).remove(objectKey);
                 loadedObjects.remove(objectKey);
                 loadObjectMutex.release();
+
             }
-            
+
         }
     }
-    
 
     /**
      * Adds an object to the cache. The object must not necessarily be in the
@@ -167,20 +178,28 @@ public class ObjectsCache {
     public void addObject(long objectKey, Object object, boolean inDB, boolean edited) {
 
         if (!readOnly) {
+
             loadObjectMutex.acquire();
+
             if (!loadedObjects.containsKey(objectKey)) {
+
                 loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
+
             } else {
+
                 loadedObjects.get(objectKey).object = object;
                 loadedObjects.get(objectKey).inDB = inDB;
                 loadedObjects.get(objectKey).edited = edited;
+
             }
-            loadObjectMutex.release();
+
             if (!classMap.containsKey(object.getClass())) {
                 classMap.put(object.getClass(), new HashSet<>());
             }
 
             classMap.get(object.getClass()).add(objectKey);
+
+            loadObjectMutex.release();
 
             updateCache();
         }
@@ -188,7 +207,7 @@ public class ObjectsCache {
     }
 
     /**
-     * Adds an object to the cache. The object must not necessarily be in the
+     * Adds objects to the cache. The objects must not necessarily be in the
      * database. If an object is already present with the same identifiers, it
      * will be silently overwritten.
      *
@@ -200,7 +219,7 @@ public class ObjectsCache {
     }
 
     /**
-     * Adds an object to the cache. The object must not necessarily be in the
+     * Adds objects to the cache. The objects must not necessarily be in the
      * database. If an object is already present with the same identifiers, it
      * will be silently overwritten.
      *
@@ -213,25 +232,34 @@ public class ObjectsCache {
 
         if (!readOnly) {
 
+            loadObjectMutex.acquire();
+
             for (Entry<Long, Object> kv : objects.entrySet()) {
 
                 long objectKey = kv.getKey();
                 Object object = kv.getValue();
-                loadObjectMutex.acquire();
+
                 if (!loadedObjects.containsKey(objectKey)) {
+
                     loadedObjects.put(objectKey, new ObjectsCacheElement(object, inDB, edited));
+
                 } else {
+
                     loadedObjects.get(objectKey).object = object;
                     loadedObjects.get(objectKey).inDB = inDB;
                     loadedObjects.get(objectKey).edited = edited;
+
                 }
-                loadObjectMutex.release();
+
                 if (!classMap.containsKey(object.getClass())) {
                     classMap.put(object.getClass(), new HashSet<>());
                 }
 
                 classMap.get(object.getClass()).add(objectKey);
+
             }
+
+            loadObjectMutex.release();
 
             updateCache();
         }
@@ -246,12 +274,14 @@ public class ObjectsCache {
      * is lower than 75% of the heap
      */
     private boolean memoryCheck() {
+
         return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
                 < (long) (memoryShare * Runtime.getRuntime().maxMemory());
+
     }
 
     /**
-     * Saves an entry in the database if modified and clears it from the cache.
+     * Saves entries in the database if modified and clears it from the cache.
      *
      * @param numLastEntries number of keys of the entries
      */
@@ -260,7 +290,7 @@ public class ObjectsCache {
     }
 
     /**
-     * Saves an entry in the database if modified.
+     * Saves entries in the database if modified.
      *
      * @param numLastEntries number of keys of the entries
      * @param waitingHandler a waiting handler displaying progress to the user.
@@ -268,88 +298,92 @@ public class ObjectsCache {
      * @param clearEntries a boolean indicating whether the entry shall be
      * cleared from the cache
      */
-    public void saveObjects(int numLastEntries, WaitingHandler waitingHandler, boolean clearEntries) {
-        Kryo kryo = objectsDB.kryo;
+    public void saveObjects(
+            int numLastEntries,
+            WaitingHandler waitingHandler,
+            boolean clearEntries
+    ) {
 
         if (!readOnly) {
 
             Connection connection = objectsDB.getDB();
-            PreparedStatement psInsert = null, psUpdate = null;
 
             try {
-                psInsert = connection.prepareStatement("INSERT INTO data (id, class, data) VALUES (?, ?, ?);");
-                psUpdate = connection.prepareStatement("UPDATE data SET data = ? WHERE id = ?;");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                PreparedStatement psInsert = connection.prepareStatement("INSERT INTO data (id, class, data) VALUES (?, ?, ?);");
+                PreparedStatement psUpdate = connection.prepareStatement("UPDATE data SET data = ? WHERE id = ?;");
 
-            HashSet<Long> keysInBackend = objectsDB.getKeysInBackend();
-
-            Set<Long> removeKeys = new HashSet<Long>();
-
-            int i = 0;
-
-            for (Entry<Long, ObjectsCacheElement> entry : loadedObjects.entrySet()) {
-
-                if (numLastEntries <= i++) {
-                    break;
-                }
-
-                if (waitingHandler != null) {
-                    waitingHandler.increaseSecondaryProgressCounter();
-
-                    if (waitingHandler.isRunCanceled()) {
-                        break;
-                    }
-                }
                 loadObjectMutex.acquire();
 
-                long key = entry.getKey();
-                
-                ObjectsCacheElement obj = loadedObjects.get(key);
-                obj.edited = false;
-                
-                try {
+                HashSet<Long> keysInBackend = objectsDB.getKeysInBackend();
+                Set<Long> removeKeys = new HashSet<>();
+                Kryo kryo = objectsDB.kryo;
+
+                int i = 0;
+
+                for (Entry<Long, ObjectsCacheElement> entry : loadedObjects.entrySet()) {
+
+                    if (numLastEntries <= i++) {
+                        break;
+                    }
+
+                    if (waitingHandler != null) {
+                        waitingHandler.increaseSecondaryProgressCounter();
+
+                        if (waitingHandler.isRunCanceled()) {
+                            break;
+                        }
+                    }
+
+                    long key = entry.getKey();
+
+                    ObjectsCacheElement obj = loadedObjects.get(key);
+                    obj.edited = false;
+
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     Output output = new Output(baos);
                     kryo.writeObject(output, obj.object);
                     output.close();
                     byte[] barray = baos.toByteArray();
                     baos.close();
-                    
-                    
-                    if (obj.inDB){
+
+                    if (obj.inDB) {
+
                         psUpdate.setBytes(1, barray);
                         psUpdate.setLong(2, key);
                         psUpdate.addBatch();
+
                     } else {
+
                         psInsert.setLong(1, key);
                         psInsert.setString(2, obj.object.getClass().getName());
                         psInsert.setBytes(3, barray);
                         psInsert.addBatch();
                         keysInBackend.add(key);
+
                     }
+
                     obj.inDB = true;
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                    if (clearEntries) {
+
+                        removeKeys.add(key);
+                        classMap.get(obj.object.getClass()).remove(key);
+
+                    }
+
                 }
 
-                if (clearEntries) {
-                    removeKeys.add(key);
-                    classMap.get(obj.object.getClass()).remove(key);
-                }
-                loadObjectMutex.release();
-
-            }
-            
-            try {
-                loadObjectMutex.acquire();
                 psInsert.executeBatch();
                 psUpdate.executeBatch();
+
                 if (removeKeys.size() > 0) {
+
                     loadedObjects.keySet().removeAll(removeKeys);
+
                 }
+
                 connection.commit();
+
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -366,8 +400,9 @@ public class ObjectsCache {
      * @throws InterruptedException if the thread is interrupted
      */
     private void updateCache() {
+
         int cacheSize = getCacheSize();
-        
+
         while (cacheSize > keepObjectsThreshold && !memoryCheck()) {
 
             int toRemove = cacheSize >> 2;
@@ -378,20 +413,22 @@ public class ObjectsCache {
     }
 
     /**
-     * Check if key in cache.
+     * Checks if a given key is in the cache.
      *
      * @param longKey key of the entry
      * @return if key in cache
      */
     public boolean inCache(long longKey) {
+
         loadObjectMutex.acquire();
         boolean contains = loadedObjects.containsKey(longKey);
         loadObjectMutex.release();
+
         return contains;
     }
 
     /**
-     * Saves the cache content in the database.
+     * Saves the cache content to the database.
      *
      * @param waitingHandler a waiting handler on which the progress will be
      * displayed
@@ -404,6 +441,7 @@ public class ObjectsCache {
             waitingHandler.resetSecondaryProgressCounter();
             waitingHandler.setMaxSecondaryProgressCounter(loadedObjects.size() + 1); // @TODO: can this number get bigger than the max integer value? 
         }
+
         int cacheSize = getCacheSize();
         saveObjects(cacheSize, waitingHandler, emptyCache);
 
@@ -421,9 +459,11 @@ public class ObjectsCache {
      * @return a boolean indicating whether the cache is empty
      */
     public boolean isEmpty() {
+
         loadObjectMutex.acquire();
         boolean isEmpty = loadedObjects.isEmpty();
         loadObjectMutex.release();
+
         return isEmpty;
     }
 
@@ -431,16 +471,18 @@ public class ObjectsCache {
      * Clears the cache.
      */
     public void clearCache() {
+
         loadObjectMutex.acquire();
         loadedObjects.clear();
         loadObjectMutex.release();
+
     }
 
     /**
-     * Sets the cache in read only.
+     * Sets the cache in read only mode.
      *
      * @param readOnly boolean indicating whether the cache should be in read
-     * only
+     * only mode
      */
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
@@ -490,10 +532,16 @@ public class ObjectsCache {
          * @param inDB the database state
          * @param edited the edited state
          */
-        public ObjectsCacheElement(Object object, boolean inDB, boolean edited) {
+        public ObjectsCacheElement(
+                Object object,
+                boolean inDB,
+                boolean edited
+        ) {
+
             this.object = object;
             this.inDB = inDB;
             this.edited = edited;
+
         }
     }
 }

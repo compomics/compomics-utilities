@@ -377,6 +377,22 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
         // Sanity check: are there enough representative sites for the given modification mass?
         int modCount = 0;
 
+        if (confidentModificationsByModName != null) {
+
+            for (Entry<String, HashSet<Integer>> entry : confidentModificationsByModName.entrySet()) {
+
+                String tempModName = entry.getKey();
+
+                double tempModMass = modificationProvider.getModification(tempModName).getMass();
+
+                if (modMass == tempModMass) {
+
+                    modCount += entry.getValue().size();
+
+                }
+            }
+        }
+
         for (Entry<String, HashMap<Integer, HashSet<Integer>>> entry : ambiguousModificationsByModName.entrySet()) {
 
             String tempModName = entry.getKey();
@@ -438,7 +454,7 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             int site
     ) {
 
-        return mainModificationSites == null 
+        return mainModificationSites == null
                 || !mainModificationSites.containsKey(site) ? EmptyCollections.emptyStringSet
                 : mainModificationSites.get(site);
 
@@ -477,7 +493,7 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             String modName
     ) {
 
-        return confidentModificationsByModName == null 
+        return confidentModificationsByModName == null
                 || !confidentModificationsByModName.containsKey(modName) ? EmptyCollections.emptyIntSet
                 : confidentModificationsByModName.get(modName);
 
@@ -496,7 +512,7 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             int representativeSite
     ) {
 
-        return ambiguousModificationsByRepresentativeSite == null 
+        return ambiguousModificationsByRepresentativeSite == null
                 || !ambiguousModificationsByRepresentativeSite.containsKey(representativeSite)
                 ? new HashMap<>(0)
                 : ambiguousModificationsByRepresentativeSite.get(representativeSite);

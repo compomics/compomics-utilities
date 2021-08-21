@@ -637,7 +637,7 @@ public class PhosphoRS {
                         modificationParameters,
                         sequenceProvider,
                         modificationSequenceMatchingParameters,
-                        possibleFragmentIons, // @TODO: should be profilePossibleFragmentIons, but this results in errors downstream
+                        profilePossibleFragmentIons, 
                         false
                 );
 

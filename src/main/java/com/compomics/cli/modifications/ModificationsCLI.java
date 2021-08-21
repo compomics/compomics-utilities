@@ -112,22 +112,22 @@ public class ModificationsCLI {
      */
     public Object call() {
 
-        ModificationFactory ptmFactory;
+        ModificationFactory modificationFactory;
         File inputFile = modificationsCLIInputBean.getFileIn();
         if (inputFile != null) {
             try {
-                ptmFactory = ModificationFactory.loadFromFile(inputFile);
+                modificationFactory = ModificationFactory.loadFromFile(inputFile);
             } catch (IOException e) {
                 System.out.println("An error occurred while reading modifications from " + inputFile + ".");
                 return 1;
             }
         } else {
-            ptmFactory = ModificationFactory.getInstance();
+            modificationFactory = ModificationFactory.getInstance();
         }
 
         if (modificationsCLIInputBean.isList()) {
-            for (String ptmName : ptmFactory.getModifications()) {
-                Modification ptm = ptmFactory.getModification(ptmName);
+            for (String ptmName : modificationFactory.getModifications()) {
+                Modification ptm = modificationFactory.getModification(ptmName);
                 System.out.println(ptm);
                 System.out.println();
             }
@@ -136,18 +136,18 @@ public class ModificationsCLI {
 
         String modificationToRemove = modificationsCLIInputBean.getModificationToRemove();
         if (modificationToRemove != null) {
-            ptmFactory.removeUserPtm(modificationToRemove);
+            modificationFactory.removeUserPtm(modificationToRemove);
         }
 
         Modification modificationToAdd = modificationsCLIInputBean.getModificationToAdd();
         if (modificationToAdd != null) {
-            ptmFactory.addUserModification(modificationToAdd);
+            modificationFactory.addUserModification(modificationToAdd);
         }
 
         File outputFile = modificationsCLIInputBean.getFileOut();
         if (outputFile != null) {
             try {
-                ModificationFactory.saveToFile(ptmFactory, outputFile);
+                ModificationFactory.saveToFile(modificationFactory, outputFile);
             } catch (IOException e) {
                 System.out.println("An error occurred while saving the modifications to " + outputFile + ".");
                 return 1;

@@ -343,12 +343,16 @@ public class ObjectsDB {
 
             if (rs.next()) {
 
+                // kryo
                 ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
                 Input input = new Input(bis);
                 Class<?> c = Class.forName(rs.getString("class"));
                 object = kryo.readObject(input, c);
                 input.close();
                 bis.close();
+
+                // standard java serialization
+//                object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
 
             }
 
@@ -428,12 +432,16 @@ public class ObjectsDB {
                     return;
                 }
 
+                // kryo
                 ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
                 Input input = new Input(bis);
                 Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
                 input.close();
                 bis.close();
 
+                // standard java serialization
+//                Object object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
+                
                 long objectKey = rs.getLong("id");
 
                 objectsNotInCache.put(objectKey, object);
@@ -593,18 +601,23 @@ public class ObjectsDB {
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return retrievingObjects;
                 }
-
+                
+                // kryo
                 ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
                 Input input = new Input(bis);
                 Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
                 input.close();
-                bis.close();
+                bis.close();           
 
+                // standard java serialization
+//                Object object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
+                
                 long objectKey = rs.getLong("id");
-
+                
                 if (!objectInCache.contains(objectKey)) {
                     objectsNotInCache.put(objectKey, object);
                 }
+
                 retrievingObjects.add(object);
             }
 

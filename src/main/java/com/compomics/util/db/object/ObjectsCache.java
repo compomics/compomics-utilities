@@ -339,6 +339,7 @@ public class ObjectsCache {
                     ObjectsCacheElement obj = loadedObjects.get(key);
                     obj.edited = false;
 
+                    // kryo
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     Output output = new Output(baos);
                     kryo.writeObject(output, obj.object);
@@ -346,6 +347,14 @@ public class ObjectsCache {
                     byte[] barray = baos.toByteArray();
                     baos.close();
 
+                    // standard java serialization
+//                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//                    ObjectOutputStream out = new ObjectOutputStream(bos);
+//                    out.writeObject(obj.object);
+//                    out.flush();
+//                    byte[] barray = bos.toByteArray();
+//                    bos.close();
+                    
                     if (obj.inDB) {
 
                         psUpdate.setBytes(1, barray);

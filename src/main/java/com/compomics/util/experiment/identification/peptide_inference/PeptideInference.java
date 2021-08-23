@@ -197,12 +197,6 @@ public class PeptideInference {
                         modificationProvider
                 );
             }
-                        
-                        if (spectrumMatch.getKey() == -4395038805245491989l) {
-                            
-                            int debug = 1;
-                            
-                        }
 
             // Map the most likely inferred sites
             if (!newLocalizationCandidates.isEmpty()) {
@@ -707,8 +701,6 @@ public class PeptideInference {
                     modificationMatch.setSite(newLocalization);
                     modificationMatch.setModification(candidateName);
                     PSModificationScores psmScores = (PSModificationScores) spectrumMatch.getUrParam(PSModificationScores.dummy);
-                    
-//                    try {
 
                     psmScores.changeRepresentativeSite(
                             candidateName,
@@ -718,11 +710,7 @@ public class PeptideInference {
                             nMod,
                             modificationProvider
                     );
-//                    } catch (Exception e) {
-//                        
-//                        System.out.println(spectrumMatch.getKey());
-//                        
-//                    }
+
                 }
 
                 modificationMatch.setInferred(true);

@@ -24,12 +24,6 @@ import javax.swing.JTable;
 public class Util {
 
     /**
-     * Empty default constructor.
-     */
-    public Util() {
-    }
-
-    /**
      * Forbidden characters in file names.
      */
     public static final String[] FORBIDDEN_CHARACTERS = {"!", ":", ";", "\\?", "/", "\\\\", "\\*", "<", ">", "\"", "'", "\\|"};
@@ -227,7 +221,9 @@ public class Util {
     public static String removeForbiddenCharacters(
             String string
     ) {
+
         return removeCharacters(string, FORBIDDEN_CHARACTERS);
+
     }
 
     /**
@@ -281,6 +277,7 @@ public class Util {
         }
 
         return new String(stringArray);
+
     }
 
     /**
@@ -311,7 +308,9 @@ public class Util {
             double d,
             int places
     ) {
+
         return (new BigDecimal(String.valueOf(d)).setScale(places, RoundingMode.FLOOR)).doubleValue();
+
     }
 
     /**
@@ -327,21 +326,25 @@ public class Util {
             double theoreticalMzValue,
             double massError
     ) {
+
         double ppmValue = (massError / theoreticalMzValue) * 1000000;
         return ppmValue;
+
     }
 
     /**
      * Converts a color to hex format for use in HTML tags.
      *
-     * @param colorRGB the color in rgb representation
+     * @param colorRGB the color in RGB representation
      *
      * @return the color in hex format
      */
     public static String color2Hex(
             int colorRGB
     ) {
+
         return Integer.toHexString(colorRGB & 0x00ffffff);
+
     }
 
     /**
@@ -354,20 +357,24 @@ public class Util {
     public static String color2Hex(
             Color color
     ) {
+
         return color2Hex(color.getRGB());
+
     }
 
     /**
-     * Returns the color object corresponding to the given rgb representation.
+     * Returns the color object corresponding to the given RGB representation.
      *
-     * @param colorRGB the color in rgb representation
+     * @param colorRGB the color in RGBs representation
      *
      * @return the color object
      */
     public static Color getColor(
             int colorRGB
     ) {
+
         return new Color((colorRGB >> 16) & 0xFF, (colorRGB >> 8) & 0xFF, colorRGB & 0xFF);
+
     }
 
     /**
@@ -407,6 +414,7 @@ public class Util {
             for (int j = 0; j < table.getColumnCount() && !progressDialog.isRunCanceled(); j++) {
 
                 if (table.getValueAt(i, j) != null) {
+
                     String tempValue = table.getValueAt(i, j).toString();
 
                     // remove html tags
@@ -415,15 +423,20 @@ public class Util {
                     }
 
                     tableAsString.append(tempValue).append(separator);
+
                 } else {
+
                     tableAsString.append(separator);
+
                 }
             }
 
             tableAsString.append(lineBreak);
+
         }
 
         return tableAsString.toString();
+
     }
 
     /**
@@ -446,12 +459,16 @@ public class Util {
     ) throws IOException {
 
         for (int i = 0; i < table.getColumnCount(); i++) {
+
             writer.write(table.getColumnName(i) + separator);
+
         }
 
         if (progressDialog != null) {
+
             progressDialog.setPrimaryProgressCounterIndeterminate(false);
             progressDialog.setMaxPrimaryProgressCounter(table.getRowCount());
+
         }
 
         String lineBreak = System.getProperty("line.separator");
@@ -461,32 +478,47 @@ public class Util {
         for (int i = 0; i < table.getRowCount(); i++) {
 
             if (progressDialog != null) {
+
                 if (progressDialog.isRunCanceled()) {
+
                     return;
+
                 }
+
                 progressDialog.increasePrimaryProgressCounter();
             }
 
             for (int j = 0; j < table.getColumnCount(); j++) {
 
                 if (progressDialog != null) {
+
                     if (progressDialog.isRunCanceled()) {
+
                         return;
+
                     }
+
                 }
 
                 if (table.getValueAt(i, j) != null) {
+
                     String tempValue = table.getValueAt(i, j).toString();
 
                     // remove html tags
                     if (tempValue.contains("<html>") && removeHtml) {
+
                         tempValue = tempValue.replaceAll("\\<[^>]*>", "");
+
                     }
 
                     writer.write(tempValue + separator);
+
                 } else {
+
                     writer.write(separator);
+
                 }
+
             }
 
             writer.write(lineBreak);
@@ -496,7 +528,7 @@ public class Util {
     /**
      * Convenience methods indicating whether the content of two lists have the
      * same content. Equality is based on the hash of the objects. Note that
-     * this method does not work for lists containing null;
+     * this method does not work for lists containing null.
      *
      * @param list1 the first list
      * @param list2 the second list
@@ -509,7 +541,9 @@ public class Util {
     ) {
 
         if (list1.size() != list2.size()) {
+
             return false;
+
         }
 
         HashMap<Object, Long> list1Occurrence = list1.stream()
@@ -534,6 +568,7 @@ public class Util {
                 .allMatch(
                         entry -> list2Occurrence.containsKey(entry.getKey()) && list2Occurrence.get(entry.getKey()).equals(entry.getValue())
                 );
+
     }
 
     /**
@@ -564,15 +599,16 @@ public class Util {
      * big string
      */
     public static ArrayList<Integer> getIndexes(
-            String bigString, 
+            String bigString,
             String smallString
     ) {
+        
         Pattern pattern = Pattern.compile(smallString);
         ArrayList<Integer> result = new ArrayList<>();
         Matcher matcher = pattern.matcher(bigString);
         matcher.matches();
         int index = 0;
-        
+
         while (matcher.find(index)) {
 
             index = matcher.start();
@@ -599,6 +635,7 @@ public class Util {
     ) throws NumberFormatException {
 
         BigDecimal temp;
+
         try {
 
             temp = new BigDecimal(doubleAsString);
@@ -620,6 +657,7 @@ public class Util {
         }
 
         return temp.doubleValue();
+
     }
 
     /**
@@ -627,7 +665,7 @@ public class Util {
      * and 1 for true.
      *
      * @param booleanToConvert the boolean value to convert
-     * 
+     *
      * @return 0 for false and 1 for true
      */
     public static int convertBooleanToInteger(
@@ -647,12 +685,11 @@ public class Util {
      * @return a string in the form value(attribute)
      */
     public static String keyValueToString(
-            String key, 
+            String key,
             String value
     ) {
 
         StringBuilder sb = new StringBuilder(key.length() + value.length() + 2);
-
         sb.append(key).append("(").append(value).append(")");
 
         return sb.toString();

@@ -699,7 +699,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         } catch (Exception e1) {
 
             try {
-                // Try serialized java object
+                // try serialized java object
                 savedObject = SerializationUtils.readObject(searchParametersFile);
 
             } catch (Exception e2) {
@@ -806,17 +806,24 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
             output.append("Fragment Tolerance: ").append(fragmentIonMZTolerance).append(" ").append(fragmentAccuracyType).append(".").append(newLine);
         }
 
-        if (!Util.sameLists(forwardIons, defaultParameters.getForwardIons())
-                || !Util.sameLists(rewindIons, defaultParameters.getRewindIons())) {
-            String ions1 = forwardIons.stream()
-                    .sorted()
-                    .map(ion -> PeptideFragmentIon.getSubTypeAsString(ion))
-                    .collect(Collectors.joining(","));
-            String ions2 = rewindIons.stream()
-                    .sorted()
-                    .map(ion -> PeptideFragmentIon.getSubTypeAsString(ion))
-                    .collect(Collectors.joining(","));
-            output.append("Ion Types: ").append(ions1).append(" and ").append(ions2).append(".").append(newLine);
+        if (forwardIons != null && rewindIons != null) {
+
+            if (!Util.sameLists(forwardIons, defaultParameters.getForwardIons())
+                    || !Util.sameLists(rewindIons, defaultParameters.getRewindIons())) {
+
+                String ions1 = forwardIons.stream()
+                        .sorted()
+                        .map(ion -> PeptideFragmentIon.getSubTypeAsString(ion))
+                        .collect(Collectors.joining(","));
+
+                String ions2 = rewindIons.stream()
+                        .sorted()
+                        .map(ion -> PeptideFragmentIon.getSubTypeAsString(ion))
+                        .collect(Collectors.joining(","));
+
+                output.append("Ion Types: ").append(ions1).append(" and ").append(ions2).append(".").append(newLine);
+            }
+
         }
 
         if (minChargeSearched != defaultParameters.getMinChargeSearched()
@@ -1001,10 +1008,20 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
                 && !this.getDigestionParameters().isSameAs(otherSearchParameters.getDigestionParameters())) {
             return false;
         }
-        if (!Util.sameLists(forwardIons, otherSearchParameters.getForwardIons())) {
+        if (forwardIons != null && otherSearchParameters.getForwardIons() == null
+                || forwardIons == null && otherSearchParameters.getForwardIons() != null) {
             return false;
         }
-        if (!Util.sameLists(rewindIons, otherSearchParameters.getRewindIons())) {
+        if (forwardIons != null && otherSearchParameters.getForwardIons() != null
+                && !Util.sameLists(forwardIons, otherSearchParameters.getForwardIons())) {
+            return false;
+        }
+        if (rewindIons != null && otherSearchParameters.getRewindIons() == null
+                || rewindIons == null && otherSearchParameters.getRewindIons() != null) {
+            return false;
+        }
+        if (rewindIons != null && otherSearchParameters.getRewindIons() != null
+                && !Util.sameLists(rewindIons, otherSearchParameters.getRewindIons())) {
             return false;
         }
         if (this.getMinChargeSearched() != otherSearchParameters.getMinChargeSearched()) {

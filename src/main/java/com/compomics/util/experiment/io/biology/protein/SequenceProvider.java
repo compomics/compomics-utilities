@@ -53,6 +53,6 @@ public interface SequenceProvider {
      *
      * @return the FASTA header of the protein as found in the FASTA file
      */
-    public String getHeader(String proteinAccession);
+    public String getHeaderAsString(String proteinAccession);
 
 }

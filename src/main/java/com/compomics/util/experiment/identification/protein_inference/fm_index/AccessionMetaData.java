@@ -1,7 +1,10 @@
 package com.compomics.util.experiment.identification.protein_inference.fm_index;
 
-import com.compomics.util.experiment.io.biology.protein.Header;
+import com.compomics.util.TempByteArray;
+import com.compomics.util.io.compression.ZstdUtils;
+import io.airlift.compress.zstd.ZstdCompressor;
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Accession meta data.
@@ -12,13 +15,13 @@ public class AccessionMetaData implements Serializable {
 
     private static final long serialVersionUID = 8320902054239025L;
     /**
-     * The header as string.
+     * The header as compressed string.
      */
-    private String headerAsString;
+    private byte[] headerAsCompressedString;
     /**
-     * The header
+     * The uncompressed length of the header.
      */
-    private Header header = null;
+    private int uncompressedLength;
     /**
      * The index.
      */
@@ -37,19 +40,6 @@ public class AccessionMetaData implements Serializable {
      */
     public AccessionMetaData() {
     }
-    
-    /**
-     * Copy constructor
-     * 
-     * @param accessionMetaData the item to copy
-     */
-    public AccessionMetaData(AccessionMetaData accessionMetaData){
-        headerAsString = new String(accessionMetaData.getHeaderAsString());
-        index = accessionMetaData.index;
-        indexPart = accessionMetaData.indexPart;
-        trueBeginning = accessionMetaData.trueBeginning;
-        header = null;
-    }
 
     /**
      * Constructor.
@@ -57,37 +47,7 @@ public class AccessionMetaData implements Serializable {
      * @param header the header as parsed from the FASTA file
      */
     public AccessionMetaData(String header) {
-        this.headerAsString = header;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param header the header as parsed from the FASTA file
-     * @param index the index
-     * @param indexPart the index part
-     * @param beginning beginning of the protein in the proteome sequence
-     */
-    public AccessionMetaData(String header, int index, int indexPart, int beginning) {
-        this.headerAsString = header;
-        this.index = index;
-        this.indexPart = indexPart;
-        this.trueBeginning = beginning;
-    }
-
-    /**
-     * Returns the parsed header.
-     *
-     * @return the parsed header
-     */
-    public Header getHeader() {
-
-        if (header == null) {
-            header = Header.parseFromFASTA(headerAsString);
-
-        }
-
-        return header;
+        setHeaderAsString(header);
     }
 
     /**
@@ -96,6 +56,22 @@ public class AccessionMetaData implements Serializable {
      * @return the parsed header
      */
     public String getHeaderAsString() {
-        return headerAsString;
+        
+        byte[] decompressedHeader = ZstdUtils.zstdDecompress(headerAsCompressedString, uncompressedLength);
+        
+        return new String(decompressedHeader);
+    
+    }
+    
+    public void setHeaderAsString(
+    String header
+    ) {
+        
+        byte[] headerBytes = header.getBytes();
+        this.uncompressedLength = headerBytes.length;
+        
+        TempByteArray tempByteArray = ZstdUtils.zstdCompress(headerBytes);
+        headerAsCompressedString = Arrays.copyOf(tempByteArray.array, tempByteArray.length);
+        
     }
 }

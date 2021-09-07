@@ -74,4 +74,38 @@ public enum ProjectType {
         throw new IllegalArgumentException("Option " + guiOption + "not found.");
         
     }
+    
+    /**
+     * Returns the project type corresponding to the given index.
+     * 
+     * @param index the index
+     * 
+     * @return the project type
+     */
+    public static ProjectType getProjectType(int index) {
+        
+        for (ProjectType projectType : values()) {
+            
+            if (projectType.index == index) {
+                
+                return projectType;
+                
+            }
+        }
+        
+        throw new IllegalArgumentException("No project type found for option '" + index + "'. Available options are " + getCommandLineOptions());
+        
+    }
+
+        /**
+         * Returns a description of the command line arguments.
+         *
+         * @return a description of the command line arguments
+         */
+        public static String getCommandLineOptions() {
+
+            return protein.index + ": " + protein.description + " (default), "
+                    + peptide.index + ": " + peptide.description + ", "
+                    + psm.index + ": " + psm.description + ".";
+        }
 }

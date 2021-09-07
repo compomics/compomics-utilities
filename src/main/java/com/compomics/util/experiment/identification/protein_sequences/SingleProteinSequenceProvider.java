@@ -55,7 +55,7 @@ public class SingleProteinSequenceProvider implements SequenceProvider {
     }
 
     @Override
-    public String getHeader(String proteinAccession) {
+    public String getHeaderAsString(String proteinAccession) {
         throw new UnsupportedOperationException("Not available for this sequence provider.");
     }
  

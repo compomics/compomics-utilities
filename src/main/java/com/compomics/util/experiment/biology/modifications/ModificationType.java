@@ -9,44 +9,44 @@ package com.compomics.util.experiment.biology.modifications;
 public enum ModificationType {
 
     /**
-     * Modification at particular amino acids.
+     * Modification at specific amino acids.
      */
-    modaa(0, "Modification at particular amino acids.", "Particular Amino Acid"),
+    modaa(0, "Modification at specific amino acids.", "Particular Amino Acid"),
     /**
      * Modification at the N-terminus of a protein.
      */
     modn_protein(1, "Modification at the N-terminus of a protein", "Protein N-term"),
     /**
-     * Modification at the N-terminus of a protein at particular amino acids.
+     * Modification at the N-terminus of a protein at specific amino acids.
      */
-    modnaa_protein(2, "Modification at the N-terminus of a protein at particular amino acids.",
+    modnaa_protein(2, "Modification at the N-terminus of a protein at specific amino acids.",
             "Protein N-term - Particular Amino Acid(s)"),
     /**
      * Modification at the C-terminus of a protein.
      */
     modc_protein(3, "Modification at the C-terminus of a protein.", "Protein C-term"),
     /**
-     * Modification at the C-terminus of a protein at particular amino acids.
+     * Modification at the C-terminus of a protein at specific amino acids.
      */
-    modcaa_protein(4, "Modification at the C-terminus of a protein at particular amino acids.",
+    modcaa_protein(4, "Modification at the C-terminus of a protein at specific amino acids.",
             "Protein C-term - Particular Amino Acid(s)"),
     /**
      * Modification at the N-terminus of a peptide.
      */
     modn_peptide(5, "Modification at the N-terminus of a peptide", "Peptide N-term"),
     /**
-     * Modification at the N-terminus of a peptide at particular amino acids.
+     * Modification at the N-terminus of a peptide at specific amino acids.
      */
-    modnaa_peptide(6, "Modification at the N-terminus of a peptide at particular amino acids.",
+    modnaa_peptide(6, "Modification at the N-terminus of a peptide at specific amino acids.",
             "Peptide N-term - Particular Amino Acid(s)"),
     /**
      * Modification at the C-terminus of a peptide.
      */
     modc_peptide(7, "Modification at the C-terminus of a peptide.", "Peptide C-term"),
     /**
-     * Modification at the C-terminus of a peptide at particular amino acids.
+     * Modification at the C-terminus of a peptide at specific amino acids.
      */
-    modcaa_peptide(8, "Modification at the C-terminus of a peptide at particular amino acids.",
+    modcaa_peptide(8, "Modification at the C-terminus of a peptide at specific amino acids.",
             "Peptide C-term - Particular Amino Acid(s)");
 
     /**

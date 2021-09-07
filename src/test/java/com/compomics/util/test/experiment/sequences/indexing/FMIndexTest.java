@@ -249,22 +249,22 @@ public class FMIndexTest extends TestCase {
         HashSet<String> accessions = new HashSet<>(fmIndex.getAccessions());
         Assert.assertTrue(accessions.size() == 6);
         Assert.assertTrue(accessions.contains("Q9FHX5"));
-        Assert.assertTrue(fmIndex.getHeader("Q9FHX5").equals("sw|Q9FHX5|E1310_ARATH Glucan endo-1,3-beta-glucosidase 10 OS=Arabidopsis thaliana GN=At5g42100 PE=1 SV=1"));
+        Assert.assertTrue(fmIndex.getHeaderAsString("Q9FHX5").equals("sw|Q9FHX5|E1310_ARATH Glucan endo-1,3-beta-glucosidase 10 OS=Arabidopsis thaliana GN=At5g42100 PE=1 SV=1"));
         
         Assert.assertTrue(accessions.contains("Q9FHX5-REVERSED"));
-        Assert.assertTrue(fmIndex.getHeader("Q9FHX5-REVERSED").equals("sw|Q9FHX5-REVERSED|E1310_ARATH Glucan endo-1,3-beta-glucosidase 10 OS=Arabidopsis thaliana GN=At5g42100 PE=1 SV=1-REVERSED"));
+        Assert.assertTrue(fmIndex.getHeaderAsString("Q9FHX5-REVERSED").equals("sw|Q9FHX5-REVERSED|E1310_ARATH Glucan endo-1,3-beta-glucosidase 10 OS=Arabidopsis thaliana GN=At5g42100 PE=1 SV=1-REVERSED"));
         
         Assert.assertTrue(accessions.contains("Q9FI94"));
-        Assert.assertTrue(fmIndex.getHeader("Q9FI94").equals("sw|Q9FI94|DHYS_ARATH Deoxyhypusine synthase OS=Arabidopsis thaliana GN=DHS PE=2 SV=1"));
+        Assert.assertTrue(fmIndex.getHeaderAsString("Q9FI94").equals("sw|Q9FI94|DHYS_ARATH Deoxyhypusine synthase OS=Arabidopsis thaliana GN=DHS PE=2 SV=1"));
         
         Assert.assertTrue(accessions.contains("Q9FI94-REVERSED"));
-        Assert.assertTrue(fmIndex.getHeader("Q9FI94-REVERSED").equals("sw|Q9FI94-REVERSED|DHYS_ARATH Deoxyhypusine synthase OS=Arabidopsis thaliana GN=DHS PE=2 SV=1-REVERSED"));
+        Assert.assertTrue(fmIndex.getHeaderAsString("Q9FI94-REVERSED").equals("sw|Q9FI94-REVERSED|DHYS_ARATH Deoxyhypusine synthase OS=Arabidopsis thaliana GN=DHS PE=2 SV=1-REVERSED"));
         
         Assert.assertTrue(accessions.contains("TEST_ACCESSION"));
-        Assert.assertTrue(fmIndex.getHeader("TEST_ACCESSION").equals("sw|TEST_ACCESSION|DHYS_ARATH Deoxyhypusine synthase OS=Arabidopsis thaliana GN=DHS PE=2 SV=1-REVERSED"));
+        Assert.assertTrue(fmIndex.getHeaderAsString("TEST_ACCESSION").equals("sw|TEST_ACCESSION|DHYS_ARATH Deoxyhypusine synthase OS=Arabidopsis thaliana GN=DHS PE=2 SV=1-REVERSED"));
         
         Assert.assertTrue(accessions.contains("TEST_ACCESSION-REVERSED"));
-        Assert.assertTrue(fmIndex.getHeader("TEST_ACCESSION-REVERSED").equals("sw|TEST_ACCESSION-REVERSED|DHYS_ARATH Deoxyhypusine synthase OS=Arabidopsis thaliana GN=DHS PE=3 SV=1-REVERSED"));
+        Assert.assertTrue(fmIndex.getHeaderAsString("TEST_ACCESSION-REVERSED").equals("sw|TEST_ACCESSION-REVERSED|DHYS_ARATH Deoxyhypusine synthase OS=Arabidopsis thaliana GN=DHS PE=3 SV=1-REVERSED"));
     }
 
     /**

@@ -5765,6 +5765,13 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
 
     }
 
+    /**
+     * Returns the header corresponding to the given accession.
+     * 
+     * @param proteinAccession The accession.
+     * 
+     * @return The corresponding header.
+     */
     public Header getHeader(String proteinAccession) {
 
         Header header = headerCache.get(proteinAccession);

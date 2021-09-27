@@ -130,7 +130,7 @@ public abstract class MatchesIterator {
         Object obj = null;
         int currentIndex = getIndex();
 
-        if (currentIndex < num) {
+        if (currentIndex < num && !waitingHandler.isRunCanceled()) {
 
             if (keys == null) {
 

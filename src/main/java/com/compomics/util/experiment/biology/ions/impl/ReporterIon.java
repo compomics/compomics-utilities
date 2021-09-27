@@ -258,6 +258,14 @@ public class ReporterIon extends Ion {
      */
     public final static ReporterIon TMTpro_134N = new ReporterIon("TMTpro-134N", getComposition("TMTpro-134N"));
     /**
+     * Standard reporter ion TMTpro-134C.
+     */
+    public final static ReporterIon TMTpro_134C = new ReporterIon("TMTpro-134C", getComposition("TMTpro-134C"));
+    /**
+     * Standard reporter ion TMTpro-135N.
+     */
+    public final static ReporterIon TMTpro_135N = new ReporterIon("TMTpro-135N", getComposition("TMTpro-135N"));
+    /**
      * Standard reporter ion iodoTMT zero.
      */
     public final static ReporterIon iodoTMT_zero = new ReporterIon("iodoTMT_zero", getComposition("iodoTMT_zero"));
@@ -1136,6 +1144,20 @@ public class ReporterIon extends Ion {
                 AtomChain atomChain = new AtomChain();
                 atomChain.append(new AtomImpl(Atom.C, 0), 1);
                 atomChain.append(new AtomImpl(Atom.C, 1), 7);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 1), 1);
+                return atomChain;
+            }
+            case "TMTpro-134C": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 1), 8);
+                atomChain.append(new AtomImpl(Atom.H, 0), 15);
+                atomChain.append(new AtomImpl(Atom.N, 0), 1);
+                return atomChain;
+            }
+            case "TMTpro-135N": {
+                AtomChain atomChain = new AtomChain();
+                atomChain.append(new AtomImpl(Atom.C, 1), 8);
                 atomChain.append(new AtomImpl(Atom.H, 0), 15);
                 atomChain.append(new AtomImpl(Atom.N, 1), 1);
                 return atomChain;

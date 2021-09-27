@@ -42,7 +42,7 @@ public class ModificationFactory implements ModificationProvider {
      * The name of the Modification factory back-up file. The version number
      * follows the one of utilities.
      */
-    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.0.json";
+    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.1.json";
     /**
      * A map linking indexes with modifications.
      */
@@ -2715,6 +2715,8 @@ public class ModificationFactory implements ModificationProvider {
         modification.addReporterIon(ReporterIon.TMTpro_133N);
         modification.addReporterIon(ReporterIon.TMTpro_133C);
         modification.addReporterIon(ReporterIon.TMTpro_134N);
+        modification.addReporterIon(ReporterIon.TMTpro_134C);
+        modification.addReporterIon(ReporterIon.TMTpro_135N);
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
 
@@ -2751,6 +2753,8 @@ public class ModificationFactory implements ModificationProvider {
         modification.addReporterIon(ReporterIon.TMTpro_133N);
         modification.addReporterIon(ReporterIon.TMTpro_133C);
         modification.addReporterIon(ReporterIon.TMTpro_134N);
+        modification.addReporterIon(ReporterIon.TMTpro_134C);
+        modification.addReporterIon(ReporterIon.TMTpro_135N);
         defaultMods.add(modificationName);
         modificationMap.put(modificationName, modification);
 

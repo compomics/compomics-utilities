@@ -39,8 +39,8 @@ public class PeptideMapperCLI {
     public static int TIMEOUT_DAYS = 1;
 
     public static void printHelp() {
-        System.out.println("PeptideMapping: a tool to map peptides or sequence tags against a given proteome.");
-        System.out.println("usage: PeptideMapping -[p|t|c] input-fasta input-peptide/tag-csv output-csv [additonal options]");
+        System.out.println("PeptideMapperCLI: a tool to map peptides or sequence tags against a given proteome.");
+        System.out.println("usage: PeptideMapperCLI -[p|t|c] input-fasta input-peptide/tag-csv output-csv [additonal options]");
         System.out.println();
         System.out.println("Options are:");
         System.out.println("\t-p\tpeptide mapping");
@@ -308,7 +308,7 @@ public class PeptideMapperCLI {
         }
 
         // read in the parameters
-        IdentificationParameters identificationParameters = new IdentificationParameters();
+        IdentificationParameters identificationParameters = new IdentificationParameters(new SearchParameters());
         boolean customParameters = false;
         if (args.length >= 5) {
             int argPos = 4;

@@ -1,15 +1,16 @@
 package com.compomics.util.parameters.peptide_shaker;
 
 /**
- * This enum lists the different types of projects that can be created using PeptideShaker.
+ * This enum lists the different types of projects that can be created using
+ * PeptideShaker.
  *
  * @author Marc Vaudel
  */
 public enum ProjectType {
 
-    psm(0,"psm", "PSM level project."), 
-    peptide(1,"peptide", "Peptide level project"),
-    protein(2,"protein", "Protein level project");
+    psm(0, "psm", "PSM level project."),
+    peptide(1, "peptide", "Peptide level project"),
+    protein(2, "protein", "Protein level project");
 
     /**
      * The index of the option.
@@ -23,89 +24,107 @@ public enum ProjectType {
      * The description of the option.
      */
     public final String description;
-    
+
     /**
      * Constructor.
-     * 
+     *
      * @param index the index of the option
      * @param name the name of the option
      * @param description the description of the option
      */
-    private ProjectType(int index, String name, String description) {
+    private ProjectType(
+            int index,
+            String name,
+            String description
+    ) {
+
         this.index = index;
         this.name = name;
         this.description = description;
+
     }
 
-
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     private ProjectType() {
+
         index = 0;
         name = "";
         description = "";
+
     }
-    
+
     /**
      * Returns the different options as they should be displayed on the GUI.
-     * 
+     *
      * @return the different options as they should be displayed on the GUI
      */
     public static String[] getGuiOptions() {
+
         return new String[]{"Protein", "Peptide", "PSM"};
+
     }
-    
+
     /**
      * Returns the project type corresponding to the given GUI option.
-     * 
+     *
      * @param guiOption the GUI option
-     * 
+     *
      * @return the project type
      */
     public static ProjectType getProjectType(String guiOption) {
-        
+
         switch (guiOption) {
-            case "Protein": return protein;
-            case "Peptide": return peptide;
-            case "PSM": return psm;
+            case "Protein":
+                return protein;
+            case "Peptide":
+                return peptide;
+            case "PSM":
+                return psm;
         }
-        
+
         throw new IllegalArgumentException("Option " + guiOption + "not found.");
-        
+
     }
-    
+
     /**
      * Returns the project type corresponding to the given index.
-     * 
+     *
      * @param index the index
-     * 
+     *
      * @return the project type
      */
     public static ProjectType getProjectType(int index) {
-        
+
         for (ProjectType projectType : values()) {
-            
+
             if (projectType.index == index) {
-                
+
                 return projectType;
-                
+
             }
         }
-        
-        throw new IllegalArgumentException("No project type found for option '" + index + "'. Available options are " + getCommandLineOptions());
-        
+
+        throw new IllegalArgumentException(
+                "No project type found for option '"
+                + index
+                + "'. Available options are "
+                + getCommandLineOptions()
+        );
+
     }
 
-        /**
-         * Returns a description of the command line arguments.
-         *
-         * @return a description of the command line arguments
-         */
-        public static String getCommandLineOptions() {
+    /**
+     * Returns a description of the command line arguments.
+     *
+     * @return a description of the command line arguments
+     */
+    public static String getCommandLineOptions() {
 
-            return protein.index + ": " + protein.description + " (default), "
-                    + peptide.index + ": " + peptide.description + ", "
-                    + psm.index + ": " + psm.description + ".";
-        }
+        return protein.index + ": " + protein.description + " (default), "
+                + peptide.index + ": " + peptide.description + ", "
+                + psm.index + ": " + psm.description + ".";
+    }
+
 }

@@ -178,7 +178,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     }
 
     /**
-     * Returns the precursor mass error (in ppm or Da). Note that the value is
+     * Returns the precursor m/z error (in ppm or absolute). Note that the value is
      * returns as (experimental mass - theoretical mass) and that negative
      * values thus can occur. The isotopic error can subtracted and retrieved by
      * the function getIsotopeNumber().
@@ -189,9 +189,9 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
      * @param minIsotope the minimal isotope
      * @param maxIsotope the maximal isotope
      *
-     * @return the precursor mass error (in ppm or Da)
+     * @return the precursor mass error
      */
-    public double getDeltaMass(
+    public double getDeltaMz(
             double measuredMZ,
             boolean ppm,
             int minIsotope,

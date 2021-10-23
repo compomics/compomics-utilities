@@ -278,7 +278,7 @@ public class AssumptionFilter extends MatchFilter {
                 );
                 SearchParameters searchParameters = identificationParameters.getSearchParameters();
                 double mzError = Math.abs(
-                        peptideAssumption.getDeltaMass(
+                        peptideAssumption.getDeltaMz(
                                 precursorMz,
                                 false,
                                 searchParameters.getMinIsotopicCorrection(),
@@ -294,7 +294,7 @@ public class AssumptionFilter extends MatchFilter {
                 );
                 searchParameters = identificationParameters.getSearchParameters();
                 mzError = Math.abs(
-                        peptideAssumption.getDeltaMass(
+                        peptideAssumption.getDeltaMz(
                                 precursorMz,
                                 true,
                                 searchParameters.getMinIsotopicCorrection(),
@@ -309,7 +309,7 @@ public class AssumptionFilter extends MatchFilter {
                         spectrumTitle
                 );
                 searchParameters = identificationParameters.getSearchParameters();
-                mzError = peptideAssumption.getDeltaMass(
+                mzError = peptideAssumption.getDeltaMz(
                         precursorMz, 
                         identificationParameters.getSearchParameters().isPrecursorAccuracyTypePpm(), 
                         searchParameters.getMinIsotopicCorrection(), 

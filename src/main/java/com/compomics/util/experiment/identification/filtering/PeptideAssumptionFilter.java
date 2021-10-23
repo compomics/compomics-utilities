@@ -326,7 +326,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
             return false;
         }
         
-        double mzDeviation = assumption.getDeltaMass(
+        double mzDeviation = assumption.getDeltaMz(
                 precursorMz, 
                 isPpm, 
                 searchParameters.getMinIsotopicCorrection(), 

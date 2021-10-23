@@ -484,6 +484,85 @@ public class PeptideUtils {
     }
 
     /**
+     * Returns whether the N-terminus of the given peptide is enzymatic at the
+     * given coordinates and enzyme on this protein.
+     *
+     * @param peptideStart the 0 based index of the peptide start on the protein
+     * @param peptideEnd the 0 based index of the peptide end on the protein
+     * @param proteinSequence the protein sequence
+     * @param enzyme the enzyme to use
+     *
+     * @return the number of enzymatic termini for the given peptide coordinates
+     * and enzyme on this protein
+     */
+    public static boolean isNtermEnzymatic(
+            int peptideStart,
+            int peptideEnd,
+            String proteinSequence,
+            Enzyme enzyme
+    ) {
+
+        if (peptideStart == 0) {
+
+            return true;
+
+        } else {
+
+            char aaBefore = proteinSequence.charAt(peptideStart - 1);
+            char aaAfter = proteinSequence.charAt(peptideStart);
+
+            if (enzyme.isCleavageSite(aaBefore, aaAfter)) {
+
+                return true;
+
+            }
+
+        }
+
+        return false;
+
+    }
+
+    /**
+     * Returns whether the N-terminus of the given peptide is enzymatic at the
+     * given coordinates and enzyme on this protein.
+     *
+     * @param peptideStart the 0 based index of the peptide start on the protein
+     * @param peptideEnd the 0 based index of the peptide end on the protein
+     * @param proteinSequence the protein sequence
+     * @param enzyme the enzyme to use
+     *
+     * @return the number of enzymatic termini for the given peptide coordinates
+     * and enzyme on this protein
+     */
+    public static boolean isCtermEnzymatic(
+            int peptideStart,
+            int peptideEnd,
+            String proteinSequence,
+            Enzyme enzyme
+    ) {
+
+        if (peptideEnd == proteinSequence.length() - 1) {
+
+            return true;
+
+        } else {
+
+            char aaBefore = proteinSequence.charAt(peptideEnd);
+            char aaAfter = proteinSequence.charAt(peptideEnd + 1);
+
+            if (enzyme.isCleavageSite(aaBefore, aaAfter)) {
+
+                return true;
+
+            }
+        }
+
+        return false;
+
+    }
+
+    /**
      * Returns the number of enzymatic termini for the given peptide coordinates
      * and enzyme on this protein.
      *

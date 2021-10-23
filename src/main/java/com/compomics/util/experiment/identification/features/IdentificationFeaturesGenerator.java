@@ -202,7 +202,7 @@ public class IdentificationFeaturesGenerator {
                 )
                 .mapToDouble(
                         spectrumMatch -> spectrumMatch.getBestPeptideAssumption()
-                                .getDeltaMass(
+                                .getDeltaMz(
                                         spectrumProvider.getPrecursorMz(
                                                 spectrumMatch.getSpectrumFile(),
                                                 spectrumMatch.getSpectrumTitle()

@@ -5749,7 +5749,10 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
     public String getSubsequence(String accession, int start, int end) {
 
         String proteinSequence = getSequence(accession);
-        return proteinSequence.substring(Math.max(start, 0), Math.min(end, proteinSequence.length()));
+        int startI = Math.min(Math.max(start, 0), proteinSequence.length());
+        int endI = Math.min(Math.max(end, 0), proteinSequence.length());
+        
+        return proteinSequence.substring(startI, endI);
 
     }
 

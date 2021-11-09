@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public abstract class SpectrumIdentificationAssumption extends ExperimentObject {
 
     /**
-     * The rank of the peptide assumption for the concerned spectrum.
+     * The rank of the peptide assumption for the given spectrum.
      */
     protected int rank;
     /**
@@ -62,7 +62,7 @@ public abstract class SpectrumIdentificationAssumption extends ExperimentObject 
     /**
      * Set the rank of the PeptideAssumption.
      *
-     * @param rank the rank of the PeptideAssumptio
+     * @param rank the rank of the PeptideAssumption
      */
     public void setRank(
             int rank

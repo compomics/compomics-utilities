@@ -121,16 +121,22 @@ public abstract class MatchesIterator {
 
     /**
      * Returns the next match and updates the buffer. Null if the iterator is
-     * done iterating.
+     * done iterating or the iteration has been cancelled.
      *
      * @return the next match
      */
     public Object nextObject() {
 
+        if (waitingHandler != null) {
+            if (waitingHandler.isRunCanceled()) {
+                return null;
+            }
+        }
+        
         Object obj = null;
         int currentIndex = getIndex();
-
-        if (currentIndex < num && !waitingHandler.isRunCanceled()) {
+        
+        if (currentIndex < num) {
 
             if (keys == null) {
 

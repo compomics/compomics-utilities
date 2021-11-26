@@ -2268,6 +2268,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                     spectrumTitle,
                     spectrumIdentificationItemKey,
                     peptideAssumptions.get(i),
+                    i,
                     modificationLocalizationScores.get(i),
                     peptideSpectrumAnnotator
             );
@@ -2311,6 +2312,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
      * @param spectrumFile The name of the file of the spectrum.
      * @param spectrumTitle The title of the spectrum.
      * @param peptideAssumption The peptide assumption.
+     * @param rank The peptide rank.
      * @param modificationLocalizationScores The modification localization
      * scores of the peptide.
      * @param peptideSpectrumAnnotator The peptide spectrum annotator to use.
@@ -2320,6 +2322,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
             String spectrumTitle,
             String spectrumIdentificationItemKey,
             PeptideAssumption peptideAssumption,
+            int rank,
             TreeMap<Double, HashMap<Integer, Double>> modificationLocalizationScores,
             PeptideSpectrumAnnotator peptideSpectrumAnnotator
     ) {
@@ -2336,6 +2339,10 @@ public class SimpleMzIdentMLExporter implements Closeable {
         writer.write(DATA_SECTION, Double.toString(spectrumProvider.getPrecursorMz(spectrumFile, spectrumTitle)));
         writer.write(DATA_SECTION, "\" chargeState=\"");
         writer.write(DATA_SECTION, Integer.toString(peptideAssumption.getIdentificationCharge()));
+        writer.write(DATA_SECTION, "\" rank=\"");
+        writer.write(DATA_SECTION, Integer.toString(rank));
+        writer.write(DATA_SECTION, "\" passThreshold=\"");
+        writer.write(DATA_SECTION, Boolean.toString(false));
         writer.write(DATA_SECTION, "\" id=\"");
         writer.write(DATA_SECTION, spectrumIdentificationItemKey);
         writer.write(DATA_SECTION, "\">");

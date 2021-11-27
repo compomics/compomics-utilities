@@ -2268,7 +2268,7 @@ public class SimpleMzIdentMLExporter implements Closeable {
                     spectrumTitle,
                     spectrumIdentificationItemKey,
                     peptideAssumptions.get(i),
-                    i,
+                    i + 1,
                     modificationLocalizationScores.get(i),
                     peptideSpectrumAnnotator
             );

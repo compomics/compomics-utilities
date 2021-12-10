@@ -1,4 +1,4 @@
-package com.compomics.util.experiment.identification.modification.mapping;
+package com.compomics.util.experiment.identification.modification.search_engine_mapping;
 
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationProvider;

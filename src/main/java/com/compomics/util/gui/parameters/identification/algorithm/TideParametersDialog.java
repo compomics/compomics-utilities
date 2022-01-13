@@ -102,8 +102,8 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
         maxPrecursorMassTxt.setEnabled(editable);
         monoPrecursorCmb.setEnabled(editable);
         removeMethionineCmb.setEnabled(editable);
-        minPtmsPerPeptideTxt.setEditable(editable);
-        minPtmsPerPeptideTxt.setEnabled(editable);
+        //minPtmsPerPeptideTxt.setEditable(editable);
+        //minPtmsPerPeptideTxt.setEnabled(editable);
         maxPtmsPerPeptideTxt.setEditable(editable);
         maxPtmsPerPeptideTxt.setEnabled(editable);
         maxVariablePtmsPerTypeTxt.setEditable(editable);
@@ -172,9 +172,9 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
                 removeMethionineCmb.setSelectedIndex(1);
             }
         }
-        if (tideParameters.getMinVariableModificationsPerPeptide() != null) {
-            minPtmsPerPeptideTxt.setText(tideParameters.getMinVariableModificationsPerPeptide() + "");
-        }
+//        if (tideParameters.getMinVariableModificationsPerPeptide() != null) {
+//            minPtmsPerPeptideTxt.setText(tideParameters.getMinVariableModificationsPerPeptide() + "");
+//        }
         if (tideParameters.getMaxVariableModificationsPerPeptide() != null) {
             maxPtmsPerPeptideTxt.setText(tideParameters.getMaxVariableModificationsPerPeptide() + "");
         }
@@ -319,10 +319,10 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
         result.setMonoisotopicPrecursor(monoPrecursorCmb.getSelectedIndex() == 0);
         result.setClipNtermMethionine(removeMethionineCmb.getSelectedIndex() == 0);
 
-        input = minPtmsPerPeptideTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setMinVariableModificationsPerPeptide(Integer.valueOf(input));
-        }
+//        input = minPtmsPerPeptideTxt.getText().trim();
+//        if (!input.equals("")) {
+//            result.setMinVariableModificationsPerPeptide(Integer.valueOf(input));
+//        }
         
         input = maxPtmsPerPeptideTxt.getText().trim();
         if (!input.equals("")) {
@@ -590,6 +590,7 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
 
         minPtmsPerPeptideTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         minPtmsPerPeptideTxt.setText("0");
+        minPtmsPerPeptideTxt.setEnabled(false);
         minPtmsPerPeptideTxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 minPtmsPerPeptideTxtKeyReleased(evt);
@@ -701,12 +702,13 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
                     .addComponent(removeMethionineLabel)
                     .addComponent(removeMethionineCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(indexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(variablePtmsPerPeptideLabel)
-                    .addComponent(maxPtmsPerPeptideTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(indexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(indexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(minPtmsPerPeptideTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(variablePtmsPerPeptideDividerLabel)))
+                        .addComponent(variablePtmsPerPeptideDividerLabel))
+                    .addGroup(indexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(variablePtmsPerPeptideLabel)
+                        .addComponent(maxPtmsPerPeptideTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(indexPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxVariablePtmsPerTypeLabel)

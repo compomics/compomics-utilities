@@ -1001,12 +1001,12 @@ public class IdentificationParametersInputBean {
         //////////////////////////////////
         // Tide
         //////////////////////////////////
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_PTMS.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_PTMS.id);
-            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.TIDE_MIN_PTMS.id, arg, true)) {
-                return false;
-            }
-        }
+//        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_PTMS.id)) {
+//            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_PTMS.id);
+//            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.TIDE_MIN_PTMS.id, arg, true)) {
+//                return false;
+//            }
+//        }
         if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_PTMS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_PTMS.id);
             if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.TIDE_MAX_PTMS.id, arg, true)) {
@@ -3095,11 +3095,11 @@ public class IdentificationParametersInputBean {
         } else {
             tideParameters = (TideParameters) identificationAlgorithmParameter;
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_PTMS.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_PTMS.id);
-            Integer option = Integer.valueOf(arg);
-            tideParameters.setMinVariableModificationsPerPeptide(option);
-        }
+//        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MIN_PTMS.id)) {
+//            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_PTMS.id);
+//            Integer option = Integer.valueOf(arg);
+//            tideParameters.setMinVariableModificationsPerPeptide(option);
+//        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_MAX_PTMS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MAX_PTMS.id);
             Integer option = Integer.valueOf(arg);

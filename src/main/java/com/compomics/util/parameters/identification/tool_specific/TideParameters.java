@@ -23,7 +23,7 @@ public class TideParameters extends ExperimentObject implements IdentificationAl
      * The minimum number of modifications that can be applied to a single
      * peptide. Default = 0.
      */
-    private Integer minVariableModificationsPerPeptide = 0;
+    //private Integer minVariableModificationsPerPeptide = 0;
     /**
      * The maximum number of variable modifications allowed on a single peptide.
      * The default is no limit (set to null).
@@ -213,7 +213,6 @@ public class TideParameters extends ExperimentObject implements IdentificationAl
      * Constructor.
      */
     public TideParameters() {
-        // @TODO: add --peptide-centric-search?
     }
 
     @Override
@@ -241,17 +240,17 @@ public class TideParameters extends ExperimentObject implements IdentificationAl
             if (diff > 0.0000000000001) {
                 return false;
             }
-            if (minVariableModificationsPerPeptide != null && tideParameters.getMinVariableModificationsPerPeptide() == null) {
-                return false;
-            }
-            if (minVariableModificationsPerPeptide == null && tideParameters.getMinVariableModificationsPerPeptide() != null) {
-                return false;
-            }
-            if (minVariableModificationsPerPeptide != null && tideParameters.getMinVariableModificationsPerPeptide() != null) {
-                if (minVariableModificationsPerPeptide.intValue() != tideParameters.getMinVariableModificationsPerPeptide().intValue()) {
-                    return false;
-                }
-            }
+//            if (minVariableModificationsPerPeptide != null && tideParameters.getMinVariableModificationsPerPeptide() == null) {
+//                return false;
+//            }
+//            if (minVariableModificationsPerPeptide == null && tideParameters.getMinVariableModificationsPerPeptide() != null) {
+//                return false;
+//            }
+//            if (minVariableModificationsPerPeptide != null && tideParameters.getMinVariableModificationsPerPeptide() != null) {
+//                if (minVariableModificationsPerPeptide.intValue() != tideParameters.getMinVariableModificationsPerPeptide().intValue()) {
+//                    return false;
+//                }
+//            }
             if (maxVariableModificationsPerPeptide != null && tideParameters.getMaxVariableModificationsPerPeptide() == null) {
                 return false;
             }
@@ -417,8 +416,8 @@ public class TideParameters extends ExperimentObject implements IdentificationAl
         output.append("MAX_VARIABLE_MODIFICATIONS_PER_TYPE_PER_PEPTIDE=");
         output.append(maxVariableModificationsPerTypePerPeptide);
         output.append(newLine);
-        output.append("MIN_VARIABLE_MODIFICATIONS_PER_PEPTID=");
-        output.append(minVariableModificationsPerPeptide);
+//        output.append("MIN_VARIABLE_MODIFICATIONS_PER_PEPTID=");
+//        output.append(minVariableModificationsPerPeptide);
         output.append("MAX_VARIABLE_MODIFICATIONS_PER_PEPTID=");
         output.append(maxVariableModificationsPerPeptide);
         output.append(newLine);
@@ -516,26 +515,26 @@ public class TideParameters extends ExperimentObject implements IdentificationAl
         return output.toString();
     }
     
-    /**
-     * Returns the minimum number of variable modifications allowed on a single
-     * peptide. Null if no lower limit is set.
-     *
-     * @return the minVariableModificationsPerPeptide
-     */
-    public Integer getMinVariableModificationsPerPeptide() {
-        return minVariableModificationsPerPeptide;
-    }
-
-    /**
-     * Set the minimum number of variable modifications of allowed on a single
-     * peptide. Set to null if no lower limit is to be used.
-     *
-     * @param minVariableModificationsPerPeptide the
-     * minVariableModificationsPerPeptide to set
-     */
-    public void setMinVariableModificationsPerPeptide(Integer minVariableModificationsPerPeptide) {
-        this.minVariableModificationsPerPeptide = minVariableModificationsPerPeptide;
-    }
+//    /**
+//     * Returns the minimum number of variable modifications allowed on a single
+//     * peptide. Null if no lower limit is set.
+//     *
+//     * @return the minVariableModificationsPerPeptide
+//     */
+//    public Integer getMinVariableModificationsPerPeptide() {
+//        return minVariableModificationsPerPeptide;
+//    }
+//
+//    /**
+//     * Set the minimum number of variable modifications of allowed on a single
+//     * peptide. Set to null if no lower limit is to be used.
+//     *
+//     * @param minVariableModificationsPerPeptide the
+//     * minVariableModificationsPerPeptide to set
+//     */
+//    public void setMinVariableModificationsPerPeptide(Integer minVariableModificationsPerPeptide) {
+//        this.minVariableModificationsPerPeptide = minVariableModificationsPerPeptide;
+//    }
 
     /**
      * Returns the maximum number of variable modifications allowed on a single

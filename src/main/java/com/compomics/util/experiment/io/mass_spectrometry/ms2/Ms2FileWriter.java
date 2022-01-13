@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class Ms2FileWriter {
+public class Ms2FileWriter implements AutoCloseable {
 
     /**
      * The file writer.
@@ -22,7 +22,7 @@ public class Ms2FileWriter {
     private final SimpleFileWriter writer;
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public Ms2FileWriter() {
         writer = null;
@@ -96,5 +96,10 @@ public class Ms2FileWriter {
 
         writer.newLine();
 
+    }
+
+    @Override
+    public void close() {
+        writer.close();
     }
 }

@@ -103,7 +103,7 @@ public class MsFileExporter {
 
         // sort the spectra on ascending precursor mass
         HashMap<Double, HashMap<String, Integer>> precursorMassToTitleMap
-                = new HashMap<Double, HashMap<String, Integer>>(spectrumTitles.length);
+                = new HashMap<>(spectrumTitles.length);
 
         for (String spectrumTitle : spectrumTitles) {
 
@@ -125,7 +125,7 @@ public class MsFileExporter {
                 HashMap<String, Integer> titlesAtMass = precursorMassToTitleMap.get(mass);
 
                 if (titlesAtMass == null) {
-                    titlesAtMass = new HashMap<String, Integer>(1);
+                    titlesAtMass = new HashMap<>(1);
                     precursorMassToTitleMap.put(mass, titlesAtMass);
                 }
 
@@ -134,7 +134,7 @@ public class MsFileExporter {
             }
         }
 
-        ArrayList<Double> masses = new ArrayList<Double>(precursorMassToTitleMap.keySet());
+        ArrayList<Double> masses = new ArrayList<>(precursorMassToTitleMap.keySet());
         Collections.sort(masses);
 
         waitingHandler.setSecondaryProgressCounterIndeterminate(false);
@@ -268,6 +268,8 @@ public class MsFileExporter {
 
             }
         }
+        
+        writer.close();
 
         waitingHandler.setSecondaryProgressCounterIndeterminate(true);
 

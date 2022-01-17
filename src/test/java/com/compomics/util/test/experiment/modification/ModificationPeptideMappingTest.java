@@ -27,7 +27,7 @@ public class ModificationPeptideMappingTest extends TestCase {
         double[] scores1 = new double[]{123.5, 10.4, 0.0};
         double[] scores2 = new double[]{95.3, 4.9, 51.7};
 
-        HashMap<Double, HashMap<Integer, ArrayList<String>>> modificationToPossibleSiteMap = new HashMap<>(2);
+        /*HashMap<Double, HashMap<Integer, ArrayList<String>>> modificationToPossibleSiteMap = new HashMap<>(2);
 
         ArrayList<String> modNames1 = new ArrayList<>(1);
         modNames1.add("Modification1");
@@ -51,7 +51,24 @@ public class ModificationPeptideMappingTest extends TestCase {
 
         }
 
-        modificationToPossibleSiteMap.put(modMass2, modification2);
+        modificationToPossibleSiteMap.put(modMass2, modification2);*/
+        
+        HashMap<Double, ArrayList<Integer>> modificationToPossibleSiteMap = new HashMap<>(2);
+        ArrayList<Integer> modification1sites = new ArrayList<>(1);
+        for (int site : sites1) {
+
+            modification1sites.add(site);
+
+        }
+        modificationToPossibleSiteMap.put(modMass1, modification1sites);
+        
+        ArrayList<Integer> modification2sites = new ArrayList<>(1);
+        for (int site : sites2) {
+
+            modification2sites.add(site);
+
+        }
+        modificationToPossibleSiteMap.put(modMass2, modification2sites);
 
         HashMap<Double, Integer> modificationOccurrenceMap = new HashMap<>(2);
         modificationOccurrenceMap.put(modMass1, nMod1);
@@ -78,12 +95,13 @@ public class ModificationPeptideMappingTest extends TestCase {
         
         modificationToSiteToScore.put(modMass2, scores2Map);
         
-        ModificationPeptideMapping.mapModifications(
+        HashMap<Integer, Double> matchedSiteToModification;
+        matchedSiteToModification = ModificationPeptideMapping.mapModifications(
                 modificationToPossibleSiteMap, 
                 modificationOccurrenceMap, 
                 modificationToSiteToScore
         );
-
+        
     }
 
 }

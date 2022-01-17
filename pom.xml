@@ -5,7 +5,7 @@
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
     <version>5.0.34</version>
-    <name>computational omics utilities</name>
+    <name>computational omics utilities-mapping</name>
     <url>https://github.com/compomics/compomics-utilities</url>
     <description>Open source java library for computational proteomics</description>
 
@@ -658,6 +658,13 @@
             <artifactId>aircompressor</artifactId>
             <version>0.19</version>
             <type>jar</type>
+        </dependency>
+        
+        <!-- Graph library for the PTM localization -->
+        <dependency>
+            <groupId>org.jgrapht</groupId>
+            <artifactId>jgrapht-core</artifactId>
+            <version>1.5.1</version>
         </dependency>
         
     </dependencies>

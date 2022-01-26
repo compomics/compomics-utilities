@@ -129,7 +129,7 @@ public class MappingWorker implements Runnable {
                             String modifications = "";
 
                             if (peptideProteinMapping.getVariableModifications() != null) {
-                                modifications = PeptideUtils.getVariableModificationsAsString(peptideProteinMapping.getVariableModifications());
+                                modifications = "," + PeptideUtils.getVariableModificationsAsString(peptideProteinMapping.getVariableModifications());
                             }
 
                             outputData.add(peptide + "," + accession + "," + startIndex + modifications);
@@ -177,7 +177,7 @@ public class MappingWorker implements Runnable {
                             String modifications = "";
 
                             if (peptideProteinMapping.getVariableModifications() != null) {
-                                modifications = PeptideUtils.getVariableModificationsAsString(peptideProteinMapping.getVariableModifications());
+                                modifications = "," + PeptideUtils.getVariableModificationsAsString(peptideProteinMapping.getVariableModifications());
                             }
 
                             outputData.add(tagString + "," + peptide + "," + accession + "," + startIndex + modifications);

@@ -20,7 +20,7 @@ public class AplFileWriter implements AutoCloseable {
     private final SimpleFileWriter writer;
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public AplFileWriter() {
         writer = null;

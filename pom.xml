@@ -106,6 +106,15 @@
                 <role>Java Developer</role>
             </roles>
         </developer>
+        <developer>
+            <name>Dafni Skiadopoulou</name>
+            <id>dafni</id>
+            <email>Dafni Skiadopoulou AT uib.no</email>
+            <organization>University of Bergen</organization>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
     </developers>
 
 

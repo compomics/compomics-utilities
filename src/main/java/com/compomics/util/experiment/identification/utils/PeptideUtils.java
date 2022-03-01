@@ -502,6 +502,12 @@ public class PeptideUtils {
             Enzyme enzyme
     ) {
 
+        if (peptideStart < 0 || peptideStart >= proteinSequence.length()) {
+            
+            throw new IllegalArgumentException("Start of peptide index (" + peptideStart + ") is outside protein sequence (" + proteinSequence.length() + "). Note that index should be zero-based.");
+            
+        }
+
         if (peptideStart == 0) {
 
             return true;
@@ -542,6 +548,11 @@ public class PeptideUtils {
             Enzyme enzyme
     ) {
 
+        if (peptideEnd < 0 || peptideEnd >= proteinSequence.length()) {
+            
+            throw new IllegalArgumentException("End of peptide index (" + peptideEnd + ") is outside protein sequence (" + proteinSequence.length() + "). Note that index should be zero-based.");
+            
+        }
         if (peptideEnd == proteinSequence.length() - 1) {
 
             return true;

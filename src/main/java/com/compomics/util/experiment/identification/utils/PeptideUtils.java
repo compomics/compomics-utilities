@@ -234,7 +234,11 @@ public class PeptideUtils {
             SequenceMatchingParameters modificationSequenceMatchingParameters
     ) {
 
-        String[] fixedModifications = peptide.getFixedModifications(modificationParameters, sequenceProvider, modificationSequenceMatchingParameters);
+        String[] fixedModifications = peptide.getFixedModifications(
+                modificationParameters, 
+                sequenceProvider, 
+                modificationSequenceMatchingParameters
+        );
 
         TreeMap<String, TreeSet<Integer>> modMap = IntStream.range(0, fixedModifications.length)
                 .mapToObj(i
@@ -372,6 +376,7 @@ public class PeptideUtils {
                 allFixedModifications,
                 allVariableModifications
         );
+
         String cTermAsString = getCtermAsString(
                 useShortName,
                 peptideSequence.length(),
@@ -503,9 +508,15 @@ public class PeptideUtils {
     ) {
 
         if (peptideStart < 0 || peptideStart >= proteinSequence.length()) {
-            
-            throw new IllegalArgumentException("Start of peptide index (" + peptideStart + ") is outside protein sequence (" + proteinSequence.length() + "). Note that index should be zero-based.");
-            
+
+            throw new IllegalArgumentException(
+                    "Start of peptide index ("
+                    + peptideStart
+                    + ") is outside protein sequence ("
+                    + proteinSequence.length()
+                    + "). Note that index should be zero-based."
+            );
+
         }
 
         if (peptideStart == 0) {
@@ -549,10 +560,17 @@ public class PeptideUtils {
     ) {
 
         if (peptideEnd < 0 || peptideEnd >= proteinSequence.length()) {
-            
-            throw new IllegalArgumentException("End of peptide index (" + peptideEnd + ") is outside protein sequence (" + proteinSequence.length() + "). Note that index should be zero-based.");
-            
+
+            throw new IllegalArgumentException(
+                    "End of peptide index ("
+                    + peptideEnd
+                    + ") is outside protein sequence ("
+                    + proteinSequence.length()
+                    + "). Note that index should be zero-based."
+            );
+
         }
+
         if (peptideEnd == proteinSequence.length() - 1) {
 
             return true;
@@ -853,7 +871,9 @@ public class PeptideUtils {
         }
 
         throw new IllegalArgumentException(
-                "Modification site " + modSite + " not supported."
+                "Modification site "
+                + modSite
+                + " not supported."
         );
     }
 }

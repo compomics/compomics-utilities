@@ -1423,13 +1423,13 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
             String accession = currentProtein.getAccession();
             Header headerObject = ((FastaIterator) pi).getLastHeader();
             String headerAsString = headerObject.getRawHeader();
-            
+
             if (headerAsString.charAt(0) == '>') {
-                
+
                 headerAsString = headerAsString.substring(1).trim();
-                
+
             }
-            
+
             AccessionMetaData accMD = new AccessionMetaData(headerAsString);
             accessionMetaData.put(accession, accMD);
 
@@ -5751,7 +5751,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
         String proteinSequence = getSequence(accession);
         int startI = Math.min(Math.max(start, 0), proteinSequence.length());
         int endI = Math.min(Math.max(end, 0), proteinSequence.length());
-        
+
         return proteinSequence.substring(startI, endI);
 
     }
@@ -5770,9 +5770,9 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
 
     /**
      * Returns the header corresponding to the given accession.
-     * 
+     *
      * @param proteinAccession The accession.
-     * 
+     *
      * @return The corresponding header.
      */
     public Header getHeader(String proteinAccession) {
@@ -5803,7 +5803,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
 
     @Override
     public String getHeaderAsString(String proteinAccession) {
-        
+
         Header header = getHeader(proteinAccession);
 
         return header.getRawHeader();
@@ -5812,63 +5812,63 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
 
     @Override
     public String getDescription(String proteinAccession) {
-        
+
         Header header = getHeader(proteinAccession);
-        
+
         return header.getDescription();
 
     }
 
     @Override
     public String getSimpleDescription(String proteinAccession) {
-        
+
         Header header = getHeader(proteinAccession);
-        
+
         return header.getSimpleProteinDescription();
 
     }
 
     @Override
     public ProteinDatabase getProteinDatabase(String proteinAccession) {
-        
+
         Header header = getHeader(proteinAccession);
-        
+
         return header.getDatabaseType();
 
     }
 
     @Override
     public String getGeneName(String proteinAccession) {
-        
+
         Header header = getHeader(proteinAccession);
-        
+
         return header.getGeneName();
 
     }
 
     @Override
     public String getTaxonomy(String proteinAccession) {
-        
+
         Header header = getHeader(proteinAccession);
-        
+
         return header.getTaxonomy();
 
     }
 
     @Override
     public String getOrganismIdentifier(String proteinAccession) {
-        
+
         Header header = getHeader(proteinAccession);
-        
+
         return header.getOrganismIdentifier();
 
     }
 
     @Override
     public Integer getProteinEvidence(String proteinAccession) {
-        
+
         Header header = getHeader(proteinAccession);
-        
+
         return header.getProteinEvidence();
 
     }

@@ -76,13 +76,10 @@ public class WaveletTree implements Serializable {
      */
     public WaveletTree() {
     }
-    
-    
-    
-    public int getLength(){
+
+    public int getLength() {
         return lenText;
     }
-    
 
     /**
      * Class for huffman nodes.
@@ -347,9 +344,6 @@ public class WaveletTree implements Serializable {
         }
         return 0;
     }
-    
-    
-    
 
     /**
      * Returns the character and rank at a given index.
@@ -358,27 +352,55 @@ public class WaveletTree implements Serializable {
      * @return the character and rank
      */
     public int[] getCharacterInfo(int index) {
-        if (index < lenText) {
-            boolean left = !rank.isOne(index);
-            int result = rank.getRank(index, left);
+
+        return getCharacterInfo(index, this);
+
+    }
+
+    /**
+     * Returns the character and rank at a given index.
+     *
+     * @param index the index
+     * @return the character and rank
+     */
+    private static int[] getCharacterInfo(int index, WaveletTree waveletTree) {
+
+        while (index < waveletTree.lenText) {
+
+            boolean left = !waveletTree.rank.isOne(index);
+            int result = waveletTree.rank.getRank(index, left);
+            
             if (result == 0) {
-                return new int[]{firstChar, 0};
+                
+                return new int[]{waveletTree.firstChar, 0};
             }
 
             result -= 1;
             if (left) {
-                if (leftChild == null) {
-                    return new int[]{firstChar, result};
+                if (waveletTree.leftChild == null) {
+                    
+                    return new int[]{waveletTree.firstChar, result};
+                    
                 } else {
-                    return leftChild.getCharacterInfo(result);
+
+                    index = result;
+                    waveletTree = waveletTree.leftChild;
+                    
                 }
-            } else if (rightChild == null) {
-                return new int[]{lastChar, result};
+            } else if (waveletTree.rightChild == null) {
+                
+                return new int[]{waveletTree.lastChar, result};
+                
             } else {
-                return rightChild.getCharacterInfo(result);
+
+                index = result;
+                waveletTree = waveletTree.rightChild;
+
             }
         }
-        throw new ArrayIndexOutOfBoundsException();
+
+        throw new ArrayIndexOutOfBoundsException("Index '" + index + "' out of range (length: '" + waveletTree.lenText + "').");
+
     }
 
     /**
@@ -511,9 +533,7 @@ public class WaveletTree implements Serializable {
             }
         }
     }
-    */
-    
-
+     */
     /**
      * Returns a new left/right index range for a given character recursively.
      *
@@ -523,11 +543,11 @@ public class WaveletTree implements Serializable {
      * @return a list of character and new left/right index for a given range
      */
     public int[] singleRangeQuery(int leftIndex, int rightIndex, int character) {
-        
+
         WaveletTree tree = this;
         int[] returnValue = null;
-        
-        while (true){
+
+        while (true) {
             boolean left = ((tree.alphabetDirections[character >>> BIT_SHIFT] >>> (character & BIT_MASK)) & 1) == 1;
             int newLeftIndex = (leftIndex >= 0) ? tree.rank.getRankOne(leftIndex) : 0;
             int newRightIndex = (rightIndex >= 0) ? tree.rank.getRankOne(rightIndex) : 0;
@@ -555,25 +575,27 @@ public class WaveletTree implements Serializable {
         }
         return returnValue;
     }
-    
-    
+
     /**
-     * Inverse function to the rank function: given the i'th occurrence of a character
-     * in the tree, it provides its position
+     * Inverse function to the rank function: given the i'th occurrence of a
+     * character in the tree, it provides its position
      *
      * @param occurrence the i'th occurrence
      * @param character the character to check
      * @return the position of the i'th occurrence of the character
      */
-    public int select(int occurrence, int character){
+    public int select(int occurrence, int character) {
         // performing a binary search by narrowing the interval
         int L = 0, R = lenText - 1, m = -1;
-        while (R - L > 1){
+        while (R - L > 1) {
             m = (L + R) >>> 1;
-            if (getRank(m, character) <= occurrence) L = m;
-            else R = m;
+            if (getRank(m, character) <= occurrence) {
+                L = m;
+            } else {
+                R = m;
+            }
         }
-        
+
         return R;
     }
 }

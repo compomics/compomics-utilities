@@ -4,6 +4,7 @@ import com.compomics.util.experiment.identification.modification.peptide_mapping
 import java.util.ArrayList;
 import java.util.HashMap;
 import junit.framework.TestCase;
+import org.junit.Assert;
 
 /**
  * Test cases for the modification to peptide mapping.
@@ -18,6 +19,7 @@ public class ModificationPeptideMappingTest extends TestCase {
     public void testModificationMapping() {
 
         // Example 1: three modifications of two types, five sites, one possible conflict
+        // Expected result: {mod1 -> (1), mod2 -> (3, 17)}
         double modMass1 = 1.0;
         double modMass2 = 2.0;
         int nMod1 = 1;
@@ -95,12 +97,19 @@ public class ModificationPeptideMappingTest extends TestCase {
         
         modificationToSiteToScore.put(modMass2, scores2Map);
         
-        HashMap<Integer, Double> matchedSiteToModification;
-        matchedSiteToModification = ModificationPeptideMapping.mapModifications(
+        HashMap<Integer, Double> matchedSiteToModification = ModificationPeptideMapping.mapModifications(
                 modificationToPossibleSiteMap, 
                 modificationOccurrenceMap, 
                 modificationToSiteToScore
         );
+        
+        Assert.assertTrue(matchedSiteToModification.size() == 3);
+        Assert.assertTrue(matchedSiteToModification.containsKey(1));
+        Assert.assertTrue(matchedSiteToModification.containsKey(3));
+        Assert.assertTrue(matchedSiteToModification.containsKey(17));
+        Assert.assertTrue(Math.abs(matchedSiteToModification.get(1) - modMass1) < 1e-6);
+        Assert.assertTrue(Math.abs(matchedSiteToModification.get(3) - modMass2) < 1e-6);
+        Assert.assertTrue(Math.abs(matchedSiteToModification.get(17) - modMass2) < 1e-6);
         
     }
 

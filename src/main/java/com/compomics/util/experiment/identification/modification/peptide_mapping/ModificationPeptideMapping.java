@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.modification.peptide_mapping;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,8 +27,7 @@ public class ModificationPeptideMapping {
      * @return The site to modification mass mapping.
      */
     public static HashMap<Integer, Double> mapModifications(
-            //HashMap<Double, HashMap<Integer, ArrayList<String>>> modificationToPossibleSiteMap,
-            HashMap<Double, ArrayList<Integer>> modificationToPossibleSiteMap,
+            HashMap<Double, int[]> modificationToPossibleSiteMap,
             HashMap<Double, Integer> modificationOccurrenceMap,
             HashMap<Double, HashMap<Integer, Double>> modificationToSiteToScore
     ) {
@@ -39,7 +37,7 @@ public class ModificationPeptideMapping {
         Set<String> sitesVertices = new HashSet<>();
         Set<String> modificationsVertices = new HashSet<>();
 
-        for (Map.Entry<Double, ArrayList<Integer>> modificationEntry : modificationToPossibleSiteMap.entrySet()) {
+        for (Map.Entry<Double, int[]> modificationEntry : modificationToPossibleSiteMap.entrySet()) {
             
             double modID = modificationEntry.getKey();
             int modOccNum = modificationOccurrenceMap.get(modID);
@@ -54,7 +52,7 @@ public class ModificationPeptideMapping {
             
             HashMap<Integer, Double> localizationScores = modificationToSiteToScore.get(modID);
             
-            ArrayList<Integer> sites = modificationEntry.getValue();
+            int[] sites = modificationEntry.getValue();
             
             for (int site : sites) {
                 

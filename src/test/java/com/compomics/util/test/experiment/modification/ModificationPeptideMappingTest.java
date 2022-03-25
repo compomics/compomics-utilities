@@ -55,22 +55,9 @@ public class ModificationPeptideMappingTest extends TestCase {
 
         modificationToPossibleSiteMap.put(modMass2, modification2);*/
         
-        HashMap<Double, ArrayList<Integer>> modificationToPossibleSiteMap = new HashMap<>(2);
-        ArrayList<Integer> modification1sites = new ArrayList<>(1);
-        for (int site : sites1) {
-
-            modification1sites.add(site);
-
-        }
-        modificationToPossibleSiteMap.put(modMass1, modification1sites);
-        
-        ArrayList<Integer> modification2sites = new ArrayList<>(1);
-        for (int site : sites2) {
-
-            modification2sites.add(site);
-
-        }
-        modificationToPossibleSiteMap.put(modMass2, modification2sites);
+        HashMap<Double, int[]> modificationToPossibleSiteMap = new HashMap<>(2);
+        modificationToPossibleSiteMap.put(modMass1, sites1);
+        modificationToPossibleSiteMap.put(modMass2, sites2);
 
         HashMap<Double, Integer> modificationOccurrenceMap = new HashMap<>(2);
         modificationOccurrenceMap.put(modMass1, nMod1);
@@ -112,5 +99,4 @@ public class ModificationPeptideMappingTest extends TestCase {
         Assert.assertTrue(Math.abs(matchedSiteToModification.get(17) - modMass2) < 1e-6);
         
     }
-
 }

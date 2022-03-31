@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.identification.modification.peptide_mapping;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,9 +25,9 @@ public class ModificationPeptideMapping {
      * @param modificationOccurrenceMap Map of modification mass to number of modifications.
      * @param modificationToSiteToScore Map of modification mass to modification site to localization score.
      * 
-     * @return The site to modification mass mapping.
+     * @return The list of best sites per modification.
      */
-    public static HashMap<Integer, Double> mapModifications(
+    public static HashMap<Double, ArrayList<Integer>> mapModifications(
             HashMap<Double, int[]> modificationToPossibleSiteMap,
             HashMap<Double, Integer> modificationOccurrenceMap,
             HashMap<Double, HashMap<Integer, Double>> modificationToSiteToScore
@@ -84,7 +85,7 @@ public class ModificationPeptideMapping {
         
         Set<DefaultWeightedEdge> matchingEdges = matchingInfo.getEdges();
         
-        HashMap<Integer, Double> matchedSiteToModification = new HashMap<>(1);
+        HashMap<Double, ArrayList<Integer>> matchedSiteToModification = new HashMap<>(1);
         
         for(DefaultWeightedEdge e : matchingEdges){
             
@@ -92,7 +93,17 @@ public class ModificationPeptideMapping {
             String[] eVertices = eInfo.split(":");
             double modVertex = Double.parseDouble(eVertices[0].substring(1,eVertices[0].length()-1).split("-")[0]);
             int siteVertex = Integer.parseInt(eVertices[1].substring(1,eVertices[1].length()-1));
-            matchedSiteToModification.put(siteVertex, modVertex);
+            
+            ArrayList<Integer> modificationSites = matchedSiteToModification.get(modVertex);
+            
+            if (modificationSites == null) {
+                
+                modificationSites = new ArrayList<>(1);
+                matchedSiteToModification.put(modVertex, modificationSites);
+                
+            }
+            
+            modificationSites.add(siteVertex);
             
         }
         

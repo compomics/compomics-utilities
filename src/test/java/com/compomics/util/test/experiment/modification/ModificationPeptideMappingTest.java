@@ -84,19 +84,20 @@ public class ModificationPeptideMappingTest extends TestCase {
         
         modificationToSiteToScore.put(modMass2, scores2Map);
         
-        HashMap<Integer, Double> matchedSiteToModification = ModificationPeptideMapping.mapModifications(
+        HashMap<Double, ArrayList<Integer>> matchedSiteByModification = ModificationPeptideMapping.mapModifications(
                 modificationToPossibleSiteMap, 
                 modificationOccurrenceMap, 
                 modificationToSiteToScore
         );
         
-        Assert.assertTrue(matchedSiteToModification.size() == 3);
-        Assert.assertTrue(matchedSiteToModification.containsKey(1));
-        Assert.assertTrue(matchedSiteToModification.containsKey(3));
-        Assert.assertTrue(matchedSiteToModification.containsKey(17));
-        Assert.assertTrue(Math.abs(matchedSiteToModification.get(1) - modMass1) < 1e-6);
-        Assert.assertTrue(Math.abs(matchedSiteToModification.get(3) - modMass2) < 1e-6);
-        Assert.assertTrue(Math.abs(matchedSiteToModification.get(17) - modMass2) < 1e-6);
+        Assert.assertTrue(matchedSiteByModification.size() == 2);
+        Assert.assertTrue(matchedSiteByModification.containsKey(modMass1));
+        Assert.assertTrue(matchedSiteByModification.containsKey(modMass2));
+        Assert.assertTrue(matchedSiteByModification.get(modMass1).size() == 1);
+        Assert.assertTrue(matchedSiteByModification.get(modMass1).get(0) == 1);
+        Assert.assertTrue(matchedSiteByModification.get(modMass2).size() == 2);
+        Assert.assertTrue(matchedSiteByModification.get(modMass2).get(0) == 3 || matchedSiteByModification.get(modMass2).get(0) == 17);
+        Assert.assertTrue(matchedSiteByModification.get(modMass2).get(1) == 3 || matchedSiteByModification.get(modMass2).get(1) == 17);
         
     }
 }

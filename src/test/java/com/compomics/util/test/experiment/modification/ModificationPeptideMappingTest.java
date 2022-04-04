@@ -3,6 +3,7 @@ package com.compomics.util.test.experiment.modification;
 import com.compomics.util.experiment.identification.modification.peptide_mapping.ModificationPeptideMapping;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeSet;
 import junit.framework.TestCase;
 import org.junit.Assert;
 
@@ -84,7 +85,7 @@ public class ModificationPeptideMappingTest extends TestCase {
         
         modificationToSiteToScore.put(modMass2, scores2Map);
         
-        HashMap<Double, ArrayList<Integer>> matchedSiteByModification = ModificationPeptideMapping.mapModifications(
+        HashMap<Double, TreeSet<Integer>> matchedSiteByModification = ModificationPeptideMapping.mapModifications(
                 modificationToPossibleSiteMap, 
                 modificationOccurrenceMap, 
                 modificationToSiteToScore
@@ -93,11 +94,12 @@ public class ModificationPeptideMappingTest extends TestCase {
         Assert.assertTrue(matchedSiteByModification.size() == 2);
         Assert.assertTrue(matchedSiteByModification.containsKey(modMass1));
         Assert.assertTrue(matchedSiteByModification.containsKey(modMass2));
+        
         Assert.assertTrue(matchedSiteByModification.get(modMass1).size() == 1);
-        Assert.assertTrue(matchedSiteByModification.get(modMass1).get(0) == 1);
+        Assert.assertTrue(matchedSiteByModification.get(modMass1).first() == 1);
         Assert.assertTrue(matchedSiteByModification.get(modMass2).size() == 2);
-        Assert.assertTrue(matchedSiteByModification.get(modMass2).get(0) == 3 || matchedSiteByModification.get(modMass2).get(0) == 17);
-        Assert.assertTrue(matchedSiteByModification.get(modMass2).get(1) == 3 || matchedSiteByModification.get(modMass2).get(1) == 17);
+        Assert.assertTrue(matchedSiteByModification.get(modMass2).first() == 3 || matchedSiteByModification.get(modMass2).first() == 17);
+        Assert.assertTrue(matchedSiteByModification.get(modMass2).last() == 3 || matchedSiteByModification.get(modMass2).last() == 17);
         
     }
 }

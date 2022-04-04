@@ -608,7 +608,7 @@ public class PeptideInference {
      * @param sequenceProvider The sequence provider to use.
      * @param modificationProvider The modification provider to use.
      */
-    private void mapInferredSites(
+    private synchronized void mapInferredSites(
             SpectrumMatch spectrumMatch,
             Peptide peptide,
             HashSet<Integer> newLocalizationCandidates,
@@ -701,7 +701,7 @@ public class PeptideInference {
                     modificationMatch.setSite(newLocalization);
                     modificationMatch.setModification(candidateName);
                     PSModificationScores psmScores = (PSModificationScores) spectrumMatch.getUrParam(PSModificationScores.dummy);
-
+                    
                     psmScores.changeRepresentativeSite(
                             candidateName,
                             previousName,
@@ -710,8 +710,8 @@ public class PeptideInference {
                             nMod,
                             modificationProvider
                     );
-
-                }
+                    
+                    }
 
                 modificationMatch.setInferred(true);
 

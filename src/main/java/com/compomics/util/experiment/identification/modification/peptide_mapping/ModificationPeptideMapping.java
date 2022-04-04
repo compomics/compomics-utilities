@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
@@ -27,7 +28,7 @@ public class ModificationPeptideMapping {
      * 
      * @return The list of best sites per modification.
      */
-    public static HashMap<Double, ArrayList<Integer>> mapModifications(
+    public static HashMap<Double, TreeSet<Integer>> mapModifications(
             HashMap<Double, int[]> modificationToPossibleSiteMap,
             HashMap<Double, Integer> modificationOccurrenceMap,
             HashMap<Double, HashMap<Integer, Double>> modificationToSiteToScore
@@ -85,7 +86,7 @@ public class ModificationPeptideMapping {
         
         Set<DefaultWeightedEdge> matchingEdges = matchingInfo.getEdges();
         
-        HashMap<Double, ArrayList<Integer>> matchedSiteToModification = new HashMap<>(1);
+        HashMap<Double, TreeSet<Integer>> matchedSiteToModification = new HashMap<>(1);
         
         for(DefaultWeightedEdge e : matchingEdges){
             
@@ -94,11 +95,11 @@ public class ModificationPeptideMapping {
             double modVertex = Double.parseDouble(eVertices[0].substring(1,eVertices[0].length()-1).split("-")[0]);
             int siteVertex = Integer.parseInt(eVertices[1].substring(1,eVertices[1].length()-1));
             
-            ArrayList<Integer> modificationSites = matchedSiteToModification.get(modVertex);
+            TreeSet<Integer> modificationSites = matchedSiteToModification.get(modVertex);
             
             if (modificationSites == null) {
                 
-                modificationSites = new ArrayList<>(1);
+                modificationSites = new TreeSet<>();
                 matchedSiteToModification.put(modVertex, modificationSites);
                 
             }

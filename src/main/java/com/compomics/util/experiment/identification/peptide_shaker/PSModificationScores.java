@@ -263,119 +263,150 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
 
         double modMass = modificationProvider.getModification(modName).getMass();
 
-        HashMap<Integer, HashSet<String>> ambiguousSites = ambiguousModificationsByRepresentativeSite.get(originalRepresentativeSite);
+        // Remove this modification from the mapping
+        TreeSet<Integer> representativeSites = new TreeSet<>();
+        representativeSites.add(newRepresentativeSite);
 
-        if (ambiguousSites != null) {
+        HashMap<Integer, HashSet<String>> modificationSites = new HashMap<>(2);
 
-            HashMap<Integer, HashSet<String>> newSites = new HashMap<>(1);
-            HashSet<Integer> sitesToRemove = new HashSet<>(0);
+        HashMap<Integer, HashMap<Integer, HashSet<String>>> newAmbiguousModificationsByRepresentativeSite = new HashMap<>(ambiguousModificationsByRepresentativeSite.size());
 
-            for (Entry<Integer, HashSet<String>> entry : ambiguousSites.entrySet()) {
+        for (Entry<Integer, HashMap<Integer, HashSet<String>>> entry1 : ambiguousModificationsByRepresentativeSite.entrySet()) {
 
-                int site = entry.getKey();
-                HashSet<String> modifications = entry.getValue();
+            int representativeSite = entry1.getKey();
+            HashMap<Integer, HashSet<String>> sites = entry1.getValue();
+            HashMap<Integer, HashSet<String>> differentModSites = new HashMap<>(sites.size());
 
-                for (String tempModName : modifications) {
+            for (Entry<Integer, HashSet<String>> entry2 : sites.entrySet()) {
 
-                    double tempModMass = modificationProvider.getModification(tempModName).getMass();
+                int secondarySite = entry2.getKey();
+                HashSet<String> modifications = entry2.getValue();
+
+                for (String modification : modifications) {
+
+                    double tempModMass = modificationProvider.getModification(modification).getMass();
 
                     if (modMass == tempModMass) {
 
-                        HashSet<String> newModifications = new HashSet<>(1);
-                        newModifications.add(tempModName);
-                        newSites.put(site, newModifications);
-                        modifications.remove(tempModName);
+                        if (representativeSite != originalRepresentativeSite) {
 
-                        if (modifications.isEmpty()) {
-
-                            sitesToRemove.add(site);
+                            representativeSites.add(representativeSite);
 
                         }
+                        if (confidentModificationsByModName != null) {
+                            
+                            if (representativeSite == originalRepresentativeSite) {
+
+                                HashSet<Integer> tempSites = confidentModificationsByModName.get(modification);
+
+                                if (tempSites != null) {
+
+                                    tempSites.remove(originalRepresentativeSite);
+
+                                    if (tempSites.isEmpty()) {
+
+                                        confidentModificationsByModName.remove(modification);
+
+                                    }
+                                }
+                            }
+                            if (secondarySite == newRepresentativeSite) {
+
+                                HashSet<Integer> tempSites = confidentModificationsByModName.get(modification);
+
+                                if (tempSites == null) {
+
+                                    tempSites = new HashSet<>(1);
+                                    confidentModificationsByModName.put(modification, tempSites);
+
+                                }
+
+                                tempSites.add(newRepresentativeSite);
+
+                            }
+                        }
+                        
+                        ambiguousModificationsByModName.remove(modification);
+
+                        HashSet<String> tempMods = modificationSites.get(secondarySite);
+
+                        if (tempMods == null) {
+
+                            tempMods = new HashSet<>(1);
+                            modificationSites.put(secondarySite, tempMods);
+
+                        }
+
+                        tempMods.add(modification);
+
+                    } else {
+
+                        HashSet<String> tempMods = differentModSites.get(secondarySite);
+
+                        if (tempMods == null) {
+
+                            tempMods = new HashSet<>(1);
+                            differentModSites.put(secondarySite, tempMods);
+
+                        }
+
+                        tempMods.add(modification);
+
                     }
                 }
             }
 
-            for (int site : sitesToRemove) {
+            if (!differentModSites.isEmpty()) {
 
-                ambiguousSites.remove(site);
-
+                newAmbiguousModificationsByRepresentativeSite.put(representativeSite, differentModSites);
             }
+        }
 
-            if (ambiguousSites.isEmpty()) {
+        ambiguousModificationsByRepresentativeSite = newAmbiguousModificationsByRepresentativeSite;
 
-                ambiguousModificationsByRepresentativeSite.remove(originalRepresentativeSite);
+        // Add the new sites
+        int[] sortedSelectedSites = representativeSites.stream().mapToInt(a -> a).toArray();
+        int[] sortedPossibleSites = modificationSites.keySet().stream().mapToInt(a -> a).toArray();
 
-            }
+        for (int siteI = 0; siteI < sortedSelectedSites.length; siteI++) {
 
-            ambiguousSites = ambiguousModificationsByRepresentativeSite.get(newRepresentativeSite);
+            int site = sortedSelectedSites[siteI];
 
-            if (ambiguousSites == null) {
+            // Assign the closest secondary sites to this one
+            HashMap<Integer, HashSet<String>> secondarySites = new HashMap<>(1);
 
-                ambiguousModificationsByRepresentativeSite.put(newRepresentativeSite, newSites);
+            for (int secondarySite : sortedPossibleSites) {
 
-            } else {
+                if (secondarySite < site) {
 
-                for (Entry<Integer, HashSet<String>> entry : newSites.entrySet()) {
+                    if (siteI > 0 && secondarySite < sortedSelectedSites[siteI - 1] && site - secondarySite < sortedSelectedSites[siteI - 1] || siteI == 0) {
 
-                    int site = entry.getKey();
-                    HashSet<String> modifications = entry.getValue();
-
-                    if (modifications == null) {
-
-                        modifications = new HashSet<>(1);
-                        ambiguousSites.put(site, modifications);
+                        secondarySites.put(secondarySite, modificationSites.get(secondarySite));
 
                     }
 
-                    modifications.add(modName);
+                } else if (secondarySite > site) {
+
+                    if (siteI < sortedSelectedSites.length - 1 && secondarySite < sortedSelectedSites[siteI + 1] && secondarySite - site <= sortedSelectedSites[siteI + 1] - secondarySite || siteI == sortedSelectedSites.length - 1) {
+
+                        secondarySites.put(secondarySite, modificationSites.get(secondarySite));
+
+                    }
+
+                } else {
+
+                    secondarySites.put(site, modificationSites.get(site));
 
                 }
             }
-        }
 
-        HashSet<Integer> originalSecondarySites = null;
-
-        HashMap<Integer, HashSet<Integer>> modificationSiteMap = ambiguousModificationsByModName.get(originalModName);
-
-        if (modificationSiteMap != null) {
-
-            originalSecondarySites = modificationSiteMap.get(originalRepresentativeSite);
-
-            modificationSiteMap.remove(originalRepresentativeSite);
-
-            if (modificationSiteMap.isEmpty()) {
-
-                ambiguousModificationsByModName.remove(originalModName);
-
-            }
-        }
-
-        modificationSiteMap = ambiguousModificationsByModName.get(modName);
-
-        if (modificationSiteMap == null) {
-
-            modificationSiteMap = new HashMap<>(1);
-            ambiguousModificationsByModName.put(modName, modificationSiteMap);
-
-        }
-
-        HashSet<Integer> secondarySites = modificationSiteMap.get(newRepresentativeSite);
-
-        if (secondarySites == null) {
-
-            secondarySites = new HashSet<>(1);
-            modificationSiteMap.put(newRepresentativeSite, secondarySites);
-
-        }
-
-        if (originalSecondarySites != null) {
-
-            secondarySites.addAll(originalSecondarySites);
+            addAmbiguousModificationSites(site, secondarySites);
 
         }
 
         // Sanity check: are there enough representative sites for the given modification mass?
-        int modCount = 0;
+        
+        HashSet<Integer> modificationSitesTest = new HashSet<>(nMod);
 
         if (confidentModificationsByModName != null) {
 
@@ -387,7 +418,7 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
 
                 if (modMass == tempModMass) {
 
-                    modCount += entry.getValue().size();
+                    modificationSitesTest.addAll(entry.getValue());
 
                 }
             }
@@ -401,12 +432,12 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
 
             if (modMass == tempModMass) {
 
-                modCount += entry.getValue().size();
+                    modificationSitesTest.addAll(entry.getValue().keySet());
 
             }
         }
 
-        if (modCount != nMod) {
+        if (modificationSitesTest.size() != nMod) {
 
             throw new IllegalArgumentException(
                     "Incorrect number of representative sites for modification of mass "
@@ -414,7 +445,7 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
                     + ". Expected: "
                     + nMod
                     + ", found: "
-                    + modCount
+                    + modificationSitesTest.size()
                     + "."
             );
 

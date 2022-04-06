@@ -234,15 +234,7 @@ public class IonFactory {
 
         HashSet<String> allModifications = new HashSet<>(1);
 
-        String[] variableModNames = null;
-        
-        // @TODO: quick fix that ought to be replaced when the ptm scoring code had been rewritten
-        try {
-            variableModNames = peptide.getIndexedVariableModifications();
-        } catch (IllegalArgumentException e) {
-            // illegal peptide, i.e. more than one modification on the same site
-            return result;
-        }
+        String[] variableModNames = peptide.getIndexedVariableModifications();
 
         Modification[] variableModifications = new Modification[variableModNames.length];
 

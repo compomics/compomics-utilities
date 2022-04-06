@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.ions.Ion;
 import com.compomics.util.experiment.biology.ions.IonFactory;
 import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.biology.modifications.Modification;
+import com.compomics.util.experiment.biology.modifications.ModificationProvider;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.spectrum_annotation.NeutralLossesMap;
 import com.compomics.util.experiment.identification.matches.IonMatch;
@@ -98,6 +99,7 @@ public class PhosphoRS {
      * preferences for modification to peptide mapping
      * @param spectrumAnnotator the peptide spectrum annotator to use for
      * spectrum annotation, can be null
+     * @param modificationProvider The modification provider to use.
      *
      * @return a map site &gt; phosphoRS site probability
      */
@@ -112,7 +114,8 @@ public class PhosphoRS {
             boolean accountNeutralLosses,
             SequenceMatchingParameters sequenceMatchingParameters,
             SequenceMatchingParameters modificationSequenceMatchingParameters,
-            PeptideSpectrumAnnotator spectrumAnnotator
+            PeptideSpectrumAnnotator spectrumAnnotator,
+            ModificationProvider modificationProvider
     ) {
 
         if (modifications.isEmpty()) {
@@ -180,7 +183,9 @@ public class PhosphoRS {
                                         peptide,
                                         modification,
                                         sequenceProvider,
-                                        modificationSequenceMatchingParameters
+                                        modificationSequenceMatchingParameters,
+                                        modificationProvider,
+                                        true
                                 )
                         )
                 )
@@ -240,7 +245,7 @@ public class PhosphoRS {
                 profileToSitesMap.put(profileKey, profile);
 
             }
-
+            
             HashMap<Integer, Peptide> profileToPeptide = getPossiblePeptidesMap(
                     peptide,
                     modNames,

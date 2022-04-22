@@ -2,6 +2,8 @@ package com.compomics.util.experiment.biology.atoms;
 
 import com.compomics.util.experiment.biology.atoms.impl.Calcium;
 import com.compomics.util.experiment.biology.atoms.impl.Carbon;
+import com.compomics.util.experiment.biology.atoms.impl.Chlorine;
+import com.compomics.util.experiment.biology.atoms.impl.Cobalt;
 import com.compomics.util.experiment.biology.atoms.impl.Copper;
 import com.compomics.util.experiment.biology.atoms.impl.Fluorine;
 import com.compomics.util.experiment.biology.atoms.impl.Helium;
@@ -10,6 +12,8 @@ import com.compomics.util.experiment.biology.atoms.impl.Iodine;
 import com.compomics.util.experiment.biology.atoms.impl.Lithium;
 import com.compomics.util.experiment.biology.atoms.impl.Iron;
 import com.compomics.util.experiment.biology.atoms.impl.Magnesium;
+import com.compomics.util.experiment.biology.atoms.impl.Manganese;
+import com.compomics.util.experiment.biology.atoms.impl.Nickel;
 import com.compomics.util.experiment.biology.atoms.impl.Nitrogen;
 import com.compomics.util.experiment.biology.atoms.impl.Oxygen;
 import com.compomics.util.experiment.biology.atoms.impl.Phosphorus;
@@ -113,6 +117,22 @@ public abstract class Atom extends ExperimentObject {
      */
     public static final Atom Cu = new Copper();
     /**
+     * The Chlorine atom.
+     */
+    public static final Atom Cl = new Chlorine();
+    /**
+     * The Cobalt atom.
+     */
+    public static final Atom Co = new Cobalt();
+    /**
+     * The Nickel atom.
+     */
+    public static final Atom Ni = new Nickel();
+    /**
+     * The Manganese atom.
+     */
+    public static final Atom Mn = new Manganese();
+    /**
      * The monoisotopic mass. Access is faster then querying the isotope map.
      */
     protected double monoisotopicMass;
@@ -143,10 +163,12 @@ public abstract class Atom extends ExperimentObject {
     public static String[] getImplementedAtoms(boolean includeSelect) {
         if (includeSelect) {
             return new String[]{"- Select -", "C", "H", "I", "N", "O", "S", "P",
-                "He", "Li", "Na", "Se", "F", "Fe", "K", "Ca", "Zn", "Mg", "Cu"};
+                "He", "Li", "Na", "Se", "F", "Fe", "K", "Ca", "Zn", "Mg", "Cu",
+                "Cl", "Co", "Ni", "Mn"};
         } else {
             return new String[]{"C", "H", "I", "N", "O", "S", "P", "He", "Li",
-                "Na", "Se", "F", "Fe", "K", "Ca", "Zn", "Mg", "Cu"};
+                "Na", "Se", "F", "Fe", "K", "Ca", "Zn", "Mg", "Cu", "Cl", "Co",
+                "Ni", "Mn"};
         }
     }
 
@@ -196,6 +218,14 @@ public abstract class Atom extends ExperimentObject {
                 return Mg;
             case "Cu":
                 return Cu;
+            case "Cl":
+                return Cl;
+            case "Co":
+                return Co;
+            case "Ni":
+                return Ni;
+            case "Mn":
+                return Mn;
             default:
                 break;
         }

@@ -314,6 +314,11 @@ public class Modification extends ExperimentObject {
      */
     public AtomChain getAtomChainRemoved() {
 
+        // backwards compatibility fix for tmt
+        if (atomChainRemoved == null) {
+            atomChainRemoved = new AtomChain();
+        }
+        
         return atomChainRemoved;
     }
 

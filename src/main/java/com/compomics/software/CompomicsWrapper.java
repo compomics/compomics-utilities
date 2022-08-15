@@ -14,10 +14,8 @@ import com.compomics.util.parameters.UtilitiesUserParameters;
 import java.awt.Image;
 import java.io.*;
 import java.net.URLDecoder;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JEditorPane;
@@ -128,15 +126,20 @@ public class CompomicsWrapper {
                 bw = new BufferedWriter(fw);
 
                 bw.write("Memory settings read from the user preferences: " + userParameters.getMemoryParameter() + System.getProperty("line.separator"));
-                String arguments = "args: ";
+                bw.write("args: ");
+
                 if (args != null) {
-                    for (String arg : args) {
-                        arguments += arg + " ";
-                    }
+
+                    bw.write(
+                            String.join(" ", args)
+                    );
+
                 }
-                bw.write(arguments);
                 bw.newLine();
             }
+            
+        
+        checkJavaVersion(toolName);
 
             try {
                 UtilitiesGUIDefaults.setLookAndFeel();
@@ -177,7 +180,6 @@ public class CompomicsWrapper {
     /**
      * Launches the jar file with parameters to the jvm.
      *
-     * @throws java.lang.Exception
      * @param jarFile the jar file to execute
      * @param splashName the splash name, for example peptide-shaker-splash.png,
      * can be null
@@ -185,6 +187,8 @@ public class CompomicsWrapper {
      * eu.isas.peptideshaker.gui.PeptideShakerGUI
      * @param args the arguments to pass to the tool (ignored if null)
      * @param bw buffered writer for the log files, can be null
+     *
+     * @throws java.lang.Exception
      */
     private void launch(File jarFile, String splashName, String mainClass, String[] args, BufferedWriter bw) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 
@@ -236,7 +240,7 @@ public class CompomicsWrapper {
         }
 
         // create the command line
-        ArrayList process_name_array = new ArrayList();
+        ArrayList<String> process_name_array = new ArrayList();
 
         process_name_array.add(javaHome);
 
@@ -273,17 +277,24 @@ public class CompomicsWrapper {
         process_name_array.trimToSize();
 
         if (useStartUpLog) {
+
+            // Print the java runtime version
+            bw.write("Java runtime version: " + System.getProperty("java.runtime.version") + System.getProperty("line.separator"));
+
             // print the command to the log file
             System.out.println(System.getProperty("line.separator") + System.getProperty("line.separator") + "Command line: ");
             bw.write(System.getProperty("line.separator") + "Command line: " + System.getProperty("line.separator"));
 
-            for (Object processEntry : process_name_array) {
+            for (String processEntry : process_name_array) {
                 System.out.print(processEntry + " ");
                 bw.write(processEntry + " ");
             }
 
             bw.write(System.getProperty("line.separator"));
             System.out.println(System.getProperty("line.separator"));
+
+            bw.flush();
+
         }
 
         ProcessBuilder pb = new ProcessBuilder(process_name_array);
@@ -353,7 +364,7 @@ public class CompomicsWrapper {
 
                     if (errorMessage.lastIndexOf("noclassdeffound") != -1) {
                         JOptionPane.showMessageDialog(null,
-                                "Seems like you are trying to start the tool from within a zip file!",
+                                "It seems like you are trying to start the tool from within a zip file!",
                                 "Startup Failed", JOptionPane.ERROR_MESSAGE);
                     } else {
                         System.out.println("Unknown error: " + errorMessage);
@@ -454,14 +465,75 @@ public class CompomicsWrapper {
     }
 
     /**
-     * Checks if the user is running Java 64 bit and shows a warning if not, and
-     * shows a dialog with a warning and a link to the JavaTroubleShooting page
-     * if not.
+     * Checks if the user is running a supported version of Java, shows a
+     * warning if not and links to the JavaTroubleShooting page.
      *
      * @param toolName the name of the tool, e.g., "PeptideShaker"
      */
     public static void checkJavaVersion(String toolName) {
 
+        // Check java version
+        String javaVersion = System.getProperty("java.runtime.version");
+
+        int javaVersionNumber = Integer.parseInt(javaVersion.substring(0, javaVersion.indexOf(".")));
+
+        if (javaVersionNumber < 11) {
+
+            // create an empty label to put the message in
+            JLabel label = new JLabel();
+
+            // html content 
+            JEditorPane ep = new JEditorPane("text/html", "<html><body bgcolor=\"#" + Util.color2Hex(label.getBackground()) + "\">"
+                    + "Running with java version " + javaVersion + ", " + toolName + " works best with Java >= 11.<br><br>"
+                    + "See <a href=\"https://compomics.github.io/projects/compomics-utilities/wiki/JavaTroubleShooting.html\">Java Troubleshooting</a> for more details."
+                    + "</body></html>");
+
+            // handle link events 
+            ep.addHyperlinkListener(new HyperlinkListener() {
+                @Override
+                public void hyperlinkUpdate(HyperlinkEvent e) {
+                    if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                        BareBonesBrowserLaunch.openURL(e.getURL().toString());
+                    }
+                }
+            });
+
+            ep.setBorder(null);
+            ep.setEditable(false);
+
+            JOptionPane.showMessageDialog(null, ep, "Update Java?", JOptionPane.INFORMATION_MESSAGE);
+
+        }
+
+        if (javaVersionNumber == 17) {
+
+            // create an empty label to put the message in
+            JLabel label = new JLabel();
+
+            // html content 
+            JEditorPane ep = new JEditorPane("text/html", "<html><body bgcolor=\"#" + Util.color2Hex(label.getBackground()) + "\">"
+                    + "Running with java version " + javaVersion + ", issues with Java 17 have been reported when using " + toolName + ", we recommend updating to Java 18.<br><br>"
+                    + "See <a href=\"https://compomics.github.io/projects/compomics-utilities/wiki/JavaTroubleShooting.html\">Java Troubleshooting</a> for more details."
+                    + "</body></html>");
+
+            // handle link events 
+            ep.addHyperlinkListener(new HyperlinkListener() {
+                @Override
+                public void hyperlinkUpdate(HyperlinkEvent e) {
+                    if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+                        BareBonesBrowserLaunch.openURL(e.getURL().toString());
+                    }
+                }
+            });
+
+            ep.setBorder(null);
+            ep.setEditable(false);
+
+            JOptionPane.showMessageDialog(null, ep, "Update Java?", JOptionPane.INFORMATION_MESSAGE);
+
+        }
+
+        // Check for 64 bit
         String arch = System.getProperty("os.arch");
 
         if (arch.endsWith("x86")) {
@@ -702,104 +774,6 @@ public class CompomicsWrapper {
         }
 
         return running;
-    }
-
-    /**
-     * Check if a newer version of the tool is available on GoogleCode, and
-     * closes the tool if the user decided to update. No zip file tag used (see
-     * the other checkForNewVersion method).
-     *
-     * @param currentVersion the version number of the tool currently running
-     * @param toolName the name of the tool, e.g., "PeptideShaker"
-     * @param googleCodeToolName the GoogleCode name of the tool, e.g.,
-     * "peptide-shaker"
-     * @deprecated use the Maven repository option instead:
-     * checkForNewDeployedVersion
-     */
-    public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName) {
-        checkForNewVersion(currentVersion, toolName, googleCodeToolName, true, "", ".zip");
-    }
-
-    /**
-     * Check if a newer version of the tool is available on GoogleCode.
-     *
-     * @param currentVersion the version number of the tool currently running
-     * @param toolName the name of the tool, e.g., "PeptideShaker"
-     * @param googleCodeToolName the GoogleCode name of the tool, e.g.,
-     * "peptide-shaker"
-     * @param closeToolWhenUpgrading if true, the tool will close when the
-     * download page is opened, false only opens the download page
-     * @param zipFileTag the zip file tag, e.g., SearchGUI-1.10.4_windows.zip
-     * has the tag "_windows"
-     * @param zipFileType the zip file type, e.g., ".zip" or ".tar.gz"
-     * @deprecated use the Maven repository option instead:
-     * checkForNewDeployedVersion
-     */
-    public static void checkForNewVersion(String currentVersion, String toolName, String googleCodeToolName, boolean closeToolWhenUpgrading, String zipFileTag, String zipFileType) {
-
-        try {
-            boolean deprecatedOrDeleted = false;
-            URL downloadPage = new URL(
-                    "http://code.google.com/p/" + googleCodeToolName + "/downloads/detail?name=" + toolName + "-"
-                    + currentVersion + zipFileTag + zipFileType);
-
-            if ((java.net.HttpURLConnection) downloadPage.openConnection() != null) {
-
-                int respons = ((java.net.HttpURLConnection) downloadPage.openConnection()).getResponseCode();
-
-                // 404 means that the file no longer exists, which means that
-                // the running version is no longer available for download,
-                // which again means that a never version is available.
-                if (respons == 404) {
-                    deprecatedOrDeleted = true;
-                } else {
-
-                    // also need to check if the available running version has been
-                    // deprecated (but not deleted)
-                    BufferedReader in = new BufferedReader(
-                            new InputStreamReader(downloadPage.openStream()));
-
-                    String inputLine;
-
-                    while ((inputLine = in.readLine()) != null && !deprecatedOrDeleted) {
-                        if (inputLine.lastIndexOf("Deprecated") != -1
-                                && inputLine.lastIndexOf("Deprecated Downloads") == -1
-                                && inputLine.lastIndexOf("Deprecated downloads") == -1) {
-                            deprecatedOrDeleted = true;
-                        }
-                    }
-
-                    in.close();
-                }
-
-                // informs the user about an updated version of the tool, unless the user
-                // is running a beta version
-                if (deprecatedOrDeleted && currentVersion.lastIndexOf("beta") == -1
-                        && currentVersion.lastIndexOf("${version}") == -1) {
-                    int option = JOptionPane.showConfirmDialog(null,
-                            "A newer version of " + toolName + " is available.\n"
-                            + "Do you want to upgrade?",
-                            "Upgrade Available",
-                            JOptionPane.YES_NO_CANCEL_OPTION);
-                    if (option == JOptionPane.YES_OPTION) {
-                        BareBonesBrowserLaunch.openURL("http://" + googleCodeToolName + ".googlecode.com/");
-                        if (closeToolWhenUpgrading) {
-                            System.exit(0);
-                        }
-                    } else if (option == JOptionPane.CANCEL_OPTION || option == JOptionPane.CLOSED_OPTION) {
-                        if (closeToolWhenUpgrading) {
-                            System.exit(0);
-                        }
-                    }
-                }
-            }
-        } catch (UnknownHostException e) {
-            // ignore exception
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

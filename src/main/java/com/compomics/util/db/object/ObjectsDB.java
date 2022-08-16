@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.*;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import java.sql.*;
 import java.util.Map.Entry;
 import org.apache.commons.io.IOUtils;
@@ -90,6 +91,7 @@ public class ObjectsDB {
         }
 
         kryo = new Kryo();
+        //kryo.setDefaultSerializer(CompatibleFieldSerializer.class); // @TODO: add when breaking backwards compatibility anyway
         kryo.setRegistrationRequired(false);
 
         this.path = path;

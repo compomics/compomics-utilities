@@ -79,8 +79,19 @@ public class CompomicsWrapper {
      * @param mainClass the main class to execute, for example
      * eu.isas.peptideshaker.gui.PeptideShakerGUI
      */
-    public void launchTool(String toolName, File jarFile, String splashName, String mainClass) {
-        launchTool(toolName, jarFile, splashName, mainClass, null);
+    public void launchTool(
+            String toolName,
+            File jarFile,
+            String splashName,
+            String mainClass
+    ) {
+        launchTool(
+                toolName,
+                jarFile,
+                splashName,
+                mainClass,
+                null
+        );
     }
 
     /**
@@ -95,32 +106,56 @@ public class CompomicsWrapper {
      * eu.isas.peptideshaker.gui.PeptideShakerGUI
      * @param args the arguments to pass to the tool (ignored if null)
      */
-    public void launchTool(String toolName, File jarFile, String splashName, String mainClass, String[] args) {
+    public void launchTool(
+            String toolName,
+            File jarFile,
+            String splashName,
+            String mainClass,
+            String[] args
+    ) {
 
         BufferedWriter bw = null;
 
         try {
             try {
+
                 userParameters = UtilitiesUserParameters.loadUserParameters();
+
             } catch (Exception e) {
+
                 e.printStackTrace();
+
             }
 
             if (useStartUpLog) {
+
                 File folder = new File(jarFile.getParentFile(), "resources/conf");
+
                 if (!folder.exists()) {
+
                     String path = URLDecoder.decode(jarFile.getParentFile().getAbsolutePath(), "UTF-8");
                     folder = new File(path, "resources/conf");
+
                 }
+
                 if (!folder.exists()) {
+
                     if (folder.mkdirs()) {
+
                         copyDefaultJavaOptionsFile(folder);
+
                     } else {
+
                         throw new FileNotFoundException(folder.getAbsolutePath() + " not found!");
+
                     }
+
                 } else if (!new File(folder.getAbsolutePath(), "JavaOptions.txt").exists()) {
+
                     copyDefaultJavaOptionsFile(folder);
+
                 }
+
                 File debugOutput = new File(folder, "startup.log");
                 FileWriter fw = new FileWriter(debugOutput);
                 bw = new BufferedWriter(fw);
@@ -135,44 +170,60 @@ public class CompomicsWrapper {
                     );
 
                 }
+
                 bw.newLine();
+
             }
-            
-        
-        checkJavaVersion(toolName);
+
+            checkJavaVersion(toolName);
 
             try {
+
                 UtilitiesGUIDefaults.setLookAndFeel();
+
             } catch (FileNotFoundException e) {
+
                 e.printStackTrace();
 
                 // perhaps not the optimal way of catching this exitValue, but seems to work
                 JOptionPane.showMessageDialog(null,
                         "Seems like you are trying to start " + toolName + " from within a zip file!",
                         toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
+
             } catch (Exception e) {
+
                 e.printStackTrace();
+
             }
 
             launch(jarFile, splashName, mainClass, args, bw);
 
         } catch (Exception e) {
+
             e.printStackTrace();
+
             try {
+
                 if (useStartUpLog && bw != null) {
+
                     bw.write(e.getMessage());
                     bw.close();
+
                 }
+
                 JOptionPane.showMessageDialog(null,
                         "Failed to start " + toolName + ":" + System.getProperty("line.separator")
                         + e.getMessage(),
                         toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
+
             } catch (IOException ex) {
+
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null,
                         "Failed to start " + toolName + ":" + System.getProperty("line.separator")
                         + e.getMessage() + "\nCould not write to statup.log file",
                         toolName + " - Startup Failed", JOptionPane.ERROR_MESSAGE);
+
             }
         }
     }
@@ -190,7 +241,15 @@ public class CompomicsWrapper {
      *
      * @throws java.lang.Exception
      */
-    private void launch(File jarFile, String splashName, String mainClass, String[] args, BufferedWriter bw) throws UnsupportedEncodingException, FileNotFoundException, IOException {
+    private void launch(
+            File jarFile,
+            String splashName,
+            String mainClass,
+            String[] args,
+            BufferedWriter bw
+    ) throws UnsupportedEncodingException,
+            FileNotFoundException,
+            IOException {
 
         File confFolder = new File(jarFile.getParentFile(), "resources/conf");
 
@@ -200,17 +259,21 @@ public class CompomicsWrapper {
         // get the splash 
         String splashPath = null;
         if (splashName != null) {
+
             splashPath = "resources/conf" + File.separator + splashName;
 
             // set the correct slashes for the splash path
             if (System.getProperty("os.name").lastIndexOf("Windows") != -1) {
+
                 splashPath = splashPath.replace("/", "\\");
 
                 // remove the initial '\' at the start of the line 
                 if (splashPath.startsWith("\\") && !splashPath.startsWith("\\\\")) {
                     splashPath = splashPath.substring(1);
                 }
+
             }
+
         }
 
         String uniprotProxyClassPath = "";
@@ -218,6 +281,7 @@ public class CompomicsWrapper {
 
         // add the classpath for the uniprot proxy file
         if (proxySettingsFound) {
+
             uniprotProxyClassPath = confFolder.getAbsolutePath() + File.separator + "proxy";
 
             // set the correct slashes for the proxy path
@@ -228,6 +292,7 @@ public class CompomicsWrapper {
                 if (uniprotProxyClassPath.startsWith("\\") && !uniprotProxyClassPath.startsWith("\\\\")) {
                     uniprotProxyClassPath = uniprotProxyClassPath.substring(1);
                 }
+
             }
 
             uniprotProxyClassPath = ";" + quote + uniprotProxyClassPath + quote;
@@ -251,6 +316,7 @@ public class CompomicsWrapper {
 
         // get the java options
         ArrayList<String> optionsAsList = getJavaOptions(confFolder, bw);
+
         for (String currentOption : optionsAsList) {
             process_name_array.add(currentOption);
         }
@@ -263,6 +329,7 @@ public class CompomicsWrapper {
         if (uniprotProxyClassPath.trim().length() > 0) {
             classPath += uniprotProxyClassPath;
         }
+
         classPath += quote;
         process_name_array.add(classPath);
 
@@ -328,23 +395,33 @@ public class CompomicsWrapper {
 
                 // if needed, try re-launching with reduced memory settings
                 if (errorMessage.contains("could not create the java virtual machine") || inputMessage.contains("could not reserve enough space")) {
+
                     if (userParameters.getMemoryParameter() > 4 * 1024) {
+
                         userParameters.setMemoryParameter(userParameters.getMemoryParameter() / 2);
                         UtilitiesUserParameters.saveUserParameters(userParameters);
                         launch(jarFile, splashName, mainClass, args, bw);
+
                     } else if (userParameters.getMemoryParameter() > 2 * 1024) {
+
                         userParameters.setMemoryParameter(userParameters.getMemoryParameter() - 1024);
                         UtilitiesUserParameters.saveUserParameters(userParameters);
                         launch(jarFile, splashName, mainClass, args, bw);
+
                     } else if (userParameters.getMemoryParameter() > 1024) {
+
                         userParameters.setMemoryParameter(userParameters.getMemoryParameter() - 512);
                         UtilitiesUserParameters.saveUserParameters(userParameters);
                         launch(jarFile, splashName, mainClass, args, bw);
+
                     } else if (userParameters.getMemoryParameter() <= 1024) {
+
                         userParameters.setMemoryParameter(800); // one last desperate try!
                         UtilitiesUserParameters.saveUserParameters(userParameters);
                         launch(jarFile, splashName, mainClass, args, bw);
+
                     } else {
+
                         if (useStartUpLog) {
                             bw.write("Memory Limit: " + userParameters.getMemoryParameter() + System.getProperty("line.separator"));
                             bw.close();
@@ -357,16 +434,24 @@ public class CompomicsWrapper {
                                 "Startup Failed", JOptionPane.ERROR_MESSAGE);
 
                         System.exit(0);
+
                     }
-                } else if (errorMessage.toLowerCase().contains("cgcontextgetctm: invalid context") || errorMessage.toLowerCase().contains("cgcontextsetbasectm: invalid context")) {
+
+                } else if (errorMessage.toLowerCase().contains("cgcontextgetctm: invalid context")
+                        || errorMessage.toLowerCase().contains("cgcontextsetbasectm: invalid context")) {
+
                     System.out.println("Mac OS/Java error (can be ignored): " + errorMessage);
+
                 } else {
 
                     if (errorMessage.lastIndexOf("noclassdeffound") != -1) {
+
                         JOptionPane.showMessageDialog(null,
                                 "It seems like you are trying to start the tool from within a zip file!",
                                 "Startup Failed", JOptionPane.ERROR_MESSAGE);
+
                     } else {
+
                         System.out.println("Unknown error: " + errorMessage);
 
                         javax.swing.JOptionPane.showMessageDialog(null,
@@ -374,6 +459,7 @@ public class CompomicsWrapper {
                                         + "Inspect the log file for details: resources/conf/startup.log.<br><br>"
                                         + "Then go to <a href=\"https://compomics.github.io/projects/compomics-utilities/wiki/JavaTroubleShooting.html\">Java TroubleShooting</a>."),
                                 "Startup Error", JOptionPane.ERROR_MESSAGE);
+
                     }
 
                     if (useStartUpLog) {
@@ -384,6 +470,7 @@ public class CompomicsWrapper {
 
                     System.exit(0);
                 }
+
             } else {
 
                 if (useStartUpLog && bw != null) {
@@ -392,6 +479,7 @@ public class CompomicsWrapper {
 
                 System.exit(0);
             }
+
         } catch (Throwable t) {
 
             if (useStartUpLog && bw != null) {
@@ -419,12 +507,14 @@ public class CompomicsWrapper {
         toolName = toolName + "-";
 
         if (path.lastIndexOf("/" + toolName) != -1) {
+
             // remove starting 'file:' tag if there
             if (path.startsWith("file:")) {
                 path = path.substring("file:".length(), path.lastIndexOf("/" + toolName));
             } else {
                 path = path.substring(0, path.lastIndexOf("/" + toolName));
             }
+
             path = path.replace("%20", " ");
             path = path.replace("%5b", "[");
             path = path.replace("%5d", "]");
@@ -432,20 +522,24 @@ public class CompomicsWrapper {
             if (System.getProperty("os.name").lastIndexOf("Windows") != -1) {
                 path = path.replace("/", "\\");
             }
+
         } else {
             path = ".";
         }
 
         // try to decode the path to fix any special characters
         try {
+
             if (!new File(path).exists()) {
                 path = URLDecoder.decode(path, "UTF-8");
             }
+
             if (!new File(path).exists()) {
                 System.out.println(path + " not found!");
                 FileNotFoundException ex = new FileNotFoundException(path + " not found!");
                 ex.printStackTrace();
             }
+
         } catch (UnsupportedEncodingException ex) {
             System.out.println("Error reading file " + path + "!");
             ex.printStackTrace();
@@ -483,8 +577,13 @@ public class CompomicsWrapper {
             JLabel label = new JLabel();
 
             // html content 
-            JEditorPane ep = new JEditorPane("text/html", "<html><body bgcolor=\"#" + Util.color2Hex(label.getBackground()) + "\">"
-                    + "Running with java version " + javaVersion + ", " + toolName + " works best with Java >= 11.<br><br>"
+            JEditorPane ep = new JEditorPane(
+                    "text/html", "<html><body bgcolor=\"#"
+                    + Util.color2Hex(label.getBackground()) + "\">"
+                    + "Running with java version "
+                    + javaVersion
+                    + ", "
+                    + toolName + " works best with Java >= 11.<br><br>"
                     + "See <a href=\"https://compomics.github.io/projects/compomics-utilities/wiki/JavaTroubleShooting.html\">Java Troubleshooting</a> for more details."
                     + "</body></html>");
 
@@ -501,7 +600,12 @@ public class CompomicsWrapper {
             ep.setBorder(null);
             ep.setEditable(false);
 
-            JOptionPane.showMessageDialog(null, ep, "Update Java?", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    null,
+                    ep,
+                    "Update Java?",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
 
         }
 
@@ -511,8 +615,15 @@ public class CompomicsWrapper {
             JLabel label = new JLabel();
 
             // html content 
-            JEditorPane ep = new JEditorPane("text/html", "<html><body bgcolor=\"#" + Util.color2Hex(label.getBackground()) + "\">"
-                    + "Running with java version " + javaVersion + ", issues with Java 17 have been reported when using " + toolName + ", we recommend updating to Java 18.<br><br>"
+            JEditorPane ep = new JEditorPane(
+                    "text/html", "<html><body bgcolor=\"#"
+                    + Util.color2Hex(label.getBackground())
+                    + "\">"
+                    + "Running with java version "
+                    + javaVersion
+                    + ", issues with Java 17 have been reported when using "
+                    + toolName
+                    + ", we recommend updating to Java 18.<br><br>"
                     + "See <a href=\"https://compomics.github.io/projects/compomics-utilities/wiki/JavaTroubleShooting.html\">Java Troubleshooting</a> for more details."
                     + "</body></html>");
 
@@ -533,7 +644,7 @@ public class CompomicsWrapper {
 
         }
 
-        // Check for 64 bit
+        // check for 64 bit
         String arch = System.getProperty("os.arch");
 
         if (arch.endsWith("x86")) {
@@ -542,8 +653,12 @@ public class CompomicsWrapper {
             JLabel label = new JLabel();
 
             // html content 
-            JEditorPane ep = new JEditorPane("text/html", "<html><body bgcolor=\"#" + Util.color2Hex(label.getBackground()) + "\">"
-                    + toolName + " works best with Java 64 bit.<br><br>"
+            JEditorPane ep = new JEditorPane(
+                    "text/html", "<html><body bgcolor=\"#"
+                    + Util.color2Hex(label.getBackground())
+                    + "\">"
+                    + toolName
+                    + " works best with Java 64 bit.<br><br>"
                     + "See <a href=\"https://compomics.github.io/projects/compomics-utilities/wiki/JavaTroubleShooting.html\">Java Troubleshooting</a> for more details."
                     + "</body></html>");
 
@@ -560,7 +675,12 @@ public class CompomicsWrapper {
             ep.setBorder(null);
             ep.setEditable(false);
 
-            JOptionPane.showMessageDialog(null, ep, "Java 64 Bit?", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    null,
+                    ep,
+                    "Java 64 Bit?",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
         }
     }
 
@@ -583,35 +703,53 @@ public class CompomicsWrapper {
      * is canceled by the user before it has started or when the update is done
      * @return true if a new version is to be downloaded
      */
-    public static boolean checkForNewDeployedVersion(final String toolName, final MavenJarFile oldMavenJarFile, final URL jarRepository, final String iconName,
-            final boolean deleteOldFiles, final boolean startDownloadedVersion, final boolean addDesktopIcon, Image normalIcon, Image waitingIcon,
-            final boolean exitJavaOnCancel) {
+    public static boolean checkForNewDeployedVersion(
+            final String toolName,
+            final MavenJarFile oldMavenJarFile,
+            final URL jarRepository,
+            final String iconName,
+            final boolean deleteOldFiles,
+            final boolean startDownloadedVersion,
+            final boolean addDesktopIcon,
+            Image normalIcon,
+            Image waitingIcon,
+            final boolean exitJavaOnCancel
+    ) {
 
         boolean update = false;
 
         try {
             // check if a new version is available
             if (WebDAO.newVersionReleased(oldMavenJarFile, jarRepository)) {
+
                 int option = JOptionPane.showConfirmDialog(null,
                         "A newer version of " + toolName + " is available.\n"
                         + "Do you want to update?",
                         "Update Available",
                         JOptionPane.YES_NO_CANCEL_OPTION);
+
                 if (option == JOptionPane.YES_OPTION) {
+
                     update = true;
+
                 } else if (option == JOptionPane.CANCEL_OPTION || option == JOptionPane.CLOSED_OPTION) {
+
                     if (exitJavaOnCancel) {
                         System.exit(0);
                     }
+
                 }
             }
 
             // download the new version
             if (update) {
-                progressDialog = new ProgressDialogX(new JFrame(),
+
+                progressDialog = new ProgressDialogX(
+                        new JFrame(),
                         normalIcon,
                         waitingIcon,
-                        true);
+                        true
+                );
                 progressDialog.setPrimaryProgressCounterIndeterminate(true);
                 progressDialog.setTitle("Updating " + toolName + ". Please Wait...");
 
@@ -629,8 +767,19 @@ public class CompomicsWrapper {
                     @Override
                     public void run() {
                         try {
-                            downloadLatestZipFromRepo(oldMavenJarFile.getJarPath().toURL(), toolName, deleteOldFiles,
-                                    iconName, null, jarRepository, startDownloadedVersion, addDesktopIcon, progressDialog);
+
+                            downloadLatestZipFromRepo(
+                                    oldMavenJarFile.getJarPath().toURL(),
+                                    toolName,
+                                    deleteOldFiles,
+                                    iconName,
+                                    null,
+                                    jarRepository,
+                                    startDownloadedVersion,
+                                    addDesktopIcon,
+                                    progressDialog
+                            );
+
                             if (!progressDialog.isRunFinished()) {
                                 progressDialog.setRunFinished();
                             }
@@ -645,20 +794,28 @@ public class CompomicsWrapper {
                             if (exitJavaOnCancel) {
                                 System.exit(0);
                             }
+
                         } catch (Exception e) {
                             e.printStackTrace();
                             if (!progressDialog.isRunFinished()) {
                                 progressDialog.setRunFinished();
                             }
-                            JOptionPane.showMessageDialog(null,
-                                    "An error occured when trying to update " + toolName + ":\n"
+                            JOptionPane.showMessageDialog(
+                                    null,
+                                    "An error occured when trying to update "
+                                    + toolName
+                                    + ":\n"
                                     + e.getMessage(),
-                                    "Update Failed", JOptionPane.WARNING_MESSAGE);
+                                    "Update Failed",
+                                    JOptionPane.WARNING_MESSAGE
+                            );
+
                             System.exit(0);
                         }
                     }
                 }.start();
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (XMLStreamException e) {
@@ -687,17 +844,30 @@ public class CompomicsWrapper {
      * is canceled by the user before it has started or when the update is done
      * @return true if a new version is to be downloaded
      */
-    public static boolean downloadLatestVersion(final String toolName, final String groupId, final String artifactId, final File downloadFolder, final URL jarRepository, final String iconName,
-            final boolean startDownloadedVersion, final boolean addDesktopIcon, Image normalIcon, Image waitingIcon,
-            final boolean exitJavaOnCancel) {
+    public static boolean downloadLatestVersion(
+            final String toolName,
+            final String groupId,
+            final String artifactId,
+            final File downloadFolder,
+            final URL jarRepository,
+            final String iconName,
+            final boolean startDownloadedVersion,
+            final boolean addDesktopIcon,
+            Image normalIcon,
+            Image waitingIcon,
+            final boolean exitJavaOnCancel
+    ) {
 
         boolean update = false;
 
         // download the latest version
-        progressDialog = new ProgressDialogX(new JFrame(),
+        progressDialog = new ProgressDialogX(
+                new JFrame(),
                 normalIcon,
                 waitingIcon,
-                true);
+                true
+        );
+
         progressDialog.setPrimaryProgressCounterIndeterminate(true);
         progressDialog.setTitle("Downloading " + toolName + ". Please Wait...");
 
@@ -715,14 +885,27 @@ public class CompomicsWrapper {
             @Override
             public void run() {
                 try {
-                    downloadLatestZipFromRepo(downloadFolder, toolName, groupId, artifactId, iconName,
-                            null, jarRepository, startDownloadedVersion, addDesktopIcon, new GUIFileDAO(), progressDialog);
+                    downloadLatestZipFromRepo(
+                            downloadFolder,
+                            toolName,
+                            groupId,
+                            artifactId,
+                            iconName,
+                            null,
+                            jarRepository,
+                            startDownloadedVersion,
+                            addDesktopIcon,
+                            new GUIFileDAO(),
+                            progressDialog
+                    );
+
                     if (!progressDialog.isRunFinished()) {
                         progressDialog.setRunFinished();
                     }
                     if (exitJavaOnCancel) {
                         System.exit(0);
                     }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (URISyntaxException e) {
@@ -731,6 +914,7 @@ public class CompomicsWrapper {
                     e.printStackTrace();
                 }
             }
+
         }.start();
 
         return update;
@@ -784,7 +968,10 @@ public class CompomicsWrapper {
      * @return the options to the Java Virtual Machine
      * @throws IOException
      */
-    private ArrayList<String> getJavaOptions(File confFolder, BufferedWriter bw) throws IOException {
+    private ArrayList<String> getJavaOptions(
+            File confFolder,
+            BufferedWriter bw
+    ) throws IOException {
 
         try {
             userParameters = UtilitiesUserParameters.loadUserParameters();
@@ -808,31 +995,52 @@ public class CompomicsWrapper {
                 String currentOption = b.readLine();
 
                 while (currentOption != null) {
+
                     if (currentOption.startsWith("-Xmx")) {
+
                         if (firstTry) {
+
                             currentOption = currentOption.substring(4, currentOption.length() - 1); // @TODO: what about GB, e.g., 6G..?
                             boolean input = false;
+
                             for (char c : currentOption.toCharArray()) {
                                 if (c != '*') {
                                     input = true;
                                     break;
                                 }
                             }
+
                             if (input) {
+
                                 try {
                                     userParameters.setMemoryParameter(Integer.valueOf(currentOption));
                                     UtilitiesUserParameters.saveUserParameters(userParameters);
+
                                     if (bw != null) {
-                                        bw.write("New memory setting saved: " + userParameters.getMemoryParameter() + System.getProperty("line.separator"));
+                                        bw.write(
+                                                "New memory setting saved: "
+                                                + userParameters.getMemoryParameter()
+                                                + System.getProperty("line.separator")
+                                        );
                                     }
+
                                 } catch (Exception e) {
-                                    javax.swing.JOptionPane.showMessageDialog(null,
-                                            "Could not parse the memory setting: " + currentOption
-                                            + ". The value was reset to" + userParameters.getMemoryParameter() + ".",
-                                            "Wrong memory settings", JOptionPane.WARNING_MESSAGE);
+
+                                    javax.swing.JOptionPane.showMessageDialog(
+                                            null,
+                                            "Could not parse the memory setting: "
+                                            + currentOption
+                                            + ". The value was reset to"
+                                            + userParameters.getMemoryParameter()
+                                            + ".",
+                                            "Wrong memory settings",
+                                            JOptionPane.WARNING_MESSAGE
+                                    );
+
                                 }
                             }
                         }
+
                     } else if (!currentOption.startsWith("#")) {
 
                         // extract the proxy settings as these are needed for uniprotjapi.properties
@@ -860,11 +1068,13 @@ public class CompomicsWrapper {
 
                 // create the uniprot japi proxy settings file
                 if (proxySettingsFound) {
+
                     FileWriter uniprotProxyWriter = new FileWriter(uniprotApiPropertiesFile);
                     BufferedWriter uniprotProxyBufferedWriter = new BufferedWriter(uniprotProxyWriter);
                     uniprotProxyBufferedWriter.write(uniprotApiProperties);
                     uniprotProxyBufferedWriter.close();
                     uniprotProxyWriter.close();
+
                 }
 
                 b.close();
@@ -873,19 +1083,25 @@ public class CompomicsWrapper {
                 options.add("-Xmx" + userParameters.getMemoryParameter() + "M"); // @TODO: should also support GB?
 
             } catch (FileNotFoundException ex) {
+
                 ex.printStackTrace();
                 if (bw != null) {
                     bw.write(ex.getMessage());
                 }
+
             } catch (IOException ex) {
+
                 ex.printStackTrace();
                 if (bw != null) {
                     bw.write(ex.getMessage());
                 }
+
             }
         } else {
+
             options.add("-Xms128M");
             options.add("-Xmx1024M");
+
         }
 
         return options;
@@ -900,7 +1116,10 @@ public class CompomicsWrapper {
      * @return the Java home
      * @throws IOException
      */
-    private String getJavaHome(File confFolder, BufferedWriter bw) throws IOException {
+    private String getJavaHome(
+            File confFolder,
+            BufferedWriter bw)
+            throws IOException {
 
         boolean usingStandardJavaHome = true;
 
@@ -925,30 +1144,58 @@ public class CompomicsWrapper {
 
                 if (new File(tempLocation).exists()
                         && (new File(tempLocation, "java.exe").exists() || new File(tempLocation, "java").exists())) {
+
                     javaHome = tempLocation;
                     usingStandardJavaHome = false;
+
                 } else if (firstTry) {
-                    JOptionPane.showMessageDialog(null, "Non-standard Java home location not found.\n"
-                            + "Using default Java home.", "Java Home Not Found!", JOptionPane.WARNING_MESSAGE);
+
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Non-standard Java home location not found.\n"
+                            + "Using default Java home.",
+                            "Java Home Not Found!",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+
                 }
 
                 b.close();
                 f.close();
 
             } catch (FileNotFoundException ex) {
+
                 if (firstTry) {
+
                     ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Non-standard Java home location not found.\n"
-                            + "Using default Java home", "Java Home Not Found!", JOptionPane.WARNING_MESSAGE);
+
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Non-standard Java home location not found.\n"
+                            + "Using default Java home",
+                            "Java Home Not Found!",
+                            JOptionPane.WARNING_MESSAGE
+                    );
                 }
+
             } catch (IOException ex) {
+
                 if (firstTry) {
+
                     ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "Error when reading non-standard Java home location.\n"
-                            + "Using default Java home.", "Java Home Error", JOptionPane.WARNING_MESSAGE);
+
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Error when reading non-standard Java home location.\n"
+                            + "Using default Java home.",
+                            "Java Home Error",
+                            JOptionPane.WARNING_MESSAGE
+                    );
                 }
+
             }
         } else {
+
             try {
                 userParameters = UtilitiesUserParameters.loadUserParameters();
             } catch (Exception e) {
@@ -956,8 +1203,10 @@ public class CompomicsWrapper {
             }
 
             // see if the user has set the java home via the gui
-            if (userParameters.getJavaHome() != null && new File(userParameters.getJavaHome()).exists()
-                    && (new File(userParameters.getJavaHome(), "java.exe").exists() || new File(userParameters.getJavaHome(), "java").exists())) {
+            if (userParameters.getJavaHome() != null
+                    && new File(userParameters.getJavaHome()).exists()
+                    && (new File(userParameters.getJavaHome(), "java.exe").exists()
+                    || new File(userParameters.getJavaHome(), "java").exists())) {
                 javaHome = userParameters.getJavaHome();
                 usingStandardJavaHome = false;
             }
@@ -969,7 +1218,8 @@ public class CompomicsWrapper {
 
         // @TODO: should rather run java -version!!!
         // try to force the use of 64 bit Java if available
-        if (usingStandardJavaHome && javaHome.lastIndexOf(" (x86)") != -1 && System.getProperty("os.name").lastIndexOf("Windows") != -1) {
+        if (usingStandardJavaHome && javaHome.lastIndexOf(" (x86)") != -1
+                && System.getProperty("os.name").lastIndexOf("Windows") != -1) {
 
             // @TODO: add similar tests for Mac and Linux...
             // default java 32 bit windows home looks like this:    C:\Program Files (x86)\Java\jre6\bin\javaw.exe
@@ -1064,12 +1314,14 @@ public class CompomicsWrapper {
      * @throws IOException if an IOException occurs
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
-    public ArrayList<String> getJavaHomeAndOptions(String toolPath) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public ArrayList<String> getJavaHomeAndOptions(String toolPath)
+            throws FileNotFoundException, IOException, ClassNotFoundException {
 
         ArrayList<String> javaHomeAndOptions = new ArrayList<>();
 
         CompomicsWrapper wrapper = new CompomicsWrapper();
         File confFolder = new File(new File(toolPath).getParentFile(), "resources/conf");
+
         if (!confFolder.exists()) {
             String path = URLDecoder.decode(new File(toolPath).getParentFile().getAbsolutePath(), "UTF-8");
             confFolder = new File(path, "resources/conf");

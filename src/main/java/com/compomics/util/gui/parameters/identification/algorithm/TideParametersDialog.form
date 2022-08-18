@@ -66,9 +66,9 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="tabbedPane" pref="473" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="tabbedPane" min="-2" pref="491" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="openDialogHelpJButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="advancedSettingsWarningLabel" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -173,9 +173,13 @@
                                   <Component id="decoyFormatCombo" min="-2" pref="200" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="maxPtmsLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="maxPtmsTxt" linkSize="13" pref="200" max="32767" attributes="2"/>
+                                  <Component id="variablePtmsPerPeptideLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                                  <Component id="minPtmsPerPeptideTxt" min="-2" pref="77" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="variablePtmsPerPeptideDividerLabel" min="-2" pref="39" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="maxPtmsPerPeptideTxt" min="-2" pref="71" max="-2" attributes="2"/>
                               </Group>
                               <Component id="removeMethionineLabel" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
@@ -190,7 +194,7 @@
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace min="0" pref="25" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="28" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -222,9 +226,15 @@
                               <Component id="removeMethionineCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="maxPtmsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="maxPtmsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                  <Component id="minPtmsPerPeptideTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="variablePtmsPerPeptideDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="variablePtmsPerPeptideLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="maxPtmsPerPeptideTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -256,12 +266,12 @@
                               <Component id="decoySeedLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="decoySeedTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="removeTempFoldersLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="removeTempFoldersCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="102" max="32767" attributes="0"/>
+                          <EmptySpace pref="48" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -356,17 +366,17 @@
                     <Property name="selectedIndex" type="int" value="1"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="maxPtmsLabel">
+                <Component class="javax.swing.JLabel" name="variablePtmsPerPeptideLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Max Variable PTMs per Peptide"/>
+                    <Property name="text" type="java.lang.String" value="Variable PTMs per Peptide"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="maxPtmsTxt">
+                <Component class="javax.swing.JTextField" name="maxPtmsPerPeptideTxt">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxPtmsTxtKeyReleased"/>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxPtmsPerPeptideTxtKeyReleased"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="decoyformatLabel">
@@ -476,6 +486,22 @@
                         <StringItem index="1" value="No"/>
                       </StringArray>
                     </Property>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="minPtmsPerPeptideTxt">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="text" type="java.lang.String" value="0"/>
+                    <Property name="enabled" type="boolean" value="false"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minPtmsPerPeptideTxtKeyReleased"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="variablePtmsPerPeptideDividerLabel">
+                  <Properties>
+                    <Property name="horizontalAlignment" type="int" value="0"/>
+                    <Property name="text" type="java.lang.String" value="-"/>
                   </Properties>
                 </Component>
               </SubComponents>
@@ -657,7 +683,7 @@
                               <Component id="outputFormatLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="outputFormatCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="88" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>

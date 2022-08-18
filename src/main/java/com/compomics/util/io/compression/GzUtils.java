@@ -34,7 +34,7 @@ public class GzUtils {
     public static final String GZ_EXTENSION = ".gz";
 
     /**
-     * Gzip a file.If the gz file already exists it will be silently
+     * Gzip a file. If the gz file already exists it will be silently
      * overwritten.
      *
      * @param file the file to read
@@ -44,6 +44,11 @@ public class GzUtils {
             File file,
             boolean remove
     ) {
+
+        // if already gzipped, the file will be unchanged
+        if (file.getAbsolutePath().endsWith(GZ_EXTENSION)) {
+            return;
+        }
 
         File gzFile = new File(file.getAbsoluteFile() + GZ_EXTENSION);
 
@@ -56,7 +61,7 @@ public class GzUtils {
     }
 
     /**
-     * Gzip a file.If the gz file already exists it will be silently
+     * Gzip a file. If the gz file already exists it will be silently
      * overwritten.
      *
      * @param file the file to read
@@ -95,6 +100,7 @@ public class GzUtils {
                 file.delete();
 
             }
+
         } catch (IOException e) {
 
             throw new RuntimeException(e);

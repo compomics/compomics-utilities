@@ -51,7 +51,7 @@ public enum PsIdentificationAlgorithmMatchesFeature implements ExportFeature {
     spectrum_charge("Measured Charge", "The charge as given in the spectrum file.", false),
     @SerializedName("PsIdentificationAlgorithmMatchesFeature.precursor_intensity")
     precursor_intensity("Precursor Intensity", "The precursor intensity as given in the spectrum file", false),
-    @SerializedName("PsIdentificationAlgorithmMatchesFeaturetotal_spectrum_intensity.")
+    @SerializedName("PsIdentificationAlgorithmMatchesFeature.total_spectrum_intensity.")
     total_spectrum_intensity("Total Spectrum Intensity", "The summed intensity of all peaks in the spectrum.", true),
     @SerializedName("PsIdentificationAlgorithmMatchesFeature.intensity_coverage")
     intensity_coverage("Intensity Coverage [%]", "Annotated share of the total spectrum intensity.", true),

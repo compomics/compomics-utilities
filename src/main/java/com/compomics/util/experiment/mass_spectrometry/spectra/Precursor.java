@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class Precursor extends ExperimentObject {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public Precursor() {
 
@@ -112,7 +112,7 @@ public class Precursor extends ExperimentObject {
      * @return the retention time in minutes
      */
     public double getRtInMinutes() {
-        
+
         return rt / 60;
     }
 
@@ -122,8 +122,6 @@ public class Precursor extends ExperimentObject {
      * @return the possible charges as a string
      */
     public String getPossibleChargesAsString() {
-
-        
 
         return Arrays.stream(possibleCharges)
                 .mapToObj(
@@ -144,7 +142,6 @@ public class Precursor extends ExperimentObject {
             int chargeValue
     ) {
 
-        
         return mz * chargeValue - chargeValue * ElementaryIon.proton.getTheoreticMass();
 
     }

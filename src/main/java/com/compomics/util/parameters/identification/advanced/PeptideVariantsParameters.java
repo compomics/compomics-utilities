@@ -201,35 +201,35 @@ public class PeptideVariantsParameters extends ExperimentObject {
     }
 
     /**
-     * Indicates whether another peptide variant preferences is the same as this
+     * Indicates whether another peptide variant parameters is the same as this
      * one.
      *
-     * @param peptideVariantsPreferences the other preferences
+     * @param peptideVariantsParameters the other parameters
      *
-     * @return whether another peptide variant preferences is the same as this
+     * @return whether another peptide variant parameters is the same as this
      * one
      */
-    public boolean isSameAs(PeptideVariantsParameters peptideVariantsPreferences) {
+    public boolean isSameAs(PeptideVariantsParameters peptideVariantsParameters) {
         
-        if (nAaDeletions != peptideVariantsPreferences.getnAaDeletions()) {
+        if (nAaDeletions != peptideVariantsParameters.getnAaDeletions()) {
             return false;
         }
-        if (nAaInsertions != peptideVariantsPreferences.getnAaInsertions()) {
+        if (nAaInsertions != peptideVariantsParameters.getnAaInsertions()) {
             return false;
         }
-        if (nAaSubstitutions != peptideVariantsPreferences.getnAaSubstitutions()) {
+        if (nAaSubstitutions != peptideVariantsParameters.getnAaSubstitutions()) {
             return false;
         }
-        if (nAaSwap != peptideVariantsPreferences.getnAaSwap()) {
+        if (nAaSwap != peptideVariantsParameters.getnAaSwap()) {
             return false;
         }
-        if (variantType != peptideVariantsPreferences.getVariantType()) {
+        if (variantType != peptideVariantsParameters.getVariantType()) {
             return false;
         }
-        if (nVariants != peptideVariantsPreferences.getnVariants()) {
+        if (nVariants != peptideVariantsParameters.getnVariants()) {
             return false;
         }
-        return aaSubstitutionMatrix.isSameAs(peptideVariantsPreferences.getAaSubstitutionMatrix());
+        return aaSubstitutionMatrix.isSameAs(peptideVariantsParameters.getAaSubstitutionMatrix());
     }
 
     /**
@@ -257,16 +257,16 @@ public class PeptideVariantsParameters extends ExperimentObject {
     }
 
     /**
-     * Returns the preferences corresponding to no variants allowed.
+     * Returns the parameters corresponding to no variants allowed.
      *
-     * @return the preferences corresponding to no variants allowed
+     * @return the parameters corresponding to no variants allowed
      */
-    public static PeptideVariantsParameters getNoVariantPreferences() {
-        PeptideVariantsParameters peptideVariantsPreferences = new PeptideVariantsParameters();
-        peptideVariantsPreferences.setnVariants(0);
-        peptideVariantsPreferences.setVatiantType(VariantType.NO_VARIANT);
-        peptideVariantsPreferences.setAaSubstitutionMatrix(AaSubstitutionMatrix.noSubstitution);
-        return peptideVariantsPreferences;
+    public static PeptideVariantsParameters getNoVariantParameters() {
+        PeptideVariantsParameters peptideVariantsParameters = new PeptideVariantsParameters();
+        peptideVariantsParameters.setnVariants(0);
+        peptideVariantsParameters.setVatiantType(VariantType.NO_VARIANT);
+        peptideVariantsParameters.setAaSubstitutionMatrix(AaSubstitutionMatrix.noSubstitution);
+        return peptideVariantsParameters;
     }
     
     

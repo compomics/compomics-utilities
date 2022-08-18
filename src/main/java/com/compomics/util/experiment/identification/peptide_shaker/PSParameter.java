@@ -140,8 +140,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public double getProbability() {
 
-        
-
         return probability;
 
     }
@@ -153,15 +151,11 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public void setProbability(double probability) {
 
-        
-
         this.probability = probability;
 
     }
 
     public void setGroupClass(int groupClass) {
-
-        
 
         this.proteinInferenceGroupClass = groupClass;
 
@@ -173,8 +167,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return the score
      */
     public double getScore() {
-
-        
 
         return score;
 
@@ -198,8 +190,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public void setScore(double score) {
 
-        
-
         this.score = score;
 
     }
@@ -210,8 +200,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return the confidence
      */
     public double getConfidence() {
-
-        
 
         double confidence = 100.0 * (1 - probability);
 
@@ -230,8 +218,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public Double getAlgorithmDeltaPEP() {
 
-        
-
         return algorithmDeltaPEP;
 
     }
@@ -246,8 +232,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * search engine
      */
     public void setAlgorithmDeltaPEP(double deltaPEP) {
-
-        
 
         this.algorithmDeltaPEP = deltaPEP;
 
@@ -264,8 +248,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public double getDeltaPEP() {
 
-        
-
         return deltaPEP;
 
     }
@@ -281,8 +263,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public void setDeltaPEP(double deltaPEP) {
 
-        
-
         this.deltaPEP = deltaPEP;
 
     }
@@ -293,8 +273,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @param qcFilters the qc filters
      */
     public void setQcFilters(HashMap<String, Boolean> qcFilters) {
-
-        
 
         this.qcFilters = qcFilters;
 
@@ -307,8 +285,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public MatchValidationLevel getMatchValidationLevel() {
 
-        
-
         return matchValidationLevel;
 
     }
@@ -319,8 +295,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @param matchValidationLevel the validation level of the match
      */
     public void setMatchValidationLevel(MatchValidationLevel matchValidationLevel) {
-
-        
 
         this.matchValidationLevel = matchValidationLevel;
 
@@ -333,8 +307,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public void setHidden(boolean hidden) {
 
-        
-
         this.hidden = hidden;
 
     }
@@ -345,8 +317,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return boolean indicating whether a match is hidden or not
      */
     public boolean getHidden() {
-
-        
 
         return hidden;
 
@@ -359,8 +329,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public void setStarred(boolean starred) {
 
-        
-
         this.starred = starred;
 
     }
@@ -371,8 +339,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return boolean indicating whether a match is starred or not
      */
     public boolean getStarred() {
-
-        
 
         return starred;
 
@@ -385,8 +351,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public int getProteinInferenceGroupClass() {
 
-        
-
         return proteinInferenceGroupClass;
 
     }
@@ -398,8 +362,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return the group class description
      */
     public String getProteinInferenceClassAsString() {
-
-        
 
         return getProteinInferenceClassAsString(proteinInferenceGroupClass);
 
@@ -448,8 +410,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public void setProteinInferenceClass(int groupClass) {
 
-        
-
         this.proteinInferenceGroupClass = groupClass;
 
     }
@@ -460,8 +420,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return the number of validated peptides per fraction
      */
     public HashMap<String, Integer> getValidatedPeptidesPerFraction() {
-
-        
 
         return validatedPeptidesPerFraction;
 
@@ -474,8 +432,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public HashMap<String, Integer> getValidatedSpectraPerFraction() {
 
-        
-
         return validatedSpectraPerFraction;
     }
 
@@ -486,8 +442,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @param confidence the confidence
      */
     public void setFractionScore(String fraction, double confidence) {
-
-        
 
         if (fractionScore == null) {
 
@@ -506,8 +460,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public void setFractionScore(HashMap<String, Double> fractionScore) {
 
-        
-
         this.fractionScore = fractionScore;
 
     }
@@ -520,8 +472,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return the fraction score
      */
     public Double getFractionScore(String fraction) {
-
-        
 
         if (fractionScore == null) {
 
@@ -540,8 +490,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public Set<String> getFractions() {
 
-        
-
         return fractionScore == null ? null
                 : fractionScore.keySet();
 
@@ -553,8 +501,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return the fractions where this match was found
      */
     public HashMap<String, Double> getFractionScore() {
-
-        
 
         return fractionScore;
 
@@ -568,8 +514,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public void setFractionPEP(String fraction, Double confidence) {
 
-        
-
         if (fractionPEP == null) {
 
             fractionPEP = new HashMap<>(2);
@@ -581,8 +525,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
     }
 
     public void setFractionPEP(HashMap<String, Double> fractionPEP) {
-
-        
 
         this.fractionPEP = fractionPEP;
 
@@ -596,8 +538,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public Double getFractionPEP(String fraction) {
 
-        
-
         return fractionPEP == null ? null : fractionPEP.get(fraction);
 
     }
@@ -608,8 +548,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return the fraction pep map
      */
     public HashMap<String, Double> getFractionPEP() {
-
-        
 
         return fractionPEP;
 
@@ -623,8 +561,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return the fraction confidence
      */
     public Double getFractionConfidence(String fraction) {
-
-        
 
         return fractionPEP == null || fractionPEP.get(fraction) == null ? null
                 : 100 * (1 - fractionPEP.get(fraction));
@@ -641,8 +577,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public int getFractionValidatedPeptides(String fraction) {
 
-        
-
         return validatedPeptidesPerFraction == null || validatedPeptidesPerFraction.get(fraction) == null ? 0
                 : validatedPeptidesPerFraction.get(fraction);
 
@@ -655,8 +589,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * map
      */
     public void setValidatedPeptidesPerFraction(HashMap<String, Integer> validatedPeptidesPerFraction) {
-
-        
 
         this.validatedPeptidesPerFraction = validatedPeptidesPerFraction;
 
@@ -671,8 +603,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public Integer getFractionValidatedSpectra(String fraction) {
 
-        
-        
         return validatedSpectraPerFraction == null || validatedSpectraPerFraction.get(fraction) == null ? 0
                 : validatedSpectraPerFraction.get(fraction);
 
@@ -684,8 +614,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @param validatedSpectraPerFraction the validated spectra per fraction map
      */
     public void setValidatedSpectraPepFraction(HashMap<String, Integer> validatedSpectraPerFraction) {
-
-        
 
         this.validatedSpectraPerFraction = validatedSpectraPerFraction;
 
@@ -699,8 +627,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public ArrayList<Double> getPrecursorIntensityPerFraction(String fraction) {
 
-        
-
         return precursorIntensityPerFraction == null ? new ArrayList<>(0)
                 : precursorIntensityPerFraction.get(fraction);
 
@@ -712,8 +638,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return the precursor intensity per fraction map
      */
     public HashMap<String, ArrayList<Double>> getPrecursorIntensityPerFraction() {
-
-        
 
         return precursorIntensityPerFraction;
 
@@ -727,8 +651,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public void setPrecursorIntensityAveragePerFraction(HashMap<String, Double> precursorIntensityAveragePerFraction) {
 
-        
-
         this.precursorIntensityAveragePerFraction = precursorIntensityAveragePerFraction;
 
     }
@@ -741,8 +663,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public void setPrecursorIntensitySummedPerFraction(HashMap<String, Double> precursorIntensitySummedPerFraction) {
 
-        
-
         this.precursorIntensitySummedPerFraction = precursorIntensitySummedPerFraction;
 
     }
@@ -754,8 +674,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * fraction map
      */
     public void setPrecursorIntensityPerFraction(HashMap<String, ArrayList<Double>> precursorIntensityPerFraction) {
-
-        
 
         this.precursorIntensityPerFraction = precursorIntensityPerFraction;
 
@@ -801,8 +719,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public Double getPrecursorIntensityAveragePerFraction(String fraction) {
 
-        
-
         return precursorIntensityAveragePerFraction == null ? null
                 : precursorIntensityAveragePerFraction.get(fraction);
 
@@ -814,8 +730,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return the fraction precursor intensity average map
      */
     public HashMap<String, Double> getPrecursorIntensityAveragePerFraction() {
-
-        
 
         return precursorIntensityAveragePerFraction;
 
@@ -830,8 +744,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public Double getPrecursorIntensitySummedPerFraction(String fraction) {
 
-        
-
         return precursorIntensitySummedPerFraction == null ? null
                 : precursorIntensitySummedPerFraction.get(fraction);
 
@@ -843,8 +755,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return the fraction summed intensity map
      */
     public HashMap<String, Double> getPrecursorIntensitySummedPerFraction() {
-
-        
 
         return precursorIntensitySummedPerFraction;
 
@@ -858,8 +768,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public boolean getManualValidation() {
 
-        
-
         return manualValidation;
 
     }
@@ -872,8 +780,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public void setManualValidation(boolean manualValidation) {
 
-        
-
         this.manualValidation = manualValidation;
 
     }
@@ -885,8 +791,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @param validated boolean indicating whether the test was passed
      */
     public void setQcResult(String criterion, boolean validated) {
-
-        
 
         if (qcFilters == null) {
 
@@ -907,8 +811,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public Boolean isQcPassed(String criterion) {
 
-        
-
         return qcFilters == null ? null
                 : qcFilters.get(criterion);
 
@@ -921,8 +823,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public Set<String> getQcCriteria() {
 
-        
-
         return qcFilters == null ? new HashSet<>(0)
                 : qcFilters.keySet();
     }
@@ -934,8 +834,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public HashMap<String, Boolean> getQcFilters() {
 
-        
-
         return qcFilters;
 
     }
@@ -944,8 +842,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * Resets the results of the QC filters.
      */
     public void resetQcResults() {
-
-        
 
         if (qcFilters == null) {
 
@@ -966,8 +862,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public boolean hasQcFilters() {
 
-        
-
         return qcFilters != null && !qcFilters.isEmpty();
 
     }
@@ -979,8 +873,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @param score the value of the score
      */
     public void setIntermediateScore(Integer scoreId, Double score) {
-
-        
 
         if (intermediateScores == null) {
 
@@ -994,8 +886,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
 
     public void setIntermediateScores(HashMap<Integer, Double> intermediateScores) {
 
-        
-
         this.intermediateScores = intermediateScores;
 
     }
@@ -1004,8 +894,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * Instantiates the intermediate scores map if null.
      */
     public synchronized void createIntermediateScoreMap() {
-
-        
 
         if (intermediateScores == null) {
 
@@ -1023,8 +911,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      */
     public Double getIntermediateScore(int scoreId) {
 
-        
-
         return intermediateScores == null ? null
                 : intermediateScores.get(scoreId);
 
@@ -1036,8 +922,6 @@ public class PSParameter extends ExperimentObject implements UrParameter {
      * @return the intermediate scores map
      */
     public HashMap<Integer, Double> getIntermediateScores() {
-
-        
 
         return intermediateScores;
 

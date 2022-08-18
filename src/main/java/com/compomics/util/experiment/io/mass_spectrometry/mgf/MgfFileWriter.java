@@ -25,7 +25,7 @@ public class MgfFileWriter implements AutoCloseable {
     private final SimpleFileWriter writer;
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public MgfFileWriter() {
         writer = null;

@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
  * @author Marc Vaudel
  * @author Harald Barsnes
  */
-public class Ms2Exporter {
+public class Ms2Exporter implements AutoCloseable {
 
     /**
      * The file writer.
@@ -96,5 +96,10 @@ public class Ms2Exporter {
 
         writer.newLine();
 
+    }
+    
+    @Override
+    public void close() {
+        writer.close();
     }
 }

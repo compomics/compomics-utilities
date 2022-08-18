@@ -42,7 +42,7 @@ public class ModificationFactory implements ModificationProvider {
      * The name of the Modification factory back-up file. The version number
      * follows the one of utilities.
      */
-    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.1.json";
+    private static final String SERIALIZATION_FILE_NAME = "modificationFactory-5.0.42.json";
     /**
      * A map linking indexes with modifications.
      */
@@ -2120,7 +2120,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = null;
         modificationName = "TMT 6-plex of peptide N-term";
         modification = new Modification(
@@ -2152,7 +2152,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 6-plex of K";
         modification = new Modification(
@@ -2185,7 +2185,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 6-plex of K+4";
         modification = new Modification(
@@ -2217,7 +2217,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 6-plex of K+6";
         modification = new Modification(
@@ -2281,7 +2281,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = null;
         modificationName = "TMT 10-plex of peptide N-term";
         modification = new Modification(
@@ -2321,7 +2321,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 10-plex of K";
         modification = new Modification(
@@ -2362,7 +2362,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 10-plex of K+4";
         modification = new Modification(
@@ -2402,7 +2402,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 10-plex of K+6";
         modification = new Modification(
@@ -2482,7 +2482,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = null;
         modificationName = "TMT 11-plex of peptide N-term";
         modification = new Modification(
@@ -2524,7 +2524,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 11-plex of K";
         modification = new Modification(
@@ -2567,7 +2567,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 11-plex of K+4";
         modification = new Modification(
@@ -2608,7 +2608,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 2);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMT 11-plex of K+6";
         modification = new Modification(
@@ -2690,7 +2690,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = null;
         modificationName = "TMTpro of peptide N-term";
         modification = new Modification(
@@ -2728,7 +2728,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 1);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 2);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("K");
         modificationName = "TMTpro of K";
         modification = new Modification(
@@ -2764,7 +2764,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.C, 0), 16);
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "iodoTMT zero of C";
         modification = new Modification(
@@ -2786,7 +2786,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 3);
         atomChainAdded.append(new AtomImpl(Atom.N, 1), 1);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 3);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "iodoTMT 6-plex of C";
         modification = new Modification(
@@ -4358,7 +4358,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.Fe, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("C");
         modificationName = "Heme B of C";
         modification = new Modification(
@@ -4377,7 +4377,7 @@ public class ModificationFactory implements ModificationProvider {
         atomChainAdded.append(new AtomImpl(Atom.N, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.O, 0), 4);
         atomChainAdded.append(new AtomImpl(Atom.Fe, 0), 1);
-        atomChainRemoved = null;
+        atomChainRemoved = new AtomChain();
         aminoAcidPattern = AminoAcidPattern.getAminoAcidPatternFromString("H");
         modificationName = "Heme B of H";
         modification = new Modification(

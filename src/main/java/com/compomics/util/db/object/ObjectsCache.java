@@ -8,9 +8,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Output;
 import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -316,7 +315,6 @@ public class ObjectsCache {
 
                 HashSet<Long> keysInBackend = objectsDB.getKeysInBackend();
                 Set<Long> removeKeys = new HashSet<>();
-                Kryo kryo = objectsDB.kryo;
 
                 int i = 0;
 
@@ -339,21 +337,13 @@ public class ObjectsCache {
                     ObjectsCacheElement obj = loadedObjects.get(key);
                     obj.edited = false;
 
-                    // kryo
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    Output output = new Output(baos);
-                    kryo.writeObject(output, obj.object);
-                    output.close();
-                    byte[] barray = baos.toByteArray();
-                    baos.close();
-
                     // standard java serialization
-//                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//                    ObjectOutputStream out = new ObjectOutputStream(bos);
-//                    out.writeObject(obj.object);
-//                    out.flush();
-//                    byte[] barray = bos.toByteArray();
-//                    bos.close();
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    ObjectOutputStream out = new ObjectOutputStream(bos);
+                    out.writeObject(obj.object);
+                    out.flush();
+                    byte[] barray = bos.toByteArray();
+                    bos.close();
                     
                     if (obj.inDB) {
 

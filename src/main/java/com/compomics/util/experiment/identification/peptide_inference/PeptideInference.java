@@ -701,7 +701,7 @@ public class PeptideInference {
                     modificationMatch.setSite(newLocalization);
                     modificationMatch.setModification(candidateName);
                     PSModificationScores psmScores = (PSModificationScores) spectrumMatch.getUrParam(PSModificationScores.dummy);
-                    
+
                     psmScores.changeRepresentativeSite(
                             candidateName,
                             previousName,
@@ -710,8 +710,8 @@ public class PeptideInference {
                             nMod,
                             modificationProvider
                     );
-                    
-                    }
+
+                }
 
                 modificationMatch.setInferred(true);
 

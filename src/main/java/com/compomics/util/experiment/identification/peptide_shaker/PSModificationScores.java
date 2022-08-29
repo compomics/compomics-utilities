@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
@@ -267,7 +268,7 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
         TreeSet<Integer> representativeSites = new TreeSet<>();
         representativeSites.add(newRepresentativeSite);
 
-        HashMap<Integer, HashSet<String>> modificationSites = new HashMap<>(2);
+        TreeMap<Integer, HashSet<String>> modificationSites = new TreeMap<>();
 
         HashMap<Integer, HashMap<Integer, HashSet<String>>> newAmbiguousModificationsByRepresentativeSite = new HashMap<>(ambiguousModificationsByRepresentativeSite.size());
 
@@ -362,6 +363,17 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
             }
         }
 
+                        HashSet<String> tempMods = modificationSites.get(newRepresentativeSite);
+
+                        if (tempMods == null) {
+
+                            tempMods = new HashSet<>(1);
+                            modificationSites.put(newRepresentativeSite, tempMods);
+
+                        }
+
+                        tempMods.add(modName);
+
         ambiguousModificationsByRepresentativeSite = newAmbiguousModificationsByRepresentativeSite;
 
         // Add the new sites
@@ -379,7 +391,7 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
 
                 if (secondarySite < site) {
 
-                    if (siteI > 0 && secondarySite < sortedSelectedSites[siteI - 1] && site - secondarySite < sortedSelectedSites[siteI - 1] || siteI == 0) {
+                    if (siteI > 0 && site - secondarySite < secondarySite - sortedSelectedSites[siteI - 1] || siteI == 0) {
 
                         secondarySites.put(secondarySite, modificationSites.get(secondarySite));
 
@@ -387,7 +399,7 @@ public class PSModificationScores extends ExperimentObject implements UrParamete
 
                 } else if (secondarySite > site) {
 
-                    if (siteI < sortedSelectedSites.length - 1 && secondarySite < sortedSelectedSites[siteI + 1] && secondarySite - site <= sortedSelectedSites[siteI + 1] - secondarySite || siteI == sortedSelectedSites.length - 1) {
+                    if (siteI < sortedSelectedSites.length - 1 && secondarySite - site <= sortedSelectedSites[siteI + 1] - secondarySite || siteI == sortedSelectedSites.length - 1) {
 
                         secondarySites.put(secondarySite, modificationSites.get(secondarySite));
 

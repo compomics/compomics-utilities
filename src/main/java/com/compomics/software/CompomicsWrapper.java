@@ -569,7 +569,13 @@ public class CompomicsWrapper {
         // Check java version
         String javaVersion = System.getProperty("java.runtime.version");
 
-        int javaVersionNumber = Integer.parseInt(javaVersion.substring(0, javaVersion.indexOf(".")));
+        int javaVersionNumber;
+
+        if (javaVersion.contains(".")) {
+            javaVersionNumber = Integer.parseInt(javaVersion.substring(0, javaVersion.indexOf(".")));
+        } else {
+            javaVersionNumber = Integer.parseInt(javaVersion);
+        }
 
         if (javaVersionNumber < 11) {
 

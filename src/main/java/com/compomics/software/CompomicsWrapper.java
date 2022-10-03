@@ -573,6 +573,8 @@ public class CompomicsWrapper {
 
         if (javaVersion.contains(".")) {
             javaVersionNumber = Integer.parseInt(javaVersion.substring(0, javaVersion.indexOf(".")));
+        } else if (javaVersion.contains("+")) {
+            javaVersionNumber = Integer.parseInt(javaVersion.substring(0, javaVersion.indexOf("+")));
         } else {
             javaVersionNumber = Integer.parseInt(javaVersion);
         }

@@ -6,9 +6,9 @@ import java.util.Arrays;
  * Utility functions to work with arrays.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class ArrayUtil {
-    
 
     /**
      * Appends the second array to the first array.
@@ -20,18 +20,18 @@ public class ArrayUtil {
      * @return The concatenation of array1 and array2.
      */
     public static char[] concatenate(
-            char[] array1, 
+            char[] array1,
             char[] array2,
             int len2
     ) {
-        
+
         char[] result = new char[array1.length + len2];
-        
+
         System.arraycopy(array1, 0, result, 0, array1.length);
         System.arraycopy(array2, 0, result, array1.length, len2);
-        
+
         return result;
-    
+
     }
 
     /**
@@ -44,18 +44,18 @@ public class ArrayUtil {
      * @return The concatenation of array1 and array2.
      */
     public static double[] concatenate(
-            double[] array1, 
+            double[] array1,
             double[] array2,
             int len2
     ) {
-        
+
         double[] result = new double[array1.length + len2];
-        
+
         System.arraycopy(array1, 0, result, 0, array1.length);
         System.arraycopy(array2, 0, result, array1.length, len2);
-        
+
         return result;
-    
+
     }
 
     /**
@@ -123,44 +123,77 @@ public class ArrayUtil {
         return arrayUnique;
     }
 
-    
     /**
      * Scales the values using the reference value.
-     * 
+     *
      * @param values The values to scale.
      * @param refIntensity The reference value.
-     * 
+     *
      * @return The scaled values.
      */
     public static double[] scaleValues(
             double[] values,
             double refIntensity
     ) {
-        
+        return scaleValues(values, refIntensity, false);
+    }
+
+    /**
+     * Scales the values using the reference value.
+     *
+     * @param values The values to scale.
+     * @param refIntensity The reference value.
+     * @param percent If true, the values are returned in the [0-100] range.
+     *
+     * @return The scaled values.
+     */
+    public static double[] scaleValues(
+            double[] values,
+            double refIntensity,
+            boolean percent
+    ) {
+
         return Arrays.stream(values)
                 .map(
-                        value -> value / refIntensity
+                        value -> percent ? (value / refIntensity) * 100 : (value / refIntensity)
                 )
                 .toArray();
     }
-    
+
     /**
      * Scales the given values using the maximum value.
-     * 
+     *
      * @param values The values to scale.
-     * 
+     *
      * @return The given values scaled using the maximum value.
      */
     public static double[] scaleToMax(
             double[] values
     ) {
-        
+        return scaleToMax(values, false);
+    }
+
+    /**
+     * Scales the given values using the maximum value.
+     *
+     * @param values The values to scale.
+     * @param percent If true, the values are returned in the [0-100] range.
+     *
+     * @return The given values scaled using the maximum value.
+     */
+    public static double[] scaleToMax(
+            double[] values,
+            boolean percent
+    ) {
+
         double maxValue = Arrays.stream(values)
                 .max()
                 .orElse(1.0);
-        
-        return scaleValues(values, 
-                maxValue
+
+        return scaleValues(
+                values,
+                maxValue,
+                percent
         );
     }
 }

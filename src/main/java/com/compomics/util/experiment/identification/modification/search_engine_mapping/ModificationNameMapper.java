@@ -31,7 +31,7 @@ public class ModificationNameMapper {
     public static final double MOD_MASS_TOLERANCE = 0.01;
 
     /**
-     * Returns the possible modification names.
+     * Returns the possible modification names from a search engine modification indexed by site.
      *
      * @param peptide the peptide
      * @param modificationMatch the modification match

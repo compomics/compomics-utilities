@@ -500,6 +500,7 @@ public class Peptide extends ExperimentObject {
 
         setMass(-1.0);
         setKey(NO_KEY);
+        
     }
 
     /**

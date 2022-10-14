@@ -6,12 +6,18 @@ import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.modification.ModificationSiteMapping;
+import com.compomics.util.experiment.identification.modification.peptide_mapping.ModificationPeptideMapping;
+import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.parameters.identification.IdentificationParameters;
+import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map.Entry;
+import java.util.TreeSet;
 
 /**
  * Function attempting to map modification localization based on their type.
@@ -22,531 +28,186 @@ import java.util.HashMap;
 public class ModificationLocalizationMapper {
 
     /**
-     * The mass added per amino acid as part of the reference mass when
-     * converting Dalton tolerances to ppm.
-     */
-    public static final double MASS_PER_AA = 100.0;
-
-    /**
      * Makes an initial modification mapping based on the search engine results
      * and the compatibility to the searched modifications.
      *
      * @param peptide The peptide where the modification was found.
-     * @param expectedNames The expected modifications at each site.
-     * @param modNames The possible names for every modification match.
      * @param identificationParameters The identification parameters.
      * @param idfileReader The identification file reader.
      * @param modificationProvider The modification provider to use.
+     * @param sequenceProvider The sequence provider to use.
      */
     public static void modificationLocalization(
             Peptide peptide,
-            HashMap<Integer, ArrayList<String>> expectedNames,
-            HashMap<ModificationMatch, ArrayList<String>> modNames,
             IdentificationParameters identificationParameters,
             IdfileReader idfileReader,
-            ModificationProvider modificationProvider
+            ModificationProvider modificationProvider,
+            SequenceProvider sequenceProvider
     ) {
 
         SearchParameters searchParameters = identificationParameters.getSearchParameters();
-        ModificationParameters modificationParameters = searchParameters.getModificationParameters();
-        ModificationMatch[] modificationMatches = peptide.getVariableModifications();
-        int peptideLength = peptide.getSequence().length();
+        SequenceMatchingParameters modificationSequenceMatchingParameters = identificationParameters.getModificationLocalizationParameters().getSequenceMatchingParameters();
 
-        ////////////////////////////////
-        // check nterm modifications
-        ////////////////////////////////
-        ModificationMatch nTermModification = null;
+        // Gather the site, occurrences, possible modifications and their sites
+        HashMap<Double, Integer> modificationOccurrenceMap = new HashMap<>(1);
+        HashMap<Double, HashMap<Integer, Double>> modificationToSiteToScore = new HashMap<>(1);
+        HashMap<Double, HashMap<Integer, TreeSet<String>>> possibleModificationToPossibleSiteToName = new HashMap<>(1);
 
-        for (ModificationMatch modMatch : modificationMatches) {
+        double maxDistance = peptide.getSequence().length();
 
-            double refMass = ModificationMassMapper.getMass(
-                    modMatch.getModification(),
+        ModificationMatch[] originalModifications = peptide.getVariableModifications();
+
+        for (ModificationMatch modificationMatch : originalModifications) {
+
+            int modSite = modificationMatch.getSite();
+
+            double searchEngineMass = ModificationMassMapper.getMass(
+                    modificationMatch.getModification(),
                     idfileReader,
                     searchParameters,
                     modificationProvider
             );
 
-            int modSite = modMatch.getSite();
+            Integer occurrence = modificationOccurrenceMap.get(searchEngineMass);
 
-            if (modSite == 1) {
+            if (occurrence == null) {
 
-                ArrayList<String> expectedNamesAtSite = expectedNames.get(0);
+                modificationOccurrenceMap.put(searchEngineMass, 1);
 
-                if (expectedNamesAtSite != null) {
+            } else {
 
-                    ArrayList<String> filteredNamesAtSite = new ArrayList<>(expectedNamesAtSite.size());
+                modificationOccurrenceMap.put(searchEngineMass, occurrence + 1);
 
-                    for (String modName : expectedNamesAtSite) {
-
-                        Modification modification = modificationProvider.getModification(modName);
-
-                        if (Math.abs(modification.getMass() - refMass)
-                                < searchParameters.getFragmentIonAccuracyInDaltons(MASS_PER_AA * peptideLength)) {
-
-                            filteredNamesAtSite.add(modName);
-
-                        }
-                    }
-
-                    for (String modName : filteredNamesAtSite) {
-
-                        Modification modification = modificationProvider.getModification(modName);
-
-                        if (modification.getModificationType().isNTerm()) {
-
-                            boolean otherPossibleMod = false;
-
-                            for (String tempName : modificationParameters.getAllNotFixedModifications()) {
-
-                                if (!tempName.equals(modName)) {
-
-                                    Modification tempModification = modificationProvider.getModification(tempName);
-
-                                    if (tempModification.getMass() == modification.getMass()
-                                            && !tempModification.getModificationType().isNTerm()) {
-
-                                        otherPossibleMod = true;
-                                        break;
-
-                                    }
-                                }
-                            }
-
-                            if (!otherPossibleMod) {
-
-                                nTermModification = modMatch;
-                                modMatch.setModification(modName);
-                                modMatch.setSite(0);
-                                break;
-
-                            }
-                        }
-                    }
-
-                    if (nTermModification != null) {
-
-                        break;
-
-                    }
-                }
-            }
-        }
-
-        ////////////////////////////////
-        // check cterm modifications
-        ////////////////////////////////
-        ModificationMatch cTermModification = null;
-
-        for (ModificationMatch modMatch : peptide.getVariableModifications()) {
-
-            if (modMatch != nTermModification) {
-
-                double refMass = ModificationMassMapper.getMass(
-                        modMatch.getModification(),
-                        idfileReader,
-                        searchParameters,
-                        modificationProvider
-                );
-
-                int modSite = modMatch.getSite();
-
-                if (modSite == peptideLength) {
-
-                    ArrayList<String> expectedNamesAtSite = expectedNames.get(peptideLength + 1);
-
-                    if (expectedNamesAtSite != null) {
-
-                        ArrayList<String> filteredNamesAtSite = new ArrayList<>(expectedNamesAtSite.size());
-
-                        for (String modName : expectedNamesAtSite) {
-
-                            Modification modification = modificationProvider.getModification(modName);
-
-                            if (Math.abs(modification.getMass() - refMass)
-                                    < searchParameters.getFragmentIonAccuracyInDaltons(MASS_PER_AA * peptideLength)) {
-
-                                filteredNamesAtSite.add(modName);
-
-                            }
-                        }
-
-                        for (String modName : filteredNamesAtSite) {
-
-                            Modification modification = modificationProvider.getModification(modName);
-
-                            if (modification.getModificationType().isCTerm()) {
-
-                                boolean otherPossibleMod = false;
-
-                                for (String tempName : modificationParameters.getAllNotFixedModifications()) {
-
-                                    if (!tempName.equals(modName)) {
-
-                                        Modification tempModification = modificationProvider.getModification(tempName);
-
-                                        if (tempModification.getMass() == modification.getMass()
-                                                && !tempModification.getModificationType().isCTerm()) {
-
-                                            otherPossibleMod = true;
-                                            break;
-
-                                        }
-                                    }
-                                }
-
-                                if (!otherPossibleMod) {
-
-                                    cTermModification = modMatch;
-                                    modMatch.setModification(modName);
-                                    modMatch.setSite(peptideLength + 1);
-                                    break;
-
-                                }
-                            }
-                        }
-
-                        if (cTermModification != null) {
-
-                            break;
-
-                        }
-                    }
-                }
-            }
-        }
-
-        ///////////////////////////////////////////////////////////////////
-        // Map the modifications according to search engine localization
-        ///////////////////////////////////////////////////////////////////
-
-        // site to modification name map, including termini
-        HashMap<Integer, ArrayList<String>> siteToModMap = new HashMap<>(modificationMatches.length);
-
-        // site to modification match map, excluding termini
-        HashMap<Integer, ModificationMatch> siteToMatchMap = new HashMap<>(modificationMatches.length);
-
-        // modification match to site map, excluding termini
-        HashMap<ModificationMatch, Integer> matchToSiteMap = new HashMap<>(modificationMatches.length);
-
-        boolean allMapped = true;
-
-        for (ModificationMatch modMatch : modificationMatches) {
-
-            boolean mapped = false;
-
-            if (modMatch != nTermModification && modMatch != cTermModification) {
-
-                double refMass = ModificationMassMapper.getMass(
-                        modMatch.getModification(),
-                        idfileReader,
-                        searchParameters,
-                        modificationProvider
-                );
-
-                int modSite = modMatch.getSite();
-                boolean terminal = false;
-                ArrayList<String> expectedNamesAtSite = expectedNames.get(modSite);
-
-                if (expectedNamesAtSite != null) {
-
-                    ArrayList<String> filteredNamesAtSite = new ArrayList<>(expectedNamesAtSite.size());
-                    ArrayList<String> modificationAtSite = siteToModMap.get(modSite);
-
-                    for (String modName : expectedNamesAtSite) {
-
-                        Modification modification = modificationProvider.getModification(modName);
-
-                        if (Math.abs(modification.getMass() - refMass)
-                                < searchParameters.getFragmentIonAccuracyInDaltons(MASS_PER_AA * peptideLength)
-                                && (modificationAtSite == null || !modificationAtSite.contains(modName))) {
-
-                            filteredNamesAtSite.add(modName);
-
-                        }
-                    }
-
-                    if (filteredNamesAtSite.size() == 1) {
-
-                        String modName = filteredNamesAtSite.get(0);
-                        Modification modification = modificationProvider.getModification(modName);
-                        ModificationType modificationType = modification.getModificationType();
-
-                        if (modificationType.isNTerm() && nTermModification == null) {
-
-                            nTermModification = modMatch;
-                            mapped = true;
-
-                        } else if (modificationType.isCTerm() && cTermModification == null) {
-
-                            cTermModification = modMatch;
-                            mapped = true;
-
-                        } else if (!modificationType.isNTerm() && !modificationType.isCTerm()) {
-
-                            matchToSiteMap.put(modMatch, modSite);
-                            siteToMatchMap.put(modSite, modMatch);
-                            mapped = true;
-
-                        }
-
-                        if (mapped) {
-
-                            modMatch.setModification(modName);
-
-                            if (modificationAtSite == null) {
-
-                                modificationAtSite = new ArrayList<>(1);
-                                siteToModMap.put(modSite, modificationAtSite);
-
-                            }
-
-                            modificationAtSite.add(modName);
-
-                        }
-                    }
-
-                    if (!mapped) {
-
-                        if (filteredNamesAtSite.isEmpty()) {
-
-                            filteredNamesAtSite = expectedNamesAtSite;
-
-                        }
-
-                        if (modSite == 1) {
-
-                            Double minDiff = null;
-                            String bestPtmName = null;
-
-                            for (String modName : filteredNamesAtSite) {
-
-                                Modification modification = modificationProvider.getModification(modName);
-
-                                if (modification.getModificationType().isNTerm() && nTermModification == null) {
-
-                                    double massError = Math.abs(refMass - modification.getMass());
-
-                                    if (massError <= searchParameters.getFragmentIonAccuracyInDaltons(MASS_PER_AA * peptideLength)
-                                            && (minDiff == null || massError < minDiff)) {
-
-                                        bestPtmName = modName;
-                                        minDiff = massError;
-
-                                    }
-                                }
-                            }
-
-                            if (bestPtmName != null) {
-
-                                nTermModification = modMatch;
-                                modMatch.setModification(bestPtmName);
-                                terminal = true;
-
-                                if (modificationAtSite == null) {
-
-                                    modificationAtSite = new ArrayList<>(1);
-                                    siteToModMap.put(modSite, modificationAtSite);
-
-                                }
-
-                                modificationAtSite.add(bestPtmName);
-                                mapped = true;
-
-                            }
-
-                        } else if (modSite == peptideLength) {
-
-                            Double minDiff = null;
-                            String bestModName = null;
-
-                            for (String modName : filteredNamesAtSite) {
-
-                                Modification modification = modificationProvider.getModification(modName);
-
-                                if (modification.getModificationType().isCTerm() && cTermModification == null) {
-
-                                    double massError = Math.abs(refMass - modification.getMass());
-
-                                    if (massError <= searchParameters.getFragmentIonAccuracyInDaltons(MASS_PER_AA * peptideLength)
-                                            && (minDiff == null || massError < minDiff)) {
-
-                                        bestModName = modName;
-                                        minDiff = massError;
-
-                                    }
-                                }
-                            }
-
-                            if (bestModName != null) {
-
-                                cTermModification = modMatch;
-                                modMatch.setModification(bestModName);
-                                terminal = true;
-
-                                if (modificationAtSite == null) {
-
-                                    modificationAtSite = new ArrayList<>(1);
-                                    siteToModMap.put(modSite, modificationAtSite);
-
-                                }
-
-                                modificationAtSite.add(bestModName);
-                                mapped = true;
-
-                            }
-                        }
-
-                        if (!terminal) {
-
-                            Double minDiff = null;
-                            String bestModName = null;
-
-                            for (String modName : filteredNamesAtSite) {
-
-                                Modification modification = modificationProvider.getModification(modName);
-                                ModificationType modificationType = modification.getModificationType();
-
-                                if (!modificationType.isCTerm()
-                                        && !modificationType.isNTerm()
-                                        && modNames.get(modMatch).contains(modName)
-                                        && !siteToMatchMap.containsKey(modSite)) {
-
-                                    double massError = Math.abs(refMass - modification.getMass());
-
-                                    if (massError <= searchParameters.getFragmentIonAccuracyInDaltons(MASS_PER_AA * peptideLength)
-                                            && (minDiff == null || massError < minDiff)) {
-
-                                        bestModName = modName;
-                                        minDiff = massError;
-
-                                    }
-                                }
-                            }
-
-                            if (bestModName != null) {
-
-                                modMatch.setModification(bestModName);
-
-                                if (modificationAtSite == null) {
-
-                                    modificationAtSite = new ArrayList<>(1);
-                                    siteToModMap.put(modSite, modificationAtSite);
-
-                                }
-
-                                modificationAtSite.add(bestModName);
-                                matchToSiteMap.put(modMatch, modSite);
-                                siteToMatchMap.put(modSite, modMatch);
-                                mapped = true;
-
-                            }
-                        }
-                    }
-                }
             }
 
-            if (!mapped) {
+            HashMap<Integer, TreeSet<String>> possibleSites = possibleModificationToPossibleSiteToName.get(searchEngineMass);
 
-                allMapped = false;
+            if (possibleSites == null) {
+
+                possibleSites = new HashMap<>(1);
+                possibleModificationToPossibleSiteToName.put(searchEngineMass, possibleSites);
+
+            }
+
+            HashMap<Integer, Double> siteToScore = modificationToSiteToScore.get(searchEngineMass);
+
+            if (siteToScore == null) {
+
+                siteToScore = new HashMap<>(1);
+                modificationToSiteToScore.put(searchEngineMass, siteToScore);
+
+            }
+
+            HashMap<Integer, HashSet<String>> tempNames = ModificationNameMapper.getPossibleModificationNames(
+                    peptide,
+                    modificationMatch,
+                    idfileReader,
+                    searchParameters,
+                    modificationSequenceMatchingParameters,
+                    sequenceProvider,
+                    modificationProvider
+            );
+
+            if (tempNames.isEmpty()) {
+
+                throw new IllegalArgumentException("Could not map modification " + modificationMatch.getModification() + " on peptide " + peptide.getSequence() + ".");
+
+            }
+
+            for (Entry<Integer, HashSet<String>> entry : tempNames.entrySet()) {
+
+                int possibleSite = entry.getKey();
+
+                for (String possibleModificationName : entry.getValue()) {
+
+                    TreeSet<String> possibleModificationNames = possibleSites.get(possibleSite);
+
+                    if (possibleModificationNames == null) {
+
+                        possibleModificationNames = new TreeSet<>();
+                        possibleSites.put(possibleSite, possibleModificationNames);
+
+                    }
+
+                    possibleModificationNames.add(possibleModificationName);
+
+                }
+
+                // Give a score that decreases with the distance to the original sites
+                double score = 1.0 - ((possibleSite - modSite) * (possibleSite - modSite) / (maxDistance * maxDistance));
+                siteToScore.put(possibleSite, score);
 
             }
         }
 
-        //////////////////////////////////////////////
-        // try to correct incompatible localizations
-        //////////////////////////////////////////////
+        HashMap<Double, int[]> modificationToPossibleSiteMap = new HashMap<>(possibleModificationToPossibleSiteToName.size());
 
-        if (!allMapped) {
+        for (Entry<Double, HashMap<Integer, TreeSet<String>>> entry : possibleModificationToPossibleSiteToName.entrySet()) {
 
-            HashMap<Integer, ArrayList<Integer>> remap = new HashMap<>(0);
+            int[] sites = entry.getValue().keySet().stream()
+                    .mapToInt(
+                            a -> a
+                    )
+                    .toArray();
 
-            for (ModificationMatch modMatch : peptide.getVariableModifications()) {
+            modificationToPossibleSiteMap.put(entry.getKey(), sites);
 
-                if (modMatch != nTermModification 
-                        && modMatch != cTermModification 
-                        && !matchToSiteMap.containsKey(modMatch)) {
+        }
 
-                    int modSite = modMatch.getSite();
+        // Find the combination of modifications that best suits the input from the search engines
+        HashMap<Double, TreeSet<Integer>> matchedSiteByModification = ModificationPeptideMapping.mapModifications(
+                modificationToPossibleSiteMap,
+                modificationOccurrenceMap,
+                modificationToSiteToScore
+        );
 
-                    for (int candidateSite : expectedNames.keySet()) {
+        // Create new modification matches
+        ModificationMatch[] newModifications = new ModificationMatch[originalModifications.length];
 
-                        if (!siteToMatchMap.containsKey(candidateSite)) {
+        int modificationI = 0;
 
-                            for (String modName : expectedNames.get(candidateSite)) {
+        for (Entry<Double, TreeSet<Integer>> entry
+                : matchedSiteByModification.entrySet()) {
 
-                                if (modNames.get(modMatch).contains(modName)) {
+            double searchEngineMass = entry.getKey();
+            HashMap<Integer, TreeSet<String>> possibleSites = possibleModificationToPossibleSiteToName.get(searchEngineMass);
 
-                                    Modification modification = modificationProvider.getModification(modName);
-                                    ModificationType modificationType = modification.getModificationType();
+            for (int site : entry.getValue()) {
 
-                                    if ((!modificationType.isCTerm() || cTermModification == null)
-                                            && (!modificationType.isNTerm() || nTermModification == null)) {
+                TreeSet<String> possibleNames = possibleSites.get(site);
 
-                                        ArrayList<Integer> modSites = remap.get(modSite);
+                String bestName = null;
+                double massDifference = Double.NaN;
 
-                                        if (modSites == null) {
+                for (String possibleName : possibleNames) {
 
-                                            modSites = new ArrayList<>(2);
-                                            remap.put(modSite, modSites);
+                    Modification modification = modificationProvider.getModification(possibleName);
+                    double currentMassDifference = Math.abs(modification.getMass() - searchEngineMass);
 
-                                        }
+                    if (bestName == null || currentMassDifference < massDifference) {
 
-                                        if (!modSites.contains(candidateSite)) {
+                        bestName = possibleName;
+                        massDifference = currentMassDifference;
 
-                                            modSites.add(candidateSite);
-
-                                        }
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
-            }
 
-            HashMap<Integer, Integer> correctedIndexes = ModificationSiteMapping.alignAll(remap);
+                ModificationMatch modificationMatch = new ModificationMatch(bestName, site);
 
-            for (ModificationMatch modMatch : peptide.getVariableModifications()) {
+                newModifications[modificationI] = modificationMatch;
 
-                if (modMatch != nTermModification 
-                        && modMatch != cTermModification 
-                        && !matchToSiteMap.containsKey(modMatch)) {
+                modificationI++;
 
-                    Integer modSite = correctedIndexes.get(modMatch.getSite());
-
-                    if (modSite != null) {
-
-                        if (expectedNames.containsKey(modSite)) {
-
-                            for (String modName : expectedNames.get(modSite)) {
-
-                                if (modNames.get(modMatch).contains(modName)) {
-
-                                    ArrayList<String> taken = siteToModMap.get(modSite);
-
-                                    if (taken == null || !taken.contains(modName)) {
-
-                                        matchToSiteMap.put(modMatch, modSite);
-                                        modMatch.setModification(modName);
-                                        modMatch.setSite(modSite);
-
-                                        if (taken == null) {
-
-                                            taken = new ArrayList<>(1);
-                                            siteToModMap.put(modSite, taken);
-
-                                        }
-
-                                        taken.add(modName);
-                                        break;
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
+
+        if (modificationI < originalModifications.length) {
+
+            throw new IllegalArgumentException("Could map only " + modificationI + " in " + originalModifications.length + ".");
+
+        }
+
+        peptide.setVariableModifications(newModifications);
+
     }
 }

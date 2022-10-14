@@ -1,6 +1,5 @@
 package com.compomics.util.experiment.identification.modification.peptide_mapping;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -18,6 +17,8 @@ import org.jgrapht.alg.interfaces.MatchingAlgorithm.Matching;
  * @author Marc Vaudel
  */
 public class ModificationPeptideMapping {
+    
+    public static final String SEPARATOR = "_";
 
     /**
      * Returns map of site to modification mapping.
@@ -46,7 +47,7 @@ public class ModificationPeptideMapping {
             
             for (int i = 0; i < modOccNum; i++){
             
-                String vertexName = String.join("-",String.valueOf(modID),String.valueOf(i));
+                String vertexName = String.join(SEPARATOR, String.valueOf(modID), String.valueOf(i));
                 g.addVertex(vertexName);
                 modificationsVertices.add(vertexName);
                 
@@ -71,7 +72,7 @@ public class ModificationPeptideMapping {
                 
                 for (int i = 0; i < modOccNum; i++){
                     
-                    String modVertexName = String.join("-", String.valueOf(modID), String.valueOf(i));
+                    String modVertexName = String.join(SEPARATOR, String.valueOf(modID), String.valueOf(i));
                     DefaultWeightedEdge e = g.addEdge(modVertexName, siteVertexName);
                     g.setEdgeWeight(e, locScore); 
                     
@@ -92,7 +93,7 @@ public class ModificationPeptideMapping {
             
             String eInfo = e.toString();
             String[] eVertices = eInfo.split(":");
-            double modVertex = Double.parseDouble(eVertices[0].substring(1,eVertices[0].length()-1).split("-")[0]);
+            double modVertex = Double.parseDouble(eVertices[0].substring(1,eVertices[0].length()-1).split(SEPARATOR)[0]);
             int siteVertex = Integer.parseInt(eVertices[1].substring(1,eVertices[1].length()-1));
             
             TreeSet<Integer> modificationSites = matchedSiteToModification.get(modVertex);

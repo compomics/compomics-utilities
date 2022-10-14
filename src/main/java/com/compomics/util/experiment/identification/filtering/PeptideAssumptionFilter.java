@@ -103,14 +103,14 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * disabled)
      */
     public PeptideAssumptionFilter(
-            int minPepLength, 
-            int maxPepLength, 
-            double maxMzDeviation, 
-            boolean isPpm, 
-            boolean unknownModification, 
-            Integer minMissedCleavages, 
-            Integer maxMissedCleavages, 
-            Integer minIsotopes, 
+            int minPepLength,
+            int maxPepLength,
+            double maxMzDeviation,
+            boolean isPpm,
+            boolean unknownModification,
+            Integer minMissedCleavages,
+            Integer maxMissedCleavages,
+            Integer minIsotopes,
             Integer maxIsotopes
     ) {
 
@@ -135,7 +135,6 @@ public class PeptideAssumptionFilter extends ExperimentObject {
     public void setFilterFromSearchParameters(
             SearchParameters searchParameters
     ) {
-        
 
         this.isPpm = searchParameters.isPrecursorAccuracyTypePpm();
         this.maxMassDeviation = searchParameters.getPrecursorAccuracy();
@@ -157,12 +156,10 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * @return a boolean indicating whether the peptide passed the test
      */
     public boolean validatePeptide(
-            Peptide peptide, 
-            SequenceMatchingParameters sequenceMatchingPreferences, 
+            Peptide peptide,
+            SequenceMatchingParameters sequenceMatchingPreferences,
             DigestionParameters digestionPreferences
     ) {
-        
-        
 
         String peptideSequence = peptide.getSequence();
         int sequenceLength = peptideSequence.length();
@@ -212,12 +209,11 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * @return a boolean indicating whether the peptide passed the test
      */
     public boolean validateProteins(
-            Peptide peptide, 
-            SequenceMatchingParameters sequenceMatchingPreferences, 
+            Peptide peptide,
+            SequenceMatchingParameters sequenceMatchingPreferences,
             SequenceProvider sequenceProvider
     ) {
 
-        
         TreeMap<String, int[]> proteinMapping = peptide.getProteinMapping();
 
         if (proteinMapping != null && proteinMapping.size() > 1) {
@@ -261,13 +257,12 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * @return a boolean indicating whether the peptide passed the test
      */
     public boolean validateModifications(
-            Peptide peptide, 
+            Peptide peptide,
             SequenceMatchingParameters sequenceMatchingPreferences,
-            SequenceMatchingParameters modificationSequenceMatchingPreferences, 
+            SequenceMatchingParameters modificationSequenceMatchingPreferences,
             ModificationParameters modificationProfile
     ) {
 
-        
         ModificationFactory modificationFactory = ModificationFactory.getInstance();
 
         // check if a modification could not be parsed
@@ -300,39 +295,38 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * filter
      */
     public boolean validatePrecursor(
-            PeptideAssumption assumption, 
-            String spectrumFile, 
-            String spectrumTitle, 
-            SpectrumProvider spectrumProvider, 
+            PeptideAssumption assumption,
+            String spectrumFile,
+            String spectrumTitle,
+            SpectrumProvider spectrumProvider,
             SearchParameters searchParameters
     ) {
 
-        
         double precursorMz = spectrumProvider.getPrecursorMz(
-                spectrumFile, 
+                spectrumFile,
                 spectrumTitle
         );
         int isotopeNumber = assumption.getIsotopeNumber(
-                precursorMz, 
-                searchParameters.getMinIsotopicCorrection(), 
+                precursorMz,
+                searchParameters.getMinIsotopicCorrection(),
                 searchParameters.getMaxIsotopicCorrection()
         );
-        
+
         if (minIsotopes != null && isotopeNumber < minIsotopes) {
             return false;
         }
-        
+
         if (maxIsotopes != null && isotopeNumber > maxIsotopes) {
             return false;
         }
-        
+
         double mzDeviation = assumption.getDeltaMz(
-                precursorMz, 
-                isPpm, 
-                searchParameters.getMinIsotopicCorrection(), 
+                precursorMz,
+                isPpm,
+                searchParameters.getMinIsotopicCorrection(),
                 searchParameters.getMaxIsotopicCorrection()
         );
-        
+
         return (maxMassDeviation <= 0 || Math.abs(mzDeviation) <= maxMassDeviation);
     }
 
@@ -344,7 +338,6 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * removed
      */
     public boolean removeUnknownModifications() {
-        
 
         return unknownModification;
 
@@ -358,7 +351,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
     public void setRemoveUnknownModifications(
             boolean unknownModification
     ) {
-        
+
         this.unknownModification = unknownModification;
 
     }
@@ -370,7 +363,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * or Dalton (false)
      */
     public boolean isIsPpm() {
-        
+
         return isPpm;
     }
 
@@ -383,7 +376,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
     public void setIsPpm(
             boolean isPpm
     ) {
-        
+
         this.isPpm = isPpm;
     }
 
@@ -393,7 +386,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * @return the maximal mass deviation allowed
      */
     public double getMaxMzDeviation() {
-        
+
         return maxMassDeviation;
     }
 
@@ -405,7 +398,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
     public void setMaxMzDeviation(
             double maxMzDeviation
     ) {
-        
+
         this.maxMassDeviation = maxMzDeviation;
     }
 
@@ -415,7 +408,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * @return the maximal peptide length allowed
      */
     public int getMaxPepLength() {
-        
+
         return maxPepLength;
     }
 
@@ -427,7 +420,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
     public void setMaxPepLength(
             int maxPepLength
     ) {
-        
+
         this.maxPepLength = maxPepLength;
     }
 
@@ -437,7 +430,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * @return the maximal peptide length allowed
      */
     public int getMinPepLength() {
-        
+
         return minPepLength;
     }
 
@@ -449,7 +442,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
     public void setMinPepLength(
             int minPepLength
     ) {
-        
+
         this.minPepLength = minPepLength;
     }
 
@@ -459,7 +452,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * @return the minimal number of isotopes allowed
      */
     public Integer getMinIsotopes() {
-        
+
         return minIsotopes;
     }
 
@@ -471,7 +464,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
     public void setMinIsotopes(
             Integer minIsotopes
     ) {
-        
+
         this.minIsotopes = minIsotopes;
     }
 
@@ -481,7 +474,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * @return the maximal number of isotopes allowed
      */
     public Integer getMaxIsotopes() {
-        
+
         return maxIsotopes;
     }
 
@@ -493,7 +486,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
     public void setMaxIsotopes(
             Integer maxIsotopes
     ) {
-        
+
         this.maxIsotopes = maxIsotopes;
     }
 
@@ -501,13 +494,12 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * Indicates whether this filter is the same as another one.
      *
      * @param anotherFilter another filter
-     * 
+     *
      * @return a boolean indicating that the filters have the same parameters
      */
     public boolean isSameAs(
             PeptideAssumptionFilter anotherFilter
     ) {
-        
 
         if (minMissedCleavages != null && anotherFilter.getMinMissedCleavages() != null) {
             if (!minMissedCleavages.equals(anotherFilter.getMinMissedCleavages())) {
@@ -568,7 +560,6 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        
 
         String newLine = System.getProperty("line.separator");
 
@@ -636,7 +627,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * @return the minMissedCleavages
      */
     public Integer getMinMissedCleavages() {
-        
+
         return minMissedCleavages;
     }
 
@@ -648,7 +639,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
     public void setMinMissedCleavages(
             Integer minMissedCleavages
     ) {
-        
+
         this.minMissedCleavages = minMissedCleavages;
     }
 
@@ -658,7 +649,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * @return the maxMissedCleavages
      */
     public Integer getMaxMissedCleavages() {
-        
+
         return maxMissedCleavages;
     }
 
@@ -670,7 +661,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
     public void setMaxMissedCleavages(
             Integer maxMissedCleavages
     ) {
-        
+
         this.maxMissedCleavages = maxMissedCleavages;
     }
 }

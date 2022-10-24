@@ -234,7 +234,7 @@ public class NewEnzymeDialog extends javax.swing.JDialog {
         String[] tempAminoAcids = aminoAcidList.split(",");
 
         for (String tempAminoAcid : tempAminoAcids) {
-            
+
             if (!AminoAcid.getAminoAcidsList().contains(tempAminoAcid.trim())) {
                 return false;
             }
@@ -548,29 +548,33 @@ public class NewEnzymeDialog extends javax.swing.JDialog {
             // create the psi-ms cv term
             CvTerm psiMsCvTerm = null;
             if (!psiMsAccessionJTextField.getText().trim().isEmpty()) {
-                int psiMsAccession = Integer.valueOf(psiMsAccessionJTextField.getText().trim());
+                int psiMsAccession = Integer.parseInt(psiMsAccessionJTextField.getText().trim());
                 psiMsCvTerm = new CvTerm("MS", "MS:" + psiMsAccession, nameTxt.getText().trim(), null);
             }
 
             Enzyme enzyme = new Enzyme(nameTxt.getText().trim());
+
             if (!cleavesAfterTxt.getText().trim().isEmpty()) {
                 for (String tempAminoAcid : cleavesAfterTxt.getText().split(",")) {
                     enzyme.addAminoAcidBefore(tempAminoAcid.trim().charAt(0));
                 }
             }
+            
             if (!butNotBeforeTxt.getText().trim().isEmpty()) {
                 for (String tempAminoAcid : butNotBeforeTxt.getText().split(",")) {
                     enzyme.addRestrictionAfter(tempAminoAcid.trim().charAt(0));
                 }
             }
+            
             if (!cleavesBeforeTxt.getText().trim().isEmpty()) {
                 for (String tempAminoAcid : cleavesBeforeTxt.getText().split(",")) {
-                    enzyme.addAminoAcidBefore(tempAminoAcid.trim().charAt(0));
+                    enzyme.addAminoAcidAfter(tempAminoAcid.trim().charAt(0));
                 }
             }
+            
             if (!butNotAfterTxt.getText().trim().isEmpty()) {
                 for (String tempAminoAcid : butNotAfterTxt.getText().split(",")) {
-                    enzyme.addRestrictionAfter(tempAminoAcid.trim().charAt(0));
+                    enzyme.addRestrictionBefore(tempAminoAcid.trim().charAt(0));
                 }
             }
 

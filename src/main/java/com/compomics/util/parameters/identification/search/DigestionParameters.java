@@ -454,21 +454,27 @@ public class DigestionParameters extends ExperimentObject {
                     break;
 
                 case enzyme:
-                    for (Enzyme enzyme1 : enzymes) {
+                    for (Enzyme enzyme : enzymes) {
 
                         if (stringBuilder.length() > 0) {
                             stringBuilder.append(newLine);
                         }
 
-                        Enzyme enzyme = enzyme1;
                         String enzymeName = enzyme.getName();
-                        stringBuilder.append(enzymeName).append(", ").append(getSpecificity(enzymeName));
-                        Integer nmc = getnMissedCleavages(enzymeName);
-
-                        if (nmc != null) {
-                            stringBuilder.append(", ").append(nmc).append(" missed cleavages");
-                        }
+                        stringBuilder.append(enzymeName).append(", ");
                     }
+                    
+                    // @TODO: support enzyme-specific specificity and missed cleavages?
+                    Enzyme firstEnzyme = enzymes.get(0);
+                    
+                    stringBuilder.append(getSpecificity(firstEnzyme.getName()));
+                    
+                    Integer nmc = getnMissedCleavages(firstEnzyme.getName());
+
+                    if (nmc != null) {
+                        stringBuilder.append(", ").append(nmc).append(" missed cleavages");
+                    }
+                    
                     break;
 
                 default:
@@ -543,9 +549,9 @@ public class DigestionParameters extends ExperimentObject {
     }
 
     /**
-     * Get the X!Tandem enzyme format.
+     * Get the X! Tandem enzyme format.
      *
-     * @return the enzyme X!Tandem format as String
+     * @return the enzyme X! Tandem format as String
      */
     public String getXTandemFormat() {
 
@@ -566,9 +572,7 @@ public class DigestionParameters extends ExperimentObject {
                         result.append(",");
                     }
 
-                    Specificity specificity = getSpecificity(enzyme.getName());
-
-                    if (enzyme.getAminoAcidBefore().size() > 0) {
+                    if (!enzyme.getAminoAcidBefore().isEmpty()) {
 
                         result.append("[");
 
@@ -579,7 +583,7 @@ public class DigestionParameters extends ExperimentObject {
                         result.append("]");
                     }
 
-                    if (enzyme.getRestrictionBefore().size() > 0) {
+                    if (!enzyme.getRestrictionBefore().isEmpty()) {
 
                         result.append("{");
 
@@ -597,7 +601,7 @@ public class DigestionParameters extends ExperimentObject {
 
                     result.append("|");
 
-                    if (enzyme.getAminoAcidAfter().size() > 0) {
+                    if (!enzyme.getAminoAcidAfter().isEmpty()) {
 
                         result.append("[");
 
@@ -608,7 +612,7 @@ public class DigestionParameters extends ExperimentObject {
                         result.append("]");
                     }
 
-                    if (enzyme.getRestrictionAfter().size() > 0) {
+                    if (!enzyme.getRestrictionAfter().isEmpty()) {
 
                         result.append("{");
 
@@ -624,11 +628,12 @@ public class DigestionParameters extends ExperimentObject {
                         result.append("[X]");
                     }
                 }
+                
                 return result.toString();
 
             default:
                 throw new UnsupportedOperationException(
-                        "X!Tandem format not implemented for cleavage parameter "
+                        "X! Tandem format not implemented for cleavage parameter "
                         + cleavageParameter
                         + "."
                 );

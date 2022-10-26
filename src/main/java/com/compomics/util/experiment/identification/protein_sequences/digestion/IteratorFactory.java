@@ -66,38 +66,50 @@ public class IteratorFactory {
      * @throws java.lang.InterruptedException exception thrown if a thread is
      * interrupted
      */
-    public SequenceIterator getSequenceIterator(String sequence, DigestionParameters digestionPreferences, double massMin, double massMax) throws InterruptedException {
+    public SequenceIterator getSequenceIterator(
+            String sequence,
+            DigestionParameters digestionPreferences,
+            double massMin, double massMax
+    ) throws InterruptedException {
 
         DigestionParameters.CleavageParameter cleavageParameter = digestionPreferences.getCleavageParameter();
 
-        if (cleavageParameter == DigestionParameters.CleavageParameter.enzyme) {
+        if (cleavageParameter != null) {
+            
+            switch (cleavageParameter) {
+                
+                case enzyme:
+                    ArrayList<Enzyme> enzymes = digestionPreferences.getEnzymes();
+                    if (enzymes.size() == 1) { // @TODO: support multiple enzymes
 
-            ArrayList<Enzyme> enzymes = digestionPreferences.getEnzymes();
+                        Enzyme enzyme = enzymes.get(0);
+                        int nMissedCleavages = digestionPreferences.getnMissedCleavages(enzyme.getName());
 
-            if (enzymes.size() == 1) {
-
-                Enzyme enzyme = enzymes.get(0);
-                int nMissedCleavages = digestionPreferences.getnMissedCleavages(enzyme.getName());
-
-                return AminoAcidSequence.hasCombination(sequence)
-                        ? new SpecificSingleEnzymeCombinationIterator(proteinIteratorUtils, sequence, enzyme, nMissedCleavages, massMin, massMax)
-                        : new SpecificSingleEnzymeIterator(proteinIteratorUtils, sequence, enzyme, nMissedCleavages, massMin, massMax);
+                        return AminoAcidSequence.hasCombination(sequence)
+                                ? new SpecificSingleEnzymeCombinationIterator(proteinIteratorUtils, sequence, enzyme, nMissedCleavages, massMin, massMax)
+                                : new SpecificSingleEnzymeIterator(proteinIteratorUtils, sequence, enzyme, nMissedCleavages, massMin, massMax);
+                    }
+                    break;
+                
+                case unSpecific:
+                    return AminoAcidSequence.hasCombination(sequence)
+                            ? new UnspecificCombinationIterator(proteinIteratorUtils, sequence, massMin, massMax)
+                            : new UnspecificIterator(proteinIteratorUtils, sequence, massMin, massMax);
+                
+                case wholeProtein:
+                    return AminoAcidSequence.hasCombination(sequence)
+                            ? new NoDigestionCombinationIterator(proteinIteratorUtils, sequence, massMin, massMax)
+                            : new NoDigestionIterator(proteinIteratorUtils, sequence, massMin, massMax);
+                
+                default:
+                    break;
             }
-
-        } else if (cleavageParameter == DigestionParameters.CleavageParameter.unSpecific) {
-
-            return AminoAcidSequence.hasCombination(sequence)
-                    ? new UnspecificCombinationIterator(proteinIteratorUtils, sequence, massMin, massMax)
-                    : new UnspecificIterator(proteinIteratorUtils, sequence, massMin, massMax);
-
-        } else if (cleavageParameter == DigestionParameters.CleavageParameter.wholeProtein) {
-
-            return AminoAcidSequence.hasCombination(sequence)
-                    ? new NoDigestionCombinationIterator(proteinIteratorUtils, sequence, massMin, massMax)
-                    : new NoDigestionIterator(proteinIteratorUtils, sequence, massMin, massMax);
-
         }
 
-        throw new UnsupportedOperationException("Cleavage preference of type " + digestionPreferences.getCleavageParameter() + " not supported.");
+        throw new UnsupportedOperationException(
+                "Cleavage preference of type "
+                + digestionPreferences.getCleavageParameter()
+                + " not supported."
+        );
     }
 }

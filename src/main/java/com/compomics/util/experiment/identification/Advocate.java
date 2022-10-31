@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.awt.Color;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * The advocate of a hit can be a search engine, a sequencing algorithm, a
@@ -170,11 +169,15 @@ public class Advocate extends ExperimentObject {
     /**
      * The IdentiPy search engine.
      */
-    public static final Advocate identiPy  = new Advocate(34, "IdentiPy", AdvocateType.search_engine, new Color(128, 128, 0));
+    public static final Advocate identiPy = new Advocate(34, "IdentiPy", AdvocateType.search_engine, new Color(128, 128, 0));
     /**
      * The CompOmics Spectral Searching (COSS) engine.
      */
-    public static final Advocate coss  = new Advocate(35, "COSS", AdvocateType.spectral_library, new Color(108, 108, 0));
+    public static final Advocate coss = new Advocate(35, "COSS", AdvocateType.spectral_library, new Color(108, 108, 0));
+    /**
+     * The Sage search engine.
+     */
+    public static final Advocate sage = new Advocate(36, "Sage", AdvocateType.search_engine, new Color(108, 108, 0));
     /**
      * Advocate type for mzId files where no software is annotated.
      */
@@ -182,7 +185,7 @@ public class Advocate extends ExperimentObject {
     /**
      * Map of user-defined advocates indexed by index.
      */
-    private static HashMap<Integer, Advocate> userAdvocates = new HashMap<Integer, Advocate>();
+    private static HashMap<Integer, Advocate> userAdvocates = new HashMap<>();
     /**
      * The index of the advocate.
      */
@@ -258,7 +261,7 @@ public class Advocate extends ExperimentObject {
      * @return the index of the advocate
      */
     public int getIndex() {
-        
+
         return index;
     }
 
@@ -268,7 +271,7 @@ public class Advocate extends ExperimentObject {
      * @return the name of the advocate
      */
     public String getName() {
-        
+
         return name;
     }
 
@@ -278,7 +281,7 @@ public class Advocate extends ExperimentObject {
      * @return the type of advocate
      */
     public AdvocateType getType() {
-        
+
         return type;
     }
 
@@ -288,13 +291,13 @@ public class Advocate extends ExperimentObject {
      * @return the color of the advocate
      */
     public Color getColor() {
-        
+
         return color;
     }
 
     @Override
     public String toString() {
-        
+
         return name;
     }
 
@@ -304,7 +307,7 @@ public class Advocate extends ExperimentObject {
      * @return the implemented advocates in an array
      */
     public static Advocate[] values() {
-        Advocate[] result = new Advocate[38 + userAdvocates.size()];
+        Advocate[] result = new Advocate[39 + userAdvocates.size()];
         int i = 0;
         result[i] = peptideShaker;
         result[++i] = onyaseEngine;
@@ -344,6 +347,7 @@ public class Advocate extends ExperimentObject {
         result[++i] = metaMorpheus;
         result[++i] = identiPy;
         result[++i] = coss;
+        result[++i] = sage;
 
         for (Advocate advocate : userAdvocates.values()) {
             result[++i] = advocate;
@@ -385,15 +389,14 @@ public class Advocate extends ExperimentObject {
         }
 
         // check the user advocates
-        Iterator<Integer> iterator = userAdvocates.keySet().iterator();
-        while (iterator.hasNext()) {
-            Integer key = iterator.next();
+        for (Integer key : userAdvocates.keySet()) {
 
             Advocate advocate = userAdvocates.get(key);
 
             if (advocate.getName().equals(advocateName)) {
                 return advocate;
             }
+
         }
 
         // unknown advocate
@@ -444,7 +447,7 @@ public class Advocate extends ExperimentObject {
      * @return the PubMed id of the reference of the advocate of interest
      */
     public String getPmid() {
-        
+
         if (this == mascot) {
             return "10612281";
         } else if (this == omssa) {
@@ -530,7 +533,7 @@ public class Advocate extends ExperimentObject {
      * @param idFileName the name of the identification file
      *
      * @return the advocate likely to have been used to create the given file
-     * 
+     *
      * @deprecated no longer used
      */
     public static Advocate getAdvocateFromFile(String idFileName) {

@@ -29,7 +29,7 @@ public class IdfileReaderFactory {
     /**
      * The list of registered IdfileReaders.
      */
-    private static final HashMap<String, Class> idFileReaders = new HashMap<String, Class>();
+    private static final HashMap<String, Class> idFileReaders = new HashMap<>();
 
     /**
      * Static initializer block that checks for registered IdfileReaders through

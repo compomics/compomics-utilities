@@ -224,8 +224,7 @@ public class PercolatorInputfileReader implements IdfileReader {
                     StringBuilder peptideSequenceBuilder = new StringBuilder();
                     String peptideSequence;
 
-                    if (modifiedPeptideSequence.lastIndexOf("(") == -1
-                            && modifiedPeptideSequence.lastIndexOf("[") == -1) {
+                    if (modifiedPeptideSequence.lastIndexOf("[") == -1) {
 
                         // no modifications
                         peptideSequence = modifiedPeptideSequence;
@@ -235,35 +234,41 @@ public class PercolatorInputfileReader implements IdfileReader {
                         // extract the modifications from the provided sequence
                         for (int i = 0; i < modifiedPeptideSequence.length(); i++) {
 
-                            // we expect something like
-                            //    FSVC(57.0215)VLGDQQHC(57.0215)DEAK
-                            // or ASM[+15.9949]QPIQIAEGTGITTR
-                            if (modifiedPeptideSequence.charAt(i) == '('
-                                    || modifiedPeptideSequence.charAt(i) == '[') {
+                            // we expect something like:
+                            // [+229.1629]-VC[+57.0215]PAPC[+57.0215]EGAC[+57.0215]TLGIIEDPVGIK-[+229.1629]
+                            if (modifiedPeptideSequence.charAt(i) == '[') {
 
-                                int endingBracketIndex;
-
-                                if (modifiedPeptideSequence.charAt(i) == '(') {
-                                    endingBracketIndex = modifiedPeptideSequence.indexOf(')', i + 1);
-                                } else {
-                                    endingBracketIndex = modifiedPeptideSequence.indexOf(']', i + 1);
-                                }
+                                int endingBracketIndex = modifiedPeptideSequence.indexOf(']', i + 1);
 
                                 String modMassAsString = modifiedPeptideSequence.substring(i + 1, endingBracketIndex);
                                 double modMass = Double.parseDouble(modMassAsString);
 
+                                int modSite;
+                                char modResidue;
+                                
+                                if (i == 0) {
+                                    modSite = 1;
+                                    modResidue = modifiedPeptideSequence.charAt(endingBracketIndex + 2);
+                                } else if (endingBracketIndex + 1 == modifiedPeptideSequence.length()) {
+                                    modSite = peptideSequenceBuilder.length();
+                                    modResidue = modifiedPeptideSequence.charAt(i - 2);
+                                } else {
+                                    modSite = peptideSequenceBuilder.length();
+                                    modResidue = modifiedPeptideSequence.charAt(i - 1);
+                                }
+                                
                                 utilitiesModifications.add(
                                         new ModificationMatch(
                                                 modMass
                                                 + "@"
-                                                + modifiedPeptideSequence.charAt(i - 1),
-                                                peptideSequenceBuilder.length()
+                                                + modResidue,
+                                                modSite
                                         )
                                 );
 
                                 i = endingBracketIndex;
 
-                            } else {
+                            } else if (modifiedPeptideSequence.charAt(i) != '-') {
 
                                 peptideSequenceBuilder.append(modifiedPeptideSequence.charAt(i));
 

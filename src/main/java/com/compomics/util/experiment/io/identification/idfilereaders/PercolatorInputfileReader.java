@@ -272,13 +272,16 @@ public class PercolatorInputfileReader implements IdfileReader {
                                     int modSite;
                                     char modResidue;
 
-                                    if (i == 0) {
+                                    if (i == 0) { 
+                                        // n-terminal modification
                                         modSite = 1;
                                         modResidue = modifiedPeptideSequence.charAt(endingBracketIndex + 2);
                                     } else if (endingBracketIndex + 1 == modifiedPeptideSequence.length()) {
+                                        // c-terminal modification
                                         modSite = peptideSequenceBuilder.length();
-                                        modResidue = modifiedPeptideSequence.charAt(i - 2);
+                                        modResidue = peptideSequenceBuilder.charAt(modSite - 1);
                                     } else {
+                                        // non-terminal modification
                                         modSite = peptideSequenceBuilder.length();
                                         modResidue = modifiedPeptideSequence.charAt(i - 1);
                                     }

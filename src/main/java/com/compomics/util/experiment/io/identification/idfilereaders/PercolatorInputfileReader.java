@@ -2,6 +2,7 @@ package com.compomics.util.experiment.io.identification.idfilereaders;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
+import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
@@ -43,6 +44,16 @@ public class PercolatorInputfileReader implements IdfileReader {
      * The Percolator pin file.
      */
     private File percolatorPinFile;
+    /**
+     * The modification factory.
+     */
+    private ModificationFactory modificationFactory = ModificationFactory.getInstance();
+    /**
+     * The mass tolerance to be used to match modifications from search engines
+     * and expected modifications. 0.01 by default, the mass resolution in
+     * X !Tandem result files.
+     */
+    public static final double MOD_MASS_TOLERANCE = 0.01;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -243,28 +254,44 @@ public class PercolatorInputfileReader implements IdfileReader {
                                 String modMassAsString = modifiedPeptideSequence.substring(i + 1, endingBracketIndex);
                                 double modMass = Double.parseDouble(modMassAsString);
 
-                                int modSite;
-                                char modResidue;
-                                
-                                if (i == 0) {
-                                    modSite = 1;
-                                    modResidue = modifiedPeptideSequence.charAt(endingBracketIndex + 2);
-                                } else if (endingBracketIndex + 1 == modifiedPeptideSequence.length()) {
-                                    modSite = peptideSequenceBuilder.length();
-                                    modResidue = modifiedPeptideSequence.charAt(i - 2);
-                                } else {
-                                    modSite = peptideSequenceBuilder.length();
-                                    modResidue = modifiedPeptideSequence.charAt(i - 1);
+                                boolean variable = true;
+
+                                // check if the modification is fixed or variable
+                                for (String tempModName : searchParameters.getModificationParameters().getFixedModifications()) {
+
+                                    modificationFactory.getModification(tempModName).getMass();
+
+                                    if (Math.abs(modMass - modificationFactory.getModification(tempModName).getMass()) < MOD_MASS_TOLERANCE) {
+                                        variable = false;
+                                    }
+
                                 }
-                                
-                                utilitiesModifications.add(
-                                        new ModificationMatch(
-                                                modMass
-                                                + "@"
-                                                + modResidue,
-                                                modSite
-                                        )
-                                );
+
+                                if (variable) {
+
+                                    int modSite;
+                                    char modResidue;
+
+                                    if (i == 0) {
+                                        modSite = 1;
+                                        modResidue = modifiedPeptideSequence.charAt(endingBracketIndex + 2);
+                                    } else if (endingBracketIndex + 1 == modifiedPeptideSequence.length()) {
+                                        modSite = peptideSequenceBuilder.length();
+                                        modResidue = modifiedPeptideSequence.charAt(i - 2);
+                                    } else {
+                                        modSite = peptideSequenceBuilder.length();
+                                        modResidue = modifiedPeptideSequence.charAt(i - 1);
+                                    }
+
+                                    utilitiesModifications.add(
+                                            new ModificationMatch(
+                                                    modMass
+                                                    + "@"
+                                                    + modResidue,
+                                                    modSite
+                                            )
+                                    );
+                                }
 
                                 i = endingBracketIndex;
 

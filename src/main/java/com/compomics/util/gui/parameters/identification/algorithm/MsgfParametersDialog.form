@@ -104,7 +104,7 @@
                                   <Component id="decoyDatabaseLabel" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
                                   <Component id="fragmentationMethodLabel" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="fragmentationMethodCmb" max="32767" attributes="0"/>
                                   <Component id="instrumentCmb" max="32767" attributes="0"/>
@@ -113,12 +113,12 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="protocolLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="protocolCmb" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="numberMatchesLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="numberMatchesTxt" max="32767" attributes="2"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -127,13 +127,13 @@
                               <Component id="minPepLengthTxt" linkSize="10" min="-2" pref="71" max="-2" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="peptideLengthDividerLabel" min="-2" pref="27" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="maxPepLengthTxt" linkSize="10" min="-2" pref="77" max="-2" attributes="0"/>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="additionalOutputLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="additionalOutputCmb" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -164,49 +164,49 @@
                           <Component id="decoyDatabaseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="decoyDatabaseCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="instrumentCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="instrumentLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="fragmentationMethodCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="fragmentationMethodLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="protocolCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="protocolLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="numberTerminiLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="terminiCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="minPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="peptideLengthDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="peptideLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="maxPtmsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxPtmsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="numberMatchesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="numberMatchesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="additionalOutputLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="additionalOutputCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="numberOfTasksLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="numberOfTasksTxt" alignment="3" min="-2" max="-2" attributes="0"/>

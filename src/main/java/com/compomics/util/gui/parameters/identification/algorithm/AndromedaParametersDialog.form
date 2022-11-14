@@ -48,7 +48,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="settingsPanel" pref="481" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
@@ -56,13 +56,13 @@
                           <Component id="openDialogHelpJButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="advancedSettingsWarningLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="92" max="32767" attributes="0"/>
+                          <EmptySpace pref="72" max="32767" attributes="0"/>
                           <Component id="okButton" min="-2" pref="59" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="closeButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -70,7 +70,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="settingsPanel" pref="585" max="32767" attributes="0"/>
+                  <Component id="settingsPanel" pref="490" max="32767" attributes="0"/>
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="openDialogHelpJButton" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -113,7 +113,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="settingsScrollPane" pref="540" max="32767" attributes="0"/>
+                      <Component id="settingsScrollPane" pref="436" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -142,11 +142,11 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="peptideLengthNoEnzymeLabel" min="-2" pref="200" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                              <Component id="minPepLengthNoEnzymeTxt" pref="78" max="32767" attributes="0"/>
+                              <Component id="minPepLengthNoEnzymeTxt" pref="84" max="32767" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="peptideLengthNoEnzymeDividerLabel" min="-2" pref="27" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
-                              <Component id="maxPepLengthNoEnzymeTxt" pref="84" max="32767" attributes="0"/>
+                              <Component id="maxPepLengthNoEnzymeTxt" pref="90" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="maxPeptideMassLabel" min="-2" pref="200" max="-2" attributes="0"/>
@@ -231,77 +231,77 @@
                                   <Component id="peptideLengthNoEnzymeDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="peptideLengthNoEnzymeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="maxPeptideMassTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="maxPeptideMassLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="numberMatchesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="numberMatchesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="maxPtmsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="maxPtmsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="fragMethodLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="fragMethodCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="waterLossLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="waterLossCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="ammoniaLossLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="ammoniaLossCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="neutralLossesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="neutralLossesCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="equalILCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="equalILLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="fragmentAllLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="fragmentAllCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="empiricalCorrectionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="empiricalCorrectionCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="higherChargeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="higherChargeCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="maxCombinationsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="maxCombinationsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="topPeaksLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="topPeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="topPeaksWindowTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="topPeaksWindowLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="decoyModeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="decoyModeCmb" alignment="3" min="-2" max="-2" attributes="0"/>

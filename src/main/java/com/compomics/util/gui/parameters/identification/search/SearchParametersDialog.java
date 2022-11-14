@@ -1743,7 +1743,14 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void enzymesCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enzymesCmbActionPerformed
-        validateParametersInput(false);
+        
+        // invoke later to give time for components to update
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                validateParametersInput(false);
+            }
+        });
+
     }//GEN-LAST:event_enzymesCmbActionPerformed
 
     /**
@@ -2186,7 +2193,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             // ignore, error already caught above
         }
 
-        // valdiate that an enzyme is selected
+        // validate that an enzyme is selected
         if (((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem()) == CleavageParameter.enzyme
                 && ((CheckBoxCellRenderer) enzymesCmb.getRenderer()).getCheckedItems(enzymesCmb.getModel()).isEmpty()) {
 
@@ -2317,10 +2324,10 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         ionType = PeptideFragmentIon.getIonType(fragmentIon2Cmb.getSelectedItem().toString().trim());
         selectedRewindIons.add(ionType);
         tempSearchParameters.setRewindIons(selectedRewindIons);
-        tempSearchParameters.setFragmentIonAccuracy(Double.valueOf(fragmentIonAccuracyTxt.getText().trim()));
-        int charge = Integer.valueOf(minPrecursorChargeTxt.getText().trim());
+        tempSearchParameters.setFragmentIonAccuracy(Double.parseDouble(fragmentIonAccuracyTxt.getText().trim()));
+        int charge = Integer.parseInt(minPrecursorChargeTxt.getText().trim());
         tempSearchParameters.setMinChargeSearched(charge);
-        charge = Integer.valueOf(maxPrecursorChargeTxt.getText().trim());
+        charge = Integer.parseInt(maxPrecursorChargeTxt.getText().trim());
         tempSearchParameters.setMaxChargeSearched(charge);
         Integer minIsotope = Integer.valueOf(isotopeMinTxt.getText());
         tempSearchParameters.setMinIsotopicCorrection(minIsotope);

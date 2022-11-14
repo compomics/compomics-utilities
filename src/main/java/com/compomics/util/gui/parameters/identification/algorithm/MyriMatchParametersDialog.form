@@ -141,7 +141,7 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="computeXCorrlLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="computeXCorrCmb" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -151,7 +151,7 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="numIntensityClassesLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="numIntensityClassesTxt" max="32767" attributes="2"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -161,7 +161,7 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="numbBatchesLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="numbBatchesTxt" max="32767" attributes="2"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -171,7 +171,7 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="maxPtmsLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="maxPtmsTxt" max="32767" attributes="2"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -194,7 +194,7 @@
                               <Component id="minPrecursorMassTxt" pref="77" max="32767" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="precursorMassDividerLabel" min="-2" pref="27" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="maxPrecursorMassTxt" pref="77" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -223,69 +223,69 @@
                                   <Component id="peptideLengthDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="peptideLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="minPrecursorMassTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="maxPrecursorMassTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="precursorMassDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="precursorMassLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="numberMatchesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="numberMatchesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="maxPtmsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="maxPtmsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="fragmentationMethodCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="fragmentationMethodLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="numberTerminiLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="terminiCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="useSmartPlusThreeModelLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="useSmartPlusThreeModelCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="computeXCorrlLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="computeXCorrCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="ticCutoffPercentageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="ticCutoffPercentageTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="numIntensityClassesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="numIntensityClassesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="classSizeMultiplierLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="classSizeMultiplierTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="numbBatchesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="numbBatchesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="maxPeakCountLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="maxPeakCountTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="outputFormatLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="outputFormatCmb" alignment="3" min="-2" max="-2" attributes="0"/>

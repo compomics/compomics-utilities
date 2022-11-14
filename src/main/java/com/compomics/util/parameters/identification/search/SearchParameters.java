@@ -25,6 +25,7 @@ import com.compomics.util.gui.parameters.identification.IdentificationAlgorithmP
 import com.compomics.util.parameters.identification.IdentificationParameters;
 import static com.compomics.util.parameters.identification.IdentificationParameters.CURRENT_VERSION;
 import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters;
+import com.compomics.util.parameters.identification.tool_specific.SageParameters;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -259,6 +260,12 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
             setIdentificationAlgorithmParameter(Advocate.metaMorpheus.getIndex(), new MetaMorpheusParameters());
         } else {
             setIdentificationAlgorithmParameter(Advocate.metaMorpheus.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.metaMorpheus.getIndex()));
+        }
+        
+        if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.sage.getIndex()) == null) {
+            setIdentificationAlgorithmParameter(Advocate.sage.getIndex(), new SageParameters());
+        } else {
+            setIdentificationAlgorithmParameter(Advocate.sage.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.sage.getIndex()));
         }
 
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.pepnovo.getIndex()) == null) {

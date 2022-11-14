@@ -192,74 +192,74 @@
                           <Component id="decoyDatabaseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="decoyDatabaseCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="rankTargetAndDecoySeparatelyLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="rankTargetAndDecoySeparatelyCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="instrumentCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="instrumentLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="monoIsotopicLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="monoIsotopicCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="maxRankLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxRankTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="performDeisotopingLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="performDeisotopingCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="maxModPerPeptideCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxModPerPeptideLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="maxVariableModPerPeptideCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxVariableModPerPeptideLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="maxPotentialModSitePerPeptideCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxPotentialModSitePerPeptideLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="maxNeutralLossesPerPeptideCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxNeutralLossesPerPeptideLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="maxPtmNeutalLossesPerPeptideCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxPtmNeutalLossesPerPeptideLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="minPeptideLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="peptideLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxPeptideLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="peptideLengthDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="maxProteinsLoadedTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxProteinsLoadedLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="maxSpectraLoadedTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxSpectraLoadedLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="outputFormatLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="outputFormatCmb" alignment="3" min="-2" max="-2" attributes="0"/>

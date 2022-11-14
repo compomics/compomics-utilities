@@ -297,6 +297,29 @@ public enum IdentificationParametersCLIParams {
     META_MORPHEUS_GPTM("meta_morpheus_gptm", "MetaMorpheus run G-PTM, 1: true, 0: false, default is '0'.", false, true),
     META_MORPHEUS_GPTM_CATEGORIES("meta_morpheus_gptm_categories", "MetaMorpheus G-PTM categories to include in the G-PTM search: " + ModificationCategory.getCategoriesAsString(), false, true),
     //////////////////////////////////
+    // Sage specific parameters
+    //////////////////////////////////
+    SAGE_BUCKET_SIZE("sage_bucket_size", "Sage bucket size, number of fragments in each internal mass bucket, default is '32768'.", false, true),
+    SAGE_MIN_PEP_LENGTH("sage_min_pep_length", "Sage minimum peptide length, default is '8'.", false, true),
+    SAGE_MAX_PEP_LENGTH("sage_max_pep_length", "Sage maximum peptide length, default is '30'.", false, true),
+    SAGE_MIN_FRAG_MZ("sage_min_frag_mz", "Sage minimum fragment mz, default is '200.0'.", false, true),
+    SAGE_MAX_FRAG_MZ("sage_max_frag_mz", "Sage maximum fragment mz, default is '2000.0'.", false, true),
+    SAGE_MIN_PEP_MASS("sage_min_pep_mass", "Sage minimum peptide mass, default is '600.0'.", false, true),
+    SAGE_MAX_PEP_MASS("sage_max_pep_mass", "Sage maximum peptide mass, default is '5000.0'.", false, true),
+    SAGE_MIN_ION_INDEX("sage_min_ion_index", "Sage minimum ion index for the preliminary search, default is '2', i.e. skip b1/b2/y1/y2 ions.", false, true),
+    SAGE_DECOY_TAG("sage_decoy_tag", "Sage decoy tag, default is 'rev_'.", false, true),
+    SAGE_GENERATE_DECOYS("sage_generate_decoys", "Sage generate decoys, default is 'true'.", false, true),
+    SAGE_TMT("sage_tmt", "Sage TMT: Tmt6, Tmt10, Tmt11, Tmt16, or Tmt18.", false, true),
+    SAGE_LFQ("sage_lfq", "Sage LFQ: default is 'false'.", false, true),
+    SAGE_DEISOTOPE("sage_deisotope", "Sage deisotope, perform deisotoping and charge state deconvolution, default is 'false'.", false, true),
+    SAGE_CHIMERA("sage_chimera", "Sage search for chimeric/co-fragmenting PSMS, default is 'false'.", false, true),
+    SAGE_PREDICT_RT("sage_predict_rt", "Sage use of retention time prediction model as an feature for LDA, default is 'true'.", false, true),
+    SAGE_MIN_PEAKS("sage_min_peaks", "Sage min number of peaks for a spectrum, default is '15'.", false, true),
+    SAGE_MAX_PEAKS("sage_max_peaks", "Sage max number of peaks for a spectrum, default is '150'.", false, true),
+    SAGE_MAX_FRAGMENT_CHARGE("sage_max_frag_charge", "Sage maximum fragment charge, default is 'null'.", false, true),
+    SAGE_NUM_PSMS("sage_num_psms", "Sage number of PSMs to report for each spectra. Recommend setting to 1, higher values might disrupt LDA, default is '1'.", false, true),
+    SAGE_PARALLEL("sage_parallel", "Sage search files in parallel. For large numbers of files or low RAM, set this to false, default is 'true'.", false, true),
+    //////////////////////////////////
     // DirecTag specific parameters
     //////////////////////////////////
     DIRECTAG_TAG_LENGTH("directag_tag_length", "DirecTag tag length, default is '4'.", false, true),
@@ -730,18 +753,40 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_MAX_HETROZYGOUS_VARIANTS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_GPTM.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_GPTM.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id) + " " + IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.description + "\n";
-        
-        output += "\n\nNovor:\n\n";
+
+        output += "\n\nSage advanced parameters:\n\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_BUCKET_SIZE.id) + " " + IdentificationParametersCLIParams.SAGE_BUCKET_SIZE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MIN_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.SAGE_MIN_PEP_LENGTH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MAX_PEP_LENGTH.id) + " " + IdentificationParametersCLIParams.SAGE_MAX_PEP_LENGTH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MIN_FRAG_MZ.id) + " " + IdentificationParametersCLIParams.SAGE_MIN_FRAG_MZ.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MAX_FRAG_MZ.id) + " " + IdentificationParametersCLIParams.SAGE_MAX_FRAG_MZ.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MIN_PEP_MASS.id) + " " + IdentificationParametersCLIParams.SAGE_MIN_PEP_MASS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MAX_PEP_MASS.id) + " " + IdentificationParametersCLIParams.SAGE_MAX_PEP_MASS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MIN_ION_INDEX.id) + " " + IdentificationParametersCLIParams.SAGE_MIN_ION_INDEX.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_DECOY_TAG.id) + " " + IdentificationParametersCLIParams.SAGE_DECOY_TAG.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.id) + " " + IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_TMT.id) + " " + IdentificationParametersCLIParams.SAGE_TMT.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_LFQ.id) + " " + IdentificationParametersCLIParams.SAGE_LFQ.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_DEISOTOPE.id) + " " + IdentificationParametersCLIParams.SAGE_DEISOTOPE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_CHIMERA.id) + " " + IdentificationParametersCLIParams.SAGE_CHIMERA.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_PREDICT_RT.id) + " " + IdentificationParametersCLIParams.SAGE_PREDICT_RT.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MIN_PEAKS.id) + " " + IdentificationParametersCLIParams.SAGE_MIN_PEAKS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MAX_PEAKS.id) + " " + IdentificationParametersCLIParams.SAGE_MAX_PEAKS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MAX_FRAGMENT_CHARGE.id) + " " + IdentificationParametersCLIParams.SAGE_MAX_FRAGMENT_CHARGE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_NUM_PSMS.id) + " " + IdentificationParametersCLIParams.SAGE_NUM_PSMS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_PARALLEL.id) + " " + IdentificationParametersCLIParams.SAGE_PARALLEL.description + "\n";
+
+        output += "\n\nNovor advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id) + " " + IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.id) + " " + IdentificationParametersCLIParams.NOVOR_MASS_ANALYZER.description + "\n";
 
-        output += "\n\nPNovo+:\n\n";
+        output += "\n\nPNovo+ advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.PNOVO_ACTIVATION_TYPE.id) + " " + IdentificationParametersCLIParams.PNOVO_ACTIVATION_TYPE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.PNOVO_LOWER_PRECURSOR_MASS.id) + " " + IdentificationParametersCLIParams.PNOVO_LOWER_PRECURSOR_MASS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.PNOVO_UPPER_PRECURSOR_MASS.id) + " " + IdentificationParametersCLIParams.PNOVO_UPPER_PRECURSOR_MASS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.id) + " " + IdentificationParametersCLIParams.PNOVO_NUMBER_OF_PEPTIDES.description + "\n";
 
-        output += "\n\nPepNovo+:\n\n";
+        output += "\n\nPepNovo+ advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.id) + " " + IdentificationParametersCLIParams.PEPNOVO_HITLIST_LENGTH.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.PEPNOVO_ESTIMATE_CHARGE.id) + " " + IdentificationParametersCLIParams.PEPNOVO_ESTIMATE_CHARGE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.id) + " " + IdentificationParametersCLIParams.PEPNOVO_CORRECT_PREC_MASS.description + "\n";

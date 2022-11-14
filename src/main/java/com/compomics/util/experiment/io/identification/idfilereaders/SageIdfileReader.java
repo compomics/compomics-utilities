@@ -26,24 +26,24 @@ import java.util.ArrayList;
 import javax.xml.bind.JAXBException;
 
 /**
- * This IdfileReader reads identifications from a Percolator pin file.
+ * This IdfileReader reads identifications from a Sage tsv file.
  *
  * @author Harald Barsnes
  */
-public class PercolatorInputfileReader implements IdfileReader {
+public class SageIdfileReader implements IdfileReader {
 
     /**
      * The software name.
      */
-    private String softwareName = null;
+    private String softwareName = "Sage";
     /**
      * The softwareVersion.
      */
     private String softwareVersion = null;
     /**
-     * The Percolator pin file.
+     * The Sage tsv file.
      */
-    private File percolatorPinFile;
+    private File sageTsvFile;
     /**
      * The modification factory.
      */
@@ -58,44 +58,44 @@ public class PercolatorInputfileReader implements IdfileReader {
     /**
      * Default constructor for the purpose of instantiation.
      */
-    public PercolatorInputfileReader() {
+    public SageIdfileReader() {
     }
 
     /**
-     * Constructor for a Percolator pin file reader.
+     * Constructor for a Sage tsv file reader.
      *
-     * @param percolatorPinFile the Percolator pin file
+     * @param sageTsvFile the Sage tsv file
      *
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      */
-    public PercolatorInputfileReader(
-            File percolatorPinFile
+    public SageIdfileReader(
+            File sageTsvFile
     ) throws IOException {
-        this(percolatorPinFile, null);
+        this(sageTsvFile, null);
     }
 
     /**
-     * Constructor for a Percolator pin file reader.
+     * Constructor for a Sage tsv file reader.
      *
-     * @param percolatorPinFile the Percolator pin file
+     * @param sageTsvFile the Sage tsv file
      * @param waitingHandler the waiting handler
      *
      * @throws FileNotFoundException if a FileNotFoundException occurs
      * @throws IOException if an IOException occurs
      */
-    public PercolatorInputfileReader(
-            File percolatorPinFile,
+    public SageIdfileReader(
+            File sageTsvFile,
             WaitingHandler waitingHandler
     ) throws IOException {
 
-        this.percolatorPinFile = percolatorPinFile;
+        this.sageTsvFile = sageTsvFile;
 
     }
 
     @Override
     public String getExtension() {
-        return ".pin";
+        return ".sage.tsv";
     }
 
     @Override
@@ -137,7 +137,7 @@ public class PercolatorInputfileReader implements IdfileReader {
 
         ArrayList<SpectrumMatch> result = new ArrayList<>();
 
-        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(percolatorPinFile)) {
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(sageTsvFile)) {
 
             String headerString = reader.readLine();
 
@@ -178,15 +178,8 @@ public class PercolatorInputfileReader implements IdfileReader {
                     || rankIndex == -1 || spectrumTitleIndex == -1 || spectrumFileIndex == -1) {
 
                 throw new IllegalArgumentException(
-                        "Mandatory columns are missing in the Percolator pin file. Please check the file!"
+                        "Mandatory columns are missing in the Sage tsv file. Please check the file!"
                 );
-            }
-
-            // try to extract the underlying search engine
-            if (sageDiscriminantScore != -1) {
-                softwareName = "Sage";
-            } else {
-                softwareName = "Percolator Input File"; // @TODO: add support for more search engines?
             }
 
             String line;
@@ -318,23 +311,15 @@ public class PercolatorInputfileReader implements IdfileReader {
                             true
                     );
 
-                    Advocate advocate;
-
-                    if (softwareName.equalsIgnoreCase("Sage")) {
-                        advocate = Advocate.sage;
-                    } else {
-                        advocate = Advocate.percolator;
-                    }
-
                     // create the peptide assumption
                     PeptideAssumption peptideAssumption = new PeptideAssumption(
                             peptide,
                             rank,
-                            advocate.getIndex(),
+                            Advocate.sage.getIndex(),
                             charge,
                             rawScore,
                             rawScore,
-                            IoUtil.getFileName(percolatorPinFile)
+                            IoUtil.getFileName(sageTsvFile)
                     );
 
                     if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
@@ -359,13 +344,13 @@ public class PercolatorInputfileReader implements IdfileReader {
                                     peptideAssumption.getIdentificationFile()
                             );
 
-                            currentMatch.addPeptideAssumption(advocate.getIndex(), newAssumption);
+                            currentMatch.addPeptideAssumption(Advocate.sage.getIndex(), newAssumption);
 
                         }
 
                     } else {
 
-                        currentMatch.addPeptideAssumption(advocate.getIndex(), peptideAssumption);
+                        currentMatch.addPeptideAssumption(Advocate.sage.getIndex(), peptideAssumption);
 
                     }
 
@@ -388,7 +373,7 @@ public class PercolatorInputfileReader implements IdfileReader {
 
     @Override
     public void close() throws IOException {
-        percolatorPinFile = null;
+        sageTsvFile = null;
     }
 
     @Override

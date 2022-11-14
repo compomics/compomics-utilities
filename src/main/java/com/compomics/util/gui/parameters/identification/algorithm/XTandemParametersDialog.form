@@ -160,7 +160,7 @@
                                   <Component id="minFragmentMzTxt" max="32767" attributes="2"/>
                               </Group>
                           </Group>
-                          <EmptySpace min="25" pref="25" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -172,37 +172,37 @@
                               <Component id="dynamicRangeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="dynamicRangeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="nPeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="nPeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="minFragmentMzTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="minFragMzLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="minPeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="minPeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="noiseSuppressionCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="noiseSuppressionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="minPrecMassTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="minPrecMassLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="parentMonoisotopicMassIsotopeErrorCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="parentMonoisotopicMassIsotopeErrorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="230" max="32767" attributes="0"/>
+                          <EmptySpace pref="266" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -389,7 +389,7 @@
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace min="25" pref="25" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -401,22 +401,22 @@
                               <Component id="quickAcetylLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="quickAcetylCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="quickPyroCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="quickPyroLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="stpBiasCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="stpBiasLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="modificationComplexityLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="modificationComplexityTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="314" max="32767" attributes="0"/>
+                          <EmptySpace pref="352" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -562,37 +562,37 @@
                               <Component id="outputResultsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="outputResultsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="eValueLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="eValueTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="outputProteinsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="outputProteinsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="outputSequencesCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="outputSequencesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="outputSpectraCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="outputSpectraLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="outputHistogramsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="outputHistogramsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="skylinePathValueLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="skylineTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="236" max="32767" attributes="0"/>
+                          <EmptySpace pref="272" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -804,37 +804,37 @@
                               <Component id="refinementCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="refinementLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="maxEValueRefineTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="maxEValueRefinmentLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="unanticipatedCleavageCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="unanticipatedCleavageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="semiEnzymaticCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="semiEnzymaticLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="potentialModificationsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="usePotentialModsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="pointMutationsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="pointMutationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="snapsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="snapsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="spectrumSynthesisCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="spectrumSynthesisLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1041,7 +1041,7 @@
                                   <Component id="openModificationSettingsJButton" alignment="2" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="modificationsJScrollPane" pref="145" max="32767" attributes="0"/>
+                              <Component id="modificationsJScrollPane" pref="194" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>

@@ -47,6 +47,7 @@ import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusPa
 import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusMassDiffAcceptorType;
 import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusSearchType;
 import com.compomics.util.parameters.identification.tool_specific.MetaMorpheusParameters.MetaMorpheusToleranceType;
+import com.compomics.util.parameters.identification.tool_specific.SageParameters;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -1411,7 +1412,7 @@ public class IdentificationParametersInputBean {
             for (MetaMorpheusFragmentationTerminusType type : MetaMorpheusFragmentationTerminusType.values()) {
                 supportedInput.add(type.toString());
             }
-            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id, arg,supportedInput)) {
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_FRAGMENTATION_TERMINUS.id, arg, supportedInput)) {
                 return false;
             }
         }
@@ -1483,7 +1484,7 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        
+
         if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id);
             if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.META_MORPHEUS_TRIM_MS1_PEAKS.id, arg)) {
@@ -1580,18 +1581,142 @@ public class IdentificationParametersInputBean {
         }
         if (aLine.hasOption(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id)) {
             String combinedArgs = aLine.getOptionValue(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id);
-            
+
             List<String> supportedInput = new ArrayList<>();
             for (ModificationCategory modCategory : ModificationCategory.values()) {
                 supportedInput.add(modCategory.toString());
             }
-            
+
             for (String arg : CommandLineUtils.splitInput(combinedArgs)) {
                 if (!CommandParameter.isInList(IdentificationParametersCLIParams.META_MORPHEUS_GPTM_CATEGORIES.id, arg, supportedInput)) {
                     return false;
                 }
             }
-            
+
+        }
+        //////////////////////////////////
+        // Sage
+        //////////////////////////////////
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_BUCKET_SIZE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_BUCKET_SIZE.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SAGE_BUCKET_SIZE.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_MIN_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MIN_PEP_LENGTH.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SAGE_MIN_PEP_LENGTH.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_PEP_LENGTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_PEP_LENGTH.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SAGE_MAX_PEP_LENGTH.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_MIN_FRAG_MZ.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MIN_FRAG_MZ.id);
+            if (!CommandParameter.isPositiveDouble(IdentificationParametersCLIParams.SAGE_MIN_FRAG_MZ.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_FRAG_MZ.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_FRAG_MZ.id);
+            if (!CommandParameter.isPositiveDouble(IdentificationParametersCLIParams.SAGE_MAX_FRAG_MZ.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_MIN_PEP_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MIN_PEP_MASS.id);
+            if (!CommandParameter.isPositiveDouble(IdentificationParametersCLIParams.SAGE_MIN_PEP_MASS.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_PEP_MASS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_PEP_MASS.id);
+            if (!CommandParameter.isPositiveDouble(IdentificationParametersCLIParams.SAGE_MAX_PEP_MASS.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_MIN_ION_INDEX.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MIN_ION_INDEX.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SAGE_MIN_ION_INDEX.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.id);
+            List<String> supportedInput = Arrays.asList("true", "false");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_TMT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_TMT.id);
+            List<String> supportedInput = Arrays.asList("Tmt6", "Tmt10", "Tmt11", "Tmt16", "Tmt18");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_TMT.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ.id);
+            List<String> supportedInput = Arrays.asList("true", "false");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_LFQ.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_DEISOTOPE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_DEISOTOPE.id);
+            List<String> supportedInput = Arrays.asList("true", "false");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_DEISOTOPE.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_CHIMERA.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_CHIMERA.id);
+            List<String> supportedInput = Arrays.asList("true", "false");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_CHIMERA.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_PREDICT_RT.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_PREDICT_RT.id);
+            List<String> supportedInput = Arrays.asList("true", "false");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_PREDICT_RT.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_MIN_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MIN_PEAKS.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SAGE_MIN_PEAKS.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_PEAKS.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SAGE_MAX_PEAKS.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_FRAGMENT_CHARGE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_FRAGMENT_CHARGE.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SAGE_MAX_FRAGMENT_CHARGE.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_NUM_PSMS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_NUM_PSMS.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SAGE_NUM_PSMS.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_PARALLEL.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_PARALLEL.id);
+            List<String> supportedInput = Arrays.asList("true", "false");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_PARALLEL.id, arg, supportedInput)) {
+                return false;
+            }
         }
         //////////////////////////////////
         // Pepnovo
@@ -3594,14 +3719,125 @@ public class IdentificationParametersInputBean {
             ArrayList<ModificationCategory> gPtmModCategories = new ArrayList<>();
             for (String arg : CommandLineUtils.splitInput(combinedArgs)) {
                 for (ModificationCategory category : ModificationCategory.values()) {
-                    if (arg.equalsIgnoreCase(category.toString()) 
+                    if (arg.equalsIgnoreCase(category.toString())
                             && !gPtmModCategories.contains(category)) {
                         gPtmModCategories.add(category);
                     }
                 }
             }
-            
+
             metaMorpheusParameters.setGPtmCategories(gPtmModCategories);
+        }
+
+        ///////////////////////////////////
+        // Sage parameters
+        ///////////////////////////////////
+        SageParameters sageParameters;
+        algorithmIndex = Advocate.sage.getIndex();
+        identificationAlgorithmParameter = searchParameters.getIdentificationAlgorithmParameter(algorithmIndex);
+        if (identificationAlgorithmParameter == null) {
+            sageParameters = new SageParameters();
+            searchParameters.setIdentificationAlgorithmParameter(algorithmIndex, sageParameters);
+        } else {
+            sageParameters = (SageParameters) identificationAlgorithmParameter;
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_BUCKET_SIZE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_BUCKET_SIZE.id);
+            Integer option = Integer.valueOf(arg);
+            sageParameters.setBucketSize(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_MIN_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MIN_PEP_LENGTH.id);
+            Integer option = Integer.valueOf(arg);
+            sageParameters.setMinPeptideLength(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_PEP_LENGTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_PEP_LENGTH.id);
+            Integer option = Integer.valueOf(arg);
+            sageParameters.setMaxPeptideLength(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_MIN_FRAG_MZ.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MIN_FRAG_MZ.id);
+            Double option = Double.valueOf(arg);
+            sageParameters.setMinFragmentMz(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_FRAG_MZ.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_FRAG_MZ.id);
+            Double option = Double.valueOf(arg);
+            sageParameters.setMaxFragmentMz(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_MIN_PEP_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MIN_PEP_MASS.id);
+            Double option = Double.valueOf(arg);
+            sageParameters.setMinPeptideMass(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_PEP_MASS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_PEP_MASS.id);
+            Double option = Double.valueOf(arg);
+            sageParameters.setMaxPeptideMass(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_MIN_ION_INDEX.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MIN_ION_INDEX.id);
+            Integer option = Integer.valueOf(arg);
+            sageParameters.setMinIonIndex(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_DECOY_TAG.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_DECOY_TAG.id);
+            sageParameters.setDecoyTag(arg);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.id);
+            Boolean option = Boolean.valueOf(arg);
+            sageParameters.setGenerateDecoys(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_TMT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_TMT.id);
+            sageParameters.setTmtType(arg);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ.id);
+            Boolean option = Boolean.valueOf(arg);
+            sageParameters.setPerformLfq(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_DEISOTOPE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_DEISOTOPE.id);
+            Boolean option = Boolean.valueOf(arg);
+            sageParameters.setDeisotope(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_CHIMERA.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_CHIMERA.id);
+            Boolean option = Boolean.valueOf(arg);
+            sageParameters.setChimera(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_PREDICT_RT.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_PREDICT_RT.id);
+            Boolean option = Boolean.valueOf(arg);
+            sageParameters.setPredictRt(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_MIN_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MIN_PEAKS.id);
+            Integer option = Integer.valueOf(arg);
+            sageParameters.setMinPeaks(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_PEAKS.id);
+            Integer option = Integer.valueOf(arg);
+            sageParameters.setMaxPeaks(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_FRAGMENT_CHARGE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_FRAGMENT_CHARGE.id);
+            Integer option = Integer.valueOf(arg);
+            sageParameters.setMaxFragmentCharge(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_NUM_PSMS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_NUM_PSMS.id);
+            Integer option = Integer.valueOf(arg);
+            sageParameters.setNumPsmsPerSpectrum(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_PARALLEL.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_PARALLEL.id);
+            Boolean option = Boolean.valueOf(arg);
+            sageParameters.setParallelSearch(option);
         }
 
         ///////////////////////////////////

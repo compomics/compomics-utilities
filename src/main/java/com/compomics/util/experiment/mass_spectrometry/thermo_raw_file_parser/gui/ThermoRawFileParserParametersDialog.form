@@ -138,7 +138,7 @@
                           <Component id="outputPepXmlLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="outputFormatCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="peakPickingLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="peakPickingCmb" alignment="3" min="-2" max="-2" attributes="0"/>

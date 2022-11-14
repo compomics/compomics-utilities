@@ -61,7 +61,7 @@ public class ModificationNameMapper {
             case "PepxmlIdfileReader":
             case "TideIdfileReader":
             case "CossIdfileReader":
-            case "PercolatorInputfileReader":
+            case "SageIdfileReader":
                 return getPossibleModificationNamesByMass(
                         peptide,
                         modificationMatch,

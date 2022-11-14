@@ -321,7 +321,6 @@ public class CometParameters extends ExperimentObject implements IdentificationA
         output.append("FRAGMENT_BIN_OFFSET=");
         output.append(fragmentBinOffset);
         output.append(newLine);
-        output.append(newLine);
         output.append("USE_SPARSE_MATRIX=");
         output.append(useSparseMatrix);
         output.append(newLine);

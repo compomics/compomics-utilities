@@ -162,22 +162,22 @@
                                   <Component id="digestionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="digestionCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="enzymeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="enzymesCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="specificityLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="specificityComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="maxMissedCleavagesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="maxMissedCleavagesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="fragmentIon1Cmb" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="fragmentIon2Cmb" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -190,13 +190,13 @@
                                   <Component id="precursorIonAccuracyTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="precursorIonUnit" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="fragmentIonLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="fragmentIonAccuracyTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="fragmentIonUnit" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="103" alignment="1" groupAlignment="3" attributes="0">
                                       <Component id="minPrecursorChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -207,7 +207,7 @@
                                       <Component id="precursorChargeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="2" attributes="0">
                                   <Component id="isotopesLbl" alignment="2" min="-2" max="-2" attributes="0"/>
                                   <Component id="isotopeMinTxt" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -503,9 +503,9 @@
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
                                           <Component id="addFixedModification" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                           <Component id="removeFixedModification" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace pref="57" max="32767" attributes="0"/>
+                                          <EmptySpace pref="63" max="32767" attributes="0"/>
                                       </Group>
                                       <Component id="fixedModsJScrollPane" max="32767" attributes="0"/>
                                   </Group>
@@ -614,9 +614,9 @@
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
                                           <Component id="addVariableModification" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                           <Component id="removeVariableModification" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace pref="57" max="32767" attributes="0"/>
+                                          <EmptySpace pref="63" max="32767" attributes="0"/>
                                       </Group>
                                       <Component id="variableModsJScrollPane" max="32767" attributes="0"/>
                                   </Group>

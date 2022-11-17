@@ -307,6 +307,7 @@ public enum IdentificationParametersCLIParams {
     SAGE_MIN_PEP_MASS("sage_min_pep_mass", "Sage minimum peptide mass, default is '600.0'.", false, true),
     SAGE_MAX_PEP_MASS("sage_max_pep_mass", "Sage maximum peptide mass, default is '5000.0'.", false, true),
     SAGE_MIN_ION_INDEX("sage_min_ion_index", "Sage minimum ion index for the preliminary search, default is '2', i.e. skip b1/b2/y1/y2 ions.", false, true),
+    SAGE_MAX_VAR_MODS("sage_max_var_mods", "Sage maximum number of variable modifications, default is '2'.", false, true),
     SAGE_DECOY_TAG("sage_decoy_tag", "Sage decoy tag, default is 'rev_'.", false, true),
     SAGE_GENERATE_DECOYS("sage_generate_decoys", "Sage generate decoys, default is 'true'.", false, true),
     SAGE_TMT("sage_tmt", "Sage TMT: Tmt6, Tmt10, Tmt11, Tmt16, or Tmt18.", false, true),
@@ -763,6 +764,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MIN_PEP_MASS.id) + " " + IdentificationParametersCLIParams.SAGE_MIN_PEP_MASS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MAX_PEP_MASS.id) + " " + IdentificationParametersCLIParams.SAGE_MAX_PEP_MASS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MIN_ION_INDEX.id) + " " + IdentificationParametersCLIParams.SAGE_MIN_ION_INDEX.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MAX_VAR_MODS.id) + " " + IdentificationParametersCLIParams.SAGE_MAX_VAR_MODS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_DECOY_TAG.id) + " " + IdentificationParametersCLIParams.SAGE_DECOY_TAG.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.id) + " " + IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_TMT.id) + " " + IdentificationParametersCLIParams.SAGE_TMT.description + "\n";

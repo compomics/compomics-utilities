@@ -1645,6 +1645,12 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_VAR_MODS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_VAR_MODS.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SAGE_MAX_VAR_MODS.id, arg, false)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.id);
             List<String> supportedInput = Arrays.asList("true", "false");
@@ -2049,7 +2055,7 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.PTM_SCORE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.PTM_SCORE.id);
             try {
-                int scoreId = Integer.valueOf(arg);
+                int scoreId = Integer.parseInt(arg);
                 ModificationLocalizationScore.getScore(scoreId);
             } catch (Exception e) {
                 System.out.println(System.getProperty("line.separator") + "Error when parsing " + IdentificationParametersCLIParams.PTM_SCORE.id + ". Option found: " + arg + "." + System.getProperty("line.separator"));
@@ -2332,7 +2338,7 @@ public class IdentificationParametersInputBean {
                 ArrayList<String> args = CommandLineUtils.splitInput(arg);
                 specificities = new ArrayList<>(args.size());
                 for (String stringValue : args) {
-                    specificities.add(Specificity.getSpecificity(Integer.valueOf(stringValue)));
+                    specificities.add(Specificity.getSpecificity(Integer.parseInt(stringValue)));
                 }
             }
             for (int i = 0; i < enzymes.size(); i++) {
@@ -3780,6 +3786,11 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MIN_ION_INDEX.id);
             Integer option = Integer.valueOf(arg);
             sageParameters.setMinIonIndex(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_VAR_MODS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_VAR_MODS.id);
+            Integer option = Integer.valueOf(arg);
+            sageParameters.setMaxVariableMods(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_DECOY_TAG.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_DECOY_TAG.id);

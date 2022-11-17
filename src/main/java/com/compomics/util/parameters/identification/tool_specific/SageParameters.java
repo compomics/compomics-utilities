@@ -14,7 +14,7 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
     /**
      * Version number for deserialization.
      */
-    //static final long serialVersionUID = -2996752557726296967L;
+    //static final long serialVersionUID = -2996752557726296967L; // @TODO: add!
     /**
      * The bucket size, i.e. the number of fragments in each internal mass
      * bucket.
@@ -41,6 +41,10 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      * skip b1/b2/y1/y2 ions.
      */
     private Integer minIonIndex = 2;
+    /**
+     * The maximum number of variable modifications on the same peptide.
+     */
+    private Integer maxVariableMods = 2;
     /**
      * Sage decoy tag.
      */
@@ -148,7 +152,10 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
             if (!minIonIndex.equals(sageParameters.getMinIonIndex())) {
                 return false;
             }
-            if (!decoyTag.equals(sageParameters.getDecoyTag())) { // @TODO: have to check for null values!
+            if (!getMaxVariableMods().equals(sageParameters.getMaxVariableMods())) {
+                return false;
+            }
+            if (!decoyTag.equals(sageParameters.getDecoyTag())) {
                 return false;
             }
             if (!generateDecoys.equals(sageParameters.getGenerateDecoys())) {
@@ -243,6 +250,9 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
         output.append(newLine);
         output.append("MIN_ION_INDEX=");
         output.append(minIonIndex);
+        output.append(newLine);
+        output.append("MAX_VARIABLE_MODS=");
+        output.append(maxVariableMods);
         output.append(newLine);
         output.append("DECOY_TAG=");
         output.append(decoyTag);
@@ -642,5 +652,28 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      */
     public void setParallelSearch(Boolean parallelSearch) {
         this.parallelSearch = parallelSearch;
+    }
+
+    /**
+     * Returns the maximum variable modifications per peptide.
+     * 
+     * @return the maxVariableMods
+     */
+    public Integer getMaxVariableMods() {
+        
+        if (maxVariableMods == null) {
+            maxVariableMods = 2;
+        }
+        
+        return maxVariableMods;
+    }
+
+    /**
+     * Set the maximum variable modifications per peptide.
+     * 
+     * @param maxVariableMods the maxVariableMods to set
+     */
+    public void setMaxVariableMods(Integer maxVariableMods) {
+        this.maxVariableMods = maxVariableMods;
     }
 }

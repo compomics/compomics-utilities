@@ -133,7 +133,7 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="decoyTagLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="decoyTagTxt" max="32767" attributes="2"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
@@ -199,6 +199,11 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="maxNumberOfPeaksTxt" linkSize="11" min="-2" pref="80" max="-2" attributes="0"/>
                           </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="maxVariableModsLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="maxVariableModsTxt" max="32767" attributes="2"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -237,6 +242,11 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="minIonIndexLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="minIonIndexTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="maxVariableModsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxVariableModsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -597,6 +607,20 @@
                   </StringArray>
                 </Property>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="maxVariableModsLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Maximum Variable Modifications"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxVariableModsTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="2"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxVariableModsTxtKeyReleased"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -100,6 +100,8 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         maxPepLengthTxt.setEnabled(editable);
         minIonIndexTxt.setEditable(editable);
         minIonIndexTxt.setEnabled(editable);
+        maxVariableModsTxt.setEditable(editable);
+        maxVariableModsTxt.setEnabled(editable);
         decoyTagTxt.setEditable(editable);
         decoyTagTxt.setEnabled(editable);
         minNumberOfPeaksTxt.setEditable(editable);
@@ -153,6 +155,10 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
             generateDecoysCmb.setSelectedIndex(0);
         } else {
             generateDecoysCmb.setSelectedIndex(1);
+        }
+
+        if (sageParameters.getMaxVariableMods() != null) {
+            maxVariableModsTxt.setText(sageParameters.getMaxVariableMods() + "");
         }
 
         if (sageParameters.getDecoyTag() != null) {
@@ -267,6 +273,11 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         if (!input.equals("")) {
             result.setMinIonIndex(Integer.valueOf(input));
         }
+        
+        input = maxVariableModsTxt.getText().trim();
+        if (!input.equals("")) {
+            result.setMaxVariableMods(Integer.valueOf(input));
+        }
 
         result.setGenerateDecoys(generateDecoysCmb.getSelectedIndex() == 0);
 
@@ -280,7 +291,7 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         } else {
             result.setTmtType(null);
         }
-        
+
         result.setPerformLfq(lfqCmb.getSelectedIndex() == 0);
         result.setDeisotope(deisotopeCmb.getSelectedIndex() == 0);
         result.setChimera(chimericSpectraCmb.getSelectedIndex() == 0);
@@ -361,6 +372,8 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         numberOfPsmsPerSpectrumLabel = new javax.swing.JLabel();
         numberOfPsmsPerSpectrumTxt = new javax.swing.JTextField();
         tmtTypeCmb = new javax.swing.JComboBox();
+        maxVariableModsLabel = new javax.swing.JLabel();
+        maxVariableModsTxt = new javax.swing.JTextField();
         okButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
         openDialogHelpJButton = new javax.swing.JButton();
@@ -539,6 +552,16 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
 
         tmtTypeCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Tmt6", "Tmt10", "Tmt11", "Tmt16", "Tmt18" }));
 
+        maxVariableModsLabel.setText("Maximum Variable Modifications");
+
+        maxVariableModsTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        maxVariableModsTxt.setText("2");
+        maxVariableModsTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                maxVariableModsTxtKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
         advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
         advancedSearchSettingsPanelLayout.setHorizontalGroup(
@@ -626,7 +649,11 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(numberOfPeaksDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(maxNumberOfPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(maxNumberOfPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(maxVariableModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(maxVariableModsTxt)))
                 .addContainerGap())
         );
 
@@ -661,6 +688,10 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minIonIndexLabel)
                     .addComponent(minIonIndexTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(maxVariableModsLabel)
+                    .addComponent(maxVariableModsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(generateDecoysLabel)
@@ -960,6 +991,15 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
     }//GEN-LAST:event_numberOfPsmsPerSpectrumTxtKeyReleased
 
     /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void maxVariableModsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxVariableModsTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_maxVariableModsTxtKeyReleased
+
+    /**
      * Inspects the parameters validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -977,6 +1017,7 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         valid = GuiUtilities.validateDoubleInput(this, peptideMassLabel, minPeptideMassTxt, "minimum peptide mass", "Peptide Mass Error", true, showMessage, valid);
         valid = GuiUtilities.validateDoubleInput(this, peptideMassLabel, maxFragmentMzTxt, "maximum peptide mass", "Peptide Mass Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, minIonIndexLabel, minIonIndexTxt, "minimum ion index", "Minimum Ion Index Error", true, showMessage, valid);
+        valid = GuiUtilities.validateIntegerInput(this, maxVariableModsLabel, maxVariableModsTxt, "maximum variable modifications", "Maximum Variable Modifications Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, numberOfPeaksLabel, minNumberOfPeaksTxt, "minimum number of peaks", "Number of Peaks Error", true, showMessage, valid);
         valid = GuiUtilities.validateIntegerInput(this, numberOfPeaksLabel, maxNumberOfPeaksTxt, "maximum number of peaks", "Number of Peaks Error", true, showMessage, valid);
 
@@ -1016,6 +1057,8 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
     private javax.swing.JTextField maxNumberOfPeaksTxt;
     private javax.swing.JTextField maxPepLengthTxt;
     private javax.swing.JTextField maxPeptideMassTxt;
+    private javax.swing.JLabel maxVariableModsLabel;
+    private javax.swing.JTextField maxVariableModsTxt;
     private javax.swing.JTextField minFragmentMzTxt;
     private javax.swing.JLabel minIonIndexLabel;
     private javax.swing.JTextField minIonIndexTxt;

@@ -16,11 +16,6 @@ import javax.swing.SwingConstants;
 public class ProcessingParametersDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public ProcessingParametersDialog() {
-    }
-    /**
      * Boolean indicating whether the user canceled the editing.
      */
     private boolean canceled = false;
@@ -37,7 +32,12 @@ public class ProcessingParametersDialog extends javax.swing.JDialog {
      * @param processingPreferences the processing parameters to display
      * @param editable boolean indicating whether the settings can be edited
      */
-    public ProcessingParametersDialog(java.awt.Frame parentFrame, ProcessingParameters processingPreferences, boolean editable) {
+    public ProcessingParametersDialog(
+            java.awt.Frame parentFrame,
+            ProcessingParameters processingPreferences,
+            boolean editable
+    ) {
+
         super(parentFrame, true);
         initComponents();
         this.editable = editable;
@@ -45,6 +45,7 @@ public class ProcessingParametersDialog extends javax.swing.JDialog {
         populateGUI(processingPreferences);
         setLocationRelativeTo(parentFrame);
         setVisible(true);
+
     }
 
     /**
@@ -55,7 +56,13 @@ public class ProcessingParametersDialog extends javax.swing.JDialog {
      * @param processingPreferences the processing parameters to display
      * @param editable boolean indicating whether the settings can be edited
      */
-    public ProcessingParametersDialog(Dialog owner, java.awt.Frame parentFrame, ProcessingParameters processingPreferences, boolean editable) {
+    public ProcessingParametersDialog(
+            Dialog owner,
+            java.awt.Frame parentFrame,
+            ProcessingParameters processingPreferences,
+            boolean editable
+    ) {
+
         super(owner, true);
         initComponents();
         this.editable = editable;
@@ -63,15 +70,18 @@ public class ProcessingParametersDialog extends javax.swing.JDialog {
         populateGUI(processingPreferences);
         setLocationRelativeTo(owner);
         setVisible(true);
+
     }
 
     /**
      * Set up the GUI.
      */
     private void setUpGui() {
+
         processingTypeCmb.setRenderer(new AlignedListCellRenderer(SwingConstants.CENTER));
         //processingTypeCmb.setEnabled(editable);
         nThreadsSpinner.setEnabled(editable);
+
     }
 
     /**
@@ -80,8 +90,10 @@ public class ProcessingParametersDialog extends javax.swing.JDialog {
      * @param processingPreferences the processing parameters to display
      */
     private void populateGUI(ProcessingParameters processingPreferences) {
+
         processingTypeCmb.setSelectedItem(processingPreferences.getProcessingType());
         nThreadsSpinner.setModel(new javax.swing.SpinnerNumberModel(processingPreferences.getnThreads(), 1, null, 1));
+
     }
 
     /**
@@ -108,10 +120,12 @@ public class ProcessingParametersDialog extends javax.swing.JDialog {
      * @return the processing parameters as set by the user
      */
     public ProcessingParameters getProcessingParameters() {
+
         ProcessingParameters processingParameters = new ProcessingParameters();
         processingParameters.setProcessingType((ProcessingParameters.ProcessingType) processingTypeCmb.getSelectedItem());
         processingParameters.setnThreads((Integer) nThreadsSpinner.getValue());
         return processingParameters;
+
     }
 
     /**
@@ -134,7 +148,7 @@ public class ProcessingParametersDialog extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Processing Preferences");
+        setTitle("Processing Settings");
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
@@ -256,8 +270,8 @@ public class ProcessingParametersDialog extends javax.swing.JDialog {
 
     /**
      * Cancel the dialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
@@ -266,8 +280,8 @@ public class ProcessingParametersDialog extends javax.swing.JDialog {
 
     /**
      * Cancel the dialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();

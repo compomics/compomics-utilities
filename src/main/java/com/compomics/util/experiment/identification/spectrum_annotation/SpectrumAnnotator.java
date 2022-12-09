@@ -194,7 +194,7 @@ public abstract class SpectrumAnnotator {
             double[] spectrumMz,
             double[] spectrumIntensity,
             Ion theoreticIon,
-            Integer inspectedCharge
+            int inspectedCharge
     ) {
 
         double fragmentMz = theoreticIon.getTheoreticMz(inspectedCharge);

@@ -255,7 +255,7 @@ public abstract class Ion extends ExperimentObject {
      */
     public static String getNeutralLossesAsString(NeutralLoss[] neutralLosses) {
 
-        if (neutralLosses == null) {
+        if (neutralLosses == null || neutralLosses.length == 0) {
             return "";
         }
 

@@ -34,17 +34,12 @@ public class MassErrorPlot extends JPanel {
     private ChartPanel chartPanel;
 
     /**
-     * Empty default constructor
-     */
-    public MassErrorPlot() {
-    }
-
-    /**
      * Creates a new MassErrorPlot.
      *
      * @param annotations the full list of spectrum annotations
      * @param currentSpectrum the current spectrum
      * @param massTolerance the mass error tolerance
+     * @param lowResolution low or high resolution chart
      *
      * @throws java.lang.InterruptedException exception thrown if the thread is
      * interrupted
@@ -52,14 +47,16 @@ public class MassErrorPlot extends JPanel {
     public MassErrorPlot(
             IonMatch[] annotations,
             Spectrum currentSpectrum,
-            double massTolerance
+            double massTolerance, 
+            boolean lowResolution
     ) throws InterruptedException {
     
         this(
                 annotations, 
                 currentSpectrum, 
                 massTolerance, 
-                false
+                false,
+                lowResolution
         );
     }
 
@@ -71,12 +68,14 @@ public class MassErrorPlot extends JPanel {
      * @param massTolerance the mass error tolerance
      * @param useRelativeError if true the relative error (ppm) is used instead
      * of the absolute error (Da)
+     * @param lowResolution low or high resolution chart
      */
     public MassErrorPlot(
             IonMatch[] annotations,
             Spectrum currentSpectrum,
             double massTolerance,
-            boolean useRelativeError
+            boolean useRelativeError, 
+            boolean lowResolution
     ) {
         super();
 
@@ -149,7 +148,7 @@ public class MassErrorPlot extends JPanel {
             chart.getPlot().setBackgroundPaint(Color.WHITE);
             chart.setBackgroundPaint(Color.WHITE);
 
-            chartPanel = new ChartPanel(chart);
+            chartPanel = new ChartPanel(chart, lowResolution);
             chartPanel.setBackground(Color.WHITE);
             this.add(chartPanel);
 

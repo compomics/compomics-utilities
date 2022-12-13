@@ -31,22 +31,18 @@ public class IntensityHistogram extends JPanel {
     private ChartPanel chartPanel;
 
     /**
-     * Empty default constructor
-     */
-    public IntensityHistogram() {
-    }
-
-    /**
      * Creates an IntensityHistogram plot
      *
      * @param annotations the full list of spectrum annotations
      * @param currentSpectrum the current spectrum
      * @param intensityThreshold the intensity threshold
+     * @param lowResolution low or high resolution chart
      */
     public IntensityHistogram(
             IonMatch[] annotations,
             Spectrum currentSpectrum,
-            double intensityThreshold
+            double intensityThreshold, 
+            boolean lowResolution
     ) {
         super();
 
@@ -106,7 +102,7 @@ public class IntensityHistogram extends JPanel {
                     false
             );
 
-            chartPanel = new ChartPanel(chart);
+            chartPanel = new ChartPanel(chart, lowResolution);
             chartPanel.setBorder(null);
             chart.setBorderVisible(false);
 

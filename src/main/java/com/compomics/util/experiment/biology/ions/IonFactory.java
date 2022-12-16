@@ -111,9 +111,13 @@ public class IonFactory {
      * Sets the default neutral losses.
      */
     private static synchronized void setDefaultNeutralLosses() {
-        defaultNeutralLosses = new HashSet<>(2);
-        defaultNeutralLosses.add(NeutralLoss.H2O.name);
-        defaultNeutralLosses.add(NeutralLoss.NH3.name);
+        
+        HashSet<String> tempMap = new HashSet<>(2);
+        tempMap.add(NeutralLoss.H2O.name);
+        tempMap.add(NeutralLoss.NH3.name);
+        
+        defaultNeutralLosses = tempMap;
+        
     }
 
     /**

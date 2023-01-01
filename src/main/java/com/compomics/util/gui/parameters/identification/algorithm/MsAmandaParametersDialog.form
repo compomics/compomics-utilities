@@ -273,7 +273,7 @@
             <Component class="javax.swing.JComboBox" name="instrumentCmb">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="16">
+                  <StringArray count="18">
                     <StringItem index="0" value="b, y"/>
                     <StringItem index="1" value="b, y, -H2O, -NH3"/>
                     <StringItem index="2" value="a, b, y, -H2O, -NH3, Imm"/>
@@ -282,14 +282,16 @@
                     <StringItem index="5" value="a, b, y, Imm"/>
                     <StringItem index="6" value="a, b, y, z, -H2O, -NH3, Imm"/>
                     <StringItem index="7" value="c, y, z+1, z+2"/>
-                    <StringItem index="8" value="b, c, y, z+1, z+2"/>
-                    <StringItem index="9" value="b, y, INT"/>
-                    <StringItem index="10" value="b, y, INT, Imm"/>
-                    <StringItem index="11" value="a, b, y, INT"/>
-                    <StringItem index="12" value="a, b, y, INT, IMM"/>
-                    <StringItem index="13" value="a, b, y, INT, IMM, -H2O"/>
-                    <StringItem index="14" value="a, b, y, INT, IMM, -H2O, -NH3"/>
-                    <StringItem index="15" value="a, b, y, INT, IMM, -NH3"/>
+                    <StringItem index="8" value="c, z, z+1"/>
+                    <StringItem index="9" value="c, z, z+1, z+2"/>
+                    <StringItem index="10" value="b, c, y, z+1, z+2"/>
+                    <StringItem index="11" value="b, y, INT"/>
+                    <StringItem index="12" value="b, y, INT, Imm"/>
+                    <StringItem index="13" value="a, b, y, INT"/>
+                    <StringItem index="14" value="a, b, y, INT, IMM"/>
+                    <StringItem index="15" value="a, b, y, INT, IMM, -H2O"/>
+                    <StringItem index="16" value="a, b, y, INT, IMM, -H2O, -NH3"/>
+                    <StringItem index="17" value="a, b, y, INT, IMM, -NH3"/>
                   </StringArray>
                 </Property>
               </Properties>

@@ -214,8 +214,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="downloadLinkLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="&lt;html&gt;Download here: &lt;a href&gt; http://proteowizard.sourceforge.net&lt;/a&gt;&lt;/html&gt;"/>
-                <Property name="toolTipText" type="java.lang.String" value="Go to http://proteowizard.sourceforge.net"/>
+                <Property name="text" type="java.lang.String" value="&lt;html&gt;Download here: &lt;a href&gt; https://proteowizard.sourceforge.net&lt;/a&gt;&lt;/html&gt;"/>
+                <Property name="toolTipText" type="java.lang.String" value="Go to https://proteowizard.sourceforge.net"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="downloadLinkLabelMouseClicked"/>
@@ -228,7 +228,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/icons/pwiz_purple_logo.png"/>
                 </Property>
-                <Property name="toolTipText" type="java.lang.String" value="Go to http://proteowizard.sourceforge.net"/>
+                <Property name="toolTipText" type="java.lang.String" value="Go to https://proteowizard.sourceforge.net"/>
                 <Property name="borderPainted" type="boolean" value="false"/>
                 <Property name="contentAreaFilled" type="boolean" value="false"/>
                 <Property name="focusPainted" type="boolean" value="false"/>

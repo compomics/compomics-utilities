@@ -44,6 +44,7 @@ public class ModificationMassMapper {
             case "PepxmlIdfileReader":
             case "TideIdfileReader":
             case "CossIdfileReader":
+            case "SageIdfileReader":
                 return getMassByMass(
                         searchEngineModificationName
                 );

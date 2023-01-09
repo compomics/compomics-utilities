@@ -59,16 +59,16 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public PeptideShakerSetupDialog(
-            JFrame parent, 
+            JFrame parent,
             boolean modal
     ) throws FileNotFoundException, IOException, ClassNotFoundException {
-    
+
         super(parent, modal);
         initComponents();
         parentFrame = parent;
         setLocationRelativeTo(parent);
         setUpGUI();
-    
+
     }
 
     /**
@@ -81,25 +81,25 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public PeptideShakerSetupDialog(
-            JDialog parent, 
+            JDialog parent,
             boolean modal
     ) throws FileNotFoundException, IOException, ClassNotFoundException {
-    
+
         super(parent, modal);
         initComponents();
         parentDialog = parent;
         setLocationRelativeTo(parent);
         setUpGUI();
-        
+
     }
 
     /**
      * Set up the GUI.
      */
     private void setUpGUI() {
-        
+
         utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
-        
+
         if (utilitiesUserParameters.getPeptideShakerPath() == null) {
             boolean downloaded = downloadPeptideShaker();
             if (downloaded) {
@@ -225,7 +225,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
         });
 
         peptideShakerButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/peptide-shaker-medium-orange-shadow.png"))); // NOI18N
-        peptideShakerButton.setToolTipText("Go to http://compomics.github.io/projects/peptide-shaker.html");
+        peptideShakerButton.setToolTipText("Go to https://compomics.github.io/projects/peptide-shaker.html");
         peptideShakerButton.setBorderPainted(false);
         peptideShakerButton.setContentAreaFilled(false);
         peptideShakerButton.setFocusPainted(false);
@@ -347,12 +347,12 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
         File selectedFile = FileChooserUtil.getUserSelectedFile(
-                this, 
-                ".jar", 
-                "PeptideShaker jar file (.jar)", 
-                "Select PeptideShaker Jar File", 
-                lastSelectedFolder, 
-                null, 
+                this,
+                ".jar",
+                "PeptideShaker jar file (.jar)",
+                "Select PeptideShaker Jar File",
+                lastSelectedFolder,
+                null,
                 true
         );
 
@@ -497,7 +497,7 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
     public boolean downloadPeptideShaker() {
 
         int option = JOptionPane.showConfirmDialog(this, "Cannot find PeptideShaker. "
-                    + "Do you want to download it now? (Select \'No\' if already downloaded.)", "Download PeptideShaker?", JOptionPane.YES_NO_OPTION);
+                + "Do you want to download it now? (Select \'No\' if already downloaded.)", "Download PeptideShaker?", JOptionPane.YES_NO_OPTION);
 
         if (option == JOptionPane.YES_OPTION) {
 
@@ -548,9 +548,26 @@ public class PeptideShakerSetupDialog extends javax.swing.JDialog {
                     @Override
                     public void run() {
                         try {
-                            URL jarRepository = new URL("http", "genesis.ugent.be", new StringBuilder().append("/maven2/").toString());
-                            downloadLatestZipFromRepo(downloadFolder, "PeptideShaker", "eu.isas.peptideshaker", "PeptideShaker", "peptide-shaker.ico",
-                                    null, jarRepository, false, true, new GUIFileDAO(), progressDialog);
+
+                            URL jarRepository = new URL(
+                                    "https",
+                                    "genesis.ugent.be",
+                                    new StringBuilder().append("/maven2/").toString()
+                            );
+
+                            downloadLatestZipFromRepo(
+                                    downloadFolder,
+                                    "PeptideShaker",
+                                    "eu.isas.peptideshaker",
+                                    "PeptideShaker",
+                                    "peptide-shaker.ico",
+                                    null,
+                                    jarRepository,
+                                    false,
+                                    true,
+                                    new GUIFileDAO(),
+                                    progressDialog
+                            );
 
                         } catch (IOException e) {
                             e.printStackTrace();

@@ -169,7 +169,7 @@
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="25" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="minimumAllowedInternalFragmentLengthLbl" max="32767" attributes="1"/>
@@ -223,49 +223,49 @@
                               <Component id="searchTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="searchTypeCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="numberOfPartitionsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="numberOfPartitionsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="dissociationTypeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="dissociationTypeCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="maxNumModPeptideLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="maxNumModPeptideTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="intitiatorMethBehaviorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="intitiatorMethBehaviorCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="scoreCutoffLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="scoreCutoffTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="useDeltaScoreLbl" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="useDeltaScoreCmb" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="massDiffAcceptorTypeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="massDiffAcceptorTypeCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="peptideLengthJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="minPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="maxPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="peptideLengthDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="minimumAllowedInternalFragmentLengthLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="minimumAllowedInternalFragmentLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -466,7 +466,7 @@
                               <Component id="writeMzidLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="writeMzidCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="writePepXmlLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="writePepXmlCmb" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -567,22 +567,22 @@
                               <Component id="useProvidedPrecLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="useProvidedPrecCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="doPrecDeconvLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="doPrecDeconvCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="deconvIntRatioLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="deconvIntRatioTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="deconvMassToleranceLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="deconvMassToleranceTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="deconvMassToleranceTypeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="deconvMassToleranceTypeCmb" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -725,32 +725,32 @@
                               <Component id="trimMs1Lbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="trimMs1Cmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="trimMsMsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="trimMsMsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="numPeaksPerWindowLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="numPeaksPerWindowTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="minAllowedIntensityRatioToBasePeakLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="minAllowedIntensityRatioToBasePeakTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="windowWidthThompsonLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="windowWidthThompsonTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="numberOfWindowsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="numberOfWindowsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="normalizePeaksAcrossAllWindowsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="normalizePeaksAcrossAllWindowsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -904,7 +904,7 @@
                               <Component id="modifiedPeptidesAreDifferentLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="modifiedPeptidesAreDifferentCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="excludeOneHitWondersLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="excludeOneHitWondersCmb" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -999,32 +999,32 @@
                               <Component id="fragmentationTerminusLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="fragmentationTerminusCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="maxFragmentSizeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="maxFragmentSizeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="searchTargetComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="searchTargetLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="decoyTypeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="decoyTypeCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="maxModIsoformsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="maxModIsoformsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="minVariantDepthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="minVariantDepthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="maxHetroVariantsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="maxHetroVariantsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1171,8 +1171,8 @@
                               <Component id="runGptmLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="runGtpmCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="gPtmScrollPane" pref="290" max="32767" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="gPtmScrollPane" pref="296" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>

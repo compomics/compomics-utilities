@@ -176,8 +176,8 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
         infoLabel.setFont(infoLabel.getFont().deriveFont(infoLabel.getFont().getStyle() | java.awt.Font.BOLD));
         infoLabel.setText("ProteoWizard - open-source and cross-platform proteomics data analysis");
 
-        downloadLinkLabel.setText("<html>Download here: <a href> http://proteowizard.sourceforge.net</a></html>");
-        downloadLinkLabel.setToolTipText("Go to http://proteowizard.sourceforge.net");
+        downloadLinkLabel.setText("<html>Download here: <a href> https://proteowizard.sourceforge.net</a></html>");
+        downloadLinkLabel.setToolTipText("Go to https://proteowizard.sourceforge.net");
         downloadLinkLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 downloadLinkLabelMouseClicked(evt);
@@ -191,7 +191,7 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
         });
 
         iconButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/pwiz_purple_logo.png"))); // NOI18N
-        iconButton.setToolTipText("Go to http://proteowizard.sourceforge.net");
+        iconButton.setToolTipText("Go to https://proteowizard.sourceforge.net");
         iconButton.setBorderPainted(false);
         iconButton.setContentAreaFilled(false);
         iconButton.setFocusPainted(false);
@@ -426,7 +426,7 @@ public class ProteoWizardSetupDialog extends javax.swing.JDialog {
      */
     private void openWebPage() {
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        BareBonesBrowserLaunch.openURL("http://proteowizard.sourceforge.net");
+        BareBonesBrowserLaunch.openURL("https://proteowizard.sourceforge.net");
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }
 

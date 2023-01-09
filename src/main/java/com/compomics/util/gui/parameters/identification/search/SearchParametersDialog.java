@@ -8,6 +8,9 @@ import com.compomics.util.experiment.biology.ions.impl.PeptideFragmentIon;
 import com.compomics.util.experiment.biology.modifications.ModificationCategory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.gui.CheckBoxCellRenderer;
+import com.compomics.util.gui.CheckableItem;
+import com.compomics.util.gui.CheckedComboBox;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.parameters.identification.tool_specific.CometParameters;
 import com.compomics.util.parameters.identification.tool_specific.XtandemParameters;
@@ -121,7 +124,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
     private UtilitiesUserParameters utilitiesUserParameters = null;
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public SearchParametersDialog() {
         lastSelectedFolder = null;
@@ -281,13 +284,14 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         // centrally align the comboboxes
         modificationsListCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        enzymesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         digestionCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         fragmentIon1Cmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         fragmentIon2Cmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         precursorIonUnit.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         fragmentIonUnit.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         specificityComboBox.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+
+        enzymesCmb.setPreferredSize(digestionCmb.getPreferredSize());
 
         ((TitledBorder) modificationsPanel.getBorder()).setTitle(TITLED_BORDER_HORIZONTAL_PADDING + "Modifications" + TITLED_BORDER_HORIZONTAL_PADDING);
         ((TitledBorder) proteaseAndFragmentationPanel.getBorder()).setTitle(TITLED_BORDER_HORIZONTAL_PADDING + "Protease & Fragmentation" + TITLED_BORDER_HORIZONTAL_PADDING);
@@ -343,7 +347,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         backgroundPanel = new javax.swing.JPanel();
         proteaseAndFragmentationPanel = new javax.swing.JPanel();
         enzymeLabel = new javax.swing.JLabel();
-        enzymesCmb = new javax.swing.JComboBox();
+        enzymesCmb = new CheckedComboBox<>(new DefaultComboBoxModel<>(loadEnzymes()));
         maxMissedCleavagesLabel = new javax.swing.JLabel();
         maxMissedCleavagesTxt = new javax.swing.JTextField();
         precursorIonLbl = new javax.swing.JLabel();
@@ -439,7 +443,6 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         enzymeLabel.setText("Enzyme");
 
         enzymesCmb.setMaximumRowCount(15);
-        enzymesCmb.setModel(new DefaultComboBoxModel(loadEnzymes()));
         enzymesCmb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enzymesCmbActionPerformed(evt);
@@ -560,7 +563,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                         .addGap(18, 18, 18)
                         .addComponent(fragmentIon2Cmb, 0, 96, Short.MAX_VALUE))
                     .addComponent(specificityComboBox, 0, 209, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                .addGap(75, 75, 75)
                 .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(precursorChargeLbl)
                     .addComponent(isotopesLbl)
@@ -591,15 +594,36 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
                         .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(digestionLabel)
+                            .addComponent(digestionCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, 0)
+                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(enzymeLabel)
+                            .addComponent(enzymesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, 0)
+                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(specificityLabel)
+                            .addComponent(specificityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, 0)
+                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(maxMissedCleavagesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(maxMissedCleavagesLabel))
+                        .addGap(0, 0, 0)
+                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(fragmentIon1Cmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fragmentIon2Cmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fragmentIonType1Lbl)))
+                    .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
+                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(precursorIonLbl)
                             .addComponent(precursorIonAccuracyTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(precursorIonUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, 0)
                         .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(fragmentIonLbl)
                             .addComponent(fragmentIonAccuracyTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(fragmentIonUnit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, 0)
                         .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(minPrecursorChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -607,33 +631,12 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                             .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(maxPrecursorChargeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(precursorChargeLbl)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, 0)
                         .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(isotopesLbl)
                             .addComponent(isotopeMinTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(isotopeMaxTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(isotopeRangeLabel)))
-                    .addGroup(proteaseAndFragmentationPanelLayout.createSequentialGroup()
-                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(digestionLabel)
-                            .addComponent(digestionCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(enzymeLabel)
-                            .addComponent(enzymesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(specificityLabel)
-                            .addComponent(specificityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(maxMissedCleavagesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(maxMissedCleavagesLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(proteaseAndFragmentationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(fragmentIon1Cmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(fragmentIon2Cmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(fragmentIonType1Lbl))))
+                            .addComponent(isotopeRangeLabel))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -737,9 +740,9 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 .addGroup(fixedModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(fixedModsPanelLayout.createSequentialGroup()
                         .addComponent(addFixedModification)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, 0)
                         .addComponent(removeFixedModification)
-                        .addContainerGap(57, Short.MAX_VALUE))
+                        .addContainerGap(63, Short.MAX_VALUE))
                     .addComponent(fixedModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
@@ -830,9 +833,9 @@ public class SearchParametersDialog extends javax.swing.JDialog {
                 .addGroup(variableModsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(variableModsPanelLayout.createSequentialGroup()
                         .addComponent(addVariableModification)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, 0)
                         .addComponent(removeVariableModification)
-                        .addContainerGap(57, Short.MAX_VALUE))
+                        .addContainerGap(63, Short.MAX_VALUE))
                     .addComponent(variableModsJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
@@ -1015,7 +1018,7 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(modificationsLayeredPane, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                .addComponent(modificationsLayeredPane, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(proteaseAndFragmentationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1740,7 +1743,14 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void enzymesCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enzymesCmbActionPerformed
-        validateParametersInput(false);
+        
+        // invoke later to give time for components to update
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                validateParametersInput(false);
+            }
+        });
+
     }//GEN-LAST:event_enzymesCmbActionPerformed
 
     /**
@@ -1819,16 +1829,13 @@ public class SearchParametersDialog extends javax.swing.JDialog {
      *
      * @return the list of enzyme names
      */
-    private String[] loadEnzymes() {
+    private CheckableItem[] loadEnzymes() {
 
         ArrayList<String> tempEnzymes = enzymeFactory.getSortedEnzymeNames();
-
-        String[] enzymes = new String[tempEnzymes.size() + 1];
-
-        enzymes[0] = "--- Select ---";
+        CheckableItem[] enzymes = new CheckableItem[tempEnzymes.size()];
 
         for (int i = 0; i < tempEnzymes.size(); i++) {
-            enzymes[i + 1] = tempEnzymes.get(i);
+            enzymes[i] = new CheckableItem(tempEnzymes.get(i), false);
         }
 
         return enzymes;
@@ -1986,12 +1993,17 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
             if (digestionPreferences.hasEnzymes()) {
 
-                Enzyme enzyme = digestionPreferences.getEnzymes().get(0);  // @TODO: allow the selection of multiple enzymes?
-                String enzymeName = enzyme.getName();
-                enzymesCmb.setSelectedItem(enzymeName);
+                for (Enzyme enzyme : digestionPreferences.getEnzymes()) {
 
+                    String enzymeName = enzyme.getName();
+
+                    ((CheckBoxCellRenderer) enzymesCmb.getRenderer()).setCheckedItem(enzymesCmb.getModel(), enzymeName);
+
+                }
+
+                // @TODO: support enzyme-specific missed cleavages?
                 // set missed cleavages
-                Integer nMissedCleavages = digestionPreferences.getnMissedCleavages(enzymeName);
+                Integer nMissedCleavages = digestionPreferences.getnMissedCleavages(digestionPreferences.getEnzymes().get(0).getName());
 
                 if (nMissedCleavages != null) {
 
@@ -2003,8 +2015,9 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
                 }
 
+                // @TODO: support enzyme-specific specificity?
                 // set specificity
-                specificityComboBox.setSelectedItem(digestionPreferences.getSpecificity(enzymeName));
+                specificityComboBox.setSelectedItem(digestionPreferences.getSpecificity(digestionPreferences.getEnzymes().get(0).getName()));
 
             } else {
 
@@ -2180,8 +2193,9 @@ public class SearchParametersDialog extends javax.swing.JDialog {
             // ignore, error already caught above
         }
 
-        // valdiate that an enzyme is selected
-        if (((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem()) == CleavageParameter.enzyme && enzymesCmb.getSelectedIndex() == 0) {
+        // validate that an enzyme is selected
+        if (((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem()) == CleavageParameter.enzyme
+                && ((CheckBoxCellRenderer) enzymesCmb.getRenderer()).getCheckedItems(enzymesCmb.getModel()).isEmpty()) {
 
             if (showMessage && valid) {
 
@@ -2223,15 +2237,23 @@ public class SearchParametersDialog extends javax.swing.JDialog {
 
         // set the enzyme
         if ((DigestionParameters.CleavageParameter) digestionCmb.getSelectedItem() == DigestionParameters.CleavageParameter.enzyme) {
-            Enzyme enzyme = enzymeFactory.getEnzyme(enzymesCmb.getSelectedItem().toString());
-            digestionPreferences.addEnzyme(enzyme);
 
-            // enzyme specificity
-            String enzymeName = enzyme.getName();
-            digestionPreferences.setSpecificity(enzymeName, (DigestionParameters.Specificity) specificityComboBox.getSelectedItem());
+            ArrayList<String> enzymeList = ((CheckBoxCellRenderer) enzymesCmb.getRenderer()).getCheckedItems(enzymesCmb.getModel());
 
-            // max missed cleavages
-            digestionPreferences.setnMissedCleavages(enzymeName, Integer.valueOf(maxMissedCleavagesTxt.getText().trim()));
+            for (String enzymeName : enzymeList) {
+
+                Enzyme enzyme = enzymeFactory.getEnzyme(enzymeName);
+                digestionPreferences.addEnzyme(enzyme);
+
+                // @TODO: enzyme-specific specificity?
+                // enzyme specificity
+                digestionPreferences.setSpecificity(enzymeName, (DigestionParameters.Specificity) specificityComboBox.getSelectedItem());
+
+                // @TODO: enzyme-specific max missed cleavage?
+                // max missed cleavages
+                digestionPreferences.setnMissedCleavages(enzymeName, Integer.parseInt(maxMissedCleavagesTxt.getText().trim()));
+            }
+
         }
 
         // save the digestion settings
@@ -2302,10 +2324,10 @@ public class SearchParametersDialog extends javax.swing.JDialog {
         ionType = PeptideFragmentIon.getIonType(fragmentIon2Cmb.getSelectedItem().toString().trim());
         selectedRewindIons.add(ionType);
         tempSearchParameters.setRewindIons(selectedRewindIons);
-        tempSearchParameters.setFragmentIonAccuracy(Double.valueOf(fragmentIonAccuracyTxt.getText().trim()));
-        int charge = Integer.valueOf(minPrecursorChargeTxt.getText().trim());
+        tempSearchParameters.setFragmentIonAccuracy(Double.parseDouble(fragmentIonAccuracyTxt.getText().trim()));
+        int charge = Integer.parseInt(minPrecursorChargeTxt.getText().trim());
         tempSearchParameters.setMinChargeSearched(charge);
-        charge = Integer.valueOf(maxPrecursorChargeTxt.getText().trim());
+        charge = Integer.parseInt(maxPrecursorChargeTxt.getText().trim());
         tempSearchParameters.setMaxChargeSearched(charge);
         Integer minIsotope = Integer.valueOf(isotopeMinTxt.getText());
         tempSearchParameters.setMinIsotopicCorrection(minIsotope);

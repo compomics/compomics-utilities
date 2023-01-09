@@ -443,11 +443,11 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
             .addGroup(settingsInnerPanelLayout.createSequentialGroup()
                 .addComponent(peptideLengthNoEnzymeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21)
-                .addComponent(minPepLengthNoEnzymeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+                .addComponent(minPepLengthNoEnzymeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(peptideLengthNoEnzymeDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
-                .addComponent(maxPepLengthNoEnzymeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE))
+                .addComponent(maxPepLengthNoEnzymeTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
             .addGroup(settingsInnerPanelLayout.createSequentialGroup()
                 .addComponent(maxPeptideMassLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21)
@@ -513,63 +513,63 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
                     .addComponent(maxPepLengthNoEnzymeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(peptideLengthNoEnzymeDividerLabel)
                     .addComponent(peptideLengthNoEnzymeLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxPeptideMassTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxPeptideMassLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(numberMatchesLabel)
                     .addComponent(numberMatchesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxPtmsLabel)
                     .addComponent(maxPtmsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fragMethodLabel)
                     .addComponent(fragMethodCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(waterLossLabel)
                     .addComponent(waterLossCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ammoniaLossLabel)
                     .addComponent(ammoniaLossCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(neutralLossesLabel)
                     .addComponent(neutralLossesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(equalILCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(equalILLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fragmentAllLabel)
                     .addComponent(fragmentAllCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(empiricalCorrectionLabel)
                     .addComponent(empiricalCorrectionCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(higherChargeLabel)
                     .addComponent(higherChargeCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxCombinationsLabel)
                     .addComponent(maxCombinationsTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(topPeaksLabel)
                     .addComponent(topPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(topPeaksWindowTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(topPeaksWindowLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(settingsInnerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(decoyModeLabel)
                     .addComponent(decoyModeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -591,7 +591,7 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
             settingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(settingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(settingsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
+                .addComponent(settingsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -643,7 +643,7 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
                         .addComponent(openDialogHelpJButton)
                         .addGap(18, 18, 18)
                         .addComponent(advancedSettingsWarningLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(closeButton)))
@@ -653,7 +653,7 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE)
+                .addComponent(settingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
@@ -741,36 +741,9 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
      *
      * @param evt
      */
-    private void maxPtmsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPtmsTxtKeyReleased
+    private void maxCombinationsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxCombinationsTxtKeyReleased
         validateInput(false);
-    }//GEN-LAST:event_maxPtmsTxtKeyReleased
-
-    /**
-     * Validate the input.
-     *
-     * @param evt
-     */
-    private void minPepLengthNoEnzymeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPepLengthNoEnzymeTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_minPepLengthNoEnzymeTxtKeyReleased
-
-    /**
-     * Validate the input.
-     *
-     * @param evt
-     */
-    private void maxPepLengthNoEnzymeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPepLengthNoEnzymeTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_maxPepLengthNoEnzymeTxtKeyReleased
-
-    /**
-     * Validate the input.
-     *
-     * @param evt
-     */
-    private void maxPeptideMassTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPeptideMassTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_maxPeptideMassTxtKeyReleased
+    }//GEN-LAST:event_maxCombinationsTxtKeyReleased
 
     /**
      * Validate the input.
@@ -786,9 +759,9 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
      *
      * @param evt
      */
-    private void maxCombinationsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxCombinationsTxtKeyReleased
+    private void maxPtmsTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPtmsTxtKeyReleased
         validateInput(false);
-    }//GEN-LAST:event_maxCombinationsTxtKeyReleased
+    }//GEN-LAST:event_maxPtmsTxtKeyReleased
 
     /**
      * Validate the input.
@@ -798,6 +771,33 @@ public class AndromedaParametersDialog extends javax.swing.JDialog implements Al
     private void numberMatchesTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numberMatchesTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_numberMatchesTxtKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void maxPeptideMassTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPeptideMassTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_maxPeptideMassTxtKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void maxPepLengthNoEnzymeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_maxPepLengthNoEnzymeTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_maxPepLengthNoEnzymeTxtKeyReleased
+
+    /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void minPepLengthNoEnzymeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_minPepLengthNoEnzymeTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_minPepLengthNoEnzymeTxtKeyReleased
 
     /**
      * Inspects the parameter validity.

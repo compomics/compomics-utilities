@@ -1,0 +1,669 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="2"/>
+    <Property name="title" type="java.lang.String" value="Sage Advanced Settings"/>
+    <Property name="resizable" type="boolean" value="false"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Component id="backgroundPanel" alignment="0" max="32767" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Component id="backgroundPanel" min="-2" max="-2" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Container class="javax.swing.JPanel" name="backgroundPanel">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="e6" green="e6" red="e6" type="rgb"/>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="advancedSearchSettingsPanel" max="32767" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                          <Component id="openDialogHelpJButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="advancedSettingsWarningLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="okButton" min="-2" pref="59" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="closeButton" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="advancedSearchSettingsPanel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="2" attributes="0">
+                      <Component id="openDialogHelpJButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="advancedSettingsWarningLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="okButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="closeButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Container class="javax.swing.JPanel" name="advancedSearchSettingsPanel">
+          <Properties>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                <TitledBorder title="Search Settings"/>
+              </Border>
+            </Property>
+            <Property name="opaque" type="boolean" value="false"/>
+          </Properties>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="predictRtLabel" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                                  <Component id="parallelSearchLabel" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                                  <Component id="chimericSpectraLabel" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="chimericSpectraCmb" max="32767" attributes="0"/>
+                                  <Component id="predictRtCmb" max="32767" attributes="0"/>
+                                  <Component id="parallelSearchCmb" alignment="1" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="deisotopeLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="deisotopeCmb" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="minIonIndexLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="minIonIndexTxt" max="32767" attributes="2"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="generateDecoysLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="generateDecoysCmb" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="lfqLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lfqCmb" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="decoyTagLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="decoyTagTxt" max="32767" attributes="2"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="bucketSizeLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="bucketSizeTxt" max="32767" attributes="2"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="maxFragmentChargeLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="maxFragmentChargeTxt" max="32767" attributes="2"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="numberOfPsmsPerSpectrumLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="numberOfPsmsPerSpectrumTxt" max="32767" attributes="2"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="tmtTypeLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="tmtTypeCmb" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="peptideMassLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="minPeptideMassTxt" linkSize="11" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="fragmentMzLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="minFragmentMzTxt" linkSize="11" min="-2" pref="79" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="fragmentMzDividerLabel" alignment="0" min="-2" pref="27" max="-2" attributes="0"/>
+                                  <Component id="peptideMassDividerLabel" alignment="0" min="-2" pref="27" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="maxPeptideMassTxt" linkSize="11" pref="86" max="32767" attributes="0"/>
+                                  <Component id="maxFragmentMzTxt" linkSize="11" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Component id="peptideLengthLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="minPepLengthTxt" linkSize="11" min="-2" pref="71" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="peptideLengthDividerLabel" min="-2" pref="27" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="maxPepLengthTxt" linkSize="11" min="-2" pref="94" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Component id="numberOfPeaksLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="minNumberOfPeaksTxt" linkSize="11" min="-2" pref="79" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="numberOfPeaksDividerLabel" min="-2" pref="27" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="maxNumberOfPeaksTxt" linkSize="11" min="-2" pref="80" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="maxVariableModsLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="maxVariableModsTxt" max="32767" attributes="2"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="bucketSizeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="bucketSizeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="minPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxPepLengthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="peptideLengthDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="peptideLengthLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="minFragmentMzTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxFragmentMzTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="fragmentMzDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="fragmentMzLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="minPeptideMassTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxPeptideMassTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="peptideMassDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="peptideMassLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="minIonIndexLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="minIonIndexTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="maxVariableModsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxVariableModsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="generateDecoysLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="generateDecoysCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="decoyTagLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="decoyTagTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tmtTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tmtTypeCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lfqLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lfqCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="deisotopeCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="deisotopeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="chimericSpectraCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="chimericSpectraLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="predictRtCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="predictRtLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="minNumberOfPeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxNumberOfPeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="numberOfPeaksDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="numberOfPeaksLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="maxFragmentChargeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="maxFragmentChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="numberOfPsmsPerSpectrumLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="numberOfPsmsPerSpectrumTxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="parallelSearchLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="parallelSearchCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JComboBox" name="predictRtCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Yes"/>
+                    <StringItem index="1" value="No"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="parallelSearchCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Yes"/>
+                    <StringItem index="1" value="No"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="parallelSearchLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Parallel Search"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="predictRtLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Predict Retention Time"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="chimericSpectraLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Chimeric Spectra"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="chimericSpectraCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Yes"/>
+                    <StringItem index="1" value="No"/>
+                  </StringArray>
+                </Property>
+                <Property name="selectedIndex" type="int" value="1"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="deisotopeLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Deisotope"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="deisotopeCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Yes"/>
+                    <StringItem index="1" value="No"/>
+                  </StringArray>
+                </Property>
+                <Property name="selectedIndex" type="int" value="1"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="minPepLengthTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="8"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minPepLengthTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="peptideLengthDividerLabel">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="-"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxPepLengthTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="30"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxPepLengthTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="peptideLengthLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Peptide Length (min - max)"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="minIonIndexLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Minimum Ion Index"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="minIonIndexTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="2"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minIonIndexTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="generateDecoysLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Generate Decoys"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="generateDecoysCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Yes"/>
+                    <StringItem index="1" value="No"/>
+                  </StringArray>
+                </Property>
+                <Property name="selectedIndex" type="int" value="1"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lfqLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="LFQ"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="decoyTagLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Decoy Tag"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="decoyTagTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="rev_"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="decoyTagTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="lfqCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Yes"/>
+                    <StringItem index="1" value="No"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="bucketSizeLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Bucket Size"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="bucketSizeTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="32768"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="bucketSizeTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="fragmentMzLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Fragment m/z (min - max)"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="minFragmentMzTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="200"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minFragmentMzTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="fragmentMzDividerLabel">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="-"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxFragmentMzTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="2000"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxFragmentMzTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="peptideMassLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Peptide Mass (min - max)"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="minPeptideMassTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="600"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minPeptideMassTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="peptideMassDividerLabel">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="-"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxPeptideMassTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="5000"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxPeptideMassTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="tmtTypeLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="TMT Type"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="numberOfPeaksLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Number of Peaks (min - max)"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="minNumberOfPeaksTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="15"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minNumberOfPeaksTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="numberOfPeaksDividerLabel">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="-"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxNumberOfPeaksTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="150"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxNumberOfPeaksTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="maxFragmentChargeLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Maximum Fragment Charge"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxFragmentChargeTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxFragmentChargeTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="numberOfPsmsPerSpectrumLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Number of PSMs per Spectrum"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="numberOfPsmsPerSpectrumTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="1"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="numberOfPsmsPerSpectrumTxtKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="tmtTypeCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="6">
+                    <StringItem index="0" value="None"/>
+                    <StringItem index="1" value="Tmt6"/>
+                    <StringItem index="2" value="Tmt10"/>
+                    <StringItem index="3" value="Tmt11"/>
+                    <StringItem index="4" value="Tmt16"/>
+                    <StringItem index="5" value="Tmt18"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="maxVariableModsLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Maximum Variable Modifications"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="maxVariableModsTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="2"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxVariableModsTxtKeyReleased"/>
+              </Events>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Component class="javax.swing.JButton" name="okButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="OK"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="okButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="closeButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Close"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="closeButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="openDialogHelpJButton">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/icons/help.GIF"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Help"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="null"/>
+            </Property>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="openDialogHelpJButtonMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="openDialogHelpJButtonMouseExited"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openDialogHelpJButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="advancedSettingsWarningLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Click to open the Sage web page"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>

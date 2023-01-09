@@ -112,7 +112,7 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="minPrecursorMassLabel" min="-2" pref="180" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="minPrecursorMassTextField" min="-2" pref="130" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -133,12 +133,12 @@
                           <Component id="activationTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="activationTypeCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="minPrecursorMassTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="minPrecursorMassLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="maxPrecursorMassLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="maxPrecursorMassTextField" alignment="3" min="-2" max="-2" attributes="0"/>

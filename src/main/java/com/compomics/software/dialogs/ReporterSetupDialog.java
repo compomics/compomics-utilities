@@ -155,7 +155,7 @@ public class ReporterSetupDialog extends javax.swing.JDialog {
         });
 
         reporterButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/reporter_logo.png"))); // NOI18N
-        reporterButton.setToolTipText("Go to http://compomics.github.io/projects/reporter.html");
+        reporterButton.setToolTipText("Go to https://compomics.github.io/projects/reporter.html");
         reporterButton.setBorderPainted(false);
         reporterButton.setContentAreaFilled(false);
         reporterButton.setFocusPainted(false);

@@ -2,7 +2,6 @@ package com.compomics.software.dialogs;
 
 import static com.compomics.software.autoupdater.DownloadLatestZipFromRepo.downloadLatestZipFromRepo;
 import com.compomics.software.autoupdater.GUIFileDAO;
-import com.compomics.util.Util;
 import com.compomics.util.examples.BareBonesBrowserLaunch;
 import com.compomics.util.gui.file_handling.FileChooserUtil;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
@@ -583,7 +582,7 @@ public class SearchGuiSetupDialog extends javax.swing.JDialog {
                     public void run() {
                         try {
                             URL jarRepository = new URL(
-                                    "http", 
+                                    "https", 
                                     "genesis.ugent.be", 
                                     new StringBuilder().append("/maven2/").toString()
                             );

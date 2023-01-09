@@ -74,7 +74,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="tabbedPane" pref="685" max="32767" attributes="0"/>
+                  <Component id="tabbedPane" pref="542" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                   <Component id="jSeparator1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -202,52 +202,52 @@
                               <Component id="lowIntensityLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lowIntensityTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="highIntensityLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="highIntensityTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="intensityIncrementLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="intensityIncrementTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="nPeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="nPeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="chargeReductionLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="eliminatePrecursorCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="precursorChargeEstimationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="chargeEstimationCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="plusOneChargeAutomaticLbl" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="plusOneChargeCmb" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="fractionChargeLbl" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="fractionChargeTxt" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="minPrecPerSpectrumLbl" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="minPrecPerSpectrumTxt" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="precursorScalingCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="precursorMassScalingLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="378" max="32767" attributes="0"/>
+                          <EmptySpace pref="215" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -433,7 +433,7 @@
                               <Component id="sequenceMappingLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="sequenceMappingCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="cleaveNterminalMethionineLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="cleaveNterminalMethionineCmb" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -507,7 +507,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                          <Component id="searchSettingsScrollPane" pref="621" max="32767" attributes="0"/>
+                          <Component id="searchSettingsScrollPane" pref="481" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -540,7 +540,7 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="neutronLbl" min="-2" pref="370" max="-2" attributes="1"/>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="neutronTxt" pref="180" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -550,7 +550,7 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="doublyChargedWindowWidthLbl" min="-2" pref="370" max="-2" attributes="1"/>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="doublyChargedWindowWidthTxt" pref="180" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -560,7 +560,7 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="doublyChargedNPeaksLbl" min="-2" pref="370" max="-2" attributes="1"/>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="doublyChargedNpeaksTxt" pref="180" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -570,7 +570,7 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="minAnnotatedPeaksLbl" min="-2" pref="370" max="-2" attributes="1"/>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="minAnnotatedPeaksTxt" pref="180" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -583,7 +583,7 @@
                                       <Component id="maxFragmentChargeLbl" alignment="0" min="-2" pref="370" max="-2" attributes="1"/>
                                       <Component id="searchPositiveIonsLbl" alignment="0" min="-2" pref="370" max="-2" attributes="1"/>
                                   </Group>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="searchPositiveIonsCmb" pref="180" max="32767" attributes="0"/>
                                       <Component id="maxFragmentChargeTxt" pref="180" max="32767" attributes="0"/>
@@ -591,7 +591,7 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="forwardIonsFirstLbl" min="-2" pref="370" max="-2" attributes="1"/>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="forwardIonsFirstCmb" pref="180" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -601,7 +601,7 @@
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="maxFragmentsPerSeriesLbl" min="-2" pref="370" max="-2" attributes="1"/>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="maxFragmentsPerSeriesTxt" pref="180" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
@@ -611,7 +611,7 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="consecutiveIonProbabilityLbl" min="-2" pref="370" max="-2" attributes="1"/>
-                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="consecutiveIonProbabilityTxt" pref="180" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -628,82 +628,82 @@
                                       <Component id="minPrecursorChargeConsideredMultiplyChargedFragmentsJLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="minPrecChargeMultipleChargedFragmentsTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="neutronLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="neutronTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="singlyChargedWindowWidthLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="singlyChargedWindowWidthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="doublyChargedWindowWidthLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="doublyChargedWindowWidthTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="singlyChargedNPeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="singlyChargedNpeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="doublyChargedNPeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="doublyChargedNpeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="minAnnotatedMostIntensePeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="minAnnotatedMostIntensePeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="minAnnotatedPeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="minAnnotatedPeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="maxLaddersLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="maxLaddersTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="maxFragmentChargeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="maxFragmentChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="searchPositiveIonsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="searchPositiveIonsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="forwardIonsFirstLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="forwardIonsFirstCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="cTermIonsLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="cTermIonsCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="maxFragmentsPerSeriesLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="maxFragmentsPerSeriesTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="correlationCorrectionScoreLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="correlationCorrectionScoreCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="consecutiveIonProbabilityLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="consecutiveIonProbabilityTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="nHitsPerSpectrumPerChargeLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="nHitsPerSpectrumPerChargeTxt" alignment="3" min="-2" max="-2" attributes="0"/>

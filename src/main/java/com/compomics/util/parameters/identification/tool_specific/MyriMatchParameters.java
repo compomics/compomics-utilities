@@ -570,7 +570,7 @@ public class MyriMatchParameters extends ExperimentObject implements Identificat
      */
     public static String enzymeMapping(DigestionParameters digestionPreferences) {
 
-        // Try to map to one of the default Myrimatch enzymes
+        // try to map to the default Myrimatch enzymes
         if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.unSpecific) {
             return "unspecific cleavage";
         }
@@ -578,8 +578,10 @@ public class MyriMatchParameters extends ExperimentObject implements Identificat
             return "no cleavage";
         }
         if (digestionPreferences.getEnzymes().size() == 1) {
-            Enzyme enzyme = digestionPreferences.getEnzymes().get(0);
+            
+            Enzyme enzyme = digestionPreferences.getEnzymes().get(0); // note: only uses the first enzyme
             String enzymeName = enzyme.getName();
+
             if (enzymeName.equalsIgnoreCase("Trypsin")) {
                 return "Trypsin";
             } else if (enzymeName.equalsIgnoreCase("Trypsin (no P rule)")) {
@@ -607,7 +609,7 @@ public class MyriMatchParameters extends ExperimentObject implements Identificat
             }
         }
 
-        // Make a custom cleavage
+        // make a custom enzyme
         return digestionPreferences.getMyriMatchFormat();
     }
 }

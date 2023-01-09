@@ -152,6 +152,12 @@ public class PeptideInference {
     ) {
 
         SpectrumMatch spectrumMatch = identification.getSpectrumMatch(spectrumKey);
+        
+        if (spectrumMatch.getSpectrumTitle().equals("File: \"E:\\Data\\H31 std\\20220323-1321_ECLIP_1001749_H31std_mix1_15pmol_rep2.raw\"; SpectrumID: \"7615\"; PrecursorID: \"0\"; scans: \"3592\"")) {
+            
+            int debug = 1;
+            
+        }
 
         Peptide peptide = spectrumMatch.getBestPeptideAssumption().getPeptide();
         String sequence = peptide.getSequence();

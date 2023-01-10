@@ -59,10 +59,6 @@ public class Peptide extends ExperimentObject {
      */
     private ModificationMatch[] variableModifications = null;
     /**
-     * Convenience array for no modifications.
-     */
-    private static final ModificationMatch[] NO_MOD = new ModificationMatch[0];
-    /**
      * The variants observed when mapping this peptide to the database. Peptide
      * variant matches are indexed by protein and by peptide start.
      */
@@ -380,7 +376,7 @@ public class Peptide extends ExperimentObject {
      */
     public ModificationMatch[] getVariableModifications() {
 
-        return variableModifications == null ? NO_MOD : variableModifications;
+        return variableModifications == null ? ModificationMatch.NO_MOD : variableModifications;
     }
 
     /**

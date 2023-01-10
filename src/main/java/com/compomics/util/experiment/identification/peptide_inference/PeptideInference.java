@@ -33,8 +33,17 @@ import java.util.stream.Collectors;
  */
 public class PeptideInference {
 
+    /**
+     * Localization score offset for modification that are confidently localized on the PSM investigated.
+     */
     public final int CONFIDENT_OWN_OFFSET = 400;
+    /**
+     * Localization score offset for modification that are confidently localized on another PSM with the same sequence.
+     */
     public final int CONFIDENT_OTHER_OFFSET = 200;
+    /**
+     * Localization score offset for modification that are confidently localized on another PSM with an overlapping sequence.
+     */
     public final int CONFIDENT_RELATED_OFFSET = 100;
 
     /**
@@ -102,10 +111,7 @@ public class PeptideInference {
                     psmKey,
                     confidentPeptideInference,
                     identification,
-                    searchParameters,
                     modificationLocalizationParameters,
-                    modificationSequenceMatchingParameters,
-                    sequenceProvider,
                     modificationProvider
             );
 
@@ -128,21 +134,14 @@ public class PeptideInference {
      * @param confidentPeptideInference PSMs with confidently localized PTMs in
      * a map: PTM mass, peptide sequence, spectrum keys.
      * @param identification The identification object containing the matches.
-     * @param identificationParameters The identification parameters of the
-     * project.
-     * @param sequenceProvider The protein sequence provider to use.
+     * @param modificationLocalizationParameters The modification localization scoring parameters.
      * @param modificationProvider The modification provider to use.
-     * @param waitingHandler The waiting handler displaying progress to the
-     * user.
      */
     private void peptideInference(
             long spectrumKey,
             HashMap<Double, HashMap<String, HashSet<Long>>> confidentPeptideInference,
             Identification identification,
-            SearchParameters searchParameters,
-            ModificationLocalizationParameters modificationScoringParameters,
-            SequenceMatchingParameters modificationSequenceMatchingParameters,
-            SequenceProvider sequenceProvider,
+            ModificationLocalizationParameters modificationLocalizationParameters,
             ModificationProvider modificationProvider
     ) {
 
@@ -161,13 +160,6 @@ public class PeptideInference {
 
         HashMap<Double, HashMap<Integer, Double>> modificationToSiteToScore = new HashMap<>(modificationMatches.length);
         HashMap<Double, HashMap<Integer, String>> modificationToSiteToName = new HashMap<>(modificationMatches.length);
-
-        for (double modMass : modMasses) {
-            
-            modificationToSiteToScore.put(modMass, new HashMap<>(2));
-            modificationToSiteToName.put(modMass, new HashMap<>(2));
-            
-        }
 
         // See if other peptides can provide confident sites
         boolean relatedPeptide = false;
@@ -267,7 +259,7 @@ public class PeptideInference {
 
                                         ModificationScoring modificationScoring = tempScores.getModificationScoring(modName);
                                         int site = modMatch.getSite();
-                                        double score = modificationScoringParameters.isProbabilisticScoreCalculation() ? modificationScoring.getProbabilisticScore(site) : modificationScoring.getDeltaScore(site);
+                                        double score = modificationLocalizationParameters.isProbabilisticScoreCalculation() ? modificationScoring.getProbabilisticScore(site) : modificationScoring.getDeltaScore(site);
 
                                         score += scoreOffset;
 
@@ -339,7 +331,7 @@ public class PeptideInference {
 
                 ModificationScoring modificationScoring = modificationScores.getModificationScoring(modName);
 
-                if (modificationScoringParameters.isProbabilisticScoreCalculation()) {
+                if (modificationLocalizationParameters.isProbabilisticScoreCalculation()) {
 
                     for (int site : modificationScoring.getProbabilisticSites()) {
 
@@ -415,7 +407,7 @@ public class PeptideInference {
                 }
             }
 
-            // Map modifications to sites
+            // Map the modifications to the best scoring sites
             HashMap<Double, TreeSet<Integer>> mapping = ModificationPeptideMapping.mapModifications(modificationToPossibleSiteMap, modificationOccurrenceMap, modificationToSiteToScore);
 
             // Update the modifications of the peptide accordingly
@@ -597,5 +589,4 @@ public class PeptideInference {
 
         }
     }
-
 }

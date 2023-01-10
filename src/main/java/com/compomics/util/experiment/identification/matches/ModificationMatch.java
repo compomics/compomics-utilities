@@ -11,6 +11,10 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class ModificationMatch extends ExperimentObject {
 
     /**
+     * Convenience array for no modifications.
+     */
+    public static final ModificationMatch[] NO_MOD = new ModificationMatch[0];
+    /**
      * The modification name. The modification can be accessed via
      * the factory.
      */

@@ -305,7 +305,7 @@ public class PeptideUtils {
      * @param modificationParameters the modification profile of the search
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param peptide the peptide to annotate
-     * @param allFixedModifications all the fixed modifications
+     * @param allFixedModifications All fixed modifications in an array representing the amino acid sequence.
      * @param allVariableModifications all the variable modifications
      * @param confidentModificationSites the confidently localized variable
      * modification sites indexed by site.
@@ -315,8 +315,7 @@ public class PeptideUtils {
      * @param secondaryAmbiguousModificationSites the secondary sites of the
      * ambiguously localized variable modifications in a map: aa number &gt;
      * list of modifications (1 is the first AA) (can be null)
-     * @param fixedModificationSites the fixed modification sites in a map: aa
-     * number &gt; list of modifications (1 is the first AA) (can be null)
+     * @param fixedModificationSites The fixed modifications to display in an array representing the amino acid sequence.
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * Modification tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags

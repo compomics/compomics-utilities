@@ -164,6 +164,13 @@ public class PeptideInference {
         // See if other peptides can provide confident sites
         boolean relatedPeptide = false;
         HashSet<Long> processed = new HashSet<>();
+        
+        for (double modMass : modMasses) {
+            
+            modificationToSiteToScore.put(modMass, new HashMap<>(2));
+            modificationToSiteToName.put(modMass, new HashMap<>(2));
+            
+        }
 
         for (double modMass : modMasses) {
 

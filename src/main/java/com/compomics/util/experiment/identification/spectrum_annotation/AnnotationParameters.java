@@ -186,8 +186,7 @@ public class AnnotationParameters extends ExperimentObject {
                             spectrumIdentificationAssumption,
                             modificationParameters,
                             sequenceProvider,
-                            modificationSequenceMatchingParameters,
-                            spectrumAnnotator
+                            modificationSequenceMatchingParameters
                     )
             );
 

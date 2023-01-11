@@ -40,13 +40,13 @@ public class ModificationMatch extends ExperimentObject {
     /**
      * Constructor for a modification match.
      *
-     * @param theoreticPtm the theoretic PTM
+     * @param modificationName the name of the modification.
      * @param modifiedSite the position of the modification in the sequence, 1
-     * is the first residue
+     * is the first residue, 0 and sequence length + 1 the N and C termini.
      */
-    public ModificationMatch(String theoreticPtm, int modifiedSite) {
+    public ModificationMatch(String modificationName, int modifiedSite) {
         
-        this.modification = theoreticPtm;
+        this.modification = modificationName;
         this.modifiedSite = modifiedSite;
         
     }

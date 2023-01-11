@@ -5,7 +5,6 @@ import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Identification;
-import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
@@ -28,8 +27,6 @@ import com.compomics.util.experiment.identification.filtering.ProteinFilter;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.peptide_shaker.Metrics;
 import com.compomics.util.experiment.identification.peptide_shaker.PSParameter;
-import com.compomics.util.experiment.identification.peptide_shaker.PSModificationScores;
-import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.gui.filtering.FilterParameters;
 import com.compomics.util.parameters.quantification.spectrum_counting.SpectrumCountingParameters;
 import com.compomics.util.experiment.identification.validation.MatchValidationLevel;
@@ -2284,7 +2281,7 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a modification summary for the given protein
      */
-    public String getConfidentModificationSitesNumber(
+    public String getModificationSitesNumber(
             ModificationMatch[] modificationMatches,
             boolean confident
     ) {
@@ -2412,7 +2409,7 @@ public class IdentificationFeaturesGenerator {
      *
      * @return a modification summary for the given match
      */
-    public int getConfidentModificationSitesNumber(
+    public int getModificationSitesNumber(
             ModificationMatch[] modificationMatches,
             boolean confident,
             HashSet<String> targetedModifications

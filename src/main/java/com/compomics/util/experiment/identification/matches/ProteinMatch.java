@@ -309,6 +309,17 @@ public class ProteinMatch extends IdentificationMatch {
 
         return variableModifications == null ? ModificationMatch.NO_MOD : variableModifications;
     }
+    
+    /**
+     * Sets the variable modifications.
+     * 
+     * @param variableModifications the variable modifications.
+     */
+    public void setVariableModifications(ModificationMatch[] variableModifications) {
+        
+        this.variableModifications = variableModifications;
+        
+    }
 
     @Override
     public MatchType getType() {

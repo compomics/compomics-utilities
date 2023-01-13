@@ -676,6 +676,12 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MSGF_DENSE_CENTROIDED_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MSGF_DENSE_CENTROIDED_PEAKS.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MSGF_DENSE_CENTROIDED_PEAKS.id, arg)) {
+                return false;
+            }
+        }
         //////////////////////////////////
         // MS Amanda
         //////////////////////////////////
@@ -2853,6 +2859,11 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_TASKS.id);
             Integer option = Integer.valueOf(arg);
             msgfParameters.setNumberOfTasks(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MSGF_DENSE_CENTROIDED_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MSGF_DENSE_CENTROIDED_PEAKS.id);
+            Integer option = Integer.valueOf(arg);
+            msgfParameters.setAllowDenseCentroidedPeaks(option == 1);
         }
 
         ///////////////////////////////////

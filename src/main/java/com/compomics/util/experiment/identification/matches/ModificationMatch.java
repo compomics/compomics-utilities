@@ -11,6 +11,10 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 public class ModificationMatch extends ExperimentObject {
 
     /**
+     * The version UID for Serialization/Deserialization compatibility.
+     */
+    static final long serialVersionUID = -6377699582945317984L;
+    /**
      * Convenience array for no modifications.
      */
     public static final ModificationMatch[] NO_MOD = new ModificationMatch[0];
@@ -64,8 +68,6 @@ public class ModificationMatch extends ExperimentObject {
      */
     public String getModification() {
         
-        
-        
         return modification;
     }
 
@@ -75,8 +77,6 @@ public class ModificationMatch extends ExperimentObject {
      * @param modName the theoretic PTM name
      */
     public void setModification(String modName) {
-        
-        
         
         this.modification = modName;
     }
@@ -91,8 +91,6 @@ public class ModificationMatch extends ExperimentObject {
      */
     public int getSite() {
         
-        
-        
         return modifiedSite;
     }
 
@@ -102,8 +100,6 @@ public class ModificationMatch extends ExperimentObject {
      * @param site the index of the modification in the sequence
      */
     public void setSite(int site) {
-        
-        
         
         this.modifiedSite = site;
     }
@@ -117,8 +113,6 @@ public class ModificationMatch extends ExperimentObject {
      */
     public boolean getConfident() {
         
-        
-        
         return confident;
     }
 
@@ -129,8 +123,6 @@ public class ModificationMatch extends ExperimentObject {
      * confidently localized on the sequence
      */
     public void setConfident(boolean confident) {
-        
-        
         
         this.confident = confident;
     }
@@ -144,8 +136,6 @@ public class ModificationMatch extends ExperimentObject {
      */
     public boolean getInferred() {
         
-        
-        
         return inferred;
     }
 
@@ -156,8 +146,6 @@ public class ModificationMatch extends ExperimentObject {
      * from another peptide
      */
     public void setInferred(boolean inferred) {
-        
-        
         
         this.inferred = inferred;
     }
@@ -174,8 +162,6 @@ public class ModificationMatch extends ExperimentObject {
      */
     public boolean isSameAs(ModificationMatch anotherModificationMatch) {
         
-        
-        
         return modification.equals(anotherModificationMatch.getModification());
         
     }
@@ -186,8 +172,6 @@ public class ModificationMatch extends ExperimentObject {
      * @return a new modification match with the same attributes
      */
     public ModificationMatch clone() {
-        
-        
         
         ModificationMatch newMatch = new ModificationMatch(modification, modifiedSite);
         newMatch.setConfident(confident);

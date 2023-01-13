@@ -14,6 +14,11 @@ import java.util.Set;
  */
 public class PSModificationScores extends ExperimentObject implements UrParameter {
 
+
+    /**
+     * The version UID for Serialization/Deserialization compatibility.
+     */
+    static final long serialVersionUID = -5382142207135163838L;
     /**
      * Dummy scores.
      */

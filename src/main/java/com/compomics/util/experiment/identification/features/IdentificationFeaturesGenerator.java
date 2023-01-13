@@ -2237,12 +2237,12 @@ public class IdentificationFeaturesGenerator {
 
             if (site > 0 && site <= sequence.length()) {
 
-                letter = sequence.charAt(site);
-                site = site + 1;
+                letter = sequence.charAt(site - 1);
 
             } else if (site == 0) {
 
                 letter = sequence.charAt(0);
+                site = site + 1;
 
             } else if (site == sequence.length() + 1) {
 

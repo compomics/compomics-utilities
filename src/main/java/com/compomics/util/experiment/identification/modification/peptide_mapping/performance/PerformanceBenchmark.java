@@ -4,6 +4,7 @@ import com.compomics.util.io.flat.SimpleFileWriter;
 import com.compomics.util.waiting.Duration;
 import java.io.File;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
@@ -107,9 +108,13 @@ public class PerformanceBenchmark {
 
                         ExecutorService pool = Executors.newFixedThreadPool(nThreads);
 
-                        pool.submit(
-                                new PerformanceBenchmarkRunnable(nPeptides, null, null, null)
-                        );
+                        for (int threadI = 0; threadI < nThreads; threadI++) {
+
+                            pool.submit(
+                                    new PerformanceBenchmarkRunnable(nPeptides, null, null, null)
+                            );
+
+                        }
 
                         Duration duration = new Duration();
                         duration.start();

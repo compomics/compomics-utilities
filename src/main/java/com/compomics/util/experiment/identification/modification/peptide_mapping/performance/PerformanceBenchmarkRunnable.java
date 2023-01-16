@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification.modification.peptide_mapping.performance;
 
 import com.compomics.util.experiment.identification.modification.peptide_mapping.ModificationPeptideMapping;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
@@ -16,34 +17,22 @@ public class PerformanceBenchmarkRunnable implements Runnable {
      * The random number generator.
      */
     private final Random random = new Random(SEED);
-/**
- * The seed to use.
- */
+    /**
+     * The seed to use.
+     */
     public final static int SEED = 29122022;
-/**
- * The peptide length to use.
- */
+    /**
+     * The peptide length to use.
+     */
     public final static int PEPTIDE_LENGTH = 30;
-/**
- * The number of peptides to generate.
- */
-    private final int nPeptides;
     /**
-     * The number of modifications to consider.
+     * The input to map.
      */
-    private final Integer nMods;
-    /**
-     * The number of possible modification sites.
-     */
-    private final Integer nPossible;
-    /**
-     * The number of occupied modification sites.
-     */
-    private final Integer nOccupied;
+    private ArrayList<HashMap[]> inputs = new ArrayList<>();
 
     /**
      * Constructor.
-     * 
+     *
      * @param nPeptides The number of peptides to generate.
      * @param nMods The number of modifications to consider.
      * @param nPossible The number of possible modification sites.
@@ -56,11 +45,14 @@ public class PerformanceBenchmarkRunnable implements Runnable {
             Integer nOccupied
     ) {
 
-        this.nPeptides = nPeptides;
-        this.nMods = nMods;
-        this.nPossible = nPossible;
-        this.nOccupied = nOccupied;
+        this.inputs = new ArrayList<>(nPeptides);
 
+        for (int i = 0; i < nPeptides; i++) {
+
+            HashMap[] methodInput = getMethodInput(nMods, nPossible, nOccupied);
+            inputs.add(methodInput);
+
+        }
     }
 
     @Override
@@ -68,9 +60,7 @@ public class PerformanceBenchmarkRunnable implements Runnable {
 
         try {
 
-            for (int i = 0; i < nPeptides; i++) {
-
-                HashMap[] methodInput = getMethodInput(nMods, nPossible, nOccupied);
+            for (HashMap[] methodInput : inputs) {
 
                 HashMap<Double, int[]> modificationToPossibleSiteMap = methodInput[0];
                 HashMap<Double, Integer> modificationOccurrenceMap = methodInput[1];
@@ -89,12 +79,13 @@ public class PerformanceBenchmarkRunnable implements Runnable {
 
     /**
      * Generates the input for the modification mapping method.
-     * 
+     *
      * @param nMods The number of modifications to consider.
      * @param nPossible The number of possible modification sites.
      * @param nOccupied The number of occupied modification sites.
-     * 
-     * @return An array of maps that can be given to the modification mapping method.
+     *
+     * @return An array of maps that can be given to the modification mapping
+     * method.
      */
     private HashMap[] getMethodInput(
             Integer nMods,

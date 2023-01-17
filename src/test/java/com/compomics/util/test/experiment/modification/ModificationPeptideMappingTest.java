@@ -91,7 +91,7 @@ public class ModificationPeptideMappingTest extends TestCase {
                 modificationToSiteToScore
         );*/
         
-        HashMap<Double, TreeSet<Integer>> matchedSiteByModification = ModificationPeptideMapping.mapModificationsMWPM(
+        HashMap<Double, TreeSet<Integer>> matchedSiteByModification = ModificationPeptideMapping.mapModifications(
                 modificationToPossibleSiteMap, 
                 modificationOccurrenceMap, 
                 modificationToSiteToScore
@@ -195,7 +195,7 @@ public class ModificationPeptideMappingTest extends TestCase {
                 modificationToSiteToScore
         );*/
         
-        matchedSiteByModification = ModificationPeptideMapping.mapModificationsMWPM(
+        matchedSiteByModification = ModificationPeptideMapping.mapModifications(
                 modificationToPossibleSiteMap, 
                 modificationOccurrenceMap, 
                 modificationToSiteToScore

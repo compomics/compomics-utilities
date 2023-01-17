@@ -36,9 +36,10 @@ public class ModificationPeptideMapping {
      * @param modificationToSiteToScore Map of modification mass to modification
      * site to localization score.
      *
+     * @deprecated does not handle corner cases
      * @return The list of best sites per modification.
      */
-    public static HashMap<Double, TreeSet<Integer>> mapModifications(
+    public static HashMap<Double, TreeSet<Integer>> mapModificationsDeprecated(
             HashMap<Double, int[]> modificationToPossibleSiteMap,
             HashMap<Double, Integer> modificationOccurrenceMap,
             HashMap<Double, HashMap<Integer, Double>> modificationToSiteToScore
@@ -142,7 +143,7 @@ public class ModificationPeptideMapping {
      *
      * @return The list of best sites per modification.
      */
-    public static HashMap<Double, TreeSet<Integer>> mapModificationsMWPM(
+    public static HashMap<Double, TreeSet<Integer>> mapModifications(
             HashMap<Double, int[]> modificationToPossibleSiteMap,
             HashMap<Double, Integer> modificationOccurrenceMap,
             HashMap<Double, HashMap<Integer, Double>> modificationToSiteToScore
@@ -297,8 +298,6 @@ public class ModificationPeptideMapping {
 
         }
 
-        System.out.println(matchedSiteToModification);
-        //System.out.println(matching.getMatchingWeight());
         return matchedSiteToModification;
 
     }

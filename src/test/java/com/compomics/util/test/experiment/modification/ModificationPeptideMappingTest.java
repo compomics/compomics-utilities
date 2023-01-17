@@ -85,7 +85,13 @@ public class ModificationPeptideMappingTest extends TestCase {
         
         modificationToSiteToScore.put(modMass2, scores2Map);
         
-        HashMap<Double, TreeSet<Integer>> matchedSiteByModification = ModificationPeptideMapping.mapModifications(
+        /*HashMap<Double, TreeSet<Integer>> matchedSiteByModification = ModificationPeptideMapping.mapModifications(
+                modificationToPossibleSiteMap, 
+                modificationOccurrenceMap, 
+                modificationToSiteToScore
+        );*/
+        
+        HashMap<Double, TreeSet<Integer>> matchedSiteByModification = ModificationPeptideMapping.mapModificationsMWPM(
                 modificationToPossibleSiteMap, 
                 modificationOccurrenceMap, 
                 modificationToSiteToScore
@@ -183,23 +189,29 @@ public class ModificationPeptideMappingTest extends TestCase {
         
         modificationToSiteToScore.put(modMass3, scores3Map);
         
-        matchedSiteByModification = ModificationPeptideMapping.mapModifications(
+        /*matchedSiteByModification = ModificationPeptideMapping.mapModifications(
+                modificationToPossibleSiteMap, 
+                modificationOccurrenceMap, 
+                modificationToSiteToScore
+        );*/
+        
+        matchedSiteByModification = ModificationPeptideMapping.mapModificationsMWPM(
                 modificationToPossibleSiteMap, 
                 modificationOccurrenceMap, 
                 modificationToSiteToScore
         );
         
-//        Assert.assertTrue(matchedSiteByModification.size() == 3);
-//        Assert.assertTrue(matchedSiteByModification.containsKey(modMass1));
-//        Assert.assertTrue(matchedSiteByModification.containsKey(modMass2));
-//        Assert.assertTrue(matchedSiteByModification.containsKey(modMass2));
-//        
-//        Assert.assertTrue(matchedSiteByModification.get(modMass1).size() == 1);
-//        Assert.assertTrue(matchedSiteByModification.get(modMass1).first() == 0 || matchedSiteByModification.get(modMass1).first() == 1);
-//        Assert.assertTrue(matchedSiteByModification.get(modMass2).size() == 1);
-//        Assert.assertTrue(matchedSiteByModification.get(modMass2).first() == 9);
-//        Assert.assertTrue(matchedSiteByModification.get(modMass3).size() == 2);
-//        Assert.assertTrue(matchedSiteByModification.get(modMass3).first() == 4 || matchedSiteByModification.get(modMass3).last() == 4);
+        Assert.assertTrue(matchedSiteByModification.size() == 3);
+        Assert.assertTrue(matchedSiteByModification.containsKey(modMass1));
+        Assert.assertTrue(matchedSiteByModification.containsKey(modMass2));
+        Assert.assertTrue(matchedSiteByModification.containsKey(modMass2));
+        
+        Assert.assertTrue(matchedSiteByModification.get(modMass1).size() == 1);
+        Assert.assertTrue(matchedSiteByModification.get(modMass1).first() == 0 || matchedSiteByModification.get(modMass1).first() == 1);
+        Assert.assertTrue(matchedSiteByModification.get(modMass2).size() == 1);
+        Assert.assertTrue(matchedSiteByModification.get(modMass2).first() == 9);
+        Assert.assertTrue(matchedSiteByModification.get(modMass3).size() == 2);
+        Assert.assertTrue(matchedSiteByModification.get(modMass3).first() == 4 || matchedSiteByModification.get(modMass3).last() == 4);
         
     }
 }

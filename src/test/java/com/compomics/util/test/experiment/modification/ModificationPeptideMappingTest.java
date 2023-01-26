@@ -195,15 +195,15 @@ public class ModificationPeptideMappingTest extends TestCase {
                 modificationToSiteToScore
         );
         
-//        Assert.assertTrue(matchedSiteByModification.size() == 2);
-//        Assert.assertTrue(matchedSiteByModification.containsKey(modMass1));
-//        Assert.assertTrue(matchedSiteByModification.containsKey(modMass2));
-//        
-//        Assert.assertTrue(matchedSiteByModification.get(modMass1).size() == 1);
-//        Assert.assertTrue(matchedSiteByModification.get(modMass1).first() == 0 || matchedSiteByModification.get(modMass1).first() == 8);
-//        Assert.assertTrue(matchedSiteByModification.get(modMass2).size() == 1);
-//        Assert.assertTrue(matchedSiteByModification.get(modMass2).first() == 8 || matchedSiteByModification.get(modMass2).first() == 13);
-//        Assert.assertFalse(matchedSiteByModification.get(modMass1).first().equals(matchedSiteByModification.get(modMass2).first()));
+        Assert.assertTrue(matchedSiteByModification.size() == 2);
+        Assert.assertTrue(matchedSiteByModification.containsKey(modMass1));
+        Assert.assertTrue(matchedSiteByModification.containsKey(modMass2));
+        
+        Assert.assertTrue(matchedSiteByModification.get(modMass1).size() == 1);
+        Assert.assertTrue(matchedSiteByModification.get(modMass1).first() == 0 || matchedSiteByModification.get(modMass1).first() == 8);
+        Assert.assertTrue(matchedSiteByModification.get(modMass2).size() == 1);
+        Assert.assertTrue(matchedSiteByModification.get(modMass2).first() == 8 || matchedSiteByModification.get(modMass2).first() == 13);
+        Assert.assertFalse(matchedSiteByModification.get(modMass1).first().equals(matchedSiteByModification.get(modMass2).first()));
         
     }
 }

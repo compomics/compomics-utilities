@@ -199,8 +199,8 @@ public class ModificationPeptideMapping {
 
                 }
 
-                //Add 0.001 to ensure weights are not zero
-                double locScore = maxScore - localizationScores.get(site) + 0.001;
+                //Add 0.1 to ensure weights are not zero
+                double locScore = maxScore - localizationScores.get(site) + 0.1;
 
                 for (int i = 0; i < modOccNum; i++) {
 
@@ -213,7 +213,7 @@ public class ModificationPeptideMapping {
                         
                     }
                     
-                    System.out.println(modVertexName + " " + siteVertexName + " " + String.valueOf(locScore));
+                    //System.out.println(modVertexName + " " + siteVertexName + " " + String.valueOf(locScore));
                     
                     g.setEdgeWeight(e, locScore);
                     
@@ -232,8 +232,8 @@ public class ModificationPeptideMapping {
             }
         }
         
-        //Larger weight for the dummy edges
-        double dummyEdgeWeight = maxScore * 10.0;
+        //Larger weight for the dummy edges (add 50.0 such that even if max score = 0.0 the dummy edges have larger weights)
+        double dummyEdgeWeight = (maxScore + 50.0) * 10.0;
         
         ArrayList<String> sitesVerticesList = new ArrayList<>(sitesVertices);
         ArrayList<String> modsVerticesList = new ArrayList<>(modificationsVertices);
@@ -245,7 +245,7 @@ public class ModificationPeptideMapping {
                     e = g.addEdge(sitesVerticesList.get(i), modsVerticesList.get(j));
                     g.setEdgeWeight(e, dummyEdgeWeight);
                     
-                    System.out.println(modsVerticesList.get(j) + " " + sitesVerticesList.get(i) + " " + String.valueOf(dummyEdgeWeight));
+                    //System.out.println(modsVerticesList.get(j) + " " + sitesVerticesList.get(i) + " " + String.valueOf(dummyEdgeWeight));
                 }
             }
         }
@@ -297,7 +297,7 @@ public class ModificationPeptideMapping {
             modificationSites.add(siteVertex);
 
         }
-
+        
         return matchedSiteToModification;
 
     }

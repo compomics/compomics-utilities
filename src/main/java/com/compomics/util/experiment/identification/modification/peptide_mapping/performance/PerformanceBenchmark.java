@@ -4,10 +4,6 @@ import com.compomics.util.io.flat.SimpleFileWriter;
 import com.compomics.util.waiting.Duration;
 import java.io.File;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +33,7 @@ public class PerformanceBenchmark {
 
         try {
 
-            performanceBenchmark.run("/home/marc/Github/papers/peptides-modifications-matching/benchmark/benchmark_29.12.22");
+            performanceBenchmark.run("/home/marc/Github/papers/peptides-modifications-matching/benchmark/benchmark_17.01.23");
 
         } catch (Exception e) {
 

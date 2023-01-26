@@ -29,32 +29,6 @@ public class ModificationPeptideMappingTest extends TestCase {
         int[] sites2 = new int[]{3, 10, 17};
         double[] scores1 = new double[]{123.5, 10.4, 0.0};
         double[] scores2 = new double[]{95.3, 4.9, 51.7};
-
-        /*HashMap<Double, HashMap<Integer, ArrayList<String>>> modificationToPossibleSiteMap = new HashMap<>(2);
-
-        ArrayList<String> modNames1 = new ArrayList<>(1);
-        modNames1.add("Modification1");
-        HashMap<Integer, ArrayList<String>> modification1 = new HashMap<>(2);
-
-        for (int site : sites1) {
-
-            modification1.put(site, modNames1);
-
-        }
-
-        modificationToPossibleSiteMap.put(modMass1, modification1);
-
-        ArrayList<String> modNames2 = new ArrayList<>(1);
-        modNames2.add("Modification2");
-        HashMap<Integer, ArrayList<String>> modification2 = new HashMap<>(2);
-
-        for (int site : sites2) {
-
-            modification2.put(site, modNames2);
-
-        }
-
-        modificationToPossibleSiteMap.put(modMass2, modification2);*/
         
         HashMap<Double, int[]> modificationToPossibleSiteMap = new HashMap<>(2);
         modificationToPossibleSiteMap.put(modMass1, sites1);
@@ -84,12 +58,6 @@ public class ModificationPeptideMappingTest extends TestCase {
         }
         
         modificationToSiteToScore.put(modMass2, scores2Map);
-        
-        /*HashMap<Double, TreeSet<Integer>> matchedSiteByModification = ModificationPeptideMapping.mapModifications(
-                modificationToPossibleSiteMap, 
-                modificationOccurrenceMap, 
-                modificationToSiteToScore
-        );*/
         
         HashMap<Double, TreeSet<Integer>> matchedSiteByModification = ModificationPeptideMapping.mapModifications(
                 modificationToPossibleSiteMap, 
@@ -121,32 +89,6 @@ public class ModificationPeptideMappingTest extends TestCase {
         scores1 = new double[]{33.33333333333333, 33.33333333333333, 33.33333333333333, 199.99862783870378};
         scores2 = new double[]{50.0, 50.0};
         double[] scores3 = new double[]{699.9913211475568, 50.00006662013995, 50.00006662013995};
-
-        /*HashMap<Double, HashMap<Integer, ArrayList<String>>> modificationToPossibleSiteMap = new HashMap<>(2);
-
-        ArrayList<String> modNames1 = new ArrayList<>(1);
-        modNames1.add("Modification1");
-        HashMap<Integer, ArrayList<String>> modification1 = new HashMap<>(2);
-
-        for (int site : sites1) {
-
-            modification1.put(site, modNames1);
-
-        }
-
-        modificationToPossibleSiteMap.put(modMass1, modification1);
-
-        ArrayList<String> modNames2 = new ArrayList<>(1);
-        modNames2.add("Modification2");
-        HashMap<Integer, ArrayList<String>> modification2 = new HashMap<>(2);
-
-        for (int site : sites2) {
-
-            modification2.put(site, modNames2);
-
-        }
-
-        modificationToPossibleSiteMap.put(modMass2, modification2);*/
         
         modificationToPossibleSiteMap = new HashMap<>(3);
         modificationToPossibleSiteMap.put(modMass1, sites1);
@@ -189,12 +131,6 @@ public class ModificationPeptideMappingTest extends TestCase {
         
         modificationToSiteToScore.put(modMass3, scores3Map);
         
-        /*matchedSiteByModification = ModificationPeptideMapping.mapModifications(
-                modificationToPossibleSiteMap, 
-                modificationOccurrenceMap, 
-                modificationToSiteToScore
-        );*/
-        
         matchedSiteByModification = ModificationPeptideMapping.mapModifications(
                 modificationToPossibleSiteMap, 
                 modificationOccurrenceMap, 
@@ -212,6 +148,64 @@ public class ModificationPeptideMappingTest extends TestCase {
         Assert.assertTrue(matchedSiteByModification.get(modMass2).first() == 9);
         Assert.assertTrue(matchedSiteByModification.get(modMass3).size() == 2);
         Assert.assertTrue(matchedSiteByModification.get(modMass3).first() == 4 || matchedSiteByModification.get(modMass3).last() == 4);
+
+        // Example 3: All zero scores
+        // Expected result: {mod1 -> (0 or 8), mod2 -> (6 or 8)}
+        modMass1 = 42.0105646837;
+        modMass2 = 79.96633052074999;
+         nMod1 = 1;
+        nMod2 = 1;
+        sites1 = new int[]{0, 8};
+        sites2 = new int[]{2, 6, 13};
+        scores1 = new double[]{0.0, 0.0};
+        scores2 = new double[]{3.647473038564308E-4, 0.0, 0.0};
+        
+        modificationToPossibleSiteMap = new HashMap<>(2);
+        modificationToPossibleSiteMap.put(modMass1, sites1);
+        modificationToPossibleSiteMap.put(modMass2, sites2);
+
+        modificationOccurrenceMap = new HashMap<>(2);
+        modificationOccurrenceMap.put(modMass1, nMod1);
+        modificationOccurrenceMap.put(modMass2, nMod2);
+
+        modificationToSiteToScore = new HashMap<>(2);
+        scores1Map = new HashMap<>(4);
+        
+        for (int i = 0; i < sites1.length ; i++) {
+            
+            scores1Map.put(sites1[i], scores1[i]);
+            
+        }
+        
+        modificationToSiteToScore.put(modMass1, scores1Map);
+        
+        scores2Map = new HashMap<>(2);
+        
+        for (int i = 0; i < sites2.length ; i++) {
+            
+            scores2Map.put(sites2[i], scores2[i]);
+            
+        }
+        
+        modificationToSiteToScore.put(modMass2, scores2Map);
+        
+        matchedSiteByModification = ModificationPeptideMapping.mapModifications(
+                modificationToPossibleSiteMap, 
+                modificationOccurrenceMap, 
+                modificationToSiteToScore
+        );
+//        
+//        Assert.assertTrue(matchedSiteByModification.size() == 3);
+//        Assert.assertTrue(matchedSiteByModification.containsKey(modMass1));
+//        Assert.assertTrue(matchedSiteByModification.containsKey(modMass2));
+//        Assert.assertTrue(matchedSiteByModification.containsKey(modMass2));
+//        
+//        Assert.assertTrue(matchedSiteByModification.get(modMass1).size() == 1);
+//        Assert.assertTrue(matchedSiteByModification.get(modMass1).first() == 0 || matchedSiteByModification.get(modMass1).first() == 1);
+//        Assert.assertTrue(matchedSiteByModification.get(modMass2).size() == 1);
+//        Assert.assertTrue(matchedSiteByModification.get(modMass2).first() == 9);
+//        Assert.assertTrue(matchedSiteByModification.get(modMass3).size() == 2);
+//        Assert.assertTrue(matchedSiteByModification.get(modMass3).first() == 4 || matchedSiteByModification.get(modMass3).last() == 4);
         
     }
 }

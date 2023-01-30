@@ -124,11 +124,11 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
             additionalOutputCmb.setSelectedIndex(1);
         }
         
-        if (msgfParameters.getAllowDenseCentroidedPeaks()) {
-            allowDenseCentroidedPeaksOutputCmb.setSelectedIndex(0);
-        } else {
-            allowDenseCentroidedPeaksOutputCmb.setSelectedIndex(1);
-        }
+//        if (msgfParameters.getAllowDenseCentroidedPeaks()) {
+//            allowDenseCentroidedPeaksOutputCmb.setSelectedIndex(0);
+//        } else {
+//            allowDenseCentroidedPeaksOutputCmb.setSelectedIndex(1);
+//        }
 
         if (msgfParameters.getNumberTolerableTermini() != null) {
             terminiCmb.setSelectedIndex(msgfParameters.getNumberTolerableTermini());
@@ -182,7 +182,7 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
 
         result.setAdditionalOutput(additionalOutputCmb.getSelectedIndex() == 0);
         
-        result.setAllowDenseCentroidedPeaks(allowDenseCentroidedPeaksOutputCmb.getSelectedIndex() == 0);
+//        result.setAllowDenseCentroidedPeaks(allowDenseCentroidedPeaksOutputCmb.getSelectedIndex() == 0);
 
         result.setNumberTolerableTermini(terminiCmb.getSelectedIndex());
         input = maxPtmsTxt.getText().trim();
@@ -338,6 +338,7 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
 
         allowDenseCentroidedPeaksOutputCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         allowDenseCentroidedPeaksOutputCmb.setSelectedIndex(1);
+        allowDenseCentroidedPeaksOutputCmb.setEnabled(false);
 
         javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
         advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);

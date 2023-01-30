@@ -23,7 +23,7 @@ public class TideParameters extends ExperimentObject implements IdentificationAl
      * The minimum number of modifications that can be applied to a single
      * peptide. Default = 0.
      */
-    //private Integer minVariableModificationsPerPeptide = 0;
+    //private Integer minVariableModificationsPerPeptide = 0; // @TODO: re-add next time we break backwards compatibility
     /**
      * The maximum number of variable modifications allowed on a single peptide.
      * The default is no limit (set to null).

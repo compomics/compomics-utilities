@@ -94,7 +94,7 @@ public enum IdentificationParametersCLIParams {
     MSGF_NUM_MATCHES("msgf_num_matches", "MS-GF+ maximum number of spectrum matches, default is '10'.", false, true), // @TODO: find an optimal default
     MSGF_ADDITIONAL("msgf_additional", "MS-GF+ additional output, 0: output basic scores only (Default, true), 1: output additional features.", false, true),
     MSGF_TASKS("msgf_num_tasks", "MS-GF+ number of tasks as an integer, default: internally calculated based on inputs", false, true),
-    MSGF_DENSE_CENTROIDED_PEAKS("msgf_dense_centroided_peaks", "MS-GF+ allows inclusion of spectra with high-density centroid data in the search, 1: true, 0: false, default is '0'.", false, true),
+    //MSGF_DENSE_CENTROIDED_PEAKS("msgf_dense_centroided_peaks", "MS-GF+ allows inclusion of spectra with high-density centroid data in the search, 1: true, 0: false, default is '0'.", false, true),
     //////////////////////////////////
     // MS Amanda specific parameters
     //////////////////////////////////
@@ -597,7 +597,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MSGF_NUM_MATCHES.id) + " " + IdentificationParametersCLIParams.MSGF_NUM_MATCHES.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MSGF_ADDITIONAL.id) + " " + IdentificationParametersCLIParams.MSGF_ADDITIONAL.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MSGF_TASKS.id) + " " + IdentificationParametersCLIParams.MSGF_TASKS.description + "\n";
-        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MSGF_DENSE_CENTROIDED_PEAKS.id) + " " + IdentificationParametersCLIParams.MSGF_DENSE_CENTROIDED_PEAKS.description + "\n";
+        //output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MSGF_DENSE_CENTROIDED_PEAKS.id) + " " + IdentificationParametersCLIParams.MSGF_DENSE_CENTROIDED_PEAKS.description + "\n";
 
         output += "\n\nOMSSA advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id) + " " + IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.description + "\n";

@@ -14,7 +14,7 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
     /**
      * Version number for deserialization.
      */
-    //static final long serialVersionUID = -2996752557726296967L; // @TODO: add!
+    static final long serialVersionUID = 7440784691598087741L;
     /**
      * The bucket size, i.e. the number of fragments in each internal mass
      * bucket.

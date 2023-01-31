@@ -30,10 +30,12 @@ public class PerformanceBenchmark {
     public static void main(String[] args) {
 
         PerformanceBenchmark performanceBenchmark = new PerformanceBenchmark();
+        
+        String fileStem = args[0];
 
         try {
 
-            performanceBenchmark.run("/home/marc/Github/papers/peptides-modifications-matching/benchmark/benchmark_17.01.23");
+            performanceBenchmark.run(fileStem);
 
         } catch (Exception e) {
 

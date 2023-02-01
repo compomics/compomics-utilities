@@ -117,9 +117,22 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param lastModified a long indicating the last time the indexed file was
      * modified
      */
-    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, HashMap<String, Integer> spectrumNumberIndexMap, HashMap<Integer, Double> precursorMzMap,
-            String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, boolean peakPicked, boolean precursorChargesMissing,
-            long lastModified) {
+    public MgfIndex(
+            ArrayList<String> spectrumTitles, 
+            HashMap<String, Long> indexMap, 
+            HashMap<String, Integer> spectrumNumberIndexMap, 
+            HashMap<Integer, Double> precursorMzMap,
+            String fileName, 
+            double minRT, 
+            double maxRT, 
+            double maxMz, 
+            double maxIntensity, 
+            int maxCharge, 
+            int maxPeakCount, 
+            boolean peakPicked, 
+            boolean precursorChargesMissing,
+            long lastModified
+    ) {
         this.spectrumTitles = spectrumTitles;
         this.duplicatedSpectrumTitles = null; //information not provided
         this.indexMap = indexMap;
@@ -163,9 +176,25 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param spectrumCount the number of spectra in the file counted by the
      * number of begin ion tags
      */
-    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Integer> duplicatedSpectrumTitles, HashMap<String, Long> indexMap, HashMap<String, Integer> spectrumNumberIndexMap,
-            HashMap<Integer, Double> precursorMzMap, String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount,
-            boolean peakPicked, boolean precursorChargesMissing, long lastModified, int spectrumCount) {
+    public MgfIndex(
+            ArrayList<String> spectrumTitles, 
+            HashMap<String, Integer> duplicatedSpectrumTitles, 
+            HashMap<String, Long> indexMap, 
+            HashMap<String, Integer> spectrumNumberIndexMap,
+            HashMap<Integer, Double> precursorMzMap, 
+            String fileName, 
+            double minRT, 
+            double maxRT, 
+            double maxMz, 
+            double maxIntensity, 
+            int maxCharge, 
+            int maxPeakCount,
+            boolean peakPicked, 
+            boolean precursorChargesMissing, 
+            long lastModified, 
+            int spectrumCount
+    ) {
+        
         this.spectrumTitles = spectrumTitles;
         this.duplicatedSpectrumTitles = duplicatedSpectrumTitles;
         this.indexMap = indexMap;

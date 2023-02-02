@@ -890,6 +890,12 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+//        if (aLine.hasOption(IdentificationParametersCLIParams.COMET_SCALE_FRAGMENT_NL.id)) {
+//            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_SCALE_FRAGMENT_NL.id);
+//            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.COMET_SCALE_FRAGMENT_NL.id, arg)) {
+//                return false;
+//            }
+//        }
         if (aLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PEAKS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PEAKS.id);
             if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.COMET_MIN_PEAKS.id, arg, false)) {
@@ -3097,6 +3103,11 @@ public class IdentificationParametersInputBean {
             Integer option = Integer.valueOf(arg);
             cometParameters.setRequireVariableMods(option == 1);
         }
+//        if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_SCALE_FRAGMENT_NL.id)) {
+//            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_SCALE_FRAGMENT_NL.id);
+//            Integer option = Integer.valueOf(arg);
+//            cometParameters.setScaleFragmentNL(option == 1);
+//        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.COMET_MIN_PEAKS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.COMET_MIN_PEAKS.id);
             Integer option = Integer.valueOf(arg);

@@ -81,6 +81,7 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         correlationScoreTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         removeMethionineCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         requireVariablePtmCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        scaleFragmentNLCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         outputFormatCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         printExpectScoreCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
@@ -102,6 +103,7 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         batchSizeTxt.setEnabled(editable);
         maxPtmsTxt.setEnabled(editable);
         requireVariablePtmCmb.setEnabled(editable);
+        scaleFragmentNLCmb.setEnabled(editable);
         correlationScoreTypeCmb.setEnabled(editable);
         fragmentBinOffsetTxt.setEnabled(editable);
         outputFormatCmb.setEnabled(editable);
@@ -143,15 +145,30 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         }
 
         if (cometParameters.getEnzymeType() != null) {
-            if (cometParameters.getEnzymeType() == 1) {
-                enzymeTypeCmb.setSelectedIndex(1);
-            } else if (cometParameters.getEnzymeType() == 2) {
-                enzymeTypeCmb.setSelectedIndex(0);
-            } else if (cometParameters.getEnzymeType() == 8) {
-                enzymeTypeCmb.setSelectedIndex(2);
-            } else if (cometParameters.getEnzymeType() == 9) {
-                enzymeTypeCmb.setSelectedIndex(3);
+
+            switch (cometParameters.getEnzymeType()) {
+
+                case 1:
+                    enzymeTypeCmb.setSelectedIndex(1);
+                    break;
+
+                case 2:
+                    enzymeTypeCmb.setSelectedIndex(0);
+                    break;
+
+                case 8:
+                    enzymeTypeCmb.setSelectedIndex(2);
+                    break;
+
+                case 9:
+                    enzymeTypeCmb.setSelectedIndex(3);
+                    break;
+
+                default:
+                    break;
+
             }
+
         }
 
         if (cometParameters.getIsotopeCorrection() != null) {
@@ -195,6 +212,12 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         } else {
             requireVariablePtmCmb.setSelectedIndex(1);
         }
+
+//        if (cometParameters.getScaleFragmentNL()) {
+//            scaleFragmentNLCmb.setSelectedIndex(0);
+//        } else {
+//            scaleFragmentNLCmb.setSelectedIndex(1);
+//        }
 
         if (cometParameters.getTheoreticalFragmentIonsSumOnly()) {
             correlationScoreTypeCmb.setSelectedIndex(1);
@@ -291,11 +314,11 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
 
         input = minPepLengthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMinPeptideLength(Integer.valueOf(input));
+            result.setMinPeptideLength(Integer.parseInt(input));
         }
         input = maxPepLengthTxt.getText().trim();
         if (!input.equals("")) {
-            result.setMaxPeptideLength(Integer.valueOf(input));
+            result.setMaxPeptideLength(Integer.parseInt(input));
         }
 
         input = maxFragmentChargeTxt.getText().trim();
@@ -316,6 +339,8 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         }
 
         result.setRequireVariableMods(requireVariablePtmCmb.getSelectedIndex() == 0);
+
+//        result.setScaleFragmentNL(scaleFragmentNLCmb.getSelectedIndex() == 0);
 
         result.setTheoreticalFragmentIonsSumOnly(correlationScoreTypeCmb.getSelectedIndex() == 1);
 
@@ -386,6 +411,8 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
         minPepLengthTxt = new javax.swing.JTextField();
         peptideLengthDividerLabel = new javax.swing.JLabel();
         maxPepLengthTxt = new javax.swing.JTextField();
+        scaleFragmentNLPtmLabel = new javax.swing.JLabel();
+        scaleFragmentNLCmb = new javax.swing.JComboBox();
         fragmentIonsPanel = new javax.swing.JPanel();
         correlationScoreTypeLabel = new javax.swing.JLabel();
         correlationScoreTypeCmb = new javax.swing.JComboBox();
@@ -654,22 +681,32 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
             }
         });
 
+        scaleFragmentNLPtmLabel.setText("Scale Fragment Neutral Losses");
+
+        scaleFragmentNLCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        scaleFragmentNLCmb.setSelectedIndex(1);
+        scaleFragmentNLCmb.setEnabled(false);
+
         javax.swing.GroupLayout searchSettingsPanelLayout = new javax.swing.GroupLayout(searchSettingsPanel);
         searchSettingsPanel.setLayout(searchSettingsPanelLayout);
         searchSettingsPanelLayout.setHorizontalGroup(
             searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(searchSettingsPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchSettingsPanelLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(searchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(scaleFragmentNLPtmLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(scaleFragmentNLCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, searchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(maxPtmsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(maxPtmsTxt))
-                    .addGroup(searchSettingsPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, searchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(requireVariablePtmLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(requireVariablePtmCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchSettingsPanelLayout.createSequentialGroup()
+                    .addGroup(searchSettingsPanelLayout.createSequentialGroup()
                         .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(searchSettingsPanelLayout.createSequentialGroup()
                                 .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -753,7 +790,11 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
                 .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(requireVariablePtmCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(requireVariablePtmLabel))
-                .addGap(25, 25, 25))
+                .addGap(0, 0, 0)
+                .addGroup(searchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(scaleFragmentNLCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scaleFragmentNLPtmLabel))
+                .addContainerGap())
         );
 
         tabbedPane.addTab("Search", searchSettingsPanel);
@@ -1257,6 +1298,8 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
     private javax.swing.JTextField removePrecursorPeakToleranceTxt;
     private javax.swing.JComboBox requireVariablePtmCmb;
     private javax.swing.JLabel requireVariablePtmLabel;
+    private javax.swing.JComboBox scaleFragmentNLCmb;
+    private javax.swing.JLabel scaleFragmentNLPtmLabel;
     private javax.swing.JPanel searchSettingsPanel;
     private javax.swing.JPanel spectrumProcessingPanel;
     private javax.swing.JTabbedPane tabbedPane;

@@ -142,6 +142,11 @@ public class CometParameters extends ExperimentObject implements IdentificationA
      * The maximal peptide length. Maximum length for Comet is 63.
      */
     private Integer maxPeptideLength = 30;
+    /**
+     * Scales (multiplies) the neutral loss mass value by the number of modified
+     * residues in the fragment.
+     */
+    // private Boolean scaleFragmentNL = false; // @TODO: re-add next time we break backwards compatibility
 
     /**
      * Constructor.
@@ -158,6 +163,7 @@ public class CometParameters extends ExperimentObject implements IdentificationA
     public boolean equals(IdentificationAlgorithmParameter identificationAlgorithmParameter) {
 
         if (identificationAlgorithmParameter instanceof CometParameters) {
+
             CometParameters cometParameters = (CometParameters) identificationAlgorithmParameter;
 
             if (!numberOfSpectrumMatches.equals(cometParameters.getNumberOfSpectrumMatches())) {
@@ -236,6 +242,9 @@ public class CometParameters extends ExperimentObject implements IdentificationA
             if (getPrintExpectScore() != cometParameters.getPrintExpectScore()) {
                 return false;
             }
+//            if (!getScaleFragmentNL().equals(cometParameters.getTheoreticalFragmentIonsSumOnly())) {
+//                return false;
+//            }
 
             return true;
         }
@@ -245,6 +254,7 @@ public class CometParameters extends ExperimentObject implements IdentificationA
 
     @Override
     public String toString(boolean html) {
+
         String newLine = System.getProperty("line.separator");
 
         if (html) {
@@ -330,6 +340,9 @@ public class CometParameters extends ExperimentObject implements IdentificationA
         output.append("PRINT_EXPECT_SCORE=");
         output.append(getPrintExpectScore());
         output.append(newLine);
+//        output.append("SCALE_FRAGMENT_NL=");
+//        output.append(getScaleFragmentNL());
+//        output.append(newLine);
 
         return output.toString();
     }
@@ -340,10 +353,13 @@ public class CometParameters extends ExperimentObject implements IdentificationA
      * @return the numberOfSpectrumMarches
      */
     public Integer getNumberOfSpectrumMatches() {
+
         if (numberOfSpectrumMatches == null) {
             numberOfSpectrumMatches = 10;
         }
+
         return numberOfSpectrumMatches;
+
     }
 
     /**
@@ -753,7 +769,7 @@ public class CometParameters extends ExperimentObject implements IdentificationA
     }
 
     /**
-     * Sets the minimal peptide length allowed.
+     * Returns the minimal peptide length allowed.
      *
      * @return the minimal peptide length allowed
      */
@@ -769,4 +785,28 @@ public class CometParameters extends ExperimentObject implements IdentificationA
     public void setMinPeptideLength(int minPeptideLength) {
         this.minPeptideLength = minPeptideLength;
     }
+
+//    /**
+//     * Returns whether fragment neutral losses will be scaled.
+//     *
+//     * @return the scaleFragmentNL
+//     */
+//    public Boolean getScaleFragmentNL() {
+//
+//        if (scaleFragmentNL == null) {
+//            scaleFragmentNL = false;
+//        }
+//
+//        return scaleFragmentNL;
+//
+//    }
+//
+//    /**
+//     * Sets whether fragment neutral losses will be scaled.
+//     *
+//     * @param scaleFragmentNL the scaleFragmentNL to set
+//     */
+//    public void setScaleFragmentNL(Boolean scaleFragmentNL) {
+//        this.scaleFragmentNL = scaleFragmentNL;
+//    }
 }

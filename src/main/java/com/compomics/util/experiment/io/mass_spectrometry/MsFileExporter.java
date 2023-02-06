@@ -56,15 +56,31 @@ public class MsFileExporter {
         switch (format) {
 
             case mgf:
-                writeMgfFile(spectrumProvider, fileNameWithoutExtension, destinationFile, waitingHandler);
+                writeMgfFile(
+                        spectrumProvider,
+                        fileNameWithoutExtension,
+                        destinationFile,
+                        waitingHandler
+                );
                 return;
 
             case apl:
-                writeAplFile(spectrumProvider, fileNameWithoutExtension, destinationFile, searchParameters, waitingHandler);
+                writeAplFile(
+                        spectrumProvider,
+                        fileNameWithoutExtension,
+                        destinationFile,
+                        searchParameters,
+                        waitingHandler
+                );
                 return;
 
             case ms2:
-                writeMs2File(spectrumProvider, fileNameWithoutExtension, destinationFile, waitingHandler);
+                writeMs2File(
+                        spectrumProvider,
+                        fileNameWithoutExtension,
+                        destinationFile,
+                        waitingHandler
+                );
                 return;
 
             default:
@@ -92,8 +108,8 @@ public class MsFileExporter {
             WaitingHandler waitingHandler
     ) {
 
-        AndromedaParameters andromedaParameters = 
-                (AndromedaParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.andromeda.getIndex());
+        AndromedaParameters andromedaParameters
+                = (AndromedaParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.andromeda.getIndex());
 
         String[] spectrumTitles = spectrumProvider.getSpectrumTitles(fileNameWithoutExtension);
 
@@ -268,7 +284,7 @@ public class MsFileExporter {
 
             }
         }
-        
+
         writer.close();
 
         waitingHandler.setSecondaryProgressCounterIndeterminate(true);

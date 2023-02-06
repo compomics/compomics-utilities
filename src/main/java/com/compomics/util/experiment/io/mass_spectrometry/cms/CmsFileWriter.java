@@ -26,7 +26,7 @@ public class CmsFileWriter implements AutoCloseable {
     /**
      * The length of the file header.
      */
-    public static final int HEADER_LENGTH = MAGIC_NUMBER.length + Long.BYTES + 4 * Double.BYTES;
+    public static final int HEADER_LENGTH = MAGIC_NUMBER.length + Long.BYTES + 5 * Double.BYTES;
     /**
      * The random access file to write to.
      */
@@ -133,11 +133,12 @@ public class CmsFileWriter implements AutoCloseable {
             compressedData = new TempByteArray(buffer.array(), 0);
         }
 
-        buffer = ByteBuffer.allocate(3 * Double.BYTES + (3 + possibleCharges.length) * Integer.BYTES + compressedData.length);
+        buffer = ByteBuffer.allocate(3 * Double.BYTES + (4 + possibleCharges.length) * Integer.BYTES + compressedData.length);
         buffer
                 .putDouble(precursorMz)
                 .putDouble(precursorRt)
                 .putDouble(precursorIntensity)
+                .putInt(spectrum.getSpectrumLevel())
                 .putInt(compressedData.length)
                 .putInt(nPeaks)
                 .put(compressedData.array, 0, compressedData.length)

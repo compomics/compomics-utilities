@@ -630,7 +630,7 @@ public class MgfFileUtils {
                 }
 
                 mgfIndexes.add(IndexedMgfReader.getMgfIndex(newFile, waitingHandler));
-                if (waitingHandler.isRunCanceled()) {
+                if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     break;
                 }
             }

@@ -163,6 +163,7 @@ public class CmsFileReader implements SpectrumProvider {
         double precursorMz = mappedByteBuffer.getDouble();
         double precursorRt = mappedByteBuffer.getDouble();
         double precursorIntensity = mappedByteBuffer.getDouble();
+        int spectrumLevel = mappedByteBuffer.getInt();
         int compressedDataLength = mappedByteBuffer.getInt();
         int nPeaks = mappedByteBuffer.getInt();
 
@@ -206,7 +207,7 @@ public class CmsFileReader implements SpectrumProvider {
                 charges
         );
 
-        return new Spectrum(precursor, mz, intensity);
+        return new Spectrum(precursor, mz, intensity, spectrumLevel);
 
     }
 
@@ -228,6 +229,7 @@ public class CmsFileReader implements SpectrumProvider {
         double precursorMz = mappedByteBuffer.getDouble();
         double precursorRt = mappedByteBuffer.getDouble();
         double precursorIntensity = mappedByteBuffer.getDouble();
+        mappedByteBuffer.getInt(); // read and ignore the spectrum level @TODO: there is probably a better way of doing this?
         int compressedDataLength = mappedByteBuffer.getInt();
 
         mappedByteBuffer.position(mappedByteBuffer.position() + compressedDataLength + Integer.BYTES);
@@ -304,6 +306,29 @@ public class CmsFileReader implements SpectrumProvider {
         mutex.release();
 
         return precursorRt;
+
+    }
+    
+    /**
+     * Returns the spectrum level of the spectrum with the given title.
+     *
+     * @param spectrumTitle the title of the spectrum
+     *
+     * @return the spectrum level of the spectrum
+     */
+    public int getSpectrumLevel(String spectrumTitle) {
+
+        int index = indexMap.get(spectrumTitle);
+
+        mutex.acquire();
+
+        mappedByteBuffer.position(index + 2 + Double.BYTES);
+
+        int spectrumLevel = mappedByteBuffer.getInt();
+
+        mutex.release();
+
+        return spectrumLevel;
 
     }
 
@@ -398,6 +423,13 @@ public class CmsFileReader implements SpectrumProvider {
     public double getPrecursorRt(String fileName, String spectrumTitle) {
 
         return getPrecursorRt(spectrumTitle);
+
+    }
+    
+    @Override
+    public int getSpectrumLevel(String fileName, String spectrumTitle) {
+
+        return getSpectrumLevel(spectrumTitle);
 
     }
 

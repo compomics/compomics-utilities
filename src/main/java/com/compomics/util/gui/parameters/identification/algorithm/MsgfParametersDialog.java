@@ -123,6 +123,12 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         } else {
             additionalOutputCmb.setSelectedIndex(1);
         }
+        
+//        if (msgfParameters.getAllowDenseCentroidedPeaks()) {
+//            allowDenseCentroidedPeaksOutputCmb.setSelectedIndex(0);
+//        } else {
+//            allowDenseCentroidedPeaksOutputCmb.setSelectedIndex(1);
+//        }
 
         if (msgfParameters.getNumberTolerableTermini() != null) {
             terminiCmb.setSelectedIndex(msgfParameters.getNumberTolerableTermini());
@@ -175,6 +181,8 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         }
 
         result.setAdditionalOutput(additionalOutputCmb.getSelectedIndex() == 0);
+        
+//        result.setAllowDenseCentroidedPeaks(allowDenseCentroidedPeaksOutputCmb.getSelectedIndex() == 0);
 
         result.setNumberTolerableTermini(terminiCmb.getSelectedIndex());
         input = maxPtmsTxt.getText().trim();
@@ -225,6 +233,8 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         terminiCmb = new javax.swing.JComboBox();
         numberOfTasksLabel = new javax.swing.JLabel();
         numberOfTasksTxt = new javax.swing.JTextField();
+        allowDenseCentroidedPeaksLabel = new javax.swing.JLabel();
+        allowDenseCentroidedPeaksOutputCmb = new javax.swing.JComboBox();
         okButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
         openDialogHelpJButton = new javax.swing.JButton();
@@ -324,6 +334,12 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
             }
         });
 
+        allowDenseCentroidedPeaksLabel.setText("Allow Dense Centroided Peaks");
+
+        allowDenseCentroidedPeaksOutputCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        allowDenseCentroidedPeaksOutputCmb.setSelectedIndex(1);
+        allowDenseCentroidedPeaksOutputCmb.setEnabled(false);
+
         javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
         advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
         advancedSearchSettingsPanelLayout.setHorizontalGroup(
@@ -373,7 +389,11 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(numberOfTasksLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(numberOfTasksTxt)))
+                        .addComponent(numberOfTasksTxt))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(allowDenseCentroidedPeaksLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(allowDenseCentroidedPeaksOutputCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -424,6 +444,10 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(numberOfTasksLabel)
                     .addComponent(numberOfTasksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(allowDenseCentroidedPeaksLabel)
+                    .addComponent(allowDenseCentroidedPeaksOutputCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -647,6 +671,8 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
     private javax.swing.JLabel additionalOutputLabel;
     private javax.swing.JPanel advancedSearchSettingsPanel;
     private javax.swing.JLabel advancedSettingsWarningLabel;
+    private javax.swing.JLabel allowDenseCentroidedPeaksLabel;
+    private javax.swing.JComboBox allowDenseCentroidedPeaksOutputCmb;
     private javax.swing.JPanel backgroundPanel;
     private javax.swing.JButton closeButton;
     private javax.swing.JComboBox decoyDatabaseCmb;

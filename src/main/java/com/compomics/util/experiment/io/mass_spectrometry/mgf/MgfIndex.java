@@ -117,9 +117,22 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param lastModified a long indicating the last time the indexed file was
      * modified
      */
-    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Long> indexMap, HashMap<String, Integer> spectrumNumberIndexMap, HashMap<Integer, Double> precursorMzMap,
-            String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount, boolean peakPicked, boolean precursorChargesMissing,
-            long lastModified) {
+    public MgfIndex(
+            ArrayList<String> spectrumTitles,
+            HashMap<String, Long> indexMap,
+            HashMap<String, Integer> spectrumNumberIndexMap,
+            HashMap<Integer, Double> precursorMzMap,
+            String fileName,
+            double minRT,
+            double maxRT,
+            double maxMz,
+            double maxIntensity,
+            int maxCharge,
+            int maxPeakCount,
+            boolean peakPicked,
+            boolean precursorChargesMissing,
+            long lastModified
+    ) {
         this.spectrumTitles = spectrumTitles;
         this.duplicatedSpectrumTitles = null; //information not provided
         this.indexMap = indexMap;
@@ -163,9 +176,25 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param spectrumCount the number of spectra in the file counted by the
      * number of begin ion tags
      */
-    public MgfIndex(ArrayList<String> spectrumTitles, HashMap<String, Integer> duplicatedSpectrumTitles, HashMap<String, Long> indexMap, HashMap<String, Integer> spectrumNumberIndexMap,
-            HashMap<Integer, Double> precursorMzMap, String fileName, double minRT, double maxRT, double maxMz, double maxIntensity, int maxCharge, int maxPeakCount,
-            boolean peakPicked, boolean precursorChargesMissing, long lastModified, int spectrumCount) {
+    public MgfIndex(
+            ArrayList<String> spectrumTitles,
+            HashMap<String, Integer> duplicatedSpectrumTitles,
+            HashMap<String, Long> indexMap,
+            HashMap<String, Integer> spectrumNumberIndexMap,
+            HashMap<Integer, Double> precursorMzMap,
+            String fileName,
+            double minRT,
+            double maxRT,
+            double maxMz,
+            double maxIntensity,
+            int maxCharge,
+            int maxPeakCount,
+            boolean peakPicked,
+            boolean precursorChargesMissing,
+            long lastModified,
+            int spectrumCount
+    ) {
+
         this.spectrumTitles = spectrumTitles;
         this.duplicatedSpectrumTitles = duplicatedSpectrumTitles;
         this.indexMap = indexMap;
@@ -191,7 +220,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the corresponding index
      */
     public Long getIndex(String spectrumTitle) {
-        
+
         return indexMap.get(spectrumTitle);
     }
 
@@ -204,7 +233,6 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the corresponding spectrum index
      */
     public Integer getSpectrumIndex(String spectrumTitle) {
-        
 
         if (spectrumNumberIndexMap == null) {
             return null;
@@ -228,7 +256,6 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the precursor mz
      */
     public Double getPrecursorMz(int spectrumIndex) {
-        
 
         if (precursorMzMap == null) {
             return null;
@@ -252,8 +279,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the title of the spectrum of interest
      */
     public String getSpectrumTitle(int number) {
-        
+
         return spectrumTitles.get(number);
+
     }
 
     /**
@@ -265,8 +293,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * this index
      */
     public boolean containsSpectrum(String spectrumTitle) {
-        
+
         return indexMap.containsKey(spectrumTitle);
+
     }
 
     /**
@@ -275,12 +304,13 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return an ordered list of all spectrum titles
      */
     public ArrayList<String> getSpectrumTitles() {
-        
+
         if (spectrumTitles != null) {
             return spectrumTitles;
         } else {
             return new ArrayList<>(indexMap.keySet());
         }
+
     }
 
     /**
@@ -289,8 +319,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return a map of the duplicated spectrum titles, can be null
      */
     public HashMap<String, Integer> getDuplicatedSpectrumTitles() {
-        
+
         return duplicatedSpectrumTitles;
+
     }
 
     /**
@@ -299,8 +330,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the name of the indexed file
      */
     public String getFileName() {
-        
+
         return fileName;
+
     }
 
     /**
@@ -309,8 +341,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the maximal RT in this file
      */
     public Double getMaxRT() {
-        
+
         return maxRT;
+
     }
 
     /**
@@ -319,8 +352,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param maxRT the maximal RT in this file
      */
     public void setMaxRT(Double maxRT) {
-        
+
         this.maxRT = maxRT;
+
     }
 
     /**
@@ -329,8 +363,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the maximum m/z in this file
      */
     public Double getMaxMz() {
-        
+
         return maxMz;
+
     }
 
     /**
@@ -339,8 +374,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param maxCharge the maximum charge in this file
      */
     public void setMaxCharge(Integer maxCharge) {
-        
+
         this.maxCharge = maxCharge;
+
     }
 
     /**
@@ -349,8 +385,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the maximal charge found in the mgf file
      */
     public Integer getMaxCharge() {
-        
+
         return maxCharge;
+
     }
 
     /**
@@ -359,8 +396,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param maxMz the maximum m/z in this file
      */
     public void setMaxMz(Double maxMz) {
-        
+
         this.maxMz = maxMz;
+
     }
 
     /**
@@ -369,8 +407,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the maximum precursor intensity in this file
      */
     public Double getMaxIntensity() {
-        
+
         return maxIntensity;
+
     }
 
     /**
@@ -379,8 +418,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param maxIntensity the maximum precursor intensity in this file
      */
     public void setMaxIntensity(Double maxIntensity) {
-        
+
         this.maxIntensity = maxIntensity;
+
     }
 
     /**
@@ -389,8 +429,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the minimum RT in this file
      */
     public Double getMinRT() {
-        
+
         return minRT;
+
     }
 
     /**
@@ -399,8 +440,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param minRT the minimum RT in this file
      */
     public void setMinRT(Double minRT) {
-        
+
         this.minRT = minRT;
+
     }
 
     /**
@@ -409,8 +451,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the maximum peak count in this file
      */
     public Integer getMaxPeakCount() {
-        
+
         return maxPeakCount;
+
     }
 
     /**
@@ -419,8 +462,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param maxPeakCount the maximum peak count in this file
      */
     public void setMaxPeakCount(Integer maxPeakCount) {
-        
+
         this.maxPeakCount = maxPeakCount;
+
     }
 
     /**
@@ -429,11 +473,13 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return the number of imported spectra
      */
     public int getNSpectra() {
-        
+
         if (spectrumCount == null) {
             spectrumCount = spectrumTitles.size();
         }
+
         return spectrumCount;
+
     }
 
     /**
@@ -443,8 +489,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return a long indicating when the file was last modified
      */
     public Long getLastModified() {
-        
+
         return lastModified;
+
     }
 
     /**
@@ -455,11 +502,13 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * spectra
      */
     public Boolean isPeakPicked() {
-        
+
         if (peakPicked == null) {
             peakPicked = true;
         }
+
         return peakPicked;
+
     }
 
     /**
@@ -468,8 +517,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param peakPicked the peakPicked to set
      */
     public void setPeakPicked(Boolean peakPicked) {
-        
+
         this.peakPicked = peakPicked;
+
     }
 
     /**
@@ -479,8 +529,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @return true if the at least one spectrum is missing the precursor charge
      */
     public Boolean isPrecursorChargesMissing() {
-        
+
         return precursorChargesMissing;
+
     }
 
     /**
@@ -489,8 +540,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param precursorChargesMissing the precursorChargesMissing to set
      */
     public void setPrecursorChargesMissing(Boolean precursorChargesMissing) {
-        
+
         this.precursorChargesMissing = precursorChargesMissing;
+
     }
 
     /**
@@ -499,14 +551,14 @@ public class MgfIndex extends ExperimentObject implements Serializable {
      * @param bufferedRandomAccessFile The random access file of the inspected
      * mgf file
      * @param index The index where to start looking for the spectrum
-     * 
+     *
      * @return The next spectrum encountered
-     * 
+     *
      * @throws IOException Exception thrown whenever an error is encountered
      * while reading the spectrum
      */
     public static Spectrum getSpectrum(
-            BufferedRandomAccessFile bufferedRandomAccessFile, 
+            BufferedRandomAccessFile bufferedRandomAccessFile,
             long index
     ) throws IOException {
 
@@ -519,6 +571,7 @@ public class MgfIndex extends ExperimentObject implements Serializable {
         ArrayList<Double> intensityList = new ArrayList<>(0);
 
         String line;
+
         while ((line = bufferedRandomAccessFile.getNextLine()) != null) {
 
             // fix for lines ending with \r
@@ -527,49 +580,68 @@ public class MgfIndex extends ExperimentObject implements Serializable {
             }
 
             if (line.startsWith("BEGIN IONS")) {
+
                 insideSpectrum = true;
                 mzList = new ArrayList<>();
                 intensityList = new ArrayList<>();
+
             } else if (line.startsWith("TITLE")) {
+
                 insideSpectrum = true;
                 spectrumTitle = line.substring(line.indexOf('=') + 1).trim();
+
                 try {
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
                 } catch (UnsupportedEncodingException e) {
                     System.out.println("An exception was thrown when trying to decode an mgf title: " + spectrumTitle);
                     e.printStackTrace();
                 }
+
             } else if (line.startsWith("CHARGE")) {
+
                 precursorCharges = parseCharges(line);
+
             } else if (line.startsWith("PEPMASS")) {
+
                 String temp = line.substring(line.indexOf("=") + 1);
                 String[] values = temp.split("\\s");
                 precursorMz = Double.parseDouble(values[0]);
+
                 if (values.length > 1) {
                     precursorIntensity = Double.parseDouble(values[1]);
                 } else {
                     precursorIntensity = 0.0;
                 }
+
             } else if (line.startsWith("RTINSECONDS")) {
+
                 try {
+
                     String rtInput = line.substring(line.indexOf('=') + 1);
                     String[] rtWindow = rtInput.split("-");
+
                     if (rtWindow.length == 1) {
+
                         String tempRt = rtWindow[0];
                         // possible fix for values like RTINSECONDS=PT121.250000S
                         if (tempRt.startsWith("PT") && tempRt.endsWith("S")) {
                             tempRt = tempRt.substring(2, tempRt.length() - 1);
                         }
-                        rt = Double.valueOf(tempRt);
+                        rt = Double.parseDouble(tempRt);
+
                     } else if (rtWindow.length == 2) {
-                        rt1 = Double.valueOf(rtWindow[0]);
-                        rt2 = Double.valueOf(rtWindow[1]);
+
+                        rt1 = Double.parseDouble(rtWindow[0]);
+                        rt2 = Double.parseDouble(rtWindow[1]);
+
                     }
+
                 } catch (Exception e) {
                     System.out.println("An exception was thrown when trying to decode the retention time: " + spectrumTitle);
                     e.printStackTrace();
                     // ignore exception, RT will not be parsed
                 }
+
             } else if (line.startsWith("TOLU")) {
                 // peptide tolerance unit not implemented
             } else if (line.startsWith("TOL")) {
@@ -587,41 +659,52 @@ public class MgfIndex extends ExperimentObject implements Serializable {
             } else if (line.startsWith("INSTRUMENT")) {
                 // ion series not implemented
             } else if (line.startsWith("END IONS")) {
+
                 insideSpectrum = false;
                 Precursor precursor;
+
                 if (rt1 != -1 && rt2 != -1) {
                     precursor = new Precursor(precursorMz, precursorIntensity, precursorCharges, rt1, rt2);
                 } else {
                     precursor = new Precursor(rt, precursorMz, precursorIntensity, precursorCharges);
                 }
+
                 double[] mzArray = mzList.stream()
                         .mapToDouble(
                                 a -> a
                         )
                         .toArray();
+
                 double[] intensityArray = intensityList.stream()
                         .mapToDouble(
                                 a -> a
                         )
                         .toArray();
-                Spectrum spectrum = new Spectrum(precursor, mzArray, intensityArray);
-                
+
+                Spectrum spectrum = new Spectrum(precursor, mzArray, intensityArray, 2);
+
                 return spectrum;
-                
+
             } else if (insideSpectrum && !line.equals("")) {
+
                 try {
+
                     String values[] = line.split("\\s+");
                     double mz = Double.parseDouble(values[0]);
                     mzList.add(mz);
                     double intensity = Double.parseDouble(values[1]);
                     intensityList.add(intensity);
+
                 } catch (Exception e1) {
                     // ignore comments and all other lines
                 }
+
             }
         }
 
-        throw new IllegalArgumentException("End of the file reached before encountering the tag \"END IONS\".");
+        throw new IllegalArgumentException(
+                "End of the file reached before encountering the tag \"END IONS\"."
+        );
     }
 
     /**
@@ -648,7 +731,9 @@ public class MgfIndex extends ExperimentObject implements Serializable {
             chargeAsString = chargeAsString.trim();
 
             if (!chargeAsString.isEmpty()) {
+
                 try {
+
                     if (chargeAsString.endsWith("+")) {
                         int value = Integer.parseInt(chargeAsString.substring(0, chargeAsString.length() - 1));
                         result.add(value);
@@ -659,9 +744,14 @@ public class MgfIndex extends ExperimentObject implements Serializable {
                         int value = Integer.parseInt(chargeAsString);
                         result.add(value);
                     }
+
                 } catch (NumberFormatException e) {
+
                     e.printStackTrace();
-                    throw new IllegalArgumentException("\'" + chargeAsString + "\' could not be processed as a valid precursor charge!");
+                    throw new IllegalArgumentException(
+                            "\'" + chargeAsString + "\' could not be processed as a valid precursor charge!"
+                    );
+
                 }
             }
         }
@@ -674,5 +764,6 @@ public class MgfIndex extends ExperimentObject implements Serializable {
         return result.stream()
                 .mapToInt(a -> a)
                 .toArray();
+
     }
 }

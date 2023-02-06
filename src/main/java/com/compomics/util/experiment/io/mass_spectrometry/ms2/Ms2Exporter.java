@@ -31,7 +31,7 @@ public class Ms2Exporter implements AutoCloseable {
     /**
      * Constructor.
      *
-     * @param destinationFile The file where to write.
+     * @param destinationFile the file where to write
      */
     public Ms2Exporter(
             File destinationFile
@@ -55,7 +55,7 @@ public class Ms2Exporter implements AutoCloseable {
     /**
      * Writes the given spectrum in ms2 format.
      *
-     * @param spectrum The spectrum to write.
+     * @param spectrum the spectrum to write
      * @param scanNumber the scan number
      */
     public void writeSpectrum(

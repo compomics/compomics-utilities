@@ -288,6 +288,18 @@ public class MsFileHandler implements SpectrumProvider {
         return reader == null ? Double.NaN : reader.getPrecursorRt(spectrumTitle);
 
     }
+    
+    @Override
+    public int getSpectrumLevel(
+            String fileNameWithoutExtension,
+            String spectrumTitle
+    ) {
+
+        CmsFileReader reader = cmsFileReaderMap.get(fileNameWithoutExtension);
+
+        return reader == null ? 2 : reader.getSpectrumLevel(spectrumTitle);
+
+    }
 
     @Override
     public double[][] getPeaks(

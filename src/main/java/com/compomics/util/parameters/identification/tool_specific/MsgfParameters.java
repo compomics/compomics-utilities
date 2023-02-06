@@ -69,6 +69,15 @@ public class MsgfParameters extends ExperimentObject implements IdentificationAl
      * a noticeably longer search time.
      */
     private Integer numberOfTasks = null;
+    /**
+     * Allows inclusion of spectra with high-density centroid data in the
+     * search. MS-GF+ checks the distance between consecutive peaks in the
+     * spectrum, and if the median distance is less than 50 ppm, they are
+     * considered profile spectra regardless of the value provided in mzML and
+     * mzXML files. This parameter allows overriding this check when the
+     * mzML/mzXML file says the spectrum is centroided.
+     */
+    //private Boolean allowDenseCentroidedPeaks = false; // @TODO: re-add next time we break backwards compatibility
 
     /**
      * Constructor.
@@ -121,6 +130,10 @@ public class MsgfParameters extends ExperimentObject implements IdentificationAl
                     || (numberOfTasks != null && msgfParameters.getNumberOfTasks() != null && !numberOfTasks.equals(msgfParameters.getNumberOfTasks()))) {
                 return false;
             }
+//            if (allowDenseCentroidedPeaks != msgfParameters.getAllowDenseCentroidedPeaks()) {
+//                return false;
+//            }
+
             return true;
         }
 
@@ -178,6 +191,9 @@ public class MsgfParameters extends ExperimentObject implements IdentificationAl
         output.append("NUMBER_TASKS=");
         output.append(numberOfTasks);
         output.append(newLine);
+//        output.append("ALLOW_DENSE_CENTROIDED_PEAKS=");
+//        output.append(getAllowDenseCentroidedPeaks());
+//        output.append(newLine);
 
         return output.toString();
     }
@@ -362,7 +378,7 @@ public class MsgfParameters extends ExperimentObject implements IdentificationAl
     public void setNumberOfModificationsPerPeptide(Integer numberOfModificationsPerPeptide) {
         this.numberOfModificationsPerPeptide = numberOfModificationsPerPeptide;
     }
-    
+
     /**
      * Returns the number of tasks, null if not set.
      *
@@ -380,4 +396,27 @@ public class MsgfParameters extends ExperimentObject implements IdentificationAl
     public void setNumberOfTasks(Integer numberOfTasks) {
         this.numberOfTasks = numberOfTasks;
     }
+
+//    /**
+//     * Returns true if spectra with high-density centroid data are included.
+//     *
+//     * @return true if spectra with high-density centroid data are included.
+//     */
+//    public boolean getAllowDenseCentroidedPeaks() {
+//
+//        if (allowDenseCentroidedPeaks == null) {
+//            allowDenseCentroidedPeaks = false;
+//        }
+//
+//        return allowDenseCentroidedPeaks;
+//    }
+//
+//    /**
+//     * Set if spectra with high-density centroid data are to be included.
+//     *
+//     * @param allowDenseCentroidedPeaks the allowDenseCentroidedPeaks to set
+//     */
+//    public void setAllowDenseCentroidedPeaks(Boolean allowDenseCentroidedPeaks) {
+//        this.allowDenseCentroidedPeaks = allowDenseCentroidedPeaks;
+//    }
 }

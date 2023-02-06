@@ -176,7 +176,7 @@ public class MgfFileIterator implements MsFileIterator {
                         )
                         .toArray();
 
-                spectrum = new Spectrum(precursor, mzArray, intensityArray);
+                spectrum = new Spectrum(precursor, mzArray, intensityArray, 2);
 
                 spectrumBlock = false;
 

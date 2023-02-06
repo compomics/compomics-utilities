@@ -20,12 +20,6 @@ import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialo
 public class TideParametersDialog extends javax.swing.JDialog implements AlgorithmParametersDialog {
 
     /**
-     * Empty default constructor
-     */
-    public TideParametersDialog() {
-    }
-
-    /**
      * Boolean indicating whether the used canceled the editing.
      */
     private boolean cancelled = false;

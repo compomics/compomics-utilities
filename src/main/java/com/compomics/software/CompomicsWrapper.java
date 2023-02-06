@@ -566,7 +566,7 @@ public class CompomicsWrapper {
      */
     public static void checkJavaVersion(String toolName) {
 
-        // Check java version
+        // check java version
         String javaVersion = System.getProperty("java.runtime.version");
 
         int javaVersionNumber;
@@ -588,7 +588,7 @@ public class CompomicsWrapper {
             JEditorPane ep = new JEditorPane(
                     "text/html", "<html><body bgcolor=\"#"
                     + Util.color2Hex(label.getBackground()) + "\">"
-                    + "Running with java version "
+                    + "Running with Java version "
                     + javaVersion
                     + ", "
                     + toolName + " works best with Java >= 11.<br><br>"
@@ -627,7 +627,7 @@ public class CompomicsWrapper {
                     "text/html", "<html><body bgcolor=\"#"
                     + Util.color2Hex(label.getBackground())
                     + "\">"
-                    + "Running with java version "
+                    + "Running with Java version "
                     + javaVersion
                     + ", issues with Java 17 have been reported when using "
                     + toolName

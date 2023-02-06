@@ -94,6 +94,7 @@ public enum IdentificationParametersCLIParams {
     MSGF_NUM_MATCHES("msgf_num_matches", "MS-GF+ maximum number of spectrum matches, default is '10'.", false, true), // @TODO: find an optimal default
     MSGF_ADDITIONAL("msgf_additional", "MS-GF+ additional output, 0: output basic scores only (Default, true), 1: output additional features.", false, true),
     MSGF_TASKS("msgf_num_tasks", "MS-GF+ number of tasks as an integer, default: internally calculated based on inputs", false, true),
+    //MSGF_DENSE_CENTROIDED_PEAKS("msgf_dense_centroided_peaks", "MS-GF+ allows inclusion of spectra with high-density centroid data in the search, 1: true, 0: false, default is '0'.", false, true),
     //////////////////////////////////
     // MS Amanda specific parameters
     //////////////////////////////////
@@ -192,6 +193,7 @@ public enum IdentificationParametersCLIParams {
     COMET_BATCH_SIZE("comet_batch_size", "Comet spectrum batch size, '0' means load and search all spectra at once, default is '0'.", false, true),
     COMET_PTMS("comet_num_ptms", "Comet max number of variable PTMs per peptide, default is '10'.", false, true),
     COMET_REQ_PTMS("comet_req_ptms", "Comet require at least one variable PTM per peptide, 1: true, 0: false, default is '0'.", false, true),
+    //COMET_SCALE_FRAGMENT_NL("comet_scale_frag_nl", "Comet scales (multiplies) the neutral loss mass value by the number of modified residues in the fragment, 1: true, 0: false, default is '0'.", false, true),
     COMET_THEORETICAL_FRAGMENT_IONS("comet_theoretical_fragment_ions", "Comet theoretical_fragment_ions option, it is the correlation score type, 1: true, 0: false, default is '1'.", false, true),
     COMET_FRAGMENT_BIN_OFFSET("comet_frag_bin_offset", "Comet fragment bin offset, default is '0.01'.", false, true),
     COMET_NUM_MATCHES("comet_num_matches", "Comet maximum number of spectrum matches, default is '10'.", false, true),
@@ -596,6 +598,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MSGF_NUM_MATCHES.id) + " " + IdentificationParametersCLIParams.MSGF_NUM_MATCHES.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MSGF_ADDITIONAL.id) + " " + IdentificationParametersCLIParams.MSGF_ADDITIONAL.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MSGF_TASKS.id) + " " + IdentificationParametersCLIParams.MSGF_TASKS.description + "\n";
+        //output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MSGF_DENSE_CENTROIDED_PEAKS.id) + " " + IdentificationParametersCLIParams.MSGF_DENSE_CENTROIDED_PEAKS.description + "\n";
 
         output += "\n\nOMSSA advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.id) + " " + IdentificationParametersCLIParams.OMSSA_LOW_INTENSITY.description + "\n";
@@ -653,6 +656,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.COMET_BATCH_SIZE.id) + " " + IdentificationParametersCLIParams.COMET_BATCH_SIZE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.COMET_PTMS.id) + " " + IdentificationParametersCLIParams.COMET_PTMS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.COMET_REQ_PTMS.id) + " " + IdentificationParametersCLIParams.COMET_REQ_PTMS.description + "\n";
+        //output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.COMET_SCALE_FRAGMENT_NL.id) + " " + IdentificationParametersCLIParams.COMET_SCALE_FRAGMENT_NL.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.COMET_THEORETICAL_FRAGMENT_IONS.id) + " " + IdentificationParametersCLIParams.COMET_THEORETICAL_FRAGMENT_IONS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_OFFSET.id) + " " + IdentificationParametersCLIParams.COMET_FRAGMENT_BIN_OFFSET.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.COMET_NUM_MATCHES.id) + " " + IdentificationParametersCLIParams.COMET_NUM_MATCHES.description + "\n";

@@ -4,6 +4,7 @@ import com.compomics.util.io.flat.SimpleFileWriter;
 import com.compomics.util.waiting.Duration;
 import java.io.File;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -30,8 +31,8 @@ public class PerformanceBenchmark {
     public static void main(String[] args) {
 
         PerformanceBenchmark performanceBenchmark = new PerformanceBenchmark();
-        
-        String fileStem = args[0];
+
+        String fileStem = args.length > 0 ? args[0] : "/home/marc/Github/papers/peptides-modifications-matching/benchmark/benchmark_23.02.02";
 
         try {
 
@@ -87,9 +88,9 @@ public class PerformanceBenchmark {
             String fileStem
     ) throws InterruptedException, TimeoutException {
 
-        try ( SimpleFileWriter writer = new SimpleFileWriter(new File(fileStem + "_threads"), false)) {
+        try ( SimpleFileWriter writer = new SimpleFileWriter(new File(fileStem + ".benchmark_threads"), false)) {
 
-            writer.writeLine("threads", "peptides", "replicate", "time");
+            writer.writeLine("threads", "peptides", "replicate", "time", "failed");
 
             for (int i = 1; i <= 6; i++) {
 
@@ -106,11 +107,15 @@ public class PerformanceBenchmark {
 
                         ExecutorService pool = Executors.newFixedThreadPool(nThreads);
 
+                        ArrayList<PerformanceBenchmarkRunnable> runnables = new ArrayList<>(nThreads);
+
                         for (int threadI = 0; threadI < nThreads; threadI++) {
 
-                            pool.submit(
-                                    new PerformanceBenchmarkRunnable(nPeptides, null, null, null)
-                            );
+                            PerformanceBenchmarkRunnable runnable = new PerformanceBenchmarkRunnable(nPeptides, null, null, null);
+
+                            pool.submit(runnable);
+
+                            runnables.add(runnable);
 
                         }
 
@@ -127,11 +132,18 @@ public class PerformanceBenchmark {
 
                         duration.end();
 
+                        int nFailed = runnables.stream()
+                                .mapToInt(
+                                        runnable -> runnable.failedPeptides
+                                )
+                                .sum();
+
                         writer.writeLine(
                                 Integer.toString(nThreads),
                                 Integer.toString(nPeptidesTotal),
                                 Integer.toString(replicate),
-                                Long.toString(duration.getDuration())
+                                Long.toString(duration.getDuration()),
+                                Integer.toString(nFailed)
                         );
 
                         System.gc();
@@ -158,12 +170,11 @@ public class PerformanceBenchmark {
             String fileStem
     ) throws InterruptedException, TimeoutException {
 
-        try ( SimpleFileWriter writer = new SimpleFileWriter(new File(fileStem + "_size"), false)) {
+        try ( SimpleFileWriter writer = new SimpleFileWriter(new File(fileStem + ".benchmark_size"), false)) {
 
-            writer.writeLine("modifications", "sites", "occupancy", "replicate", "time");
+            writer.writeLine("modifications", "sites", "occupancy", "replicate", "time", "peptides", "failed");
 
             int nPeptides = 1000;
-            int nThreads = Runtime.getRuntime().availableProcessors();
 
             for (int i = 1; i <= 10; i++) {
 
@@ -179,22 +190,12 @@ public class PerformanceBenchmark {
 
                             System.out.println(Instant.now() + "    Size benchmark - " + occupancy + " in " + nSites + " sites, " + nMods + " modifications (" + replicate + "/" + REPLICATES + ")");
 
-                            ExecutorService pool = Executors.newFixedThreadPool(nThreads);
-
-                            pool.submit(
-                                    new PerformanceBenchmarkRunnable(nPeptides, nMods, nSites, occupancy)
-                            );
+                            PerformanceBenchmarkRunnable runnable = new PerformanceBenchmarkRunnable(nPeptides, nMods, nSites, occupancy);
 
                             Duration duration = new Duration();
                             duration.start();
 
-                            pool.shutdown();
-
-                            if (!pool.awaitTermination(1, TimeUnit.DAYS)) {
-
-                                throw new TimeoutException("Analysis timed out (time out: " + 1 + " days)");
-
-                            }
+                            runnable.run();
 
                             duration.end();
 
@@ -203,7 +204,9 @@ public class PerformanceBenchmark {
                                     Integer.toString(nSites),
                                     Integer.toString(occupancy),
                                     Integer.toString(replicate),
-                                    Long.toString(duration.getDuration())
+                                    Long.toString(duration.getDuration()),
+                                    Integer.toString(nPeptides),
+                                    Integer.toString(runnable.failedPeptides)
                             );
 
                             System.gc();

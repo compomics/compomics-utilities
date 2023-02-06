@@ -34,15 +34,18 @@ import java.util.stream.Collectors;
 public class PeptideInference {
 
     /**
-     * Localization score offset for modification that are confidently localized on the PSM investigated.
+     * Localization score offset for modification that are confidently localized
+     * on the PSM investigated.
      */
     public final int CONFIDENT_OWN_OFFSET = 400;
     /**
-     * Localization score offset for modification that are confidently localized on another PSM with the same sequence.
+     * Localization score offset for modification that are confidently localized
+     * on another PSM with the same sequence.
      */
     public final int CONFIDENT_OTHER_OFFSET = 200;
     /**
-     * Localization score offset for modification that are confidently localized on another PSM with an overlapping sequence.
+     * Localization score offset for modification that are confidently localized
+     * on another PSM with an overlapping sequence.
      */
     public final int CONFIDENT_RELATED_OFFSET = 100;
 
@@ -134,7 +137,8 @@ public class PeptideInference {
      * @param confidentPeptideInference PSMs with confidently localized PTMs in
      * a map: PTM mass, peptide sequence, spectrum keys.
      * @param identification The identification object containing the matches.
-     * @param modificationLocalizationParameters The modification localization scoring parameters.
+     * @param modificationLocalizationParameters The modification localization
+     * scoring parameters.
      * @param modificationProvider The modification provider to use.
      */
     private void peptideInference(
@@ -164,142 +168,145 @@ public class PeptideInference {
         // See if other peptides can provide confident sites
         boolean relatedPeptide = false;
         HashSet<Long> processed = new HashSet<>();
-        
+
         for (double modMass : modMasses) {
-            
+
             modificationToSiteToScore.put(modMass, new HashMap<>(2));
             modificationToSiteToName.put(modMass, new HashMap<>(2));
-            
+
         }
 
         for (double modMass : modMasses) {
 
             HashMap<String, HashSet<Long>> modMap = confidentPeptideInference.get(modMass);
 
-            for (Entry<String, HashSet<Long>> entry : modMap.entrySet()) {
+            if (modMap != null) {
 
-                String entrySequence = entry.getKey();
+                for (Entry<String, HashSet<Long>> entry : modMap.entrySet()) {
 
-                double scoreOffset = Double.NaN;
-                int[] peptideSiteOffsets = null;
-                int[] entrySiteOffsets = null;
-                int tempIndex;
+                    String entrySequence = entry.getKey();
 
-                if (entrySequence.equals(sequence)) {
+                    double scoreOffset = Double.NaN;
+                    int[] peptideSiteOffsets = null;
+                    int[] entrySiteOffsets = null;
+                    int tempIndex;
 
-                    scoreOffset = CONFIDENT_OTHER_OFFSET;
-                    peptideSiteOffsets = new int[]{0};
-                    entrySiteOffsets = new int[]{0};
+                    if (entrySequence.equals(sequence)) {
 
-                } else if (entrySequence.length() > sequence.length() && (tempIndex = entrySequence.indexOf(sequence)) >= 0) {
+                        scoreOffset = CONFIDENT_OTHER_OFFSET;
+                        peptideSiteOffsets = new int[]{0};
+                        entrySiteOffsets = new int[]{0};
 
-                    scoreOffset = CONFIDENT_RELATED_OFFSET;
-                    peptideSiteOffsets = new int[]{0};
+                    } else if (entrySequence.length() > sequence.length() && (tempIndex = entrySequence.indexOf(sequence)) >= 0) {
 
-                    ArrayList<Integer> offsetList = new ArrayList<>(1);
-                    offsetList.add(tempIndex);
+                        scoreOffset = CONFIDENT_RELATED_OFFSET;
+                        peptideSiteOffsets = new int[]{0};
 
-                    int ref = tempIndex + 1;
-                    String tempSequence = entrySequence.substring(tempIndex + 1);
+                        ArrayList<Integer> offsetList = new ArrayList<>(1);
+                        offsetList.add(tempIndex);
 
-                    while ((tempIndex = tempSequence.indexOf(sequence)) >= 0) {
+                        int ref = tempIndex + 1;
+                        String tempSequence = entrySequence.substring(tempIndex + 1);
 
-                        ref += tempIndex;
+                        while ((tempIndex = tempSequence.indexOf(sequence)) >= 0) {
 
-                        offsetList.add(ref);
+                            ref += tempIndex;
 
-                        tempSequence = tempSequence.substring(tempIndex + 1);
-                        ref++;
+                            offsetList.add(ref);
+
+                            tempSequence = tempSequence.substring(tempIndex + 1);
+                            ref++;
+
+                        }
+
+                        entrySiteOffsets = offsetList.stream()
+                                .mapToInt(a -> a)
+                                .toArray();
+
+                    } else if (entrySequence.length() < sequence.length() && (tempIndex = sequence.indexOf(entrySequence)) >= 0) {
+
+                        scoreOffset = CONFIDENT_RELATED_OFFSET;
+                        entrySiteOffsets = new int[]{0};
+
+                        ArrayList<Integer> offsetList = new ArrayList<>(1);
+                        offsetList.add(tempIndex);
+
+                        int ref = tempIndex + 1;
+                        String tempSequence = sequence.substring(tempIndex + 1);
+
+                        while ((tempIndex = tempSequence.indexOf(entrySequence)) >= 0) {
+
+                            ref += tempIndex;
+
+                            offsetList.add(ref);
+
+                            tempSequence = tempSequence.substring(tempIndex + 1);
+                            ref++;
+
+                        }
+
+                        peptideSiteOffsets = offsetList.stream()
+                                .mapToInt(a -> a)
+                                .toArray();
 
                     }
 
-                    entrySiteOffsets = offsetList.stream()
-                            .mapToInt(a -> a)
-                            .toArray();
+                    if (peptideSiteOffsets != null) {
 
-                } else if (entrySequence.length() < sequence.length() && (tempIndex = sequence.indexOf(entrySequence)) >= 0) {
+                        for (long key : entry.getValue()) {
 
-                    scoreOffset = CONFIDENT_RELATED_OFFSET;
-                    entrySiteOffsets = new int[]{0};
+                            if (key != spectrumKey && !processed.contains(key)) {
 
-                    ArrayList<Integer> offsetList = new ArrayList<>(1);
-                    offsetList.add(tempIndex);
+                                SpectrumMatch tempMatch = identification.getSpectrumMatch(key);
+                                PSModificationScores tempScores = (PSModificationScores) tempMatch.getUrParam(PSModificationScores.dummy);
 
-                    int ref = tempIndex + 1;
-                    String tempSequence = sequence.substring(tempIndex + 1);
+                                for (ModificationMatch modMatch : tempMatch.getBestPeptideAssumption().getPeptide().getVariableModifications()) {
 
-                    while ((tempIndex = tempSequence.indexOf(entrySequence)) >= 0) {
+                                    if (modMatch.getConfident()) {
 
-                        ref += tempIndex;
+                                        String modName = modMatch.getModification();
+                                        Modification modification = modificationProvider.getModification(modName);
+                                        double tempMass = modification.getMass();
 
-                        offsetList.add(ref);
+                                        if (modMasses.contains(tempMass)) {
 
-                        tempSequence = tempSequence.substring(tempIndex + 1);
-                        ref++;
+                                            ModificationScoring modificationScoring = tempScores.getModificationScoring(modName);
+                                            int site = modMatch.getSite();
+                                            double score = modificationLocalizationParameters.isProbabilisticScoreCalculation() ? modificationScoring.getProbabilisticScore(site) : modificationScoring.getDeltaScore(site);
 
-                    }
+                                            score += scoreOffset;
 
-                    peptideSiteOffsets = offsetList.stream()
-                            .mapToInt(a -> a)
-                            .toArray();
+                                            HashMap<Integer, Double> tempScoreMap = modificationToSiteToScore.get(tempMass);
+                                            HashMap<Integer, String> tempNameMap = modificationToSiteToName.get(tempMass);
 
-                }
+                                            for (int siteOffset1 : peptideSiteOffsets) {
 
-                if (peptideSiteOffsets != null) {
+                                                for (int siteOffset2 : entrySiteOffsets) {
 
-                    for (long key : entry.getValue()) {
+                                                    int siteOnPeptide = site + siteOffset1 - siteOffset2;
 
-                        if (key != spectrumKey && !processed.contains(key)) {
+                                                    if (siteOnPeptide >= 0 && siteOnPeptide <= sequence.length() + 1) {
 
-                            SpectrumMatch tempMatch = identification.getSpectrumMatch(key);
-                            PSModificationScores tempScores = (PSModificationScores) tempMatch.getUrParam(PSModificationScores.dummy);
+                                                        Double currentScore = tempScoreMap.get(site);
 
-                            for (ModificationMatch modMatch : tempMatch.getBestPeptideAssumption().getPeptide().getVariableModifications()) {
+                                                        if (currentScore == null || currentScore < score) {
 
-                                if (modMatch.getConfident()) {
+                                                            tempScoreMap.put(siteOnPeptide, score);
+                                                            tempNameMap.put(siteOnPeptide, modName);
 
-                                    String modName = modMatch.getModification();
-                                    Modification modification = modificationProvider.getModification(modName);
-                                    double tempMass = modification.getMass();
+                                                            relatedPeptide = true;
 
-                                    if (modMasses.contains(tempMass)) {
-
-                                        ModificationScoring modificationScoring = tempScores.getModificationScoring(modName);
-                                        int site = modMatch.getSite();
-                                        double score = modificationLocalizationParameters.isProbabilisticScoreCalculation() ? modificationScoring.getProbabilisticScore(site) : modificationScoring.getDeltaScore(site);
-
-                                        score += scoreOffset;
-
-                                        HashMap<Integer, Double> tempScoreMap = modificationToSiteToScore.get(tempMass);
-                                        HashMap<Integer, String> tempNameMap = modificationToSiteToName.get(tempMass);
-
-                                        for (int siteOffset1 : peptideSiteOffsets) {
-
-                                            for (int siteOffset2 : entrySiteOffsets) {
-
-                                                int siteOnPeptide = site + siteOffset1 - siteOffset2;
-
-                                                if (siteOnPeptide >= 0 && siteOnPeptide <= sequence.length() + 1) {
-
-                                                    Double currentScore = tempScoreMap.get(site);
-
-                                                    if (currentScore == null || currentScore < score) {
-
-                                                        tempScoreMap.put(siteOnPeptide, score);
-                                                        tempNameMap.put(siteOnPeptide, modName);
-                                                        
-                                                        relatedPeptide = true;
-
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
                                     }
                                 }
+
+                                processed.add(key);
+
                             }
-
-                            processed.add(key);
-
                         }
                     }
                 }
@@ -449,11 +456,11 @@ public class PeptideInference {
 
                 }
             }
-            
+
             if (modI < modificationMatches.length) {
-                
+
                 throw new IllegalArgumentException(modI + " modifications found where " + modificationMatches.length + " needed.");
-                
+
             }
 
             peptide.setVariableModifications(newModificationMatches);

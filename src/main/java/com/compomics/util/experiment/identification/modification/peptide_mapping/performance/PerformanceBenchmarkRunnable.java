@@ -26,6 +26,10 @@ public class PerformanceBenchmarkRunnable implements Runnable {
      */
     public final static int PEPTIDE_LENGTH = 30;
     /**
+     * The number of peptides that failed.
+     */
+    public int failedPeptides = 0;
+    /**
      * The input to map.
      */
     private ArrayList<HashMap[]> inputs = new ArrayList<>();
@@ -66,7 +70,15 @@ public class PerformanceBenchmarkRunnable implements Runnable {
                 HashMap<Double, Integer> modificationOccurrenceMap = methodInput[1];
                 HashMap<Double, HashMap<Integer, Double>> modificationToSiteToScore = methodInput[2];
 
-                ModificationPeptideMapping.mapModifications(modificationToPossibleSiteMap, modificationOccurrenceMap, modificationToSiteToScore);
+                try {
+
+                    ModificationPeptideMapping.mapModifications(modificationToPossibleSiteMap, modificationOccurrenceMap, modificationToSiteToScore);
+
+                } catch (Exception e) {
+                    
+                    failedPeptides++;
+                    
+                }
 
             }
         } catch (Exception e) {

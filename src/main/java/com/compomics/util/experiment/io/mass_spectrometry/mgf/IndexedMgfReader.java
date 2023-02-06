@@ -382,7 +382,7 @@ public class IndexedMgfReader {
                                 a -> a
                         )
                         .toArray();
-                Spectrum spectrum = new Spectrum(precursor, mzArray, intensityArray);
+                Spectrum spectrum = new Spectrum(precursor, mzArray, intensityArray, 2);
 
                 return spectrum;
 

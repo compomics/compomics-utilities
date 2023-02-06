@@ -29,6 +29,10 @@ public class Spectrum extends ExperimentObject {
      * The array of the intensities of the peaks.
      */
     public double[] intensity;
+    /**
+     * The spectrum level, i.e. 1 for MS1, 2 for MS2, etc.
+     */
+    private Integer spectrumLevel = null;
 
     /**
      * Empty default constructor.
@@ -38,26 +42,30 @@ public class Spectrum extends ExperimentObject {
         mz = new double[0];
         intensity = new double[0];
         precursor = null;
+        spectrumLevel = null;
 
     }
 
     /**
-     * Constructor. Note: throughout the code, it is assumed that the m/z array
+     * Constructor.Note: throughout the code, it is assumed that the m/z array
      * is sorted by ascending m/z. Only minimal sanity check is conducted.
      *
-     * @param precursor The precursor.
-     * @param mz The array of mz of the peaks.
-     * @param intensities The array of intensities of the peaks.
+     * @param precursor the precursor
+     * @param mz the array of mz of the peaks
+     * @param intensities the array of intensities of the peaks
+     * @param spectrumLevel the spectrum level
      */
     public Spectrum(
             Precursor precursor,
             double[] mz,
-            double[] intensities
+            double[] intensities,
+            int spectrumLevel
     ) {
 
         this.precursor = precursor;
         this.mz = mz;
         this.intensity = intensities;
+        this.spectrumLevel = spectrumLevel;
 
     }
 
@@ -68,7 +76,6 @@ public class Spectrum extends ExperimentObject {
      * @return the peak list as an array list formatted as text
      */
     public String getPeakListAsString() {
-        
 
         return IntStream.range(0, mz.length)
                 .mapToObj(
@@ -82,10 +89,9 @@ public class Spectrum extends ExperimentObject {
     /**
      * Returns the total intensity of the spectrum.
      *
-     * @return the total intensity. 0 if no peak.
+     * @return the total intensity, 0 if no peak
      */
     public double getTotalIntensity() {
-        
 
         return Arrays.stream(intensity)
                 .sum();
@@ -98,7 +104,6 @@ public class Spectrum extends ExperimentObject {
      * @return the max intensity value. 0 if no peak.
      */
     public double getMaxIntensity() {
-        
 
         return Arrays.stream(intensity)
                 .max()
@@ -112,7 +117,6 @@ public class Spectrum extends ExperimentObject {
      * @return the max mz value
      */
     public double getMaxMz() {
-        
 
         return mz[mz.length - 1];
 
@@ -124,7 +128,6 @@ public class Spectrum extends ExperimentObject {
      * @return the min mz value
      */
     public double getMinMz() {
-        
 
         return mz[0];
 
@@ -133,11 +136,10 @@ public class Spectrum extends ExperimentObject {
     /**
      * Returns the precursor. Null if none.
      *
-     * @return The precursor.
+     * @return the precursor
      */
     public Precursor getPrecursor() {
 
-        
         return precursor;
 
     }
@@ -167,9 +169,9 @@ public class Spectrum extends ExperimentObject {
             Spectrum otherSpectrum
     ) {
 
-        if (precursor == null && otherSpectrum.precursor != null
-                || precursor != null && otherSpectrum.precursor == null
-                || precursor != null && otherSpectrum.precursor != null && !precursor.isSameAs(otherSpectrum.precursor)) {
+        if ((precursor == null && otherSpectrum.precursor != null)
+                || (precursor != null && otherSpectrum.precursor == null)
+                || (precursor != null && otherSpectrum.precursor != null && !precursor.isSameAs(otherSpectrum.precursor))) {
 
             return false;
 
@@ -190,6 +192,12 @@ public class Spectrum extends ExperimentObject {
 
         }
 
+        if (getSpectrumLevel() != otherSpectrum.getSpectrumLevel()) {
+
+            return false;
+
+        }
+
         return true;
 
     }
@@ -197,6 +205,37 @@ public class Spectrum extends ExperimentObject {
     @Override
     public String toString() {
 
-        return "{precursor: " + precursor.toString() + "}{Peaks: " + getPeakListAsString() + "}";
+        if (precursor != null) {
+
+            return "{precursor: " + precursor.toString() + "}"
+                    + "{spectrum level: " + spectrumLevel + "}"
+                    + "{Peaks: " + getPeakListAsString() + "}";
+
+        } else {
+
+            return "{precursor: none}"
+                    + "{spectrum level: " + spectrumLevel + "}"
+                    + "{Peaks: " + getPeakListAsString() + "}";
+
+        }
+
+    }
+
+    /**
+     * Returns the spectrum level. Null if not set.
+     *
+     * @return the spectrumLevel
+     */
+    public int getSpectrumLevel() {
+        return spectrumLevel;
+    }
+
+    /**
+     * Set the spectrum level.
+     *
+     * @param spectrumLevel the spectrumLevel to set
+     */
+    public void setSpectrumLevel(int spectrumLevel) {
+        this.spectrumLevel = spectrumLevel;
     }
 }

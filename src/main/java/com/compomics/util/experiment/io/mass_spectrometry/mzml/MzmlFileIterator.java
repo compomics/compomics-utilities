@@ -122,12 +122,20 @@ public class MzmlFileIterator implements MsFileIterator {
             }
 
             if (!spectrumListFound) {
-                throw new IllegalArgumentException("Spectrum list not found when parsing mzML file!");
+
+                throw new IllegalArgumentException(
+                        "Spectrum list not found when parsing mzML file!"
+                );
+
             }
 
         } catch (XMLStreamException ex) {
+
             ex.printStackTrace();
-            throw new IllegalArgumentException("An exception was thrown when trying to create the mzML parser.");
+            throw new IllegalArgumentException(
+                    "An exception was thrown when trying to create the mzML parser."
+            );
+
         }
 
         this.waitingHandler = waitingHandler;
@@ -160,12 +168,8 @@ public class MzmlFileIterator implements MsFileIterator {
                         if (element.equalsIgnoreCase("spectrum")) {
 
                             String id = parser.getAttributeValue("", "id");
-
-                            int spectrumLevel = parseSpectrum();
-
-                            if (spectrumLevel == 2) {
-                                return id;
-                            }
+                            parseSpectrum();
+                            return id;
 
                         }
 
@@ -178,21 +182,24 @@ public class MzmlFileIterator implements MsFileIterator {
             }
 
         } catch (XMLStreamException ex) {
+
             ex.printStackTrace();
-            throw new IllegalArgumentException("An exception was thrown when trying to parse the mzML file.");
+            throw new IllegalArgumentException(
+                    "An exception was thrown when trying to parse the mzML file."
+            );
+
         }
 
         return null;
     }
 
     /**
-     * Parse a spectrum and return the ms level. Note that only MS2 spectra are
-     * parsed.
+     * Parse a spectrum.
      *
      * @return the ms level
      * @throws XMLStreamException thrown if an XMLStreamException occurs
      */
-    private int parseSpectrum() throws XMLStreamException {
+    private void parseSpectrum() throws XMLStreamException {
 
         int spectrumLevel = -1;
         double retentionTimeInSeconds = -1.0;
@@ -215,12 +222,27 @@ public class MzmlFileIterator implements MsFileIterator {
 
                     if ("spectrum".equalsIgnoreCase(parser.getLocalName())) {
 
-                        if (spectrumLevel == 2) {
-                            Precursor precursor = new Precursor(retentionTimeInSeconds, precursorMz, precursorIntensity, possibleChargesAsArray.stream().mapToInt(i -> i).toArray());
-                            spectrum = new Spectrum(precursor, mzArray, intensityArray);
+                        Precursor precursor = null; // no precusor for ms1 spectra
+
+                        if (spectrumLevel > 1) {
+
+                            precursor = new Precursor(
+                                    retentionTimeInSeconds,
+                                    precursorMz,
+                                    precursorIntensity,
+                                    possibleChargesAsArray.stream().mapToInt(i -> i).toArray()
+                            );
+
                         }
 
-                        return spectrumLevel;
+                        spectrum = new Spectrum(
+                                precursor,
+                                mzArray,
+                                intensityArray,
+                                spectrumLevel
+                        );
+
+                        return;
                     }
 
                     break;
@@ -243,9 +265,9 @@ public class MzmlFileIterator implements MsFileIterator {
                                 } else if (accession.equalsIgnoreCase("MS:1000016")) {
 
                                     if (parser.getAttributeValue("", "unitName").equalsIgnoreCase("minute")) {
-                                        retentionTimeInSeconds = Double.valueOf(value) * 60;
+                                        retentionTimeInSeconds = Double.parseDouble(value) * 60;
                                     } else if (parser.getAttributeValue("", "unitName").equalsIgnoreCase("second")) {
-                                        retentionTimeInSeconds = Double.valueOf(value);
+                                        retentionTimeInSeconds = Double.parseDouble(value);
                                     }
 
                                 } else if (accession.equalsIgnoreCase("MS:1000041")) {
@@ -254,11 +276,11 @@ public class MzmlFileIterator implements MsFileIterator {
 
                                 } else if (accession.equalsIgnoreCase("MS:1000744")) {
 
-                                    precursorMz = Double.valueOf(value);
+                                    precursorMz = Double.parseDouble(value);
 
                                 } else if (accession.equalsIgnoreCase("MS:1000042")) {
 
-                                    precursorIntensity = Double.valueOf(value);
+                                    precursorIntensity = Double.parseDouble(value);
 
                                 } else if (accession.equalsIgnoreCase("MS:1000514")) {
 
@@ -304,24 +326,27 @@ public class MzmlFileIterator implements MsFileIterator {
 
                         case "binary":
 
-                            if (spectrumLevel == 2) {
+                            String binaryAsText = parser.getElementText();
+                            byte[] binaryDataArray = Base64.decodeBase64(binaryAsText.getBytes());
 
-                                String binaryAsText = parser.getElementText();
-                                byte[] binaryDataArray = Base64.decodeBase64(binaryAsText.getBytes());
+                            if (mzArrayValues) {
 
-                                if (mzArrayValues) {
-                                    Number[] tempNumbers = getBinaryDataAsNumberArray(compression, precision, binaryDataArray);
-                                    mzArray = new double[tempNumbers.length];
-                                    for (int i = 0; i < tempNumbers.length; i++) {
-                                        mzArray[i] = tempNumbers[i].doubleValue();
-                                    }
-                                } else {
-                                    Number[] tempNumbers = getBinaryDataAsNumberArray(compression, precision, binaryDataArray);
-                                    intensityArray = new double[tempNumbers.length];
-                                    for (int i = 0; i < tempNumbers.length; i++) {
-                                        intensityArray[i] = tempNumbers[i].doubleValue();
-                                    }
+                                Number[] tempNumbers = getBinaryDataAsNumberArray(compression, precision, binaryDataArray);
+                                mzArray = new double[tempNumbers.length];
+
+                                for (int i = 0; i < tempNumbers.length; i++) {
+                                    mzArray[i] = tempNumbers[i].doubleValue();
                                 }
+
+                            } else {
+
+                                Number[] tempNumbers = getBinaryDataAsNumberArray(compression, precision, binaryDataArray);
+                                intensityArray = new double[tempNumbers.length];
+
+                                for (int i = 0; i < tempNumbers.length; i++) {
+                                    intensityArray[i] = tempNumbers[i].doubleValue();
+                                }
+
                             }
 
                             break;
@@ -338,22 +363,31 @@ public class MzmlFileIterator implements MsFileIterator {
             }
         }
 
-        return spectrumLevel;
     }
 
     @Override
     public Spectrum getSpectrum() {
+
         return spectrum;
+
     }
 
     @Override
     public void close() {
+
         try {
+
             parser.close();
+
         } catch (XMLStreamException ex) {
+
             ex.printStackTrace();
-            throw new IllegalArgumentException("An exception was thrown when closing the mzML parser.");
+            throw new IllegalArgumentException(
+                    "An exception was thrown when closing the mzML parser."
+            );
+
         }
+
         reader.close();
     }
 
@@ -379,10 +413,15 @@ public class MzmlFileIterator implements MsFileIterator {
      *
      * @return a Number array representation of the binary data
      */
-    public Number[] getBinaryDataAsNumberArray(String compression, Precision precision, byte[] binary) {
+    public Number[] getBinaryDataAsNumberArray(
+            String compression,
+            Precision precision,
+            byte[] binary
+    ) {
 
         // decompression of the data
         byte[] data;
+
         if (needsUncompressing(compression)) {
             data = decompress(binary);
         } else {
@@ -395,28 +434,40 @@ public class MzmlFileIterator implements MsFileIterator {
         if (compression.equalsIgnoreCase("MS:1002312")
                 || compression.equalsIgnoreCase("MS:1002314")
                 || compression.equalsIgnoreCase("MS:1002313")) {
+
             dataArray = MSNumpress.decode(compression, data);
             return dataArray;
+
         }
 
         // if not, apply the specified precision when converting into numeric values        
         switch (precision) {
+
             case FLOAT64BIT:
                 dataArray = convertData(data, Precision.FLOAT64BIT);
                 break;
+
             case FLOAT32BIT:
                 dataArray = convertData(data, Precision.FLOAT32BIT);
                 break;
+
             case INT64BIT:
                 dataArray = convertData(data, Precision.INT64BIT);
                 break;
+
             case INT32BIT:
                 dataArray = convertData(data, Precision.INT32BIT);
                 break;
+
             case NTSTRING:
-                throw new IllegalArgumentException("Precision " + Precision.NTSTRING + " is not supported in this method!");
+                throw new IllegalArgumentException(
+                        "Precision " + Precision.NTSTRING + " is not supported in this method!"
+                );
+
             default:
-                throw new IllegalStateException("Not supported Precision in BinaryDataArray: " + precision);
+                throw new IllegalStateException(
+                        "Not supported Precision in BinaryDataArray: " + precision
+                );
         }
 
         return dataArray;
@@ -427,23 +478,30 @@ public class MzmlFileIterator implements MsFileIterator {
      *
      * @param data the binary data to convert
      * @param precision the precision
-     * @return
+     * @return the converted data
      */
-    private Number[] convertData(byte[] data, Precision precision) {
+    private Number[] convertData(
+            byte[] data,
+            Precision precision
+    ) {
 
         int step;
 
         switch (precision) {
+
             case FLOAT64BIT:
             case INT64BIT:
                 step = 8;
                 break;
+
             case FLOAT32BIT:
             case INT32BIT:
                 step = 4;
                 break;
+
             default:
                 step = -1;
+
         }
 
         // create a Number array of sufficient size
@@ -461,23 +519,30 @@ public class MzmlFileIterator implements MsFileIterator {
             Number num;
 
             switch (precision) {
+
                 case FLOAT64BIT:
                     num = bb.getDouble(indexOut);
                     break;
+
                 case INT64BIT:
                     num = bb.getLong(indexOut);
                     break;
+
                 case FLOAT32BIT:
                     num = bb.getFloat(indexOut);
                     break;
+
                 case INT32BIT:
                     num = bb.getInt(indexOut);
                     break;
+
                 default:
                     num = null;
+
             }
 
             resultArray[indexOut / step] = num;
+
         }
 
         return resultArray;
@@ -503,16 +568,25 @@ public class MzmlFileIterator implements MsFileIterator {
         byte[] buf = new byte[1024];
 
         while (!decompressor.finished()) {
+
             try {
+
                 int count = decompressor.inflate(buf);
+
                 if (count == 0 && decompressor.needsInput()) {
                     break;
                 }
+
                 bos.write(buf, 0, count);
+
             } catch (DataFormatException e) {
-                throw new IllegalStateException("Encountered wrong data format "
-                        + "while trying to decompress binary data!", e);
+                throw new IllegalStateException(
+                        "Encountered wrong data format "
+                        + "while trying to decompress binary data!",
+                        e
+                );
             }
+
         }
 
         try {
@@ -525,7 +599,11 @@ public class MzmlFileIterator implements MsFileIterator {
         decompressedData = bos.toByteArray();
 
         if (decompressedData == null) {
-            throw new IllegalStateException("Decompression of binary data produced no result (null)!");
+
+            throw new IllegalStateException(
+                    "Decompression of binary data produced no result (null)!"
+            );
+
         }
 
         return decompressedData;

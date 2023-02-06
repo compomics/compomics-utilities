@@ -1768,7 +1768,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                             plot.setRangeAxis(new LogAxis(plot.getRangeAxis().getLabel()));
                         }
 
-                        chartPanel = new ChartPanel(chart);
+                        chartPanel = new ChartPanel(chart, false);
                         chartPanel.setBorder(null);
                         chart.setBorderVisible(false);
 
@@ -2221,7 +2221,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                             plot.setRangeAxis(new LogAxis(plot.getRangeAxis().getLabel()));
                         }
 
-                        // store the x axis range to see of the bubbles are too big
+                        // store the x-axis range to see of the bubbles are too big
                         xAxisRange = plot.getDomainAxis().getUpperBound() - plot.getDomainAxis().getLowerBound();
 
                         // hide unwanted chart details
@@ -2232,7 +2232,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                         chart.getPlot().setBackgroundPaint(Color.WHITE);
                         chart.setBackgroundPaint(Color.WHITE);
 
-                        chartPanel = new ChartPanel(chart) {
+                        chartPanel = new ChartPanel(chart, false) {
                             @Override
                             public void mouseReleased(MouseEvent e) {
                                 if (selectionActive) {

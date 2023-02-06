@@ -67,6 +67,20 @@ public interface SpectrumProvider extends AutoCloseable {
             String fileNameWithoutExtension,
             String spectrumTitle
     );
+    
+    /**
+     * Returns the spectrum level.
+     *
+     * @param fileNameWithoutExtension The name of the spectrum file without
+     * file extension.
+     * @param spectrumTitle The title of the spectrum.
+     *
+     * @return The spectrum level.
+     */
+    public int getSpectrumLevel(
+            String fileNameWithoutExtension,
+            String spectrumTitle
+    );
 
     /**
      * Returns the spectrum peaks.

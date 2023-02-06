@@ -596,7 +596,8 @@ public class PhosphoRS {
             Spectrum phosphoRsSpectrum = new Spectrum(
                     spectrum.getPrecursor(),
                     reducedSpectrumMz,
-                    reducedSpectrumIntensity
+                    reducedSpectrumIntensity,
+                    spectrum.getSpectrumLevel()
             );
 
             double w = filteredSpectrum.getMaxMz() - filteredSpectrum.getMinMz();
@@ -1356,7 +1357,8 @@ public class PhosphoRS {
             return new Spectrum(
                     spectrum.precursor,
                     filteredMz,
-                    filteredIntensities
+                    filteredIntensities,
+                    spectrum.getSpectrumLevel()
             );
         }
     }

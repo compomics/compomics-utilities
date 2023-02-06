@@ -13,6 +13,7 @@ import org.junit.Test;
  * Test for the Compomics Mass Spectrometry (cms) file writer and reader.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class CmsFileTest extends TestCase {
 
@@ -27,7 +28,8 @@ public class CmsFileTest extends TestCase {
                         new int[]{1, 2, 3}
                 ),
                 new double[]{1.0, 2.0, 3.0},
-                new double[]{4.0, 5.0, 6.0}
+                new double[]{4.0, 5.0, 6.0},
+                2
         );
         String title2 = "Spectrum 2";
         Spectrum spectrum2 = new Spectrum(
@@ -37,7 +39,8 @@ public class CmsFileTest extends TestCase {
                         new int[]{4, 5, 6}
                 ),
                 new double[]{4.0, 5.0, 6.0},
-                new double[]{7.0, 8.0, 9.0}
+                new double[]{7.0, 8.0, 9.0},
+                2
         );
         String title3 = "Spectrum 3";
         Spectrum spectrum3 = new Spectrum(
@@ -47,7 +50,8 @@ public class CmsFileTest extends TestCase {
                         new int[]{7, 8, 9}
                 ),
                 new double[]{7.0, 8.0, 9.0},
-                new double[]{1.0, 2.0, 3.0}
+                new double[]{1.0, 2.0, 3.0},
+                2
         );
         
         File cmsFile = new File("src/test/resources/experiment/test.cms");

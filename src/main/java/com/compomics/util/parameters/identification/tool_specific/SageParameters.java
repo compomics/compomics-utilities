@@ -48,7 +48,7 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
     /**
      * Sage decoy tag.
      */
-    private String decoyTag = "rev_";
+    private String decoyTag = "_REVERSED";
     /**
      * Set whether decoys are to be generated.
      */

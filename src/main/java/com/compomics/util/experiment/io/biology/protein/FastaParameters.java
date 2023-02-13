@@ -58,7 +58,6 @@ public class FastaParameters extends ExperimentObject {
      * as target-decoy or only target
      */
     public boolean isTargetDecoy() {
-        
         return targetDecoy;
     }
 
@@ -70,7 +69,6 @@ public class FastaParameters extends ExperimentObject {
      * target-decoy or only target
      */
     public void setTargetDecoy(boolean targetDecoy) {
-        
         this.targetDecoy = targetDecoy;
     }
 
@@ -80,7 +78,6 @@ public class FastaParameters extends ExperimentObject {
      * @return the decoy flag
      */
     public String getDecoyFlag() {
-        
         return decoyFlag;
     }
 
@@ -90,7 +87,6 @@ public class FastaParameters extends ExperimentObject {
      * @param decoyFlag the decoy flag
      */
     public void setDecoyFlag(String decoyFlag) {
-        
         this.decoyFlag = decoyFlag;
     }
 
@@ -102,7 +98,6 @@ public class FastaParameters extends ExperimentObject {
      * prefix
      */
     public boolean isDecoySuffix() {
-        
         return decoySuffix;
     }
 
@@ -112,7 +107,6 @@ public class FastaParameters extends ExperimentObject {
      * @param decoySuffix whether the decoy flag is a suffix or a prefix
      */
     public void setDecoySuffix(boolean decoySuffix) {
-        
         this.decoySuffix = decoySuffix;
     }
 
@@ -122,7 +116,6 @@ public class FastaParameters extends ExperimentObject {
      * @return the targetDecoyFileNameSuffix
      */
     public String getTargetDecoyFileNameSuffix() {
-        
         return targetDecoyFileNameTag;
     }
 
@@ -132,7 +125,6 @@ public class FastaParameters extends ExperimentObject {
      * @param targetDecoyFileNameSuffix the targetDecoyFileNameSuffix to set
      */
     public void setTargetDecoyFileNameSuffix(String targetDecoyFileNameSuffix) {
-        
         this.targetDecoyFileNameTag = targetDecoyFileNameSuffix;
     }
 
@@ -146,8 +138,6 @@ public class FastaParameters extends ExperimentObject {
      * as the given parameters
      */
     public boolean isSameAs(FastaParameters fastaParameters) {
-
-        
 
         if (targetDecoy != fastaParameters.isTargetDecoy()) {
 
@@ -171,7 +161,8 @@ public class FastaParameters extends ExperimentObject {
 
         if (targetDecoyFileNameTag != null && fastaParameters.getTargetDecoyFileNameSuffix() == null
                 || targetDecoyFileNameTag == null && fastaParameters.getTargetDecoyFileNameSuffix() != null
-                || targetDecoyFileNameTag != null && fastaParameters.getTargetDecoyFileNameSuffix() != null && !targetDecoyFileNameTag.equals(fastaParameters.getTargetDecoyFileNameSuffix())) {
+                || targetDecoyFileNameTag != null && fastaParameters.getTargetDecoyFileNameSuffix() != null
+                && !targetDecoyFileNameTag.equals(fastaParameters.getTargetDecoyFileNameSuffix())) {
 
             return false;
 
@@ -191,7 +182,10 @@ public class FastaParameters extends ExperimentObject {
      * @throws IOException exception thrown if an error occurred while iterating
      * the file
      */
-    public static FastaParameters inferParameters(String fastaFilePath, WaitingHandler waitingHandler) throws IOException {
+    public static FastaParameters inferParameters(
+            String fastaFilePath,
+            WaitingHandler waitingHandler
+    ) throws IOException {
 
         FastaParameters fastaParameters = new FastaParameters();
         fastaParameters.setTargetDecoy(false);
@@ -316,20 +310,20 @@ public class FastaParameters extends ExperimentObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        
 
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
         output.append("Decoy Type: ");
-        
+
         if (decoySuffix) {
             output.append("Suffix");
         } else {
             output.append("Prefix");
         }
-        
+
         output.append(", ").append("Decoy Tag: ").append(decoyFlag).append(".").append(newLine);
 
         return output.toString();
+
     }
 }

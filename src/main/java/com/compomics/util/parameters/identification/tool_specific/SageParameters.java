@@ -47,8 +47,10 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
     private Integer maxVariableMods = 2;
     /**
      * Sage decoy tag.
+     * 
+     * @deprecated use the decoy tag from FastaParameters instead
      */
-    private String decoyTag = "_REVERSED";
+    private String decoyTag = "_REVERSED";  // @TODO: remove next time we break backwards compatibility
     /**
      * Set whether decoys are to be generated.
      */
@@ -58,6 +60,10 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      * Tmt16 or Tmt18.
      */
     private String tmtType = null;
+//    /**
+//     * The MS-level to perform TMT quantification on.
+//     */
+//    private Integer tmtLevel = 3; // @TODO: re-add next time we break backwards compatibility
     /**
      * Set whether LFQ is to be performed.
      */
@@ -155,9 +161,9 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
             if (!getMaxVariableMods().equals(sageParameters.getMaxVariableMods())) {
                 return false;
             }
-            if (!decoyTag.equals(sageParameters.getDecoyTag())) {
-                return false;
-            }
+//            if (!decoyTag.equals(sageParameters.getDecoyTag())) {
+//                return false;
+//            }
             if (!generateDecoys.equals(sageParameters.getGenerateDecoys())) {
                 return false;
             }
@@ -165,6 +171,10 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
                     || (tmtType != null && sageParameters.getTmtType() == null)) {
                 return false;
             }
+//            if ((tmtLevel == null && sageParameters.getTmtLevel() != null)
+//                    || (tmtLevel != null && sageParameters.getTmtLevel() == null)) {
+//                return false;
+//            }
             if ((tmtType != null && sageParameters.getTmtType() != null)
                     && (!tmtType.equalsIgnoreCase(sageParameters.getTmtType()))) {
                 return false;
@@ -254,15 +264,18 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
         output.append("MAX_VARIABLE_MODS=");
         output.append(maxVariableMods);
         output.append(newLine);
-        output.append("DECOY_TAG=");
-        output.append(decoyTag);
-        output.append(newLine);
+//        output.append("DECOY_TAG=");
+//        output.append(decoyTag);
+//        output.append(newLine);
         output.append("GENERATE_DECOYS=");
         output.append(generateDecoys);
         output.append(newLine);
         output.append("TMT_TYPE=");
         output.append(tmtType);
         output.append(newLine);
+//        output.append("TMT_LEVEL=");
+//        output.append(tmtLevel);
+//        output.append(newLine);
         output.append("LFQ=");
         output.append(performLfq);
         output.append(newLine);
@@ -442,6 +455,8 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      * Returns the decoy tag, null if not set.
      *
      * @return the decoyTag
+     * 
+     * @deprecated use the decoy tag from FastaParameters instead
      */
     public String getDecoyTag() {
         return decoyTag;
@@ -451,6 +466,8 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      * Set the decoy tag, null if no decoy tag is used.
      *
      * @param decoyTag the decoyTag to set
+     * 
+     * @deprecated use the decoy tag from FastaParameters instead
      */
     public void setDecoyTag(String decoyTag) {
         this.decoyTag = decoyTag;
@@ -477,7 +494,7 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
     /**
      * Returns the TMT type.
      *
-     * @return the tmtType
+     * @return the TMT type
      */
     public String getTmtType() {
         return tmtType;
@@ -486,11 +503,34 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
     /**
      * Sets the TMT type.
      *
-     * @param tmtType the tmtType to set
+     * @param tmtType the TMT type to set
      */
     public void setTmtType(String tmtType) {
         this.tmtType = tmtType;
     }
+    
+//    /**
+//     * Returns the TMT level.
+//     *
+//     * @return the TMT level
+//     */
+//    public Integer getTmtLevel() {
+//        
+//        if (tmtLevel == null){
+//            tmtLevel = 2;
+//        }
+//        
+//        return tmtLevel;
+//    }
+//
+//    /**
+//     * Sets the TMT level.
+//     *
+//     * @param tmtLevel the TMT level to set
+//     */
+//    public void setTmtLevel(Integer tmtLevel) {
+//        this.tmtLevel = tmtLevel;
+//    }
 
     /**
      * Returns true if LFQ is to be performed.

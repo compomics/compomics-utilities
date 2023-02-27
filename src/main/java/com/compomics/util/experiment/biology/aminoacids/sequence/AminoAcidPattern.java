@@ -719,9 +719,13 @@ public class AminoAcidPattern extends ExperimentObject {
             if (aaList != null && !aaList.isEmpty()) {
 
                 for (int i = 0; i < aaList.size(); i++) {
+                    
                     Character targetedAA = aaList.get(i);
+                    
                     if (aa.equals(targetedAA)) {
+                        
                         return true;
+                    
                     } else if (matchingType == MatchingType.aminoAcid || matchingType == MatchingType.indistiguishableAminoAcids) {
 
                         AminoAcid targetedAminoAcid = AminoAcid.getAminoAcid(targetedAA);
@@ -740,8 +744,11 @@ public class AminoAcidPattern extends ExperimentObject {
 
                         if (matchingType == MatchingType.indistiguishableAminoAcids
                                 && (targetedAminoAcid == AminoAcid.I || targetedAminoAcid == AminoAcid.J || targetedAminoAcid == AminoAcid.L)) {
+                            
                             if (aa == 'I' || aa == 'J' || aa == 'L') {
+                            
                                 return true;
+                            
                             }
                         }
                     }

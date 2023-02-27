@@ -131,11 +131,6 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="lfqCmb" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="decoyTagLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="decoyTagTxt" max="32767" attributes="2"/>
-                          </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="bucketSizeLabel" min="-2" pref="200" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -204,6 +199,11 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="maxVariableModsTxt" max="32767" attributes="2"/>
                           </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="tmtLevelLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="tmtLevelCmb" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -255,13 +255,13 @@
                       </Group>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="decoyTagLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="decoyTagTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="tmtTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tmtTypeCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tmtLevelLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tmtLevelCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -437,20 +437,6 @@
                 <Property name="text" type="java.lang.String" value="LFQ"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="decoyTagLabel">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Decoy Tag"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="decoyTagTxt">
-              <Properties>
-                <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="rev_"/>
-              </Properties>
-              <Events>
-                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="decoyTagTxtKeyReleased"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JComboBox" name="lfqCmb">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
@@ -621,6 +607,23 @@
               <Events>
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="maxVariableModsTxtKeyReleased"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="tmtLevelLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="TMT Level"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="tmtLevelCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="2"/>
+                    <StringItem index="1" value="3"/>
+                  </StringArray>
+                </Property>
+                <Property name="selectedIndex" type="int" value="1"/>
+                <Property name="enabled" type="boolean" value="false"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

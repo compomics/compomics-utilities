@@ -313,6 +313,7 @@ public enum IdentificationParametersCLIParams {
     SAGE_DECOY_TAG("sage_decoy_tag", "Sage decoy tag, default is 'rev_'.", false, true),
     SAGE_GENERATE_DECOYS("sage_generate_decoys", "Sage generate decoys, default is 'true'.", false, true),
     SAGE_TMT("sage_tmt", "Sage TMT: Tmt6, Tmt10, Tmt11, Tmt16, or Tmt18.", false, true),
+    //SAGE_TMT_LEVEL("sage_tmt_level", "Sage TMT level: MS-level to perform TMT quantification on, default is '3'.", false, true),
     SAGE_LFQ("sage_lfq", "Sage LFQ: default is 'false'.", false, true),
     SAGE_DEISOTOPE("sage_deisotope", "Sage deisotope, perform deisotoping and charge state deconvolution, default is 'false'.", false, true),
     SAGE_CHIMERA("sage_chimera", "Sage search for chimeric/co-fragmenting PSMS, default is 'false'.", false, true),
@@ -772,6 +773,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_DECOY_TAG.id) + " " + IdentificationParametersCLIParams.SAGE_DECOY_TAG.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.id) + " " + IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_TMT.id) + " " + IdentificationParametersCLIParams.SAGE_TMT.description + "\n";
+        //output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id) + " " + IdentificationParametersCLIParams.SAGE_TMT_LEVEL.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_LFQ.id) + " " + IdentificationParametersCLIParams.SAGE_LFQ.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_DEISOTOPE.id) + " " + IdentificationParametersCLIParams.SAGE_DEISOTOPE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_CHIMERA.id) + " " + IdentificationParametersCLIParams.SAGE_CHIMERA.description + "\n";

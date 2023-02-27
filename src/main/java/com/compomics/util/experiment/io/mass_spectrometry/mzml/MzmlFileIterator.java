@@ -196,14 +196,13 @@ public class MzmlFileIterator implements MsFileIterator {
     /**
      * Parse a spectrum.
      *
-     * @return the ms level
      * @throws XMLStreamException thrown if an XMLStreamException occurs
      */
     private void parseSpectrum() throws XMLStreamException {
 
         int spectrumLevel = -1;
         double retentionTimeInSeconds = -1.0;
-        ArrayList<Integer> possibleChargesAsArray = new ArrayList<>(); // @TODO: can there be more than one..?
+        ArrayList<Integer> possibleChargesAsArray = new ArrayList<>();
         double precursorMz = 0.0;
         double precursorIntensity = 0.0;
         double[] mzArray = new double[0];
@@ -211,7 +210,7 @@ public class MzmlFileIterator implements MsFileIterator {
         boolean mzArrayValues = true;
         Precision precision = Precision.FLOAT64BIT;
         String compression = "MS:1000574";
-
+        
         while (parser.hasNext()) {
 
             parser.next();

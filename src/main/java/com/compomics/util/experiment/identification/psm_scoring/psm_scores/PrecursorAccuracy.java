@@ -3,7 +3,6 @@ package com.compomics.util.experiment.identification.psm_scoring.psm_scores;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.biology.ions.impl.PrecursorIon;
 import com.compomics.util.experiment.identification.matches.IonMatch;
-import com.compomics.util.experiment.mass_spectrometry.spectra.Peak;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 
 /**
@@ -14,7 +13,7 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 public class PrecursorAccuracy {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public PrecursorAccuracy() {
     }
@@ -33,25 +32,28 @@ public class PrecursorAccuracy {
      * @return the score of the match
      */
     public double getScore(
-            Peptide peptide, 
-            int identificationCharge, 
-            Precursor precursor, 
-            boolean ppm, 
-            int minIsotope, 
+            Peptide peptide,
+            int identificationCharge,
+            Precursor precursor,
+            boolean ppm,
+            int minIsotope,
             int maxIsotope
     ) {
+
         IonMatch ionMatch = new IonMatch(
-                precursor.mz, 
-                precursor.intensity, 
-                new PrecursorIon(peptide.getMass()), 
+                precursor.mz,
+                precursor.intensity,
+                new PrecursorIon(peptide.getMass()),
                 identificationCharge
         );
+
         return Math.abs(
                 ionMatch.getError(
-                        ppm, 
-                        minIsotope, 
+                        ppm,
+                        minIsotope,
                         maxIsotope
                 )
         );
+
     }
 }

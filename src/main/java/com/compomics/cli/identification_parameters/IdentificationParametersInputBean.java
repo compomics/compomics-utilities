@@ -1677,6 +1677,13 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+//        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id)) {
+//            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id);
+//            List<String> supportedInput = Arrays.asList("2", "3");
+//            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id, arg, supportedInput)) {
+//                return false;
+//            }
+//        }
         if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ.id);
             List<String> supportedInput = Arrays.asList("true", "false");
@@ -3814,10 +3821,10 @@ public class IdentificationParametersInputBean {
             Integer option = Integer.valueOf(arg);
             sageParameters.setMaxVariableMods(option);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_DECOY_TAG.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_DECOY_TAG.id);
-            sageParameters.setDecoyTag(arg);
-        }
+//        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_DECOY_TAG.id)) {
+//            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_DECOY_TAG.id);
+//            sageParameters.setDecoyTag(arg);
+//        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.id);
             Boolean option = Boolean.valueOf(arg);
@@ -3827,6 +3834,11 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_TMT.id);
             sageParameters.setTmtType(arg);
         }
+//        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id)) {
+//            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id);
+//            Integer option = Integer.valueOf(arg);
+//            sageParameters.setTmtLevel(option);
+//        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ.id);
             Boolean option = Boolean.valueOf(arg);

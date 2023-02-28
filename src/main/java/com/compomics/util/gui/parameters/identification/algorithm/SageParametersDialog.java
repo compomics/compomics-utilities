@@ -70,6 +70,7 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
 
         generateDecoysCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         tmtTypeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        tmtLevelCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         lfqCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         deisotopeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         chimericSpectraCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -78,6 +79,7 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
 
         generateDecoysCmb.setEnabled(editable);
         tmtTypeCmb.setEnabled(editable);
+        //tmtLevelCmb.setEnabled(editable);
         lfqCmb.setEnabled(editable);
         deisotopeCmb.setEnabled(editable);
         chimericSpectraCmb.setEnabled(editable);
@@ -102,8 +104,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         minIonIndexTxt.setEnabled(editable);
         maxVariableModsTxt.setEditable(editable);
         maxVariableModsTxt.setEnabled(editable);
-        decoyTagTxt.setEditable(editable);
-        decoyTagTxt.setEnabled(editable);
         minNumberOfPeaksTxt.setEditable(editable);
         minNumberOfPeaksTxt.setEnabled(editable);
         maxNumberOfPeaksTxt.setEditable(editable);
@@ -161,15 +161,17 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
             maxVariableModsTxt.setText(sageParameters.getMaxVariableMods() + "");
         }
 
-        if (sageParameters.getDecoyTag() != null) {
-            decoyTagTxt.setText(sageParameters.getDecoyTag() + "");
-        }
-
         if (sageParameters.getTmtType() != null) {
             tmtTypeCmb.setSelectedItem(sageParameters.getTmtType());
         } else {
             tmtTypeCmb.setSelectedItem("None");
         }
+
+//        if (sageParameters.getTmtLevel() != null) {
+//            tmtLevelCmb.setSelectedItem(sageParameters.getTmtLevel());
+//        } else {
+//            tmtLevelCmb.setSelectedItem("3");
+//        }
 
         if (sageParameters.getPerformLfq()) {
             lfqCmb.setSelectedIndex(0);
@@ -273,7 +275,7 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         if (!input.equals("")) {
             result.setMinIonIndex(Integer.valueOf(input));
         }
-        
+
         input = maxVariableModsTxt.getText().trim();
         if (!input.equals("")) {
             result.setMaxVariableMods(Integer.valueOf(input));
@@ -281,16 +283,13 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
 
         result.setGenerateDecoys(generateDecoysCmb.getSelectedIndex() == 0);
 
-        input = decoyTagTxt.getText().trim();
-        if (!input.equals("")) {
-            result.setDecoyTag(input);
-        }
-
         if (tmtTypeCmb.getSelectedIndex() != 0) {
             result.setTmtType(((String) tmtTypeCmb.getSelectedItem()));
         } else {
             result.setTmtType(null);
         }
+
+//        result.setTmtLevel(Integer.valueOf((String) tmtLevelCmb.getSelectedItem()));
 
         result.setPerformLfq(lfqCmb.getSelectedIndex() == 0);
         result.setDeisotope(deisotopeCmb.getSelectedIndex() == 0);
@@ -349,8 +348,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         generateDecoysLabel = new javax.swing.JLabel();
         generateDecoysCmb = new javax.swing.JComboBox();
         lfqLabel = new javax.swing.JLabel();
-        decoyTagLabel = new javax.swing.JLabel();
-        decoyTagTxt = new javax.swing.JTextField();
         lfqCmb = new javax.swing.JComboBox();
         bucketSizeLabel = new javax.swing.JLabel();
         bucketSizeTxt = new javax.swing.JTextField();
@@ -374,6 +371,8 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         tmtTypeCmb = new javax.swing.JComboBox();
         maxVariableModsLabel = new javax.swing.JLabel();
         maxVariableModsTxt = new javax.swing.JTextField();
+        tmtLevelLabel = new javax.swing.JLabel();
+        tmtLevelCmb = new javax.swing.JComboBox();
         okButton = new javax.swing.JButton();
         closeButton = new javax.swing.JButton();
         openDialogHelpJButton = new javax.swing.JButton();
@@ -443,16 +442,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         generateDecoysCmb.setSelectedIndex(1);
 
         lfqLabel.setText("LFQ");
-
-        decoyTagLabel.setText("Decoy Tag");
-
-        decoyTagTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        decoyTagTxt.setText("rev_");
-        decoyTagTxt.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                decoyTagTxtKeyReleased(evt);
-            }
-        });
 
         lfqCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
@@ -562,6 +551,12 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
             }
         });
 
+        tmtLevelLabel.setText("TMT Level");
+
+        tmtLevelCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2", "3" }));
+        tmtLevelCmb.setSelectedIndex(1);
+        tmtLevelCmb.setEnabled(false);
+
         javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
         advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
         advancedSearchSettingsPanelLayout.setHorizontalGroup(
@@ -595,10 +590,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                         .addComponent(lfqLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lfqCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(decoyTagLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(decoyTagTxt))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(bucketSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -653,7 +644,11 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(maxVariableModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maxVariableModsTxt)))
+                        .addComponent(maxVariableModsTxt))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(tmtLevelLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tmtLevelCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -698,12 +693,12 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                     .addComponent(generateDecoysCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(decoyTagLabel)
-                    .addComponent(decoyTagTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(2, 2, 2)
-                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tmtTypeLabel)
                     .addComponent(tmtTypeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tmtLevelLabel)
+                    .addComponent(tmtLevelCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lfqLabel)
@@ -905,15 +900,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
      *
      * @param evt
      */
-    private void decoyTagTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_decoyTagTxtKeyReleased
-        validateInput(false);
-    }//GEN-LAST:event_decoyTagTxtKeyReleased
-
-    /**
-     * Validate the input.
-     *
-     * @param evt
-     */
     private void bucketSizeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_bucketSizeTxtKeyReleased
         validateInput(false);
     }//GEN-LAST:event_bucketSizeTxtKeyReleased
@@ -1041,8 +1027,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
     private javax.swing.JComboBox chimericSpectraCmb;
     private javax.swing.JLabel chimericSpectraLabel;
     private javax.swing.JButton closeButton;
-    private javax.swing.JLabel decoyTagLabel;
-    private javax.swing.JTextField decoyTagTxt;
     private javax.swing.JComboBox deisotopeCmb;
     private javax.swing.JLabel deisotopeLabel;
     private javax.swing.JLabel fragmentMzDividerLabel;
@@ -1079,6 +1063,8 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
     private javax.swing.JLabel peptideMassLabel;
     private javax.swing.JComboBox predictRtCmb;
     private javax.swing.JLabel predictRtLabel;
+    private javax.swing.JComboBox tmtLevelCmb;
+    private javax.swing.JLabel tmtLevelLabel;
     private javax.swing.JComboBox tmtTypeCmb;
     private javax.swing.JLabel tmtTypeLabel;
     // End of variables declaration//GEN-END:variables

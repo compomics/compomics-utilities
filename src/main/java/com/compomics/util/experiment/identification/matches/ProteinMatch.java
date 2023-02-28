@@ -41,10 +41,6 @@ public class ProteinMatch extends IdentificationMatch {
      */
     private boolean decoy;
     /**
-     * @deprecated not sure what this is doing here but needs to be kept for backward compatibility.
-     */
-    private ProteinMatch p = null;
-    /**
      * The variable modifications carried by the protein.
      */
     private ModificationMatch[] variableModifications = null;

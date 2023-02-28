@@ -102,12 +102,6 @@ public abstract class Ion extends ExperimentObject {
     protected IonType type = IonType.UNKNOWN;
     /**
      * The theoretic mass.
-     *
-     * @deprecated use the double value instead.
-     */
-    protected Double theoreticMass;
-    /**
-     * The theoretic mass.
      */
     protected double theoreticMass1;
     /**

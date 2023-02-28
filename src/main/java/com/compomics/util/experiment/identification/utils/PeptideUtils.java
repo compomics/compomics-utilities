@@ -235,8 +235,8 @@ public class PeptideUtils {
     ) {
 
         String[] fixedModifications = peptide.getFixedModifications(
-                modificationParameters, 
-                sequenceProvider, 
+                modificationParameters,
+                sequenceProvider,
                 modificationSequenceMatchingParameters
         );
 
@@ -305,7 +305,8 @@ public class PeptideUtils {
      * @param modificationParameters the modification profile of the search
      * @param includeHtmlStartEndTags if true, start and end HTML tags are added
      * @param peptide the peptide to annotate
-     * @param allFixedModifications All fixed modifications in an array representing the amino acid sequence.
+     * @param allFixedModifications All fixed modifications in an array
+     * representing the amino acid sequence.
      * @param allVariableModifications all the variable modifications
      * @param confidentModificationSites the confidently localized variable
      * modification sites indexed by site.
@@ -315,7 +316,8 @@ public class PeptideUtils {
      * @param secondaryAmbiguousModificationSites the secondary sites of the
      * ambiguously localized variable modifications in a map: aa number &gt;
      * list of modifications (1 is the first AA) (can be null)
-     * @param fixedModificationSites The fixed modifications to display in an array representing the amino acid sequence.
+     * @param fixedModificationSites The fixed modifications to display in an
+     * array representing the amino acid sequence.
      * @param useHtmlColorCoding if true, color coded HTML is used, otherwise
      * Modification tags, e.g, &lt;mox&gt;, are used
      * @param useShortName if true the short names are used in the tags
@@ -840,9 +842,10 @@ public class PeptideUtils {
     }
 
     /**
-     * Returns the index of a modification on the amino acid sequence. 0 is the
-     * first amino acid. The modification site is expected to be the zero-based
-     * index on the sequence. -1 and sequenceLength for N-term and C-term
+     * Returns the index of a modification on the amino acid sequence, where 0
+     * is the first amino acid. For modification on amino acids, the index on
+     * the sequence starting from 1 is expected as site. For terminal
+     * modifications, 0 and sequenceLength+1 are expected for N-term and C-term
      * modifications, respectively.
      *
      * @param modSite the modification site
@@ -855,15 +858,15 @@ public class PeptideUtils {
             int sequenceLength
     ) {
 
-        if (modSite >= 0 & modSite < sequenceLength) {
+        if (modSite > 0 & modSite <= sequenceLength) {
 
-            return modSite;
+            return modSite - 1;
 
-        } else if (modSite == -1) {
+        } else if (modSite == 0) {
 
             return 0;
 
-        } else if (modSite == sequenceLength) {
+        } else if (modSite == sequenceLength + 1) {
 
             return sequenceLength - 1;
 

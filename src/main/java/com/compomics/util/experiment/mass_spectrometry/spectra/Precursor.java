@@ -55,11 +55,14 @@ public class Precursor extends ExperimentObject {
             double mz,
             int[] possibleCharges
     ) {
+
         this.rt = rt;
         this.mz = mz;
         this.intensity = Double.NaN;
         this.possibleCharges = new int[possibleCharges.length];
+
         System.arraycopy(possibleCharges, 0, this.possibleCharges, 0, possibleCharges.length);
+
     }
 
     /**
@@ -76,11 +79,13 @@ public class Precursor extends ExperimentObject {
             double intensity,
             int[] possibleCharges
     ) {
+
         this.rt = rt;
         this.mz = mz;
         this.intensity = intensity;
         this.possibleCharges = new int[possibleCharges.length];
         System.arraycopy(possibleCharges, 0, this.possibleCharges, 0, possibleCharges.length);
+
     }
 
     /**
@@ -99,11 +104,14 @@ public class Precursor extends ExperimentObject {
             double rtMin,
             double rtMax
     ) {
+
         this.rt = (rtMin + rtMax) / 2;
         this.mz = mz;
         this.intensity = intensity;
         this.possibleCharges = new int[possibleCharges.length];
+
         System.arraycopy(possibleCharges, 0, this.possibleCharges, 0, possibleCharges.length);
+
     }
 
     /**
@@ -114,6 +122,7 @@ public class Precursor extends ExperimentObject {
     public double getRtInMinutes() {
 
         return rt / 60;
+
     }
 
     /**

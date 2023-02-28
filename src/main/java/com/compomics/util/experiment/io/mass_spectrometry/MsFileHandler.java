@@ -216,10 +216,10 @@ public class MsFileHandler implements SpectrumProvider {
             try ( CmsFileWriter writer = new CmsFileWriter(cmsFile)) {
 
                 String spectrumTitle;
+
                 while ((spectrumTitle = iterator.next()) != null) {
 
                     Spectrum spectrum = iterator.getSpectrum();
-
                     writer.addSpectrum(spectrumTitle, spectrum);
 
                 }
@@ -288,7 +288,7 @@ public class MsFileHandler implements SpectrumProvider {
         return reader == null ? Double.NaN : reader.getPrecursorRt(spectrumTitle);
 
     }
-    
+
     @Override
     public int getSpectrumLevel(
             String fileNameWithoutExtension,

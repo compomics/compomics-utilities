@@ -276,7 +276,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         advancedSearchSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Search Settings"));
         advancedSearchSettingsPanel.setOpaque(false);
 
-        instrumentCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "b, y", "b, y, -H2O, -NH3", "a, b, y, -H2O, -NH3, Imm", "a, b, y, -H2O, -NH3", "a, b, y", "a, b, y, Imm", "a, b, y, z, -H2O, -NH3, Imm", "c, y, z+1, z+2", "c, z, z+1", "c, z, z+1, z+2", "b, c, y, z+1, z+2", "b, y, INT", "b, y, INT, Imm", "a, b, y, INT", "a, b, y, INT, IMM", "a, b, y, INT, IMM, -H2O", "a, b, y, INT, IMM, -H2O, -NH3", "a, b, y, INT, IMM, -NH3" }));
+        instrumentCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "b, y", "b, y, -H2O, -NH3", "a, b, y, -H2O, -NH3, Imm", "a, b, y, -H2O, -NH3", "a, b, y", "a, b, y, Imm", "a, b, y, z, -H2O, -NH3, Imm", "c, y, z+1, z+2", "b, c, y, z+1, z+2", "b, y, INT", "b, y, INT, Imm", "a, b, y, INT", "a, b, y, INT, IMM", "a, b, y, INT, IMM, -H2O", "a, b, y, INT, IMM, -H2O, -NH3", "a, b, y, INT, IMM, -NH3" }));
 
         decoyDatabaseCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         decoyDatabaseCmb.setSelectedIndex(1);

@@ -37,6 +37,10 @@ public class PepnovoAssumptionDetails extends ExperimentObject implements UrPara
      */
     public double getRankScore() {
         
+        
+        
+        
+        
         return rankScore;
     }
 
@@ -46,6 +50,10 @@ public class PepnovoAssumptionDetails extends ExperimentObject implements UrPara
      * @param rankScore the PepNovo rank score
      */
     public void setRankScore(double rankScore) {
+        
+        
+        
+        
         
         this.rankScore = rankScore;
     }
@@ -57,6 +65,8 @@ public class PepnovoAssumptionDetails extends ExperimentObject implements UrPara
      */
     public double getMH() {
         
+        
+        
         return mH;
     }
 
@@ -67,13 +77,17 @@ public class PepnovoAssumptionDetails extends ExperimentObject implements UrPara
      */
     public void setMH(double mH) {
         
+        
+        
+        
+        
         this.mH = mH;
     }
 
     @Override
-    public int getParameterKey() {
+    public long getParameterKey() {
         
-        return this.getClass().getCanonicalName().hashCode();
+        return serialVersionUID;
         
     }
 }

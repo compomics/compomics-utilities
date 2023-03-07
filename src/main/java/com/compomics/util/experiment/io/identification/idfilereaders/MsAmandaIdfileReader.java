@@ -4,7 +4,6 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -107,7 +106,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
@@ -124,7 +123,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
@@ -133,7 +132,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
     )
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> result = new HashMap<>(1);
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
 
         try ( SimpleFileReader reader = SimpleFileReader.getFileReader(msAmandaCsvFile)) {
 
@@ -201,7 +200,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
             if (scanNumberIndex == -1 || titleIndex == -1 || sequenceIndex == -1 || modificationsIndex == -1
                     || proteinAccessionsIndex == -1 || amandaScoreIndex == -1 || rankIndex == -1
                     || mzIndex == -1 || chargeIndex == -1 || filenameIndex == -1) {
-                throw new IllegalArgumentException("Mandatory columns are missing in the MS Amanda csv file. Please check that the file contains the following columns (not case sensitive): 'Scan Number', 'Title', 'Sequence', 'Modifications', 'Protein Accessions', 'Amanda Score', 'Weighted Probability', 'Rank', 'm/z', 'Charge', 'RT', 'Nr of matched peaks', 'Filename'");
+                throw new IllegalArgumentException("Mandatory columns are missing in the MS Amanda csv file. Please check the file!");
             }
 
             String line;
@@ -241,24 +240,19 @@ public class MsAmandaIdfileReader implements IdfileReader {
                     //double rt = Util.readDoubleAsString(rtAsText); // @TODO: have to escape retention times such as PT2700.460000S
                     String fileName = elements[filenameIndex];
 
-                    HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = result.get(fileName);
-
-                    if (fileResults == null) {
-
-                        fileResults = new HashMap<>();
-                        result.put(fileName, fileResults);
-
-                    }
-
                     // remove any html from the title
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
 
-                    ArrayList<SpectrumIdentificationAssumption> spectrumResults = fileResults.get(spectrumTitle);
+                    // set up the yet empty spectrum match, or add to the current match
+                    if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {
 
-                    if (spectrumResults == null) {
+                        // add the previous match, if any
+                        if (currentMatch != null) {
+                            result.add(currentMatch);
+                        }
 
-                        spectrumResults = new ArrayList<>(4);
-                        fileResults.put(spectrumTitle, spectrumResults);
+                        currentMatch = new SpectrumMatch(fileName, spectrumTitle);
+                        currentSpectrumTitle = spectrumTitle;
 
                     }
 
@@ -344,13 +338,13 @@ public class MsAmandaIdfileReader implements IdfileReader {
                                     peptideAssumption.getIdentificationFile()
                             );
 
-                            spectrumResults.add(newAssumption);
+                            currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), newAssumption);
 
                         }
 
                     } else {
 
-                        spectrumResults.add(peptideAssumption);
+                        currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), peptideAssumption);
 
                     }
 
@@ -360,6 +354,11 @@ public class MsAmandaIdfileReader implements IdfileReader {
 
                     }
                 }
+            }
+
+            // add the last match, if any
+            if (currentMatch != null) {
+                result.add(currentMatch);
             }
         }
 
@@ -373,8 +372,8 @@ public class MsAmandaIdfileReader implements IdfileReader {
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<>(1);
-        ArrayList<String> versions = new ArrayList<>(1);
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        ArrayList<String> versions = new ArrayList<>();
         versions.add(softwareVersion);
         result.put(softwareName, versions);
         return result;

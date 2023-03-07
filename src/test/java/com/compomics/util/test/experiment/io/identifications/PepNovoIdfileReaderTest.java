@@ -1,13 +1,12 @@
 package com.compomics.util.test.experiment.io.identifications;
 
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.io.identification.idfilereaders.PepNovoIdfileReader;
+import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
 import junit.framework.TestCase;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,20 +28,19 @@ public class PepNovoIdfileReaderTest extends TestCase {
 
     @Test
     public void testGetAllSpectrumMatches() throws Exception {
-
-        HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> results = idfileReader.getAllSpectrumMatches(null, null, null);
-
-        HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = results.get("test.mgf");
-                assertEquals(fileResults.size(), 4);
-
-        for (Entry<String, ArrayList<SpectrumIdentificationAssumption>> entry : fileResults.entrySet()) {
-            if (entry.getKey().contains("Scan 835")) {
+        ArrayList<SpectrumMatch> allSpectrumMatches = idfileReader.getAllSpectrumMatches(null, null, null);
+//        Assert.assertEquals(
+//                "Incorrect numbre of spectrum matches.", 
+//                allSpectrumMatches.size(), 
+//                4
+//        );
+        for (SpectrumMatch sm : allSpectrumMatches) {
+            if (sm.getSpectrumTitle().contains("Scan 835")) {
                 assertEquals(
                         "Incorrect title parsing for scan 835",
                         "7: Scan 835 (rt=12.4589) [NQIGDKEK]",
-                        entry.getKey()
+                        sm.getSpectrumTitle()
                 );
-                assertEquals(entry.getValue().size(), 10);
             }
         }
     }

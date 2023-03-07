@@ -7,8 +7,8 @@ import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
@@ -45,6 +45,14 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * The input file.
      */
     private File inputFile = null;
+    /**
+     * Map of all matches indexed by X!Tandem spectrum id.
+     */
+    private final HashMap<Integer, SpectrumMatch> allMatches = new HashMap<>();
+    /**
+     * The PSM filename.
+     */
+    private String spectrumFileName;
     /**
      * The software version.
      */
@@ -92,7 +100,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
@@ -109,7 +117,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
@@ -145,8 +153,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                         Collectors.toCollection(HashSet::new)
                 );
 
-        HashSet<String> fixedNTerminalModifications = new HashSet<>(1);
-        HashSet<String> fixedCTerminalModifications = new HashSet<>(1);
+        HashSet<String> fixedNTerminalModifications = new HashSet<>();
+        HashSet<String> fixedCTerminalModifications = new HashSet<>();
 
         ArrayList<String> allFixedModifications = searchParameters.getModificationParameters().getFixedModifications();
 
@@ -201,9 +209,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             }
         }
 
-        HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = new HashMap<>();
-        String spectrumFileName = null;
-
         try ( SimpleFileReader reader = SimpleFileReader.getFileReader(inputFile)) {
 
             XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -250,6 +255,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                                 case "model":
 
                                     int id = Integer.parseInt(parser.getAttributeValue("", "id"));
+                                    SpectrumMatch spectrumMatch = new SpectrumMatch(spectrumFileName, Integer.toString(id));
+                                    allMatches.put(id, spectrumMatch);
                                     double expect = Double.parseDouble(parser.getAttributeValue("", "expect"));
 
                                     readGroupOrProtein(
@@ -258,8 +265,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                                             expect,
                                             fixedNonTerminalModifications,
                                             fixedNTerminalModifications,
-                                            fixedCTerminalModifications,
-                                            fileResults
+                                            fixedCTerminalModifications
                                     );
 
                                     break;
@@ -293,16 +299,9 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
             if (expandAaCombinations) {
 
-                HashSet<String> ids = new HashSet<>(fileResults.keySet());
+                for (SpectrumMatch spectrumMatch : allMatches.values()) {
 
-                for (String spectrumId : ids) {
-
-                    ArrayList<SpectrumIdentificationAssumption> spectrumIdentificationAssumptions = fileResults.get(spectrumId);
-                    ArrayList<SpectrumIdentificationAssumption> expandedPeptides = new ArrayList<>(spectrumIdentificationAssumptions.size());
-
-                    for (SpectrumIdentificationAssumption spectrumIdentificationAssumption : spectrumIdentificationAssumptions) {
-
-                        PeptideAssumption currentAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
+                    spectrumMatch.getAllPeptideAssumptions().forEach(currentAssumption -> {
 
                         Peptide peptide = currentAssumption.getPeptide();
                         String peptideSequence = peptide.getSequence();
@@ -330,34 +329,17 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                                             currentAssumption.getIdentificationFile()
                                     );
 
-                                    expandedPeptides.add(newAssumption);
+                                    spectrumMatch.addPeptideAssumption(Advocate.xtandem.getIndex(), newAssumption);
 
                                 }
                             }
-
-                        } else {
-
-                            expandedPeptides.add(currentAssumption);
-
                         }
-                    }
-                    
-                    fileResults.put(spectrumId, expandedPeptides);
-
+                    });
                 }
             }
         }
-        
-        if (spectrumFileName == null) {
-            
-            throw new IllegalArgumentException("Spectrum file name not found.");
-            
-        }
-        
-        HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> result = new HashMap<>(1);
-        result.put(spectrumFileName, fileResults);
 
-        return result;
+        return new ArrayList<>(allMatches.values());
     }
 
     @Override
@@ -388,7 +370,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * modifications.
      * @param fixedNTerminalModifications The fixed modifications on the N-term.
      * @param fixedCTerminalModifications The fixed modifications on the C-term.
-     * @param fileResults The map where to store the results.
      *
      * @throws XMLStreamException Exception thrown if an error occurred while
      * parsing the xml
@@ -401,8 +382,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             double expect,
             HashSet<String> fixedNonTerminalModifications,
             HashSet<String> fixedNTerminalModifications,
-            HashSet<String> fixedCTerminalModifications,
-            HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults
+            HashSet<String> fixedCTerminalModifications
     ) throws XMLStreamException, UnsupportedEncodingException {
 
         while (parser.hasNext()) {
@@ -443,7 +423,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                             if (parser.getAttributeValue("", "label") != null
                                     && "fragment ion mass spectrum".equalsIgnoreCase(parser.getAttributeValue("", "label"))) {
-                                readGroupFragment(parser, id, fileResults);
+                                readGroupFragment(parser, id);
                             }
 
                             break;
@@ -456,8 +436,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                                     expect,
                                     fixedNonTerminalModifications,
                                     fixedNTerminalModifications,
-                                    fixedCTerminalModifications,
-                                    fileResults
+                                    fixedCTerminalModifications
                             );
 
                             break;
@@ -480,7 +459,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      *
      * @param parser The xml parser.
      * @param id The id of the group or protein.
-     * @param fileResults The map where to store the results.
      *
      * @throws XMLStreamException Exception thrown if an error occurred while
      * parsing the xml
@@ -489,8 +467,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      */
     private void readGroupFragment(
             XMLStreamReader parser,
-            int id,
-            HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults
+            int id
     ) throws XMLStreamException, UnsupportedEncodingException {
 
         boolean write = false;
@@ -533,16 +510,8 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                             title = title.split("RTINSECONDS")[0].trim();
                         }
 
-                        String tempId = Integer.toString(id);
-                        ArrayList<SpectrumIdentificationAssumption> spectrumResults = fileResults.get(tempId);
-
-                        if (spectrumResults != null) {
-
-                            fileResults.remove(tempId);
-                            fileResults.put(title, spectrumResults);
-
-                        }
-
+                        SpectrumMatch spectrumMatch = allMatches.get(id);
+                        spectrumMatch.setSpectrumTitle(title);
                         content = new StringBuilder();
                         write = false;
 
@@ -565,7 +534,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                             if (parser.getAttributeValue("", "type") != null
                                     && "tandem mass spectrum".equalsIgnoreCase(parser.getAttributeValue("", "type"))) {
-                                readGroupFragmentTrace(parser, id, fileResults);
+                                readGroupFragmentTrace(parser, id);
                             }
 
                             break;
@@ -589,15 +558,13 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      *
      * @param parser The xml parser.
      * @param id The id of the group or protein.
-     * @param fileResults The map where to store the results.
      *
      * @throws XMLStreamException Exception thrown if an error occurred while
      * parsing the xml
      */
     private void readGroupFragmentTrace(
             XMLStreamReader parser,
-            int id,
-            HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults
+            int id
     ) throws XMLStreamException {
 
         boolean readCharge = false;
@@ -625,17 +592,10 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                     if (readCharge) {
 
                         int chrg = Integer.parseInt(parser.getText());
+                        allMatches.get(id).getAllPeptideAssumptions().forEach(peptideAssumption -> {
+                            peptideAssumption.setIdentificationCharge(chrg);
+                        });
 
-                        String tempId = Integer.toString(id);
-                        ArrayList<SpectrumIdentificationAssumption> spectrumResults = fileResults.get(tempId);
-
-                        if (spectrumResults != null) {
-
-                            spectrumResults.forEach(
-                                    spectrumAssumption -> spectrumAssumption.setIdentificationCharge(chrg)
-                            );
-
-                        }
                     }
 
                     readCharge = false;
@@ -686,7 +646,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * modifications.
      * @param fixedNTerminalModifications The fixed modifications on the N-term.
      * @param fixedCTerminalModifications The fixed modifications on the C-term.
-     * @param fileResults The map where to store the results.
      *
      * @throws XMLStreamException Exception thrown if an error occurred while
      * parsing the xml
@@ -697,8 +656,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             double expect,
             HashSet<String> fixedNonTerminalModifications,
             HashSet<String> fixedNTerminalModifications,
-            HashSet<String> fixedCTerminalModifications,
-            HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults
+            HashSet<String> fixedCTerminalModifications
     ) throws XMLStreamException {
 
         while (parser.hasNext()) {
@@ -740,8 +698,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
                                 expect,
                                 fixedNonTerminalModifications,
                                 fixedNTerminalModifications,
-                                fixedCTerminalModifications,
-                                fileResults
+                                fixedCTerminalModifications
                         );
                     }
 
@@ -764,7 +721,6 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
      * modifications.
      * @param fixedNTerminalModifications The fixed modifications on the N-term.
      * @param fixedCTerminalModifications The fixed modifications on the C-term.
-     * @param fileResults The map where to store the results.
      *
      * @throws XMLStreamException Exception thrown if an error occurred while
      * parsing the xml
@@ -775,8 +731,7 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
             double expect,
             HashSet<String> fixedNonTerminalModifications,
             HashSet<String> fixedNTerminalModifications,
-            HashSet<String> fixedCTerminalModifications,
-            HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults
+            HashSet<String> fixedCTerminalModifications
     ) throws XMLStreamException {
 
         Peptide peptide = null;
@@ -822,36 +777,37 @@ public class XTandemIdfileReader extends ExperimentObject implements IdfileReade
 
                             String pepSeq = parser.getAttributeValue("", "seq");
 
-                            String tempId = Integer.toString(id);
-                            ArrayList<SpectrumIdentificationAssumption> spectrumResults = fileResults.get(tempId);
+                            boolean adding = true;
 
-                            if (spectrumResults == null) {
+                            if (allMatches.get(id).getAllPeptideAssumptions(Advocate.xtandem.getIndex()) != null) {
 
-                                spectrumResults = new ArrayList<>(1);
-                                fileResults.put(tempId, spectrumResults);
+                                ArrayList<PeptideAssumption> matchAssuptions
+                                        = allMatches.get(id).getAllPeptideAssumptions(Advocate.xtandem.getIndex()).get(expect);
 
+                                for (int i = 0; i < matchAssuptions.size(); ++i) {
+
+                                    if (matchAssuptions.get(i).getPeptide().getSequence().equals(pepSeq)) {
+                                        adding = false;
+                                        break;
+                                    }
+
+                                }
                             }
 
-                            boolean alreadyFound = spectrumResults.stream()
-                                    .anyMatch(
-                                            spectrumIdentificationAssumption -> ((PeptideAssumption) spectrumIdentificationAssumption).getPeptide().getSequence().equals(pepSeq)
-                                    );
-
-                            if (!alreadyFound) {
+                            if (adding) {
 
                                 peptide = new Peptide(pepSeq);
 
                                 PeptideAssumption currentAssumption = new PeptideAssumption(
                                         peptide,
-                                        1,
-                                        Advocate.xtandem.getIndex(),
-                                        0,
+                                        1, Advocate.xtandem.getIndex(),
+                                        0, 
                                         expect,
                                         expect,
                                         inputFile.getName()
                                 );
 
-                                spectrumResults.add(currentAssumption);
+                                allMatches.get(id).addPeptideAssumption(Advocate.xtandem.getIndex(), currentAssumption);
                                 pepStart = Integer.parseInt(parser.getAttributeValue("", "start"));
                                 addAA = true;
 

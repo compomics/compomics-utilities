@@ -4,7 +4,6 @@ import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -103,7 +102,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
@@ -120,7 +119,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
@@ -129,7 +128,7 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
     )
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> result = new HashMap<>(1);
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
 
         try ( SimpleFileReader reader = SimpleFileReader.getFileReader(tideTsvFile)) {
 
@@ -215,14 +214,8 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
             String fileName = IoUtil.getFileName(tideTsvFile);
             String spectrumFileName = getMgfFileName(fileName);
 
-            HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = result.get(spectrumFileName);
-
-            if (fileResults == null) {
-
-                fileResults = new HashMap<>();
-                result.put(spectrumFileName, fileResults);
-
-            }
+            // required map given that the tide output is _not_ sorted on scan index
+            HashMap<Long, SpectrumMatch> tempSpectrumMatchesMap = new HashMap<>();
 
             // get the psms
             while ((line = reader.readLine()) != null) {
@@ -258,14 +251,12 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                     }
 
                     String spectrumTitle = spectrumProvider.getSpectrumTitles(IoUtil.removeExtension(spectrumFileName))[scanNumber]; // @TODO: does not work for mzML files
+                    Long tempSpectrumMatchKey = ExperimentObject.asLong(String.join("", spectrumFileName, spectrumTitle));
+                    SpectrumMatch currentMatch = tempSpectrumMatchesMap.get(tempSpectrumMatchKey);
 
-                    ArrayList<SpectrumIdentificationAssumption> spectrumResults = fileResults.get(spectrumTitle);
-
-                    if (spectrumResults == null) {
-
-                        spectrumResults = new ArrayList<>(4);
-                        fileResults.put(spectrumTitle, spectrumResults);
-
+                    if (currentMatch == null) {
+                        currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
+                        tempSpectrumMatchesMap.put(tempSpectrumMatchKey, currentMatch);
                     }
 
                     // get the modifications
@@ -329,16 +320,20 @@ public class TideIdfileReader extends ExperimentObject implements IdfileReader {
                                     peptideAssumption.getIdentificationFile()
                             );
 
-                            spectrumResults.add(newAssumption);
-
+                            currentMatch.addPeptideAssumption(Advocate.tide.getIndex(), newAssumption);
                         }
-
                     } else {
-
                         //peptideAssumption.addUrParam(scoreParam);
-                        spectrumResults.add(peptideAssumption);
+                        currentMatch.addPeptideAssumption(Advocate.tide.getIndex(), peptideAssumption);
                     }
                 }
+            }
+
+            // iterate the matches and add to the results
+            Iterator<Long> iterator = tempSpectrumMatchesMap.keySet().iterator();
+
+            while (iterator.hasNext()) {
+                result.add(tempSpectrumMatchesMap.get(iterator.next()));
             }
         }
 

@@ -3,10 +3,10 @@ package com.compomics.util.experiment.io.identification.idfilereaders;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.io.IoUtil;
@@ -63,7 +63,7 @@ public class AndromedaIdfileReader implements IdfileReader {
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
@@ -79,7 +79,7 @@ public class AndromedaIdfileReader implements IdfileReader {
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
@@ -89,15 +89,15 @@ public class AndromedaIdfileReader implements IdfileReader {
             throws IOException, IllegalArgumentException, SQLException,
             ClassNotFoundException, InterruptedException, JAXBException {
 
-        HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> result = new HashMap<>(1);
-
         String mgfFile = getMgfFileName(fileName);
-        HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = new HashMap<>();
-        result.put(mgfFile, fileResults);
+
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
+        HashMap<String, SpectrumMatch> spectrumMatchesMap = new HashMap<>();
 
         try ( SimpleFileReader reader = SimpleFileReader.getFileReader(resultsFile)) {
 
             String line, title = null;
+            SpectrumMatch spectrumMatch = null;
             int rank = 0;
             boolean firstSpectrum = false;
             while ((line = reader.readLine()) != null) {
@@ -110,20 +110,26 @@ public class AndromedaIdfileReader implements IdfileReader {
                     title = line.substring(1).trim();
                     // remove any html from the title
                     title = URLDecoder.decode(title, "utf-8");
+                    spectrumMatch = null;
 
                 } else if (firstSpectrum) {
 
-                    ArrayList<SpectrumIdentificationAssumption> spectrumResults = fileResults.get(title);
+                    if (spectrumMatch == null) {
 
-                    if (spectrumResults == null) {
-
-                        spectrumResults = new ArrayList<>(2);
-                        fileResults.put(title, spectrumResults);
-
+                        spectrumMatch = spectrumMatchesMap.get(title);
                         rank = 0; // the rank is here per charge
 
-                    }
+                        if (spectrumMatch == null) {
 
+                            spectrumMatch = new SpectrumMatch(
+                                    mgfFile,
+                                    title
+                            );
+                            result.add(spectrumMatch);
+                            spectrumMatchesMap.put(title, spectrumMatch);
+
+                        }
+                    }
                     rank++;
                     PeptideAssumption peptideAssumption = getAssumptionFromLine(line, rank);
 
@@ -149,12 +155,12 @@ public class AndromedaIdfileReader implements IdfileReader {
                                     peptideAssumption.getScore(),
                                     peptideAssumption.getIdentificationFile()
                             );
-                            spectrumResults.add(newAssumption);
+                            spectrumMatch.addPeptideAssumption(Advocate.andromeda.getIndex(), newAssumption);
 
                         }
                     } else {
 
-                        spectrumResults.add(peptideAssumption);
+                        spectrumMatch.addPeptideAssumption(Advocate.andromeda.getIndex(), peptideAssumption);
 
                     }
                 }

@@ -30,10 +30,6 @@ import java.util.stream.Collectors;
 public class Peptide extends ExperimentObject {
 
     /**
-     * The version UID for Serialization/Deserialization compatibility.
-     */
-    static final long serialVersionUID = -613284073602011038L;
-    /**
      * The peptide sequence.
      */
     private String sequence;
@@ -62,6 +58,10 @@ public class Peptide extends ExperimentObject {
      * The variable modifications carried by the peptide.
      */
     private ModificationMatch[] variableModifications = null;
+    /**
+     * Convenience array for no modifications.
+     */
+    private static final ModificationMatch[] NO_MOD = new ModificationMatch[0];
     /**
      * The variants observed when mapping this peptide to the database. Peptide
      * variant matches are indexed by protein and by peptide start.
@@ -380,7 +380,7 @@ public class Peptide extends ExperimentObject {
      */
     public ModificationMatch[] getVariableModifications() {
 
-        return variableModifications == null ? ModificationMatch.NO_MOD : variableModifications;
+        return variableModifications == null ? NO_MOD : variableModifications;
     }
 
     /**
@@ -500,7 +500,6 @@ public class Peptide extends ExperimentObject {
 
         setMass(-1.0);
         setKey(NO_KEY);
-        
     }
 
     /**
@@ -708,14 +707,14 @@ public class Peptide extends ExperimentObject {
      *
      * @return the key of the peptide
      */
-    public static int getKey(
+    public static long getKey(
             String sequence,
             ModificationMatch[] variableModifications
     ) {
 
         if (variableModifications == null || variableModifications.length == 0) {
 
-            return ExperimentObject.getHash(sequence);
+            return ExperimentObject.asLong(sequence);
 
         }
 
@@ -745,7 +744,7 @@ public class Peptide extends ExperimentObject {
                 modificationsKey
         );
 
-        return ExperimentObject.getHash(keyAsString);
+        return ExperimentObject.asLong(keyAsString);
 
     }
 

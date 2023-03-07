@@ -3,8 +3,8 @@ package com.compomics.util.experiment.io.identification.idfilereaders;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.TreeMap;
 import javax.xml.bind.JAXBException;
 
 /**
@@ -30,26 +32,32 @@ import javax.xml.bind.JAXBException;
 public class MascotIdfileReader implements IdfileReader {
 
     /**
-     * The file to parse
+     * The searched variable modifications.
      */
-    private final File inputFile;
-    /**
-     * The number of queries in the file.
-     */
-    private final int nQueries;
+    private ArrayList<String> varMods = new ArrayList<>();
     /**
      * The software version.
      */
     private String softwareVersion;
+    /**
+     * The charges of the spectra.
+     */
+    private ArrayList<Integer> charges = new ArrayList<>();
+    /**
+     * The qmatch field.
+     */
+    private ArrayList<Integer> matches = new ArrayList<>();
+    /**
+     * The spectrum file name.
+     */
+    private String fileName = null;
+
+    private HashMap<Integer, SpectrumMatch> allMatches = new HashMap<>();
 
     /**
      * Default constructor for the purpose of instantiation.
      */
     public MascotIdfileReader() {
-
-        inputFile = null;
-        nQueries = -1;
-
     }
 
     /**
@@ -80,85 +88,6 @@ public class MascotIdfileReader implements IdfileReader {
             WaitingHandler waitingHandler
     ) throws UnsupportedEncodingException {
 
-        this.inputFile = inputFile;
-
-        int queryCount = 0;
-
-        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(inputFile)) {
-
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-
-                int nameIndex = line.indexOf("name=\"");
-
-                if (nameIndex >= 0) {
-
-                    String state = line.substring(line.indexOf("=\"", nameIndex) + 2, line.indexOf("\"", nameIndex + 6));
-
-                    if (state.startsWith("query")) {
-
-                        queryCount++;
-
-                    }
-                }
-            }
-        }
-
-        nQueries = queryCount;
-
-    }
-
-    @Override
-    public String getExtension() {
-        return ".dat";
-    }
-
-    @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
-            SpectrumProvider spectrumProvider,
-            WaitingHandler waitingHandler,
-            SearchParameters searchParameters
-    )
-            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-
-        return getAllSpectrumMatches(
-                spectrumProvider,
-                waitingHandler,
-                searchParameters,
-                null,
-                false
-        );
-    }
-
-    @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
-            SpectrumProvider spectrumProvider,
-            WaitingHandler waitingHandler,
-            SearchParameters searchParameters,
-            SequenceMatchingParameters sequenceMatchingPreferences,
-            boolean expandAaCombinations
-    )
-            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-
-        if (waitingHandler != null) {
-            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
-            waitingHandler.setMaxSecondaryProgressCounter(nQueries);
-        }
-
-        HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> results = new HashMap<>(1);
-
-        // The searched variable modifications.
-        ArrayList<String> varMods = new ArrayList<>();
-        // The charges of the spectra
-        ArrayList<Integer> charges = new ArrayList<>();
-        // The qmatch field
-        ArrayList<Integer> matches = new ArrayList<>();
-        // The spectrum file name
-        String fileName = null;
-        // Query tot title map
-        HashMap<Integer, String> titleMap = new HashMap<>();
-
         varMods.add("dummy");
         charges.add(-100000);
         matches.add(-1);
@@ -187,57 +116,27 @@ public class MascotIdfileReader implements IdfileReader {
             }
 
             while ((line = reader.readLine()) != null) {
-
                 int nameIndex = line.indexOf("name=\"");
-
                 if (nameIndex < 0) {
-
                     throw new IllegalArgumentException("File format not parsable.");
-
                 }
-
                 String state = line.substring(line.indexOf("=\"", nameIndex) + 2, line.indexOf("\"", nameIndex + 6));
-
                 if (state.startsWith("query")) {
-
-                    parseQuery(reader, boundary, state, titleMap);
-
-                    waitingHandler.increaseSecondaryProgressCounter();
-
+                    parseQuery(reader, boundary, state);
                 } else {
                     switch (state) {
                         case "masses":
-                            parseMasses(reader, boundary, varMods);
+                            parseMasses(reader, boundary);
                             break;
                         case "peptides":
-                            HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = results.get(fileName);
-
-                            if (fileResults == null) {
-
-                                fileResults = new HashMap<>();
-                                results.put(fileName, fileResults);
-
-                            }
-
-                            parsePeptides(
-                                    reader,
-                                    boundary,
-                                    inputFile.getName(),
-                                    fileName,
-                                    charges,
-                                    matches,
-                                    varMods,
-                                    titleMap,
-                                    fileResults,
-                                    expandAaCombinations
-                            );
+                            parsePeptides(reader, boundary, inputFile.getName());
                             break;
                         case "summary":
-                            parseSummary(reader, boundary, charges, matches);
+                            parseSummary(reader, boundary);
                             break;
 
                         case "parameters":
-                            fileName = parseParameters(reader, boundary);
+                            parseParameters(reader, boundary);
                             break;
 
                         case "header":
@@ -261,8 +160,95 @@ public class MascotIdfileReader implements IdfileReader {
                 }
             }
         }
+    }
 
-        return results;
+    @Override
+    public String getExtension() {
+        return ".dat";
+    }
+
+    @Override
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            SpectrumProvider spectrumProvider,
+            WaitingHandler waitingHandler,
+            SearchParameters searchParameters
+    )
+            throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+
+        return getAllSpectrumMatches(
+                spectrumProvider,
+                waitingHandler,
+                searchParameters,
+                null,
+                false
+        );
+    }
+
+    @Override
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+            SpectrumProvider spectrumProvider,
+            WaitingHandler waitingHandler,
+            SearchParameters searchParameters,
+            SequenceMatchingParameters sequenceMatchingPreferences,
+            boolean expandAaCombinations
+    )
+            throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
+
+        if (waitingHandler != null) {
+            waitingHandler.setSecondaryProgressCounterIndeterminate(false);
+            waitingHandler.setMaxSecondaryProgressCounter(allMatches.size());
+        }
+
+        if (expandAaCombinations) {
+
+            for (SpectrumMatch currentMatch : allMatches.values()) {
+
+                currentMatch.getAllPeptideAssumptions().forEach(currentAssumption -> {
+
+                    Peptide peptide = currentAssumption.getPeptide();
+                    String peptideSequence = peptide.getSequence();
+                    ModificationMatch[] previousModificationMatches = peptide.getVariableModifications();
+
+                    if (AminoAcidSequence.hasCombination(peptideSequence)) {
+
+                        for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
+
+                            String newSequence = expandedSequence.toString();
+                            if (newSequence.equals(peptideSequence)) {
+                                continue;
+                            }
+
+                            ModificationMatch[] newModificationMatches = Arrays.stream(previousModificationMatches)
+                                    .map(modificationMatch -> modificationMatch.clone())
+                                    .toArray(ModificationMatch[]::new);
+
+                            Peptide newPeptide = new Peptide(newSequence, newModificationMatches);
+
+                            PeptideAssumption newAssumption = new PeptideAssumption(
+                                    newPeptide,
+                                    currentAssumption.getRank(),
+                                    currentAssumption.getAdvocate(),
+                                    currentAssumption.getIdentificationCharge(),
+                                    currentAssumption.getRawScore(),
+                                    currentAssumption.getScore(),
+                                    currentAssumption.getIdentificationFile()
+                            );
+
+                            currentMatch.addPeptideAssumption(Advocate.mascot.getIndex(), newAssumption);
+
+                            if (waitingHandler != null) {
+                                if (waitingHandler.isRunCanceled()) {
+                                    break;
+                                }
+                                waitingHandler.increaseSecondaryProgressCounter();
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        return new ArrayList<>(allMatches.values());
     }
 
     @Override
@@ -272,8 +258,8 @@ public class MascotIdfileReader implements IdfileReader {
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
 
-        HashMap<String, ArrayList<String>> result = new HashMap<>(1);
-        ArrayList<String> versions = new ArrayList<>(1);
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        ArrayList<String> versions = new ArrayList<>();
         versions.add(softwareVersion);
         result.put("Mascot", versions);
         return result;
@@ -292,12 +278,10 @@ public class MascotIdfileReader implements IdfileReader {
      *
      * @param reader the buffered reader
      * @param boundary the boundary
-     * @param varMods the variable modifications
      */
     private void parseMasses(
             SimpleFileReader reader,
-            String boundary,
-            ArrayList<String> varMods
+            String boundary
     ) {
 
         String mass = "";
@@ -343,7 +327,6 @@ public class MascotIdfileReader implements IdfileReader {
      * @param reader the buffered reader
      * @param boundary the boundary
      * @param state the state
-     * @param titleMap the query to title map
      *
      * @throws UnsupportedEncodingException Exception thrown if an error
      * occurred when decoding a spectrum title.
@@ -351,13 +334,10 @@ public class MascotIdfileReader implements IdfileReader {
     private void parseQuery(
             SimpleFileReader reader,
             String boundary,
-            String state,
-            HashMap<Integer, String> titleMap
+            String state
     ) throws UnsupportedEncodingException {
-
         String line;
         while ((line = reader.readLine()) != null) {
-
             if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
                 break;
             }
@@ -373,9 +353,13 @@ public class MascotIdfileReader implements IdfileReader {
 
                 int specNum = Integer.parseInt(state.substring(5, state.length()));
                 String spectrumTitle = URLDecoder.decode(parts[1].trim(), "utf8");
+                SpectrumMatch spectrumMatch = allMatches.get(specNum);
 
-                titleMap.put(specNum, spectrumTitle);
+                if (spectrumMatch != null) {
 
+                    spectrumMatch.setSpectrumTitle(spectrumTitle);
+
+                }
             }
         }
     }
@@ -414,55 +398,31 @@ public class MascotIdfileReader implements IdfileReader {
      *
      * @param reader the buffered reader
      * @param boundary the boundary
-     *
-     * @return Returns the file name.
      */
-    private String parseParameters(
+    private void parseParameters(
             SimpleFileReader reader,
             String boundary
     ) {
 
-        String fileName = null;
-
         String line;
         while ((line = reader.readLine()) != null) {
-
             if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
-
                 break;
-
             }
-
             if (line.length() < 2) {
-
                 continue;
-
             }
 
             String[] parts = line.split("=");
-
             if (parts.length != 2) {
-
                 continue;
-
             }
 
             if ("FILE".equals(parts[0])) {
-
                 File f = new File(parts[1].replaceAll("\\\\", "/"));
                 fileName = f.getName();
-
             }
         }
-
-        if (fileName == null) {
-
-            throw new IllegalArgumentException("File name not found.");
-
-        }
-
-        return fileName;
-
     }
 
     /**
@@ -471,29 +431,18 @@ public class MascotIdfileReader implements IdfileReader {
      * @param reader the buffered reader
      * @param boundary the boundary
      * @param sourceFile the source file
-     * @param fileName the file name
      */
     private void parsePeptides(
             SimpleFileReader reader,
             String boundary,
-            String sourceFile,
-            String fileName,
-            ArrayList<Integer> charges,
-            ArrayList<Integer> matches,
-            ArrayList<String> varMods,
-            HashMap<Integer, String> titleMap,
-            HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults,
-            boolean expandAaCombinations
+            String sourceFile
     ) {
+        String line;
 
         if (fileName == null) {
-            throw new IllegalArgumentException("File name not found.");
+            throw new IllegalArgumentException("File format not parsable.");
         }
 
-        int rank = 0;
-        double currentScore = Double.NaN;
-
-        String line;
         while ((line = reader.readLine()) != null) {
             if (line.length() > 2 && line.substring(0, 2).equals("--") && line.substring(2).equals(boundary)) {
                 break;
@@ -533,68 +482,44 @@ public class MascotIdfileReader implements IdfileReader {
             int specCharge = charges.get(spectrumNumber);
             double lThreshold = 10.0 * Math.log(matches.get(spectrumNumber)) / Math.log(10);
             double expectancy = (0.05 * Math.pow(10, ((lThreshold - (double) ionScore) / 10)));
+            int rank;
 
-            if (Double.isNaN(currentScore) || expectancy != currentScore) {
+            SpectrumMatch currentMatch = allMatches.get(spectrumNumber);
 
-                rank++; // Note: this assumes that peptides are sorted by expectancy in the file.
-                currentScore = expectancy;
+            if (currentMatch == null) {
 
-            }
-
-            String spectrumTitle = titleMap.get(spectrumNumber);
-
-            ArrayList<SpectrumIdentificationAssumption> spectrumResults = fileResults.get(spectrumTitle);
-
-            if (spectrumResults == null) {
-
-                spectrumResults = new ArrayList<>(4);
-                fileResults.put(spectrumTitle, spectrumResults);
-
-            }
-
-            Peptide peptide = new Peptide(peptideSequence, foundModifications.toArray(new ModificationMatch[0]));
-
-            if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
-
-                for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
-
-                    String newSequence = expandedSequence.toString();
-
-                    ModificationMatch[] newModificationMatches = foundModifications.stream()
-                            .map(modificationMatch -> modificationMatch.clone())
-                            .toArray(ModificationMatch[]::new);
-
-                    Peptide newPeptide = new Peptide(newSequence, newModificationMatches);
-
-                    PeptideAssumption newAssumption = new PeptideAssumption(
-                            newPeptide,
-                            rank,
-                            Advocate.mascot.getIndex(),
-                            specCharge,
-                            ionScore,
-                            expectancy,
-                            sourceFile
-                    );
-
-                    spectrumResults.add(newAssumption);
-
-                }
+                currentMatch = new SpectrumMatch(fileName, Integer.toString(spectrumNumber));
+                allMatches.put(spectrumNumber, currentMatch);
+                rank = 1;
 
             } else {
 
-                PeptideAssumption currentAssumption = new PeptideAssumption(
-                        peptide,
-                        rank,
-                        Advocate.mascot.getIndex(),
-                        specCharge,
-                        ionScore,
-                        expectancy,
-                        sourceFile
-                );
+                TreeMap<Double, ArrayList<PeptideAssumption>> assump = allMatches.get(spectrumNumber).getAllPeptideAssumptions(Advocate.mascot.getIndex());
 
-                spectrumResults.add(currentAssumption);
+                if (assump.containsKey(expectancy)) {
 
+                    rank = assump.get(expectancy).get(0).getRank();
+
+                } else {
+
+                    rank = (int) allMatches.get(spectrumNumber).getAllPeptideAssumptions().count() + 1;
+
+                }
             }
+
+            Peptide peptide = new Peptide(peptideSequence, foundModifications.toArray(new ModificationMatch[foundModifications.size()]));
+            PeptideAssumption currentAssumption = new PeptideAssumption(
+                    peptide,
+                    rank,
+                    Advocate.mascot.getIndex(),
+                    specCharge,
+                    ionScore,
+                    expectancy,
+                    sourceFile
+            );
+
+            currentMatch.addPeptideAssumption(Advocate.mascot.getIndex(), currentAssumption);
+
         }
     }
 
@@ -603,14 +528,10 @@ public class MascotIdfileReader implements IdfileReader {
      *
      * @param reader the buffered reader
      * @param boundary the boundary
-     * @param charges the charges found in the qexp field
-     * @param matches the qmatch field
      */
     private void parseSummary(
             SimpleFileReader reader,
-            String boundary,
-            ArrayList<Integer> charges,
-            ArrayList<Integer> matches
+            String boundary
     ) {
 
         String line;

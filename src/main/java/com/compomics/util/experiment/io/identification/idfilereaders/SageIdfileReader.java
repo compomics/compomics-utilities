@@ -5,7 +5,6 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequen
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
@@ -100,7 +99,7 @@ public class SageIdfileReader implements IdfileReader {
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
@@ -122,7 +121,7 @@ public class SageIdfileReader implements IdfileReader {
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
@@ -136,7 +135,7 @@ public class SageIdfileReader implements IdfileReader {
             InterruptedException,
             JAXBException {
 
-        HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> result = new HashMap<>(1);
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
 
         try ( SimpleFileReader reader = SimpleFileReader.getFileReader(sageTsvFile)) {
 
@@ -179,12 +178,13 @@ public class SageIdfileReader implements IdfileReader {
                     || rankIndex == -1 || spectrumTitleIndex == -1 || spectrumFileIndex == -1) {
 
                 throw new IllegalArgumentException(
-                        "Mandatory columns are missing in the Sage tsv file. Please make sure that the file contains the following columns (not case sensitive): 'peptide', 'charge', 'posterior_error', 'sage_discriminant_score', 'rank', 'scannr', 'filename'"
+                        "Mandatory columns are missing in the Sage tsv file. Please check the file!"
                 );
             }
 
             String line;
             String currentSpectrumTitle = null;
+            SpectrumMatch currentMatch = null;
 
             // get the psms
             while ((line = reader.readLine()) != null) {
@@ -204,26 +204,22 @@ public class SageIdfileReader implements IdfileReader {
                     int charge = Integer.parseInt(elements[chargeIndex]);
 
                     String fileName = elements[spectrumFileIndex];
-                    
-                    HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = result.get(fileName);
-                    
-                    if (fileResults == null) {
-                        
-                        fileResults = new HashMap<>();
-                        result.put(fileName, fileResults);
-                        
-                    }
 
                     // remove any html from the title
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
 
-                    ArrayList<SpectrumIdentificationAssumption> spectrumResults = fileResults.get(spectrumTitle);
-                    
-                    if (spectrumResults == null) {
-                        
-                        spectrumResults = new ArrayList<>(4);
-                        fileResults.put(spectrumTitle, spectrumResults);
-                        
+                    // set up the yet empty spectrum match, or add to the current match
+                    if (currentMatch == null
+                            || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {
+
+                        // add the previous match, if any
+                        if (currentMatch != null) {
+                            result.add(currentMatch);
+                        }
+
+                        currentMatch = new SpectrumMatch(fileName, spectrumTitle);
+                        currentSpectrumTitle = spectrumTitle;
+
                     }
 
                     // get the modifications
@@ -348,13 +344,13 @@ public class SageIdfileReader implements IdfileReader {
                                     peptideAssumption.getIdentificationFile()
                             );
 
-                            spectrumResults.add(newAssumption);
-                            
+                            currentMatch.addPeptideAssumption(Advocate.sage.getIndex(), newAssumption);
+
                         }
 
                     } else {
 
-                        spectrumResults.add(peptideAssumption);
+                        currentMatch.addPeptideAssumption(Advocate.sage.getIndex(), peptideAssumption);
 
                     }
 
@@ -364,6 +360,11 @@ public class SageIdfileReader implements IdfileReader {
 
                     }
                 }
+            }
+
+            // add the last match, if any
+            if (currentMatch != null) {
+                result.add(currentMatch);
             }
         }
 
@@ -377,8 +378,8 @@ public class SageIdfileReader implements IdfileReader {
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<>(1);
-        ArrayList<String> versions = new ArrayList<>(1);
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        ArrayList<String> versions = new ArrayList<>();
         versions.add(softwareVersion);
         result.put(softwareName, versions);
         return result;

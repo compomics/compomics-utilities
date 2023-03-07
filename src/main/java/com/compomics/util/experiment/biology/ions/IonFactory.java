@@ -111,13 +111,9 @@ public class IonFactory {
      * Sets the default neutral losses.
      */
     private static synchronized void setDefaultNeutralLosses() {
-
-        HashSet<String> tempMap = new HashSet<>(2);
-        tempMap.add(NeutralLoss.H2O.name);
-        tempMap.add(NeutralLoss.NH3.name);
-
-        defaultNeutralLosses = tempMap;
-
+        defaultNeutralLosses = new HashSet<>(2);
+        defaultNeutralLosses.add(NeutralLoss.H2O.name);
+        defaultNeutralLosses.add(NeutralLoss.NH3.name);
     }
 
     /**
@@ -178,16 +174,16 @@ public class IonFactory {
      * @return the expected fragment ions
      */
     public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(
-            Peptide peptide,
-            ModificationParameters modificationParameters,
-            SequenceProvider sequenceProvider,
+            Peptide peptide, 
+            ModificationParameters modificationParameters, 
+            SequenceProvider sequenceProvider, 
             SequenceMatchingParameters modificationsSequenceMatchingParameters
     ) {
         return getFragmentIons(
-                peptide,
-                null,
-                modificationParameters,
-                sequenceProvider,
+                peptide, 
+                null, 
+                modificationParameters, 
+                sequenceProvider, 
                 modificationsSequenceMatchingParameters
         );
     }
@@ -209,10 +205,10 @@ public class IonFactory {
      * @return the expected fragment ions
      */
     public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(
-            Peptide peptide,
-            SpecificAnnotationParameters specificAnnotationSettings,
-            ModificationParameters modificationParameters,
-            SequenceProvider sequenceProvider,
+            Peptide peptide, 
+            SpecificAnnotationParameters specificAnnotationSettings, 
+            ModificationParameters modificationParameters, 
+            SequenceProvider sequenceProvider, 
             SequenceMatchingParameters modificationsSequenceMatchingParameters
     ) {
 
@@ -238,13 +234,21 @@ public class IonFactory {
 
         HashSet<String> allModifications = new HashSet<>(1);
 
-        String[] variableModNames = peptide.getIndexedVariableModifications();
+        String[] variableModNames = null;
+        
+        // @TODO: quick fix that ought to be replaced when the ptm scoring code had been rewritten
+        try {
+            variableModNames = peptide.getIndexedVariableModifications();
+        } catch (IllegalArgumentException e) {
+            // illegal peptide, i.e. more than one modification on the same site
+            return result;
+        }
 
         Modification[] variableModifications = new Modification[variableModNames.length];
 
         String[] fixedModNames = peptide.getFixedModifications(
-                modificationParameters,
-                sequenceProvider,
+                modificationParameters, 
+                sequenceProvider, 
                 modificationsSequenceMatchingParameters
         );
         Modification[] fixedModifications = new Modification[fixedModNames.length];
@@ -789,8 +793,8 @@ public class IonFactory {
      * @return the expected fragment ions
      */
     public HashMap<Integer, HashMap<Integer, ArrayList<Ion>>> getFragmentIons(
-            Tag tag,
-            ModificationParameters modificationParameters,
+            Tag tag, 
+            ModificationParameters modificationParameters, 
             SequenceMatchingParameters modificationsSequenceMatchingParameters
     ) {
 
@@ -922,13 +926,13 @@ public class IonFactory {
                     }
 
                     double mass = aminoAcid.getMonoisotopicMass();
-
+                    
                     Modification modification = variableModifications[i];
 
                     if (modification != null) {
                         mass += modification.getMass();
                     }
-
+                    
                     modification = fixedModifications[i];
 
                     if (modification != null) {
@@ -1154,13 +1158,13 @@ public class IonFactory {
                     }
 
                     double mass = aminoAcid.getMonoisotopicMass();
-
+                    
                     Modification modification = variableModifications[i];
 
                     if (modification != null) {
                         mass += modification.getMass();
                     }
-
+                    
                     modification = fixedModifications[i];
 
                     if (modification != null) {
@@ -1384,13 +1388,11 @@ public class IonFactory {
      *
      * @return the corresponding cache key
      */
-    private int getNeutralLossesKey(
+    private long getNeutralLossesKey(
             HashSet<String> possibleNeutralLosses
     ) {
-        return ExperimentObject.getHash(
-                possibleNeutralLosses.stream()
-                        .collect(Collectors.joining())
-        );
+        return ExperimentObject.asLong(possibleNeutralLosses.stream()
+                .collect(Collectors.joining()));
     }
 
     /**

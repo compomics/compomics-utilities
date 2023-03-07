@@ -83,15 +83,7 @@ public class TagFragmentIon extends Ion {
      * @param neutralLosses the neutral losses of the ion
      * @param massGap the mass gap before this tag fragment ions
      */
-    public TagFragmentIon(
-            int fragmentType, 
-            int number, 
-            int subNumber, 
-            double mass, 
-            NeutralLoss[] neutralLosses, 
-            double massGap
-    ) {
-        
+    public TagFragmentIon(int fragmentType, int number, int subNumber, double mass, NeutralLoss[] neutralLosses, double massGap) {
         this.neutralLosses = neutralLosses;
         this.subType = fragmentType;
         type = Ion.IonType.TAG_FRAGMENT_ION;
@@ -99,7 +91,6 @@ public class TagFragmentIon extends Ion {
         this.number = number;
         this.subNumber = subNumber;
         this.massGap = massGap;
-        
     }
 
     /**

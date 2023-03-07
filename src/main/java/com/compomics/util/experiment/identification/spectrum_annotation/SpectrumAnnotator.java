@@ -194,7 +194,7 @@ public abstract class SpectrumAnnotator {
             double[] spectrumMz,
             double[] spectrumIntensity,
             Ion theoreticIon,
-            int inspectedCharge
+            Integer inspectedCharge
     ) {
 
         double fragmentMz = theoreticIon.getTheoreticMz(inspectedCharge);
@@ -834,6 +834,7 @@ public abstract class SpectrumAnnotator {
      * @param sequenceProvider a protein sequence provider
      * @param modificationsSequenceMatchingParameters the sequence matching
      * parameters to use for modifications
+     * @param spectrumAnnotator the spectrum annotator
      *
      * @return the expected possible neutral losses
      */
@@ -841,7 +842,8 @@ public abstract class SpectrumAnnotator {
             SpectrumIdentificationAssumption spectrumIdentificationAssumption,
             ModificationParameters modificationParameters,
             SequenceProvider sequenceProvider,
-            SequenceMatchingParameters modificationsSequenceMatchingParameters
+            SequenceMatchingParameters modificationsSequenceMatchingParameters,
+            SpectrumAnnotator spectrumAnnotator
     ) {
 
         if (spectrumIdentificationAssumption instanceof PeptideAssumption) {

@@ -6,7 +6,6 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.Arrays;
 
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 /**
@@ -32,7 +31,7 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * The keys of the peptide matches associated to this protein match.
      */
-    private int[] peptideMatchesKeys = new int[0];
+    private long[] peptideMatchesKeys = new long[0];
     /**
      * The key of the match.
      */
@@ -41,10 +40,9 @@ public class ProteinMatch extends IdentificationMatch {
      * Boolean indicating whether the protein match is decoy.
      */
     private boolean decoy;
-    /**
-     * The variable modifications carried by the protein.
-     */
-    private ModificationMatch[] variableModifications = null;
+    
+    
+    private ProteinMatch p = null;
     
 
     /**
@@ -78,7 +76,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public ProteinMatch(
             Peptide peptide,
-            int peptideMatchKey
+            long peptideMatchKey
     ) {
 
         accessions = peptide.getProteinMapping()
@@ -88,7 +86,7 @@ public class ProteinMatch extends IdentificationMatch {
                 );
         leadingAccession = accessions[0];
 
-        peptideMatchesKeys = new int[1];
+        peptideMatchesKeys = new long[1];
         peptideMatchesKeys[0] = peptideMatchKey;
 
         setMatchKey();
@@ -120,6 +118,8 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public String[] getAccessions() {
 
+        
+
         return accessions;
     }
 
@@ -129,6 +129,8 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the leading accession for this match
      */
     public String getLeadingAccession() {
+
+        
 
         return leadingAccession;
 
@@ -141,6 +143,8 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void setLeadingAccession(String leadingAccession) {
 
+        
+
         this.leadingAccession = leadingAccession;
     }
 
@@ -150,6 +154,8 @@ public class ProteinMatch extends IdentificationMatch {
      * @return a boolean indicating whether the given match is decoy
      */
     public boolean isDecoy() {
+
+        
 
         return decoy;
 
@@ -162,6 +168,8 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public void setDecoy(boolean decoy) {
 
+        
+
         this.decoy = decoy;
 
     }
@@ -171,7 +179,9 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @return subordinated peptide keys
      */
-    public int[] getPeptideMatchesKeys() {
+    public long[] getPeptideMatchesKeys() {
+
+        
 
         return peptideMatchesKeys;
     }
@@ -181,7 +191,9 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param peptideMatchKey a peptide key
      */
-    public void addPeptideMatchKey(int peptideMatchKey) {
+    public void addPeptideMatchKey(long peptideMatchKey) {
+
+        
 
         peptideMatchesKeys = Arrays.copyOf(peptideMatchesKeys, peptideMatchesKeys.length + 1);
         peptideMatchesKeys[peptideMatchesKeys.length - 1] = peptideMatchKey;
@@ -193,9 +205,11 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param newKeys peptide keys
      */
-    public void addPeptideMatchKeys(int[] newKeys) {
+    public void addPeptideMatchKeys(long[] newKeys) {
 
-        peptideMatchesKeys = IntStream.concat(Arrays.stream(peptideMatchesKeys),
+        
+
+        peptideMatchesKeys = LongStream.concat(Arrays.stream(peptideMatchesKeys),
                 Arrays.stream(newKeys))
                 .distinct()
                 .toArray();
@@ -207,7 +221,9 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param peptideMatchKeys the peptide match keys
      */
-    public void setPeptideMatchesKeys(int[] peptideMatchKeys) {
+    public void setPeptideMatchesKeys(long[] peptideMatchKeys) {
+
+        
 
         peptideMatchesKeys = peptideMatchKeys;
     }
@@ -219,11 +235,15 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public int getPeptideCount() {
 
+        
+
         return peptideMatchesKeys.length;
     }
 
     @Override
     public long getKey() {
+
+        
 
         return matchKey;
     }
@@ -233,7 +253,9 @@ public class ProteinMatch extends IdentificationMatch {
      */
     private void setMatchKey() {
 
-        matchKey = ExperimentObject.getHash(
+        
+
+        matchKey = ExperimentObject.asLong(
                 Arrays.stream(accessions)
                         .collect(Collectors.joining()));
 
@@ -247,9 +269,9 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @return the protein match key
      */
-    public static int getProteinMatchKey(Peptide peptide) {
+    public static long getProteinMatchKey(Peptide peptide) {
 
-        return ExperimentObject.getHash(
+        return ExperimentObject.asLong(
                 peptide.getProteinMapping().navigableKeySet().stream()
                         .collect(Collectors.joining()));
 
@@ -261,6 +283,8 @@ public class ProteinMatch extends IdentificationMatch {
      * @return the number of proteins for this match
      */
     public int getNProteins() {
+
+        
 
         return accessions.length;
     }
@@ -276,6 +300,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public boolean contains(String aProtein) {
 
+        
 
         return Arrays.stream(accessions)
                 .anyMatch(accession -> accession.equals(aProtein));
@@ -290,31 +315,10 @@ public class ProteinMatch extends IdentificationMatch {
      * @return a boolean indicating whether a peptide was found in this protein
      * match
      */
-    public boolean containsPeptide(int peptideKey) {
+    public boolean containsPeptide(long peptideKey) {
         
         return Arrays.stream(peptideMatchesKeys)
                 .anyMatch(key -> key == peptideKey);
-        
-    }
-
-    /**
-     * Returns the variable modifications.
-     *
-     * @return the variable modifications
-     */
-    public ModificationMatch[] getVariableModifications() {
-
-        return variableModifications == null ? ModificationMatch.NO_MOD : variableModifications;
-    }
-    
-    /**
-     * Sets the variable modifications.
-     * 
-     * @param variableModifications the variable modifications.
-     */
-    public void setVariableModifications(ModificationMatch[] variableModifications) {
-        
-        this.variableModifications = variableModifications;
         
     }
 

@@ -3,10 +3,10 @@ package com.compomics.util.experiment.io.identification.idfilereaders;
 import com.compomics.util.experiment.biology.aminoacids.AminoAcid;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
+import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.parameters.identification.tool_specific.DirecTagParameters;
 import com.compomics.util.experiment.io.identification.IdfileReader;
@@ -382,24 +382,21 @@ public class DirecTagIdfileReader implements IdfileReader {
     /**
      * Parses the results section.
      */
-    private HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> parseResults(
+    private ArrayList<SpectrumMatch> parseResults(
             SimpleFileReader reader,
             String[] spectrumTitles
     ) {
 
-        HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> result = new HashMap<>(1);
-
+        ArrayList<SpectrumMatch> result = new ArrayList<>();
         String spectrumFileName = IoUtil.getFileName(getInputFile());
-        HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = new HashMap<>();
-        result.put(spectrumFileName, fileResults);
 
         int spectrumCount = 0;
         Integer sIdColumnIndex = spectrumLineContent.get("ID");
         Integer chargeColumnIndex = spectrumLineContent.get("Charge");
 
-        int lastCharge = -1;
-        ArrayList<SpectrumIdentificationAssumption> currentSpectrumResults = null;
+        int lastId = -1, lastCharge = -1;
         int rank = 0;
+        SpectrumMatch currentMatch = null;
         String line;
 
         while ((line = reader.readLine()) != null) {
@@ -419,14 +416,16 @@ public class DirecTagIdfileReader implements IdfileReader {
                     lastCharge = Integer.parseInt(chargeString);
 
                 }
+                if (sId != lastId) {
 
-                String spectrumTitle = spectrumTitles[sId];
-                currentSpectrumResults = fileResults.get(spectrumTitle);
+                    if (currentMatch != null && currentMatch.getAllTagAssumptions().count() > 0) {
 
-                if (currentSpectrumResults == null) {
+                        result.add(currentMatch);
+                    }
 
-                    currentSpectrumResults = new ArrayList<>(4);
-                    fileResults.put(spectrumTitle, currentSpectrumResults);
+                    String spectrumTitle = spectrumTitles[sId];
+                    currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
+                    lastId = sId;
 
                 }
 
@@ -436,9 +435,14 @@ public class DirecTagIdfileReader implements IdfileReader {
                 TagAssumption tagAssumption = getAssumptionFromLine(line, rank);
                 //@TODO: check with the developers if this is correct
                 tagAssumption.setIdentificationCharge(lastCharge);
-                currentSpectrumResults.add(tagAssumption);
+                currentMatch.addTagAssumption(Advocate.direcTag.getIndex(), tagAssumption);
 
             }
+        }
+
+        if (currentMatch != null && currentMatch.getAllTagAssumptions().count() > 0) {
+
+            result.add(currentMatch);
         }
 
         return result;
@@ -446,7 +450,7 @@ public class DirecTagIdfileReader implements IdfileReader {
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
@@ -462,7 +466,7 @@ public class DirecTagIdfileReader implements IdfileReader {
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
@@ -471,6 +475,8 @@ public class DirecTagIdfileReader implements IdfileReader {
     ) throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
         direcTagParameters = (DirecTagParameters) searchParameters.getAlgorithmSpecificParameters().get(Advocate.direcTag.getIndex());
+
+        ArrayList<SpectrumMatch> result = new ArrayList<>(0);
 
         try ( SimpleFileReader reader = SimpleFileReader.getFileReader(tagFile)) {
 
@@ -489,7 +495,7 @@ public class DirecTagIdfileReader implements IdfileReader {
             if (!endOfFile) {
 
                 setDynamicMods();
-                return parseResults(
+                result = parseResults(
                         reader,
                         spectrumProvider.getSpectrumTitles(
                                 IoUtil.removeExtension(getInputFile().getName())
@@ -497,10 +503,7 @@ public class DirecTagIdfileReader implements IdfileReader {
                 );
             }
         }
-
-        // No result
-        return new HashMap<>(0);
-
+        return result;
     }
 
     /**
@@ -541,7 +544,7 @@ public class DirecTagIdfileReader implements IdfileReader {
         }
         String tagSequence = components[tagIndex];
         StringBuilder residues = new StringBuilder(tagSequence.length());
-        HashMap<Integer, ModificationMatch> modificationMatches = new HashMap<>(1);
+        HashMap<Integer, ModificationMatch> modificationMatches = new HashMap<>();
         for (int i = 0; i < tagSequence.length(); i++) {
             char charAtI = tagSequence.charAt(i);
             try {
@@ -681,8 +684,8 @@ public class DirecTagIdfileReader implements IdfileReader {
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
 
-        HashMap<String, ArrayList<String>> result = new HashMap<>(1);
-        ArrayList<String> versions = new ArrayList<>(1);
+        HashMap<String, ArrayList<String>> result = new HashMap<>();
+        ArrayList<String> versions = new ArrayList<>();
         versions.add(tagsGeneratorVersion);
         result.put(tagsGenerator, versions);
         return result;

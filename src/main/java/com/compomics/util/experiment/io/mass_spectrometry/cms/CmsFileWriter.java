@@ -11,9 +11,12 @@ import java.util.stream.Collectors;
 import static com.compomics.util.io.IoUtil.ENCODING;
 import static com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileUtils.MAGIC_NUMBER;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
+import com.compomics.util.experiment.mass_spectrometry.spectra.PrecursorParameter;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import com.compomics.util.experiment.personalization.UrParameter;
 import com.compomics.util.io.compression.ZstdUtils;
 import io.airlift.compress.zstd.ZstdCompressor;
+import java.util.HashMap;
 
 /**
  * Writer for cms files.
@@ -55,6 +58,12 @@ public class CmsFileWriter implements AutoCloseable {
      * List of the index of the spectra.
      */
     private final ArrayList<Integer> indexes = new ArrayList<>();
+    /**
+     * Map of which MSn spectra an MS(n-1) spectrum has created. The key is the
+     * identifier of the MS(n-1) spectrum and the resulting list contains the
+     * identifiers if the MSn spectra.
+     */
+    private final HashMap<String, ArrayList<String>> precursorMap = new HashMap<>();
     /**
      * Zstd compressor.
      */
@@ -106,7 +115,30 @@ public class CmsFileWriter implements AutoCloseable {
         indexes.add((int) index);
         titles.add(spectrumTitle);
 
+        // update the precusor mapping
+        UrParameter tempPrecursorParameter = spectrum.getUrParam(PrecursorParameter.dummy);
+
+        if (tempPrecursorParameter != null) {
+
+            PrecursorParameter precursorParameter = (PrecursorParameter) tempPrecursorParameter;
+            ArrayList<String> precursorIdentifiers = precursorParameter.getPrecusorIdentifiers();
+
+            for (String tempPrecursorIdentifier : precursorIdentifiers) {
+
+                if (!precursorMap.containsKey(tempPrecursorIdentifier)) {
+                    precursorMap.put(tempPrecursorIdentifier, new ArrayList<>());
+                }
+
+                precursorMap.get(tempPrecursorIdentifier).add(spectrumTitle);
+
+            }
+
+            // remove the precursor map as it is no longer needed
+            //spectrum.removeUrParam(precursorParameter.getParameterKey()); // @TODO: worth considering?
+        }
+
         Precursor precursor = spectrum.precursor;
+
         double precursorMz = precursor == null ? Double.NaN : precursor.mz;
         double precursorRt = precursor == null ? Double.NaN : precursor.rt;
         double precursorIntensity = precursor == null ? Double.NaN : precursor.intensity;
@@ -239,9 +271,32 @@ public class CmsFileWriter implements AutoCloseable {
                 )
                 .collect(Collectors.joining(CmsFileUtils.TITLE_SEPARATOR));
 
+        StringBuilder precursorMapString = new StringBuilder();
+
+        for (String spectrumKey : precursorMap.keySet()) { // @TODO: has to be a more elegant way of doing this..?
+
+            if (precursorMapString.length() > 0) {
+                precursorMapString.append(" # ");
+            }
+
+            precursorMapString.append(spectrumKey).append("");
+            String tempListAsText = precursorMap.get(spectrumKey).stream().collect(Collectors.joining(",")); // @TODO: use index instead of the spectrum id?
+            precursorMapString.append(" {").append(tempListAsText).append(("}"));
+
+        }
+
+        String precursorMapAsString;
+        
+        if (!precursorMap.isEmpty()) {
+            precursorMapAsString = precursorMapString.toString();
+        } else {
+            precursorMapAsString = "null";
+        }
+
         String titleIndexString = String.join(CmsFileUtils.TITLE_SEPARATOR,
                 titleString,
-                indexString
+                indexString,
+                precursorMapAsString
         );
 
         byte[] titleBytes = titleIndexString.getBytes(ENCODING);

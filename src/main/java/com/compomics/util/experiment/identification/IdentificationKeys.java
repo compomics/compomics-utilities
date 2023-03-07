@@ -1,6 +1,7 @@
 package com.compomics.util.experiment.identification;
 
 import com.compomics.util.experiment.personalization.ExperimentObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -14,34 +15,27 @@ public class IdentificationKeys extends ExperimentObject {
     /**
      * Key to use in the database.
      */
-    public static final int KEY = ExperimentObject.getHash("IdentificationKeys");
+    public static final long KEY = ExperimentObject.asLong("IdentificationKeys");
     /**
-     * The keys of all protein matches.
+     * List of the keys of all imported proteins.
      */
-    public int[] proteinIdentification;
+    public final HashSet<Long> proteinIdentification = new HashSet<>();
     /**
-     * The keys of all peptide matches.
+     * List of the keys of all imported peptides.
      */
-    public int[] peptideIdentification;
+    public final HashSet<Long> peptideIdentification = new HashSet<>();
     /**
-     * The keys of all spectrum matches
+     * Map mapping spectra per file.
      */
-    public int[] spectrumIdentification;
-    /**
-     * The keys of all peptide assumptions
-     */
-    public int[] peptideAssumptions;
-    /**
-     * The keys of all tag assumptions
-     */
-    public int[] tagAssumptions;
+    public HashMap<String, HashSet<Long>> spectrumIdentification = new HashMap<>();
     /**
      * A map linking protein accessions to all their protein matches keys.
      */
-    public final HashMap<String, HashSet<Integer>> proteinMap = new HashMap<>();
+    public final HashMap<String, HashSet<Long>> proteinMap = new HashMap<>();
     /**
-     * The keys of the spectrum files.
+     * The names of the spectrum files (without extensions) that were used for
+     * the PSMs.
      */
-    public int[] fractions;
+    public ArrayList<String> fractions = new ArrayList<>();
 
 }

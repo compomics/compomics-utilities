@@ -1,8 +1,6 @@
 package com.compomics.cli.peptide_mapper;
 
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
-import com.compomics.util.experiment.biology.proteins.Peptide;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.amino_acid_tags.MassGap;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
@@ -17,23 +15,17 @@ import java.io.PrintWriter;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import com.compomics.util.experiment.identification.protein_inference.FastaMapper;
-import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
-import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.io.identification.IdfileReaderFactory;
 import com.compomics.util.experiment.io.mass_spectrometry.MsFileHandler;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.compression.ZipUtils;
-import com.compomics.util.io.flat.SimpleFileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -41,7 +33,6 @@ import java.util.stream.Collectors;
  * Command line peptide mapping.
  *
  * @author Dominik Kopczynski
- * @author Marc Vaudel
  */
 public class PeptideMapperCLI {
 
@@ -205,7 +196,7 @@ public class PeptideMapperCLI {
 
             }
 
-            HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> results = new HashMap<>(0);
+            ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
 
             for (File idFile : idFiles) {
 
@@ -219,152 +210,60 @@ public class PeptideMapperCLI {
                     System.exit(-1);
                 }
 
-                HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> newMatches = fileReader.getAllSpectrumMatches(
+                spectrumMatches.addAll(fileReader.getAllSpectrumMatches(
                         msFileHandler,
                         null,
                         identificationParameters.getSearchParameters(),
                         identificationParameters.getSequenceMatchingParameters(),
                         true
-                );
+                ));
 
-                for (Entry<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> entry1 : newMatches.entrySet()) {
-
-                    HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = results.get(entry1.getKey());
-
-                    if (fileResults == null) {
-
-                        results.put(entry1.getKey(), entry1.getValue());
-
-                    } else {
-
-                        for (Entry<String, ArrayList<SpectrumIdentificationAssumption>> entry2 : entry1.getValue().entrySet()) {
-
-                            ArrayList<SpectrumIdentificationAssumption> spectrumResults = fileResults.get(entry2.getKey());
-
-                            if (spectrumResults == null) {
-
-                                fileResults.put(entry2.getKey(), entry2.getValue());
-
-                            } else {
-
-                                spectrumResults.addAll(entry2.getValue());
-
-                            }
-                        }
-                    }
-                }
             }
 
-            boolean hasPeptides = results.values().stream()
-                    .flatMap(
-                            map -> map.values().stream()
-                    )
-                    .flatMap(
-                            array -> array.stream()
-                    )
-                    .anyMatch(
-                            spectrumIdentificationAssumption -> spectrumIdentificationAssumption instanceof PeptideAssumption
-                    );
-            boolean hasTags = results.values().stream()
-                    .flatMap(
-                            map -> map.values().stream()
-                    )
-                    .flatMap(
-                            array -> array.stream()
-                    )
-                    .anyMatch(
-                            spectrumIdentificationAssumption -> spectrumIdentificationAssumption instanceof TagAssumption
-                    );
+            boolean hasPeptides = false;
+            boolean hasTags = false;
+            for (SpectrumMatch spectrumMatch : spectrumMatches) {
+                hasPeptides |= spectrumMatch.hasPeptideAssumption();
+                hasTags |= spectrumMatch.hasTagAssumption();
+            }
 
-            SimpleFileWriter writerPeptides = null;
-            SimpleFileWriter writerTags = null;
-
-            String exportFolder = (new File(args[1])).getParent();
-            String exportFile = (new File(args[1])).getName();
+            PrintWriter writerPeptides = null;
+            PrintWriter writerTags = null;
 
             try {
                 if (hasPeptides) {
-
-                    writerPeptides = new SimpleFileWriter(new File(exportFolder, exportFile + "_peptidemapper_peptides.gz"), true);
-                    writerPeptides.writeLine("File", "Title", "Accessions", "Sequence", "Modifications");
-
+                    writerPeptides = new PrintWriter(Paths.get((new File(args[1])).getParent(), "extracted-peptides.csv").toFile(), "UTF-8");
                 }
                 if (hasTags) {
-
-                    writerTags = new SimpleFileWriter(new File(exportFolder, exportFile + "_peptidemapper_tags.gz"), true);
-                    writerTags.writeLine("File", "Title", "Sequence", "Modifications");
-
+                    writerTags = new PrintWriter(Paths.get((new File(args[1])).getParent(), "extracted-tags.csv").toFile(), "UTF-8");
                 }
             } catch (Exception e) {
                 handleError("Opening error", "Error: could not open output files properly.", e);
             }
 
-            for (Entry<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> entry1 : results.entrySet()) {
+            for (SpectrumMatch spectrumMatch : spectrumMatches) {
+                if (spectrumMatch.hasPeptideAssumption()) {
+                    ArrayList<String> peptides = spectrumMatch.getAllPeptideAssumptions()
+                            .map(assumption -> assumption.getPeptide().getSequence())
+                            .collect(Collectors.toCollection(ArrayList::new));
 
-                for (Entry<String, ArrayList<SpectrumIdentificationAssumption>> entry2 : entry1.getValue().entrySet()) {
+                    for (String peptide : peptides) {
+                        try {
+                            writerPeptides.println(peptide);
+                        } catch (Exception e) {
+                            handleError("Writing error", "Error: could not write into file.", e);
+                        }
+                    }
+                } else if (spectrumMatch.hasTagAssumption()) {
+                    ArrayList<String> sequenceTags = spectrumMatch.getAllTagAssumptions()
+                            .map(assumption -> tagToString(assumption.getTag()))
+                            .collect(Collectors.toCollection(ArrayList::new));
 
-                    for (SpectrumIdentificationAssumption spectrumIdentificationAssumption : entry2.getValue()) {
-
-                        if (spectrumIdentificationAssumption instanceof PeptideAssumption) {
-
-                            PeptideAssumption peptideAssumption = (PeptideAssumption) spectrumIdentificationAssumption;
-                            Peptide peptide = peptideAssumption.getPeptide();
-                            String proteins = peptide.getProteinMapping().entrySet().stream()
-                                    .map(
-                                            entry -> entry.getKey() + "("
-                                            + Arrays.stream(entry.getValue())
-                                                    .mapToObj(
-                                                            position -> String.valueOf(position)
-                                                    )
-                                                    .collect(Collectors.joining(",")) + ")"
-                                    )
-                                    .collect(Collectors.joining(";"));
-                            String modifications = Arrays.stream(peptide.getVariableModifications())
-                                    .map(
-                                            modificationMatch -> modificationMatch.getModification() + "(" + modificationMatch.getSite() + ")"
-                                    )
-                                    .collect(Collectors.joining("1"));
-
-                            writerPeptides.writeLine(
-                                    entry1.getKey(),
-                                    entry2.getKey(),
-                                    proteins,
-                                    peptide.getSequence(),
-                                    modifications
-                            );
-
-                        } else if (spectrumIdentificationAssumption instanceof TagAssumption) {
-
-                            TagAssumption tagAssumption = (TagAssumption) spectrumIdentificationAssumption;
-                            Tag tag = tagAssumption.getTag();
-                            String modifications = tag.getContent().stream()
-                                    .filter(
-                                            tagComponent -> tagComponent instanceof AminoAcidSequence
-                                    )
-                                    .map(
-                                            tagComponent -> (AminoAcidSequence) tagComponent
-                                    )
-                                    .map(
-                                            aminoAcidSequence -> aminoAcidSequence.asSequence() + "{"
-                                            + Arrays.stream(aminoAcidSequence.getVariableModifications())
-                                                    .map(
-                                                            modificationMatch -> modificationMatch.getModification() + "(" + modificationMatch.getSite() + ")"
-                                                    )
-                                                    .collect(Collectors.joining("1")) + "}"
-                                    )
-                                    .collect(Collectors.joining(";"));
-
-                            writerTags.writeLine(
-                                    entry1.getKey(),
-                                    entry2.getKey(),
-                                    tag.asSequence(),
-                                    modifications
-                            );
-
-                        } else {
-
-                            throw new UnsupportedClassVersionError("No export implemented for object of class " + spectrumIdentificationAssumption.getClass() + ".");
-
+                    for (String sequenceTag : sequenceTags) {
+                        try {
+                            writerTags.println(sequenceTag);
+                        } catch (Exception e) {
+                            handleError("Writing error", "Error: could not write into file.", e);
                         }
                     }
                 }
@@ -388,11 +287,6 @@ public class PeptideMapperCLI {
         }
     }
 
-    /**
-     * Parses the command line parameters.
-     * 
-     * @param args The command line parameters.
-     */
     public static void handleParameters(String[] args) {
 
         if (args.length < 4) {
@@ -476,13 +370,6 @@ public class PeptideMapperCLI {
                 peptideMapping);
     }
 
-    /**
-     * Handles errors.
-     * 
-     * @param outputFileName The name of the output file.
-     * @param errorMessage The error message to write.
-     * @param e The error encountered.
-     */
     public static void handleError(String outputFileName, String errorMessage, Throwable e) {
         PrintWriter writer = null;
         System.out.println(errorMessage);
@@ -509,17 +396,6 @@ public class PeptideMapperCLI {
         System.exit(-1);
     }
 
-    /**
-     * Runs PeptideMapper.
-     * 
-     * @param fastaFile The file containing the protein sequences.
-     * @param waitingHandlerCLIImpl The waiting handler to use to display progress.
-     * @param identificationParameters The identification parameters.
-     * @param inputFileName The file containing the ids to match.
-     * @param outputFileName The name of the output file.
-     * @param nCores The number of cores to use.
-     * @param peptideMapping A boolean indicating whether peptide sequences should be mapped.
-     */
     public static void runMapping(File fastaFile,
             WaitingHandlerCLIImpl waitingHandlerCLIImpl,
             IdentificationParameters identificationParameters,

@@ -102,6 +102,12 @@ public abstract class Ion extends ExperimentObject {
     protected IonType type = IonType.UNKNOWN;
     /**
      * The theoretic mass.
+     * 
+     * @deprecated use the double value instead.
+     */
+    protected Double theoreticMass;
+    /**
+     * The theoretic mass.
      */
     protected double theoreticMass1;
     /**
@@ -153,7 +159,7 @@ public abstract class Ion extends ExperimentObject {
      * Returns an array of possible subtypes.
      *
      * @param ionType an array of possible subtypes
-     *
+     * 
      * @return an array of possible subtypes
      */
     public static int[] getPossibleSubtypes(IonType ionType) {
@@ -183,17 +189,17 @@ public abstract class Ion extends ExperimentObject {
      * Returns a hashset of possible subtypes.
      *
      * @param ionType a hashset of possible subtypes
-     *
+     * 
      * @return a hashset of possible subtypes
      */
     public static HashSet<Integer> getPossibleSubtypesAsSet(IonType ionType) {
-
+        
         int[] possibleSubtypes = getPossibleSubtypes(ionType);
-
+        
         return Arrays.stream(possibleSubtypes)
                 .boxed()
                 .collect(Collectors.toCollection(HashSet::new));
-
+        
     }
 
     /**
@@ -248,19 +254,19 @@ public abstract class Ion extends ExperimentObject {
      * @return the neutral loss
      */
     public static String getNeutralLossesAsString(NeutralLoss[] neutralLosses) {
-
-        if (neutralLosses == null || neutralLosses.length == 0) {
+        if (neutralLosses == null) {
             return "";
         }
-
-        return Arrays.stream(neutralLosses)
-                .map(
-                        neutralLoss -> neutralLoss.name
-                )
-                .sorted()
-                .collect(
-                        Collectors.joining("-", "-", "")
-                );
+        ArrayList<String> names = new ArrayList<>(neutralLosses.length);
+        for (NeutralLoss neutralLoss : neutralLosses) {
+            names.add(neutralLoss.name);
+        }
+        Collections.sort(names);
+        StringBuilder result = new StringBuilder(4 * neutralLosses.length);
+        for (String name : names) {
+            result.append('-').append(name);
+        }
+        return result.toString();
     }
 
     /**

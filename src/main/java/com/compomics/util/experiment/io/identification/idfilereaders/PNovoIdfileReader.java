@@ -2,7 +2,6 @@ package com.compomics.util.experiment.io.identification.idfilereaders;
 
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.identification.Advocate;
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.parameters.identification.tool_specific.PNovoParameters;
@@ -55,7 +54,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
@@ -72,7 +71,7 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
     }
 
     @Override
-    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
@@ -88,48 +87,47 @@ public class PNovoIdfileReader extends ExperimentObject implements IdfileReader 
         String fileName = IoUtil.getFileName(identificationFile);
         String mgfFileName = getMgfFileName(fileName);
 
-        HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> result = new HashMap<>(1);
-        HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = result.get(mgfFileName);
-        result.put(mgfFileName, fileResults);
+        ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
 
         try (SimpleFileReader reader = SimpleFileReader.getFileReader(identificationFile)) {
 
-            ArrayList<SpectrumIdentificationAssumption> spectrumResults = null;
+            SpectrumMatch currentMatch = null;
+            int rank = 1;
             String line;
             while ((line = reader.readLine()) != null) {
 
                 if (line.charAt(0) == 'S') {
 
+                    if (currentMatch != null) {
+
+                        spectrumMatches.add(currentMatch);
+                        rank = 1;
+
+                    }
+
                     String[] splitLine = line.split("\\t");
+                    String spectrumTitle = splitLine[1].trim();
 
                     // remove any html from the title
-                   String spectrumTitle = URLDecoder.decode(splitLine[1].trim(), ENCODING);
-                   
-                   spectrumResults = fileResults.get(spectrumTitle);
-                   
-                   if (spectrumResults == null) {
-                       
-                       spectrumResults = new ArrayList<>(4);
-                       fileResults.put(spectrumTitle, spectrumResults);
-                       
-                   }
+                    String decodedTitle = URLDecoder.decode(spectrumTitle, ENCODING);
+
+                    currentMatch = new SpectrumMatch(mgfFileName, decodedTitle);
 
                 } else if (line.charAt(0) == 'P') {
 
-                    if (spectrumResults == null) {
+                    if (currentMatch == null) {
 
                         throw new IllegalArgumentException("No spectrum title found for peptide.\n" + line);
 
                     }
 
-                    TagAssumption tagAssumption = getAssumptionFromLine(line, spectrumResults.size() + 1, searchParameters);
-                    spectrumResults.add(tagAssumption);
+                    currentMatch.addTagAssumption(Advocate.pNovo.getIndex(), getAssumptionFromLine(line, rank, searchParameters));
 
                 }
             }
         }
 
-        return result;
+        return spectrumMatches;
     }
 
     /**

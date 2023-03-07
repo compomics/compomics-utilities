@@ -42,36 +42,19 @@ public class Charge {
     public static String getChargeAsFormattedString(int value) {
 
         if (value == 1) {
-            
             return "";
-        
-        } else if (value == 2) {
-            
-            return "++";
-            
-        } else if (value == 3) {
-            
-            return "+++";
-            
         }
-        
-        int absValue = Math.abs(value);
 
-        StringBuilder chargeAsString = new StringBuilder(absValue);
+        String temp = "";
 
-        for (int i = 0; i < absValue; i++) {
-            
+        for (int i = 0; i < Math.abs(value); i++) {
             if (value > 0) {
-
-                chargeAsString.append('+');
-
+                temp += "+";
             } else {
-
-                chargeAsString.append('-');
-
+                temp += "-";
             }
         }
 
-        return chargeAsString.toString();
+        return temp;
     }
 }

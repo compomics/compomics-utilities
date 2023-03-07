@@ -28,6 +28,10 @@ public class PeptideMatch extends IdentificationMatch {
     @Override
     public long getKey() {
         
+        
+        
+        
+        
         return key;
     }
 
@@ -38,6 +42,10 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public void setKey(long newKey) {
         
+        
+        
+        
+        
         this.key = newKey;
     }
     
@@ -45,6 +53,8 @@ public class PeptideMatch extends IdentificationMatch {
     /**
      * Default Constructor for the peptide match.
      */
+    
+    
     public PeptideMatch(){
         
     }
@@ -56,7 +66,11 @@ public class PeptideMatch extends IdentificationMatch {
      * @param matchKey the key of the match as referenced in the identification
      * @param spectrumMatchKey the key of a spectrum match linked to this peptide
      */
-    public PeptideMatch(Peptide peptide, long matchKey, long spectrumMatchKey) {        
+    public PeptideMatch(Peptide peptide, long matchKey, long spectrumMatchKey) {
+        
+        
+        
+        
         
         this.peptide = peptide;
         this.key = matchKey;
@@ -73,6 +87,10 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public Peptide getPeptide() {
         
+        
+        
+        
+        
         return peptide;
     }
 
@@ -83,6 +101,10 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public void setPeptide(Peptide peptide) {
         
+        
+        
+        
+        
         this.peptide = peptide;
     }
 
@@ -92,6 +114,10 @@ public class PeptideMatch extends IdentificationMatch {
      * @return the keys of all spectrum matches
      */
     public long[] getSpectrumMatchesKeys() {
+        
+        
+        
+        
         
         return spectrumMatchesKeys;
         
@@ -104,6 +130,10 @@ public class PeptideMatch extends IdentificationMatch {
      */
     public void setSpectrumMatchesKeys(long[] spectrumMatchesKeys) {
         
+        
+        
+        
+        
         this.spectrumMatchesKeys = spectrumMatchesKeys;
         
     }
@@ -114,6 +144,10 @@ public class PeptideMatch extends IdentificationMatch {
      * @param spectrumMatchKey the key of a spectrum match
      */
     public void addSpectrumMatchKey(long spectrumMatchKey) {
+        
+        
+        
+        
         
         spectrumMatchesKeys =  Arrays.copyOf(spectrumMatchesKeys, spectrumMatchesKeys.length + 1);
         
@@ -127,6 +161,11 @@ public class PeptideMatch extends IdentificationMatch {
      * @return spectrum count
      */
     public int getSpectrumCount() {
+        
+        
+        
+        
+        
         return spectrumMatchesKeys.length;
     }
 

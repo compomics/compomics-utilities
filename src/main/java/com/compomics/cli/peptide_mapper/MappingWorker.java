@@ -19,8 +19,7 @@ import com.compomics.util.parameters.identification.IdentificationParameters;
 /**
  * MappingWorker.
  *
- * @author Dominik Kopczynski
- * @author Marc Vaudel
+ * @author dominik.kopczynski
  */
 public class MappingWorker implements Runnable {
 
@@ -34,16 +33,6 @@ public class MappingWorker implements Runnable {
     boolean peptideMapping = false;
     public Exception exception = null;
 
-    /**
-     * Constructor.
-     * 
-     * @param waitingHandlerCLIImpl The waiting handler to use to display progress.
-     * @param peptideMapper the peptide mapper object.
-     * @param identificationParameters The identification parameters.
-     * @param br The reader where to read the input.
-     * @param writer The writer where to write the output.
-     * @param peptideMapping A boolean indicating whether peptide sequences should be mapped.
-     */
     public MappingWorker(WaitingHandlerCLIImpl waitingHandlerCLIImpl,
             FastaMapper peptideMapper,
             IdentificationParameters identificationParameters,
@@ -60,44 +49,33 @@ public class MappingWorker implements Runnable {
         this.peptideMapping = peptideMapping;
     }
 
-    /**
-     * Flanks the peptide with prefix and suffix characters.
-     *
-     * @param peptideProteinMapping The peptide to protein mapping.
-     * @param peptideMapper The peptide mapper.
-     *
-     * @return The flanked sequence.
-     */
     public String flanking(PeptideProteinMapping peptideProteinMapping, FastaMapper peptideMapper) {
-
+        
         String peptide = peptideProteinMapping.getPeptideSequence();
         String accession = peptideProteinMapping.getProteinAccession();
         int peptideLength = peptide.length();
-        StringBuilder flankedSequence = new StringBuilder(peptideLength + 4);
 
         char prefixChar = ((FMIndex) peptideMapper).prefixCharacter(accession, peptideProteinMapping.fmIndexPosition);
         if (prefixChar != FMIndex.DELIMITER) {
-            flankedSequence.append(prefixChar).append('.');
+            peptide = Character.toString(prefixChar) + "." + peptide;
         } else {
-            flankedSequence.append('-');
+            peptide = "-" + peptide;
         }
-
-        flankedSequence.append(peptide);
 
         char suffixChar = ((FMIndex) peptideMapper).suffixCharacter(accession, peptideProteinMapping.fmIndexPosition, peptideLength + 1);
         if (suffixChar != FMIndex.DELIMITER) {
-            flankedSequence.append('.').append(suffixChar);
+            peptide += "." + Character.toString(suffixChar);
 
         } else {
-            flankedSequence.append('-');
+            peptide += "-";
         }
 
-        return flankedSequence.toString();
+        return peptide;
     }
 
     @Override
     public void run() {
-
+        
         ArrayList<String> rows = new ArrayList<>();
         HashSet<String> outputData = new HashSet<>();
 

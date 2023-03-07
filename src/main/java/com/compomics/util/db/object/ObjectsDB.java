@@ -5,10 +5,12 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.util.*;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import java.sql.*;
 import java.util.Map.Entry;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.SerializationUtils;
 
 /**
  * A database which can easily be used to store objects.
@@ -41,6 +43,10 @@ public class ObjectsDB {
      */
     private Connection connection = null;
     /**
+     * Configuration for fast serialization.
+     */
+    public Kryo kryo;
+    /**
      * HashMap to map hash IDs of entries into DB ids.
      */
     private static boolean connectionActive = false;
@@ -51,7 +57,7 @@ public class ObjectsDB {
     /**
      * Keys stored in the backend.
      */
-    private HashSet<Integer> keysInBackend = new HashSet<>();
+    private HashSet<Long> keysInBackend = new HashSet<>();
 
     /**
      * Empty default constructor.
@@ -84,6 +90,10 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " Creating database");
         }
 
+        kryo = new Kryo();
+        //kryo.setDefaultSerializer(CompatibleFieldSerializer.class); // @TODO: add when breaking backwards compatibility anyway
+        kryo.setRegistrationRequired(false);
+
         this.path = path;
         this.dbName = dbName;
 
@@ -113,13 +123,9 @@ public class ObjectsDB {
     public void commit() {
 
         try {
-            
             dbMutex.acquire();
             connection.commit();
-            
-        } catch (SQLException e) {
-            
-            // Ignore and hope for the best
+        } catch (Exception e) {
 
         } finally {
             dbMutex.release();
@@ -197,7 +203,7 @@ public class ObjectsDB {
      * @param objectKey the key of the object
      * @param object the object to store
      */
-    public void insertObject(int objectKey, Object object) {
+    public void insertObject(long objectKey, Object object) {
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis()
@@ -222,21 +228,27 @@ public class ObjectsDB {
      * @param className the class name
      * @return the iterator
      */
-    public HashSet<Integer> getClassObjectIDs(Class className) {
+    public HashSet<Long> getClassObjectIDs(Class className) {
         return getClassObjectIDs(className, null);
     }
 
     /**
-     * Returns a all keys of the objects of a given class.
+     * Returns an iterator of all objects of a given class.
      *
      * @param className the class name
      * @param filters string with filters;
      * @return the iterator
      */
-    public HashSet<Integer> getClassObjectIDs(Class className, String filters) {
+    public HashSet<Long> getClassObjectIDs(Class className, String filters) {
 
-        HashSet<Integer> cacheIDs = objectsCache.getClassInCache(className);
-        HashSet<Integer> classObjectIds = cacheIDs != null ? new HashSet<>(cacheIDs) : new HashSet<>();
+        HashSet<Long> cacheIDs = objectsCache.getClassInCache(className);
+        HashSet<Long> classObjectIds;
+
+        if (cacheIDs != null) {
+            classObjectIds = new HashSet<>(cacheIDs);
+        } else {
+            classObjectIds = new HashSet<>();
+        }
 
         String sqlQuery = "SELECT id FROM data WHERE class = ?";
 
@@ -253,16 +265,16 @@ public class ObjectsDB {
 
             // set the value
             pstmt.setString(1, className.getName());
-            // execute query
+            //
             ResultSet rs = pstmt.executeQuery();
 
             // loop through the result set
             while (rs.next()) {
-                classObjectIds.add(rs.getInt("id"));
+                classObjectIds.add(rs.getLong("id"));
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } finally {
             dbMutex.release();
         }
@@ -280,14 +292,14 @@ public class ObjectsDB {
      * method should be displayed on the waiting handler
      */
     public void insertObjects(
-            HashMap<Integer, Object> objects,
+            HashMap<Long, Object> objects,
             WaitingHandler waitingHandler,
             boolean displayProgress
     ) {
 
-        for (Entry<Integer, Object> entry : objects.entrySet()) {
+        for (Entry<Long, Object> entry : objects.entrySet()) {
 
-            int objectKey = entry.getKey();
+            long objectKey = entry.getKey();
             Object object = entry.getValue();
 
             if (object == null) {
@@ -320,7 +332,7 @@ public class ObjectsDB {
      * @param objectKey the keys of the objects to load
      * @return object the object loaded from the database
      */
-    private Object loadFromDB(int objectKey) {
+    private Object loadFromDB(long objectKey) {
 
         Object object = null;
 
@@ -328,17 +340,26 @@ public class ObjectsDB {
 
             dbMutex.acquire();
             PreparedStatement pstmt = connection.prepareStatement("SELECT class, data FROM data WHERE id = ?;");
-            pstmt.setInt(1, objectKey);
+            pstmt.setLong(1, objectKey);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
 
-                object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
+                // kryo
+                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
+                Input input = new Input(bis);
+                Class<?> c = Class.forName(rs.getString("class"));
+                object = kryo.readObject(input, c);
+                input.close();
+                bis.close();
+
+                // standard java serialization
+//                object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
 
             }
 
-        } catch (IOException | SQLException ex) {
-            throw new RuntimeException(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         } finally {
             dbMutex.release();
         }
@@ -355,15 +376,15 @@ public class ObjectsDB {
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      */
-    public void loadObjects(Collection<Integer> keys, WaitingHandler waitingHandler, boolean displayProgress) {
+    public void loadObjects(Collection<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) {
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " loading " + keys.size() + " objects");
         }
 
-        HashMap<Integer, Object> objectsNotInCache = new HashMap<>();
+        HashMap<Long, Object> objectsNotInCache = new HashMap<>();
 
-        for (int objectKey : keys) {
+        for (long objectKey : keys) {
 
             if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                 return;
@@ -381,7 +402,6 @@ public class ObjectsDB {
         }
 
         objectsCache.addObjects(objectsNotInCache, true, false);
-
     }
 
     /**
@@ -399,7 +419,7 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " loading all " + className.getName() + " objects");
         }
 
-        HashMap<Integer, Object> objectsNotInCache = new HashMap<>();
+        HashMap<Long, Object> objectsNotInCache = new HashMap<>();
 
         try {
 
@@ -414,21 +434,28 @@ public class ObjectsDB {
                     return;
                 }
 
-                Object object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
+                // kryo
+                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
+                Input input = new Input(bis);
+                Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
+                input.close();
+                bis.close();
 
-                int objectKey = rs.getInt("id");
+                // standard java serialization
+//                Object object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
+                
+                long objectKey = rs.getLong("id");
 
                 objectsNotInCache.put(objectKey, object);
             }
 
-        } catch (IOException | SQLException ex) {
-            throw new RuntimeException(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         } finally {
             dbMutex.release();
         }
 
         objectsCache.addObjects(objectsNotInCache, true, false);
-
     }
 
     /**
@@ -437,7 +464,7 @@ public class ObjectsDB {
      * @param objectKey the key of the object to load
      * @return the retrieved object
      */
-    public Object retrieveObject(int objectKey) {
+    public Object retrieveObject(long objectKey) {
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " | retrieving one object with key: " + objectKey);
@@ -456,7 +483,6 @@ public class ObjectsDB {
         }
 
         return obj;
-
     }
 
     /**
@@ -467,21 +493,17 @@ public class ObjectsDB {
      * @return the number of objects
      *
      */
-    public int getNumberOfInstances(Class className) {
-
+    public int getNumber(Class className) {
         return getClassObjectIDs(className).size();
-
     }
 
     /**
      * Triggers a dump of all objects within the cache into the database.
      */
     public void dumpToDB() {
-
         dbMutex.acquire();
         objectsCache.saveCache(null, false);
         dbMutex.release();
-
     }
 
     /**
@@ -495,7 +517,7 @@ public class ObjectsDB {
      *
      * @return a list of objects
      */
-    public ArrayList<Object> retrieveObjects(Collection<Integer> keys, WaitingHandler waitingHandler, boolean displayProgress) {
+    public ArrayList<Object> retrieveObjects(Collection<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) {
 
         ArrayList<Object> retrievingObjects = new ArrayList<>(keys.size());
 
@@ -503,9 +525,9 @@ public class ObjectsDB {
             System.out.println(System.currentTimeMillis() + " retrieving " + keys.size() + " objects");
         }
 
-        HashMap<Integer, Object> objectsNotInCache = new HashMap<>();
+        HashMap<Long, Object> objectsNotInCache = new HashMap<>();
 
-        for (int objectKey : keys) {
+        for (long objectKey : keys) {
 
             if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                 return retrievingObjects;
@@ -518,9 +540,9 @@ public class ObjectsDB {
                 obj = loadFromDB(objectKey);
 
                 if (obj != null) {
-
                     objectsNotInCache.put(objectKey, obj);
                 }
+
             }
 
             retrievingObjects.add(obj);
@@ -528,7 +550,6 @@ public class ObjectsDB {
 
         objectsCache.addObjects(objectsNotInCache, true, false);
         return retrievingObjects;
-
     }
 
     /**
@@ -537,14 +558,13 @@ public class ObjectsDB {
      * @param objectKey the object key
      * @param object the object
      */
-    public void updateObject(int objectKey, Object object) {
+    public void updateObject(long objectKey, Object object) {
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " | retrieving one object with key: " + objectKey);
         }
 
         objectsCache.addObject(objectKey, object, inBackend(objectKey), true);
-
     }
 
     /**
@@ -561,14 +581,11 @@ public class ObjectsDB {
     public ArrayList<Object> retrieveObjects(Class className, WaitingHandler waitingHandler, boolean displayProgress) {
 
         ArrayList<Object> retrievingObjects = new ArrayList<>();
-        HashMap<Integer, Object> objectsNotInCache = new HashMap<>();
-        HashSet<Integer> objectInCache = objectsCache.getClassInCache(className);
-
-        objectInCache.forEach(
-                key -> {
-                    retrievingObjects.add(objectsCache.getObject(key));
-                }
-        );
+        HashMap<Long, Object> objectsNotInCache = new HashMap<>();
+        HashSet<Long> objectInCache = objectsCache.getClassInCache(className);
+        objectInCache.forEach(key -> {
+            retrievingObjects.add(objectsCache.getObject(key));
+        });
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " retrieving all " + className + " objects");
@@ -586,46 +603,46 @@ public class ObjectsDB {
                 if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                     return retrievingObjects;
                 }
+                
+                // kryo
+                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
+                Input input = new Input(bis);
+                Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
+                input.close();
+                bis.close();           
 
-                Object object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
-
-                int objectKey = rs.getInt("id");
-
+                // standard java serialization
+//                Object object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
+                
+                long objectKey = rs.getLong("id");
+                
                 if (!objectInCache.contains(objectKey)) {
-
                     objectsNotInCache.put(objectKey, object);
-
                 }
 
                 retrievingObjects.add(object);
-
             }
 
-        } catch (IOException | SQLException ex) {
-
-            throw new RuntimeException(ex);
-
+        } catch (Exception ex) {
+            ex.printStackTrace();
         } finally {
-
             dbMutex.release();
-
         }
 
         objectsCache.addObjects(objectsNotInCache, true, false);
         return retrievingObjects;
-
     }
 
     /**
      * Removing an object from the cache and database.
      *
-     * @param keys the keys
+     * @param keys the object key
      * @param waitingHandler the waiting handler allowing displaying progress
      * and canceling the process
      * @param displayProgress boolean indicating whether the progress of this
      * method should be displayed on the waiting handler
      */
-    public void removeObjects(Collection<Integer> keys, WaitingHandler waitingHandler, boolean displayProgress) {
+    public void removeObjects(Collection<Long> keys, WaitingHandler waitingHandler, boolean displayProgress) {
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " removing " + keys.size() + " objects");
@@ -636,20 +653,20 @@ public class ObjectsDB {
             dbMutex.acquire();
             PreparedStatement pstmt = connection.prepareStatement("DELETE FROM data WHERE id = ?;");
 
-            for (int key : keys) {
+            for (long key : keys) {
 
                 if (waitingHandler.isRunCanceled()) {
                     break;
                 }
 
                 objectsCache.removeObject(key);
-                pstmt.setInt(1, key);
+                pstmt.setLong(1, key);
                 pstmt.executeUpdate();
 
             }
 
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         } finally {
             dbMutex.release();
         }
@@ -661,7 +678,7 @@ public class ObjectsDB {
      *
      * @param key the object key
      */
-    public void removeObject(int key) {
+    public void removeObject(long key) {
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " removing object: " + key);
@@ -672,18 +689,15 @@ public class ObjectsDB {
             objectsCache.removeObject(key);
             dbMutex.acquire();
             PreparedStatement pstmt = connection.prepareStatement("DELETE FROM data WHERE id = ?;");
-            pstmt.setInt(1, key);
+            pstmt.setLong(1, key);
             pstmt.executeUpdate();
 
-        } catch (SQLException ex) {
-
-            throw new RuntimeException(ex);
-
+        } catch (Exception ex) {
+            ex.printStackTrace();
         } finally {
-
             dbMutex.release();
-
         }
+
     }
 
     /**
@@ -693,10 +707,8 @@ public class ObjectsDB {
      *
      * @return a boolean indicating whether an object is loaded
      */
-    public boolean inCache(int objectKey) {
-
+    public boolean inCache(long objectKey) {
         return objectsCache.inCache(objectKey);
-
     }
 
     /**
@@ -706,16 +718,14 @@ public class ObjectsDB {
      *
      * @return a boolean indicating whether an object is loaded
      */
-    public boolean inDB(int objectKey) {
+    public boolean inDB(long objectKey) {
 
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Checking db content,  key: " + objectKey);
         }
 
         if (objectsCache.inCache(objectKey)) {
-
             return true;
-
         }
 
         return inBackend(objectKey);
@@ -728,10 +738,28 @@ public class ObjectsDB {
      *
      * @return a boolean indicating whether an object is loaded
      */
-    public boolean inBackend(int objectKey) {
-
+    public boolean inBackend(long objectKey) {
         return keysInBackend.contains(objectKey);
+        /*
+        boolean result = false;
+        try {
+            dbMutex.acquire();
+            PreparedStatement pstmt = connection.prepareStatement("SELECT count(id) cnt FROM data WHERE id = ?;");
+            pstmt.setLong(1, objectKey);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()){
+                result = rs.getLong("cnt") == 1;
+            }
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+        finally {
+            dbMutex.release();
+        }
 
+        return result;
+         */
     }
 
     /**
@@ -739,7 +767,7 @@ public class ObjectsDB {
      *
      * @return the keys in backend set
      */
-    public HashSet<Integer> getKeysInBackend() {
+    public HashSet<Long> getKeysInBackend() {
         return keysInBackend;
     }
 
@@ -811,15 +839,12 @@ public class ObjectsDB {
             connectionActive = false;
             connection.close();
 
-        } catch (SQLException ex) {
-
-            throw new RuntimeException(ex);
-
+        } catch (Exception ex) {
+            ex.printStackTrace();
         } finally {
-
             dbMutex.release();
-
         }
+
     }
 
     /**
@@ -875,24 +900,19 @@ public class ObjectsDB {
                     ResultSet rsId = pstmt.executeQuery();
 
                     if (rsId.next()) {
-                        keysInBackend.add(rsId.getInt("id"));
+                        keysInBackend.add(rsId.getLong("id"));
                     }
 
-                } catch (SQLException ex) {
-
-                    throw new RuntimeException(ex);
-
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
+
             }
 
-        } catch (RuntimeException | SQLException ex) {
-
-            throw new RuntimeException(ex);
-
+        } catch (Exception ex) {
+            ex.printStackTrace();
         } finally {
-
             dbMutex.release();
-
         }
 
         connectionActive = true;

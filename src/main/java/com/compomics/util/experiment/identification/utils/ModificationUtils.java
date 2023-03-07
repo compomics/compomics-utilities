@@ -5,7 +5,6 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPatter
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
-import com.compomics.util.experiment.biology.modifications.ModificationProvider;
 import com.compomics.util.experiment.biology.modifications.ModificationType;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
@@ -81,11 +80,10 @@ public class ModificationUtils {
      * C-term at sequence length + 1, and amino acid at 1-based index on the
      * sequence.
      *
-     * @param peptide The peptide.
-     * @param modification The modification.
-     * @param sequenceProvider The protein sequence provider to use.
-     * @param sequenceMatchingParameters The sequence matching parameters to
-     * use.
+     * @param peptide the peptide
+     * @param modification the modification
+     * @param sequenceProvider a protein sequence provider
+     * @param sequenceMatchingParameters the sequence matching parameters
      *
      * @return an array of the possible modification sites
      */
@@ -94,36 +92,6 @@ public class ModificationUtils {
             Modification modification,
             SequenceProvider sequenceProvider,
             SequenceMatchingParameters sequenceMatchingParameters
-    ) {
-
-        return getPossibleModificationSites(peptide, modification, sequenceProvider, sequenceMatchingParameters, null, false);
-
-    }
-
-    /**
-     * Returns an array of the possible modification sites for the given
-     * modification on the given peptide. N-term modifications are at index 0,
-     * C-term at sequence length + 1, and amino acid at 1-based index on the
-     * sequence.
-     *
-     * @param peptide The peptide.
-     * @param modification The modification.
-     * @param sequenceProvider The protein sequence provider to use.
-     * @param sequenceMatchingParameters The sequence matching parameters to
-     * use.
-     * @param modificationProvider The modification provider to use.
-     * @param avoidOverlap If true, avoid overlapping modifications for
-     * modifications on amino acids.
-     *
-     * @return an array of the possible modification sites
-     */
-    public static int[] getPossibleModificationSites(
-            Peptide peptide,
-            Modification modification,
-            SequenceProvider sequenceProvider,
-            SequenceMatchingParameters sequenceMatchingParameters,
-            ModificationProvider modificationProvider,
-            boolean avoidOverlap
     ) {
 
         String peptideSequence = peptide.getSequence();
@@ -145,32 +113,7 @@ public class ModificationUtils {
 
                     if (aminoAcidPattern.length() == 1) {
 
-                        int[] indexes = aminoAcidPattern.getIndexes(peptideSequence, sequenceMatchingParameters);
-
-                        if (!avoidOverlap) {
-
-                            return indexes;
-
-                        } else {
-
-                            HashSet<Integer> occupiedSites = Arrays.stream(peptide.getVariableModifications())
-                                    .filter(
-                                            modificationMatch -> modificationProvider.getModification(modificationMatch.getModification()).getMass() != modification.getMass()
-                                    )
-                                    .map(
-                                            modificationMatch -> modificationMatch.getSite()
-                                    )
-                                    .collect(
-                                            Collectors.toCollection(HashSet::new)
-                                    );
-
-                            return IntStream.of(indexes)
-                                    .filter(
-                                            site -> !occupiedSites.contains(site)
-                                    )
-                                    .toArray();
-
-                        }
+                        return aminoAcidPattern.getIndexes(peptideSequence, sequenceMatchingParameters);
 
                     } else if (aminoAcidPattern.length() > 1) {
 
@@ -201,7 +144,7 @@ public class ModificationUtils {
                                     String suffix = sequence.substring(
                                             startIndex + peptideSequence.length(),
                                             Math.min(
-                                                    startIndex + peptideSequence.length() + maxIndex,
+                                                    startIndex + peptideSequence.length() + maxIndex, 
                                                     sequence.length()
                                             )
                                     );
@@ -223,30 +166,7 @@ public class ModificationUtils {
                             allPossibleIndexes.map(site -> site - minIndex);
                         }
 
-                        if (!avoidOverlap) {
-
-                            return allPossibleIndexes.toArray();
-
-                        } else {
-
-                            HashSet<Integer> occupiedSites = Arrays.stream(peptide.getVariableModifications())
-                                    .filter(
-                                            modificationMatch -> modificationProvider.getModification(modificationMatch.getModification()).getMass() != modification.getMass()
-                                    )
-                                    .map(
-                                            modificationMatch -> modificationMatch.getSite()
-                                    )
-                                    .collect(
-                                            Collectors.toCollection(HashSet::new)
-                                    );
-
-                            return allPossibleIndexes
-                                    .filter(
-                                            site -> !occupiedSites.contains(site)
-                                    )
-                                    .toArray();
-
-                        }
+                        return allPossibleIndexes.toArray();
 
                     } else {
 
@@ -294,7 +214,7 @@ public class ModificationUtils {
 
                                     if (aminoAcidPattern.matches(subSequence, sequenceMatchingParameters)) {
                                         return ZERO;
-
+                                    
                                     }
                                 }
                             }
@@ -356,7 +276,7 @@ public class ModificationUtils {
 
                                     if (aminoAcidPattern.matches(subSequence, sequenceMatchingParameters)) {
                                         return ZERO;
-
+                                    
                                     }
 
                                     if (sequence.charAt(0) == 'M' && maxIndex + 1 < sequence.length()) {
@@ -365,7 +285,7 @@ public class ModificationUtils {
 
                                         if (aminoAcidPattern.matches(subSequence, sequenceMatchingParameters)) {
                                             return ZERO;
-
+                                        
                                         }
                                     }
                                 }
@@ -429,7 +349,7 @@ public class ModificationUtils {
 
                                     if (aminoAcidPattern.matches(subSequence, sequenceMatchingParameters)) {
                                         return getArray(peptideSequence.length() + 1);
-
+                                    
                                     }
                                 }
                             }
@@ -873,7 +793,7 @@ public class ModificationUtils {
      * @return the 1-based index on the sequence
      */
     public static int getSite(
-            int index,
+            int index, 
             int sequenceLength
     ) {
 
@@ -922,12 +842,12 @@ public class ModificationUtils {
 
         modNames.addAll(
                 Arrays.stream(fixedModifications)
-                        .filter(
-                                modName -> modName != null
-                        )
-                        .collect(
-                                Collectors.toSet()
-                        )
+                .filter(
+                        modName -> modName != null
+                )
+                .collect(
+                        Collectors.toSet()
+                )
         );
 
         return modNames;
@@ -961,12 +881,12 @@ public class ModificationUtils {
 
                 modNames.addAll(
                         Arrays.stream(aminoAcidSequence.getVariableModifications())
-                                .map(
-                                        ModificationMatch::getModification
-                                )
-                                .collect(
-                                        Collectors.toCollection(HashSet::new)
-                                )
+                        .map(
+                                ModificationMatch::getModification
+                        )
+                        .collect(
+                                Collectors.toCollection(HashSet::new)
+                        )
                 );
 
                 String[] fixedModifications

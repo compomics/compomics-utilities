@@ -2,9 +2,15 @@ package com.compomics.util.experiment.identification.matches;
 
 import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
+import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
+import com.compomics.util.experiment.personalization.ExperimentObject;
+import com.compomics.util.io.IoUtil;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
 /**
  * This class models a spectrum match.
@@ -18,23 +24,33 @@ public class SpectrumMatch extends IdentificationMatch {
     /**
      * The key of the match.
      */
-    private int key;
+    private long key;
     /**
-     * The key of the file of the spectrum.
+     * The name of the file (without extension) containing the spectrum.
      */
-    private int spectrumFileKey;
+    private String spectrumFile;
     /**
-     * The key of the title of the spectrum.
+     * The title of the spectrum.
      */
-    private int spectrumTitleKey;
+    private String spectrumtitle;
+    /**
+     * Map of the identification algorithm peptide assumptions: advocate number
+     * &gt; score &gt; assumptions.
+     */
+    private HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> peptideAssumptionsMap = new HashMap<>(0);
     /**
      * The best peptide assumption.
      */
     private PeptideAssumption bestPeptideAssumption;
     /**
-     * The identification algorithms supporting this match.
+     * Map of the identification algorithm tag assumptions: advocate number &gt;
+     * score &gt; assumptions.
      */
-    private int[] advocates;
+    private HashMap<Integer, TreeMap<Double, ArrayList<TagAssumption>>> tagAssumptionsMap = new HashMap<>(0);
+    /**
+     * The best tag assumption.
+     */
+    private TagAssumption bestTagAssumption;
 
     /**
      * Constructor for the spectrum match.
@@ -43,22 +59,56 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
+     * Sets the peptide assumption map.
+     *
+     * @param peptideAssumptionsMap the peptide assumption map
+     */
+    public void setPeptideAssumptionMap(HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> peptideAssumptionsMap) {
+
+        this.peptideAssumptionsMap = peptideAssumptionsMap;
+    }
+
+    /**
+     * Sets the tag assumption map.
+     *
+     * @param tagAssumptionsMap the tag assumption map
+     */
+    public void setTagAssumptionMap(HashMap<Integer, TreeMap<Double, ArrayList<TagAssumption>>> tagAssumptionsMap) {
+
+        this.tagAssumptionsMap = tagAssumptionsMap;
+    }
+
+    /**
      * Constructor for the spectrum match.
      *
-     * @param spectrumFileKey The key of the file containing the spectrum.
-     * @param spectrumTitleKey The key of the spectrum title.
-     * @param key The key of the spectrum match.
+     * @param spectrumFile The name of the file containing the spectrum.
+     * @param spectrumTitle The title of the spectrum.
      */
     public SpectrumMatch(
-            int spectrumFileKey,
-            int spectrumTitleKey,
-            int key
+            String spectrumFile,
+            String spectrumTitle
     ) {
 
-        this.spectrumFileKey = spectrumFileKey;
-        this.spectrumTitleKey = spectrumTitleKey;
-        this.key = key;
+        this.spectrumFile = IoUtil.removeExtension(spectrumFile);
+        this.spectrumtitle = spectrumTitle;
+        this.key = getKey(this.spectrumFile, spectrumTitle);
 
+    }
+
+    /**
+     * Returns a key to use for the spectrum match based on the file where the
+     * spectrum was found and its title.
+     *
+     * @param spectrumFile The name of the file containing the spectrum.
+     * @param spectrumTitle The title of the spectrum.
+     *
+     * @return The key as long.
+     */
+    public static long getKey(
+            String spectrumFile,
+            String spectrumTitle
+    ) {
+        return ExperimentObject.asLong(String.join("", IoUtil.removeExtension(spectrumFile), spectrumTitle));
     }
 
     /**
@@ -74,14 +124,31 @@ public class SpectrumMatch extends IdentificationMatch {
     /**
      * Setter for the best peptide assumption.
      *
-     * @param bestPeptideAssumption The best peptide assumption for the spectrum.
-     * @param advocates The identification algorithms supporting this match.
+     * @param bestPeptideAssumption the best peptide assumption for the spectrum
      */
-    public void setBestPeptideAssumption(PeptideAssumption bestPeptideAssumption, int[] advocates) {
+    public void setBestPeptideAssumption(PeptideAssumption bestPeptideAssumption) {
 
         this.bestPeptideAssumption = bestPeptideAssumption;
-        this.advocates = advocates;
-        
+    }
+
+    /**
+     * Getter for the best tag assumption.
+     *
+     * @return the best tag assumption for the spectrum
+     */
+    public TagAssumption getBestTagAssumption() {
+
+        return bestTagAssumption;
+    }
+
+    /**
+     * Setter for the best tag assumption.
+     *
+     * @param bestTagAssumption the best tag assumption for the spectrum
+     */
+    public void setBestTagAssumption(TagAssumption bestTagAssumption) {
+
+        this.bestTagAssumption = bestTagAssumption;
     }
 
     /**
@@ -89,40 +156,41 @@ public class SpectrumMatch extends IdentificationMatch {
      *
      * @return The name of the file where this spectrum was found.
      */
-    public int getSpectrumFileKey() {
+    public String getSpectrumFile() {
 
-        return spectrumFileKey;
+        return spectrumFile;
     }
 
     /**
      * Sets the spectrum file name.
      *
-     * @param spectrumFileKey The spectrum file name.
+     * @param spectrumFile The spectrum file name.
      */
-    public void setSpectrumFileKey(
-            int spectrumFileKey
+    public void setSpectrumFile(
+            String spectrumFile
     ) {
-        this.spectrumFileKey = spectrumFileKey;
+        this.spectrumFile = IoUtil.removeExtension(spectrumFile);
     }
 
     /**
-     * Returns the key of the title of the spectrum.
+     * Returns the title of the spectrum.
      *
-     * @return The key of the title of the spectrum.
+     * @return The title of the spectrum.
      */
-    public int getSpectrumTitleKey() {
-        return spectrumTitleKey;
+    public String getSpectrumTitle() {
+        return spectrumtitle;
     }
 
     /**
      * Sets the spectrum title.
      *
-     * @param spectrumTitleKey The spectrum title.
+     * @param spectrumTitle The spectrum title.
      */
-    public void setSpectrumTitleKey(
-            int spectrumTitleKey
+    public void setSpectrumTitle(
+            String spectrumTitle
     ) {
-        this.spectrumTitleKey = spectrumTitleKey;
+        this.spectrumtitle = spectrumTitle;
+        key = getKey(spectrumFile, spectrumTitle);
     }
 
     @Override
@@ -131,30 +199,271 @@ public class SpectrumMatch extends IdentificationMatch {
     }
 
     /**
-     * Sets the spectrum key.
-     *
-     * @param key The key of the spectrum.
-     */
-    public void setSpectrumKey(
-            int key
-    ) {
-        this.key = key;
-    }
-
-    /**
      * Returns the advocates supporting hits for this spectrum.
      *
      * @return The advocates supporting hits for this spectrum.
      */
-    public int[] getAdvocates() {
+    public HashSet<Integer> getAdvocates() {
 
-        return advocates;
+        HashSet<Integer> result = new HashSet<>(0);
 
+        if (peptideAssumptionsMap != null) {
+
+            result.addAll(peptideAssumptionsMap.keySet());
+
+        }
+
+        if (tagAssumptionsMap != null) {
+
+            result.addAll(tagAssumptionsMap.keySet());
+
+        }
+
+        return result;
+
+    }
+
+    /**
+     * Returns all peptide assumptions for the specified search engine indexed
+     * by their score. Null if none found.
+     *
+     * @param advocateId the desired advocate ID
+     *
+     * @return all assumptions
+     */
+    public TreeMap<Double, ArrayList<PeptideAssumption>> getAllPeptideAssumptions(int advocateId) {
+
+        return peptideAssumptionsMap.get(advocateId);
+    }
+
+    /**
+     * Returns all tag assumptions for the specified search engine indexed by
+     * their score. Null if none found.
+     *
+     * @param advocateId the desired advocate ID
+     *
+     * @return all assumptions
+     */
+    public TreeMap<Double, ArrayList<TagAssumption>> getAllTagAssumptions(int advocateId) {
+
+        return tagAssumptionsMap.get(advocateId);
+    }
+
+    /**
+     * Returns a stream of all peptide assumptions
+     *
+     * @return a stream of all peptide assumptions
+     */
+    public Stream<PeptideAssumption> getAllPeptideAssumptions() {
+
+        return peptideAssumptionsMap.values().stream()
+                .flatMap(algorithmMap -> algorithmMap.values().stream())
+                .flatMap(assumptionsList -> assumptionsList.stream());
+    }
+
+    /**
+     * Returns a stream of all tag assumptions
+     *
+     * @return a stream of all tag assumptions
+     */
+    public Stream<TagAssumption> getAllTagAssumptions() {
+
+        return tagAssumptionsMap.values().stream()
+                .flatMap(algorithmMap -> algorithmMap.values().stream())
+                .flatMap(assumptionsList -> assumptionsList.stream());
+    }
+
+    /**
+     * Returns the peptide assumptions map: advocate id &gt; score &gt; list of
+     * assumptions.
+     *
+     * @return the assumptions map
+     */
+    public HashMap<Integer, TreeMap<Double, ArrayList<PeptideAssumption>>> getPeptideAssumptionsMap() {
+
+        return peptideAssumptionsMap;
+    }
+
+    /**
+     * Returns the tag assumptions map: advocate id &gt; score &gt; list of
+     * assumptions.
+     *
+     * @return the assumptions map
+     */
+    public HashMap<Integer, TreeMap<Double, ArrayList<TagAssumption>>> getTagAssumptionsMap() {
+
+        return tagAssumptionsMap;
+    }
+
+    /**
+     * Add a hit.
+     *
+     * @param advocateId the index of the advocate of the new hit
+     * @param peptideAssumption the new identification assumption
+     */
+    public void addPeptideAssumption(int advocateId, PeptideAssumption peptideAssumption) {
+
+        TreeMap<Double, ArrayList<PeptideAssumption>> advocateMap = peptideAssumptionsMap.get(advocateId);
+
+        if (advocateMap == null) {
+
+            advocateMap = new TreeMap<>();
+            peptideAssumptionsMap.put(advocateId, advocateMap);
+
+        }
+
+        Double score = peptideAssumption.getScore();
+        ArrayList<PeptideAssumption> assumptionList = advocateMap.get(score);
+
+        if (assumptionList == null) {
+
+            assumptionList = new ArrayList<>(1);
+            advocateMap.put(score, assumptionList);
+
+        }
+
+        assumptionList.add(peptideAssumption);
+    }
+
+    /**
+     * Add a hit.
+     *
+     * @param advocateId the index of the advocate of the new hit
+     * @param tagAssumption the new identification assumption
+     */
+    public void addTagAssumption(int advocateId, TagAssumption tagAssumption) {
+
+        TreeMap<Double, ArrayList<TagAssumption>> advocateMap = tagAssumptionsMap.get(advocateId);
+
+        if (advocateMap == null) {
+
+            advocateMap = new TreeMap<>();
+            tagAssumptionsMap.put(advocateId, advocateMap);
+
+        }
+
+        double score = tagAssumption.getScore();
+        ArrayList<TagAssumption> assumptionList = advocateMap.get(score);
+
+        if (assumptionList == null) {
+
+            assumptionList = new ArrayList<>(1);
+            advocateMap.put(score, assumptionList);
+
+        }
+
+        assumptionList.add(tagAssumption);
     }
 
     @Override
     public MatchType getType() {
 
         return MatchType.Spectrum;
+    }
+
+    /**
+     * Removes an assumption from the mapping.
+     *
+     * @param peptideAssumption the peptide assumption to remove
+     */
+    public void removePeptideAssumption(PeptideAssumption peptideAssumption) {
+
+        int se = peptideAssumption.getAdvocate();
+        TreeMap<Double, ArrayList<PeptideAssumption>> algorithmMap = peptideAssumptionsMap.get(se);
+        ArrayList<PeptideAssumption> assumptionsList = algorithmMap.get(peptideAssumption.getScore());
+        assumptionsList.remove(peptideAssumption);
+
+        if (assumptionsList.isEmpty()) {
+
+            algorithmMap.remove(peptideAssumption.getScore());
+
+        }
+        if (algorithmMap.isEmpty()) {
+
+            peptideAssumptionsMap.remove(se);
+
+        }
+    }
+
+    /**
+     * Removes an assumption from the mapping.
+     *
+     * @param tagAssumption the tag assumption to remove
+     */
+    public void removeTagAssumption(TagAssumption tagAssumption) {
+
+        int se = tagAssumption.getAdvocate();
+        TreeMap<Double, ArrayList<TagAssumption>> algorithmMap = tagAssumptionsMap.get(se);
+        ArrayList<TagAssumption> assumptionsList = algorithmMap.get(tagAssumption.getScore());
+        assumptionsList.remove(tagAssumption);
+
+        if (assumptionsList.isEmpty()) {
+
+            algorithmMap.remove(tagAssumption.getScore());
+
+        }
+
+        if (algorithmMap.isEmpty()) {
+
+            tagAssumptionsMap.remove(se);
+
+        }
+    }
+
+    /**
+     * Indicates whether the spectrum match contains a peptide assumption.
+     *
+     * @return a boolean indicating whether the spectrum match contains a
+     * peptide assumption
+     */
+    public boolean hasPeptideAssumption() {
+
+        return peptideAssumptionsMap.values().stream()
+                .flatMap(algorithmMap -> algorithmMap.values().stream())
+                .anyMatch(assumptionsList -> !assumptionsList.isEmpty());
+    }
+
+    /**
+     * Indicates whether the spectrum match contains a tag assumption.
+     *
+     * @return a boolean indicating whether the spectrum match contains a tag
+     * assumption
+     */
+    public boolean hasTagAssumption() {
+
+        return tagAssumptionsMap.values().stream().flatMap(algorithmMap -> algorithmMap.values().stream())
+                .anyMatch(assumptionsList -> !assumptionsList.isEmpty());
+    }
+
+    /**
+     * Indicates whether the spectrum match contains a peptide assumption for
+     * the given advocate (see the Advocate class).
+     *
+     * @param advocateId The index of the advocate
+     *
+     * @return a boolean indicating whether the spectrum match contains an
+     * assumption for the given advocate
+     */
+    public boolean hasPeptideAssumption(int advocateId) {
+
+        TreeMap<Double, ArrayList<PeptideAssumption>> algorithmIds = peptideAssumptionsMap.get(advocateId);
+
+        return algorithmIds == null ? false : algorithmIds.values().stream().anyMatch(assumptions -> !assumptions.isEmpty());
+    }
+
+    /**
+     * Indicates whether the spectrum match contains a tag assumption for the
+     * given advocate (see the Advocate class).
+     *
+     * @param advocateId The index of the advocate
+     *
+     * @return a boolean indicating whether the spectrum match contains an
+     * assumption for the given advocate
+     */
+    public boolean hasTagAssumption(int advocateId) {
+
+        TreeMap<Double, ArrayList<TagAssumption>> algorithmIds = tagAssumptionsMap.get(advocateId);
+
+        return algorithmIds == null ? false : algorithmIds.values().stream().anyMatch(assumptions -> !assumptions.isEmpty());
     }
 }

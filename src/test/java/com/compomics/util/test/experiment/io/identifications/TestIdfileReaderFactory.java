@@ -1,7 +1,7 @@
 package com.compomics.util.test.experiment.io.identifications;
 
-import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.parameters.identification.search.SearchParameters;
+import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.io.identification.IdfileReaderFactory;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
@@ -39,7 +39,7 @@ public class TestIdfileReaderFactory extends TestCase {
         IdfileReader tifr = new IdfileReader() {
 
             @Override
-            public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+            public ArrayList<SpectrumMatch> getAllSpectrumMatches(
                     SpectrumProvider spectrumProvider,
                     WaitingHandler waitingHandler,
                     SearchParameters searchParameters
@@ -56,7 +56,7 @@ public class TestIdfileReaderFactory extends TestCase {
             }
 
             @Override
-            public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+            public ArrayList<SpectrumMatch> getAllSpectrumMatches(
                     SpectrumProvider spectrumProvider,
                     WaitingHandler waitingHandler,
                     SearchParameters searchParameters,
@@ -64,7 +64,7 @@ public class TestIdfileReaderFactory extends TestCase {
                     boolean expandAaCombinations
             )
                     throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-
+                
                 return null;
             }
 
@@ -160,13 +160,13 @@ public class TestIdfileReaderFactory extends TestCase {
         }
 
         @Override
-        public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+        public ArrayList<SpectrumMatch> getAllSpectrumMatches(
                 SpectrumProvider spectrumProvider,
                 WaitingHandler waitingHandler,
                 SearchParameters searchParameters
         )
                 throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
-
+            
             return getAllSpectrumMatches(
                     spectrumProvider,
                     waitingHandler,
@@ -177,7 +177,7 @@ public class TestIdfileReaderFactory extends TestCase {
         }
 
         @Override
-        public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
+        public ArrayList<SpectrumMatch> getAllSpectrumMatches(
                 SpectrumProvider spectrumProvider,
                 WaitingHandler waitingHandler,
                 SearchParameters searchParameters,

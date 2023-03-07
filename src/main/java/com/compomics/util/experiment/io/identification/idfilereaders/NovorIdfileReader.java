@@ -5,6 +5,7 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequen
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.parameters.identification.tool_specific.NovorParameters;
@@ -122,7 +123,7 @@ public class NovorIdfileReader implements IdfileReader {
     }
 
     @Override
-    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
@@ -139,7 +140,7 @@ public class NovorIdfileReader implements IdfileReader {
     }
 
     @Override
-    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
@@ -156,7 +157,7 @@ public class NovorIdfileReader implements IdfileReader {
 //        }
         NovorParameters novorParameters = (NovorParameters) searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex());
 
-        ArrayList<SpectrumMatch> result = new ArrayList<>();
+        HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> result = new HashMap<>();
 
         try ( SimpleFileReader reader = SimpleFileReader.getFileReader(novorCsvFile)) {
 
@@ -189,7 +190,16 @@ public class NovorIdfileReader implements IdfileReader {
             }
 
             // get the spectrum file name
-            String spectrumFileName = IoUtil.getFileName(inputFile);
+            String spectrumFileName = IoUtil.removeExtension(IoUtil.getFileName(inputFile));
+
+            HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = result.get(spectrumFileName);
+
+            if (fileResults == null) {
+
+                fileResults = new HashMap<>();
+                result.put(spectrumFileName, fileResults);
+
+            }
 
             // get the variable modifications
             HashMap<Integer, String> variableModificationsMap = new HashMap<>();
@@ -252,7 +262,7 @@ public class NovorIdfileReader implements IdfileReader {
             if (idIndex == -1 || scanNumberIndex == -1 || rtIndex == -1 || mzIndex == -1 || chargeIndex == -1
                     || pepMassIndex == -1 || erorrIndex == -1 || ppmIndex == -1
                     || scoreIndex == -1 || peptideIndex == -1 || aaScoreIndex == -1) {
-                throw new IllegalArgumentException("Mandatory columns are missing in the Novor csv file. Please check the file!");
+                throw new IllegalArgumentException("Mandatory columns are missing in the Novor csv file. Please check that the header contains the following fields (not case sensitive): 'id', 'RT', 'mz(data)', 'z', 'pepMass(denovo)', 'err(data-denovo)', 'ppm(1e6*err/(mz*z))', 'score', 'peptide', 'aaScore'");
             }
 
             String currentSpectrumTitle = null;
@@ -287,18 +297,14 @@ public class NovorIdfileReader implements IdfileReader {
                     aminoAcidScores.add(aminoAcidScoresAsList);
 
                     // get the name of the spectrum file
-                    String spectrumTitle = spectrumProvider.getSpectrumTitles(IoUtil.removeExtension(spectrumFileName))[id - 1];
+                    String spectrumTitle = spectrumProvider.getSpectrumTitles(spectrumFileName)[id - 1];
 
-                    // set up the yet empty spectrum match, or add to the current match
-                    if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {
+                    ArrayList<SpectrumIdentificationAssumption> spectrumResults = fileResults.get(spectrumTitle);
 
-                        // add the previous match, if any
-                        if (currentMatch != null) {
-                            result.add(currentMatch);
-                        }
+                    if (spectrumResults == null) {
 
-                        currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
-                        currentSpectrumTitle = spectrumTitle;
+                        spectrumResults = new ArrayList<>(4);
+                        fileResults.put(spectrumTitle, spectrumResults);
 
                     }
 
@@ -498,7 +504,6 @@ public class NovorIdfileReader implements IdfileReader {
                                 maxAminoAcidTagLength = currentSequence.length();
                             }
 
-                            currentSequence = "";
                         } else {
 
                             double modMass = 0.0;
@@ -516,7 +521,6 @@ public class NovorIdfileReader implements IdfileReader {
 
                             tag.addMassGap(new AminoAcidSequence(currentSequence).getMass() + modMass);
 
-                            currentSequence = "";
                         }
                     }
 
@@ -532,7 +536,7 @@ public class NovorIdfileReader implements IdfileReader {
                         );
 
                         //tagAssumption.setAminoAcidScores(aminoAcidScores); // @TODO: would have to done relative to the tags i guess..?
-                        currentMatch.addTagAssumption(Advocate.novor.getIndex(), tagAssumption);
+                        spectrumResults.add(tagAssumption);
 
                     } else {
 
@@ -593,22 +597,18 @@ public class NovorIdfileReader implements IdfileReader {
                                         peptideAssumption.getIdentificationFile()
                                 );
 
-                                currentMatch.addPeptideAssumption(Advocate.novor.getIndex(), newAssumption);
+                                spectrumResults.add(newAssumption);
 
                             }
 
                         } else {
-                            currentMatch.addPeptideAssumption(Advocate.novor.getIndex(), peptideAssumption);
+
+                            spectrumResults.add(peptideAssumption);
+
                         }
                     }
                 }
             }
-
-            // add the last match, if any
-            if (currentMatch != null) {
-                result.add(currentMatch);
-            }
-
         }
 
         return result;
@@ -621,8 +621,8 @@ public class NovorIdfileReader implements IdfileReader {
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<>();
-        ArrayList<String> versions = new ArrayList<>();
+        HashMap<String, ArrayList<String>> result = new HashMap<>(1);
+        ArrayList<String> versions = new ArrayList<>(1);
         versions.add(softwareVersion);
         result.put(softwareName, versions);
         return result;

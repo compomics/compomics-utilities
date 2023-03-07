@@ -3,10 +3,10 @@ package com.compomics.util.experiment.io.identification.idfilereaders;
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequence;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.io.IoUtil;
@@ -148,7 +148,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
     }
 
     @Override
-    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
@@ -165,7 +165,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
     }
 
     @Override
-    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
@@ -256,11 +256,11 @@ public class MzIdentMLIdfileReader implements IdfileReader {
      *
      * @return the list of spectrum matches
      */
-    private ArrayList<SpectrumMatch> parseFile(
+    private HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> parseFile(
             WaitingHandler waitingHandler
     ) throws XmlPullParserException, IOException {
 
-        ArrayList<SpectrumMatch> result = new ArrayList<>();
+        HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> result = new HashMap<>(1);
 
         // create the pull parser
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance(System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
@@ -723,11 +723,11 @@ public class MzIdentMLIdfileReader implements IdfileReader {
      * Parse a PSM object.
      *
      * @param parser the XML parser
-     * @param result the list to add the extracted PSM to
+     * @param result the map to add the extracted PSM to
      */
     private void parsePsm(
             XmlPullParser parser,
-            ArrayList<SpectrumMatch> result
+            HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> result
     ) throws XmlPullParserException, IOException {
 
         String spectraDataRef = null;
@@ -751,14 +751,22 @@ public class MzIdentMLIdfileReader implements IdfileReader {
         // get the spectrum file name
         String spectrumFileName = spectrumFileNameMap.get(spectraDataRef);
 
-        // get the spectrum index and potentially the spectrum name
+        HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = result.get(spectrumFileName);
+
+        if (fileResults == null) {
+
+            fileResults = new HashMap<>();
+            result.put(spectrumFileName, fileResults);
+
+        }
+
+        // get the spectrum index and the spectrum name
         if (spectrumId.startsWith("index=")) { // @TODO: support more index types
             Integer spectrumIndex = Integer.valueOf(spectrumId.substring(spectrumId.indexOf("=") + 1));
             spectrumTitle = spectrumProvider.getSpectrumTitles(IoUtil.removeExtension(spectrumFileName))[spectrumIndex];
         }
 
-        // set up the spectrum match
-        SpectrumMatch currentMatch = new SpectrumMatch(spectrumFileName, spectrumId);
+        ArrayList<SpectrumIdentificationAssumption> spectrumResults = new ArrayList<>();
 
         parser.next();
         int type = parser.next();
@@ -878,7 +886,7 @@ public class MzIdentMLIdfileReader implements IdfileReader {
             Advocate advocate = tempEValue.getAdvocate();
             Double eValue = tempEValue.getEValue();
             Double rawScore = tempEValue.getRawScore();
-            
+
             if (rawScore == null) {
                 rawScore = eValue;
             }
@@ -947,20 +955,22 @@ public class MzIdentMLIdfileReader implements IdfileReader {
                     Peptide newPeptide = new Peptide(expandedSequence.toString(), newModificationMatches, true);
 
                     PeptideAssumption newAssumption = new PeptideAssumption(
-                            newPeptide, 
-                            peptideAssumption.getRank(), 
-                            peptideAssumption.getAdvocate(), 
-                            peptideAssumption.getIdentificationCharge(), 
+                            newPeptide,
+                            peptideAssumption.getRank(),
+                            peptideAssumption.getAdvocate(),
+                            peptideAssumption.getIdentificationCharge(),
                             rawScore,
-                            peptideAssumption.getScore(), 
+                            peptideAssumption.getScore(),
                             peptideAssumption.getIdentificationFile()
                     );
 
-                    currentMatch.addPeptideAssumption(advocate.getIndex(), newAssumption);
+                    spectrumResults.add(newAssumption);
 
                 }
             } else {
-                currentMatch.addPeptideAssumption(advocate.getIndex(), peptideAssumption);
+
+                spectrumResults.add(peptideAssumption);
+
             }
         }
 
@@ -993,14 +1003,26 @@ public class MzIdentMLIdfileReader implements IdfileReader {
             parser.next();
             parser.next();
             parser.next();
+
         }
 
-        // update the spectrum key with the correct spectrum title
-        if (spectrumTitle != null) {
-            currentMatch.setSpectrumTitle(spectrumTitle);
+        if (spectrumTitle == null) {
+
+            spectrumTitle = spectrumId;
+
         }
 
-        result.add(currentMatch);
+        ArrayList<SpectrumIdentificationAssumption> previousSpectrumResults = fileResults.get(spectrumTitle);
+
+        if (previousSpectrumResults == null) {
+
+            fileResults.put(spectrumTitle, spectrumResults);
+
+        } else {
+
+            previousSpectrumResults.addAll(spectrumResults);
+
+        }
     }
 
     /**

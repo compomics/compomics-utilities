@@ -5,11 +5,11 @@ import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidSequen
 import com.compomics.util.experiment.biology.atoms.Atom;
 import com.compomics.util.experiment.biology.ions.impl.ElementaryIon;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.spectrum_assumptions.TagAssumption;
 import com.compomics.util.parameters.identification.tool_specific.PepnovoParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.identification.amino_acid_tags.Tag;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
@@ -45,6 +45,10 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      */
     public static final String DEFAULT_HEADER = "#Index	RnkScr	PnvScr	N-Gap	C-Gap	[M+H]	Charge	Sequence";
     /**
+     * The prefix for the build.
+     */
+    public static final String BUILD_PREFIX = "PepNovo+ Build ";
+    /**
      * The mass to add to the C-terminal gap so that is corresponds to a peptide
      * fragment.
      */
@@ -54,6 +58,10 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
      * fragment.
      */
     public final double nTermCorrection = 0;
+    /**
+     * The pepnovo build.
+     */
+    private String build = null;
 
     /**
      * Default constructor for the purpose of instantiation.
@@ -75,7 +83,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
@@ -92,7 +100,7 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     }
 
     @Override
-    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
@@ -108,23 +116,26 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         String fileName = IoUtil.getFileName(identificationFile);
         String mgfFileName = getMgfFileName(fileName);
 
-        ArrayList<SpectrumMatch> spectrumMatches = new ArrayList<>();
+        HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> result = new HashMap<>(1);
+        HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = new HashMap<>();
+        result.put(mgfFileName, fileResults);
 
-        try (SimpleFileReader reader = SimpleFileReader.getFileReader(identificationFile)) {
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(identificationFile)) {
 
-            SpectrumMatch currentMatch = null;
-            int rank = 1;
+            ArrayList<SpectrumIdentificationAssumption> spectrumResults = null;
+
             String line;
             while ((line = reader.readLine()) != null) {
 
+                line = line.trim();
+
+                if (line.startsWith(BUILD_PREFIX)) {
+
+                    build = line;
+
+                }
+
                 if (line.startsWith(">>")) {
-
-                    if (currentMatch != null) {
-
-                        spectrumMatches.add(currentMatch);
-                        rank = 1;
-
-                    }
 
                     String[] temp = line.split("\\s+");
                     StringBuilder sb = new StringBuilder(line.length());
@@ -145,33 +156,35 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
 
                         // remove any html from the title
                         String decodedTitle = URLDecoder.decode(spectrumTitle, ENCODING);
-                        currentMatch = new SpectrumMatch(mgfFileName, decodedTitle);
 
-                        while (true) {
-                            line = reader.readLine();
-                            if (line.startsWith("# No") || line.startsWith("# Charge") || line.startsWith("#Problem") || line.startsWith("# too")) {
-                                // Skip
-                            } else if (!line.equals(DEFAULT_HEADER)) {
-                                throw new IllegalArgumentException("Unrecognized table format. Expected: \"" + DEFAULT_HEADER + "\", found:\"" + line + "\".");
-                            } else {
-                                break;
-                            }
+                        spectrumResults = fileResults.get(decodedTitle);
+
+                        if (spectrumResults == null) {
+
+                            spectrumResults = new ArrayList<>();
+                            fileResults.put(decodedTitle, spectrumResults);
+
                         }
-
-                    } else {
-
-                        currentMatch = null;
-
                     }
-                } else if (line.length() > 0 && line.charAt(0) != '#' && currentMatch != null) {
 
-                    currentMatch.addTagAssumption(Advocate.pepnovo.getIndex(), getAssumptionFromLine(line, rank));
-                    rank++;
+                    line = reader.readLine();
+
+                    if (!line.equals(DEFAULT_HEADER)) {
+                        throw new IllegalArgumentException("Unrecognized table format. Expected: \"" + DEFAULT_HEADER + "\", found:\"" + line + "\".");
+                    }
+                }
+
+                if (line.length() > 0 && line.charAt(0) != '#' && spectrumResults != null) {
+
+                    TagAssumption tagAssumption = getAssumptionFromLine(line, spectrumResults.size() + 1);
+                    spectrumResults.add(tagAssumption);
+
                 }
             }
         }
 
-        return spectrumMatches;
+        return result;
+
     }
 
     /**
@@ -323,14 +336,14 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
         }
         Tag tag = new Tag(nGap, aminoAcidSequence, cGap);
         TagAssumption tagAssumption = new TagAssumption(
-                Advocate.pepnovo.getIndex(), 
-                rank, 
-                tag, 
+                Advocate.pepnovo.getIndex(),
+                rank,
+                tag,
                 charge,
                 pepNovoScore,
                 pepNovoScore
         );
-        
+
         PepnovoAssumptionDetails pepnovoAssumptionDetails = new PepnovoAssumptionDetails();
         pepnovoAssumptionDetails.setRankScore(rankScore);
         pepnovoAssumptionDetails.setMH(mH);
@@ -372,7 +385,11 @@ public class PepNovoIdfileReader extends ExperimentObject implements IdfileReade
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
         HashMap<String, ArrayList<String>> result = new HashMap<>(1);
         ArrayList<String> versions = new ArrayList<>(1);
-        versions.add("3.1 (beta)");
+        if (build != null) {
+            versions.add(build);
+        } else {
+            versions.add("3.1 (beta)");
+        }
         result.put("PepNovo+", versions);
         return result;
     }

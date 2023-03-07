@@ -6,10 +6,10 @@ import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Advocate;
+import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
-import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.io.IoUtil;
@@ -96,7 +96,7 @@ public class CossIdfileReader implements IdfileReader {
      */
     private void extractVersionNumber() { // @TODO: not implemented by coss
 
-        try (SimpleFileReader reader = SimpleFileReader.getFileReader(cossTsvFile)) {
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(cossTsvFile)) {
 
             // read the version number, if available
             String versionNumberString = reader.readLine();
@@ -113,7 +113,7 @@ public class CossIdfileReader implements IdfileReader {
     }
 
     @Override
-    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
@@ -131,7 +131,7 @@ public class CossIdfileReader implements IdfileReader {
     }
 
     @Override
-    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,
@@ -141,9 +141,9 @@ public class CossIdfileReader implements IdfileReader {
             throws IOException, IllegalArgumentException, SQLException,
             ClassNotFoundException, InterruptedException, JAXBException {
 
-        ArrayList<SpectrumMatch> result = new ArrayList<>();
+        HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> result = new HashMap<>(1);
 
-        try (SimpleFileReader reader = SimpleFileReader.getFileReader(cossTsvFile)) {
+        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(cossTsvFile)) {
 
             // check if the version number is included
             String versionNumberString = reader.readLine();
@@ -158,17 +158,31 @@ public class CossIdfileReader implements IdfileReader {
 
             // parse the header line
             String[] headers = headerString.split("\t");
-            int fileIndex = -1, titleIndex = -1, rankIndex = -1, libraryIndex = -1,
-                    scanNumberIndex = -1, rtIndex = -1, sequenceIndex = -1,
-                    precMassIndex = -1, chargeQueryIndex = -1, chargeLibIndex = -1,
-                    cossScoreIndex = -1, validationFdrIndex = -1, modificationsIndex = -1,
-                    proteinsIndex = -1, filteredQueryPeaksIndex = -1,
-                    filteredLibraryPeaksIndex = -1, sumIntQueryIndex = -1,
-                    sumIntLibIndex = -1, matchedPeaksIndex = -1,
-                    matchedIntQueryIndex = -1, matchedIntLibIndex = -1;
+            int fileIndex = -1,
+                    titleIndex = -1,
+                    rankIndex = -1,
+                    libraryIndex = -1,
+                    scanNumberIndex = -1,
+                    rtIndex = -1,
+                    sequenceIndex = -1,
+                    precMassIndex = -1,
+                    chargeQueryIndex = -1,
+                    chargeLibIndex = -1,
+                    cossScoreIndex = -1,
+                    validationFdrIndex = -1,
+                    modificationsIndex = -1,
+                    proteinsIndex = -1,
+                    filteredQueryPeaksIndex = -1,
+                    filteredLibraryPeaksIndex = -1,
+                    sumIntQueryIndex = -1,
+                    sumIntLibIndex = -1,
+                    matchedPeaksIndex = -1,
+                    matchedIntQueryIndex = -1,
+                    matchedIntLibIndex = -1;
 
             // get the column index of the headers
             for (int i = 0; i < headers.length; i++) {
+
                 String header = headers[i];
 
                 if (header.equalsIgnoreCase("File")) {
@@ -224,12 +238,10 @@ public class CossIdfileReader implements IdfileReader {
                     || cossScoreIndex == -1 || chargeLibIndex == -1
                     || validationFdrIndex == -1) {
                 throw new IllegalArgumentException(
-                        "Mandatory columns are missing in the COSS tsv file. Please check the file!");
+                        "Mandatory column(s) not found in the COSS tsv file. Please check that the file contains at least (not case sensitive): 'File', 'Title', 'Rank', 'Sequence', 'Mods', 'Score', 'ChargeLib', and 'Validation(FDR)'.");
             }
 
             String line;
-            String currentSpectrumTitle = null;
-            SpectrumMatch currentMatch = null;
 
             // get the psms
             while ((line = reader.readLine()) != null) {
@@ -240,25 +252,31 @@ public class CossIdfileReader implements IdfileReader {
 
                     // get spectrum file name and title
                     String spectrumFileName = elements[fileIndex];
+
+                    HashMap<String, ArrayList<SpectrumIdentificationAssumption>> fileResults = result.get(spectrumFileName);
+
+                    if (fileResults == null) {
+
+                        fileResults = new HashMap<>();
+                        result.put(spectrumFileName, fileResults);
+
+                    }
+
                     String spectrumTitle = elements[titleIndex].trim();
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8"); // remove any html from the title
 
-                    // set up the yet empty spectrum match, or add to the current match
-                    if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {
+                    ArrayList<SpectrumIdentificationAssumption> spectrumResults = fileResults.get(spectrumTitle);
 
-                        // add the previous match, if any
-                        if (currentMatch != null) {
-                            result.add(currentMatch);
-                        }
+                    if (spectrumResults == null) {
 
-                        currentMatch = new SpectrumMatch(spectrumFileName, spectrumTitle);
-                        currentSpectrumTitle = spectrumTitle;
-                        
+                        spectrumResults = new ArrayList<>(2);
+                        fileResults.put(spectrumTitle, spectrumResults);
+
                     }
-                    
+
                     // get the peptide sequence
                     String peptideSequence = elements[sequenceIndex].toUpperCase();
-                    
+
                     // get the rank and charge
                     int rank = Integer.valueOf(elements[rankIndex]);
                     int charge = Integer.valueOf(elements[chargeLibIndex]); // @TODO: correct to use this one?
@@ -270,7 +288,6 @@ public class CossIdfileReader implements IdfileReader {
 
                     // coss fdr value
                     //double cossFdrValue = Util.readDoubleAsString(elements[validationFdrIndex]);   
-
                     // get and process the modifications
                     String modifications = elements[modificationsIndex].trim();
                     ArrayList<ModificationMatch> utilitiesModifications = new ArrayList<>(1);
@@ -414,23 +431,20 @@ public class CossIdfileReader implements IdfileReader {
                                     peptideAssumption.getIdentificationFile()
                             );
 
-                            currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), newAssumption);
+                            spectrumResults.add(newAssumption);
 
                         }
 
                     } else {
-                        currentMatch.addPeptideAssumption(Advocate.coss.getIndex(), peptideAssumption);
+
+                        spectrumResults.add(peptideAssumption);
+
                     }
 
                     if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                         break;
                     }
                 }
-            }
-            
-            // add the last match, if any
-            if (currentMatch != null) {
-                result.add(currentMatch);
             }
         }
 
@@ -444,8 +458,8 @@ public class CossIdfileReader implements IdfileReader {
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
-        HashMap<String, ArrayList<String>> result = new HashMap<>();
-        ArrayList<String> versions = new ArrayList<>();
+        HashMap<String, ArrayList<String>> result = new HashMap<>(1);
+        ArrayList<String> versions = new ArrayList<>(1);
         versions.add(softwareVersion);
         result.put(SOFTWARE_NAME, versions);
         return result;

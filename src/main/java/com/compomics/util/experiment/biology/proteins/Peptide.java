@@ -708,14 +708,14 @@ public class Peptide extends ExperimentObject {
      *
      * @return the key of the peptide
      */
-    public static long getKey(
+    public static int getKey(
             String sequence,
             ModificationMatch[] variableModifications
     ) {
 
         if (variableModifications == null || variableModifications.length == 0) {
 
-            return ExperimentObject.asLong(sequence);
+            return ExperimentObject.getHash(sequence);
 
         }
 
@@ -745,7 +745,7 @@ public class Peptide extends ExperimentObject {
                 modificationsKey
         );
 
-        return ExperimentObject.asLong(keyAsString);
+        return ExperimentObject.getHash(keyAsString);
 
     }
 

@@ -1,5 +1,6 @@
 package com.compomics.util.experiment.io.identification;
 
+import com.compomics.util.experiment.identification.SpectrumIdentificationAssumption;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
@@ -44,7 +45,7 @@ public interface IdfileReader extends AutoCloseable {
     public void close() throws IOException;
 
     /**
-     * Retrieves all the spectrum matches from an identification file as a list
+     * Retrieves all the spectrum identification candidates candidates from an identification file as a list
      * of spectrum matches, one spectrum match per spectrum. It is very
      * important to close the file reader after creation. Using this method
      * secondary maps are not filled.
@@ -64,7 +65,7 @@ public interface IdfileReader extends AutoCloseable {
      * @throws XmlPullParserException if an XmlPullParserException occurs
      * @throws XMLStreamException if an XMLStreamException occurs
      */
-    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters
@@ -72,7 +73,7 @@ public interface IdfileReader extends AutoCloseable {
             throws IOException, SQLException, ClassNotFoundException, InterruptedException, JAXBException, XmlPullParserException, XMLStreamException;
 
     /**
-     * Retrieves all the spectrum matches from an identification file as a list
+     * Retrieves all the spectrum identification candidates from an identification file as a list
      * of spectrum matches, one spectrum match per spectrum.It is very important
      * to close the file reader after creation. Secondary peptide and tag maps
      * are filled according to the file content and the sequence matching
@@ -99,7 +100,7 @@ public interface IdfileReader extends AutoCloseable {
      * @throws XmlPullParserException if an XmlPullParserException occurs
      * @throws XMLStreamException if an XMLStreamException occurs
      */
-    public ArrayList<SpectrumMatch> getAllSpectrumMatches(
+    public HashMap<String, HashMap<String, ArrayList<SpectrumIdentificationAssumption>>> getAllSpectrumMatches(
             SpectrumProvider spectrumProvider,
             WaitingHandler waitingHandler,
             SearchParameters searchParameters,

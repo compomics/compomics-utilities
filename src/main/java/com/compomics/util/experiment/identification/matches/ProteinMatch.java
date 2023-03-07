@@ -6,6 +6,7 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.util.Arrays;
 
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 /**
@@ -31,7 +32,7 @@ public class ProteinMatch extends IdentificationMatch {
     /**
      * The keys of the peptide matches associated to this protein match.
      */
-    private long[] peptideMatchesKeys = new long[0];
+    private int[] peptideMatchesKeys = new int[0];
     /**
      * The key of the match.
      */
@@ -77,7 +78,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     public ProteinMatch(
             Peptide peptide,
-            long peptideMatchKey
+            int peptideMatchKey
     ) {
 
         accessions = peptide.getProteinMapping()
@@ -87,7 +88,7 @@ public class ProteinMatch extends IdentificationMatch {
                 );
         leadingAccession = accessions[0];
 
-        peptideMatchesKeys = new long[1];
+        peptideMatchesKeys = new int[1];
         peptideMatchesKeys[0] = peptideMatchKey;
 
         setMatchKey();
@@ -170,7 +171,7 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @return subordinated peptide keys
      */
-    public long[] getPeptideMatchesKeys() {
+    public int[] getPeptideMatchesKeys() {
 
         return peptideMatchesKeys;
     }
@@ -180,7 +181,7 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param peptideMatchKey a peptide key
      */
-    public void addPeptideMatchKey(long peptideMatchKey) {
+    public void addPeptideMatchKey(int peptideMatchKey) {
 
         peptideMatchesKeys = Arrays.copyOf(peptideMatchesKeys, peptideMatchesKeys.length + 1);
         peptideMatchesKeys[peptideMatchesKeys.length - 1] = peptideMatchKey;
@@ -192,9 +193,9 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param newKeys peptide keys
      */
-    public void addPeptideMatchKeys(long[] newKeys) {
+    public void addPeptideMatchKeys(int[] newKeys) {
 
-        peptideMatchesKeys = LongStream.concat(Arrays.stream(peptideMatchesKeys),
+        peptideMatchesKeys = IntStream.concat(Arrays.stream(peptideMatchesKeys),
                 Arrays.stream(newKeys))
                 .distinct()
                 .toArray();
@@ -206,7 +207,7 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @param peptideMatchKeys the peptide match keys
      */
-    public void setPeptideMatchesKeys(long[] peptideMatchKeys) {
+    public void setPeptideMatchesKeys(int[] peptideMatchKeys) {
 
         peptideMatchesKeys = peptideMatchKeys;
     }
@@ -232,7 +233,7 @@ public class ProteinMatch extends IdentificationMatch {
      */
     private void setMatchKey() {
 
-        matchKey = ExperimentObject.asLong(
+        matchKey = ExperimentObject.getHash(
                 Arrays.stream(accessions)
                         .collect(Collectors.joining()));
 
@@ -246,9 +247,9 @@ public class ProteinMatch extends IdentificationMatch {
      *
      * @return the protein match key
      */
-    public static long getProteinMatchKey(Peptide peptide) {
+    public static int getProteinMatchKey(Peptide peptide) {
 
-        return ExperimentObject.asLong(
+        return ExperimentObject.getHash(
                 peptide.getProteinMapping().navigableKeySet().stream()
                         .collect(Collectors.joining()));
 
@@ -289,7 +290,7 @@ public class ProteinMatch extends IdentificationMatch {
      * @return a boolean indicating whether a peptide was found in this protein
      * match
      */
-    public boolean containsPeptide(long peptideKey) {
+    public boolean containsPeptide(int peptideKey) {
         
         return Arrays.stream(peptideMatchesKeys)
                 .anyMatch(key -> key == peptideKey);

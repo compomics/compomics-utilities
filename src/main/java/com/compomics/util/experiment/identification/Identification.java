@@ -116,7 +116,7 @@ public class Identification extends ExperimentObject {
      * @return the number of spectrum identifications
      */
     public int getSpectrumIdentificationSize() {
-        return objectsDB.getNumber(SpectrumMatch.class);
+        return objectsDB.getNumberOfInstances(SpectrumMatch.class);
     }
 
     /**
@@ -129,7 +129,7 @@ public class Identification extends ExperimentObject {
     public int getNumber(
             Class className
     ) {
-        return objectsDB.getNumber(className);
+        return objectsDB.getNumberOfInstances(className);
     }
 
     /**

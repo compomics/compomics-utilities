@@ -4,7 +4,7 @@
     <groupId>com.compomics</groupId>
     <artifactId>utilities</artifactId>
     <packaging>jar</packaging>
-    <version>5.0.66</version>
+    <version>5.0.65</version>
     <name>computational omics utilities</name>
     <url>https://github.com/compomics/compomics-utilities</url>
     <description>Open source java library for computational proteomics</description>
@@ -101,6 +101,15 @@
             <name>Carlos Horro</name>
             <id>carlos</id>
             <email>carlos.horro AT uib.no</email>
+            <organization>University of Bergen</organization>
+            <roles>
+                <role>Java Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Dafni Skiadopoulou</name>
+            <id>dafni</id>
+            <email>Dafni Skiadopoulou AT uib.no</email>
             <organization>University of Bergen</organization>
             <roles>
                 <role>Java Developer</role>
@@ -447,12 +456,6 @@
             <version>1.1.6</version>
             <type>jar</type>
         </dependency>
-        
-        <dependency>
-            <groupId>com.esotericsoftware</groupId>
-            <artifactId>kryo</artifactId>
-            <version>5.3.0</version>
-        </dependency>
 
         <!-- This project depends on jgoodies looks -->
         <dependency>
@@ -658,6 +661,13 @@
             <artifactId>aircompressor</artifactId>
             <version>0.21</version>
             <type>jar</type>
+        </dependency>
+        
+        <!-- Graph library for the PTM localization -->
+        <dependency>
+            <groupId>org.jgrapht</groupId>
+            <artifactId>jgrapht-core</artifactId>
+            <version>1.5.1</version>
         </dependency>
         
     </dependencies>

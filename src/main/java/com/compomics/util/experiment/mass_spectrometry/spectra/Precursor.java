@@ -15,6 +15,18 @@ import java.util.stream.Collectors;
 public class Precursor extends ExperimentObject {
 
     /**
+     * Empty default constructor.
+     */
+    public Precursor() {
+
+        this.rt = Double.NaN;
+        this.mz = Double.NaN;
+        this.intensity = Double.NaN;
+        this.possibleCharges = new int[0];
+
+    }
+
+    /**
      * The retention time when the precursor was isolated.
      */
     public final double rt;
@@ -30,18 +42,6 @@ public class Precursor extends ExperimentObject {
      * The charge of the precursor.
      */
     public final int[] possibleCharges;
-
-    /**
-     * Empty default constructor.
-     */
-    public Precursor() {
-
-        this.rt = Double.NaN;
-        this.mz = Double.NaN;
-        this.intensity = Double.NaN;
-        this.possibleCharges = new int[0];
-
-    }
 
     /**
      * Constructor for the precursor.

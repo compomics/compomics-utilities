@@ -5,12 +5,10 @@ import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.waiting.WaitingHandler;
 import java.io.*;
 import java.util.*;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import java.sql.*;
 import java.util.Map.Entry;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.SerializationUtils;
 
 /**
  * A database which can easily be used to store objects.
@@ -42,10 +40,6 @@ public class ObjectsDB {
      * Database persistence manager.
      */
     private Connection connection = null;
-    /**
-     * Configuration for fast serialization.
-     */
-    public Kryo kryo;
     /**
      * HashMap to map hash IDs of entries into DB ids.
      */
@@ -89,10 +83,6 @@ public class ObjectsDB {
         if (debugInteractions) {
             System.out.println(System.currentTimeMillis() + " Creating database");
         }
-
-        kryo = new Kryo();
-        //kryo.setDefaultSerializer(CompatibleFieldSerializer.class); // @TODO: add when breaking backwards compatibility anyway
-        kryo.setRegistrationRequired(false);
 
         this.path = path;
         this.dbName = dbName;
@@ -345,16 +335,7 @@ public class ObjectsDB {
 
             if (rs.next()) {
 
-                // kryo
-                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
-                Input input = new Input(bis);
-                Class<?> c = Class.forName(rs.getString("class"));
-                object = kryo.readObject(input, c);
-                input.close();
-                bis.close();
-
-                // standard java serialization
-//                object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
+                object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
 
             }
 
@@ -434,15 +415,7 @@ public class ObjectsDB {
                     return;
                 }
 
-                // kryo
-                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
-                Input input = new Input(bis);
-                Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
-                input.close();
-                bis.close();
-
-                // standard java serialization
-//                Object object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
+                Object object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
                 
                 long objectKey = rs.getLong("id");
 
@@ -604,15 +577,7 @@ public class ObjectsDB {
                     return retrievingObjects;
                 }
                 
-                // kryo
-                ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.toByteArray(rs.getBinaryStream("data")));
-                Input input = new Input(bis);
-                Object object = kryo.readObject(input, Class.forName(rs.getString("class")));
-                input.close();
-                bis.close();           
-
-                // standard java serialization
-//                Object object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
+                Object object = SerializationUtils.deserialize(IOUtils.toByteArray(rs.getBinaryStream("data")));
                 
                 long objectKey = rs.getLong("id");
                 

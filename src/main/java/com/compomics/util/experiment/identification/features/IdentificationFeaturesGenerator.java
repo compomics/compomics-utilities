@@ -5,7 +5,6 @@ import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
 import com.compomics.util.experiment.biology.proteins.Peptide;
 import com.compomics.util.experiment.identification.Identification;
-import com.compomics.util.experiment.identification.IdentificationMatch;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.PeptideMatch;
 import com.compomics.util.experiment.identification.matches.ProteinMatch;
@@ -25,10 +24,9 @@ import com.compomics.util.parameters.identification.search.DigestionParameters;
 import com.compomics.util.waiting.WaitingHandler;
 import com.compomics.util.parameters.identification.IdentificationParameters;
 import com.compomics.util.experiment.identification.filtering.ProteinFilter;
+import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.peptide_shaker.Metrics;
 import com.compomics.util.experiment.identification.peptide_shaker.PSParameter;
-import com.compomics.util.experiment.identification.peptide_shaker.PSModificationScores;
-import com.compomics.util.experiment.identification.utils.ModificationUtils;
 import com.compomics.util.gui.filtering.FilterParameters;
 import com.compomics.util.parameters.quantification.spectrum_counting.SpectrumCountingParameters;
 import com.compomics.util.experiment.identification.validation.MatchValidationLevel;
@@ -219,7 +217,7 @@ public class IdentificationFeaturesGenerator {
             massErrorDistribution.put(spectrumFile, new NonSymmetricalNormalDistribution(0, 0, 0));
         } else {
             setMassErrorDistribution(spectrumFile, precursorMzDeviations);
-        }  
+        }
 
     }
 
@@ -2178,159 +2176,221 @@ public class IdentificationFeaturesGenerator {
     }
 
     /**
-     * Returns a summary of all modifications present on the sequence
-     * confidently assigned to an amino acid. Example: SEQVEM&lt;mox&gt;CE gives
-     * Oxidation of M (M6).
+     * Returns a summary of the modifications present on the sequence. Example:
+     * S&lt;p&gt;EQVEM&lt;mox&gt;CE gives Phosphoylation of S (S1);Oxidation of
+     * M (M6).
      *
-     * @param identificationMatch the identification match
-     * @param sequence the sequence
+     * @param sequence the amino acid sequence
+     * @param modificationMatches the modifications
+     * @param confident exports only the confidently localized modifications if
+     * true, the other ones if false
      *
      * @return a modification summary for the given match
      */
-    public String getConfidentModificationSites(
-            IdentificationMatch identificationMatch,
-            String sequence
+    public String getModificationSites(
+            String sequence,
+            ModificationMatch[] modificationMatches,
+            boolean confident
     ) {
 
-        PSModificationScores modificationsScores = (PSModificationScores) identificationMatch.getUrParam(PSModificationScores.dummy);
+        if (modificationMatches.length == 0) {
 
-        return modificationsScores == null ? ""
-                : modificationsScores.getConfidentlyLocalizedModifications().stream()
-                        .map(
-                                modName -> String.join("",
-                                        modName,
-                                        modificationsScores.getConfidentSitesForModification(modName).stream()
-                                                .sorted()
-                                                .map(
-                                                        modSite -> PeptideUtils.getModifiedAaIndex(modSite, sequence.length())
-                                                )
-                                                .map(
-                                                        site -> String.join("",
-                                                                sequence.substring(site, site + 1), site.toString()
-                                                        )
-                                                )
-                                                .collect(
-                                                        Collectors.joining(", ", " (", ")")
-                                                )
-                                )
-                        )
-                        .collect(
-                                Collectors.joining(";")
-                        );
+            return "";
+
+        }
+
+        TreeMap<Integer, TreeSet<String>> modificationLocalization = new TreeMap<>();
+
+        for (ModificationMatch modificationMatch : modificationMatches) {
+
+            if (confident && modificationMatch.getConfident()
+                    || !confident && !modificationMatch.getConfident()) {
+
+                int site = modificationMatch.getSite();
+                TreeSet<String> modifications = modificationLocalization.get(site);
+
+                if (modifications == null) {
+
+                    modifications = new TreeSet<>();
+                    modificationLocalization.put(site, modifications);
+
+                }
+
+                modifications.add(modificationMatch.getModification());
+
+            }
+        }
+
+        if (modificationLocalization.isEmpty()) {
+
+            return "";
+
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        for (Entry<Integer, TreeSet<String>> entry : modificationLocalization.entrySet()) {
+
+            int site = entry.getKey();
+
+            char letter;
+
+            if (site > 0 && site <= sequence.length()) {
+
+                letter = sequence.charAt(site - 1);
+
+            } else if (site == 0) {
+
+                letter = sequence.charAt(0);
+                site = site + 1;
+
+            } else if (site == sequence.length() + 1) {
+
+                letter = sequence.charAt(sequence.length() - 1);
+                site = site - 1;
+
+            } else {
+
+                throw new IllegalArgumentException("Modification index out of sequence.");
+
+            }
+
+            for (String modName : entry.getValue()) {
+
+                if (result.length() > 0) {
+
+                    result.append("; ");
+
+                }
+
+                result.append(modName).append(" (").append(letter).append(site).append(')');
+
+            }
+        }
+
+        return result.toString();
 
     }
 
     /**
      * Returns the number of confidently localized variable modifications.
      *
-     * @param identificationMatch the identification match
+     * @param modificationMatches the modifications
+     * @param confident exports only the confidently localized modifications if
+     * true, the other ones if false
      *
      * @return a modification summary for the given protein
      */
-    public String getConfidentModificationSitesNumber(
-            IdentificationMatch identificationMatch
+    public String getModificationSitesNumber(
+            ModificationMatch[] modificationMatches,
+            boolean confident
     ) {
 
-        final PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(PSModificationScores.dummy);
+        if (modificationMatches.length == 0) {
 
-        return modificationScores == null ? ""
-                : modificationScores.getConfidentlyLocalizedModifications().stream()
-                        .map(
-                                modName -> String.join("",
-                                        modName,
-                                        " (",
-                                        Integer.toString(modificationScores.getConfidentSitesForModification(modName).size()),
-                                        ")"
-                                )
-                        )
-                        .collect(
-                                Collectors.joining(";")
-                        );
+            return "";
 
-    }
+        }
 
-    /**
-     * Returns a list of the modifications present on the sequence ambiguously
-     * assigned to an amino acid grouped by representative site followed by
-     * secondary ambiguous sites. Example: SEQVEM&lt;mox&gt;CEM&lt;mox&gt;K
-     * returns M6 {M9}.
-     *
-     * @param identificationMatch the identification match
-     * @param sequence the sequence
-     *
-     * @return a modification summary for the given protein
-     */
-    public String getAmbiguousModificationSites(
-            IdentificationMatch identificationMatch,
-            String sequence
-    ) {
+        TreeMap<String, Integer> modificationOccurrence = new TreeMap<>();
 
-        final PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(PSModificationScores.dummy);
+        for (ModificationMatch modificationMatch : modificationMatches) {
 
-        return modificationScores == null ? ""
-                : modificationScores.getAmbiguouslyLocalizedModifications().stream()
-                        .map(
-                                modName -> String.join("",
-                                        modName,
-                                        " (",
-                                        getSitesSummary(
-                                                modificationScores.getAmbiguousModificationsSites(modName),
-                                                sequence
-                                        ),
-                                        ")"
-                                )
-                        )
-                        .collect(
-                                Collectors.joining(";")
-                        );
+            if (confident && modificationMatch.getConfident()
+                    || !confident && !modificationMatch.getConfident()) {
 
-    }
+                String modName = modificationMatch.getModification();
 
-    /**
-     * Returns a string representing the given map of modification sites.
-     *
-     * @param sites the modification sites
-     * @param sequence the sequence
-     *
-     * @return a string representing the given map of modification sites
-     */
-    private String getSitesSummary(
-            HashMap<Integer, HashSet<Integer>> sites,
-            String sequence
-    ) {
+                Integer occurrence = modificationOccurrence.get(modName);
 
-        return (new TreeMap<>(sites)).entrySet().stream()
+                if (occurrence == null) {
+
+                    modificationOccurrence.put(modName, 1);
+
+                } else {
+
+                    modificationOccurrence.put(modName, occurrence + 1);
+
+                }
+            }
+        }
+
+        if (modificationOccurrence.isEmpty()) {
+
+            return "";
+
+        }
+
+        return modificationOccurrence.entrySet().stream()
                 .map(
-                        entry -> String.join(
-                                "",
-                                sequence.substring(
-                                        ModificationUtils.getSite(
-                                                entry.getKey(),
-                                                sequence.length()
-                                        ) - 1,
-                                        ModificationUtils.getSite(
-                                                entry.getKey(),
-                                                sequence.length()
-                                        )
-                                ),
-                                Integer.toString(
-                                        ModificationUtils.getSite(
-                                                entry.getKey(),
-                                                sequence.length()
-                                        )
-                                ),
-                                entry.getValue().stream()
-                                        .map(
-                                                index -> Integer.toString(
-                                                        ModificationUtils.getSite(
-                                                                index,
-                                                                sequence.length()
-                                                        )
-                                                )
-                                        )
-                                        .collect(
-                                                Collectors.joining(" ", "-{", "}")
-                                        )
+                        entry -> String.join("",
+                                entry.getKey(), " (", entry.getValue().toString(), ")"
+                        )
+                )
+                .collect(
+                        Collectors.joining(";")
+                );
+
+    }
+
+    /**
+     * Returns a summary of the modifications present on the peptide sequence
+     * confidently assigned to an amino acid with focus on given list of
+     * modifications.
+     *
+     * @param sequence the sequence
+     * @param modificationMatches the modifications
+     * @param confident exports only the confidently localized modifications if
+     * true, the other ones if false
+     * @param targetedModifications the modifications to include in the summary
+     *
+     * @return a modification summary for the given match
+     */
+    public String getModificationSites(
+            String sequence,
+            ModificationMatch[] modificationMatches,
+            boolean confident,
+            HashSet<String> targetedModifications
+    ) {
+
+        if (modificationMatches.length == 0) {
+
+            return "";
+
+        }
+
+        TreeSet<Integer> sites = new TreeSet<>();
+
+        for (ModificationMatch modificationMatch : modificationMatches) {
+
+            if (confident && modificationMatch.getConfident()
+                    || !confident && !modificationMatch.getConfident()) {
+
+                if (targetedModifications.contains(modificationMatch.getModification())) {
+
+                    sites.add(modificationMatch.getSite());
+
+                }
+            }
+        }
+
+        if (sites.isEmpty()) {
+
+            return "";
+
+        }
+
+        return sites.stream()
+                .map(
+                        modSite -> PeptideUtils.getModifiedAaIndex(
+                                modSite,
+                                sequence.length()
+                        )
+                )
+                .map(
+                        site -> String.join("",
+                                sequence.substring(site, site + 1),
+                                site.toString()
                         )
                 )
                 .collect(
@@ -2340,238 +2400,76 @@ public class IdentificationFeaturesGenerator {
     }
 
     /**
-     * Returns a summary of the number of modifications present on the sequence
-     * ambiguously assigned to an amino acid grouped by representative site
-     * followed by secondary ambiguous sites. Example:
-     * SEQVEM&lt;mox&gt;CEM&lt;mox&gt;K returns M6 {M9}.
-     *
-     * @param identificationMatch the identification match
-     *
-     * @return a modification summary for the given match
-     */
-    public String getAmbiguousModificationSiteNumber(
-            IdentificationMatch identificationMatch
-    ) {
-
-        final PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(PSModificationScores.dummy);
-
-        return modificationScores == null ? ""
-                : modificationScores.getAmbiguouslyLocalizedModifications().stream()
-                        .map(
-                                modName -> String.join("",
-                                        modName,
-                                        " (",
-                                        Integer.toString(
-                                                modificationScores.getAmbiguousModificationsSites(modName).size()
-                                        ),
-                                        ")"
-                                )
-                        )
-                        .collect(
-                                Collectors.joining(";")
-                        );
-
-    }
-
-    /**
-     * Returns a summary of the modifications present on the peptide sequence
-     * confidently assigned to an amino acid with focus on given list of
-     * modifications.
-     *
-     * @param match the identification match
-     * @param sequence the sequence
-     * @param targetedModifications the modifications to include in the summary
-     *
-     * @return a modification summary for the given match
-     */
-    public String getConfidentModificationSites(
-            IdentificationMatch match,
-            String sequence,
-            ArrayList<String> targetedModifications
-    ) {
-
-        final PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(PSModificationScores.dummy);
-
-        return modificationScores == null ? ""
-                : targetedModifications.stream()
-                        .flatMap(
-                                modName -> modificationScores.getConfidentSitesForModification(modName).stream()
-                        )
-                        .distinct()
-                        .sorted()
-                        .map(
-                                modSite -> PeptideUtils.getModifiedAaIndex(
-                                        modSite,
-                                        sequence.length()
-                                )
-                        )
-                        .map(
-                                site -> String.join("",
-                                        sequence.substring(site, site + 1),
-                                        site.toString()
-                                )
-                        )
-                        .collect(
-                                Collectors.joining(",")
-                        );
-
-    }
-
-    /**
      * Returns the number of confidently localized variable modifications.
      *
-     * @param match the identification match
+     * @param modificationMatches the modifications
+     * @param confident exports only the confidently localized modifications if
+     * true, the other ones if false
      * @param targetedModifications the modifications to include in the summary
      *
      * @return a modification summary for the given match
      */
-    public String getConfidentModificationSitesNumber(
-            IdentificationMatch match,
-            ArrayList<String> targetedModifications
+    public int getModificationSitesNumber(
+            ModificationMatch[] modificationMatches,
+            boolean confident,
+            HashSet<String> targetedModifications
     ) {
 
-        final PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(PSModificationScores.dummy);
-
-        return modificationScores == null ? ""
-                : Long.toString(
-                        targetedModifications.stream()
-                                .flatMap(
-                                        modName -> modificationScores.getConfidentSitesForModification(modName).stream()
-                                )
-                                .distinct()
-                                .count());
-
-    }
-
-    /**
-     * Returns a list of the modifications present on the sequence ambiguously
-     * assigned to an amino acid grouped by representative site followed by
-     * secondary ambiguous sites. Example: SEQVEM&lt;mox&gt;CEM&lt;mox&gt;K
-     * returns M6 {M9}.
-     *
-     * @param match the identification match
-     * @param sequence the sequence
-     * @param targetedModifications the modifications to include in the summary
-     *
-     * @return a modification summary for the given match
-     */
-    public String getAmbiguousModificationSites(
-            IdentificationMatch match,
-            String sequence,
-            ArrayList<String> targetedModifications
-    ) {
-
-        PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(PSModificationScores.dummy);
-
-        if (modificationScores == null) {
-
-            return "";
-
-        } else {
-
-            TreeMap<Integer, ArrayList<String>> reportPerSite = new TreeMap<>();
-
-            for (String modName : targetedModifications) {
-
-                TreeMap<Integer, HashSet<Integer>> sites = new TreeMap<>(modificationScores.getAmbiguousModificationsSites(modName));
-
-                for (Entry<Integer, HashSet<Integer>> entry : sites.entrySet()) {
-
-                    int representativeSite = entry.getKey();
-                    HashSet<Integer> ambiguousSites = entry.getValue();
-
-                    StringBuilder prefix = new StringBuilder();
-                    prefix
-                            .append(sequence.charAt(representativeSite - 1))
-                            .append(representativeSite)
-                            .append("-{");
-
-                    String reportAtSite = ambiguousSites.stream()
-                            .sorted()
-                            .map(
-                                    site -> String.join("",
-                                            sequence.substring(site - 1, site),
-                                            site.toString()
-                                    )
-                            )
-                            .collect(
-                                    Collectors.joining(" ",
-                                            prefix,
-                                            "}"
-                                    )
-                            );
-
-                    ArrayList<String> reportsAtSite = reportPerSite.get(representativeSite);
-
-                    if (reportsAtSite == null) {
-
-                        reportsAtSite = new ArrayList<>(1);
-                        reportPerSite.put(representativeSite, reportsAtSite);
-
-                    }
-
-                    reportsAtSite.add(reportAtSite);
-
-                }
-            }
-
-            return reportPerSite.values().stream()
-                    .flatMap(ArrayList::stream)
-                    .collect(Collectors.joining(";"));
-
-        }
-    }
-
-    /**
-     * Returns a summary of the number of modifications present on the sequence
-     * ambiguously assigned to an amino acid grouped by representative site
-     * followed by secondary ambiguous sites. Example:
-     * SEQVEM&lt;mox&gt;CEM&lt;mox&gt;K returns M6 {M9}.
-     *
-     * @param match the identification match
-     * @param targetedModifications the modifications to include in the summary
-     *
-     * @return a modification summary for the given match
-     */
-    public String getAmbiguousModificationSiteNumber(
-            IdentificationMatch match,
-            ArrayList<String> targetedModifications
-    ) {
-
-        final PSModificationScores modificationScores = (PSModificationScores) match.getUrParam(PSModificationScores.dummy);
-
-        return modificationScores == null ? ""
-                : Long.toString(
-                        targetedModifications.stream()
-                                .flatMap(
-                                        modName -> modificationScores.getAmbiguousModificationsSites(modName).keySet().stream()
-                                )
-                                .distinct()
-                                .count()
-                );
+        return (int) Arrays.stream(modificationMatches)
+                .filter(
+                        modificationMatch -> confident && modificationMatch.getConfident()
+                        || !confident && !modificationMatch.getConfident()
+                )
+                .filter(
+                        modificationMatch -> targetedModifications.contains(modificationMatch.getModification())
+                )
+                .mapToInt(
+                        ModificationMatch::getSite
+                )
+                .distinct()
+                .count();
 
     }
 
     /**
      * Returns the match sequence annotated with modifications.
      *
-     * @param identificationMatch the identification match
+     * @param modificationMatches the modifications
      * @param sequence the sequence of the match
      *
      * @return the protein sequence annotated with modifications
      */
     public String getModifiedSequence(
-            IdentificationMatch identificationMatch,
+            ModificationMatch[] modificationMatches,
             String sequence
     ) {
 
-        PSModificationScores modificationScores = (PSModificationScores) identificationMatch.getUrParam(PSModificationScores.dummy);
+        if (modificationMatches.length == 0) {
 
-        if (modificationScores == null) {
-
-            return "";
+            return sequence;
 
         } else {
+
+            HashMap<Integer, TreeSet<String>> modificationsBySite = new HashMap<>();
+
+            for (ModificationMatch modificationMatch : modificationMatches) {
+
+                int site = modificationMatch.getSite();
+
+                int index = PeptideUtils.getModifiedAaIndex(site, sequence.length());
+
+                TreeSet<String> modifications = modificationsBySite.get(index);
+
+                if (modifications == null) {
+
+                    modifications = new TreeSet<>();
+                    modificationsBySite.put(index, modifications);
+
+                }
+
+                modifications.add(modificationMatch.getModification());
+
+            }
 
             StringBuilder result = new StringBuilder(sequence.length());
 
@@ -2580,13 +2478,12 @@ public class IdentificationFeaturesGenerator {
                 result.append(sequence.charAt(aa));
 
                 int aaNumber = aa + 1;
-                HashSet<String> modificationsAtSite = modificationScores.getConfidentModificationsAt(aaNumber);
+                TreeSet<String> modificationsAtSite = modificationsBySite.get(aaNumber);
 
                 if (!modificationsAtSite.isEmpty()) {
 
                     result.append(
                             modificationsAtSite.stream()
-                                    .sorted()
                                     .map(
                                             modName -> modificationFactory.getModification(modName).getShortName()
                                     )

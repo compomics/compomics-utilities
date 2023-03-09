@@ -60,10 +60,14 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      * Tmt16 or Tmt18.
      */
     private String tmtType = null;
-//    /**
-//     * The MS-level to perform TMT quantification on.
-//     */
-//    private Integer tmtLevel = 3; // @TODO: re-add next time we break backwards compatibility
+    /**
+     * The MS-level to perform TMT quantification on.
+     */
+    private Integer tmtLevel = 3;
+     /**
+     * Use Signal/Noise instead of intensity for TMT quant. Requires noise values in mzML.
+     */
+    private Boolean tmtSn = false;
     /**
      * Set whether LFQ is to be performed.
      */
@@ -89,6 +93,10 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      * The maximum number of peaks for a spectrum.
      */
     private Integer maxPeaks = 150;
+    /**
+     * The minimum number of matched b+y ions to use for reporting PSMs.
+     */
+    private Integer minMatchedPeaks = 4;
     /**
      * The maximum fragment charge.
      */
@@ -171,12 +179,19 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
                     || (tmtType != null && sageParameters.getTmtType() == null)) {
                 return false;
             }
-//            if ((tmtLevel == null && sageParameters.getTmtLevel() != null)
-//                    || (tmtLevel != null && sageParameters.getTmtLevel() == null)) {
-//                return false;
-//            }
             if ((tmtType != null && sageParameters.getTmtType() != null)
                     && (!tmtType.equalsIgnoreCase(sageParameters.getTmtType()))) {
+                return false;
+            }
+            if ((tmtLevel == null && sageParameters.getTmtLevel() != null)
+                    || (tmtLevel != null && sageParameters.getTmtLevel() == null)) {
+                return false;
+            }
+            if ((tmtLevel != null && sageParameters.getTmtLevel() != null)
+                    && (!tmtLevel.equals(sageParameters.getTmtLevel()))) {
+                return false;
+            }
+            if (!getTmtSn().equals(sageParameters.getTmtSn())) {
                 return false;
             }
             if (!performLfq.equals(sageParameters.getPerformLfq())) {
@@ -195,6 +210,14 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
                 return false;
             }
             if (!maxPeaks.equals(sageParameters.getMaxPeaks())) {
+                return false;
+            }
+            if ((minMatchedPeaks == null && sageParameters.getMinMatchedPeaks() != null)
+                    || (minMatchedPeaks != null && sageParameters.getMinMatchedPeaks() == null)) {
+                return false;
+            }
+            if ((minMatchedPeaks != null && sageParameters.getMinMatchedPeaks() != null)
+                    && (!minMatchedPeaks.equals(sageParameters.getMinMatchedPeaks()))) {
                 return false;
             }
             if ((maxFragmentCharge == null && sageParameters.getMaxFragmentCharge() != null)
@@ -273,9 +296,12 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
         output.append("TMT_TYPE=");
         output.append(tmtType);
         output.append(newLine);
-//        output.append("TMT_LEVEL=");
-//        output.append(tmtLevel);
-//        output.append(newLine);
+        output.append("TMT_LEVEL=");
+        output.append(tmtLevel);
+        output.append(newLine);
+        output.append("TMT_SN=");
+        output.append(tmtSn);
+        output.append(newLine);
         output.append("LFQ=");
         output.append(performLfq);
         output.append(newLine);
@@ -293,6 +319,9 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
         output.append(newLine);
         output.append("MAX_PEAKS=");
         output.append(maxPeaks);
+        output.append(newLine);
+        output.append("MIN_MATCHED_PEAKS=");
+        output.append(minMatchedPeaks);
         output.append(newLine);
         output.append("MAX_FRAGMENT_CHARGE=");
         output.append(maxFragmentCharge);
@@ -509,28 +538,51 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
         this.tmtType = tmtType;
     }
     
-//    /**
-//     * Returns the TMT level.
-//     *
-//     * @return the TMT level
-//     */
-//    public Integer getTmtLevel() {
-//        
-//        if (tmtLevel == null){
-//            tmtLevel = 2;
-//        }
-//        
-//        return tmtLevel;
-//    }
-//
-//    /**
-//     * Sets the TMT level.
-//     *
-//     * @param tmtLevel the TMT level to set
-//     */
-//    public void setTmtLevel(Integer tmtLevel) {
-//        this.tmtLevel = tmtLevel;
-//    }
+    /**
+     * Returns the TMT level.
+     *
+     * @return the TMT level
+     */
+    public Integer getTmtLevel() {
+        
+        if (tmtLevel == null){
+            tmtLevel = 3;
+        }
+        
+        return tmtLevel;
+    }
+
+    /**
+     * Sets the TMT level.
+     *
+     * @param tmtLevel the TMT level to set
+     */
+    public void setTmtLevel(Integer tmtLevel) {
+        this.tmtLevel = tmtLevel;
+    }
+    
+     /**
+     * Returns true if Signal/Noise should be used instead of intensity for TMT quantification.
+     *
+     * @return true if Signal/Noise should be used instead of intensity for TMT quantification
+     */
+    public Boolean getTmtSn() {
+        
+        if (tmtSn == null) {
+            tmtSn = false;
+        }
+        
+        return tmtSn;
+    }
+
+    /**
+     * Set if Signal/Noise should be used instead of intensity for TMT quantification.
+     *
+     * @param tmtSn the tmtSn to set
+     */
+    public void setTmtSn(Boolean tmtSn) {
+        this.tmtSn = tmtSn;
+    }
 
     /**
      * Returns true if LFQ is to be performed.
@@ -638,6 +690,24 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      */
     public void setMaxPeaks(Integer maxPeaks) {
         this.maxPeaks = maxPeaks;
+    }
+    
+    /**
+     * Returns the minimum number of matched b+y ions to use for reporting PSMs.
+     *
+     * @return the minimum number of matched b+y ions
+     */
+    public Integer getMinMatchedPeaks() {
+        return minMatchedPeaks;
+    }
+
+    /**
+     * Set the minimum number of matched b+y ions to use for reporting PSMs.
+     *
+     * @param minMatchedPeaks the minMatchedPeaks to set
+     */
+    public void setMinMatchedPeaks(Integer minMatchedPeaks) {
+        this.minMatchedPeaks = minMatchedPeaks;
     }
 
     /**

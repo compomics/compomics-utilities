@@ -45,7 +45,7 @@ public class PrecursorParameter implements UrParameter, Serializable {
     }
 
     /**
-     * Returns the precusor identifiers.
+     * Returns the precursor identifiers.
      *
      * @return the precusorIdentifiers
      */

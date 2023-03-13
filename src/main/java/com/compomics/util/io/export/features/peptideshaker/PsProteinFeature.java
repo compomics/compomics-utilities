@@ -85,18 +85,26 @@ public enum PsProteinFeature implements ExportFeature {
     spectrum_counting_nsaf("Spectrum Counting NSAF", "Raw Normalized Spectrum Abundance Factor (NSAF).", false),
     @SerializedName("PsProteinFeature.spectrum_counting_empai")
     spectrum_counting_empai("Spectrum Counting emPAI", "Raw exponentially modified Protein Abundance Index (emPAI).", false),
+    @SerializedName("PsProteinFeature.label_free_quantification")
+    label_free_quantification("Label-free MS1 Quantification", "Label-free MS1 quantification (LFQ).", false),
     @SerializedName("PsProteinFeature.spectrum_counting_nsaf_percent")
     spectrum_counting_nsaf_percent("Spectrum Counting NSAF [%]", "Normalized Spectrum Abundance Factor (NSAF) in percent.", false),
     @SerializedName("PsProteinFeature.spectrum_counting_empai_percent")
     spectrum_counting_empai_percent("Spectrum Counting emPAI [%]", "exponentially modified Protein Abundance Index (emPAI) in percent.", false),
+    @SerializedName("PsProteinFeature.label_free_quantification_percent")
+    label_free_quantification_percent("Label-free MS1 Quantification [%]", "Label-free MS1 quantification (LFQ) in percent.", false),
     @SerializedName("PsProteinFeature.spectrum_counting_nsaf_ppm")
     spectrum_counting_nsaf_ppm("Spectrum Counting NSAF [ppm]", "Normalized Spectrum Abundance Factor (NSAF) in ppm.", false),
     @SerializedName("PsProteinFeature.spectrum_counting_empai_ppm")
     spectrum_counting_empai_ppm("Spectrum Counting emPAI [ppm]", "exponentially modified Protein Abundance Index (emPAI) in ppm.", false),
+    @SerializedName("PsProteinFeature.label_free_quantification_ppm")
+    label_free_quantification_ppm("Label-free MS1 Quantification [%]", "Label-free MS1 quantification (LFQ) in ppn.", false),
     @SerializedName("PsProteinFeature.spectrum_counting_nsaf_fmol")
     spectrum_counting_nsaf_fmol("Spectrum Counting NSAF [fmol]", "Normalized Spectrum Abundance Factor (NSAF) in femtomol.", false),
     @SerializedName("PsProteinFeature.spectrum_counting_empai_fmol")
     spectrum_counting_empai_fmol("Spectrum Counting emPAI [fmol]", "exponentially modified Protein Abundance Index (emPAI) in femtomol.", false),
+    @SerializedName("PsProteinFeature.label_free_quantification_[fmol]")
+    label_free_quantification_fmol("Label-free MS1 Quantification [%]", "Label-free MS1 quantification (LFQ) in femtomol.", false),
     @SerializedName("PsProteinFeature.mw")
     mw("MW [kDa]", "Molecular Weight [kDa].", false),
     @SerializedName("PsProteinFeature.proteinLength")

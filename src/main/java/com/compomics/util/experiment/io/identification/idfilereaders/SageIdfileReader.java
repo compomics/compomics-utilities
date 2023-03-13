@@ -9,6 +9,7 @@ import com.compomics.util.experiment.identification.spectrum_assumptions.Peptide
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
+import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumptionParameter;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.io.IoUtil;
@@ -149,7 +150,8 @@ public class SageIdfileReader implements IdfileReader {
                     sageDiscriminantScore = -1,
                     rankIndex = -1,
                     spectrumTitleIndex = -1,
-                    spectrumFileIndex = -1;
+                    spectrumFileIndex = -1,
+                    ms1_intensityIndex = -1;
 
             // get the column index of the headers
             for (int i = 0; i < headers.length; i++) {
@@ -170,6 +172,8 @@ public class SageIdfileReader implements IdfileReader {
                     spectrumTitleIndex = i;
                 } else if (header.equalsIgnoreCase("filename")) {
                     spectrumFileIndex = i;
+                } else if (header.equalsIgnoreCase("ms1_intensity")) {
+                    ms1_intensityIndex = i;
                 }
             }
 
@@ -310,6 +314,9 @@ public class SageIdfileReader implements IdfileReader {
                             ),
                             true
                     );
+                    
+                    // get the ms1 intensity
+                    double ms1_intensity = Double.parseDouble(elements[ms1_intensityIndex]);
 
                     // create the peptide assumption
                     PeptideAssumption peptideAssumption = new PeptideAssumption(
@@ -321,6 +328,8 @@ public class SageIdfileReader implements IdfileReader {
                             rawScore,
                             IoUtil.getFileName(sageTsvFile)
                     );
+                    
+                    peptideAssumption.addUrParam(new PeptideAssumptionParameter(ms1_intensity));
 
                     if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
 

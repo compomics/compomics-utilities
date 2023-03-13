@@ -23,7 +23,6 @@ import javax.swing.table.*;
 import no.uib.jsparklines.data.ArrrayListDataPoints;
 import no.uib.jsparklines.data.XYDataPoint;
 import no.uib.jsparklines.data.StartIndexes;
-import no.uib.jsparklines.renderers.JSparklinesArrayListBarChartTableCellRenderer;
 import no.uib.jsparklines.renderers.JSparklinesIntegerColorTableCellRenderer;
 import no.uib.jsparklines.renderers.util.AreaRenderer;
 import no.uib.jsparklines.renderers.util.GradientColorCoding;
@@ -187,6 +186,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * The rows remaining after applying the data filters.
      */
     private ArrayList<Integer> rowsAfterDataFiltering = new ArrayList<>();
+
     /**
      * The plotting dialog types.
      */
@@ -219,10 +219,19 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param normalIcon the normal icon for the parent dialog
      * @param waitingIcon the icon to use when busy
      */
-    public XYPlottingDialog(java.awt.Frame dialogParent, JTable table, String selectedColumn,
-            PlottingDialogPlotType plotType, ArrayList<String> tableToolTips,
-            Image normalIcon, Image waitingIcon, boolean modal) {
+    public XYPlottingDialog(
+            java.awt.Frame dialogParent,
+            JTable table,
+            String selectedColumn,
+            PlottingDialogPlotType plotType,
+            ArrayList<String> tableToolTips,
+            Image normalIcon,
+            Image waitingIcon,
+            boolean modal
+    ) {
+
         super(dialogParent, modal);
+
         initComponents();
         this.dialogParent = dialogParent;
         this.tableModel = table.getModel();
@@ -234,11 +243,15 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         minColumnWidths = new HashMap<>();
 
         if (table.getRowCount() > 0) {
+
             for (int i = 0; i < table.getColumnCount(); i++) {
+
                 cellRenderers.put(i, table.getCellRenderer(0, i));
                 minColumnWidths.put(i, table.getColumn(table.getColumnName(i)).getMinWidth());
                 maxColumnWidths.put(i, table.getColumn(table.getColumnName(i)).getMaxWidth());
+
             }
+
         }
 
         this.tableToolTips = tableToolTips;
@@ -249,12 +262,23 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
             xAxisComboBox.setSelectedItem(selectedColumn);
         }
 
-        if (plotType == PlottingDialogPlotType.xyPlot) {
-            xyPlotRadioButton.setSelected(true);
-        } else if (plotType == PlottingDialogPlotType.histogram) {
-            histogramRadioButton.setSelected(true);
-        } else if (plotType == PlottingDialogPlotType.densityPlot) {
-            densityPlotRadioButton.setSelected(true);
+        switch (plotType) {
+
+            case xyPlot:
+                xyPlotRadioButton.setSelected(true);
+                break;
+
+            case histogram:
+                histogramRadioButton.setSelected(true);
+                break;
+
+            case densityPlot:
+                densityPlotRadioButton.setSelected(true);
+                break;
+
+            default:
+                break;
+
         }
 
         updatePlot();
@@ -266,6 +290,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                 setVisible(true);
             }
         });
+
     }
 
     /**
@@ -281,13 +306,19 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         int columnCount = tableModel.getColumnCount();
 
         for (int i = 0; i < columnCount; i++) {
+
             if (tableModel.getColumnName(i).trim().length() == 0) {
+
                 colummnNames.add("(column " + (i + 1) + ")");
                 colummnNamesExtended.add("(column " + (i + 1) + ")");
+
             } else {
+
                 colummnNames.add(tableModel.getColumnName(i));
                 colummnNamesExtended.add(tableModel.getColumnName(i));
+
             }
+
         }
 
         xAxisComboBox.setModel(new DefaultComboBoxModel(colummnNames));
@@ -301,14 +332,17 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         visibleColumns = new HashMap<>();
 
         for (int i = 0; i < selectedValuesTable.getColumnCount(); i++) {
+
             allTableColumns.add(selectedValuesTable.getColumn(selectedValuesTable.getColumnName(i)));
             visibleColumns.put(i, true);
+
         }
 
         selectedValuesScrollPane.getViewport().setOpaque(false);
         selectedValuesTable.getTableHeader().setReorderingAllowed(false);
 
         if (tableModel instanceof SelfUpdatingTableModel) {
+
             SelfUpdatingTableModel.addSortListener(selectedValuesTable, new ProgressDialogX(dialogParent,
                     normalIcon,
                     waitingIcon,
@@ -317,14 +351,18 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
             // add scrolling listeners
             //SelfUpdatingTableModel.addScrollListeners(selectedValuesTable, selectedValuesScrollPane, selectedValuesScrollPane.getVerticalScrollBar()); // @TODO: should work, but has no effect it seems...
         } else {
+
             selectedValuesTable.setAutoCreateRowSorter(true);
+
         }
 
         Iterator<Integer> iterator = cellRenderers.keySet().iterator();
 
         while (iterator.hasNext()) {
+
             Integer columnIndex = iterator.next();
             selectedValuesTable.getColumn(selectedValuesTable.getColumnName(columnIndex)).setCellRenderer(cellRenderers.get(columnIndex));
+
         }
 
         iterator = minColumnWidths.keySet().iterator();
@@ -345,6 +383,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         JPanel selectedValuesCorner = new JPanel();
         selectedValuesCorner.setBackground(selectedValuesTable.getTableHeader().getBackground());
         selectedValuesScrollPane.setCorner(ScrollPaneConstants.UPPER_RIGHT_CORNER, selectedValuesCorner);
+
     }
 
     /**
@@ -1047,9 +1086,11 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void binSizeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_binSizeSpinnerStateChanged
+
         numberOfBins = (Integer) binSizeSpinner.getValue();
         userDefinedBinSize = true;
         updatePlot();
+
     }//GEN-LAST:event_binSizeSpinnerStateChanged
 
     /**
@@ -1117,6 +1158,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         binSizeSpinner.setEnabled(histogramRadioButton.isSelected());
 
         updatePlot();
+
     }//GEN-LAST:event_histogramRadioButtonActionPerformed
 
     /**
@@ -1143,11 +1185,13 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void xAxisLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_xAxisLabelMouseClicked
+
         String xAxis = (String) xAxisComboBox.getSelectedItem();
         String yAxis = (String) yAxisComboBox.getSelectedItem();
 
         xAxisComboBox.setSelectedItem(yAxis);
         yAxisComboBox.setSelectedItem(xAxis);
+
     }//GEN-LAST:event_xAxisLabelMouseClicked
 
     /**
@@ -1192,20 +1236,40 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void bubbleSizeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bubbleSizeComboBoxActionPerformed
+
         if (bubbleSizeComboBox.getSelectedIndex() == 0) {
-            String value = JOptionPane.showInputDialog(this, "Select the bubble size.", bubbleSize);
+
+            String value = JOptionPane.showInputDialog(
+                    this,
+                    "Select the bubble size.",
+                    bubbleSize
+            );
+
             if (value != null) {
+
                 try {
-                    bubbleSize = Double.valueOf(value);
+
+                    bubbleSize = Double.parseDouble(value);
                     updatePlot();
+
                 } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(this, "Bubble size has to be a number.", "Bubble Size Error", JOptionPane.ERROR_MESSAGE);
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Bubble size has to be a number.",
+                            "Bubble Size Error",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+
                     bubbleSizeComboBoxActionPerformed(null);
                 }
+
             }
+
         } else {
             updatePlot();
         }
+
     }//GEN-LAST:event_bubbleSizeComboBoxActionPerformed
 
     /**
@@ -1232,22 +1296,51 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void bubbleSizeLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bubbleSizeLabelMouseClicked
-        String value = JOptionPane.showInputDialog(this, "Select the bubble scaling factor.\nA value of 1 means no scaling.", bubbleScalingFactor);
+
+        String value = JOptionPane.showInputDialog(
+                this,
+                "Select the bubble scaling factor.\nA value of 1 means no scaling.",
+                bubbleScalingFactor
+        );
+
         if (value != null) {
+
             try {
+
                 double tempBubbleScalingFactor = Double.valueOf(value);
+
                 if (tempBubbleScalingFactor > 0) {
+
                     bubbleScalingFactor = tempBubbleScalingFactor;
                     updatePlot();
+
                 } else {
-                    JOptionPane.showMessageDialog(this, "The bubble scaling factor has to be bigger than 0.", "Bubble Scaling Error", JOptionPane.ERROR_MESSAGE);
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "The bubble scaling factor has to be bigger than 0.",
+                            "Bubble Scaling Error",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+
                     bubbleSizeComboBoxActionPerformed(null);
+
                 }
+
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Bubble scaling factor has to be a number.", "Bubble Scaling Error", JOptionPane.ERROR_MESSAGE);
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Bubble scaling factor has to be a number.",
+                        "Bubble Scaling Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+
                 bubbleSizeComboBoxActionPerformed(null);
             }
+
         }
+
     }//GEN-LAST:event_bubbleSizeLabelMouseClicked
 
     /**
@@ -1259,6 +1352,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
 
         // resize the layered panels
         SwingUtilities.invokeLater(new Runnable() {
+
             public void run() {
 
                 // move the icons
@@ -1266,22 +1360,31 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                         selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(0).getWidth() - 22,
                         -2,
                         selectedValuesLayeredPane.getComponent(0).getWidth(),
-                        selectedValuesLayeredPane.getComponent(0).getHeight());
+                        selectedValuesLayeredPane.getComponent(0).getHeight()
+                );
 
                 selectedValuesLayeredPane.getComponent(1).setBounds(
                         selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(1).getWidth() - 10,
                         -4,
                         selectedValuesLayeredPane.getComponent(1).getWidth(),
-                        selectedValuesLayeredPane.getComponent(1).getHeight());
+                        selectedValuesLayeredPane.getComponent(1).getHeight()
+                );
 
                 selectedValuesLayeredPane.getComponent(2).setBounds(
                         selectedValuesLayeredPane.getWidth() - selectedValuesLayeredPane.getComponent(2).getWidth() - 5,
                         -3,
                         selectedValuesLayeredPane.getComponent(2).getWidth(),
-                        selectedValuesLayeredPane.getComponent(2).getHeight());
+                        selectedValuesLayeredPane.getComponent(2).getHeight()
+                );
 
                 // resize the table area
-                selectedValuesLayeredPane.getComponent(3).setBounds(0, 0, selectedValuesLayeredPane.getWidth(), selectedValuesLayeredPane.getHeight());
+                selectedValuesLayeredPane.getComponent(3).setBounds(
+                        0,
+                        0,
+                        selectedValuesLayeredPane.getWidth(),
+                        selectedValuesLayeredPane.getHeight()
+                );
+
                 selectedValuesLayeredPane.revalidate();
                 selectedValuesLayeredPane.repaint();
 
@@ -1290,26 +1393,38 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                         plotLayeredPane.getWidth() - plotLayeredPane.getComponent(0).getWidth() - 22,
                         -2,
                         plotLayeredPane.getComponent(0).getWidth(),
-                        plotLayeredPane.getComponent(0).getHeight());
+                        plotLayeredPane.getComponent(0).getHeight()
+                );
 
                 plotLayeredPane.getComponent(1).setBounds(
                         plotLayeredPane.getWidth() - plotLayeredPane.getComponent(1).getWidth() - 10,
                         -4,
                         plotLayeredPane.getComponent(1).getWidth(),
-                        plotLayeredPane.getComponent(1).getHeight());
+                        plotLayeredPane.getComponent(1).getHeight()
+                );
 
                 plotLayeredPane.getComponent(2).setBounds(
                         plotLayeredPane.getWidth() - plotLayeredPane.getComponent(2).getWidth() - 5,
                         -3,
                         plotLayeredPane.getComponent(2).getWidth(),
-                        plotLayeredPane.getComponent(2).getHeight());
+                        plotLayeredPane.getComponent(2).getHeight()
+                );
 
                 // resize the plot area
-                plotLayeredPane.getComponent(3).setBounds(0, 0, plotLayeredPane.getWidth(), plotLayeredPane.getHeight());
+                plotLayeredPane.getComponent(3).setBounds(
+                        0,
+                        0,
+                        plotLayeredPane.getWidth(),
+                        plotLayeredPane.getHeight()
+                );
+
                 plotLayeredPane.revalidate();
                 plotLayeredPane.repaint();
+
             }
+
         });
+
     }//GEN-LAST:event_backgroundPanelComponentResized
 
     /**
@@ -1372,7 +1487,16 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void exportPlotMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportPlotMenuItemActionPerformed
-        new ExportGraphicsDialog(this, getNormalIcon(), getWaitingIcon(), true, chartPanel, lastSelectedFolder);
+
+        new ExportGraphicsDialog(
+                this,
+                getNormalIcon(),
+                getWaitingIcon(),
+                true,
+                chartPanel,
+                lastSelectedFolder
+        );
+
     }//GEN-LAST:event_exportPlotMenuItemActionPerformed
 
     /**
@@ -1381,32 +1505,53 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void exportSelectedValuesMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportSelectedValuesMenuItemActionPerformed
-        final File selectedFile = FileChooserUtil.getUserSelectedFile(this, ".txt", "Tab separated text file (.txt)", "Export Selected Values", lastSelectedFolder.getLastSelectedFolder(), "table_to_file.txt", false);
+
+        final File selectedFile = FileChooserUtil.getUserSelectedFile(
+                this,
+                ".txt",
+                "Tab separated text file (.txt)",
+                "Export Selected Values",
+                lastSelectedFolder.getLastSelectedFolder(),
+                "table_to_file.txt",
+                false
+        );
+
         final XYPlottingDialog finalRef = this;
 
         if (selectedFile != null) {
 
-            progressDialog = new ProgressDialogX(this, dialogParent,
+            progressDialog = new ProgressDialogX(
+                    this,
+                    dialogParent,
                     normalIcon,
                     waitingIcon,
-                    true);
+                    true
+            );
+
             progressDialog.setPrimaryProgressCounterIndeterminate(true);
             progressDialog.setTitle("Exporting Table. Please Wait...");
 
             new Thread(new Runnable() {
+
                 public void run() {
+
                     try {
                         progressDialog.setVisible(true);
                     } catch (IndexOutOfBoundsException e) {
                         // ignore
                     }
+
                 }
+
             }, "ProgressDialog").start();
 
             new Thread("TableExportThread") {
                 @Override
+
                 public void run() {
+
                     try {
+
                         BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile));
                         Util.tableToFile(selectedValuesTable, "\t", progressDialog, true, writer);
                         writer.close();
@@ -1415,11 +1560,27 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                         progressDialog.setRunFinished();
 
                         if (!processCancelled) {
-                            JOptionPane.showMessageDialog(finalRef, "Data copied to file:\n" + selectedFile.getAbsolutePath(), "Data Exported.", JOptionPane.INFORMATION_MESSAGE);
+
+                            JOptionPane.showMessageDialog(
+                                    finalRef,
+                                    "Data copied to file:\n" + selectedFile.getAbsolutePath(),
+                                    "Data Exported.",
+                                    JOptionPane.INFORMATION_MESSAGE
+                            );
+
                         }
+
                     } catch (IOException e) {
+
                         progressDialog.setRunFinished();
-                        JOptionPane.showMessageDialog(null, "An error occurred when exporting the table content.", "Export Failed", JOptionPane.ERROR_MESSAGE);
+
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "An error occurred when exporting the table content.",
+                                "Export Failed",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+
                         e.printStackTrace();
                     }
                 }
@@ -1451,11 +1612,17 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void plotHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotHelpJButtonActionPerformed
+
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        new HelpDialog(this, getClass().getResource("/helpFiles/StatisticsDialog.html"),
+
+        new HelpDialog(
+                this,
+                getClass().getResource("/helpFiles/StatisticsDialog.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-                "Statistics - Help");
+                "Statistics - Help"
+        );
+
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_plotHelpJButtonActionPerformed
 
@@ -1483,11 +1650,17 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void selectedValuesTableHelpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectedValuesTableHelpJButtonActionPerformed
+
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        new HelpDialog(this, getClass().getResource("/helpFiles/StatisticsDialog.html"),
+
+        new HelpDialog(
+                this,
+                getClass().getResource("/helpFiles/StatisticsDialog.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
-                "Statistics - Help");
+                "Statistics - Help"
+        );
+
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_selectedValuesTableHelpJButtonActionPerformed
 
@@ -1497,7 +1670,13 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void hideColumnsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideColumnsMenuItemActionPerformed
-        new VisibleTableColumnsDialog(this, this, isPlotting);
+
+        new VisibleTableColumnsDialog(
+                this,
+                this,
+                isPlotting
+        );
+
     }//GEN-LAST:event_hideColumnsMenuItemActionPerformed
 
     /**
@@ -1506,6 +1685,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void colorLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_colorLabelMouseClicked
+
         useGradientColorCoding = !useGradientColorCoding;
         updatePlot();
 
@@ -1514,6 +1694,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         } else {
             colorLabel.setToolTipText("Click to enable gradient colors");
         }
+
     }//GEN-LAST:event_colorLabelMouseClicked
 
     /**
@@ -1540,8 +1721,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void regressionLineCheckBoxMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regressionLineCheckBoxMenuItemActionPerformed
+
         showRegressionLine = regressionLineCheckBoxMenuItem.isSelected();
         updatePlot(); // @TODO: maybe not needed to redo the whole plot to show/hide the regression line?
+
     }//GEN-LAST:event_regressionLineCheckBoxMenuItemActionPerformed
 
     /**
@@ -1559,7 +1742,9 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * @param evt
      */
     private void editFiltersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editFiltersButtonActionPerformed
+
         new XYPlotFiltersDialog(this, true);
+
     }//GEN-LAST:event_editFiltersButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel backgroundPanel;
@@ -1616,30 +1801,40 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
     public void updatePlot() {
 
         if (!isPlotting) {
+
             selectedDataPoints = new HashMap<>();
             dataPointToRowNumber = new HashMap<>();
             selectedModelRows = new ArrayList<>();
 
             isPlotting = true;
 
-            progressDialog = new ProgressDialogX(this, dialogParent,
+            progressDialog = new ProgressDialogX(
+                    this,
+                    dialogParent,
                     normalIcon,
                     waitingIcon,
-                    true);
+                    true
+            );
+
             progressDialog.setPrimaryProgressCounterIndeterminate(true);
             progressDialog.setTitle("Loading Data. Please Wait...");
 
             new Thread(new Runnable() {
+
                 public void run() {
+
                     try {
                         progressDialog.setVisible(true);
                     } catch (IndexOutOfBoundsException e) {
                         // ignore
                     }
+
                 }
+
             }, "ProgressDialog").start();
 
             new Thread("XYPlottingThread") {
+
                 @Override
                 public void run() {
 
@@ -1676,30 +1871,53 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                         double[] values = new double[tableModel.getRowCount()];
 
                         for (int index = 0; index < tableModel.getRowCount(); index++) {
+
                             progressDialog.increasePrimaryProgressCounter();
 
                             if (rowsAfterDataFiltering.contains(index)) {
 
                                 // @TODO: support more data types!!
                                 if (tableModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
+
                                     values[index] = ((XYDataPoint) tableModel.getValueAt(index, xAxisIndex)).getX();
+
                                 } else if (tableModel.getValueAt(index, xAxisIndex) instanceof Integer) {
+
                                     values[index] = ((Integer) tableModel.getValueAt(index, xAxisIndex)).doubleValue();
+
                                 } else if (tableModel.getValueAt(index, xAxisIndex) instanceof Double) {
-                                    values[index] = ((Double) tableModel.getValueAt(index, xAxisIndex)).doubleValue();
+
+                                    values[index] = ((Double) tableModel.getValueAt(index, xAxisIndex));
+
                                 } else if (tableModel.getValueAt(index, xAxisIndex) instanceof StartIndexes) {
-                                    if (((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().size() > 0) {
+
+                                    if (!((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().isEmpty()) {
                                         values[index] = ((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
                                     }
+
                                 } else if (tableModel.getValueAt(index, xAxisIndex) instanceof ArrrayListDataPoints) {
+
                                     ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(index, xAxisIndex);
+
                                     if (!arrrayListDataPoints.getData().isEmpty()) {
-                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
-                                            values[index] = arrrayListDataPoints.getSum();
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
-                                            values[index] = arrrayListDataPoints.getSumExceptLast();
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
-                                            values[index] = arrrayListDataPoints.getData().get(0);
+
+                                        switch (arrrayListDataPoints.getDataSortingType()) {
+
+                                            case sumOfNumbers:
+                                                values[index] = arrrayListDataPoints.getSum();
+                                                break;
+
+                                            case sumExceptLastNumber:
+                                                values[index] = arrrayListDataPoints.getSumExceptLast();
+                                                break;
+
+                                            case firstNumberOnly:
+                                                values[index] = arrrayListDataPoints.getData().get(0);
+                                                break;
+
+                                            default:
+                                                break;
+
                                         }
                                     }
                                 }
@@ -1731,7 +1949,17 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                             renderer.setSeriesFillPaint(0, histogramColor);
                             renderer.setSeriesOutlinePaint(0, histogramColor.darker());
 
-                            chart = ChartFactory.createXYLineChart(null, xAxisName, "Density", lineChartDataset, PlotOrientation.VERTICAL, false, true, false);
+                            chart = ChartFactory.createXYLineChart(
+                                    null,
+                                    xAxisName,
+                                    "Density",
+                                    lineChartDataset,
+                                    PlotOrientation.VERTICAL,
+                                    false,
+                                    true,
+                                    false
+                            );
+
                             plot = chart.getXYPlot();
                             plot.setRenderer(renderer);
 
@@ -1749,7 +1977,17 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
 
                             dataset.addSeries(xAxisName, values, numberOfBins);
 
-                            chart = ChartFactory.createHistogram(null, xAxisName, "Frequency", dataset, PlotOrientation.VERTICAL, false, true, false);
+                            chart = ChartFactory.createHistogram(
+                                    null,
+                                    xAxisName,
+                                    "Frequency",
+                                    dataset,
+                                    PlotOrientation.VERTICAL,
+                                    false,
+                                    true,
+                                    false
+                            );
+
                             plot = chart.getXYPlot();
 
                             // set up the chart renderer
@@ -1758,6 +1996,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                             renderer.setShadowVisible(false);
                             renderer.setSeriesPaint(0, histogramColor);
                             plot.setRenderer(renderer);
+
                         }
 
                         // linear or logarithmic axis
@@ -1810,77 +2049,130 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                             if (rowsAfterDataFiltering.contains(i)) {
 
                                 ArrayList<Integer> tempArray;
+
                                 if (!datasets.containsKey(tableModel.getValueAt(i, colorIndex).toString())) {
                                     tempArray = new ArrayList<>();
                                     datasetNames.add(tableModel.getValueAt(i, colorIndex).toString());
                                 } else {
                                     tempArray = datasets.get(tableModel.getValueAt(i, colorIndex).toString());
                                 }
+
                                 tempArray.add(i);
                                 datasets.put(tableModel.getValueAt(i, colorIndex).toString(), tempArray);
 
                                 // get the min and max values for the color column
                                 if (tableModel.getValueAt(i, colorIndex) instanceof XYDataPoint) {
+
                                     double tempColorValue = ((XYDataPoint) tableModel.getValueAt(i, colorIndex)).getX();
+
                                     if (tempColorValue > maxColorValue) {
                                         maxColorValue = tempColorValue;
                                     }
+
                                     if (tempColorValue < minColorValue) {
                                         minColorValue = tempColorValue;
                                     }
+
                                 } else if (tableModel.getValueAt(i, colorIndex) instanceof Integer) {
+
                                     int tempColorValue = (Integer) tableModel.getValueAt(i, colorIndex);
+
                                     if (tempColorValue > maxColorValue) {
                                         maxColorValue = tempColorValue;
                                     }
+
                                     if (tempColorValue < minColorValue) {
                                         minColorValue = tempColorValue;
                                     }
+
                                 } else if (tableModel.getValueAt(i, colorIndex) instanceof Double) {
+
                                     double tempColorValue = (Double) tableModel.getValueAt(i, colorIndex);
+
                                     if (tempColorValue > maxColorValue) {
                                         maxColorValue = tempColorValue;
                                     }
+
                                     if (tempColorValue < minColorValue) {
                                         minColorValue = tempColorValue;
                                     }
+
                                 } else if (tableModel.getValueAt(i, colorIndex) instanceof StartIndexes) {
-                                    if (((StartIndexes) tableModel.getValueAt(i, colorIndex)).getIndexes().size() > 0) {
+
+                                    if (!((StartIndexes) tableModel.getValueAt(i, colorIndex)).getIndexes().isEmpty()) {
+
                                         double tempColorValue = ((StartIndexes) tableModel.getValueAt(i, colorIndex)).getIndexes().get(0);
+
                                         if (tempColorValue > maxColorValue) {
                                             maxColorValue = tempColorValue;
                                         }
+
                                         if (tempColorValue < minColorValue) {
                                             minColorValue = tempColorValue;
                                         }
+
                                     }
+
                                 } else if (tableModel.getValueAt(i, colorIndex) instanceof ArrrayListDataPoints) {
+
                                     ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(i, colorIndex);
+
                                     if (!arrrayListDataPoints.getData().isEmpty()) {
-                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
-                                            double tempColorValue = arrrayListDataPoints.getSum();
-                                            if (tempColorValue > maxColorValue) {
-                                                maxColorValue = tempColorValue;
+
+                                        switch (arrrayListDataPoints.getDataSortingType()) {
+
+                                            case sumOfNumbers: {
+
+                                                double tempColorValue = arrrayListDataPoints.getSum();
+
+                                                if (tempColorValue > maxColorValue) {
+                                                    maxColorValue = tempColorValue;
+
+                                                }
+
+                                                if (tempColorValue < minColorValue) {
+                                                    minColorValue = tempColorValue;
+                                                }
+
+                                                break;
+
                                             }
-                                            if (tempColorValue < minColorValue) {
-                                                minColorValue = tempColorValue;
+
+                                            case sumExceptLastNumber: {
+
+                                                double tempColorValue = arrrayListDataPoints.getSumExceptLast();
+
+                                                if (tempColorValue > maxColorValue) {
+                                                    maxColorValue = tempColorValue;
+                                                }
+
+                                                if (tempColorValue < minColorValue) {
+                                                    minColorValue = tempColorValue;
+                                                }
+
+                                                break;
+
                                             }
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
-                                            double tempColorValue = arrrayListDataPoints.getSumExceptLast();
-                                            if (tempColorValue > maxColorValue) {
-                                                maxColorValue = tempColorValue;
+
+                                            case firstNumberOnly: {
+
+                                                double tempColorValue = arrrayListDataPoints.getData().get(0);
+
+                                                if (tempColorValue > maxColorValue) {
+                                                    maxColorValue = tempColorValue;
+                                                }
+
+                                                if (tempColorValue < minColorValue) {
+                                                    minColorValue = tempColorValue;
+                                                }
+
+                                                break;
+
                                             }
-                                            if (tempColorValue < minColorValue) {
-                                                minColorValue = tempColorValue;
-                                            }
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
-                                            double tempColorValue = arrrayListDataPoints.getData().get(0);
-                                            if (tempColorValue > maxColorValue) {
-                                                maxColorValue = tempColorValue;
-                                            }
-                                            if (tempColorValue < minColorValue) {
-                                                minColorValue = tempColorValue;
-                                            }
+
+                                            default:
+                                                break;
+
                                         }
                                     }
                                 }
@@ -1917,48 +2209,93 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
 
                                 // @TODO: support more data types!!
                                 if (tableModel.getValueAt(index, xAxisIndex) instanceof XYDataPoint) {
+
                                     tempDataXYZ[0][counter] = ((XYDataPoint) tableModel.getValueAt(index, xAxisIndex)).getX();
+
                                 } else if (tableModel.getValueAt(index, xAxisIndex) instanceof Integer) {
+
                                     tempDataXYZ[0][counter] = (Integer) tableModel.getValueAt(index, xAxisIndex);
+
                                 } else if (tableModel.getValueAt(index, xAxisIndex) instanceof Double) {
+
                                     tempDataXYZ[0][counter] = (Double) tableModel.getValueAt(index, xAxisIndex);
+
                                 } else if (tableModel.getValueAt(index, xAxisIndex) instanceof StartIndexes) {
-                                    if (((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().size() > 0) {
+
+                                    if (!((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().isEmpty()) {
                                         tempDataXYZ[0][counter] = ((StartIndexes) tableModel.getValueAt(index, xAxisIndex)).getIndexes().get(0);
                                     }
+
                                 } else if (tableModel.getValueAt(index, xAxisIndex) instanceof ArrrayListDataPoints) {
+
                                     ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(index, xAxisIndex);
+
                                     if (!arrrayListDataPoints.getData().isEmpty()) {
-                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
-                                            tempDataXYZ[0][counter] = arrrayListDataPoints.getSum();
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
-                                            tempDataXYZ[0][counter] = arrrayListDataPoints.getSumExceptLast();
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
-                                            tempDataXYZ[0][counter] = arrrayListDataPoints.getData().get(0);
+
+                                        switch (arrrayListDataPoints.getDataSortingType()) {
+
+                                            case sumOfNumbers:
+                                                tempDataXYZ[0][counter] = arrrayListDataPoints.getSum();
+                                                break;
+
+                                            case sumExceptLastNumber:
+                                                tempDataXYZ[0][counter] = arrrayListDataPoints.getSumExceptLast();
+                                                break;
+
+                                            case firstNumberOnly:
+                                                tempDataXYZ[0][counter] = arrrayListDataPoints.getData().get(0);
+                                                break;
+
+                                            default:
+                                                break;
+
                                         }
                                     }
                                 }
 
                                 if (tableModel.getValueAt(index, yAxisIndex) instanceof XYDataPoint) {
+
                                     tempDataXYZ[1][counter] = ((XYDataPoint) tableModel.getValueAt(index, yAxisIndex)).getX();
+
                                 } else if (tableModel.getValueAt(index, yAxisIndex) instanceof Integer) {
+
                                     tempDataXYZ[1][counter] = (Integer) tableModel.getValueAt(index, yAxisIndex);
+
                                 } else if (tableModel.getValueAt(index, yAxisIndex) instanceof Double) {
+
                                     tempDataXYZ[1][counter] = (Double) tableModel.getValueAt(index, yAxisIndex);
+
                                 } else if (tableModel.getValueAt(index, yAxisIndex) instanceof StartIndexes) {
-                                    if (((StartIndexes) tableModel.getValueAt(index, yAxisIndex)).getIndexes().size() > 0) {
+
+                                    if (!((StartIndexes) tableModel.getValueAt(index, yAxisIndex)).getIndexes().isEmpty()) {
                                         tempDataXYZ[1][counter] = ((StartIndexes) tableModel.getValueAt(index, yAxisIndex)).getIndexes().get(0);
                                     }
+
                                 } else if (tableModel.getValueAt(index, yAxisIndex) instanceof ArrrayListDataPoints) {
+
                                     ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(index, yAxisIndex);
+
                                     if (!arrrayListDataPoints.getData().isEmpty()) {
-                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
-                                            tempDataXYZ[1][counter] = arrrayListDataPoints.getSum();
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
-                                            tempDataXYZ[1][counter] = arrrayListDataPoints.getSumExceptLast();
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
-                                            tempDataXYZ[1][counter] = arrrayListDataPoints.getData().get(0);
+
+                                        switch (arrrayListDataPoints.getDataSortingType()) {
+
+                                            case sumOfNumbers:
+                                                tempDataXYZ[1][counter] = arrrayListDataPoints.getSum();
+                                                break;
+
+                                            case sumExceptLastNumber:
+                                                tempDataXYZ[1][counter] = arrrayListDataPoints.getSumExceptLast();
+                                                break;
+
+                                            case firstNumberOnly:
+                                                tempDataXYZ[1][counter] = arrrayListDataPoints.getData().get(0);
+                                                break;
+
+                                            default:
+                                                break;
+
                                         }
+
                                     }
                                 }
 
@@ -1976,27 +2313,49 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                 if (bubbleSizeIndex == 0) {
                                     tempDataXYZ[2][counter] = bubbleSize;
                                 } else {
+
                                     if (tableModel.getValueAt(index, bubbleSizeIndex - 1) instanceof XYDataPoint) {
+
                                         tempDataXYZ[2][counter] = ((XYDataPoint) tableModel.getValueAt(index, bubbleSizeIndex - 1)).getX();
+
                                     } else if (tableModel.getValueAt(index, bubbleSizeIndex - 1) instanceof Integer) {
+
                                         tempDataXYZ[2][counter] = ((Integer) tableModel.getValueAt(index, bubbleSizeIndex - 1));
+
                                     } else if (tableModel.getValueAt(index, bubbleSizeIndex - 1) instanceof Double) {
+
                                         tempDataXYZ[2][counter] = ((Double) tableModel.getValueAt(index, bubbleSizeIndex - 1));
+
                                     } else if (tableModel.getValueAt(index, bubbleSizeIndex - 1) instanceof StartIndexes) {
-                                        if (((StartIndexes) tableModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().size() > 0) {
+
+                                        if (!((StartIndexes) tableModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().isEmpty()) {
                                             tempDataXYZ[2][counter] = (((StartIndexes) tableModel.getValueAt(index, bubbleSizeIndex - 1)).getIndexes().get(0));
                                         } else {
                                             tempDataXYZ[2][counter] = 0;
                                         }
+
                                     } else if (tableModel.getValueAt(index, bubbleSizeIndex - 1) instanceof ArrrayListDataPoints) {
+
                                         ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(index, bubbleSizeIndex - 1);
+
                                         if (!arrrayListDataPoints.getData().isEmpty()) {
-                                            if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
-                                                tempDataXYZ[2][counter] = arrrayListDataPoints.getSum();
-                                            } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
-                                                tempDataXYZ[2][counter] = arrrayListDataPoints.getSumExceptLast();
-                                            } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
-                                                tempDataXYZ[2][counter] = arrrayListDataPoints.getData().get(0);
+
+                                            switch (arrrayListDataPoints.getDataSortingType()) {
+                                                case sumOfNumbers:
+                                                    tempDataXYZ[2][counter] = arrrayListDataPoints.getSum();
+                                                    break;
+
+                                                case sumExceptLastNumber:
+                                                    tempDataXYZ[2][counter] = arrrayListDataPoints.getSumExceptLast();
+                                                    break;
+
+                                                case firstNumberOnly:
+                                                    tempDataXYZ[2][counter] = arrrayListDataPoints.getData().get(0);
+                                                    break;
+
+                                                default:
+                                                    break;
+
                                             }
                                         } else {
                                             tempDataXYZ[2][counter] = 0;
@@ -2027,50 +2386,186 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
 
                             // get the color to use if using gradient color coding
                             if (tempObject instanceof Integer) {
-                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(((Integer) tempObject).doubleValue(), minColorValue, maxColorValue, colorGradient, false));
+
+                                datasetColors.put(
+                                        datasetCounter,
+                                        GradientColorCoding.findGradientColor(
+                                                ((Integer) tempObject).doubleValue(),
+                                                minColorValue,
+                                                maxColorValue,
+                                                colorGradient,
+                                                false
+                                        )
+                                );
+
                             } else if (tempObject instanceof Double) {
-                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor((Double) tempObject, minColorValue, maxColorValue, colorGradient, false));
+
+                                datasetColors.put(
+                                        datasetCounter,
+                                        GradientColorCoding.findGradientColor(
+                                                (Double) tempObject,
+                                                minColorValue,
+                                                maxColorValue,
+                                                colorGradient,
+                                                false
+                                        )
+                                );
+
                             } else if (tempObject instanceof XYDataPoint) {
-                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(((XYDataPoint) tempObject).getX(), minColorValue, maxColorValue, colorGradient, false));
+
+                                datasetColors.put(
+                                        datasetCounter,
+                                        GradientColorCoding.findGradientColor(
+                                                ((XYDataPoint) tempObject).getX(),
+                                                minColorValue,
+                                                maxColorValue,
+                                                colorGradient,
+                                                false
+                                        )
+                                );
+
                             } else if (tempObject instanceof StartIndexes) {
-                                if (((StartIndexes) tempObject).getIndexes().size() > 0) {
-                                    datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(
-                                            ((StartIndexes) tempObject).getIndexes().get(0).doubleValue(), minColorValue, maxColorValue, colorGradient, false));
+
+                                if (!((StartIndexes) tempObject).getIndexes().isEmpty()) {
+
+                                    datasetColors.put(
+                                            datasetCounter,
+                                            GradientColorCoding.findGradientColor(
+                                                    ((StartIndexes) tempObject).getIndexes().get(0).doubleValue(),
+                                                    minColorValue,
+                                                    maxColorValue,
+                                                    colorGradient,
+                                                    false
+                                            )
+                                    );
+
                                 } else {
-                                    datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minColorValue, minColorValue, maxColorValue, colorGradient, false));
+
+                                    datasetColors.put(
+                                            datasetCounter,
+                                            GradientColorCoding.findGradientColor(
+                                                    minColorValue,
+                                                    minColorValue,
+                                                    maxColorValue,
+                                                    colorGradient,
+                                                    false
+                                            )
+                                    );
+
                                 }
+
                             } else if (tempObject instanceof ArrrayListDataPoints) {
+
                                 ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tempObject;
+
                                 if (!arrrayListDataPoints.getData().isEmpty()) {
-                                    if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
-                                        datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(arrrayListDataPoints.getSum(),
-                                                minColorValue, maxColorValue, colorGradient, false));
-                                    } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
-                                        datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(arrrayListDataPoints.getSumExceptLast(),
-                                                minColorValue, maxColorValue, colorGradient, false));
-                                    } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
-                                        datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(arrrayListDataPoints.getData().get(0),
-                                                minColorValue, maxColorValue, colorGradient, false));
+
+                                    switch (arrrayListDataPoints.getDataSortingType()) {
+
+                                        case sumOfNumbers:
+
+                                            datasetColors.put(
+                                                    datasetCounter,
+                                                    GradientColorCoding.findGradientColor(
+                                                            arrrayListDataPoints.getSum(),
+                                                            minColorValue,
+                                                            maxColorValue,
+                                                            colorGradient,
+                                                            false
+                                                    )
+                                            );
+
+                                            break;
+
+                                        case sumExceptLastNumber:
+
+                                            datasetColors.put(
+                                                    datasetCounter,
+                                                    GradientColorCoding.findGradientColor(
+                                                            arrrayListDataPoints.getSumExceptLast(),
+                                                            minColorValue,
+                                                            maxColorValue,
+                                                            colorGradient,
+                                                            false
+                                                    )
+                                            );
+
+                                            break;
+
+                                        case firstNumberOnly:
+
+                                            datasetColors.put(
+                                                    datasetCounter,
+                                                    GradientColorCoding.findGradientColor(
+                                                            arrrayListDataPoints.getData().get(0),
+                                                            minColorValue,
+                                                            maxColorValue,
+                                                            colorGradient,
+                                                            false
+                                                    )
+                                            );
+
+                                            break;
+
+                                        default:
+                                            break;
+
                                     }
+
                                 } else {
-                                    datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minColorValue, minColorValue, maxColorValue, colorGradient, false));
+
+                                    datasetColors.put(
+                                            datasetCounter,
+                                            GradientColorCoding.findGradientColor(
+                                                    minColorValue,
+                                                    minColorValue,
+                                                    maxColorValue,
+                                                    colorGradient,
+                                                    false
+                                            )
+                                    );
+
                                 }
+
                             } else {
-                                datasetColors.put(datasetCounter, GradientColorCoding.findGradientColor(minColorValue, minColorValue, maxColorValue, colorGradient, false));
+
+                                datasetColors.put(
+                                        datasetCounter,
+                                        GradientColorCoding.findGradientColor(
+                                                minColorValue,
+                                                minColorValue,
+                                                maxColorValue,
+                                                colorGradient,
+                                                false
+                                        )
+                                );
+
                             }
 
                             xyzDataset.addSeries(dataset, tempDataXYZ);
                             datasetCounter++;
+
                         }
 
                         progressDialog.setPrimaryProgressCounterIndeterminate(true);
 
                         // create the plot
-                        JFreeChart chart = ChartFactory.createBubbleChart(null, xAxisName, yAxisName, xyzDataset, PlotOrientation.VERTICAL, false, true, false);
+                        JFreeChart chart = ChartFactory.createBubbleChart(
+                                null,
+                                xAxisName,
+                                yAxisName,
+                                xyzDataset,
+                                PlotOrientation.VERTICAL,
+                                false,
+                                true,
+                                false
+                        );
+
                         XYPlot plot = chart.getXYPlot();
 
                         // add the regression line
                         if (showRegressionLine) {
+
                             XYSeriesCollection regressionData = new XYSeriesCollection();
                             XYSeries regr = new XYSeries("RegressionLine");
                             regr.add(minXValue, simpleRegression.predict(minXValue));
@@ -2078,18 +2573,25 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                             regressionData.addSeries(regr);
 
                             // show the r squared value
-                            plot.addAnnotation(new XYTextAnnotation("R2=" + Util.roundDouble(simpleRegression.getRSquare(), 2),
-                                    maxXValue * 0.93, simpleRegression.predict(maxXValue) * 0.99));
+                            plot.addAnnotation(
+                                    new XYTextAnnotation(
+                                            "R2=" + Util.roundDouble(simpleRegression.getRSquare(), 2),
+                                            maxXValue * 0.93,
+                                            simpleRegression.predict(maxXValue) * 0.99
+                                    )
+                            );
 
                             StandardXYItemRenderer regressionRenderer = new StandardXYItemRenderer();
                             regressionRenderer.setBaseSeriesVisibleInLegend(false);
                             regressionRenderer.setSeriesPaint(0, Color.GRAY);
                             plot.setDataset(1, regressionData);
                             plot.setRenderer(1, regressionRenderer);
+
                         }
 
                         // set up the renderer
                         XYBubbleRenderer renderer = new XYBubbleRenderer(XYBubbleRenderer.SCALE_ON_DOMAIN_AXIS) {
+
                             @Override
                             public Stroke getItemOutlineStroke(int row, int column) {
 
@@ -2097,26 +2599,38 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                 int[] selectedRows = selectedValuesTable.getSelectedRows();
 
                                 for (int tableRowIndex : selectedRows) {
-                                    if (dataPointToRowNumber.get(row + "_" + column).intValue()
+                                    if (dataPointToRowNumber.get(row + "_" + column)
                                             == selectedValuesTable.convertRowIndexToModel(tableRowIndex)) {
                                         selectedInTable = true;
                                     }
                                 }
 
                                 if (selectedInTable) {
+
                                     BasicStroke stroke = (BasicStroke) super.getItemOutlineStroke(row, column);
                                     return new BasicStroke(stroke.getLineWidth() * 10f);
+
                                 } else {
+
                                     if (!selectedDataPoints.isEmpty()) {
+
                                         if (selectedDataPoints.containsKey(row) && selectedDataPoints.get(row).contains(column)) {
+
                                             BasicStroke stroke = (BasicStroke) super.getItemOutlineStroke(row, column);
                                             return new BasicStroke(stroke.getLineWidth() * 1.2f);
+
                                         } else {
+
                                             return super.getItemOutlineStroke(row, column);
+
                                         }
+
                                     } else {
+
                                         return super.getItemOutlineStroke(row, column);
+
                                     }
+
                                 }
                             }
 
@@ -2127,78 +2641,99 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                 int[] selectedRows = selectedValuesTable.getSelectedRows();
 
                                 for (int tableRowIndex : selectedRows) {
-                                    if (dataPointToRowNumber.get(row + "_" + column).intValue()
+                                    if (dataPointToRowNumber.get(row + "_" + column)
                                             == selectedValuesTable.convertRowIndexToModel(tableRowIndex)) {
                                         selectedInTable = true;
                                     }
                                 }
 
                                 if (selectedInTable) {
+
                                     return Color.BLUE; // @TODO: should not be hard coded here!!
+
                                 } else {
+
                                     if (!selectedDataPoints.isEmpty()) {
+
                                         if (selectedDataPoints.containsKey(row) && selectedDataPoints.get(row).contains(column)) {
                                             return Color.BLACK;
                                         } else {
                                             return Color.LIGHT_GRAY;
                                         }
+
                                     } else {
                                         return super.getItemOutlinePaint(row, column);
                                     }
+
                                 }
                             }
 
                             @Override
                             public Paint getItemPaint(int row, int column) {
+
                                 if (!selectedDataPoints.isEmpty()) {
+
                                     Color tempColor = (Color) super.getItemPaint(row, column);
+
                                     if (selectedDataPoints.containsKey(row) && selectedDataPoints.get(row).contains(column)) {
                                         return new Color(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue(), 255);
                                     } else {
                                         return new Color(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue(), 30); // @TODO: should not be hard coded here?
                                     }
+
                                 } else {
                                     return super.getItemPaint(row, column);
                                 }
+
                             }
 
                             @Override
                             public Paint getItemFillPaint(int row, int column) {
+
                                 if (!selectedDataPoints.isEmpty()) {
+
                                     Color tempColor = (Color) super.getItemFillPaint(row, column);
+
                                     if (selectedDataPoints.containsKey(row) && selectedDataPoints.get(row).contains(column)) {
                                         return new Color(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue(), 255);
                                     } else {
                                         return new Color(tempColor.getRed(), tempColor.getGreen(), tempColor.getBlue(), 30); // @TODO: should not be hard coded here?
                                     }
+
                                 } else {
                                     return super.getItemFillPaint(row, column);
                                 }
+
                             }
                         };
 
                         // set the colors for the data series
                         boolean isIntegerColorRenderer = false;
 
-                        if (cellRenderers.containsKey(Integer.valueOf(colorsComboBox.getSelectedIndex()))) {
-                            if (cellRenderers.get(Integer.valueOf(colorsComboBox.getSelectedIndex())) instanceof JSparklinesIntegerColorTableCellRenderer) {
+                        if (cellRenderers.containsKey(colorsComboBox.getSelectedIndex())) {
+
+                            if (cellRenderers.get(colorsComboBox.getSelectedIndex()) instanceof JSparklinesIntegerColorTableCellRenderer) {
+
                                 JSparklinesIntegerColorTableCellRenderer integerColorRenderer
-                                        = (JSparklinesIntegerColorTableCellRenderer) cellRenderers.get(Integer.valueOf(colorsComboBox.getSelectedIndex()));
+                                        = (JSparklinesIntegerColorTableCellRenderer) cellRenderers.get(colorsComboBox.getSelectedIndex());
                                 HashMap<Integer, Color> colors = integerColorRenderer.getColors();
 
                                 for (int i = 0; i < datasetNames.size(); i++) {
                                     Integer datasetInteger = Integer.valueOf(datasetNames.get(i));
-                                    renderer.setSeriesPaint(i, colors.get(Integer.valueOf(datasetInteger)));
+                                    renderer.setSeriesPaint(i, colors.get(datasetInteger));
                                 }
 
                                 isIntegerColorRenderer = true;
                             }
+
                         }
 
                         if (!isIntegerColorRenderer && useGradientColorCoding) {
+
                             for (int i = 0; i < datasetNames.size(); i++) {
                                 renderer.setSeriesPaint(i, datasetColors.get(i));
                             }
+
                         }
 
                         renderer.setBaseToolTipGenerator(new StandardXYZToolTipGenerator());
@@ -2233,8 +2768,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                         chart.setBackgroundPaint(Color.WHITE);
 
                         chartPanel = new ChartPanel(chart, false) {
+
                             @Override
                             public void mouseReleased(MouseEvent e) {
+
                                 if (selectionActive) {
                                     setMouseZoomable(false);
                                     super.mouseReleased(e);
@@ -2242,7 +2779,9 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                 } else {
                                     super.mouseReleased(e);
                                 }
+
                             }
+
                         };
 
                         chartPanel.setBackground(Color.WHITE);
@@ -2254,10 +2793,13 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
 
                         // add chart mouse listener
                         chartPanel.addChartMouseListener(new ChartMouseListener() {
+
+                            @Override
                             public void chartMouseClicked(ChartMouseEvent cme) {
                                 mouseClickedInChart(cme);
                             }
 
+                            @Override
                             public void chartMouseMoved(ChartMouseEvent cme) {
                                 mouseMovedInChart(cme);
                             }
@@ -2265,8 +2807,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
 
                         // add chart mouse motion listener
                         chartPanel.addMouseMotionListener(new MouseAdapter() {
+
                             @Override
                             public void mouseDragged(MouseEvent e) {
+
                                 if (!dragToZoomRadioButton.isSelected()) {
                                     selectionActive = true;
                                     mouseDragged = true;
@@ -2274,11 +2818,14 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                     selectionActive = false;
                                     super.mouseDragged(e);
                                 }
+
                             }
+
                         });
 
                         // add more chart mouse listeners
                         chartPanel.addMouseListener(new MouseAdapter() {
+
                             @Override
                             public void mousePressed(MouseEvent e) {
                                 dragStart = e.getPoint();
@@ -2288,7 +2835,9 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
 
                             @Override
                             public void mouseReleased(MouseEvent e) {
+
                                 if (mouseDragged) {
+
                                     dragEnd = e.getPoint();
 
                                     // clear the old selection
@@ -2305,14 +2854,22 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                                     Iterator<ChartEntity> iterator = entities.iterator();
 
                                     while (iterator.hasNext()) {
+
                                         ChartEntity entity = iterator.next();
+
                                         if (entity instanceof XYItemEntity) {
+
                                             if (entity.getArea().intersects(dragStartX, dragStartY, dragEndX - dragStartX, dragEndY - dragStartY)) {
+
                                                 if (!entitiesFound.contains((XYItemEntity) entity)) {
+
                                                     entitiesFound.add((XYItemEntity) entity);
+
                                                 }
                                             }
+
                                         }
+
                                     }
 
                                     for (XYItemEntity entity : entitiesFound) {
@@ -2337,11 +2894,19 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                     progressDialog.setRunFinished();
 
                     if (maxBubbleSize > xAxisRange && !sizeLogCheckBox.isSelected()) {
-                        int value = JOptionPane.showConfirmDialog(dialogParent, "Seems like your bubbles are too large.\nTurn on log scale?", "Log Scale?", JOptionPane.YES_NO_OPTION);
+
+                        int value = JOptionPane.showConfirmDialog(
+                                dialogParent,
+                                "Seems like your bubbles are too large.\nTurn on log scale?",
+                                "Log Scale?",
+                                JOptionPane.YES_NO_OPTION
+                        );
+
                         if (value == JOptionPane.YES_OPTION) {
                             sizeLogCheckBox.setSelected(true);
                             updatePlot();
                         }
+
                     }
                 }
             }.start();
@@ -2355,7 +2920,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      */
     private void mouseClickedInChart(ChartMouseEvent event) {
 
-        ArrayList<ChartEntity> entities = getEntitiesForPoint(event.getTrigger().getPoint().x, event.getTrigger().getPoint().y);
+        ArrayList<ChartEntity> entities = getEntitiesForPoint(
+                event.getTrigger().getPoint().x,
+                event.getTrigger().getPoint().y
+        );
 
         if (entities.isEmpty()) {
             return;
@@ -2365,11 +2933,13 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
 
         // check if any data points are selected, and select/de-select them
         for (ChartEntity entity : entities) {
-            // Get entity details
+
+            // get entity details
             if (entity instanceof XYItemEntity) {
                 selectEntity((XYItemEntity) entity, true);
                 dataPointsSelected = true;
             }
+
         }
 
         // if no data points were selected then clear the selection
@@ -2394,25 +2964,37 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         Integer itemIndex = ((XYItemEntity) entity).getItem();
 
         if (selectedDataPoints.containsKey(seriesIndex)) {
+
             if (selectedDataPoints.get(seriesIndex).contains(itemIndex)) {
+
                 if (removeSelected) {
+
                     selectedDataPoints.get(seriesIndex).remove(itemIndex);
+
                     if (selectedDataPoints.get(seriesIndex).isEmpty()) {
                         selectedDataPoints.remove(seriesIndex);
                     }
+
                     selectedModelRows.remove(dataPointToRowNumber.get(seriesIndex + "_" + itemIndex));
                 }
+
             } else {
+
                 selectedDataPoints.get(seriesIndex).add(itemIndex);
                 selectedModelRows.add(dataPointToRowNumber.get(seriesIndex + "_" + itemIndex));
+
             }
+
         } else {
+
             ArrayList<Integer> itemList = new ArrayList<>();
             itemList.add(itemIndex);
             selectedDataPoints.put(seriesIndex, itemList);
+
             if (!selectedModelRows.contains(dataPointToRowNumber.get(seriesIndex + "_" + itemIndex))) {
                 selectedModelRows.add(dataPointToRowNumber.get(seriesIndex + "_" + itemIndex));
             }
+
         }
     }
 
@@ -2430,6 +3012,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      * values and the current data filters.
      */
     public void filterTable() {
+
         if (tableModel instanceof SelfUpdatingTableModel) {
             TableRowSorter sorter = new TableRowSorter(tableModel);
             sorter.setRowFilter(new SelectedValuesTableFilter());
@@ -2437,8 +3020,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         } else {
             ((TableRowSorter) selectedValuesTable.getRowSorter()).setRowFilter(new SelectedValuesTableFilter());
         }
+
         ((TitledBorder) selectedValuesPanel.getBorder()).setTitle("Selected Values (" + selectedValuesTable.getRowCount() + ")");
         selectedValuesPanel.repaint();
+
     }
 
     /**
@@ -2454,6 +3039,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         ChartRenderingInfo info = chartPanel.getChartRenderingInfo();
 
         if (info != null) {
+
             Insets insets = chartPanel.getInsets();
             double x = (viewX - insets.left) / chartPanel.getScaleX();
             double y = (viewY - insets.top) / chartPanel.getScaleY();
@@ -2466,35 +3052,55 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                     entitiesForPoint.add(entity);
                 }
             }
+
         }
 
         return entitiesForPoint;
     }
 
+    /**
+     * Set the export folder.
+     *
+     * @param selectedFolder the export folder to set
+     */
     public void setSelectedExportFolder(LastSelectedFolder selectedFolder) {
         lastSelectedFolder = selectedFolder;
     }
 
+    @Override
     public void setVisibleColumns(HashMap<Integer, Boolean> showColumns) {
         this.visibleColumns = showColumns;
     }
 
+    @Override
     public HashMap<Integer, Boolean> getVisibleColumns() {
         return visibleColumns;
     }
 
+    @Override
     public JTable getTable() {
         return selectedValuesTable;
     }
 
+    @Override
     public ArrayList<TableColumn> getAllTableColumns() {
         return allTableColumns;
     }
 
+    /**
+     * Returns the normal icon.
+     *
+     * @return the normal icon
+     */
     public Image getNormalIcon() {
         return normalIcon;
     }
 
+    /**
+     * Returns the waiting icon.
+     *
+     * @return the waiting icon
+     */
     public Image getWaitingIcon() {
         return waitingIcon;
     }
@@ -2505,6 +3111,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
      */
     public class SelectedValuesTableFilter extends RowFilter<DefaultTableModel, Integer> {
 
+        @Override
         public boolean include(RowFilter.Entry<? extends DefaultTableModel, ? extends Integer> entry) {
 
             // see if the row has already been filtered out
@@ -2519,6 +3126,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
 
             return false;
         }
+
     }
 
     /**
@@ -2534,9 +3142,10 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         double minValue = Double.MAX_VALUE;
         double maxValue = Double.MIN_VALUE;
 
-        // Get a DescriptiveStatistics instance
+        // get a DescriptiveStatistics instance
         DescriptiveStatistics stats = new DescriptiveStatistics();
-        // Add the data from the array
+
+        // add the data from the array
         for (int i = 0; i < values.length; i++) {
             stats.addValue(values[i]);
 
@@ -2565,6 +3174,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         }
 
         return freedmanDiaconisValue;
+
     }
 
     /**
@@ -2615,6 +3225,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
             boolean include = true;
 
             for (int j = 0; j < tableModel.getColumnCount(); j++) {
+
                 String filter = filters.get(tableModel.getColumnName(j));
 
                 if (filter != null) {
@@ -2628,85 +3239,140 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                         } else {
 
                             try {
-                                double value = Double.valueOf(filter.substring(1));
+                                double value = Double.parseDouble(filter.substring(1));
 
                                 if (tableModel.getValueAt(i, j) instanceof Integer) {
+
                                     if ((Integer) tableModel.getValueAt(i, j) <= value) {
                                         include = false;
                                     }
+
                                 } else if (tableModel.getValueAt(i, j) instanceof Double) {
+
                                     if ((Double) tableModel.getValueAt(i, j) <= value) {
                                         include = false;
                                     }
+
                                 } else if (tableModel.getValueAt(i, j) instanceof XYDataPoint) {
+
                                     if (((XYDataPoint) tableModel.getValueAt(i, j)).getX() <= value) {
                                         include = false;
                                     }
+
                                 } else if (tableModel.getValueAt(i, j) instanceof StartIndexes) {
+
                                     StartIndexes startIndexes = (StartIndexes) tableModel.getValueAt(i, j);
+
                                     if (startIndexes.getIndexes().isEmpty() || startIndexes.getIndexes().get(0) <= value) {
                                         include = false;
                                     }
+
                                 } else if (tableModel.getValueAt(i, j) instanceof ArrrayListDataPoints) {
+
                                     ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(i, j);
+
                                     if (!arrrayListDataPoints.getData().isEmpty()) {
-                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
-                                            include = arrrayListDataPoints.getSum() <= value;
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
-                                            include = arrrayListDataPoints.getSumExceptLast() <= value;
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
-                                            include = arrrayListDataPoints.getData().get(0) <= value;
+
+                                        switch (arrrayListDataPoints.getDataSortingType()) {
+
+                                            case sumOfNumbers:
+                                                include = arrrayListDataPoints.getSum() <= value;
+                                                break;
+
+                                            case sumExceptLastNumber:
+                                                include = arrrayListDataPoints.getSumExceptLast() <= value;
+                                                break;
+
+                                            case firstNumberOnly:
+                                                include = arrrayListDataPoints.getData().get(0) <= value;
+                                                break;
+
+                                            default:
+                                                break;
+
                                         }
+
                                     } else {
                                         include = false;
                                     }
+
                                 }
 
                             } catch (NumberFormatException e) {
                                 filterError = true;
                             }
+
                         }
+
                     } else if (filter.startsWith("<")) {
 
                         if (tableModel.getValueAt(i, j) instanceof String) {
+
                             // not supported
                             filterError = true;
+
                         } else {
 
                             try {
-                                double value = Double.valueOf(filter.substring(1));
+                                double value = Double.parseDouble(filter.substring(1));
 
                                 if (tableModel.getValueAt(i, j) instanceof Integer) {
+
                                     if ((Integer) tableModel.getValueAt(i, j) >= value) {
                                         include = false;
                                     }
+
                                 } else if (tableModel.getValueAt(i, j) instanceof Double) {
+
                                     if ((Double) tableModel.getValueAt(i, j) >= value) {
                                         include = false;
                                     }
+
                                 } else if (tableModel.getValueAt(i, j) instanceof XYDataPoint) {
+
                                     if (((XYDataPoint) tableModel.getValueAt(i, j)).getX() >= value) {
                                         include = false;
                                     }
+
                                 } else if (tableModel.getValueAt(i, j) instanceof StartIndexes) {
+
                                     StartIndexes startIndexes = (StartIndexes) tableModel.getValueAt(i, j);
+
                                     if (startIndexes.getIndexes().isEmpty() || startIndexes.getIndexes().get(0) >= value) {
                                         include = false;
                                     }
+
                                 } else if (tableModel.getValueAt(i, j) instanceof ArrrayListDataPoints) {
+
                                     ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(i, j);
+
                                     if (!arrrayListDataPoints.getData().isEmpty()) {
-                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
-                                            include = arrrayListDataPoints.getSum() >= value;
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
-                                            include = arrrayListDataPoints.getSumExceptLast() >= value;
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
-                                            include = arrrayListDataPoints.getData().get(0) >= value;
+
+                                        switch (arrrayListDataPoints.getDataSortingType()) {
+
+                                            case sumOfNumbers:
+                                                include = arrrayListDataPoints.getSum() >= value;
+                                                break;
+
+                                            case sumExceptLastNumber:
+                                                include = arrrayListDataPoints.getSumExceptLast() >= value;
+                                                break;
+
+                                            case firstNumberOnly:
+                                                include = arrrayListDataPoints.getData().get(0) >= value;
+                                                break;
+
+                                            default:
+                                                break;
+
                                         }
+
                                     } else {
                                         include = false;
                                     }
+
                                 }
+
                             } catch (NumberFormatException e) {
                                 filterError = true;
                             }
@@ -2724,39 +3390,65 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
                         } else {
 
                             try {
-                                double value = Double.valueOf(filter.substring(1));
+                                double value = Double.parseDouble(filter.substring(1));
 
                                 if (tableModel.getValueAt(i, j) instanceof Integer) {
-                                    if (((Integer) tableModel.getValueAt(i, j)).intValue() != value) {
+
+                                    if (((Integer) tableModel.getValueAt(i, j)) != value) {
                                         include = false;
                                     }
+
                                 } else if (tableModel.getValueAt(i, j) instanceof Double) {
-                                    if (((Double) tableModel.getValueAt(i, j)).doubleValue() != value) {
+
+                                    if (((Double) tableModel.getValueAt(i, j)) != value) {
                                         include = false;
                                     }
+
                                 } else if (tableModel.getValueAt(i, j) instanceof XYDataPoint) {
+
                                     if (((XYDataPoint) tableModel.getValueAt(i, j)).getX() != value) {
                                         include = false;
                                     }
+
                                 } else if (tableModel.getValueAt(i, j) instanceof StartIndexes) {
+
                                     StartIndexes startIndexes = (StartIndexes) tableModel.getValueAt(i, j);
+
                                     if (startIndexes.getIndexes().isEmpty() || startIndexes.getIndexes().get(0) != value) {
                                         include = false;
                                     }
+
                                 } else if (tableModel.getValueAt(i, j) instanceof ArrrayListDataPoints) {
+
                                     ArrrayListDataPoints arrrayListDataPoints = (ArrrayListDataPoints) tableModel.getValueAt(i, j);
+
                                     if (!arrrayListDataPoints.getData().isEmpty()) {
-                                        if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumOfNumbers) {
-                                            include = arrrayListDataPoints.getSum() != value;
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.sumExceptLastNumber) {
-                                            include = arrrayListDataPoints.getSumExceptLast() != value;
-                                        } else if (arrrayListDataPoints.getDataSortingType() == JSparklinesArrayListBarChartTableCellRenderer.ValueDisplayType.firstNumberOnly) {
-                                            include = arrrayListDataPoints.getData().get(0) != value;
+
+                                        switch (arrrayListDataPoints.getDataSortingType()) {
+
+                                            case sumOfNumbers:
+                                                include = arrrayListDataPoints.getSum() != value;
+                                                break;
+
+                                            case sumExceptLastNumber:
+                                                include = arrrayListDataPoints.getSumExceptLast() != value;
+                                                break;
+
+                                            case firstNumberOnly:
+                                                include = arrrayListDataPoints.getData().get(0) != value;
+                                                break;
+
+                                            default:
+                                                break;
+
                                         }
+
                                     } else {
                                         include = false;
                                     }
+
                                 }
+
                             } catch (NumberFormatException e) {
                                 filterError = true;
                             }
@@ -2768,6 +3460,7 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
             if (include) {
                 rowsAfterDataFiltering.add(i);
             }
+
         }
 
         if (tableModel instanceof SelfUpdatingTableModel) {
@@ -2775,7 +3468,14 @@ public class XYPlottingDialog extends javax.swing.JDialog implements VisibleTabl
         }
 
         if (filterError) {
-            JOptionPane.showMessageDialog(this, "There was an error with one of the filters. Please check the filter settings.", "Filter Error", JOptionPane.INFORMATION_MESSAGE);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "There was an error with one of the filters. Please check the filter settings.",
+                    "Filter Error",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
         }
     }
 }

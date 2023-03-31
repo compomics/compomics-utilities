@@ -769,8 +769,11 @@ public class UtilitiesUserParameters extends ExperimentObject {
      * @return the user preferences file
      */
     public static String getUserParametersFolder() {
+        
         File tempFile = new File(getUserParametersFile());
+        
         return tempFile.getParent();
+        
     }
 
     /**

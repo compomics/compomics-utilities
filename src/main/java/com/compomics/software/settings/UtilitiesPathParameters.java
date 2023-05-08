@@ -95,11 +95,18 @@ public class UtilitiesPathParameters {
          * @param description the description of the path usage
          * @param isDirectory boolean indicating whether a folder is expected
          */
-        private UtilitiesPathKey(String id, String description, String defaultSubDirectory, boolean isDirectory) {
+        private UtilitiesPathKey(
+                String id,
+                String description,
+                String defaultSubDirectory,
+                boolean isDirectory
+        ) {
+
             this.id = id;
             this.description = description;
             this.defaultSubDirectory = defaultSubDirectory;
             this.isDirectory = isDirectory;
+
         }
 
         @Override
@@ -120,12 +127,17 @@ public class UtilitiesPathParameters {
          * @return the key of interest
          */
         public static UtilitiesPathKey getKeyFromId(String id) {
+
             for (UtilitiesPathKey pathKey : values()) {
+
                 if (pathKey.id.equals(id)) {
                     return pathKey;
                 }
+
             }
+
             return null;
+
         }
     }
 
@@ -138,17 +150,26 @@ public class UtilitiesPathParameters {
      * @throws IOException if an IOException occurs
      */
     public static void loadPathParametersFromFile(File inputFile) throws FileNotFoundException, IOException {
+
         BufferedReader br = new BufferedReader(new FileReader(inputFile));
+
         try {
+
             String line;
+
             while ((line = br.readLine()) != null) {
+
                 line = line.trim();
+
                 if (!line.equals("") && !line.startsWith("#")) {
                 }
+
             }
+
         } finally {
             br.close();
         }
+
     }
 
     /**
@@ -159,26 +180,41 @@ public class UtilitiesPathParameters {
      * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public static void loadPathParameterFromLine(String line) throws FileNotFoundException {
+
         String id = getPathID(line);
+
         if (id.equals("")) {
             throw new IllegalArgumentException("Impossible to parse path in " + line + ".");
         }
+
         UtilitiesPathKey utilitiesPathKey = UtilitiesPathKey.getKeyFromId(id);
+
         if (utilitiesPathKey == null) {
+
             throw new IllegalArgumentException("Path " + id + " not recognized");
+
         } else {
+
             String path = getPath(line);
+
             if (!path.equals(UtilitiesPathParameters.defaultPath)) {
+
                 File file = new File(path);
+
                 if (!file.exists()) {
                     throw new FileNotFoundException("File " + path + " not found.");
                 }
+
                 if (utilitiesPathKey.isDirectory && !file.isDirectory()) {
                     throw new FileNotFoundException("Found a file when expecting a directory for " + utilitiesPathKey.id + ".");
                 }
+
                 setPathParameter(utilitiesPathKey, path);
+
             }
+
         }
+
     }
 
     /**
@@ -188,28 +224,38 @@ public class UtilitiesPathParameters {
      * @param path the path to be set
      */
     public static void setPathParameter(UtilitiesPathKey utilitiesPathKey, String path) {
+
         switch (utilitiesPathKey) {
+
             case geneMappingKey:
                 ProteinGeneDetailsProvider.setGeneMappingFolder(path);
                 return;
+
             case prideAnnotationKey:
                 PrideObjectsFactory.setPrideFolder(path);
                 return;
+
             case ptmFactoryKey:
                 ModificationFactory.setSerializationFolder(path);
                 return;
+
             case enzymeFactoryKey:
                 EnzymeFactory.setSerializationFolder(path);
                 return;
+
             case utilitiesPreferencesKey:
                 UtilitiesUserParameters.setUserParametersFolder(path);
                 return;
+
             case identificationParametersKey:
-                IdentificationParametersFactory.setParentFolder(path);
+                IdentificationParametersFactory.setParentFolder(new File(path).getParent());
                 return;
+
             default:
                 throw new UnsupportedOperationException("Path " + utilitiesPathKey.id + " not implemented.");
+
         }
+
     }
 
     /**
@@ -220,22 +266,32 @@ public class UtilitiesPathParameters {
      * @return the path to be set
      */
     public static String getPathParameter(UtilitiesPathKey utilitiesPathKey) {
+
         switch (utilitiesPathKey) {
+
             case geneMappingKey:
                 return ProteinGeneDetailsProvider.getGeneMappingFolder().getAbsolutePath();
+
             case prideAnnotationKey:
                 return PrideObjectsFactory.getPrideFolder();
+
             case ptmFactoryKey:
                 return ModificationFactory.getSerializationFolder();
+
             case enzymeFactoryKey:
                 return EnzymeFactory.getSerializationFolder();
+
             case utilitiesPreferencesKey:
                 return UtilitiesUserParameters.getUserParametersFolder();
+
             case identificationParametersKey:
                 return IdentificationParametersFactory.getParentFolder();
+
             default:
                 throw new UnsupportedOperationException("Path " + utilitiesPathKey.id + " not implemented.");
+
         }
+
     }
 
     /**
@@ -246,11 +302,15 @@ public class UtilitiesPathParameters {
      * @return the id of the path
      */
     public static String getPathID(String line) {
+
         int separatorIndex = line.indexOf(separator);
+
         if (separatorIndex > 0) {
             return line.substring(0, separatorIndex);
         }
+
         return "";
+
     }
 
     /**
@@ -262,11 +322,15 @@ public class UtilitiesPathParameters {
      * @return the path after the separator
      */
     public static String getPath(String line) {
+
         int separatorIndex = line.indexOf(separator);
+
         if (separatorIndex > 0 && separatorIndex < line.length()) {
             return line.substring(separatorIndex + 1);
         }
+
         return "";
+
     }
 
     /**
@@ -277,17 +341,24 @@ public class UtilitiesPathParameters {
      * @throws FileNotFoundException if a FileNotFoundException occurs
      */
     public static void setAllPathsIn(String path) throws FileNotFoundException {
+
         for (UtilitiesPathKey utilitiesPathKey : UtilitiesPathKey.values()) {
+
             String subDirectory = utilitiesPathKey.defaultSubDirectory;
             File newFile = new File(path, subDirectory);
+
             if (!newFile.exists()) {
                 newFile.mkdirs();
             }
+
             if (!newFile.exists()) {
                 throw new FileNotFoundException(newFile.getAbsolutePath() + " could not be created.");
             }
+
             setPathParameter(utilitiesPathKey, newFile.getAbsolutePath());
+
         }
+
     }
 
     /**
@@ -298,12 +369,15 @@ public class UtilitiesPathParameters {
      * @throws IOException if an IOException occurs
      */
     public static void writeConfigurationToFile(File file) throws IOException {
+
         BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+
         try {
             writeConfigurationToFile(bw);
         } finally {
             bw.close();
         }
+
     }
 
     /**
@@ -314,9 +388,11 @@ public class UtilitiesPathParameters {
      * @throws IOException if an IOException occurs
      */
     public static void writeConfigurationToFile(BufferedWriter bw) throws IOException {
+
         for (UtilitiesPathKey pathKey : UtilitiesPathKey.values()) {
             writePathToFile(bw, pathKey);
         }
+
     }
 
     /**
@@ -330,55 +406,88 @@ public class UtilitiesPathParameters {
     public static void writePathToFile(BufferedWriter bw, UtilitiesPathKey pathKey) throws IOException {
 
         bw.write(pathKey.id + UtilitiesPathParameters.separator);
-        String toWrite = "";
+        String toWrite;
+
         switch (pathKey) {
+
             case geneMappingKey:
+
                 toWrite = ProteinGeneDetailsProvider.getGeneMappingFolder().getAbsolutePath();
+
                 if (toWrite == null) {
                     toWrite = UtilitiesPathParameters.defaultPath;
                 }
+
                 bw.write(toWrite);
+
                 break;
+
             case prideAnnotationKey:
+
                 toWrite = PrideObjectsFactory.getPrideFolder();
                 if (toWrite == null) {
                     toWrite = UtilitiesPathParameters.defaultPath;
                 }
+
                 bw.write(toWrite);
+
                 break;
+
             case ptmFactoryKey:
+
                 toWrite = ModificationFactory.getSerializationFolder();
+
                 if (toWrite == null) {
                     toWrite = UtilitiesPathParameters.defaultPath;
+
                 }
+
                 bw.write(toWrite);
                 break;
+
             case enzymeFactoryKey:
+
                 toWrite = EnzymeFactory.getSerializationFolder();
+
                 if (toWrite == null) {
                     toWrite = UtilitiesPathParameters.defaultPath;
+
                 }
+
                 bw.write(toWrite);
                 break;
+
             case utilitiesPreferencesKey:
+
                 toWrite = UtilitiesUserParameters.getUserParametersFolder();
+
                 if (toWrite == null) {
                     toWrite = UtilitiesPathParameters.defaultPath;
                 }
+
                 bw.write(toWrite);
+
                 break;
+
             case identificationParametersKey:
+
                 toWrite = IdentificationParametersFactory.getParentFolder();
+
                 if (toWrite == null) {
                     toWrite = IdentificationParametersFactory.PARAMETERS_FOLDER;
                 }
+
                 bw.write(toWrite);
+
                 break;
+
             default:
                 throw new UnsupportedOperationException("Path " + pathKey.id + " not implemented.");
+
         }
 
         bw.newLine();
+
     }
 
     /**
@@ -390,36 +499,58 @@ public class UtilitiesPathParameters {
      * destination folder
      */
     public static boolean testPath(String destinationPath) {
+
         try {
-            
+
             File destinationFile = new File(destinationPath);
+
             if (!destinationFile.exists()) {
+
                 try {
+
                     if (!destinationFile.mkdirs()) {
                         return false;
                     }
+
                 } catch (Exception e) {
+
                     return false;
+
                 }
+
             }
 
             File testFile = new File(destinationPath, "test_path_configuration.tmp");
             BufferedWriter bw = new BufferedWriter(new FileWriter(testFile));
+
             try {
+
                 bw.write("test");
+
             } finally {
+
                 try {
+
                     bw.close();
+
                 } finally {
+
                     if (testFile.exists()) {
                         testFile.delete();
                     }
+
                 }
+
             }
+
         } catch (Exception e) {
+
             return false;
+
         }
+
         return true;
+
     }
 
     /**
@@ -433,13 +564,21 @@ public class UtilitiesPathParameters {
      * loading the path configuration
      */
     public static ArrayList<PathKey> getErrorKeys() throws IOException {
+
         ArrayList<PathKey> result = new ArrayList<>();
+
         for (UtilitiesPathParameters.UtilitiesPathKey utilitiesPathKey : UtilitiesPathParameters.UtilitiesPathKey.values()) {
+
             String folder = UtilitiesPathParameters.getPathParameter(utilitiesPathKey);
+
             if (folder != null && !testPath(folder)) {
                 result.add(utilitiesPathKey);
             }
+
         }
+
         return result;
+
     }
+
 }

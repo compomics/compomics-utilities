@@ -1,7 +1,6 @@
 package com.compomics.cli.identification_parameters;
 
 import com.compomics.cli.paths.PathSettingsCLI;
-import com.compomics.software.CompomicsWrapper;
 import com.compomics.util.gui.waiting.waitinghandlers.WaitingHandlerCLIImpl;
 import com.compomics.util.waiting.WaitingHandler;
 import org.apache.commons.cli.Options;
@@ -29,15 +28,21 @@ public class IdentificationParametersCLI extends AbstractIdentificationParameter
      * @param args the command line arguments
      */
     public IdentificationParametersCLI(String[] args) {
+
         try {
+
             waitingHandler = new WaitingHandlerCLIImpl();
             // check if there are updates to the paths
             String[] nonPathSettingArgsAsList = PathSettingsCLI.extractAndUpdatePathOptions(args);
             initiate(nonPathSettingArgsAsList);
+
         } catch (ParseException ex) {
+
             waitingHandler.appendReport("An error occurred while running the command line.", true, true);
             ex.printStackTrace();
+
         }
+
     }
 
     /**
@@ -47,11 +52,13 @@ public class IdentificationParametersCLI extends AbstractIdentificationParameter
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
         try {
             new IdentificationParametersCLI(args);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -64,12 +71,4 @@ public class IdentificationParametersCLI extends AbstractIdentificationParameter
         return IdentificationParametersCLIParams.getOptionsAsString();
     }
 
-    /**
-     * Returns the path to the jar file.
-     *
-     * @return the path to the jar file
-     */
-    public String getJarFilePath() {
-        return CompomicsWrapper.getJarFilePath(this.getClass().getResource("IdentificationParametersCLI.class").getPath(), "compomics-utilities");
-    }
 }

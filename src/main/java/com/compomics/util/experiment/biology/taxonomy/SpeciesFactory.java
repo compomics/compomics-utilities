@@ -94,20 +94,20 @@ public class SpeciesFactory {
     /**
      * Initiates the factory using the files of the static fields.
      *
-     * @param jarFilePath path to the jar file
+     * @param configFolder the config folder
      *
      * @throws IOException Exception thrown whenever an error occurred while
      * reading a mapping file.
      */
-    public void initiate(String jarFilePath) throws IOException {
+    public void initiate(File configFolder) throws IOException {
         ensemblSpecies = new EnsemblSpecies();
-        ensemblSpecies.loadMapping(getEnsemblSpeciesFile(jarFilePath));
+        ensemblSpecies.loadMapping(getEnsemblSpeciesFile(configFolder));
         ensemblGenomesSpecies = new EnsemblGenomesSpecies();
-        ensemblGenomesSpecies.loadMapping(getEnsemblGenomesSpeciesFile(jarFilePath));
+        ensemblGenomesSpecies.loadMapping(getEnsemblGenomesSpeciesFile(configFolder));
         uniprotTaxonomy = new UniprotTaxonomy();
-        uniprotTaxonomy.loadMapping(getUniprotTaxonomyFile(jarFilePath));
+        uniprotTaxonomy.loadMapping(getUniprotTaxonomyFile(configFolder));
         biomartMapping = new BiomartMapping();
-        biomartMapping.loadMapping(getBiomartEnsemblMappingFile(jarFilePath), getBiomartEnsemblGenomeMappingFile(jarFilePath));
+        biomartMapping.loadMapping(getBiomartEnsemblMappingFile(configFolder), getBiomartEnsemblGenomeMappingFile(configFolder));
     }
 
     /**
@@ -196,56 +196,56 @@ public class SpeciesFactory {
     /**
      * Returns the Ensembl species file.
      *
-     * @param jarFilePath the path to the jar file
+     * @param configFolder the config folder
      *
      * @return the Ensembl species file
      */
-    public static File getEnsemblSpeciesFile(String jarFilePath) {
-        return new File(jarFilePath, TOOL_SPECIES_MAPPING_SUBFOLDER + ENSEMBL_SPECIES);
+    public static File getEnsemblSpeciesFile(File configFolder) {
+        return new File(configFolder, TOOL_SPECIES_MAPPING_SUBFOLDER + ENSEMBL_SPECIES);
     }
 
     /**
      * Returns the Ensembl genome species file.
      *
-     * @param jarFilePath the path to the jar file
+     * @param configFolder the config folder
      *
      * @return the Ensembl genome species file
      */
-    public static File getEnsemblGenomesSpeciesFile(String jarFilePath) {
-        return new File(jarFilePath, TOOL_SPECIES_MAPPING_SUBFOLDER + ENSEMBL_GENOME_SPECIES);
+    public static File getEnsemblGenomesSpeciesFile(File configFolder) {
+        return new File(configFolder, TOOL_SPECIES_MAPPING_SUBFOLDER + ENSEMBL_GENOME_SPECIES);
     }
 
     /**
      * Returns the UniProt taxonomy file.
      *
-     * @param jarFilePath the path to the jar file
+     * @param configFolder the config folder
      *
      * @return the UniProt taxonomy species file
      */
-    public static File getUniprotTaxonomyFile(String jarFilePath) {
-        return new File(jarFilePath, TOOL_SPECIES_MAPPING_SUBFOLDER + UNIPROT_TAXONOMY_FILENAME);
+    public static File getUniprotTaxonomyFile(File configFolder) {
+        return new File(configFolder, TOOL_SPECIES_MAPPING_SUBFOLDER + UNIPROT_TAXONOMY_FILENAME);
     }
 
     /**
      * Returns the Ensembl BioMart file.
      *
-     * @param jarFilePath the path to the jar file
+     * @param configFolder the config folder
      *
      * @return the Ensembl BioMart file
      */
-    public static File getBiomartEnsemblMappingFile(String jarFilePath) {
-        return new File(jarFilePath, TOOL_SPECIES_MAPPING_SUBFOLDER + BIOMART_ENSEMBL_FILENAME);
+    public static File getBiomartEnsemblMappingFile(File configFolder) {
+        return new File(configFolder, TOOL_SPECIES_MAPPING_SUBFOLDER + BIOMART_ENSEMBL_FILENAME);
     }
 
     /**
      * Returns the Ensembl Genome BioMart file.
      *
-     * @param jarFilePath the path to the jar file
+     * @param configFolder the config folder
      *
      * @return the Ensembl Genome BioMart file
      */
-    public static File getBiomartEnsemblGenomeMappingFile(String jarFilePath) {
-        return new File(jarFilePath, TOOL_SPECIES_MAPPING_SUBFOLDER + BIOMART_ENSEMBL_GENOME_FILENAME);
+    public static File getBiomartEnsemblGenomeMappingFile(File configFolder) {
+        return new File(configFolder, TOOL_SPECIES_MAPPING_SUBFOLDER + BIOMART_ENSEMBL_GENOME_FILENAME);
     }
 
     /**

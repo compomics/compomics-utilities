@@ -4,7 +4,6 @@ import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.enzymes.EnzymeFactory;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationFactory;
-import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
 import com.compomics.util.parameters.identification.IdentificationParameters;
 import java.io.File;
 import java.io.PrintWriter;
@@ -38,19 +37,6 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
     public void initiate(String[] args) {
 
         try {
-
-            try {
-
-                SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
-                speciesFactory.initiate(getJarFilePath());
-
-            } catch (Exception e) {
-
-                System.out.println("An error occurred while loading the species.");
-                e.printStackTrace();
-                System.exit(1);
-
-            }
 
             Options lOptions = new Options();
             createOptionsCLI(lOptions);
@@ -211,13 +197,6 @@ public abstract class AbstractIdentificationParametersCli implements Callable {
 
         System.out.println();
     }
-
-    /**
-     * Returns the path to the jar file.
-     *
-     * @return the path to the jar file
-     */
-    protected abstract String getJarFilePath();
 
     /**
      * Provides the options left to the user.

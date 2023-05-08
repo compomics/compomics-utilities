@@ -85,12 +85,12 @@ public class ProteinGeneDetailsProvider {
      * Initializes the factory. Note: the species factory must be initialized
      * first.
      *
-     * @param jarFilePath the path to the jar file
+     * @param configFolder the config folder
      *
      * @throws java.io.IOException Exception thrown if an error occurs while
      * reading the species mapping
      */
-    public void initialize(String jarFilePath) throws IOException {
+    public void initialize(File configFolder) throws IOException {
 
         // load the previous ensembl version numbers
         File ensemblVersionsFile = getEnsemblVersionsFile();
@@ -101,9 +101,9 @@ public class ProteinGeneDetailsProvider {
         }
 
         createDefaultGeneMappingFilesGeneric(
-                jarFilePath,
-                new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + ENSEMBL_VERSIONS),
-                new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + GO_DOMAINS),
+                configFolder,
+                new File(configFolder, TOOL_GENE_MAPPING_SUBFOLDER + ENSEMBL_VERSIONS),
+                new File(configFolder, TOOL_GENE_MAPPING_SUBFOLDER + GO_DOMAINS),
                 true);
     }
 
@@ -703,14 +703,14 @@ public class ProteinGeneDetailsProvider {
      * versions of the mapping exists they will be overwritten according to
      * updateEqualVersion.
      *
-     * @param jarFilePath the Ensembl versions file
+     * @param configFolder the config folder
      * @param sourceEnsemblVersionsFile the Ensembl versions file
      * @param sourceGoDomainsFile the GO domains file
      * @param updateEqualVersion if true, the version is updated with equal
      * version numbers, false, only update if the new version is newer
      */
     public void createDefaultGeneMappingFilesGeneric(
-            String jarFilePath,
+            File configFolder,
             File sourceEnsemblVersionsFile,
             File sourceGoDomainsFile,
             boolean updateEqualVersion
@@ -727,8 +727,8 @@ public class ProteinGeneDetailsProvider {
         File targetEnsemblVersionsFile = getEnsemblVersionsFile();
         File targetGoDomainsFile = getGoDomainsFile();
 
-        HashMap<String, String> localEnsemblVersionsMap = new HashMap<String, String>();
-        HashMap<String, Boolean> localUpdateSpeciesEnsembl = new HashMap<String, Boolean>();
+        HashMap<String, String> localEnsemblVersionsMap = new HashMap<>();
+        HashMap<String, Boolean> localUpdateSpeciesEnsembl = new HashMap<>();
 
         try {
             if (!targetEnsemblVersionsFile.exists()) {
@@ -795,8 +795,8 @@ public class ProteinGeneDetailsProvider {
         for (Map.Entry<String, Boolean> entry : localUpdateSpeciesEnsembl.entrySet()) {
             if (entry.getValue()) {
 
-                File sourceSpeciesGoMappingsFile = new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + entry.getKey() + GO_MAPPING_FILE_SUFFIX);
-                File sourceSpeciesGeneMappingFile = new File(jarFilePath, TOOL_GENE_MAPPING_SUBFOLDER + entry.getKey() + GENE_MAPPING_FILE_SUFFIX);
+                File sourceSpeciesGoMappingsFile = new File(configFolder, TOOL_GENE_MAPPING_SUBFOLDER + entry.getKey() + GO_MAPPING_FILE_SUFFIX);
+                File sourceSpeciesGeneMappingFile = new File(configFolder, TOOL_GENE_MAPPING_SUBFOLDER + entry.getKey() + GENE_MAPPING_FILE_SUFFIX);
                 File targetSpeciesGoMappingsFile = new File(getGeneMappingFolder(), sourceSpeciesGoMappingsFile.getName());
                 File targetSpeciesGeneMappingFile = new File(getGeneMappingFolder(), sourceSpeciesGeneMappingFile.getName());
 

@@ -73,6 +73,7 @@ public class MsgfParametersDialog extends javax.swing.JDialog implements Algorit
         protocolCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         additionalOutputCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         terminiCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        allowDenseCentroidedPeaksOutputCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         
         decoyDatabaseCmb.setEnabled(editable);
         instrumentCmb.setEnabled(editable);

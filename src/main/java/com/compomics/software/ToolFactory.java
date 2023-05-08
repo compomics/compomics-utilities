@@ -71,7 +71,11 @@ public class ToolFactory {
     /**
      * The command line argument for the PeptideShaker project name.
      */
-    public static final String PROJEC_NAME_OPTION = "-project_name";
+    public static final String PROJECT_NAME_OPTION = "-project_name";
+    /**
+     * The command line argument for the config folder.
+     */
+    public static final String CONFIG_FOLDER = "-config_folder";
 
     /**
      * Starts PeptideShaker from the location of utilities preferences.
@@ -134,7 +138,8 @@ public class ToolFactory {
      * Reshake mode and attempts at selecting the given project.
      *
      * @param parent a frame to display the path setting dialog (can be null)
-     * @param pxAccession the ProteomeXchange accession of the project to open (can be null)
+     * @param pxAccession the ProteomeXchange accession of the project to open
+     * (can be null)
      *
      * @throws IOException if an exception occurs while reading or writing a
      * file
@@ -258,18 +263,19 @@ public class ToolFactory {
      * @throws InterruptedException if a threading issue occurs
      */
     public static void startSearchGUI(JFrame parent) throws IOException, ClassNotFoundException, InterruptedException {
-        startSearchGUI(parent, null, null, null, null, null, null, null, null);
+        startSearchGUI(parent, null, null, null, null, null, null, null, null, null);
     }
 
     /**
      * Starts SearchGUI from the location of utilities preferences.
      *
      * @param parent a frame to display the path setting dialog.
-     * @param mgfFiles the mgf files to search (can be null)
+     * @param spectrumFiles the spectrum files to search (can be null)
      * @param rawFiles the raw files to search (can be null)
      * @param fastaFile the FASTA file
      * @param searchParameters the search parameters as a file (can be null)
-     * @param outputFolder outputFolder the output folder (can be null)
+     * @param outputFolder the output folder (can be null)
+     * @param configFolder the config folder (can be null)
      * @param species the species (can be null)
      * @param speciesType the species type (can be null)
      * @param projectName the PeptideShaker project name
@@ -280,57 +286,92 @@ public class ToolFactory {
      * user preferences
      * @throws InterruptedException if a threading issue occurs
      */
-    public static void startSearchGUI(JFrame parent, ArrayList<File> mgfFiles, ArrayList<File> rawFiles, File fastaFile, File searchParameters, File outputFolder, String species, String speciesType, String projectName)
+    public static void startSearchGUI(
+            JFrame parent,
+            ArrayList<File> spectrumFiles,
+            ArrayList<File> rawFiles,
+            File fastaFile,
+            File searchParameters,
+            File outputFolder,
+            File configFolder,
+            String species,
+            String speciesType,
+            String projectName
+    )
             throws IOException, ClassNotFoundException, InterruptedException {
 
         UtilitiesUserParameters utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
         boolean openSearchGUI = true;
 
-        if (utilitiesUserPreferences.getSearchGuiPath() == null || !(new File(utilitiesUserPreferences.getSearchGuiPath()).exists())) {
+        if (utilitiesUserPreferences.getSearchGuiPath() == null
+                || !(new File(utilitiesUserPreferences.getSearchGuiPath()).exists())) {
+
             SearchGuiSetupDialog searchGuiSetupDialog = new SearchGuiSetupDialog(parent, true);
             utilitiesUserPreferences = UtilitiesUserParameters.loadUserParameters();
             openSearchGUI = !searchGuiSetupDialog.isDialogCanceled();
+
         }
+
         if (openSearchGUI) {
+
             if (utilitiesUserPreferences.getSearchGuiPath() != null
                     && new File(utilitiesUserPreferences.getSearchGuiPath()).exists()) {
-                if (mgfFiles == null && rawFiles == null && searchParameters == null && species == null) {
+
+                if (spectrumFiles == null && rawFiles == null && searchParameters == null && species == null) {
+
                     launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI");
+
                 } else {
+
                     ArrayList<String> args = new ArrayList<>();
-                    if (mgfFiles != null && !mgfFiles.isEmpty()) {
+
+                    if (spectrumFiles != null && !spectrumFiles.isEmpty()) {
                         args.add(SEARCHGUI_SPECTRUM_FILE_OPTION);
-                        args.add(CommandLineUtils.getCommandLineArgument(mgfFiles));
+                        args.add(CommandLineUtils.getCommandLineArgument(spectrumFiles));
                     }
+
                     if (rawFiles != null && !rawFiles.isEmpty()) {
                         args.add(SEARCHGUI_RAW_FILE_OPTION);
                         args.add(CommandLineUtils.getCommandLineArgument(rawFiles));
                     }
+
                     if (fastaFile != null) {
                         args.add(SEARCHGUI_FASTA_FILE_OPTION);
                         args.add(CommandLineUtils.getCommandLineArgument(fastaFile));
                     }
+
                     if (searchParameters != null) {
                         args.add(SEARCHGUI_PARAMETERS_FILE_OPTION);
                         args.add(CommandLineUtils.getCommandLineArgument(searchParameters));
                     }
+
                     if (outputFolder != null) {
                         args.add(OUTPUT_FOLDER_OPTION);
                         args.add(CommandLineUtils.getCommandLineArgument(outputFolder));
                     }
+
                     if (species != null) {
                         args.add(SPECIES_OPTION);
                         args.add(species);
                     }
+
                     if (speciesType != null) {
                         args.add(SPECIES_TYPE_OPTION);
                         args.add(speciesType);
                     }
+
                     if (projectName != null) {
-                        args.add(PROJEC_NAME_OPTION);
+                        args.add(PROJECT_NAME_OPTION);
                         args.add(projectName);
                     }
+
+                    if (configFolder != null) {
+                        args.add(CONFIG_FOLDER);
+                        args.add(CommandLineUtils.getCommandLineArgument(configFolder));
+                    }
+
                     launch(utilitiesUserPreferences.getSearchGuiPath(), "SearchGUI", args);
+
                 }
             } else {
                 throw new IllegalArgumentException("SearchGUI not found in " + utilitiesUserPreferences.getSearchGuiPath());

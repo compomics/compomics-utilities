@@ -321,7 +321,7 @@ public enum IdentificationParametersCLIParams {
     SAGE_LFQ_SPECTRAL_ANGLE("sage_lfq_spectral_angle", "Sage LFQ spectral angle, default is '0.7'.", false, true),
     SAGE_LFQ_PPM_TOLERANCE("sage_lfq_ppm_tolerance", "Sage LFQ ppm tolerance, default is '0.5'.", false, true),
     SAGE_DEISOTOPE("sage_deisotope", "Sage deisotope, perform deisotoping and charge state deconvolution, default is 'false'.", false, true),
-    SAGE_CHIMERA("sage_chimera", "Sage search for chimeric/co-fragmenting PSMS, default is 'false'.", false, true),
+    SAGE_CHIMERA("sage_chimera", "Sage search for chimeric/co-fragmenting PSMs, default is 'false'.", false, true),
     SAGE_WIDE_WINDOW("sage_wide_window", "Sage ignore `precursor_tol` and search spectra in wide-window/dynamic precursor tolerance mode, default is 'false'.", false, true),
     SAGE_PREDICT_RT("sage_predict_rt", "Sage use of retention time prediction model as an feature for LDA, default is 'true'.", false, true),
     SAGE_MIN_PEAKS("sage_min_peaks", "Sage min number of peaks for a spectrum, default is '15'.", false, true),

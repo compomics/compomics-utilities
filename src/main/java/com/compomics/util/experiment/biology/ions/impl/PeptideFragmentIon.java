@@ -8,41 +8,36 @@ import com.compomics.util.pride.CvTerm;
  * This class models a peptide fragment ion.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class PeptideFragmentIon extends Ion {
 
     /**
-     * Empty default constructor
-     */
-    public PeptideFragmentIon() {
-    }
-
-    /**
-     * Serial number for backward compatibility
+     * Serial number for backward compatibility.
      */
     static final long serialVersionUID = 8283809283803740651L;
     /**
-     * Identifier for an a ion.
+     * Identifier for an a-ion.
      */
     public static final int A_ION = 0;
     /**
-     * Identifier for a b ion.
+     * Identifier for a b-ion.
      */
     public static final int B_ION = 1;
     /**
-     * Identifier for a c ion.
+     * Identifier for a c-ion.
      */
     public static final int C_ION = 2;
     /**
-     * Identifier for an x ion.
+     * Identifier for an x-ion.
      */
     public static final int X_ION = 3;
     /**
-     * Identifier for a y ion.
+     * Identifier for a y-ion.
      */
     public static final int Y_ION = 4;
     /**
-     * Identifier for a z ion.
+     * Identifier for a z-ion.
      */
     public static final int Z_ION = 5;
     /**
@@ -67,6 +62,12 @@ public class PeptideFragmentIon extends Ion {
     private CvTerm psiCvTerm = null;
 
     /**
+     * Empty default constructor.
+     */
+    public PeptideFragmentIon() {
+    }
+
+    /**
      * Constructor.
      *
      * @param fragmentType the type of peptide fragment ion as indexed by the
@@ -75,14 +76,21 @@ public class PeptideFragmentIon extends Ion {
      * @param mass the mass of the fragment ion
      * @param neutralLosses the neutral losses of the ion
      */
-    public PeptideFragmentIon(int fragmentType, int number, double mass, NeutralLoss[] neutralLosses) {
+    public PeptideFragmentIon(
+            int fragmentType,
+            int number,
+            double mass, NeutralLoss[] neutralLosses
+    ) {
+
         if (neutralLosses != null) {
             this.neutralLosses = neutralLosses;
         }
+
         this.subType = fragmentType;
         type = IonType.PEPTIDE_FRAGMENT_ION;
         this.theoreticMass1 = mass;
         this.number = number;
+
     }
 
     /**
@@ -92,12 +100,18 @@ public class PeptideFragmentIon extends Ion {
      * static fields
      * @param neutralLosses the neutral losses of the ion
      */
-    public PeptideFragmentIon(int fragmentType, NeutralLoss[] neutralLosses) {
+    public PeptideFragmentIon(
+            int fragmentType,
+            NeutralLoss[] neutralLosses
+    ) {
+
         if (neutralLosses != null) {
             this.neutralLosses = neutralLosses;
         }
+
         this.subType = fragmentType;
         type = IonType.PEPTIDE_FRAGMENT_ION;
+
     }
 
     /**
@@ -107,8 +121,10 @@ public class PeptideFragmentIon extends Ion {
      * static fields
      */
     public PeptideFragmentIon(int fragmentType) {
+
         this.subType = fragmentType;
         type = IonType.PEPTIDE_FRAGMENT_ION;
+
     }
 
     /**
@@ -130,17 +146,26 @@ public class PeptideFragmentIon extends Ion {
     public int getAaNumber(int peptideLength) {
 
         switch (subType) {
+
             case PeptideFragmentIon.A_ION:
             case PeptideFragmentIon.B_ION:
             case PeptideFragmentIon.C_ION:
                 return number;
+
             case PeptideFragmentIon.X_ION:
             case PeptideFragmentIon.Y_ION:
             case PeptideFragmentIon.Z_ION:
                 return peptideLength + 1 - number;
+
             default:
-                throw new UnsupportedOperationException("Peptide fragment ion of type " + subType + " not implemented.");
+                throw new UnsupportedOperationException(
+                        "Peptide fragment ion of type "
+                        + subType
+                        + " not implemented."
+                );
+
         }
+
     }
 
     @Override
@@ -168,61 +193,207 @@ public class PeptideFragmentIon extends Ion {
         if (cvTerm == null) {
 
             switch (subType) {
+
                 case A_ION:
+
                     if (neutralLosses == null || neutralLosses.length == 0) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001229", "frag: a ion", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001229",
+                                "frag: a ion",
+                                "" + getNumber()
+                        );
+
                     } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.H2O)) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001234", "frag: a ion - H2O", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001234",
+                                "frag: a ion - H2O",
+                                "" + getNumber()
+                        );
+
                     } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.NH3)) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001235", "frag: a ion - NH3", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001235",
+                                "frag: a ion - NH3",
+                                "" + getNumber()
+                        );
+
                     }
+
                     break;
+
                 case B_ION:
+
                     if (neutralLosses == null || neutralLosses.length == 0) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001224", "frag: b ion", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001224",
+                                "frag: b ion",
+                                "" + getNumber()
+                        );
+
                     } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.H2O)) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001222", "frag: b ion - H2O", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001222",
+                                "frag: b ion - H2O",
+                                "" + getNumber()
+                        );
+
                     } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.NH3)) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001232", "frag: b ion - NH3", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001232",
+                                "frag: b ion - NH3",
+                                "" + getNumber()
+                        );
+
                     }
+
                     break;
+
                 case C_ION:
+
                     if (neutralLosses == null || neutralLosses.length == 0) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001231", "frag: c ion", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001231",
+                                "frag: c ion",
+                                "" + getNumber()
+                        );
+
                     } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.H2O)) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001515", "frag: c ion - H2O", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001515",
+                                "frag: c ion - H2O",
+                                "" + getNumber()
+                        );
+
                     } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.NH3)) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001516", "frag: c ion - NH3", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001516",
+                                "frag: c ion - NH3",
+                                "" + getNumber()
+                        );
+
                     }
+
                     break;
+
                 case X_ION:
+
                     if (neutralLosses == null || neutralLosses.length == 0) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001228", "frag: x ion", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001228",
+                                "frag: x ion",
+                                "" + getNumber()
+                        );
+
                     } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.H2O)) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001519", "frag: x ion - H2O", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001519",
+                                "frag: x ion - H2O",
+                                "" + getNumber()
+                        );
+
                     } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.NH3)) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001520", "frag: x ion - NH3", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001520",
+                                "frag: x ion - NH3",
+                                "" + getNumber()
+                        );
+
                     }
+
                     break;
+
                 case Y_ION:
+
                     if (neutralLosses == null || neutralLosses.length == 0) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001220", "frag: y ion", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001220",
+                                "frag: y ion",
+                                "" + getNumber()
+                        );
+
                     } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.H2O)) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001223", "frag: y ion - H2O", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001223",
+                                "frag: y ion - H2O",
+                                "" + getNumber()
+                        );
+
                     } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.NH3)) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001233", "frag: y ion - NH3", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001233",
+                                "frag: y ion - NH3",
+                                "" + getNumber()
+                        );
+
                     }
+
                     break;
+
                 case Z_ION:
+
                     if (neutralLosses == null || neutralLosses.length == 0) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001230", "frag: z ion", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001230",
+                                "frag: z ion",
+                                "" + getNumber()
+                        );
+
                     } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.H2O)) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001517", "frag: z ion - H2O", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001517",
+                                "frag: z ion - H2O",
+                                "" + getNumber()
+                        );
+
                     } else if (neutralLosses.length == 1 && neutralLosses[0].isSameAs(NeutralLoss.NH3)) {
-                        cvTerm = new CvTerm("PSI-MS", "MS:1001518", "frag: z ion - NH3", "" + getNumber());
+
+                        cvTerm = new CvTerm(
+                                "PSI-MS",
+                                "MS:1001518",
+                                "frag: z ion - NH3",
+                                "" + getNumber()
+                        );
+
                     }
+
                     break;
+
             }
+
         }
 
         return cvTerm;
@@ -236,27 +407,77 @@ public class PeptideFragmentIon extends Ion {
         }
 
         switch (subType) {
+
             case A_ION:
-                psiCvTerm = new CvTerm("PSI-MS", "MS:1001229", "frag: a ion", null);
+
+                psiCvTerm = new CvTerm(
+                        "PSI-MS",
+                        "MS:1001229",
+                        "frag: a ion",
+                        null
+                );
+
                 break;
+
             case B_ION:
-                psiCvTerm = new CvTerm("PSI-MS", "MS:1001224", "frag: b ion", null);
+
+                psiCvTerm = new CvTerm(
+                        "PSI-MS",
+                        "MS:1001224",
+                        "frag: b ion",
+                        null
+                );
+
                 break;
+
             case C_ION:
-                psiCvTerm = new CvTerm("PSI-MS", "MS:1001231", "frag: c ion", null);
+
+                psiCvTerm = new CvTerm(
+                        "PSI-MS",
+                        "MS:1001231",
+                        "frag: c ion",
+                        null
+                );
+
                 break;
+
             case X_ION:
-                psiCvTerm = new CvTerm("PSI-MS", "MS:1001228", "frag: x ion", null);
+
+                psiCvTerm = new CvTerm(
+                        "PSI-MS",
+                        "MS:1001228",
+                        "frag: x ion",
+                        null
+                );
+
                 break;
+
             case Y_ION:
-                psiCvTerm = new CvTerm("PSI-MS", "MS:1001220", "frag: y ion", null);
+
+                psiCvTerm = new CvTerm(
+                        "PSI-MS",
+                        "MS:1001220",
+                        "frag: y ion",
+                        null
+                );
+
                 break;
+
             case Z_ION:
-                psiCvTerm = new CvTerm("PSI-MS", "MS:1001230", "frag: z ion", null);
+
+                psiCvTerm = new CvTerm(
+                        "PSI-MS",
+                        "MS:1001230",
+                        "frag: z ion",
+                        null
+                );
+
                 break;
+
         }
 
         return psiCvTerm;
+
     }
 
     @Override
@@ -266,11 +487,23 @@ public class PeptideFragmentIon extends Ion {
 
     @Override
     public String getSubTypeAsString() {
+
         try {
+
             return getSubTypeAsString(subType);
+
         } catch (UnsupportedOperationException e) {
-            throw new UnsupportedOperationException("No name for subtype: " + subType + " of " + getTypeAsString() + ".");
+
+            throw new UnsupportedOperationException(
+                    "No name for subtype: "
+                    + subType
+                    + " of "
+                    + getTypeAsString()
+                    + "."
+            );
+
         }
+
     }
 
     /**
@@ -280,21 +513,34 @@ public class PeptideFragmentIon extends Ion {
      * @return the type of fragment ion as a letter
      */
     public static String getSubTypeAsString(int subType) {
+
         switch (subType) {
+
             case A_ION:
                 return "a";
+
             case B_ION:
                 return "b";
+
             case C_ION:
                 return "c";
+
             case X_ION:
                 return "x";
+
             case Y_ION:
                 return "y";
+
             case Z_ION:
                 return "z";
+
             default:
-                throw new UnsupportedOperationException("No name for subtype: " + subType + ".");
+                throw new UnsupportedOperationException(
+                        "No name for subtype: "
+                        + subType
+                        + "."
+                );
+
         }
     }
 
@@ -310,20 +556,32 @@ public class PeptideFragmentIon extends Ion {
     public static Integer getIonType(String ionSymbol) {
 
         switch (ionSymbol) {
+
             case "a":
                 return PeptideFragmentIon.A_ION;
+
             case "b":
                 return PeptideFragmentIon.B_ION;
+
             case "c":
                 return PeptideFragmentIon.C_ION;
+
             case "x":
                 return PeptideFragmentIon.X_ION;
+
             case "y":
                 return PeptideFragmentIon.Y_ION;
+
             case "z":
                 return PeptideFragmentIon.Z_ION;
         }
-        throw new UnsupportedOperationException("Ion of type " + ionSymbol + " not supported.");
+
+        throw new UnsupportedOperationException(
+                "Ion of type "
+                + ionSymbol
+                + " not supported."
+        );
+
     }
 
     /**
@@ -335,36 +593,48 @@ public class PeptideFragmentIon extends Ion {
 
         return new int[]{A_ION, B_ION, C_ION,
             X_ION, Y_ION, Z_ION};
+
     }
-    
+
     /**
      * Indicates whether the given subtype refers to a forward or a rewind ion.
-     * 
+     *
      * @param subType the subtype as integer.
-     * 
+     *
      * @return true for forward ions
      */
     public static boolean isForward(int subType) {
-        
-        switch(subType) {
-                case A_ION:
-                case B_ION:
-                case C_ION:
-                    return true;
-                case X_ION:
-                case Y_ION:
-                case Z_ION:
-                    return false;
+
+        switch (subType) {
+
+            case A_ION:
+            case B_ION:
+            case C_ION:
+                return true;
+
+            case X_ION:
+            case Y_ION:
+            case Z_ION:
+                return false;
+
         }
-        
-                throw new UnsupportedOperationException("Subtype: " + subType + " not found.");
+
+        throw new UnsupportedOperationException(
+                "Subtype: "
+                + subType
+                + " not found."
+        );
+
     }
 
     @Override
     public boolean isSameAs(Ion anotherIon) {
+
         return anotherIon.getType() == IonType.PEPTIDE_FRAGMENT_ION
                 && anotherIon.getSubType() == subType
                 && ((PeptideFragmentIon) anotherIon).getNumber() == number
                 && anotherIon.getNeutralLossesAsString().equals(getNeutralLossesAsString());
+
     }
+
 }

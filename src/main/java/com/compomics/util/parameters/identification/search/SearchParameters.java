@@ -59,15 +59,25 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
 
         @Override
         public String toString() {
+
             switch (this) {
+
                 case PPM:
                     return "ppm";
+
                 case DA:
                     return "Da";
+
                 default:
-                    throw new UnsupportedOperationException("Name of tolerance type " + this.name() + " not implemented.");
+                    throw new UnsupportedOperationException(
+                            "Name of tolerance type "
+                            + this.name()
+                            + " not implemented."
+                    );
             }
+
         }
+
     };
     /**
      * Convenience array for forward ion type selection.
@@ -161,6 +171,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
 
         // Set advanced parameters
         setDefaultAdvancedSettings();
+
     }
 
     /**
@@ -188,13 +199,13 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
 
         // Set advanced parameters
         setDefaultAdvancedSettings(searchParameters);
+
     }
 
     /**
      * Set the advanced settings to the default values.
      */
     public void setDefaultAdvancedSettings() {
-
         setDefaultAdvancedSettings(null);
     }
 
@@ -261,7 +272,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         } else {
             setIdentificationAlgorithmParameter(Advocate.metaMorpheus.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.metaMorpheus.getIndex()));
         }
-        
+
         if (searchParameters == null || searchParameters.getIdentificationAlgorithmParameter(Advocate.sage.getIndex()) == null) {
             setIdentificationAlgorithmParameter(Advocate.sage.getIndex(), new SageParameters());
         } else {
@@ -291,6 +302,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         } else {
             setIdentificationAlgorithmParameter(Advocate.novor.getIndex(), searchParameters.getIdentificationAlgorithmParameter(Advocate.novor.getIndex()));
         }
+
     }
 
     /**
@@ -299,7 +311,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the reference mass used to convert ppm to Da
      */
     public double getRefMass() {
-
         return refMass;
     }
 
@@ -309,7 +320,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param refMass the reference mass used to convert ppm to Da
      */
     public void setRefMass(double refMass) {
-
         this.refMass = refMass;
     }
 
@@ -319,7 +329,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the modification settings
      */
     public ModificationParameters getModificationParameters() {
-
         return modificationParameters;
     }
 
@@ -329,7 +338,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param modificationParameters the modification settings
      */
     public void setModificationParameters(ModificationParameters modificationParameters) {
-
         this.modificationParameters = modificationParameters;
     }
 
@@ -339,7 +347,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the MS2 ion m/z tolerance
      */
     public double getFragmentIonAccuracy() {
-
         return fragmentIonMZTolerance;
     }
 
@@ -350,7 +357,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the absolute fragment ion tolerance in Dalton
      */
     public double getFragmentIonAccuracyInDaltons() {
-
         return getFragmentIonAccuracyInDaltons(refMass);
     }
 
@@ -366,13 +372,22 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
     public double getFragmentIonAccuracyInDaltons(double refMass) {
 
         switch (fragmentAccuracyType) {
+
             case DA:
                 return fragmentIonMZTolerance;
+
             case PPM:
                 return fragmentIonMZTolerance * refMass / 1000000;
+
             default:
-                throw new UnsupportedOperationException("Tolerance in " + fragmentAccuracyType + " not implemented.");
+                throw new UnsupportedOperationException(
+                        "Tolerance in "
+                        + fragmentAccuracyType
+                        + " not implemented."
+                );
+
         }
+
     }
 
     /**
@@ -381,7 +396,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param fragmentIonMZTolerance the fragment ion m/z tolerance
      */
     public void setFragmentIonAccuracy(double fragmentIonMZTolerance) {
-
         this.fragmentIonMZTolerance = fragmentIonMZTolerance;
     }
 
@@ -391,7 +405,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the digestion preferences
      */
     public DigestionParameters getDigestionParameters() {
-
         return digestionParameters;
     }
 
@@ -401,51 +414,46 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param digestionParameters the digestion preferences
      */
     public void setDigestionParameters(DigestionParameters digestionParameters) {
-
         this.digestionParameters = digestionParameters;
     }
 
     /**
      * Returns the forward ions searched as list of integers as indexed in the
-     * FragmentIon class.
+     * PeptideFragmentIon class.
      *
      * @return the forward ions searched
      */
     public ArrayList<Integer> getForwardIons() {
-
         return forwardIons;
     }
 
     /**
      * Sets the forward ions searched as list of integers as indexed in the
-     * FragmentIon class.
+     * PeptideFragmentIon class.
      *
      * @param forwardIons the forward ions searched
      */
     public void setForwardIons(ArrayList<Integer> forwardIons) {
-
         this.forwardIons = forwardIons;
     }
 
     /**
      * Returns the rewind ions searched as list of integers as indexed in the
-     * FragmentIon class.
+     * PeptideFragmentIon class.
      *
      * @return the rewind ions searched
      */
     public ArrayList<Integer> getRewindIons() {
-
         return rewindIons;
     }
 
     /**
      * Sets the rewind ions searched as list of integers as indexed in the
-     * FragmentIon class.
+     * PeptideFragmentIon class.
      *
      * @param rewindIons the rewind ions searched
      */
     public void setRewindIons(ArrayList<Integer> rewindIons) {
-
         this.rewindIons = rewindIons;
     }
 
@@ -455,14 +463,19 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the list of ion symbols used
      */
     public static String[] getIons() {
+
         String[] ions = new String[implementedForwardIons.length + implementedRewindIons.length];
+
         for (String forwardIon1 : implementedForwardIons) {
             ions[ions.length] = forwardIon1;
         }
+
         for (String rewindIon1 : implementedRewindIons) {
             ions[ions.length] = rewindIon1;
         }
+
         return ions;
+
     }
 
     /**
@@ -471,7 +484,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the precursor tolerance
      */
     public double getPrecursorAccuracy() {
-
         return precursorTolerance;
     }
 
@@ -481,7 +493,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param precursorTolerance the precursor tolerance
      */
     public void setPrecursorAccuracy(double precursorTolerance) {
-
         this.precursorTolerance = precursorTolerance;
     }
 
@@ -491,7 +502,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the precursor accuracy type
      */
     public MassAccuracyType getPrecursorAccuracyType() {
-
         return precursorAccuracyType;
     }
 
@@ -501,7 +511,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param precursorAccuracyType the precursor accuracy type
      */
     public void setPrecursorAccuracyType(MassAccuracyType precursorAccuracyType) {
-
         this.precursorAccuracyType = precursorAccuracyType;
     }
 
@@ -511,7 +520,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the fragment accuracy type
      */
     public MassAccuracyType getFragmentAccuracyType() {
-
         return fragmentAccuracyType;
     }
 
@@ -521,7 +529,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param fragmentAccuracyType the fragment accuracy type
      */
     public void setFragmentAccuracyType(MassAccuracyType fragmentAccuracyType) {
-
         this.fragmentAccuracyType = fragmentAccuracyType;
     }
 
@@ -531,7 +538,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return true if the current precursor accuracy type is ppm
      */
     public Boolean isPrecursorAccuracyTypePpm() {
-
         return getPrecursorAccuracyType() == MassAccuracyType.PPM;
     }
 
@@ -541,7 +547,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the maximal charge searched
      */
     public int getMaxChargeSearched() {
-
         return maxChargeSearched;
     }
 
@@ -551,7 +556,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param maxChargeSearched the maximal charge searched
      */
     public void setMaxChargeSearched(int maxChargeSearched) {
-
         this.maxChargeSearched = maxChargeSearched;
     }
 
@@ -561,7 +565,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the minimal charge searched
      */
     public int getMinChargeSearched() {
-
         return minChargeSearched;
     }
 
@@ -571,7 +574,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param minChargeSearched the minimal charge searched
      */
     public void setMinChargeSearched(int minChargeSearched) {
-
         this.minChargeSearched = minChargeSearched;
     }
 
@@ -582,7 +584,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the algorithm specific parameters in a map
      */
     public HashMap<Integer, IdentificationAlgorithmParameter> getAlgorithmSpecificParameters() {
-
         return algorithmParameters;
     }
 
@@ -599,7 +600,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         if (algorithmParameters == null) {
             return null;
         }
+
         return algorithmParameters.get(algorithmID);
+
     }
 
     /**
@@ -614,7 +617,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         if (algorithmParameters == null) {
             algorithmParameters = new HashMap<>();
         }
+
         algorithmParameters.put(algorithmID, identificationAlgorithmParameter);
+
     }
 
     /**
@@ -629,7 +634,9 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         if (algorithmParameters == null) {
             return new HashSet<>(0);
         }
+
         return algorithmParameters.keySet();
+
     }
 
     /**
@@ -638,7 +645,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the minimal isotopic correction
      */
     public int getMinIsotopicCorrection() {
-
         return minIsotopicCorrection;
     }
 
@@ -648,7 +654,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param minIsotopicCorrection the minimal isotopic correction
      */
     public void setMinIsotopicCorrection(int minIsotopicCorrection) {
-
         this.minIsotopicCorrection = minIsotopicCorrection;
     }
 
@@ -658,7 +663,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @return the maximal isotopic correction
      */
     public int getMaxIsotopicCorrection() {
-
         return maxIsotopicCorrection;
     }
 
@@ -668,7 +672,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @param maxIsotopicCorrection the maximal isotopic correction
      */
     public void setMaxIsotopicCorrection(int maxIsotopicCorrection) {
-
         this.maxIsotopicCorrection = maxIsotopicCorrection;
     }
 
@@ -684,6 +687,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * @throws ClassNotFoundException if a ClassNotFoundException occurs
      */
     public static SearchParameters getIdentificationParameters(File searchParametersFile) throws IOException, ClassNotFoundException {
+
         Object savedObject;
 
         try {
@@ -693,6 +697,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
             Class expectedObjectType = DummyParameters.class;
             Object object = jsonMarshaller.fromJson(expectedObjectType, searchParametersFile);
             DummyParameters dummyParameters = (DummyParameters) object;
+
             if (dummyParameters.getType() == MarshallableParameter.Type.search_parameters) {
                 expectedObjectType = SearchParameters.class;
                 savedObject = jsonMarshaller.fromJson(expectedObjectType, searchParametersFile);
@@ -714,9 +719,11 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
                 e2.printStackTrace();
                 throw new IllegalArgumentException("Parameters file " + searchParametersFile + " not recognized.");
             }
+
         }
 
         SearchParameters searchParameters;
+
         if (savedObject instanceof SearchParameters) {
             searchParameters = (SearchParameters) savedObject;
         } else if (savedObject instanceof IdentificationParameters) {
@@ -727,6 +734,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         }
 
         return searchParameters;
+
     }
 
     /**
@@ -737,10 +745,15 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      *
      * @throws IOException if an IOException occurs
      */
-    public static void saveIdentificationParameters(SearchParameters searchParameters, File searchParametersFile) throws IOException {
+    public static void saveIdentificationParameters(
+            SearchParameters searchParameters,
+            File searchParametersFile)
+            throws IOException {
+
         IdentificationParametersMarshaller jsonMarshaller = new IdentificationParametersMarshaller();
         searchParameters.setType();
         jsonMarshaller.saveObjectToJson(searchParameters, searchParametersFile);
+
     }
 
     /**
@@ -753,16 +766,21 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
     public void saveIdentificationParametersAsTextFile(File file) throws IOException {
 
         FileWriter fw = new FileWriter(file);
+
         try {
+
             BufferedWriter bw = new BufferedWriter(fw);
+
             try {
                 bw.write(toString());
             } finally {
                 bw.close();
             }
+
         } finally {
             fw.close();
         }
+
     }
 
     @Override
@@ -786,21 +804,27 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         }
 
         if (modificationParameters != null) {
+
             ArrayList<String> modifications = modificationParameters.getFixedModifications();
+
             if (!modifications.isEmpty()) {
                 output.append("Fixed: ");
                 output.append(modifications.stream().sorted().collect(Collectors.joining(", ")));
                 output.append(".").append(newLine);
             }
+
         }
 
         if (modificationParameters != null) {
+
             ArrayList<String> modifications = modificationParameters.getVariableModifications();
+
             if (!modifications.isEmpty()) {
                 output.append("Variable: ");
                 output.append(modifications.stream().sorted().collect(Collectors.joining(", ")));
                 output.append(".").append(newLine);
             }
+
         }
 
         if (precursorTolerance != defaultParameters.getPrecursorAccuracy()
@@ -829,6 +853,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
                         .collect(Collectors.joining(","));
 
                 output.append("Ion Types: ").append(ions1).append(" and ").append(ions2).append(".").append(newLine);
+
             }
 
         }
@@ -844,6 +869,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         }
 
         return output.toString();
+
     }
 
     /**
@@ -855,6 +881,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
     public String toString(boolean html) {
 
         String newLine;
+
         if (html) {
             newLine = "<br>";
         } else {
@@ -872,8 +899,11 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         output.append(newLine);
 
         if (digestionParameters.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
+
             ArrayList<Enzyme> enzymes = digestionParameters.getEnzymes();
+
             for (int i = 0; i < enzymes.size(); i++) {
+
                 Enzyme tempEnzyme = enzymes.get(i);
                 String enzymeName = tempEnzyme.getName();
                 output.append("ENZYME").append(i).append("=");
@@ -881,80 +911,89 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
                 int nmc = digestionParameters.getnMissedCleavages(enzymeName);
                 output.append(", ").append(nmc).append(" missed cleavages");
                 output.append(newLine);
+
             }
+
         } else {
             output.append("ENZYME").append("=").append(digestionParameters.getCleavageParameter().name);
         }
 
         output.append("FIXED_MODIFICATIONS=");
+
         if (modificationParameters != null) {
             ArrayList<String> modifications = modificationParameters.getFixedModifications();
             output.append(modifications.stream().sorted().collect(Collectors.joining(",")));
         }
+
         output.append(newLine);
 
         output.append("VARIABLE_MODIFICATIONS=");
+
         if (modificationParameters != null) {
             ArrayList<String> modifications = modificationParameters.getVariableModifications();
             output.append(modifications.stream().sorted().collect(Collectors.joining(",")));
         }
-        output.append(newLine);
 
+        output.append(newLine);
         output.append("REFINEMENT_FIXED_MODIFICATIONS=");
+
         if (modificationParameters != null && modificationParameters.getRefinementFixedModifications() != null) {
             ArrayList<String> modifications = modificationParameters.getRefinementFixedModifications();
             output.append(modifications.stream().sorted().collect(Collectors.joining(",")));
         }
-        output.append(newLine);
 
+        output.append(newLine);
         output.append("REFINEMENT_VARIABLE_MODIFICATIONS=");
+
         if (modificationParameters != null && modificationParameters.getRefinementVariableModifications() != null) {
             ArrayList<String> modifications = modificationParameters.getRefinementVariableModifications();
             output.append(modifications.stream().sorted().collect(Collectors.joining(",")));
         }
-        output.append(newLine);
 
+        output.append(newLine);
         output.append("PRECURSOR_MASS_TOLERANCE=");
         output.append(precursorTolerance);
         output.append(newLine);
-
         output.append("PRECURSOR_MASS_TOLERANCE_UNIT=");
+
         if (getPrecursorAccuracyType() == MassAccuracyType.PPM) {
             output.append("ppm");
         } else {
             output.append("Da");
         }
-        output.append(newLine);
 
+        output.append(newLine);
         output.append("FRAGMENT_MASS_TOLERANCE=");
         output.append(fragmentIonMZTolerance);
         output.append(newLine);
-
         output.append("FRAGMENT_MASS_TOLERANCE_UNIT=");
+
         if (getFragmentAccuracyType() == MassAccuracyType.PPM) {
             output.append("ppm");
         } else {
             output.append("Da");
         }
-        output.append(newLine);
 
+        output.append(newLine);
         output.append("PPM_TO_DA_CONVERSION_REF_MASS=");
         output.append(getRefMass());
         output.append(newLine);
-
         output.append("FORWARD_FRAGMENT_ION_TYPE=");
+
         String ions1 = forwardIons.stream()
                 .sorted()
                 .map(ion -> PeptideFragmentIon.getSubTypeAsString(ion))
                 .collect(Collectors.joining(","));
+
         output.append(ions1);
         output.append(newLine);
-
         output.append("FRAGMENT_ION_TYPE_2=");
+
         String ions2 = rewindIons.stream()
                 .sorted()
                 .map(ion -> PeptideFragmentIon.getSubTypeAsString(ion))
                 .collect(Collectors.joining(","));
+
         output.append(ions2);
         output.append(newLine);
 
@@ -1067,6 +1106,7 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         }
 
         return true;
+
     }
 
     /**
@@ -1077,7 +1117,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * to be reported
      */
     public void setFlanking(boolean flanking) {
-
         this.flanking = flanking;
     }
 
@@ -1089,13 +1128,11 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      * to be reported
      */
     public boolean getFlanking() {
-
         return flanking;
     }
 
     @Override
     public void setType() {
-
         marshallableParameterType = Type.search_parameters.name();
     }
 
@@ -1107,5 +1144,6 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
         }
 
         return Type.valueOf(marshallableParameterType);
+
     }
 }

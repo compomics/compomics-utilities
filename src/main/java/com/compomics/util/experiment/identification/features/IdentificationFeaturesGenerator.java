@@ -27,13 +27,8 @@ import com.compomics.util.experiment.identification.filtering.ProteinFilter;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.peptide_shaker.Metrics;
 import com.compomics.util.experiment.identification.peptide_shaker.PSParameter;
-<<<<<<< HEAD
-=======
-import com.compomics.util.experiment.identification.peptide_shaker.PSModificationScores;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
 import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumptionParameter;
-import com.compomics.util.experiment.identification.utils.ModificationUtils;
->>>>>>> master
 import com.compomics.util.gui.filtering.FilterParameters;
 import com.compomics.util.parameters.quantification.spectrum_counting.SpectrumCountingParameters;
 import com.compomics.util.experiment.identification.validation.MatchValidationLevel;

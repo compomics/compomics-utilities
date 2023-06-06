@@ -1677,13 +1677,20 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-//        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id)) {
-//            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id);
-//            List<String> supportedInput = Arrays.asList("2", "3");
-//            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id, arg, supportedInput)) {
-//                return false;
-//            }
-//        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id);
+            List<String> supportedInput = Arrays.asList("2", "3");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_TMT_SN.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_TMT_SN.id);
+            List<String> supportedInput = Arrays.asList("true", "false");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_TMT_SN.id, arg, supportedInput)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ.id);
             List<String> supportedInput = Arrays.asList("true", "false");
@@ -1721,6 +1728,12 @@ public class IdentificationParametersInputBean {
         if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_PEAKS.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_PEAKS.id);
             if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SAGE_MAX_PEAKS.id, arg, false)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_MIN_MATCHED_PEAKS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MIN_MATCHED_PEAKS.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SAGE_MIN_MATCHED_PEAKS.id, arg, false)) {
                 return false;
             }
         }
@@ -3834,11 +3847,16 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_TMT.id);
             sageParameters.setTmtType(arg);
         }
-//        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id)) {
-//            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id);
-//            Integer option = Integer.valueOf(arg);
-//            sageParameters.setTmtLevel(option);
-//        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id);
+            Integer option = Integer.valueOf(arg);
+            sageParameters.setTmtLevel(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_TMT_SN.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ.id);
+            Boolean option = Boolean.valueOf(arg);
+            sageParameters.setPerformLfq(option);
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ.id);
             Boolean option = Boolean.valueOf(arg);
@@ -3868,6 +3886,11 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_PEAKS.id);
             Integer option = Integer.valueOf(arg);
             sageParameters.setMaxPeaks(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_MIN_MATCHED_PEAKS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MIN_MATCHED_PEAKS.id);
+            Integer option = Integer.valueOf(arg);
+            sageParameters.setMinMatchedPeaks(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_MAX_FRAGMENT_CHARGE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_MAX_FRAGMENT_CHARGE.id);

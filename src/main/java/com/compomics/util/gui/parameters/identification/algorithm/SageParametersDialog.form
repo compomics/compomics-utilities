@@ -204,6 +204,16 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="tmtLevelCmb" max="32767" attributes="0"/>
                           </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="tmtSnLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="tmtSnCmb" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="minMatchedPeaksLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="minMatchedPeaksTxt" max="32767" attributes="2"/>
+                          </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -265,6 +275,11 @@
                       </Group>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tmtSnLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tmtSnCmb" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lfqLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lfqCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -289,6 +304,11 @@
                           <Component id="maxNumberOfPeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="numberOfPeaksDividerLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="numberOfPeaksLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="minMatchedPeaksLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="minMatchedPeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -622,8 +642,36 @@
                   </StringArray>
                 </Property>
                 <Property name="selectedIndex" type="int" value="1"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="tmtSnLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="TMT Signal/Noise"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="tmtSnCmb">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Yes"/>
+                    <StringItem index="1" value="No"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="minMatchedPeaksLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Minimum Matched Peaks"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="minMatchedPeaksTxt">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="4"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="minMatchedPeaksTxtKeyReleased"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

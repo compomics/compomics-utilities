@@ -27,6 +27,13 @@ import com.compomics.util.experiment.identification.filtering.ProteinFilter;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.peptide_shaker.Metrics;
 import com.compomics.util.experiment.identification.peptide_shaker.PSParameter;
+<<<<<<< HEAD
+=======
+import com.compomics.util.experiment.identification.peptide_shaker.PSModificationScores;
+import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumption;
+import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumptionParameter;
+import com.compomics.util.experiment.identification.utils.ModificationUtils;
+>>>>>>> master
 import com.compomics.util.gui.filtering.FilterParameters;
 import com.compomics.util.parameters.quantification.spectrum_counting.SpectrumCountingParameters;
 import com.compomics.util.experiment.identification.validation.MatchValidationLevel;
@@ -812,15 +819,15 @@ public class IdentificationFeaturesGenerator {
     }
 
     /**
-     * Returns the spectrum counting metric of the protein match of interest
-     * using the preference settings normalized to the injected protein amount
-     * using the spectrum counting preferences of the identification features
-     * generator.
+     * Returns the spectrum quantification metric of the protein match of
+     * interest using the preference settings normalized to the injected protein
+     * amount using the spectrum counting preferences of the identification
+     * features generator.
      *
      * @param proteinMatchKey the key of the protein match of interest
      *
-     * @return the corresponding spectrum counting metric normalized in the
-     * metrics prefix of mol
+     * @return the corresponding spectrum quantification metric normalized in
+     * the metrics prefix of mol
      */
     public double getNormalizedSpectrumCounting(
             long proteinMatchKey
@@ -835,16 +842,16 @@ public class IdentificationFeaturesGenerator {
     }
 
     /**
-     * Returns the spectrum counting metric of the protein match of interest
-     * using the preference settings normalized to the injected protein amount
-     * using the given spectrum counting preferences.
+     * Returns the spectrum quantification metric of the protein match of
+     * interest using the preference settings normalized to the injected protein
+     * amount using the given spectrum counting preferences.
      *
      * @param proteinMatchKey the key of the protein match of interest
      * @param spectrumCountingPreferences the spectrum counting preferences
-     * @param metrics the metrics on the dataset
+     * @param metrics the metrics on the data set
      *
-     * @return the corresponding spectrum counting metric normalized in the
-     * metricsprefix of mol
+     * @return the corresponding spectrum quantification metric normalized in
+     * the metrics prefix of mol
      */
     public double getNormalizedSpectrumCounting(
             long proteinMatchKey,
@@ -862,15 +869,16 @@ public class IdentificationFeaturesGenerator {
     }
 
     /**
-     * Returns the spectrum counting metric of the protein match of interest
-     * using the preference settings normalized to the injected protein amount.
+     * Returns the spectrum quantification metric of the protein match of
+     * interest using the preference settings normalized to the injected protein
+     * amount.
      *
      * @param proteinMatchKey the key of the protein match of interest
      * @param unit the unit to use for the normalization
      * @param method the method to use
      *
-     * @return the corresponding spectrum counting metric normalized in the
-     * metricsprefix of mol
+     * @return the corresponding spectrum quantification metric normalized in
+     * the metrics prefix of mol
      */
     public double getNormalizedSpectrumCounting(
             long proteinMatchKey,
@@ -887,18 +895,19 @@ public class IdentificationFeaturesGenerator {
     }
 
     /**
-     * Returns the spectrum counting metric of the protein match of interest
-     * using the preference settings normalized to the injected protein amount.
+     * Returns the spectrum quantification metric of the protein match of
+     * interest using the preference settings normalized to the injected protein
+     * amount.
      *
      * @param proteinMatchKey the key of the protein match of interest
-     * @param metrics the metrics on the dataset
+     * @param metrics the metrics for the data set
      * @param unit the unit to use for the normalization
      * @param method the method to use
      * @param referenceMass the reference mass if abundance normalization is
      * chosen
      *
-     * @return the corresponding spectrum counting metric normalized in the
-     * metrics prefix of mol
+     * @return the corresponding spectrum quantification metric normalized in
+     * the metrics prefix of mol
      */
     public double getNormalizedSpectrumCounting(
             long proteinMatchKey,
@@ -961,12 +970,12 @@ public class IdentificationFeaturesGenerator {
     }
 
     /**
-     * Returns the spectrum counting metric of the protein match of interest
-     * using the preference settings.
+     * Returns the spectrum quantification metric of the protein match of
+     * interest using the preference settings.
      *
      * @param proteinMatchKey the key of the protein match of interest
      *
-     * @return the corresponding spectrum counting metric
+     * @return the corresponding spectrum quantification metric
      */
     public double getSpectrumCounting(
             long proteinMatchKey
@@ -978,13 +987,13 @@ public class IdentificationFeaturesGenerator {
     }
 
     /**
-     * Returns the spectrum counting metric of the protein match of interest for
-     * the given method.
+     * Returns the spectrum quantification metric of the protein match of
+     * interest for the given method.
      *
      * @param proteinMatchKey the key of the protein match of interest
      * @param method the method to use
      *
-     * @return the corresponding spectrum counting metric
+     * @return the corresponding spectrum quantification metric
      */
     public Double getSpectrumCounting(
             long proteinMatchKey,
@@ -1010,6 +1019,7 @@ public class IdentificationFeaturesGenerator {
             }
 
             return result;
+
         } else {
 
             SpectrumCountingParameters tempPreferences = new SpectrumCountingParameters();
@@ -1095,116 +1105,175 @@ public class IdentificationFeaturesGenerator {
         ProteinMatch proteinMatch = (ProteinMatch) identification.retrieveObject(proteinMatchKey);
         DigestionParameters digestionPreferences = identificationParameters.getSearchParameters().getDigestionParameters();
 
-        if (spectrumCountingPreferences.getSelectedMethod() == SpectrumCountingMethod.NSAF) {
+        switch (spectrumCountingPreferences.getSelectedMethod()) {
 
-            // NSAF
-            double result = 0;
+            case NSAF: {
 
-            // iterate the peptides and store the coverage for each peptide validation level
-            PeptideMatchesIterator peptideMatchesIterator = identification.getPeptideMatchesIterator(
-                    proteinMatch.getPeptideMatchesKeys(),
-                    null
-            );
-            PeptideMatch peptideMatch;
+                double result = 0;
 
-            while ((peptideMatch = peptideMatchesIterator.next()) != null) {
-
-                PSParameter psParameter = (PSParameter) peptideMatch.getUrParam(PSParameter.dummy);
-
-                if (psParameter.getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()) {
-
-                    Peptide peptide = peptideMatch.getPeptide();
-
-                    int peptideOccurrence = identification.getProteinMatches(peptideMatch.getKey()).stream()
-                            .map(
-                                    groupKey -> identification.getProteinMatch(groupKey)
-                            )
-                            .filter(
-                                    sharedGroup -> ((PSParameter) sharedGroup.getUrParam(PSParameter.dummy))
-                                            .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()
-                            )
-                            .filter(
-                                    sharedGroup -> peptide.getProteinMapping().containsKey(sharedGroup.getLeadingAccession())
-                            )
-                            .mapToInt(
-                                    sharedGroup -> peptide.getProteinMapping().get(sharedGroup.getLeadingAccession()).length
-                            )
-                            .sum();
-
-                    double spectrumCount = Arrays.stream(peptideMatch.getSpectrumMatchesKeys())
-                            .mapToObj(
-                                    key -> identification.getSpectrumMatch(key)
-                            )
-                            .filter(
-                                    spectrumMatch -> ((PSParameter) spectrumMatch.getUrParam(PSParameter.dummy))
-                                            .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()
-                            )
-                            .count();
-
-                    double ratio = spectrumCount / peptideOccurrence;
-
-                    result += ratio;
-
-                }
-            }
-
-            String proteinSequence = sequenceProvider.getSequence(proteinMatch.getLeadingAccession());
-
-            if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
-
-                result /= ProteinUtils.getObservableLength(
-                        proteinSequence,
-                        digestionPreferences.getEnzymes(),
-                        maxPepLength
+                // iterate the peptides and store the coverage for each peptide validation level
+                PeptideMatchesIterator peptideMatchesIterator = identification.getPeptideMatchesIterator(
+                        proteinMatch.getPeptideMatchesKeys(),
+                        null
                 );
 
-            } else {
+                PeptideMatch peptideMatch;
 
-                result /= proteinSequence.length();
+                while ((peptideMatch = peptideMatchesIterator.next()) != null) {
 
-            }
+                    PSParameter psParameter = (PSParameter) peptideMatch.getUrParam(PSParameter.dummy);
 
-            if (Double.valueOf(result).isInfinite() || Double.valueOf(result).isNaN()) {
+                    if (psParameter.getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()) {
 
-                result = 0.0;
+                        Peptide peptide = peptideMatch.getPeptide();
 
-            }
+                        int peptideOccurrence = identification.getProteinMatches(peptideMatch.getKey()).stream()
+                                .map(
+                                        groupKey -> identification.getProteinMatch(groupKey)
+                                )
+                                .filter(
+                                        sharedGroup -> ((PSParameter) sharedGroup.getUrParam(PSParameter.dummy))
+                                                .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()
+                                )
+                                .filter(
+                                        sharedGroup -> peptide.getProteinMapping().containsKey(sharedGroup.getLeadingAccession())
+                                )
+                                .mapToInt(
+                                        sharedGroup -> peptide.getProteinMapping().get(sharedGroup.getLeadingAccession()).length
+                                )
+                                .sum();
 
-            return result; // @TODO: round to a certain number of decimals?
+                        double spectrumCount = Arrays.stream(peptideMatch.getSpectrumMatchesKeys())
+                                .mapToObj(
+                                        key -> identification.getSpectrumMatch(key)
+                                )
+                                .filter(
+                                        spectrumMatch -> ((PSParameter) spectrumMatch.getUrParam(PSParameter.dummy))
+                                                .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()
+                                )
+                                .count();
 
-        } else {
+                        double ratio = spectrumCount / peptideOccurrence;
 
-            // emPAI
-            double result = Arrays.stream(proteinMatch.getPeptideMatchesKeys())
-                    .mapToObj(
-                            key -> identification.getPeptideMatch(key)
-                    )
-                    .filter(
-                            peptideMatch -> ((PSParameter) peptideMatch.getUrParam(PSParameter.dummy))
-                                    .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()
-                    )
-                    .count();
+                        result += ratio;
 
-            if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
+                    }
+                }
 
                 String proteinSequence = sequenceProvider.getSequence(proteinMatch.getLeadingAccession());
-                result = Math.pow(10, result / (ProteinUtils.getNCleavageSites(proteinSequence, digestionPreferences.getEnzymes()) + 1)) - 1;
 
-            } else {
+                if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
 
-                result = Math.pow(10, result) - 1;
+                    result /= ProteinUtils.getObservableLength(
+                            proteinSequence,
+                            digestionPreferences.getEnzymes(),
+                            maxPepLength
+                    );
+
+                } else {
+
+                    result /= proteinSequence.length();
+
+                }
+
+                if (Double.valueOf(result).isInfinite() || Double.valueOf(result).isNaN()) {
+
+                    result = 0.0;
+
+                }
+
+                return result; // @TODO: round to a certain number of decimals?
 
             }
 
-            if (Double.valueOf(result).isInfinite() || Double.valueOf(result).isNaN()) {
+            case EMPAI: {
 
-                result = 0.0;
+                double result = Arrays.stream(proteinMatch.getPeptideMatchesKeys())
+                        .mapToObj(
+                                key -> identification.getPeptideMatch(key)
+                        )
+                        .filter(
+                                peptideMatch -> ((PSParameter) peptideMatch.getUrParam(PSParameter.dummy))
+                                        .getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()
+                        )
+                        .count();
+
+                if (digestionPreferences.getCleavageParameter() == DigestionParameters.CleavageParameter.enzyme) {
+
+                    String proteinSequence = sequenceProvider.getSequence(proteinMatch.getLeadingAccession());
+                    result = Math.pow(10, result / (ProteinUtils.getNCleavageSites(proteinSequence, digestionPreferences.getEnzymes()) + 1)) - 1;
+
+                } else {
+
+                    result = Math.pow(10, result) - 1;
+
+                }
+
+                if (Double.valueOf(result).isInfinite() || Double.valueOf(result).isNaN()) {
+
+                    result = 0.0;
+
+                }
+
+                return result; // @TODO: round to a certain number of decimals?
 
             }
 
-            return result; // @TODO: round to a certain number of decimals?
+            case LFQ:
+
+                PeptideMatchesIterator peptideMatchesIterator = identification.getPeptideMatchesIterator(
+                        proteinMatch.getPeptideMatchesKeys(),
+                        null
+                );
+
+                PeptideMatch peptideMatch;
+                SpectrumMatch spectrumMatch;
+                double result = 0.0;
+
+                while ((peptideMatch = peptideMatchesIterator.next()) != null) {
+
+                    PSParameter psParameter = (PSParameter) peptideMatch.getUrParam(PSParameter.dummy);
+
+                    if (psParameter.getMatchValidationLevel().getIndex() >= spectrumCountingPreferences.getMatchValidationLevel()) {
+
+                        SpectrumMatchesIterator spectrumMatchesIterator = identification.getSpectrumMatchesIterator(
+                                peptideMatch.getSpectrumMatchesKeys(),
+                                null
+                        );
+
+                        while ((spectrumMatch = spectrumMatchesIterator.next()) != null) {
+
+                            PeptideAssumption peptideAssumption = spectrumMatch.getBestPeptideAssumption();
+
+                            if (peptideAssumption.getUrParam(PeptideAssumptionParameter.dummy) != null) {
+
+                                PeptideAssumptionParameter peptideAssumptionParameter
+                                        = (PeptideAssumptionParameter) peptideAssumption.getUrParam(PeptideAssumptionParameter.dummy);
+
+                                if (peptideAssumptionParameter != null
+                                        && peptideAssumptionParameter.getMs1Intensity() != null) {
+
+                                    result += peptideAssumptionParameter.getMs1Intensity();
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                return result; // @TODO: round to a certain number of decimals?
+
+            default:
+                break;
 
         }
+
+        return Double.NaN;
+
     }
 
     /**
@@ -2173,6 +2242,8 @@ public class IdentificationFeaturesGenerator {
                 IdentificationFeaturesCache.ObjectType.spectrum_counting
         );
 
+        metrics.setMaxSpectrumCounting(null);
+
     }
 
     /**
@@ -2534,7 +2605,7 @@ public class IdentificationFeaturesGenerator {
 
         if (result == null) {
 
-            getProcessedProteinKeys(waitingHandler, filterPreferences);
+            getProcessedProteinKeys(waitingHandler, filterPreferences, true);
 
         }
 
@@ -2547,20 +2618,24 @@ public class IdentificationFeaturesGenerator {
      *
      * @param filterPreferences the filtering preferences used. can be null
      * @param waitingHandler the waiting handler, can be null
+     * @param forceUpdate force an update of the protein keys
      *
      * @return the sorted list of protein keys
      */
     public long[] getProcessedProteinKeys(
             WaitingHandler waitingHandler,
-            FilterParameters filterPreferences
+            FilterParameters filterPreferences,
+            boolean forceUpdate
     ) {
 
-        if (identificationFeaturesCache.getProteinList() == null) {
+        if (identificationFeaturesCache.getProteinList() == null || forceUpdate) {
+
             if (waitingHandler != null) {
                 waitingHandler.resetSecondaryProgressCounter();
                 waitingHandler.setWaitingText("Loading Protein Information. Please Wait...");
                 waitingHandler.setMaxSecondaryProgressCounter(identification.getProteinIdentification().size());
             }
+
             boolean needMaxValues = (metrics.getMaxNPeptides() == null)
                     || metrics.getMaxNPeptides() <= 0
                     || metrics.getMaxNPsms() == null
@@ -2813,7 +2888,7 @@ public class IdentificationFeaturesGenerator {
 
         if (identificationFeaturesCache.getProteinList() == null) {
 
-            getProcessedProteinKeys(waitingHandler, filterPreferences);
+            getProcessedProteinKeys(waitingHandler, filterPreferences, true);
 
         }
 

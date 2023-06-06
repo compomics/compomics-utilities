@@ -313,13 +313,15 @@ public enum IdentificationParametersCLIParams {
     SAGE_DECOY_TAG("sage_decoy_tag", "Sage decoy tag, default is 'rev_'.", false, true),
     SAGE_GENERATE_DECOYS("sage_generate_decoys", "Sage generate decoys, default is 'true'.", false, true),
     SAGE_TMT("sage_tmt", "Sage TMT: Tmt6, Tmt10, Tmt11, Tmt16, or Tmt18.", false, true),
-    //SAGE_TMT_LEVEL("sage_tmt_level", "Sage TMT level: MS-level to perform TMT quantification on, default is '3'.", false, true),
-    SAGE_LFQ("sage_lfq", "Sage LFQ: default is 'false'.", false, true),
+    SAGE_TMT_LEVEL("sage_tmt_level", "Sage TMT level: MS-level to perform TMT quantification on, default is '3'.", false, true),
+    SAGE_TMT_SN("sage_tmt_sn", "Sage use signal/noise instead of intensity for TMT quant, default is 'false'.", false, true),
+    SAGE_LFQ("sage_lfq", "Sage perform LFQ, default is 'false'.", false, true),
     SAGE_DEISOTOPE("sage_deisotope", "Sage deisotope, perform deisotoping and charge state deconvolution, default is 'false'.", false, true),
     SAGE_CHIMERA("sage_chimera", "Sage search for chimeric/co-fragmenting PSMS, default is 'false'.", false, true),
     SAGE_PREDICT_RT("sage_predict_rt", "Sage use of retention time prediction model as an feature for LDA, default is 'true'.", false, true),
     SAGE_MIN_PEAKS("sage_min_peaks", "Sage min number of peaks for a spectrum, default is '15'.", false, true),
     SAGE_MAX_PEAKS("sage_max_peaks", "Sage max number of peaks for a spectrum, default is '150'.", false, true),
+    SAGE_MIN_MATCHED_PEAKS("sage_min_matched_peaks", "Sage minimum matched peaks, default is '4'.", false, true),
     SAGE_MAX_FRAGMENT_CHARGE("sage_max_frag_charge", "Sage maximum fragment charge, default is 'null'.", false, true),
     SAGE_NUM_PSMS("sage_num_psms", "Sage number of PSMs to report for each spectra. Recommend setting to 1, higher values might disrupt LDA, default is '1'.", false, true),
     SAGE_PARALLEL("sage_parallel", "Sage search files in parallel. For large numbers of files or low RAM, set this to false, default is 'true'.", false, true),
@@ -770,16 +772,18 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MAX_PEP_MASS.id) + " " + IdentificationParametersCLIParams.SAGE_MAX_PEP_MASS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MIN_ION_INDEX.id) + " " + IdentificationParametersCLIParams.SAGE_MIN_ION_INDEX.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MAX_VAR_MODS.id) + " " + IdentificationParametersCLIParams.SAGE_MAX_VAR_MODS.description + "\n";
-        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_DECOY_TAG.id) + " " + IdentificationParametersCLIParams.SAGE_DECOY_TAG.description + "\n";
+        //output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_DECOY_TAG.id) + " " + IdentificationParametersCLIParams.SAGE_DECOY_TAG.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.id) + " " + IdentificationParametersCLIParams.SAGE_GENERATE_DECOYS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_TMT.id) + " " + IdentificationParametersCLIParams.SAGE_TMT.description + "\n";
-        //output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id) + " " + IdentificationParametersCLIParams.SAGE_TMT_LEVEL.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id) + " " + IdentificationParametersCLIParams.SAGE_TMT_LEVEL.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_TMT_SN.id) + " " + IdentificationParametersCLIParams.SAGE_TMT_SN.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_LFQ.id) + " " + IdentificationParametersCLIParams.SAGE_LFQ.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_DEISOTOPE.id) + " " + IdentificationParametersCLIParams.SAGE_DEISOTOPE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_CHIMERA.id) + " " + IdentificationParametersCLIParams.SAGE_CHIMERA.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_PREDICT_RT.id) + " " + IdentificationParametersCLIParams.SAGE_PREDICT_RT.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MIN_PEAKS.id) + " " + IdentificationParametersCLIParams.SAGE_MIN_PEAKS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MAX_PEAKS.id) + " " + IdentificationParametersCLIParams.SAGE_MAX_PEAKS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MIN_MATCHED_PEAKS.id) + " " + IdentificationParametersCLIParams.SAGE_MIN_MATCHED_PEAKS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MAX_FRAGMENT_CHARGE.id) + " " + IdentificationParametersCLIParams.SAGE_MAX_FRAGMENT_CHARGE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_NUM_PSMS.id) + " " + IdentificationParametersCLIParams.SAGE_NUM_PSMS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_PARALLEL.id) + " " + IdentificationParametersCLIParams.SAGE_PARALLEL.description + "\n";

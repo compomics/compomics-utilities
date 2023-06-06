@@ -274,7 +274,7 @@ public enum IdentificationParametersCLIParams {
     META_MORPHEUS_FRAGMENTATION_TERMINUS("meta_morpheus_frag_term", "MetaMorpheus fragmentation terminus, Both, N or C, default is 'Both'.", false, true),
     META_MORPHEUS_MAX_FRAGMENTATION_SIZE("meta_morpheus_max_frag_size", "MetaMorpheus maximum fragmentation size, default is '30000'.", false, true),
     META_MORPHEUS_MIN_ALLOWED_INTERNAL_FRAGMENT_LENGTH("meta_morpheus_min_internal_fragment_length", "MetaMorpheus minimum allowed internal fragment length, default is '0'.", false, true),
-    META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE("meta_morpheus_mass_diff_acceptor_type", "MetaMorpheus mass difference acceptor type, Exact, OneMM, TwoMM, ThreeMM, PlusOrMinusThreeMM, ModOpen or Open, default is 'OneMM'.", false, true),
+    META_MORPHEUS_MASS_DIFF_ACCEPTOR_TYPE("meta_morpheus_mass_diff_acceptor_type", "MetaMorpheus mass difference acceptor type: Exact, OneMM, TwoMM, ThreeMM, PlusOrMinusThreeMM, ModOpen or Open, default is 'OneMM'.", false, true),
     META_MORPHEUS_WRITE_MZID("meta_morpheus_write_mzid", "MetaMorpheus write mzid, 1: true, 0: false, default is '1'.", false, true),
     META_MORPHEUS_WRITE_PEPXML("meta_morpheus_write_pepxml", "MetaMorpheus write pepxml, 1: true, 0: false, default is '0'.", false, true),
     META_MORPHEUS_USE_PROVIDED_PRECURSOR("meta_morpheus_use_provided_prec", "MetaMorpheus use provided precursor info, 1: true, 0: false, default is '1'.", false, true),
@@ -316,15 +316,20 @@ public enum IdentificationParametersCLIParams {
     SAGE_TMT_LEVEL("sage_tmt_level", "Sage TMT level: MS-level to perform TMT quantification on, default is '3'.", false, true),
     SAGE_TMT_SN("sage_tmt_sn", "Sage use signal/noise instead of intensity for TMT quant, default is 'false'.", false, true),
     SAGE_LFQ("sage_lfq", "Sage perform LFQ, default is 'false'.", false, true),
+    SAGE_LFQ_PEAK_SCORING("sage_lfq_peak_scoring", "Sage LFQ peak scoring: Hybrid, RetentionTime or SpectralAngle. Default is 'Hybrid'.", false, true),
+    SAGE_LFQ_INTEGRATION("sage_lfq_intergration", "Sage LFQ integration: Sum or Max. Default is 'Sum'.", false, true),
+    SAGE_LFQ_SPECTRAL_ANGLE("sage_lfq_spectral_angle", "Sage LFQ spectral angle, default is '0.7'.", false, true),
+    SAGE_LFQ_PPM_TOLERANCE("sage_lfq_ppm_tolerance", "Sage LFQ ppm tolerance, default is '0.5'.", false, true),
     SAGE_DEISOTOPE("sage_deisotope", "Sage deisotope, perform deisotoping and charge state deconvolution, default is 'false'.", false, true),
-    SAGE_CHIMERA("sage_chimera", "Sage search for chimeric/co-fragmenting PSMS, default is 'false'.", false, true),
+    SAGE_CHIMERA("sage_chimera", "Sage search for chimeric/co-fragmenting PSMs, default is 'false'.", false, true),
+    SAGE_WIDE_WINDOW("sage_wide_window", "Sage ignore `precursor_tol` and search spectra in wide-window/dynamic precursor tolerance mode, default is 'false'.", false, true),
     SAGE_PREDICT_RT("sage_predict_rt", "Sage use of retention time prediction model as an feature for LDA, default is 'true'.", false, true),
     SAGE_MIN_PEAKS("sage_min_peaks", "Sage min number of peaks for a spectrum, default is '15'.", false, true),
     SAGE_MAX_PEAKS("sage_max_peaks", "Sage max number of peaks for a spectrum, default is '150'.", false, true),
     SAGE_MIN_MATCHED_PEAKS("sage_min_matched_peaks", "Sage minimum matched peaks, default is '4'.", false, true),
     SAGE_MAX_FRAGMENT_CHARGE("sage_max_frag_charge", "Sage maximum fragment charge, default is 'null'.", false, true),
     SAGE_NUM_PSMS("sage_num_psms", "Sage number of PSMs to report for each spectra. Recommend setting to 1, higher values might disrupt LDA, default is '1'.", false, true),
-    SAGE_PARALLEL("sage_parallel", "Sage search files in parallel. For large numbers of files or low RAM, set this to false, default is 'true'.", false, true),
+    SAGE_BATCH_SIZE("sage_batch_size", "Sage batch size, default is the number of CPUs/2.", false, true),
     //////////////////////////////////
     // DirecTag specific parameters
     //////////////////////////////////
@@ -778,6 +783,10 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_TMT_LEVEL.id) + " " + IdentificationParametersCLIParams.SAGE_TMT_LEVEL.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_TMT_SN.id) + " " + IdentificationParametersCLIParams.SAGE_TMT_SN.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_LFQ.id) + " " + IdentificationParametersCLIParams.SAGE_LFQ.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_LFQ_PEAK_SCORING.id) + " " + IdentificationParametersCLIParams.SAGE_LFQ_PEAK_SCORING.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_LFQ_INTEGRATION.id) + " " + IdentificationParametersCLIParams.SAGE_LFQ_INTEGRATION.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_LFQ_SPECTRAL_ANGLE.id) + " " + IdentificationParametersCLIParams.SAGE_LFQ_SPECTRAL_ANGLE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_LFQ_PPM_TOLERANCE.id) + " " + IdentificationParametersCLIParams.SAGE_LFQ_PPM_TOLERANCE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_DEISOTOPE.id) + " " + IdentificationParametersCLIParams.SAGE_DEISOTOPE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_CHIMERA.id) + " " + IdentificationParametersCLIParams.SAGE_CHIMERA.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_PREDICT_RT.id) + " " + IdentificationParametersCLIParams.SAGE_PREDICT_RT.description + "\n";
@@ -786,7 +795,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MIN_MATCHED_PEAKS.id) + " " + IdentificationParametersCLIParams.SAGE_MIN_MATCHED_PEAKS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_MAX_FRAGMENT_CHARGE.id) + " " + IdentificationParametersCLIParams.SAGE_MAX_FRAGMENT_CHARGE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_NUM_PSMS.id) + " " + IdentificationParametersCLIParams.SAGE_NUM_PSMS.description + "\n";
-        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_PARALLEL.id) + " " + IdentificationParametersCLIParams.SAGE_PARALLEL.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_BATCH_SIZE.id) + " " + IdentificationParametersCLIParams.SAGE_BATCH_SIZE.description + "\n";
 
         output += "\n\nNovor advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.id) + " " + IdentificationParametersCLIParams.NOVOR_FRAGMENTATION.description + "\n";

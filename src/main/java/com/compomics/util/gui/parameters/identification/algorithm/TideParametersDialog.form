@@ -475,7 +475,7 @@
                 </Component>
                 <Component class="javax.swing.JLabel" name="removeTempFoldersLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Remove Temp Folders"/>
+                    <Property name="text" type="java.lang.String" value="Recreate FASTA Index"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="removeTempFoldersCmb">

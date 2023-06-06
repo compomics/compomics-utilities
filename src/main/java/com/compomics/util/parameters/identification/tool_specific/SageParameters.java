@@ -47,7 +47,7 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
     private Integer maxVariableMods = 2;
     /**
      * Sage decoy tag.
-     * 
+     *
      * @deprecated use the decoy tag from FastaParameters instead
      */
     private String decoyTag = "_REVERSED";  // @TODO: remove next time we break backwards compatibility
@@ -64,14 +64,33 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      * The MS-level to perform TMT quantification on.
      */
     private Integer tmtLevel = 3;
-     /**
-     * Use Signal/Noise instead of intensity for TMT quant. Requires noise values in mzML.
+    /**
+     * Use Signal/Noise instead of intensity for TMT quant. Requires noise
+     * values in mzML.
      */
     private Boolean tmtSn = false;
     /**
      * Set whether LFQ is to be performed.
      */
     private Boolean performLfq = false;
+    /**
+     * The method used for scoring peaks in LFQ: Hybrid, RetentionTime or
+     * SpectralAngle.
+     */
+    private String lfqPeakScoring = "Hybrid";
+    /**
+     * The method used for integrating peak intensities, either Sum or Max.
+     */
+    private String lfqIntergration = "Sum";
+    /**
+     * Threshold for the spectral angle similarity measure, ranging from 0 to 1.
+     */
+    private Double lfqSpectralAngle = 0.7;
+    /**
+     * Tolerance for matching MS1 ions for DICE window around calculated
+     * precursor mass.
+     */
+    private Double lfqPpmTolerance = 5.0;
     /**
      * Set whether deisotoping and charge state deconvolution is to be
      * performed.
@@ -81,6 +100,10 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      * Search for chimeric/co-fragmenting PSMS.
      */
     private Boolean chimera = false;
+    /**
+     * Ignore precursor_tol and search in wide-window/DIA mode.
+     */
+    private Boolean wideWindow = false;
     /**
      * Use of retention time prediction model as an feature for LDA.
      */
@@ -107,10 +130,9 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      */
     private Integer numPsmsPerSpectrum = 1;
     /**
-     * Search files in parallel. For large numbers of files or low RAM, set this
-     * to false.
+     * Number of files to search in parallel (default = number of CPUs/2).
      */
-    private Boolean parallelSearch = true;
+    private Integer batchSize = null;
     /**
      * The minimum peptide length.
      */
@@ -197,10 +219,37 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
             if (!performLfq.equals(sageParameters.getPerformLfq())) {
                 return false;
             }
+            if ((lfqPeakScoring == null && sageParameters.getLfqPeakScoring() != null)
+                    || (lfqPeakScoring != null && sageParameters.getLfqPeakScoring() == null)) {
+                return false;
+            }
+            if ((lfqPeakScoring != null && sageParameters.getLfqPeakScoring() != null)
+                    && (!lfqPeakScoring.equalsIgnoreCase(sageParameters.getLfqPeakScoring()))) {
+                return false;
+            }
+            if ((lfqIntergration == null && sageParameters.getLfqIntergration() != null)
+                    || (lfqIntergration != null && sageParameters.getLfqIntergration() == null)) {
+                return false;
+            }
+            if ((lfqIntergration != null && sageParameters.getLfqIntergration() != null)
+                    && (!lfqIntergration.equalsIgnoreCase(sageParameters.getLfqIntergration()))) {
+                return false;
+            }
+            diff = Math.abs(getLfqSpectralAngle() - sageParameters.getLfqSpectralAngle());
+            if (diff > 0.0000000000001) {
+                return false;
+            }
+            diff = Math.abs(getLfqPpmTolerance() - sageParameters.getLfqPpmTolerance());
+            if (diff > 0.0000000000001) {
+                return false;
+            }
             if (!deisotope.equals(sageParameters.getDeisotope())) {
                 return false;
             }
             if (!chimera.equals(sageParameters.getChimera())) {
+                return false;
+            }
+            if (!getWideWindow().equals(sageParameters.getWideWindow())) {
                 return false;
             }
             if (!predictRt.equals(sageParameters.getPredictRt())) {
@@ -231,7 +280,12 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
             if (!numPsmsPerSpectrum.equals(sageParameters.getNumPsmsPerSpectrum())) {
                 return false;
             }
-            if (!parallelSearch.equals(sageParameters.getParallelSearch())) {
+            if ((getBatchSize() == null && sageParameters.getBatchSize() != null)
+                    || (getBatchSize() != null && sageParameters.getBatchSize() == null)) {
+                return false;
+            }
+            if ((getBatchSize() != null && sageParameters.getBatchSize() != null)
+                    && (!getBatchSize().equals(sageParameters.getBatchSize()))) {
                 return false;
             }
 
@@ -305,11 +359,26 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
         output.append("LFQ=");
         output.append(performLfq);
         output.append(newLine);
+        output.append("LFQ_PEAK_SCORING=");
+        output.append(lfqPeakScoring);
+        output.append(newLine);
+        output.append("LFQ_INTEGRATION=");
+        output.append(lfqIntergration);
+        output.append(newLine);
+        output.append("LFQ_SPECTRAL_ANGLE=");
+        output.append(lfqSpectralAngle);
+        output.append(newLine);  
+        output.append("LFQ_PPM_TOLERANCE=");
+        output.append(lfqPpmTolerance);
+        output.append(newLine);
         output.append("DEISOTOPE=");
         output.append(deisotope);
         output.append(newLine);
         output.append("CHIMERA=");
         output.append(chimera);
+        output.append(newLine);
+        output.append("WIDE_WINDOW=");
+        output.append(wideWindow);
         output.append(newLine);
         output.append("PREDICT_RT=");
         output.append(predictRt);
@@ -329,8 +398,8 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
         output.append("NUM_PSMS_PER_SPECTRUM=");
         output.append(numPsmsPerSpectrum);
         output.append(newLine);
-        output.append("PARALELL=");
-        output.append(parallelSearch);
+        output.append("BATCH_SIZE=");
+        output.append(batchSize);
         output.append(newLine);
 
         return output.toString();
@@ -484,7 +553,7 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      * Returns the decoy tag, null if not set.
      *
      * @return the decoyTag
-     * 
+     *
      * @deprecated use the decoy tag from FastaParameters instead
      */
     public String getDecoyTag() {
@@ -495,7 +564,7 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      * Set the decoy tag, null if no decoy tag is used.
      *
      * @param decoyTag the decoyTag to set
-     * 
+     *
      * @deprecated use the decoy tag from FastaParameters instead
      */
     public void setDecoyTag(String decoyTag) {
@@ -537,18 +606,18 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
     public void setTmtType(String tmtType) {
         this.tmtType = tmtType;
     }
-    
+
     /**
      * Returns the TMT level.
      *
      * @return the TMT level
      */
     public Integer getTmtLevel() {
-        
-        if (tmtLevel == null){
+
+        if (tmtLevel == null) {
             tmtLevel = 3;
         }
-        
+
         return tmtLevel;
     }
 
@@ -560,23 +629,26 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
     public void setTmtLevel(Integer tmtLevel) {
         this.tmtLevel = tmtLevel;
     }
-    
-     /**
-     * Returns true if Signal/Noise should be used instead of intensity for TMT quantification.
+
+    /**
+     * Returns true if Signal/Noise should be used instead of intensity for TMT
+     * quantification.
      *
-     * @return true if Signal/Noise should be used instead of intensity for TMT quantification
+     * @return true if Signal/Noise should be used instead of intensity for TMT
+     * quantification
      */
     public Boolean getTmtSn() {
-        
+
         if (tmtSn == null) {
             tmtSn = false;
         }
-        
+
         return tmtSn;
     }
 
     /**
-     * Set if Signal/Noise should be used instead of intensity for TMT quantification.
+     * Set if Signal/Noise should be used instead of intensity for TMT
+     * quantification.
      *
      * @param tmtSn the tmtSn to set
      */
@@ -639,6 +711,30 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
     }
 
     /**
+     * Returns true if wide windows are to be used.
+     *
+     * @return true if wide windows are to be used
+     */
+    public Boolean getWideWindow() {
+
+        if (wideWindow == null) {
+            wideWindow = false;
+        }
+
+        return wideWindow;
+
+    }
+
+    /**
+     * Set whether wide windows are to be used.
+     *
+     * @param wideWindow the wide window to set
+     */
+    public void setWideWindow(Boolean wideWindow) {
+        this.wideWindow = wideWindow;
+    }
+
+    /**
      * Returns true if RT is to be predicted.
      *
      * @return true if RT is to be predicted
@@ -691,7 +787,7 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
     public void setMaxPeaks(Integer maxPeaks) {
         this.maxPeaks = maxPeaks;
     }
-    
+
     /**
      * Returns the minimum number of matched b+y ions to use for reporting PSMs.
      *
@@ -747,43 +843,138 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
     }
 
     /**
-     * Returns true if parallel search are to be used.
+     * Returns the batch size. Null if not set.
      *
-     * @return true if parallel search are to be used
+     * @return the batch size
      */
-    public Boolean getParallelSearch() {
-        return parallelSearch;
+    public Integer getBatchSize() {
+        return batchSize;
     }
 
     /**
-     * Set if parallel search are to be used.
+     * Set the batch size.
      *
-     * @param parallelSearch the parallelSearch to set
+     * @param batchSize the batch size to set
      */
-    public void setParallelSearch(Boolean parallelSearch) {
-        this.parallelSearch = parallelSearch;
+    public void setBatchSize(Integer batchSize) {
+        this.batchSize = batchSize;
     }
 
     /**
      * Returns the maximum variable modifications per peptide.
-     * 
+     *
      * @return the maxVariableMods
      */
     public Integer getMaxVariableMods() {
-        
+
         if (maxVariableMods == null) {
             maxVariableMods = 2;
         }
-        
+
         return maxVariableMods;
+
     }
 
     /**
      * Set the maximum variable modifications per peptide.
-     * 
+     *
      * @param maxVariableMods the maxVariableMods to set
      */
     public void setMaxVariableMods(Integer maxVariableMods) {
         this.maxVariableMods = maxVariableMods;
+    }
+
+    /**
+     * Returns the LFQ peak scoring method.
+     *
+     * @return the lfqPeakScoring
+     */
+    public String getLfqPeakScoring() {
+
+        if (lfqPeakScoring == null) {
+
+            lfqPeakScoring = "Hybrid";
+
+        }
+
+        return lfqPeakScoring;
+    }
+
+    /**
+     * Sets the LFQ peak scoring method.
+     *
+     * @param lfqPeakScoring the lfqPeakScoring to set
+     */
+    public void setLfqPeakScoring(String lfqPeakScoring) {
+        this.lfqPeakScoring = lfqPeakScoring;
+    }
+
+    /**
+     * Returns the LFQ integration type.
+     *
+     * @return the lfqIntergration
+     */
+    public String getLfqIntergration() {
+
+        if (lfqIntergration == null) {
+            lfqIntergration = "Sum";
+        }
+
+        return lfqIntergration;
+    }
+
+    /**
+     * Sets the LFQ integration type.
+     *
+     * @param lfqIntergration the lfqIntergration to set
+     */
+    public void setLfqIntergration(String lfqIntergration) {
+        this.lfqIntergration = lfqIntergration;
+    }
+
+    /**
+     * Returns the LFQ spectral angel.
+     *
+     * @return the lfqSpectralAngle
+     */
+    public Double getLfqSpectralAngle() {
+
+        if (lfqSpectralAngle == null) {
+            lfqSpectralAngle = 0.7;
+        }
+
+        return lfqSpectralAngle;
+    }
+
+    /**
+     * Set the LFQ spectral angel.
+     *
+     * @param lfqSpectralAngle the lfqSpectralAngle to set
+     */
+    public void setLfqSpectralAngle(Double lfqSpectralAngle) {
+        this.lfqSpectralAngle = lfqSpectralAngle;
+    }
+
+    /**
+     * Returns the LFQ PPM tolerance.
+     *
+     * @return the lfqPpmTolerance
+     */
+    public Double getLfqPpmTolerance() {
+
+        if (lfqPpmTolerance == null) {
+            lfqPpmTolerance = 0.5;
+        }
+
+        return lfqPpmTolerance;
+    }
+
+    /**
+     * Sets the LFQ PPM tolerance.
+     *
+     * @param lfqPpmTolerance the lfqPpmTolerance to set
+     */
+    public void setLfqPpmTolerance(Double lfqPpmTolerance) {
+        this.lfqPpmTolerance = lfqPpmTolerance;
     }
 }

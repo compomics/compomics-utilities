@@ -1698,6 +1698,32 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ_PEAK_SCORING.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ_PEAK_SCORING.id);
+            List<String> supportedInput = Arrays.asList("Hybrid", "RetentionTime", "SpectralAngle");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_LFQ_PEAK_SCORING.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ_INTEGRATION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ_INTEGRATION.id);
+            List<String> supportedInput = Arrays.asList("Sum", "Max");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_LFQ_INTEGRATION.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ_SPECTRAL_ANGLE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ_SPECTRAL_ANGLE.id);
+            if (!CommandParameter.isDouble(IdentificationParametersCLIParams.SAGE_LFQ_SPECTRAL_ANGLE.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ_PPM_TOLERANCE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ_PPM_TOLERANCE.id);
+            if (!CommandParameter.isDouble(IdentificationParametersCLIParams.SAGE_LFQ_PPM_TOLERANCE.id, arg)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_DEISOTOPE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_DEISOTOPE.id);
             List<String> supportedInput = Arrays.asList("true", "false");
@@ -1709,6 +1735,13 @@ public class IdentificationParametersInputBean {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_CHIMERA.id);
             List<String> supportedInput = Arrays.asList("true", "false");
             if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_CHIMERA.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_WIDE_WINDOW.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_WIDE_WINDOW.id);
+            List<String> supportedInput = Arrays.asList("true", "false");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_WIDE_WINDOW.id, arg, supportedInput)) {
                 return false;
             }
         }
@@ -1749,10 +1782,9 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_PARALLEL.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_PARALLEL.id);
-            List<String> supportedInput = Arrays.asList("true", "false");
-            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_PARALLEL.id, arg, supportedInput)) {
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_BATCH_SIZE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_BATCH_SIZE.id);
+            if (!CommandParameter.isPositiveInteger(IdentificationParametersCLIParams.SAGE_BATCH_SIZE.id, arg, false)) {
                 return false;
             }
         }
@@ -3862,6 +3894,24 @@ public class IdentificationParametersInputBean {
             Boolean option = Boolean.valueOf(arg);
             sageParameters.setPerformLfq(option);
         }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ_PEAK_SCORING.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ_PEAK_SCORING.id);
+            sageParameters.setLfqPeakScoring(arg);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ_INTEGRATION.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ_INTEGRATION.id);
+            sageParameters.setLfqIntergration(arg);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ_SPECTRAL_ANGLE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ_SPECTRAL_ANGLE.id);
+            Double option = Double.valueOf(arg);
+            sageParameters.setLfqSpectralAngle(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ_PPM_TOLERANCE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ_PPM_TOLERANCE.id);
+            Double option = Double.valueOf(arg);
+            sageParameters.setLfqPpmTolerance(option);
+        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_DEISOTOPE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_DEISOTOPE.id);
             Boolean option = Boolean.valueOf(arg);
@@ -3871,6 +3921,11 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_CHIMERA.id);
             Boolean option = Boolean.valueOf(arg);
             sageParameters.setChimera(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_WIDE_WINDOW.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_WIDE_WINDOW.id);
+            Boolean option = Boolean.valueOf(arg);
+            sageParameters.setWideWindow(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_PREDICT_RT.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_PREDICT_RT.id);
@@ -3902,10 +3957,10 @@ public class IdentificationParametersInputBean {
             Integer option = Integer.valueOf(arg);
             sageParameters.setNumPsmsPerSpectrum(option);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_PARALLEL.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_PARALLEL.id);
-            Boolean option = Boolean.valueOf(arg);
-            sageParameters.setParallelSearch(option);
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_BATCH_SIZE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_BATCH_SIZE.id);
+            Integer option = Integer.valueOf(arg);
+            sageParameters.setBatchSize(option);
         }
 
         ///////////////////////////////////

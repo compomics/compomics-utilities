@@ -7,6 +7,7 @@ import java.awt.Dialog;
 import javax.swing.SwingConstants;
 import com.compomics.util.gui.parameters.identification.AlgorithmParametersDialog;
 import com.compomics.util.parameters.identification.tool_specific.SageParameters;
+import java.awt.Color;
 
 /**
  * Dialog for the Sage specific settings.
@@ -76,7 +77,9 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         deisotopeCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         chimericSpectraCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         predictRtCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        parallelSearchCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        wideWindowCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        lfqPeakScoringCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        lfqIntegrationCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
         generateDecoysCmb.setEnabled(editable);
         tmtTypeCmb.setEnabled(editable);
@@ -86,7 +89,9 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         deisotopeCmb.setEnabled(editable);
         chimericSpectraCmb.setEnabled(editable);
         predictRtCmb.setEnabled(editable);
-        parallelSearchCmb.setEnabled(editable);
+        wideWindowCmb.setEnabled(editable);
+        lfqPeakScoringCmb.setEnabled(editable);
+        lfqIntegrationCmb.setEnabled(editable);
 
         bucketSizeTxt.setEditable(editable);
         bucketSizeTxt.setEnabled(editable);
@@ -114,6 +119,12 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         maxFragmentChargeTxt.setEnabled(editable);
         numberOfPsmsPerSpectrumTxt.setEditable(editable);
         numberOfPsmsPerSpectrumTxt.setEnabled(editable);
+        batchSizeTxt.setEditable(editable);
+        batchSizeTxt.setEnabled(editable);
+        lfqSpectralAngleTxt.setEditable(editable);
+        lfqSpectralAngleTxt.setEnabled(editable);
+        lfqPpmToleranceTxt.setEditable(editable);
+        lfqPpmToleranceTxt.setEnabled(editable);
 
     }
 
@@ -187,6 +198,26 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
             lfqCmb.setSelectedIndex(1);
         }
 
+        if (sageParameters.getLfqPeakScoring() != null) {
+            lfqPeakScoringCmb.setSelectedItem(sageParameters.getLfqPeakScoring());
+        } else {
+            lfqPeakScoringCmb.setSelectedItem("Hybrid");
+        }
+
+        if (sageParameters.getLfqIntergration() != null) {
+            lfqIntegrationCmb.setSelectedItem(sageParameters.getLfqIntergration());
+        } else {
+            lfqIntegrationCmb.setSelectedItem("Sum");
+        }
+
+        if (sageParameters.getLfqSpectralAngle() != null) {
+            lfqSpectralAngleTxt.setText(sageParameters.getLfqSpectralAngle() + "");
+        }
+
+        if (sageParameters.getLfqPpmTolerance() != null) {
+            lfqPpmToleranceTxt.setText(sageParameters.getLfqPpmTolerance() + "");
+        }
+
         if (sageParameters.getDeisotope()) {
             deisotopeCmb.setSelectedIndex(0);
         } else {
@@ -197,6 +228,12 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
             chimericSpectraCmb.setSelectedIndex(0);
         } else {
             chimericSpectraCmb.setSelectedIndex(1);
+        }
+
+        if (sageParameters.getWideWindow()) {
+            wideWindowCmb.setSelectedIndex(0);
+        } else {
+            wideWindowCmb.setSelectedIndex(1);
         }
 
         if (sageParameters.getPredictRt()) {
@@ -211,8 +248,8 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         if (sageParameters.getMaxPeaks() != null) {
             maxNumberOfPeaksTxt.setText(sageParameters.getMaxPeaks() + "");
         }
-        
-        if (sageParameters.getMinMatchedPeaks()!= null) {
+
+        if (sageParameters.getMinMatchedPeaks() != null) {
             minMatchedPeaksTxt.setText(sageParameters.getMinMatchedPeaks() + "");
         }
 
@@ -224,10 +261,10 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
             numberOfPsmsPerSpectrumTxt.setText(sageParameters.getNumPsmsPerSpectrum() + "");
         }
 
-        if (sageParameters.getParallelSearch()) {
-            parallelSearchCmb.setSelectedIndex(0);
+        if (sageParameters.getBatchSize() != null) {
+            batchSizeTxt.setText(sageParameters.getBatchSize() + "");
         } else {
-            parallelSearchCmb.setSelectedIndex(1);
+            batchSizeTxt.setText("");
         }
 
     }
@@ -317,7 +354,7 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         if (!input.equals("")) {
             result.setMaxPeaks(Integer.valueOf(input));
         }
-        
+
         input = minMatchedPeaksTxt.getText().trim();
         if (!input.equals("")) {
             result.setMinMatchedPeaks(Integer.valueOf(input));
@@ -333,7 +370,10 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
             result.setNumPsmsPerSpectrum(Integer.valueOf(input));
         }
 
-        result.setParallelSearch(parallelSearchCmb.getSelectedIndex() == 0);
+        input = batchSizeTxt.getText().trim();
+        if (!input.equals("")) {
+            result.setBatchSize(Integer.valueOf(input));
+        }
 
         return result;
     }
@@ -348,10 +388,14 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
     private void initComponents() {
 
         backgroundPanel = new javax.swing.JPanel();
+        okButton = new javax.swing.JButton();
+        closeButton = new javax.swing.JButton();
+        openDialogHelpJButton = new javax.swing.JButton();
+        advancedSettingsWarningLabel = new javax.swing.JLabel();
+        tabbedPane = new javax.swing.JTabbedPane();
         advancedSearchSettingsPanel = new javax.swing.JPanel();
         predictRtCmb = new javax.swing.JComboBox();
-        parallelSearchCmb = new javax.swing.JComboBox();
-        parallelSearchLabel = new javax.swing.JLabel();
+        batchSizeLabel = new javax.swing.JLabel();
         predictRtLabel = new javax.swing.JLabel();
         chimericSpectraLabel = new javax.swing.JLabel();
         chimericSpectraCmb = new javax.swing.JComboBox();
@@ -365,8 +409,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         minIonIndexTxt = new javax.swing.JTextField();
         generateDecoysLabel = new javax.swing.JLabel();
         generateDecoysCmb = new javax.swing.JComboBox();
-        lfqLabel = new javax.swing.JLabel();
-        lfqCmb = new javax.swing.JComboBox();
         bucketSizeLabel = new javax.swing.JLabel();
         bucketSizeTxt = new javax.swing.JTextField();
         fragmentMzLabel = new javax.swing.JLabel();
@@ -377,7 +419,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         minPeptideMassTxt = new javax.swing.JTextField();
         peptideMassDividerLabel = new javax.swing.JLabel();
         maxPeptideMassTxt = new javax.swing.JTextField();
-        tmtTypeLabel = new javax.swing.JLabel();
         numberOfPeaksLabel = new javax.swing.JLabel();
         minNumberOfPeaksTxt = new javax.swing.JTextField();
         numberOfPeaksDividerLabel = new javax.swing.JLabel();
@@ -386,19 +427,30 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         maxFragmentChargeTxt = new javax.swing.JTextField();
         numberOfPsmsPerSpectrumLabel = new javax.swing.JLabel();
         numberOfPsmsPerSpectrumTxt = new javax.swing.JTextField();
-        tmtTypeCmb = new javax.swing.JComboBox();
         maxVariableModsLabel = new javax.swing.JLabel();
         maxVariableModsTxt = new javax.swing.JTextField();
-        tmtLevelLabel = new javax.swing.JLabel();
-        tmtLevelCmb = new javax.swing.JComboBox();
-        tmtSnLabel = new javax.swing.JLabel();
-        tmtSnCmb = new javax.swing.JComboBox();
         minMatchedPeaksLabel = new javax.swing.JLabel();
         minMatchedPeaksTxt = new javax.swing.JTextField();
-        okButton = new javax.swing.JButton();
-        closeButton = new javax.swing.JButton();
-        openDialogHelpJButton = new javax.swing.JButton();
-        advancedSettingsWarningLabel = new javax.swing.JLabel();
+        batchSizeTxt = new javax.swing.JTextField();
+        wideWindowLabel = new javax.swing.JLabel();
+        wideWindowCmb = new javax.swing.JComboBox();
+        quantificationSettingsPanel = new javax.swing.JPanel();
+        tmtTypeLabel = new javax.swing.JLabel();
+        tmtTypeCmb = new javax.swing.JComboBox();
+        tmtLevelLabel = new javax.swing.JLabel();
+        tmtLevelCmb = new javax.swing.JComboBox();
+        tmtSnCmb = new javax.swing.JComboBox();
+        tmtSnLabel = new javax.swing.JLabel();
+        lfqLabel = new javax.swing.JLabel();
+        lfqCmb = new javax.swing.JComboBox();
+        lfqPeakScoringLabel = new javax.swing.JLabel();
+        lfqPeakScoringCmb = new javax.swing.JComboBox();
+        lfqIntegrationLabel = new javax.swing.JLabel();
+        lfqIntegrationCmb = new javax.swing.JComboBox();
+        lfqSpectraAngleLabel = new javax.swing.JLabel();
+        lfqPpmToleranceLabel = new javax.swing.JLabel();
+        lfqSpectralAngleTxt = new javax.swing.JTextField();
+        lfqPpmToleranceTxt = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Sage Advanced Settings");
@@ -406,14 +458,47 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
 
         backgroundPanel.setBackground(new java.awt.Color(230, 230, 230));
 
-        advancedSearchSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Search Settings"));
+        okButton.setText("OK");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+
+        closeButton.setText("Close");
+        closeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closeButtonActionPerformed(evt);
+            }
+        });
+
+        openDialogHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
+        openDialogHelpJButton.setToolTipText("Help");
+        openDialogHelpJButton.setBorder(null);
+        openDialogHelpJButton.setBorderPainted(false);
+        openDialogHelpJButton.setContentAreaFilled(false);
+        openDialogHelpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                openDialogHelpJButtonMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                openDialogHelpJButtonMouseExited(evt);
+            }
+        });
+        openDialogHelpJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openDialogHelpJButtonActionPerformed(evt);
+            }
+        });
+
+        advancedSettingsWarningLabel.setText("Click to open the Sage web page");
+
+        advancedSearchSettingsPanel.setBorder(null);
         advancedSearchSettingsPanel.setOpaque(false);
 
         predictRtCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        parallelSearchCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
-
-        parallelSearchLabel.setText("Parallel Search");
+        batchSizeLabel.setText("Batch Size (if not set: CPUs/2)");
 
         predictRtLabel.setText("Predict Retention Time");
 
@@ -462,10 +547,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
 
         generateDecoysCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
         generateDecoysCmb.setSelectedIndex(1);
-
-        lfqLabel.setText("LFQ");
-
-        lfqCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
         bucketSizeLabel.setText("Bucket Size");
 
@@ -519,8 +600,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
             }
         });
 
-        tmtTypeLabel.setText("TMT Type");
-
         numberOfPeaksLabel.setText("Number of Peaks (min - max)");
 
         minNumberOfPeaksTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -561,8 +640,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
             }
         });
 
-        tmtTypeCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Tmt6", "Tmt10", "Tmt11", "Tmt16", "Tmt18" }));
-
         maxVariableModsLabel.setText("Maximum Variable Modifications");
 
         maxVariableModsTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -572,15 +649,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                 maxVariableModsTxtKeyReleased(evt);
             }
         });
-
-        tmtLevelLabel.setText("TMT Level");
-
-        tmtLevelCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2", "3" }));
-        tmtLevelCmb.setSelectedIndex(1);
-
-        tmtSnLabel.setText("TMT Signal/Noise");
-
-        tmtSnCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
         minMatchedPeaksLabel.setText("Minimum Matched Peaks");
 
@@ -592,6 +660,18 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
             }
         });
 
+        batchSizeTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        batchSizeTxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                batchSizeTxtKeyReleased(evt);
+            }
+        });
+
+        wideWindowLabel.setText("Wide Window");
+
+        wideWindowCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        wideWindowCmb.setSelectedIndex(1);
+
         javax.swing.GroupLayout advancedSearchSettingsPanelLayout = new javax.swing.GroupLayout(advancedSearchSettingsPanel);
         advancedSearchSettingsPanel.setLayout(advancedSearchSettingsPanelLayout);
         advancedSearchSettingsPanelLayout.setHorizontalGroup(
@@ -602,13 +682,13 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(predictRtLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(parallelSearchLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(batchSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(chimericSpectraLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(chimericSpectraCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(predictRtCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(parallelSearchCmb, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(batchSizeTxt, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(deisotopeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -621,10 +701,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                         .addComponent(generateDecoysLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(generateDecoysCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(lfqLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lfqCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(bucketSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -637,10 +713,6 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                         .addComponent(numberOfPsmsPerSpectrumLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(numberOfPsmsPerSpectrumTxt))
-                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(tmtTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tmtTypeCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, advancedSearchSettingsPanelLayout.createSequentialGroup()
@@ -655,7 +727,7 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                         .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(fragmentMzDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(peptideMassDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                         .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(maxPeptideMassTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
                             .addComponent(maxFragmentMzTxt)))
@@ -668,11 +740,10 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(maxPepLengthTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedSearchSettingsPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(numberOfPeaksLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(minNumberOfPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(numberOfPeaksDividerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(maxNumberOfPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -680,18 +751,14 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                         .addComponent(maxVariableModsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(maxVariableModsTxt))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, advancedSearchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(tmtLevelLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tmtLevelCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
-                        .addComponent(tmtSnLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tmtSnCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
                         .addComponent(minMatchedPeaksLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(minMatchedPeaksTxt)))
+                        .addComponent(minMatchedPeaksTxt))
+                    .addGroup(advancedSearchSettingsPanelLayout.createSequentialGroup()
+                        .addComponent(wideWindowLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wideWindowCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -736,28 +803,16 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                     .addComponent(generateDecoysCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tmtTypeLabel)
-                    .addComponent(tmtTypeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
-                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tmtLevelLabel)
-                    .addComponent(tmtLevelCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
-                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tmtSnLabel)
-                    .addComponent(tmtSnCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
-                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lfqLabel)
-                    .addComponent(lfqCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
-                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(deisotopeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(deisotopeLabel))
                 .addGap(0, 0, 0)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chimericSpectraCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chimericSpectraLabel))
+                .addGap(0, 0, 0)
+                .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(wideWindowCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(wideWindowLabel))
                 .addGap(0, 0, 0)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(predictRtCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -782,45 +837,147 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                     .addComponent(numberOfPsmsPerSpectrumTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addGroup(advancedSearchSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(parallelSearchLabel)
-                    .addComponent(parallelSearchCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(batchSizeLabel)
+                    .addComponent(batchSizeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
+        tabbedPane.addTab("Search", advancedSearchSettingsPanel);
+
+        quantificationSettingsPanel.setOpaque(false);
+
+        tmtTypeLabel.setText("TMT Type");
+
+        tmtTypeCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "None", "Tmt6", "Tmt10", "Tmt11", "Tmt16", "Tmt18" }));
+        tmtTypeCmb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
+                tmtTypeCmbActionPerformed(evt);
             }
         });
 
-        closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
+        tmtLevelLabel.setText("Level");
+
+        tmtLevelCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2", "3" }));
+        tmtLevelCmb.setSelectedIndex(1);
+
+        tmtSnCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
+        tmtSnLabel.setText("Signal/Noise");
+
+        lfqLabel.setText("LFQ");
+
+        lfqCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        lfqCmb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
+                lfqCmbActionPerformed(evt);
             }
         });
 
-        openDialogHelpJButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/help.GIF"))); // NOI18N
-        openDialogHelpJButton.setToolTipText("Help");
-        openDialogHelpJButton.setBorder(null);
-        openDialogHelpJButton.setBorderPainted(false);
-        openDialogHelpJButton.setContentAreaFilled(false);
-        openDialogHelpJButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                openDialogHelpJButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                openDialogHelpJButtonMouseExited(evt);
-            }
-        });
-        openDialogHelpJButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openDialogHelpJButtonActionPerformed(evt);
-            }
-        });
+        lfqPeakScoringLabel.setText("Peak Scoring");
 
-        advancedSettingsWarningLabel.setText("Click to open the Sage web page");
+        lfqPeakScoringCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hybrid", "RetentionTime", "SpectralAngle" }));
+
+        lfqIntegrationLabel.setText("Integration");
+
+        lfqIntegrationCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Sum", "Max" }));
+
+        lfqSpectraAngleLabel.setText("Spectral Angle");
+
+        lfqPpmToleranceLabel.setText("PPM Tolerance");
+
+        lfqSpectralAngleTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        lfqSpectralAngleTxt.setText("0.7");
+
+        lfqPpmToleranceTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        lfqPpmToleranceTxt.setText("5.0");
+
+        javax.swing.GroupLayout quantificationSettingsPanelLayout = new javax.swing.GroupLayout(quantificationSettingsPanel);
+        quantificationSettingsPanel.setLayout(quantificationSettingsPanelLayout);
+        quantificationSettingsPanelLayout.setHorizontalGroup(
+            quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
+                                .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lfqSpectraAngleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lfqIntegrationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lfqIntegrationCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lfqSpectralAngleTxt)))
+                            .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
+                                .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
+                                        .addComponent(lfqPeakScoringLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lfqPeakScoringCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
+                                        .addComponent(lfqPpmToleranceLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lfqPpmToleranceTxt))
+                                    .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
+                                        .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(tmtSnLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(tmtLevelLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(tmtSnCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(tmtLevelCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(tmtTypeCmb, 0, 239, Short.MAX_VALUE))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
+                        .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
+                                .addComponent(lfqLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lfqCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tmtTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        quantificationSettingsPanelLayout.setVerticalGroup(
+            quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tmtTypeLabel)
+                    .addComponent(tmtTypeCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tmtLevelLabel)
+                    .addComponent(tmtLevelCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tmtSnLabel)
+                    .addComponent(tmtSnCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lfqCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lfqLabel))
+                .addGap(0, 0, 0)
+                .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lfqPeakScoringLabel)
+                    .addComponent(lfqPeakScoringCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lfqIntegrationLabel)
+                    .addComponent(lfqIntegrationCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lfqSpectraAngleLabel)
+                    .addComponent(lfqSpectralAngleTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lfqPpmToleranceTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lfqPpmToleranceLabel))
+                .addContainerGap(234, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("Quantification", quantificationSettingsPanel);
 
         javax.swing.GroupLayout backgroundPanelLayout = new javax.swing.GroupLayout(backgroundPanel);
         backgroundPanel.setLayout(backgroundPanelLayout);
@@ -829,7 +986,7 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tabbedPane)
                     .addGroup(backgroundPanelLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(openDialogHelpJButton)
@@ -845,8 +1002,8 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
             backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(advancedSearchSettingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
                 .addGroup(backgroundPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(openDialogHelpJButton)
                     .addComponent(advancedSettingsWarningLabel)
@@ -1046,6 +1203,41 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
     }//GEN-LAST:event_minMatchedPeaksTxtKeyReleased
 
     /**
+     * Validate the input.
+     *
+     * @param evt
+     */
+    private void batchSizeTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_batchSizeTxtKeyReleased
+        validateInput(false);
+    }//GEN-LAST:event_batchSizeTxtKeyReleased
+
+    /**
+     * Enable or disable the TMT settings.
+     *
+     * @param evt
+     */
+    private void tmtTypeCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tmtTypeCmbActionPerformed
+
+        tmtLevelCmb.setEnabled(tmtTypeCmb.getSelectedIndex() > 0);
+        tmtSnCmb.setEnabled(tmtTypeCmb.getSelectedIndex() > 0);
+
+    }//GEN-LAST:event_tmtTypeCmbActionPerformed
+
+    /**
+     * Enable or disable the LFQ settings.
+     *
+     * @param evt
+     */
+    private void lfqCmbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lfqCmbActionPerformed
+
+        lfqPeakScoringCmb.setEnabled(lfqCmb.getSelectedIndex() == 0);
+        lfqIntegrationCmb.setEnabled(lfqCmb.getSelectedIndex() == 0);
+        lfqSpectralAngleTxt.setEnabled(lfqCmb.getSelectedIndex() == 0);
+        lfqPpmToleranceTxt.setEnabled(lfqCmb.getSelectedIndex() == 0);
+
+    }//GEN-LAST:event_lfqCmbActionPerformed
+
+    /**
      * Inspects the parameters validity.
      *
      * @param showMessage if true an error messages are shown to the users
@@ -1069,13 +1261,29 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
 
         if (!maxFragmentChargeTxt.getText().trim().isEmpty()) {
             valid = GuiUtilities.validateIntegerInput(this, maxFragmentChargeLabel, maxFragmentChargeTxt, "maximum fragment charge", "Fragment Charge Error", true, showMessage, valid);
+        } else {
+            maxFragmentChargeLabel.setForeground(Color.BLACK);
+            maxFragmentChargeLabel.setToolTipText(null);
         }
-        
+
         if (!minMatchedPeaksTxt.getText().trim().isEmpty()) {
             valid = GuiUtilities.validateIntegerInput(this, minMatchedPeaksLabel, minMatchedPeaksTxt, "minimum matched peaks", "Minimum Matched Peaks Error", true, showMessage, valid);
+        } else {
+            minMatchedPeaksLabel.setForeground(Color.BLACK);
+            minMatchedPeaksLabel.setToolTipText(null);
         }
 
         valid = GuiUtilities.validateIntegerInput(this, numberOfPsmsPerSpectrumLabel, numberOfPsmsPerSpectrumTxt, "number of PSMs per spectrum", "PSMs per Spectrum Error", true, showMessage, valid);
+
+        if (!batchSizeTxt.getText().trim().isEmpty()) {
+            valid = GuiUtilities.validateIntegerInput(this, batchSizeLabel, batchSizeTxt, "batch size", "Batch Size Error", true, showMessage, valid);
+        } else {
+            batchSizeLabel.setForeground(Color.BLACK);
+            batchSizeLabel.setToolTipText(null);
+        }
+
+        valid = GuiUtilities.validateDoubleInput(this, lfqSpectraAngleLabel, lfqSpectralAngleTxt, "spectral angle", "Spectral Angle Error", true, showMessage, valid);
+        valid = GuiUtilities.validateDoubleInput(this, lfqPpmToleranceLabel, lfqPpmToleranceTxt, "ppm tolerance", "PPM Tolerance Error", true, showMessage, valid);
 
         okButton.setEnabled(valid);
 
@@ -1086,6 +1294,8 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
     private javax.swing.JPanel advancedSearchSettingsPanel;
     private javax.swing.JLabel advancedSettingsWarningLabel;
     private javax.swing.JPanel backgroundPanel;
+    private javax.swing.JLabel batchSizeLabel;
+    private javax.swing.JTextField batchSizeTxt;
     private javax.swing.JLabel bucketSizeLabel;
     private javax.swing.JTextField bucketSizeTxt;
     private javax.swing.JComboBox chimericSpectraCmb;
@@ -1098,7 +1308,15 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
     private javax.swing.JComboBox generateDecoysCmb;
     private javax.swing.JLabel generateDecoysLabel;
     private javax.swing.JComboBox lfqCmb;
+    private javax.swing.JComboBox lfqIntegrationCmb;
+    private javax.swing.JLabel lfqIntegrationLabel;
     private javax.swing.JLabel lfqLabel;
+    private javax.swing.JComboBox lfqPeakScoringCmb;
+    private javax.swing.JLabel lfqPeakScoringLabel;
+    private javax.swing.JLabel lfqPpmToleranceLabel;
+    private javax.swing.JTextField lfqPpmToleranceTxt;
+    private javax.swing.JLabel lfqSpectraAngleLabel;
+    private javax.swing.JTextField lfqSpectralAngleTxt;
     private javax.swing.JLabel maxFragmentChargeLabel;
     private javax.swing.JTextField maxFragmentChargeTxt;
     private javax.swing.JTextField maxFragmentMzTxt;
@@ -1121,19 +1339,21 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
     private javax.swing.JTextField numberOfPsmsPerSpectrumTxt;
     private javax.swing.JButton okButton;
     private javax.swing.JButton openDialogHelpJButton;
-    private javax.swing.JComboBox parallelSearchCmb;
-    private javax.swing.JLabel parallelSearchLabel;
     private javax.swing.JLabel peptideLengthDividerLabel;
     private javax.swing.JLabel peptideLengthLabel;
     private javax.swing.JLabel peptideMassDividerLabel;
     private javax.swing.JLabel peptideMassLabel;
     private javax.swing.JComboBox predictRtCmb;
     private javax.swing.JLabel predictRtLabel;
+    private javax.swing.JPanel quantificationSettingsPanel;
+    private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JComboBox tmtLevelCmb;
     private javax.swing.JLabel tmtLevelLabel;
     private javax.swing.JComboBox tmtSnCmb;
     private javax.swing.JLabel tmtSnLabel;
     private javax.swing.JComboBox tmtTypeCmb;
     private javax.swing.JLabel tmtTypeLabel;
+    private javax.swing.JComboBox wideWindowCmb;
+    private javax.swing.JLabel wideWindowLabel;
     // End of variables declaration//GEN-END:variables
 }

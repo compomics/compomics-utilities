@@ -578,7 +578,7 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
             }
         });
 
-        removeTempFoldersLabel.setText("Remove Temp Folders");
+        removeTempFoldersLabel.setText("Recreate FASTA Index");
 
         removeTempFoldersCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 

@@ -95,7 +95,7 @@ public class JsonMarshaller extends ExperimentObject {
      * Save an object to JSON.
      *
      * @param anObject the input object
-     * @param jsonFile the target file to which the JSON will be saved.
+     * @param jsonFile the target file to which the JSON will be saved
      *
      * @throws IOException if the object cannot be successfully saved into a
      * JSON file

@@ -30,10 +30,13 @@ public abstract class ExceptionHandler {
      * @param e the exception caught
      */
     public synchronized void catchException(Exception e) {
+        
         if (!ignoreExceptions && !exceptionCaught.contains(getExceptionType(e))) {
+            
             e.printStackTrace();
             exceptionCaught.add(getExceptionType(e));
             notifyUser(e);
+            
         }
     }
 
@@ -58,6 +61,8 @@ public abstract class ExceptionHandler {
         } else if (e.getLocalizedMessage().startsWith("Error while loading")
                 || e.getLocalizedMessage().startsWith("Error while writing")) {
             return "Serialization";
+        } else if (e.getLocalizedMessage().startsWith("Two modifications found")) {
+            return "Two modifications on same site";
         } else {
             return e.getLocalizedMessage();
         }

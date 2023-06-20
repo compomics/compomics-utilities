@@ -3,7 +3,6 @@ package com.compomics.util.experiment.io.mass_spectrometry.mzml;
 import java.io.File;
 import com.compomics.util.experiment.io.mass_spectrometry.MsFileIterator;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
-import com.compomics.util.experiment.mass_spectrometry.spectra.PrecursorParameter;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.flat.SimpleFileReader;
 import com.compomics.util.waiting.WaitingHandler;
@@ -206,13 +205,12 @@ public class MzmlFileIterator implements MsFileIterator {
         ArrayList<Integer> possibleChargesAsArray = new ArrayList<>();
         double precursorMz = 0.0;
         double precursorIntensity = 0.0;
-        ArrayList<String> precursorIdentifiers = new ArrayList<>();
         double[] mzArray = new double[0];
         double[] intensityArray = new double[0];
         boolean mzArrayValues = true;
         Precision precision = Precision.FLOAT64BIT;
         String compression = "MS:1000574";
-
+        
         while (parser.hasNext()) {
 
             parser.next();
@@ -223,7 +221,7 @@ public class MzmlFileIterator implements MsFileIterator {
 
                     if ("spectrum".equalsIgnoreCase(parser.getLocalName())) {
 
-                        Precursor precursor = null; // no precusors for ms1 spectra
+                        Precursor precursor = null; // no precusor for ms1 spectra
 
                         if (spectrumLevel > 1) {
 
@@ -243,10 +241,6 @@ public class MzmlFileIterator implements MsFileIterator {
                                 spectrumLevel
                         );
 
-                        if (!precursorIdentifiers.isEmpty()) {
-                            spectrum.addUrParam(new PrecursorParameter(precursorIdentifiers));
-                        }
-
                         return;
                     }
 
@@ -255,20 +249,6 @@ public class MzmlFileIterator implements MsFileIterator {
                 case XMLStreamConstants.START_ELEMENT:
 
                     switch (parser.getLocalName().toLowerCase()) {
-
-                        case "precursor":
-
-                            if (parser.getAttributeValue("", "spectrumRef") != null) {
-
-                                String tempPrecursorId = parser.getAttributeValue("", "spectrumRef");
-
-                                if (!precursorIdentifiers.contains(tempPrecursorId)) {
-                                    precursorIdentifiers.add(tempPrecursorId);
-                                }
-
-                            }
-
-                            break;
 
                         case "cvparam":
 

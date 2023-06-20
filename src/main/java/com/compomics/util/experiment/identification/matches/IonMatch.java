@@ -343,39 +343,61 @@ public class IonMatch extends ExperimentObject {
 
         switch (ion.getType()) {
             case PEPTIDE_FRAGMENT_ION:
+                
                 if (html) {
+                
                     result.append("<html>");
+                
                 }
+                
                 result.append(ion.getSubTypeAsString());
 
                 // add fragment ion number
                 PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ion);
+                
                 if (html) {
+                
                     result.append("<sub>").append(fragmentIon.getNumber()).append("</sub>");
+                
                 } else {
+                
                     result.append(fragmentIon.getNumber());
+                
+                }
+
+                // add any neutral losses
+                if (html) {
+                    
+                    String neutralLoss = ion.getNeutralLossesAsString();
+
+                    for (int i = 0; i < neutralLoss.length(); i++) {
+                        
+                        if (Character.isDigit(neutralLoss.charAt(i))) {
+
+                            result.append("<sub>").append(neutralLoss.charAt(i)).append("</sub>");
+
+                        } else {
+
+                            result.append(neutralLoss.charAt(i));
+
+                        }
+                    }
+                    
+                } else {
+
+                    result.append(ion.getNeutralLossesAsString());
+
                 }
 
                 // add charge
                 result.append(Charge.getChargeAsFormattedString(charge));
-
-                // add any neutral losses
+                
                 if (html) {
-                    String neutralLoss = ion.getNeutralLossesAsString();
 
-                    for (int i = 0; i < neutralLoss.length(); i++) {
-                        if (Character.isDigit(neutralLoss.charAt(i))) {
-                            result.append("<sub>").append(neutralLoss.charAt(i)).append("</sub>");
-                        } else {
-                            result.append(neutralLoss.charAt(i));
-                        }
-                    }
-                } else {
-                    result.append(ion.getNeutralLossesAsString());
-                }
-                if (html) {
                     result.append("</html>");
+
                 }
+
                 return result.toString();
 
             case TAG_FRAGMENT_ION:

@@ -133,7 +133,7 @@ public abstract class ExperimentObject implements Serializable {
     }
 
     /**
-     * Returns the refinement parameter of the same type as the one provided.
+     * Returns the refinement parameter of the same type than the one provided.
      * Null if not found.
      *
      * @param parameter the desired parameter

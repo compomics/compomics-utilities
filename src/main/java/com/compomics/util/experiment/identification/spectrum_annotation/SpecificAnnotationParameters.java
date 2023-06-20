@@ -193,7 +193,9 @@ public class SpecificAnnotationParameters {
      *
      * @param selectedCharges the charges selected for annotation
      */
-    public void setSelectedCharges(HashSet<Integer> selectedCharges) {
+    public void setSelectedCharges(
+            HashSet<Integer> selectedCharges
+    ) {
         this.selectedCharges = selectedCharges;
     }
 

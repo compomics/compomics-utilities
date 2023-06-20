@@ -111,9 +111,13 @@ public class IonFactory {
      * Sets the default neutral losses.
      */
     private static synchronized void setDefaultNeutralLosses() {
-        defaultNeutralLosses = new HashSet<>(2);
-        defaultNeutralLosses.add(NeutralLoss.H2O.name);
-        defaultNeutralLosses.add(NeutralLoss.NH3.name);
+        
+        HashSet<String> tempMap = new HashSet<>(2);
+        tempMap.add(NeutralLoss.H2O.name);
+        tempMap.add(NeutralLoss.NH3.name);
+        
+        defaultNeutralLosses = tempMap;
+        
     }
 
     /**
@@ -234,15 +238,7 @@ public class IonFactory {
 
         HashSet<String> allModifications = new HashSet<>(1);
 
-        String[] variableModNames = null;
-        
-        // @TODO: quick fix that ought to be replaced when the ptm scoring code had been rewritten
-        try {
-            variableModNames = peptide.getIndexedVariableModifications();
-        } catch (IllegalArgumentException e) {
-            // illegal peptide, i.e. more than one modification on the same site
-            return result;
-        }
+        String[] variableModNames = peptide.getIndexedVariableModifications();
 
         Modification[] variableModifications = new Modification[variableModNames.length];
 

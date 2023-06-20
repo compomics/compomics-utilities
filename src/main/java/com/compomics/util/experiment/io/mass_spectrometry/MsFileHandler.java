@@ -11,6 +11,7 @@ import com.compomics.util.waiting.WaitingHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Stream;
@@ -453,6 +454,17 @@ public class MsFileHandler implements SpectrumProvider {
 
         CmsFileReader reader = cmsFileReaderMap.get(IoUtil.getFileName(fileName));
         return reader == null ? null : reader.titles;
+
+    }
+
+    @Override
+    public ArrayList<String> getPostcursorSpectrumTitles(
+            String fileNameWithoutExtension, 
+            String spectrumTitle
+    ) {
+
+        CmsFileReader reader = cmsFileReaderMap.get(fileNameWithoutExtension);
+        return reader == null ? null : reader.getPostcursorSpectrumTitles(fileNameWithoutExtension, spectrumTitle);
 
     }
 }

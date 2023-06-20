@@ -2,6 +2,7 @@ package com.compomics.util.experiment.mass_spectrometry;
 
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -36,6 +37,20 @@ public interface SpectrumProvider extends AutoCloseable {
      * @return The precursor.
      */
     public Precursor getPrecursor(
+            String fileNameWithoutExtension,
+            String spectrumTitle
+    );
+    
+    /**
+     * Returns the postcursor spectrum titles. Null if none.
+     *
+     * @param fileNameWithoutExtension The name of the spectrum file without
+     * file extension.
+     * @param spectrumTitle The title of the spectrum.
+     *
+     * @return The postcursor spectrum titles. Null if none.
+     */
+    public ArrayList<String> getPostcursorSpectrumTitles(
             String fileNameWithoutExtension,
             String spectrumTitle
     );

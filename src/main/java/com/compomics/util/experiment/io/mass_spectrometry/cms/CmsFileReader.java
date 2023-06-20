@@ -16,6 +16,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -47,6 +48,10 @@ public class CmsFileReader implements SpectrumProvider {
      * The titles of the spectra.
      */
     public final String[] titles;
+    /**
+     * Map with which MSn+1 spectra an MSn spectrum has created.
+     */
+    private final HashMap<String, ArrayList<String>> postcursorMap;
     /**
      * The index of the spectra.
      */
@@ -119,7 +124,7 @@ public class CmsFileReader implements SpectrumProvider {
             String titlesIndexString = new String(titlesByteArray, 0, titlesByteArray.length, ENCODING);
             String[] titlesIndexStringSplit = titlesIndexString.split(CmsFileUtils.TITLE_SEPARATOR);
 
-            int nTitles = titlesIndexStringSplit.length / 2;
+            int nTitles = (titlesIndexStringSplit.length - 1) / 2;
             indexMap = new HashMap<>(nTitles);
             titles = new String[nTitles];
 
@@ -130,6 +135,31 @@ public class CmsFileReader implements SpectrumProvider {
                 indexMap.put(title, index);
                 titles[i] = title;
 
+            }
+
+            postcursorMap = new HashMap<>();
+
+            String postcursorMapAsText = titlesIndexStringSplit[titlesIndexStringSplit.length - 1];
+
+            if (!postcursorMapAsText.equalsIgnoreCase("null")) {
+
+                String[] postcursorMapAsTextSplit = postcursorMapAsText.split(" # ");
+
+                for (String temp : postcursorMapAsTextSplit) {
+
+                    String[] precusorAndList = temp.split(" \\{");
+
+                    String precusorKey = precusorAndList[0];
+                    String postcursors = precusorAndList[1].substring(0, precusorAndList[1].length() - 1);
+                    String[] postcursorsSplit = postcursors.split(",");
+
+                    if (!postcursorMap.containsKey(precusorKey)) {
+                        postcursorMap.put(precusorKey, new ArrayList<>());
+                    }
+
+                    postcursorMap.get(precusorKey).addAll(Arrays.asList(postcursorsSplit));
+
+                }
             }
 
             precrursorMzMap = new HashMap<>(nTitles);
@@ -148,17 +178,15 @@ public class CmsFileReader implements SpectrumProvider {
     /**
      * Returns the spectrum with the given title.
      *
-     * @param spectrumTitle title of the spectrum
+     * @param spectrumIndex index of the spectrum
      *
      * @return the spectrum
      */
-    public Spectrum getSpectrum(String spectrumTitle) {
-
-        int index = indexMap.get(spectrumTitle);
+    private Spectrum getSpectrum(int spectrumIndex) {
 
         mutex.acquire();
 
-        mappedByteBuffer.position(index);
+        mappedByteBuffer.position(spectrumIndex);
 
         double precursorMz = mappedByteBuffer.getDouble();
         double precursorRt = mappedByteBuffer.getDouble();
@@ -208,6 +236,21 @@ public class CmsFileReader implements SpectrumProvider {
         );
 
         return new Spectrum(precursor, mz, intensity, spectrumLevel);
+
+    }
+
+    /**
+     * Returns the spectrum with the given title.
+     *
+     * @param spectrumTitle title of the spectrum
+     *
+     * @return the spectrum
+     */
+    public Spectrum getSpectrum(String spectrumTitle) {
+
+        int index = indexMap.get(spectrumTitle);
+
+        return getSpectrum(index);
 
     }
 
@@ -308,7 +351,7 @@ public class CmsFileReader implements SpectrumProvider {
         return precursorRt;
 
     }
-    
+
     /**
      * Returns the spectrum level of the spectrum with the given title.
      *
@@ -322,7 +365,7 @@ public class CmsFileReader implements SpectrumProvider {
 
         mutex.acquire();
 
-        mappedByteBuffer.position(index + 2 + Double.BYTES);
+        mappedByteBuffer.position(index + 3 * Double.BYTES);
 
         int spectrumLevel = mappedByteBuffer.getInt();
 
@@ -385,16 +428,16 @@ public class CmsFileReader implements SpectrumProvider {
             byte[] compressedByteArray,
             int uncompressedLength
     ) {
-            
-            ZstdDecompressor decompressor = new ZstdDecompressor(); // @TODO: consider externalizing, there should be only one per thread. 
-            
-               byte[]  uncompressedByteAray = ZstdUtils.zstdDecompress(
-                        decompressor, 
-                        compressedByteArray, 
-                        uncompressedLength
-                );
 
-            return uncompressedByteAray;
+        ZstdDecompressor decompressor = new ZstdDecompressor(); // @TODO: consider externalizing, there should be only one per thread. 
+
+        byte[] uncompressedByteAray = ZstdUtils.zstdDecompress(
+                decompressor,
+                compressedByteArray,
+                uncompressedLength
+        );
+
+        return uncompressedByteAray;
 
     }
 
@@ -425,7 +468,7 @@ public class CmsFileReader implements SpectrumProvider {
         return getPrecursorRt(spectrumTitle);
 
     }
-    
+
     @Override
     public int getSpectrumLevel(String fileName, String spectrumTitle) {
 
@@ -531,6 +574,24 @@ public class CmsFileReader implements SpectrumProvider {
     public String[] getSpectrumTitles(String fileName) {
 
         return titles;
+
+    }
+
+    @Override
+    public ArrayList<String> getPostcursorSpectrumTitles(
+            String fileNameWithoutExtension,
+            String spectrumTitle
+    ) {
+
+        if (postcursorMap == null || !postcursorMap.containsKey(spectrumTitle)) {
+
+            return null;
+
+        } else {
+
+            return postcursorMap.get(spectrumTitle);
+
+        }
 
     }
 

@@ -37,6 +37,8 @@ public class MsFileExporter {
      * Writes the spectra of a file in the given format.
      *
      * @param spectrumProvider The spectrum provider to use to get the spectra.
+     * @param includeAllSpectrumLevels If true, all spectrum levels will be
+     * included, if false only MS2 spectra are included.
      * @param fileNameWithoutExtension The name of the file to export.
      * @param destinationFile The file where to write.
      * @param format The format to write in.
@@ -46,6 +48,7 @@ public class MsFileExporter {
      */
     public static void writeMsFile(
             SpectrumProvider spectrumProvider,
+            boolean includeAllSpectrumLevels,            
             String fileNameWithoutExtension,
             File destinationFile,
             Format format,
@@ -58,6 +61,7 @@ public class MsFileExporter {
             case mgf:
                 writeMgfFile(
                         spectrumProvider,
+                        includeAllSpectrumLevels,
                         fileNameWithoutExtension,
                         destinationFile,
                         waitingHandler
@@ -67,6 +71,7 @@ public class MsFileExporter {
             case apl:
                 writeAplFile(
                         spectrumProvider,
+                        includeAllSpectrumLevels,
                         fileNameWithoutExtension,
                         destinationFile,
                         searchParameters,
@@ -77,6 +82,7 @@ public class MsFileExporter {
             case ms2:
                 writeMs2File(
                         spectrumProvider,
+                        includeAllSpectrumLevels,
                         fileNameWithoutExtension,
                         destinationFile,
                         waitingHandler
@@ -94,6 +100,8 @@ public class MsFileExporter {
      * Writes the spectra of a file in the Andromeda peak list (apl) format.
      *
      * @param spectrumProvider The spectrum provider to use to get the spectra.
+     * @param includeAllSpectrumLevels If true, all spectrum levels will be
+     * included, if false only MS2 spectra are included.
      * @param fileNameWithoutExtension The name of the file to export.
      * @param destinationFile The file where to write.
      * @param searchParameters The search parameters.
@@ -102,6 +110,7 @@ public class MsFileExporter {
      */
     public static void writeAplFile(
             SpectrumProvider spectrumProvider,
+            boolean includeAllSpectrumLevels,
             String fileNameWithoutExtension,
             File destinationFile,
             SearchParameters searchParameters,
@@ -167,12 +176,16 @@ public class MsFileExporter {
 
                 Spectrum spectrum = spectrumProvider.getSpectrum(fileNameWithoutExtension, spectrumTitle);
 
-                writer.writeSpectrum(
-                        spectrumTitle,
-                        spectrum,
-                        andromedaParameters.getFragmentationMethod(),
-                        tempSpectrumTitles.get(spectrumTitle)
-                );
+                if (includeAllSpectrumLevels || (!includeAllSpectrumLevels && spectrum.getSpectrumLevel() == 2)) {
+                
+                    writer.writeSpectrum(
+                            spectrumTitle,
+                            spectrum,
+                            andromedaParameters.getFragmentationMethod(),
+                            tempSpectrumTitles.get(spectrumTitle)
+                    );
+                
+                }
             }
 
             waitingHandler.increaseSecondaryProgressCounter();
@@ -191,6 +204,8 @@ public class MsFileExporter {
      * Writes the spectra of a file in the Mascot Generic File (mgf) format.
      *
      * @param spectrumProvider The spectrum provider to use to get the spectra.
+     * @param includeAllSpectrumLevels If true, all spectrum levels will be
+     * included, if false only MS2 spectra are included.
      * @param fileNameWithoutExtension The name of the file to export.
      * @param destinationFile The file where to write.
      * @param waitingHandler The waiting handler to use to inform on progress
@@ -198,6 +213,7 @@ public class MsFileExporter {
      */
     public static void writeMgfFile(
             SpectrumProvider spectrumProvider,
+            boolean includeAllSpectrumLevels,
             String fileNameWithoutExtension,
             File destinationFile,
             WaitingHandler waitingHandler
@@ -221,7 +237,11 @@ public class MsFileExporter {
 
             Spectrum spectrum = spectrumProvider.getSpectrum(fileNameWithoutExtension, spectrumTitle);
 
-            writer.writeSpectrum(spectrumTitle, spectrum);
+            if (includeAllSpectrumLevels || (!includeAllSpectrumLevels && spectrum.getSpectrumLevel() == 2)) {
+
+                writer.writeSpectrum(spectrumTitle, spectrum);
+
+            }
 
             waitingHandler.increaseSecondaryProgressCounter();
 
@@ -242,6 +262,8 @@ public class MsFileExporter {
      * Writes the spectra of a file in the ms2 format.
      *
      * @param spectrumProvider The spectrum provider to use to get the spectra.
+     * @param includeAllSpectrumLevels If true, all spectrum levels will be
+     * included, if false only MS2 spectra are included.
      * @param fileNameWithoutExtension The name of the file to export.
      * @param destinationFile The file where to write.
      * @param waitingHandler The waiting handler to use to inform on progress
@@ -249,6 +271,7 @@ public class MsFileExporter {
      */
     public static void writeMs2File(
             SpectrumProvider spectrumProvider,
+            boolean includeAllSpectrumLevels,
             String fileNameWithoutExtension,
             File destinationFile,
             WaitingHandler waitingHandler
@@ -274,7 +297,12 @@ public class MsFileExporter {
 
             String spectrumTitle = spectrumTitles[i];
             Spectrum spectrum = spectrumProvider.getSpectrum(fileNameWithoutExtension, spectrumTitle);
-            writer.writeSpectrum(spectrum, i);
+
+            if (includeAllSpectrumLevels || (!includeAllSpectrumLevels && spectrum.getSpectrumLevel() == 2)) {
+
+                writer.writeSpectrum(spectrum, i);
+
+            }
 
             waitingHandler.increaseSecondaryProgressCounter();
 

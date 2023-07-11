@@ -18,6 +18,7 @@ import com.compomics.util.experiment.biology.ions.NeutralLoss;
 import com.compomics.util.experiment.io.biology.protein.FastaParameters;
 import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.json.marshallers.IdentificationParametersMarshaller;
+import com.compomics.util.parameters.identification.tool_specific.Ms2RescoreParameters;
 import java.io.File;
 import java.io.IOException;
 
@@ -77,6 +78,10 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
      * The PSM scores to use.
      */
     private PsmScoringParameters psmScoringParameters;
+    /**
+     * The Ms2Rescore parameters.
+     */
+    private Ms2RescoreParameters ms2RescoreParameters;
     /**
      * The PSM filter.
      */
@@ -314,6 +319,24 @@ public class IdentificationParameters extends ExperimentObject implements Marsha
 
     }
 
+    /**
+     * Returns the MS2 scoring parameters.
+     * 
+     * @return the MS2 scoring parameters.
+     */
+    public Ms2RescoreParameters getMs2RescoreParameters() {
+        return ms2RescoreParameters;
+    }
+
+    /**
+     * Sets the MS2 scoring parameters.
+     * 
+     * @param ms2RescoreParameters the MS2 scoring parameters.
+     */
+    public void setMs2RescoreParameters(Ms2RescoreParameters ms2RescoreParameters) {
+        this.ms2RescoreParameters = ms2RescoreParameters;
+    }
+    
     /**
      * Returns the modification localization scoring parameters.
      *

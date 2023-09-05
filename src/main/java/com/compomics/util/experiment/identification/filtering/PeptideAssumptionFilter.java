@@ -69,7 +69,7 @@ public class PeptideAssumptionFilter extends ExperimentObject {
      * Constructor with default settings.
      */
     public PeptideAssumptionFilter() {
-        minPepLength = 8;
+        minPepLength = 7;
         maxPepLength = 30;
         maxMassDeviation = -1;
         isPpm = true;

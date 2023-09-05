@@ -1748,9 +1748,10 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
     }
 
     /**
-     * Method to get the text position using the sampled suffix array.
+     * Method to get the text position using the sampled suffix array. Note that the index is zero-based.
      *
      * @param index the position
+     * 
      * @return the text position
      */
     private int getTextPosition(int index, int indexPart) {

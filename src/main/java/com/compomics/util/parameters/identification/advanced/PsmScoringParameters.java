@@ -1,6 +1,5 @@
 package com.compomics.util.parameters.identification.advanced;
 
-import com.compomics.util.Util;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import com.compomics.util.experiment.identification.Advocate;
 import com.compomics.util.experiment.identification.psm_scoring.PsmScore;

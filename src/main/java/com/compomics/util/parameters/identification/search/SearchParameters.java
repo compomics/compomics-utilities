@@ -765,22 +765,15 @@ public class SearchParameters extends ExperimentObject implements MarshallablePa
      */
     public void saveIdentificationParametersAsTextFile(File file) throws IOException {
 
-        FileWriter fw = new FileWriter(file);
+        try (FileWriter fw = new FileWriter(file)) {
 
-        try {
-
-            BufferedWriter bw = new BufferedWriter(fw);
-
-            try {
+            try (BufferedWriter bw = new BufferedWriter(fw)) {
+                
                 bw.write(toString());
-            } finally {
-                bw.close();
+            
             }
 
-        } finally {
-            fw.close();
         }
-
     }
 
     @Override

@@ -150,7 +150,7 @@ public class AtomChain extends ExperimentObject {
         }
         return atomChain;
     }
-
+    
     /**
      * Appends an atom to the chain of atoms.
      *

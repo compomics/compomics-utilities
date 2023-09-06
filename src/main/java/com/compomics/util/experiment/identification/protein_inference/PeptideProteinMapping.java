@@ -13,7 +13,8 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
- * Class used to model the mapping of a peptide to a protein sequence. Mote that all peptide indexes are zero-based.
+ * Class used to model the mapping of a peptide to a protein sequence. Note that
+ * all peptide indexes are zero-based.
  *
  * @author Marc Vaudel
  */

@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 import javax.xml.bind.JAXBException;
 
 /**
@@ -203,7 +204,7 @@ public class MascotIdfileReader implements IdfileReader {
 
             for (SpectrumMatch currentMatch : allMatches.values()) {
 
-                currentMatch.getAllPeptideAssumptions().forEach(currentAssumption -> {
+                for (PeptideAssumption currentAssumption : currentMatch.getAllPeptideAssumptions().collect(Collectors.toList())) {
 
                     Peptide peptide = currentAssumption.getPeptide();
                     String peptideSequence = peptide.getSequence();
@@ -214,6 +215,7 @@ public class MascotIdfileReader implements IdfileReader {
                         for (StringBuilder expandedSequence : AminoAcidSequence.getCombinations(peptide.getSequence())) {
 
                             String newSequence = expandedSequence.toString();
+
                             if (newSequence.equals(peptideSequence)) {
                                 continue;
                             }
@@ -243,9 +245,13 @@ public class MascotIdfileReader implements IdfileReader {
                                 waitingHandler.increaseSecondaryProgressCounter();
                             }
                         }
+
                     }
-                });
+
+                }
+
             }
+
         }
 
         return new ArrayList<>(allMatches.values());
@@ -262,6 +268,7 @@ public class MascotIdfileReader implements IdfileReader {
         ArrayList<String> versions = new ArrayList<>();
         versions.add(softwareVersion);
         result.put("Mascot", versions);
+
         return result;
 
     }

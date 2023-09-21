@@ -232,16 +232,16 @@ public class MsAmandaIdfileReader implements IdfileReader {
                         msAmandaTransformedScore = Math.pow(10, -msAmandaRawScore); // convert ms amanda score to e-value like
                     }
 
-                    int rank = Integer.valueOf(elements[rankIndex]);
+                    int rank = Integer.parseInt(elements[rankIndex]);
                     //String mzAsText = elements[mzIndex]; // not currently used
                     //double mz = Util.readDoubleAsString(mzAsText);
-                    int charge = Integer.valueOf(elements[chargeIndex]);
+                    int charge = Integer.parseInt(elements[chargeIndex]);
                     //String rtAsText = elements[rtIndex]; // not currently used, and not mandatory, as old csv files didn't have this one...
                     //double rt = Util.readDoubleAsString(rtAsText); // @TODO: have to escape retention times such as PT2700.460000S
                     String fileName = elements[filenameIndex];
 
                     // remove any html from the title
-                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
+                    spectrumTitle = URLDecoder.decode(spectrumTitle, "UTF-8");
 
                     // set up the yet empty spectrum match, or add to the current match
                     if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {

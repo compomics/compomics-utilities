@@ -1,16 +1,13 @@
 package com.compomics.util.experiment.io.parameters;
 
 import com.compomics.util.experiment.biology.aminoacids.sequence.AminoAcidPattern;
-import com.compomics.util.experiment.biology.atoms.AtomChain;
 import com.compomics.util.experiment.biology.enzymes.Enzyme;
 import com.compomics.util.experiment.biology.modifications.Modification;
 import com.compomics.util.experiment.biology.modifications.ModificationProvider;
-import static com.compomics.util.experiment.biology.modifications.ModificationType.modaa;
 import static com.compomics.util.experiment.biology.modifications.ModificationType.modcaa_peptide;
 import static com.compomics.util.experiment.biology.modifications.ModificationType.modcaa_protein;
 import static com.compomics.util.experiment.biology.modifications.ModificationType.modnaa_peptide;
 import com.compomics.util.io.flat.SimpleFileWriter;
-import com.compomics.util.parameters.identification.advanced.SequenceMatchingParameters;
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.pride.CvTerm;
 import java.io.File;
@@ -23,6 +20,14 @@ import java.util.ArrayList;
  */
 public class SdrfExport {
 
+    /**
+     * Write an SDFR file.
+     *
+     * @param sdrfFile
+     * @param searchParameters
+     * @param msFileNames
+     * @param modificationProvider
+     */
     public static void writeSdrf(
             File sdrfFile,
             SearchParameters searchParameters,
@@ -94,7 +99,7 @@ public class SdrfExport {
 
         String lineSuffix = lineSuffixBuilder.toString();
 
-        try (SimpleFileWriter writer = new SimpleFileWriter(sdrfFile, false)) {
+        try ( SimpleFileWriter writer = new SimpleFileWriter(sdrfFile, false)) {
 
             writer.writeLine(header.toString());
 
@@ -109,6 +114,12 @@ public class SdrfExport {
         }
     }
 
+    /**
+     * Get the enzyme as a string.
+     *
+     * @param enzyme the enzyme
+     * @return the enzyme as a string
+     */
     private static String getEnzymeString(Enzyme enzyme) {
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -121,6 +132,13 @@ public class SdrfExport {
 
     }
 
+    /**
+     * Get the modification as a string.
+     *
+     * @param modification the modification
+     * @param fixed whether the modification is fixed
+     * @return the modification as a string
+     */
     private static String getModificationString(Modification modification, boolean fixed) {
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -181,6 +199,12 @@ public class SdrfExport {
 
     }
 
+    /**
+     * Get the modification position.
+     *
+     * @param modification the modification
+     * @return the modification position
+     */
     private static String getModificationPosition(Modification modification) {
 
         switch (modification.getModificationType()) {

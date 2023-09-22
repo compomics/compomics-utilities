@@ -10,7 +10,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
 
@@ -18,6 +17,7 @@ import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
  * Utilities for the handling of mgf files.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class MgfFileUtils {
 
@@ -81,13 +81,6 @@ public class MgfFileUtils {
                         currentSpectrum += line + lineBreak;
 
                         String title = line.substring(line.indexOf('=') + 1).trim();
-
-                        try {
-                            title = URLDecoder.decode(title, "utf-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                            throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + title);
-                        }
 
                         if (!spectrumTitles.contains(title)) {
                             spectrumTitles.add(title);
@@ -185,13 +178,6 @@ public class MgfFileUtils {
                         currentSpectrum += line + lineBreak;
 
                         title = line.substring(line.indexOf('=') + 1).trim();
-
-                        try {
-                            title = URLDecoder.decode(title, "utf-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                            throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + title);
-                        }
 
                         spectrumTitles.add(title);
                     } else if (line.startsWith("END IONS")) {
@@ -493,13 +479,6 @@ public class MgfFileUtils {
                         }
 
                         String originalTitle = line.substring(line.indexOf('=') + 1).trim();
-
-                        try {
-                            originalTitle = URLDecoder.decode(originalTitle, "utf-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                            throw new UnsupportedEncodingException("An exception was thrown when trying to decode an mgf title: " + originalTitle);
-                        }
 
                         String tempTitle = originalTitle;
                         int counter = 2;

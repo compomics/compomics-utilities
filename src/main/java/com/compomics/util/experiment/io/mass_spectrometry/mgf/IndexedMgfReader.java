@@ -5,7 +5,6 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.waiting.WaitingHandler;
 
 import java.io.*;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -117,18 +116,7 @@ public class IndexedMgfReader {
                         waitingHandler.setSecondaryProgressCounter((int) (currentIndex / progressUnit));
                     }
                 } else if (line.startsWith("TITLE")) {
-
                     title = line.substring(line.indexOf('=') + 1).trim();
-
-                    try {
-                        title = URLDecoder.decode(title, "utf-8");
-                    } catch (UnsupportedEncodingException e) {
-                        if (waitingHandler != null) {
-                            waitingHandler.appendReport("An exception was thrown when trying to decode an mgf title: " + title, true, true);
-                        }
-                        System.out.println("An exception was thrown when trying to decode an mgf title: " + title);
-                        e.printStackTrace();
-                    }
                     Integer nDuplicates = duplicateTitles.get(title);
                     if (nDuplicates != null || spectrumTitles.contains(title)) {
                         if (nDuplicates == null) {
@@ -311,12 +299,6 @@ public class IndexedMgfReader {
             } else if (line.startsWith("TITLE")) {
                 insideSpectrum = true;
                 spectrumTitle = line.substring(line.indexOf('=') + 1).trim();
-                try {
-                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    System.out.println("An exception was thrown when trying to decode an mgf title: " + spectrumTitle);
-                    e.printStackTrace();
-                }
             } else if (line.startsWith("CHARGE")) {
                 precursorCharges = parseCharges(line);
             } else if (line.startsWith("PEPMASS")) {
@@ -490,12 +472,6 @@ public class IndexedMgfReader {
 
             if (line.startsWith("TITLE")) {
                 title = line.substring(line.indexOf("=") + 1).trim();
-                try {
-                    title = URLDecoder.decode(title, "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    System.out.println("An exception was thrown when trying to decode an mgf title: " + title);
-                    e.printStackTrace();
-                }
             } else if (line.startsWith("CHARGE")) {
                 precursorCharges = parseCharges(line);
             } else if (line.startsWith("PEPMASS")) {

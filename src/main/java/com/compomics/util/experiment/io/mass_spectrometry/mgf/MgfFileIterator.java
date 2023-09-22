@@ -4,8 +4,6 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.flat.SimpleFileReader;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import com.compomics.util.experiment.io.mass_spectrometry.MsFileIterator;
 import com.compomics.util.waiting.WaitingHandler;
@@ -14,6 +12,7 @@ import com.compomics.util.waiting.WaitingHandler;
  * An iterator of the spectra in an mgf file.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class MgfFileIterator implements MsFileIterator {
 
@@ -83,15 +82,6 @@ public class MgfFileIterator implements MsFileIterator {
 
                 spectrumTitle = line.substring(line.indexOf('=') + 1).trim();
 
-                try {
-
-                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
-
-                } catch (UnsupportedEncodingException e) {
-
-                    throw new IllegalArgumentException("An exception was thrown when trying to decode the mgf title '" + spectrumTitle + "'.");
-
-                }
             } else if (line.startsWith("CHARGE")) {
 
                 precursorCharges = parseCharges(line);

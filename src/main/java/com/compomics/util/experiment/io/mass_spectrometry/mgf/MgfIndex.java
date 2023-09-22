@@ -5,8 +5,6 @@ import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.ExperimentObject;
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import uk.ac.ebi.pride.tools.braf.BufferedRandomAccessFile;
@@ -589,13 +587,6 @@ public class MgfIndex extends ExperimentObject implements Serializable {
 
                 insideSpectrum = true;
                 spectrumTitle = line.substring(line.indexOf('=') + 1).trim();
-
-                try {
-                    spectrumTitle = URLDecoder.decode(spectrumTitle, "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    System.out.println("An exception was thrown when trying to decode an mgf title: " + spectrumTitle);
-                    e.printStackTrace();
-                }
 
             } else if (line.startsWith("CHARGE")) {
 

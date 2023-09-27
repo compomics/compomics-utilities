@@ -1724,6 +1724,13 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ_COMBINE_CHARGE_STATES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ_COMBINE_CHARGE_STATES.id);
+            List<String> supportedInput = Arrays.asList("true", "false");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.SAGE_LFQ_COMBINE_CHARGE_STATES.id, arg, supportedInput)) {
+                return false;
+            }
+        }
         if (aLine.hasOption(IdentificationParametersCLIParams.SAGE_DEISOTOPE.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.SAGE_DEISOTOPE.id);
             List<String> supportedInput = Arrays.asList("true", "false");
@@ -3911,6 +3918,11 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ_PPM_TOLERANCE.id);
             Double option = Double.valueOf(arg);
             sageParameters.setLfqPpmTolerance(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_LFQ_COMBINE_CHARGE_STATES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_LFQ_COMBINE_CHARGE_STATES.id);
+            Boolean option = Boolean.valueOf(arg);
+            sageParameters.setCombineChargeStates(option);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.SAGE_DEISOTOPE.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.SAGE_DEISOTOPE.id);

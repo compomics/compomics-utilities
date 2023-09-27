@@ -320,6 +320,7 @@ public enum IdentificationParametersCLIParams {
     SAGE_LFQ_INTEGRATION("sage_lfq_intergration", "Sage LFQ integration: Sum or Max. Default is 'Sum'.", false, true),
     SAGE_LFQ_SPECTRAL_ANGLE("sage_lfq_spectral_angle", "Sage LFQ spectral angle, default is '0.7'.", false, true),
     SAGE_LFQ_PPM_TOLERANCE("sage_lfq_ppm_tolerance", "Sage LFQ ppm tolerance, default is '0.5'.", false, true),
+    SAGE_LFQ_COMBINE_CHARGE_STATES("sage_lfq_combine_charge_states", "Sage LFQ combine charge states, default is 'true'.", false, true),
     SAGE_DEISOTOPE("sage_deisotope", "Sage deisotope, perform deisotoping and charge state deconvolution, default is 'false'.", false, true),
     SAGE_CHIMERA("sage_chimera", "Sage search for chimeric/co-fragmenting PSMs, default is 'false'.", false, true),
     SAGE_WIDE_WINDOW("sage_wide_window", "Sage ignore `precursor_tol` and search spectra in wide-window/dynamic precursor tolerance mode, default is 'false'.", false, true),
@@ -787,6 +788,7 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_LFQ_INTEGRATION.id) + " " + IdentificationParametersCLIParams.SAGE_LFQ_INTEGRATION.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_LFQ_SPECTRAL_ANGLE.id) + " " + IdentificationParametersCLIParams.SAGE_LFQ_SPECTRAL_ANGLE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_LFQ_PPM_TOLERANCE.id) + " " + IdentificationParametersCLIParams.SAGE_LFQ_PPM_TOLERANCE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_LFQ_COMBINE_CHARGE_STATES.id) + " " + IdentificationParametersCLIParams.SAGE_LFQ_COMBINE_CHARGE_STATES.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_DEISOTOPE.id) + " " + IdentificationParametersCLIParams.SAGE_DEISOTOPE.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_CHIMERA.id) + " " + IdentificationParametersCLIParams.SAGE_CHIMERA.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.SAGE_PREDICT_RT.id) + " " + IdentificationParametersCLIParams.SAGE_PREDICT_RT.description + "\n";

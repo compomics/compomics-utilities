@@ -80,6 +80,7 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         wideWindowCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         lfqPeakScoringCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         lfqIntegrationCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
+        combineChargeStatesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
 
         generateDecoysCmb.setEnabled(editable);
         tmtTypeCmb.setEnabled(editable);
@@ -92,6 +93,7 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         wideWindowCmb.setEnabled(editable);
         lfqPeakScoringCmb.setEnabled(editable);
         lfqIntegrationCmb.setEnabled(editable);
+        combineChargeStatesCmb.setEnabled(editable);
 
         bucketSizeTxt.setEditable(editable);
         bucketSizeTxt.setEnabled(editable);
@@ -216,6 +218,12 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
 
         if (sageParameters.getLfqPpmTolerance() != null) {
             lfqPpmToleranceTxt.setText(sageParameters.getLfqPpmTolerance() + "");
+        }
+        
+        if (sageParameters.getCombineChargeStates()) {
+            combineChargeStatesCmb.setSelectedIndex(0);
+        } else {
+            combineChargeStatesCmb.setSelectedIndex(1);
         }
 
         if (sageParameters.getDeisotope()) {
@@ -345,6 +353,7 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         result.setDeisotope(deisotopeCmb.getSelectedIndex() == 0);
         result.setChimera(chimericSpectraCmb.getSelectedIndex() == 0);
         result.setPredictRt(predictRtCmb.getSelectedIndex() == 0);
+        result.setCombineChargeStates(combineChargeStatesCmb.getSelectedIndex() == 0);
 
         input = minNumberOfPeaksTxt.getText().trim();
         if (!input.equals("")) {
@@ -451,6 +460,8 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         lfqPpmToleranceLabel = new javax.swing.JLabel();
         lfqSpectralAngleTxt = new javax.swing.JTextField();
         lfqPpmToleranceTxt = new javax.swing.JTextField();
+        combineChargeStatesLabel = new javax.swing.JLabel();
+        combineChargeStatesCmb = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Sage Advanced Settings");
@@ -891,6 +902,10 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         lfqPpmToleranceTxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         lfqPpmToleranceTxt.setText("5.0");
 
+        combineChargeStatesLabel.setText("Combine Charge States");
+
+        combineChargeStatesCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+
         javax.swing.GroupLayout quantificationSettingsPanelLayout = new javax.swing.GroupLayout(quantificationSettingsPanel);
         quantificationSettingsPanel.setLayout(quantificationSettingsPanelLayout);
         quantificationSettingsPanelLayout.setHorizontalGroup(
@@ -899,8 +914,20 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                 .addContainerGap()
                 .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
+                        .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
+                                .addComponent(lfqLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lfqCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tmtTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
+                                .addComponent(combineChargeStatesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(combineChargeStatesCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
                                 .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lfqSpectraAngleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -928,15 +955,7 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                                             .addComponent(tmtSnCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(tmtLevelCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(tmtTypeCmb, 0, 239, Short.MAX_VALUE))))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
-                        .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(quantificationSettingsPanelLayout.createSequentialGroup()
-                                .addComponent(lfqLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lfqCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(tmtTypeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         quantificationSettingsPanelLayout.setVerticalGroup(
@@ -974,7 +993,11 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
                 .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lfqPpmToleranceTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lfqPpmToleranceLabel))
-                .addContainerGap(234, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addGroup(quantificationSettingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(combineChargeStatesLabel)
+                    .addComponent(combineChargeStatesCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(208, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Quantification", quantificationSettingsPanel);
@@ -1301,6 +1324,8 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
     private javax.swing.JComboBox chimericSpectraCmb;
     private javax.swing.JLabel chimericSpectraLabel;
     private javax.swing.JButton closeButton;
+    private javax.swing.JComboBox combineChargeStatesCmb;
+    private javax.swing.JLabel combineChargeStatesLabel;
     private javax.swing.JComboBox deisotopeCmb;
     private javax.swing.JLabel deisotopeLabel;
     private javax.swing.JLabel fragmentMzDividerLabel;

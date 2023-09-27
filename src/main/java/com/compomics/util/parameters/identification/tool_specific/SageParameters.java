@@ -92,6 +92,12 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      */
     private Double lfqPpmTolerance = 5.0;
     /**
+     * If true, LFQ is performed on the peptide-level, where all charge states
+     * are treated as the same precursor. If false, LFQ is performed on the
+     * peptide-charge-level, where each charge state will be treated separately.
+     */
+    private Boolean combineChargeStates = true;
+    /**
      * Set whether deisotoping and charge state deconvolution is to be
      * performed.
      */
@@ -243,6 +249,9 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
             if (diff > 0.0000000000001) {
                 return false;
             }
+            if (!getCombineChargeStates().equals(sageParameters.getCombineChargeStates())) {
+                return false;
+            }
             if (!deisotope.equals(sageParameters.getDeisotope())) {
                 return false;
             }
@@ -367,9 +376,12 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
         output.append(newLine);
         output.append("LFQ_SPECTRAL_ANGLE=");
         output.append(lfqSpectralAngle);
-        output.append(newLine);  
+        output.append(newLine);
         output.append("LFQ_PPM_TOLERANCE=");
         output.append(lfqPpmTolerance);
+        output.append(newLine);
+        output.append("LFQ_COMBINE_CHARGE_STATES=");
+        output.append(getCombineChargeStates());
         output.append(newLine);
         output.append("DEISOTOPE=");
         output.append(deisotope);
@@ -976,5 +988,28 @@ public class SageParameters extends ExperimentObject implements IdentificationAl
      */
     public void setLfqPpmTolerance(Double lfqPpmTolerance) {
         this.lfqPpmTolerance = lfqPpmTolerance;
+    }
+
+    /**
+     * Returns true if the charge states are to be combined.
+     *
+     * @return true if the charge states are to be combined
+     */
+    public Boolean getCombineChargeStates() {
+        
+        if (combineChargeStates == null) {
+            combineChargeStates = true;
+        }
+        
+        return combineChargeStates;
+    }
+
+    /**
+     * Sets whether the charge states are to be combined.
+     *
+     * @param combineChargeStates whether the charge states are to be combined
+     */
+    public void setCombineChargeStates(Boolean combineChargeStates) {
+        this.combineChargeStates = combineChargeStates;
     }
 }

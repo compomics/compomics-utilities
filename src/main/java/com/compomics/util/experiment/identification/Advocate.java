@@ -480,6 +480,8 @@ public class Advocate extends ExperimentObject {
             return "23323968";
         } else if (this == identiPy) {
             return "29682971";
+        } else if (this == sage) {
+            return "37819886";
         } else {
             return null;
         }

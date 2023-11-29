@@ -146,17 +146,23 @@ public class ProteinGeneDetailsProvider {
 
                 try {
 
-                    String organismNameLowerCase = organismName.toLowerCase().replaceAll(" ", "_");
+                    String organismNameLowerCase = organismName.toLowerCase();
 
-                    // if species is not found, try the synonym from the uniprot_species file
+                    // remove trailing parentheses content
+                    // e.g. change 'Saccharomyces cerevisiae (strain ATCC 204508 / S288c)' into 'Saccharomyces cerevisiae' 
+                    if (organismNameLowerCase.lastIndexOf("(") != -1) {
+                        organismNameLowerCase = organismNameLowerCase.substring(0, organismNameLowerCase.indexOf("(") - 1);
+                    }
+
+                    organismNameLowerCase = organismNameLowerCase.toLowerCase().replaceAll(" ", "_");
+
+                    // if species is still not found, try the synonym from the uniprot_species file
                     if (!speciesFactory.getEnsemblSpecies().getLatinNames().contains(organismNameLowerCase)) {
 
                         String speciesSynonym = speciesFactory.getUniprotTaxonomy().getSynonym(organismName);
 
                         if (speciesSynonym != null) {
-
                             organismNameLowerCase = speciesSynonym.toLowerCase().replaceAll(" ", "_");
-
                         }
 
                     }
@@ -193,7 +199,7 @@ public class ProteinGeneDetailsProvider {
                                 }
 
                                 if (!success) {
-                                    waitingHandler.appendReport(PADDING + "Update of gene information for species \'" + organismName + "\' failed.", true, true);
+                                    waitingHandler.appendReport(PADDING + "Update of gene information for \'" + organismName + "\' failed.", true, true);
                                 }
 
                             }
@@ -208,6 +214,7 @@ public class ProteinGeneDetailsProvider {
                                     geneMappings.put(organismName, geneMapping);
 
                                 } catch (Exception e) {
+                                    e.printStackTrace();
                                     waitingHandler.appendReport(PADDING + "Import of gene mappings for \'" + organismName + "\' failed.", true, true);
                                 }
 
@@ -225,21 +232,20 @@ public class ProteinGeneDetailsProvider {
                                     goMappings.put(organismName, goMapping);
 
                                 } catch (Exception e) {
-                                    waitingHandler.appendReport(PADDING + "Import of the GO mapping for \'" + organismName + "\' failed.", true, true);
+                                    e.printStackTrace();
+                                    waitingHandler.appendReport(PADDING + "Import of the GO mappings for \'" + organismName + "\' failed.", true, true);
                                 }
 
                             } else {
-                                waitingHandler.appendReport(PADDING + "GO mapping for \'" + organismName + "\' not available.", true, true);
+                                waitingHandler.appendReport(PADDING + "GO mappings for \'" + organismName + "\' not available.", true, true);
                             }
 
                         } else {
-
-                            // waitingHandler.appendReport(PADDING + "No taxonomy found for \'" + organismName + "\'.", true, true);
+                            waitingHandler.appendReport(PADDING + "No taxonomy found for \'" + organismName + "\'.", true, true);
                         }
 
                     } else {
-
-                        // waitingHandler.appendReport(PADDING + "No taxonomy found for \'" + organismName + "\'.", true, true);
+                        waitingHandler.appendReport(PADDING + "No taxonomy found for \'" + organismName + "\'.", true, true);
                     }
 
                 } catch (Exception e) {
@@ -712,7 +718,7 @@ public class ProteinGeneDetailsProvider {
                 + "<Attribute name = \"chromosome_name\" />"
                 + "</Dataset>"
                 + "</Query>";
-        
+
         boolean success = true;
 
         // @TODO: use the queryEnsembl method here as well?
@@ -757,7 +763,7 @@ public class ProteinGeneDetailsProvider {
                                 if (rowLine.lastIndexOf("Attribute external_gene_name NOT FOUND") != -1) {
 
                                     success = false;
-                                    
+
                                 } else if (rowLine != null && rowLine.startsWith("Query ERROR")) {
 
                                     throw new IllegalArgumentException("Query error on line: " + rowLine);
@@ -801,7 +807,7 @@ public class ProteinGeneDetailsProvider {
         }
 
         return success;
-        
+
     }
 
     /**
@@ -1338,8 +1344,11 @@ public class ProteinGeneDetailsProvider {
     public String getEnsemblVersion(String latinName) {
 
         SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
-        String ensemblDatasetName = speciesFactory.getEnsemblDatasetName(latinName, speciesFactory.getEnsemblSpecies().getDivision(latinName));
-
+        String ensemblDatasetName = speciesFactory.getEnsemblDatasetName(
+                latinName, 
+                speciesFactory.getEnsemblSpecies().getDivision(latinName)
+        );
+        
         if (ensemblVersionsMap == null) {
             return null;
         }

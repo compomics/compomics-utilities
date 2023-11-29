@@ -53,7 +53,12 @@ public class BackgroundSpeciesDialog extends javax.swing.JDialog {
      * @param genePreferences the gene preferences
      * @param fastaSummary the FASTA summary
      */
-    public BackgroundSpeciesDialog(JFrame parentFrame, GeneParameters genePreferences, FastaSummary fastaSummary) {
+    public BackgroundSpeciesDialog(
+            JFrame parentFrame,
+            GeneParameters genePreferences,
+            FastaSummary fastaSummary
+    ) {
+
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.genePreferences = genePreferences;
@@ -62,6 +67,7 @@ public class BackgroundSpeciesDialog extends javax.swing.JDialog {
         setUpGui();
         setLocationRelativeTo(parentFrame);
         setVisible(true);
+
     }
 
     /**
@@ -72,7 +78,13 @@ public class BackgroundSpeciesDialog extends javax.swing.JDialog {
      * @param genePreferences the gene preferences
      * @param fastaSummary the FASTA summary
      */
-    public BackgroundSpeciesDialog(JDialog owner, java.awt.Frame parentFrame, GeneParameters genePreferences, FastaSummary fastaSummary) {
+    public BackgroundSpeciesDialog(
+            JDialog owner,
+            java.awt.Frame parentFrame,
+            GeneParameters genePreferences,
+            FastaSummary fastaSummary
+    ) {
+
         super(owner, true);
         this.parentFrame = parentFrame;
         this.genePreferences = genePreferences;
@@ -81,6 +93,7 @@ public class BackgroundSpeciesDialog extends javax.swing.JDialog {
         setUpGui();
         setLocationRelativeTo(owner);
         setVisible(true);
+
     }
 
     /**
@@ -128,9 +141,13 @@ public class BackgroundSpeciesDialog extends javax.swing.JDialog {
                             // taxon not available, ignore
                             e.printStackTrace();
                         }
+
                     }
+
                 }
+
             }
+
         } catch (Exception e) {
             // Not able to read the species, ignore
             e.printStackTrace();

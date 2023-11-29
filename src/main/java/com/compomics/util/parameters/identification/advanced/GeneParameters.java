@@ -171,6 +171,7 @@ public class GeneParameters extends ExperimentObject {
                             e.printStackTrace();
 
                         }
+
                     }
 
                 }
@@ -181,6 +182,7 @@ public class GeneParameters extends ExperimentObject {
             // Not able to read the species, ignore
             e.printStackTrace();
         }
+
     }
 
     /**

@@ -48,12 +48,18 @@ public class GeneMapping {
      *
      * @throws IOException if an exception occurs while reading the file
      */
-    public void importFromFile(File file, WaitingHandler waitingHandler) throws IOException {
+    public void importFromFile(
+            File file,
+            WaitingHandler waitingHandler
+    ) throws IOException {
 
-        // read the species list
+        // read the gene mapping file
         FileReader r = new FileReader(file);
+
         try {
+
             BufferedReader br = new BufferedReader(r);
+
             try {
 
                 String line;
@@ -74,13 +80,17 @@ public class GeneMapping {
                     if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                         return;
                     }
+
                 }
+
             } finally {
                 br.close();
             }
+
         } finally {
             r.close();
         }
+
     }
 
     /**
@@ -122,4 +132,5 @@ public class GeneMapping {
     public HashMap<String, String> getGeneNameToAccession() {
         return geneNameToAccession;
     }
+
 }

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * Class parsing BioMart protein go mappings and storing them in maps.
+ * Class parsing BioMart protein GO mappings and storing them in maps.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -89,33 +89,42 @@ public class GoMapping {
                         String goTermName = splittedLine[2].toLowerCase();
 
                         HashSet<String> goTerms = proteinToGoMap.get(proteinAccession);
+
                         if (goTerms == null) {
                             goTerms = new HashSet<>();
                             proteinToGoMap.put(proteinAccession, goTerms);
                         }
+
                         goTerms.add(goTermAccession);
 
                         HashSet<String> proteinAccessions = goToProteinMap.get(goTermAccession);
+
                         if (proteinAccessions == null) {
                             proteinAccessions = new HashSet<>();
                             goToProteinMap.put(goTermAccession, proteinAccessions);
                         }
+
                         proteinAccessions.add(proteinAccession);
 
                         goAccessionsToNamesMap.put(goTermAccession, goTermName);
                         goNamesToAccessionsMap.put(goTermName, goTermAccession);
+
                     }
 
                     if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                         return;
                     }
+
                 }
+
             } finally {
                 br.close();
             }
+
         } finally {
             r.close();
         }
+
     }
 
     /**
@@ -200,19 +209,32 @@ public class GoMapping {
      * @return a sorted list of all GO Terms names
      */
     public ArrayList<String> getSortedTermNames() {
+
         if (sortedTermNames == null) {
+
             HashSet<String> goNames = new HashSet<>(goAccessionsToNamesMap.size());
+
             for (HashSet<String> goAccessions : proteinToGoMap.values()) {
+
                 for (String goAccession : goAccessions) {
+
                     String goName = getTermName(goAccession);
+
                     if (goName != null) {
                         goNames.add(goName);
                     }
+
                 }
+
             }
+
             sortedTermNames = new ArrayList<>(goNames);
             Collections.sort(sortedTermNames);
+
         }
+
         return sortedTermNames;
+
     }
+
 }

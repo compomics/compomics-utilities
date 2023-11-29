@@ -2,9 +2,8 @@ package com.compomics.util.experiment.biology.taxonomy;
 
 import com.compomics.util.Util;
 import com.compomics.util.experiment.biology.taxonomy.mappings.BiomartMapping;
-import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpecies;
-import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpecies.EnsemblGenomeDivision;
 import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblSpecies;
+import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblSpecies.EnsemblDivision;
 import com.compomics.util.experiment.biology.taxonomy.mappings.UniprotTaxonomy;
 import java.io.File;
 import java.io.IOException;
@@ -39,31 +38,19 @@ public class SpeciesFactory {
     /**
      * The name of the UniProt taxonomy file.
      */
-    public static final String UNIPROT_TAXONOMY_FILENAME = "uniprot_taxonomy";
+    public static final String UNIPROT_TAXONOMY_FILENAME = "uniprot_species";
     /**
      * The names of the Ensembl species files.
      */
-    public static final String ENSEMBL_SPECIES = "ensembl_species";
-    /**
-     * The names of the Ensembl genome species files.
-     */
-    public static final String ENSEMBL_GENOME_SPECIES = "ensembl-genome_species";
+    public static final String ENSEMBL_SPECIES = "ensembl_all_species";
     /**
      * The name of the Ensembl BioMart datasets file.
      */
-    public static final String BIOMART_ENSEMBL_FILENAME = "ensembl_biomart";
-    /**
-     * The name of the Ensembl Genome BioMart datasets file.
-     */
-    public static final String BIOMART_ENSEMBL_GENOME_FILENAME = "ensembl-genome_biomart";
+    public static final String BIOMART_ENSEMBL_FILENAME = "ensembl_biomart_databases";
     /**
      * The Ensembl species mapping.
      */
     private EnsemblSpecies ensemblSpecies;
-    /**
-     * The Ensembl genome species mapping.
-     */
-    private EnsemblGenomesSpecies ensemblGenomesSpecies;
     /**
      * The UniProt taxonomy.
      */
@@ -79,10 +66,13 @@ public class SpeciesFactory {
      * @return the instance of the factory
      */
     public static SpeciesFactory getInstance() {
+
         if (instance == null) {
             instance = new SpeciesFactory();
         }
+
         return instance;
+
     }
 
     /**
@@ -100,14 +90,14 @@ public class SpeciesFactory {
      * reading a mapping file.
      */
     public void initiate(File configFolder) throws IOException {
+
         ensemblSpecies = new EnsemblSpecies();
         ensemblSpecies.loadMapping(getEnsemblSpeciesFile(configFolder));
-        ensemblGenomesSpecies = new EnsemblGenomesSpecies();
-        ensemblGenomesSpecies.loadMapping(getEnsemblGenomesSpeciesFile(configFolder));
         uniprotTaxonomy = new UniprotTaxonomy();
         uniprotTaxonomy.loadMapping(getUniprotTaxonomyFile(configFolder));
         biomartMapping = new BiomartMapping();
-        biomartMapping.loadMapping(getBiomartEnsemblMappingFile(configFolder), getBiomartEnsemblGenomeMappingFile(configFolder));
+        biomartMapping.loadMapping(getBiomartEnsemblMappingFile(configFolder));
+
     }
 
     /**
@@ -122,75 +112,75 @@ public class SpeciesFactory {
 
         TreeMap<Integer, TreeSet<String>> occurrenceToSpecies = new TreeMap<>();
         double total = 0.0;
-        
+
         for (Map.Entry<String, Integer> entry : speciesOccurrence.entrySet()) {
-            
+
             String taxonomy = entry.getKey();
             Integer occurrence = entry.getValue();
             total += occurrence;
             TreeSet<String> species = occurrenceToSpecies.get(occurrence);
-            
+
             if (species == null) {
-                
+
                 species = new TreeSet<>();
                 occurrenceToSpecies.put(occurrence, species);
-                
+
             }
-            
+
             species.add(taxonomy);
-            
+
         }
 
         StringBuilder description = new StringBuilder();
-        
+
         for (Entry<Integer, TreeSet<String>> entry : occurrenceToSpecies.descendingMap().entrySet()) {
-            
+
             int occurrence = entry.getKey();
             TreeSet<String> species = entry.getValue();
-            
+
             for (String taxonomy : species) {
-                
+
                 double percentage = 100.0 * occurrence / total;
-                
+
                 if (description.length() > 0) {
-                    
+
                     description.append(", ");
-                    
+
                 }
-                
+
                 description.append(taxonomy);
-                
+
                 if (speciesOccurrence.size() > 1) {
-                    
+
                     String occurrencePercentage;
-                    
+
                     if (percentage > 99.9) {
-                        
+
                         occurrencePercentage = ">99.9";
-                        
+
                     } else if (percentage < 0.1) {
-                        
+
                         occurrencePercentage = "<0.1";
-                        
+
                     } else {
-                        
+
                         double roundedDouble = Util.roundDouble(percentage, 1);
                         occurrencePercentage = Double.toString(roundedDouble);
-                        
+
                     }
-                    
+
                     description.append(" (")
                             .append(occurrence)
                             .append(", ")
                             .append(occurrencePercentage)
                             .append("%)");
-                    
+
                 }
             }
         }
 
         return description.toString();
-        
+
     }
 
     /**
@@ -202,17 +192,6 @@ public class SpeciesFactory {
      */
     public static File getEnsemblSpeciesFile(File configFolder) {
         return new File(configFolder, TOOL_SPECIES_MAPPING_SUBFOLDER + ENSEMBL_SPECIES);
-    }
-
-    /**
-     * Returns the Ensembl genome species file.
-     *
-     * @param configFolder the config folder
-     *
-     * @return the Ensembl genome species file
-     */
-    public static File getEnsemblGenomesSpeciesFile(File configFolder) {
-        return new File(configFolder, TOOL_SPECIES_MAPPING_SUBFOLDER + ENSEMBL_GENOME_SPECIES);
     }
 
     /**
@@ -238,17 +217,6 @@ public class SpeciesFactory {
     }
 
     /**
-     * Returns the Ensembl Genome BioMart file.
-     *
-     * @param configFolder the config folder
-     *
-     * @return the Ensembl Genome BioMart file
-     */
-    public static File getBiomartEnsemblGenomeMappingFile(File configFolder) {
-        return new File(configFolder, TOOL_SPECIES_MAPPING_SUBFOLDER + BIOMART_ENSEMBL_GENOME_FILENAME);
-    }
-
-    /**
      * Returns the Latin name of the species corresponding to the given taxon
      * according to the UniProt mapping. Null if not found.
      *
@@ -260,78 +228,120 @@ public class SpeciesFactory {
         return uniprotTaxonomy.getLatinName(taxon);
     }
 
+//    /**
+//     * Returns the name of the species corresponding to the given taxon
+//     * according to the UniProt mapping. Null if not found. For species mapping
+//     * to plants in the Ensembl genome mapping, the name is Latin name (common
+//     * name); common name (Latin Name) for the other species. If no common name
+//     * is present the Latin name is used.
+//     *
+//     * @param taxon the NCBI taxon ID
+//     *
+//     * @return the Latin name of the species
+//     */
+//    public String getName(Integer taxon) {
+//
+//        if (uniprotTaxonomy == null || uniprotTaxonomy.getLatinName(taxon) == null) {
+//            return null;
+//        }
+//
+//        boolean plant = false;
+//
+//        EnsemblDivision division = ensemblSpecies.getDivision(taxon);
+//
+//        if (division != null && division == EnsemblDivision.plants) {
+//            plant = true;
+//        }
+//
+//        String latinName = uniprotTaxonomy.getLatinName(taxon);
+//        String commonName = uniprotTaxonomy.getCommonName(taxon);
+//        StringBuilder name = new StringBuilder();
+//
+//        if (plant) {
+//
+//            name.append(latinName);
+//
+//            if (commonName != null) {
+//                name.append(" (").append(commonName).append(")");
+//            }
+//
+//        } else {
+//
+//            if (commonName != null) {
+//                name.append(commonName).append(" (");
+//            }
+//
+//            name.append(latinName);
+//
+//            if (commonName != null) {
+//                name.append(")");
+//            }
+//
+//        }
+//
+//        return name.toString();
+//
+//    }
     /**
-     * Returns the name of the species corresponding to the given taxon
-     * according to the UniProt mapping. Null if not found. For species mapping
-     * to plants in the Ensembl genome mapping, the name is Latin name (common
-     * name); common name (Latin Name) for the other species. If no common name
-     * is present the Latin name is used.
+     * Returns the Ensembl assembly to use for the given Latin name.
      *
-     * @param taxon the NCBI taxon ID
-     *
-     * @return the Latin name of the species
-     */
-    public String getName(Integer taxon) {
-        if (uniprotTaxonomy == null || uniprotTaxonomy.getLatinName(taxon) == null) {
-            return null;
-        }
-        boolean plant = false;
-        if (ensemblGenomesSpecies != null) {
-            EnsemblGenomeDivision division = ensemblGenomesSpecies.getDivision(taxon);
-            if (division != null && division == EnsemblGenomeDivision.plants) {
-                plant = true;
-            }
-        }
-        String latinName = uniprotTaxonomy.getLatinName(taxon);
-        String commonName = uniprotTaxonomy.getCommonName(taxon);
-        StringBuilder name = new StringBuilder();
-        if (plant) {
-            name.append(latinName);
-            if (commonName != null) {
-                name.append(" (").append(commonName).append(")");
-            }
-        } else {
-            if (commonName != null) {
-                name.append(commonName).append(" (");
-            }
-            name.append(latinName);
-            if (commonName != null) {
-                name.append(")");
-            }
-        }
-
-        return name.toString();
-    }
-
-    /**
-     * Returns the Ensembl assembly to use for the given taxon.
-     *
-     * @param taxon the taxon number
+     * @param latinName the Latin name, e.g. 'homo_sapiens'.
      *
      * @return the Ensembl assembly to use
      */
-    public String getEnsemblAssembly(Integer taxon) {
-        EnsemblGenomeDivision ensemblGenomeDivision = ensemblGenomesSpecies.getDivision(taxon);
-        if (ensemblGenomeDivision == null) {
-            return ensemblSpecies.getAssembly(taxon);
-        } else {
-            return ensemblGenomesSpecies.getAssembly(taxon);
-        }
+    public String getEnsemblAssembly(String latinName) {
+        return ensemblSpecies.getAssembly(latinName);
     }
 
     /**
-     * Returns the Ensembl dataset to use for the given taxon.
+     * Returns the Ensembl dataset to use for the given Latin name.
      *
-     * @param taxon the taxon number
+     * @param latinName the Latin name, e.g. 'homo_sapiens'.
      *
      * @return the Ensembl dataset to use
      */
-    public String getEnsemblDataset(Integer taxon) {
-        String assembly = getEnsemblAssembly(taxon);
+    public String getEnsemblDataset(String latinName) {
+
+        String assembly = getEnsemblAssembly(latinName);
+
         if (assembly == null) {
             return null;
         }
+
         return biomartMapping.getDataset(assembly);
+
+    }
+
+    /**
+     * Returns the Ensemble dataset name. E.g. 'hsapiens_gene_ensembl'.
+     * 
+     * @param latinName the Latin name
+     * @param ensemblDivision the Ensembl division
+     * @return the Ensemble dataset name
+     */
+    public String getEnsemblDatasetName(String latinName, EnsemblDivision ensemblDivision) {
+
+        String ensemblDatasetName = "";
+        String[] ensemblDatasetNameElements = latinName.split("_");
+
+        for (int i = 0; i < ensemblDatasetNameElements.length - 1; i++) {
+            ensemblDatasetName += ensemblDatasetNameElements[i].substring(0, 1);
+        }
+
+        ensemblDatasetName += ensemblDatasetNameElements[ensemblDatasetNameElements.length - 1];
+
+        if (ensemblDivision == EnsemblDivision.vertebrates) {
+
+            ensemblDatasetName += "_gene_ensembl";
+
+        } else {
+
+            ensemblDatasetName += "_eg_gene";
+
+        }
+        
+        return ensemblDatasetName;
+
     }
 
     /**
@@ -341,15 +351,6 @@ public class SpeciesFactory {
      */
     public EnsemblSpecies getEnsemblSpecies() {
         return ensemblSpecies;
-    }
-
-    /**
-     * Returns the Ensembl genome species mapping.
-     *
-     * @return the Ensembl genome species mapping
-     */
-    public EnsemblGenomesSpecies getEnsemblGenomesSpecies() {
-        return ensemblGenomesSpecies;
     }
 
     /**
@@ -375,18 +376,27 @@ public class SpeciesFactory {
      *
      * @return a map of the species in Ensembl
      */
-    public HashMap<String, HashSet<Integer>> getEnsembleSpecies() {
-        HashMap<String, HashSet<Integer>> speciesMap = new HashMap<>(EnsemblGenomeDivision.values().length + 1);
-        for (Integer taxon : ensemblGenomesSpecies.getTaxons()) {
-            String divisionName = ensemblGenomesSpecies.getDivision(taxon).ensemblType;
-            HashSet<Integer> taxons = speciesMap.get(divisionName);
-            if (taxons == null) {
-                taxons = new HashSet<>();
-                speciesMap.put(divisionName, taxons);
+    public HashMap<String, HashSet<String>> getEnsembleSpecies() {
+
+        HashMap<String, HashSet<String>> speciesMap = new HashMap<>(EnsemblDivision.values().length + 1);
+
+        for (String tempLatinName : ensemblSpecies.getLatinNames()) {
+
+            String divisionName = ensemblSpecies.getDivision(tempLatinName).ensemblType;
+            HashSet<String> latinNames = speciesMap.get(divisionName);
+
+            if (latinNames == null) {
+                latinNames = new HashSet<>();
+                speciesMap.put(divisionName, latinNames);
             }
-            taxons.add(taxon);
+
+            latinNames.add(tempLatinName);
+
         }
-        speciesMap.put("vertebrates", ensemblSpecies.getTaxons());
+
+        //speciesMap.put("vertebrates", ensemblSpecies.getLatinNames());
         return speciesMap;
+
     }
+
 }

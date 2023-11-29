@@ -1,23 +1,19 @@
 package com.compomics.util.experiment.biology.taxonomy.mappings;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.util.URIUtil;
 
 /**
- * Mapping of the UniProt taxonomy.
+ * Mapping of the UniProt species taken from
+ * https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/docs/speclist.txt.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class UniprotTaxonomy {
 
@@ -38,9 +34,9 @@ public class UniprotTaxonomy {
      */
     private final HashMap<Integer, String> idToCommonNameMap;
     /**
-     * The local file to store the mappings.
+     * NCBI ID to synonym.
      */
-    private File mappingFile;
+    private final HashMap<String, String> nameToSynonymMap;
 
     /**
      * Constructor.
@@ -49,6 +45,7 @@ public class UniprotTaxonomy {
         nameToIdMap = new HashMap<>();
         idToNameMap = new HashMap<>();
         idToCommonNameMap = new HashMap<>();
+        nameToSynonymMap = new HashMap<>();
     }
 
     /**
@@ -62,96 +59,71 @@ public class UniprotTaxonomy {
      */
     public void loadMapping(File speciesFile) throws IOException {
 
-        this.mappingFile = speciesFile;
-
         // read the species list
         FileReader r = new FileReader(speciesFile);
 
         try {
+
             BufferedReader br = new BufferedReader(r);
-            
+
             try {
                 String line = br.readLine();
 
-                while ((line = br.readLine()) != null) {
-
-                    line = line.trim();
-
-                    if (line.length() > 0) {
-
-                        String[] elements = line.split(SEPARATOR);
-                        Integer id = Integer.valueOf(elements[0].trim());
-                        String latinName = elements[2].trim();
-                        String commonName = elements[3].trim();
-
-                        nameToIdMap.put(latinName, id);
-                        idToNameMap.put(id, latinName);
-                        if (!commonName.equals("")) {
-                            idToCommonNameMap.put(id, commonName);
-                        }
-                    }
+                // forward to the taxon details
+                while (line != null && !line.startsWith("_____")) {
+                    line = br.readLine();
                 }
+
+                line = br.readLine();
+
+                // now we expect a repeat of this format:
+                // -----
+                // ABANI E   72259: N=Abaeis nicippe
+                //                  C=Sleepy orange butterfly
+                //                  S=Eurema nicippe
+                // -----
+                // however, the C and S lines are not mandatory
+                Integer taxon = null;
+                String scientificName = null;
+
+                while (line != null && !line.startsWith("==========")) {
+
+                    if (line.lastIndexOf(": N=") != -1) {
+
+                        String[] elements = line.split("\\: N=");
+
+                        String[] codeAndTaxon = elements[0].trim().split("\\s+");
+                        taxon = Integer.valueOf(codeAndTaxon[2]);
+                        scientificName = elements[1];
+
+                        nameToIdMap.put(scientificName, taxon);
+                        idToNameMap.put(taxon, scientificName);
+
+                    } else if (line.startsWith("                 C=")) {
+
+                        String commonName = line.split("C=")[1].trim();
+
+                        idToCommonNameMap.put(taxon, commonName);
+
+                    } else if (line.startsWith("                 S=")) {
+
+                        String synonym = line.split("S=")[1].trim();
+
+                        nameToSynonymMap.put(scientificName, synonym);
+
+                    }
+
+                    line = br.readLine();
+                }
+
             } finally {
                 br.close();
             }
+
         } finally {
             r.close();
         }
-    }
 
-    /**
-     * Downloads the mapping for the given species name from UniProt and saves
-     * it to the mapping file.
-     *
-     * @param name the name of the species to query
-     *
-     * @throws MalformedURLException exception thrown whenever the query URL is
-     * malformed
-     * @throws URIException exception thrown whenever an error occurred while
-     * downloading the mapping
-     * @throws IOException exception thrown whenever an error occurred while
-     * downloading the mapping
-     */
-    public void downloadMapping(String name) throws MalformedURLException, URIException, IOException {
-
-        String query = URIUtil.encodeQuery(name);
-
-        URL url = new URL("https://www.uniprot.org/taxonomy/?sort=score&desc=&compress=no&query=" + query + "&format=tab&columns=id");
-
-        URLConnection conn = url.openConnection();
-
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream())); BufferedWriter bw = new BufferedWriter(new FileWriter(mappingFile, true))) {
-
-            String line = br.readLine();
-            while ((line = br.readLine()) != null) {
-                
-                line = line.trim();
-                
-                if (line.length() > 0) {
-                    
-                    String[] elements = line.split(SEPARATOR);
-                    Integer id = Integer.valueOf(elements[0].trim());
-                    String latinName = elements[2].trim();
-                    String commonName = elements[3].trim();
-                    
-                    if (!idToNameMap.containsKey(id)) {
-                        nameToIdMap.put(latinName, id);
-                        idToNameMap.put(id, latinName);
-                        if (!commonName.equals("")) {
-                            idToCommonNameMap.put(id, commonName);
-                        }
-                        
-                        // Try to save the new mapping
-                        try {
-                            bw.write(line);
-                            bw.newLine();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -159,8 +131,6 @@ public class UniprotTaxonomy {
      * not found.
      *
      * @param name the species name
-     * @param query boolean indicating whether UniProt should be queried if the
-     * species is not found
      *
      * @return the taxon
      *
@@ -171,13 +141,12 @@ public class UniprotTaxonomy {
      * @throws IOException exception thrown whenever an error occurred while
      * downloading the mapping
      */
-    public Integer getId(String name, boolean query) throws MalformedURLException, URIException, IOException {
+    public Integer getId(String name
+    ) throws MalformedURLException, URIException, IOException {
+
         Integer result = nameToIdMap.get(name);
-        if (result == null && query) {
-            downloadMapping(name);
-            result = nameToIdMap.get(name);
-        }
         return result;
+
     }
 
     /**
@@ -203,35 +172,15 @@ public class UniprotTaxonomy {
     }
 
     /**
-     * Downloads the UniProt taxonomy mapping to the given file.
+     * Returns the synonym corresponding to the scientific name. E.g.
+     * 'Ajellomyces capsulatus (strain H143)' returns 'Histoplasma capsulatum'.
      *
-     * @param destinationFile the file where to write the taxonomy file
+     * @param scientificName the scientific name
      *
-     * @throws IOException Exception thrown whenever an error occurred while
-     * reading or writing data.
+     * @return the synonym
      */
-    public static void downloadTaxonomyFile(File destinationFile) throws IOException {
-
-        URL url = new URL("https://www.uniprot.org/taxonomy/?format=tab&columns=id");
-
-        URLConnection conn = url.openConnection();
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(destinationFile));
-
-            try {
-                String rowLine;
-                while ((rowLine = br.readLine()) != null) {
-                    bw.write(rowLine);
-                    bw.newLine();
-                }
-            } finally {
-                bw.close();
-            }
-
-        } finally {
-            br.close();
-        }
+    public String getSynonym(String scientificName) {
+        return nameToSynonymMap.get(scientificName);
     }
+
 }

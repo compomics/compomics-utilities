@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * Class parsing go domains and storing them in a map.
+ * Class parsing GO domains and storing them in a map.
  *
  * @author Marc Vaudel
  * @author Harald Barsnes
@@ -22,7 +22,7 @@ public class GoDomains {
      */
     public final static String SEPARATOR = "\t";
     /**
-     * Go term accession to domain map.
+     * GO term accession to domain map.
      */
     private final HashMap<String, String> goAccessionToDomainMap;
 
@@ -34,8 +34,8 @@ public class GoDomains {
     }
 
     /**
-     * Reads go mappings from a file. The structure of the file should go
-     * accession go name
+     * Reads GO mappings from a file. The structure of the file should be
+     * accession\tGO name.
      *
      * Previous mappings are silently overwritten.
      *
@@ -46,9 +46,12 @@ public class GoDomains {
      *
      * @throws IOException if an exception occurs while reading the file
      */
-    public void laodMappingFromFile(File file, WaitingHandler waitingHandler) throws IOException {
+    public void loadMappingFromFile(
+            File file,
+            WaitingHandler waitingHandler
+    ) throws IOException {
 
-        // read the species list
+        // read the mappings
         FileReader r = new FileReader(file);
 
         try {
@@ -73,13 +76,17 @@ public class GoDomains {
                     if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                         return;
                     }
+
                 }
+
             } finally {
                 br.close();
             }
+
         } finally {
             r.close();
         }
+
     }
 
     /**
@@ -115,19 +122,29 @@ public class GoDomains {
 
         // save the GO domains
         FileWriter fw = new FileWriter(destinationFile, true);
+
         try {
+
             BufferedWriter bw = new BufferedWriter(fw);
+
             try {
+
                 for (String goAccession : goAccessionToDomainMap.keySet()) {
+
                     String goDomain = goAccessionToDomainMap.get(goAccession);
                     bw.write(goAccession + SEPARATOR + goDomain);
                     bw.newLine();
+
                 }
+
             } finally {
                 bw.close();
             }
+
         } finally {
             fw.close();
         }
+
     }
+
 }

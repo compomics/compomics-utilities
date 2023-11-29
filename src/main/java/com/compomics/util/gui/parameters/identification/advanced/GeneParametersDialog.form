@@ -117,7 +117,7 @@
                           <Component id="useMappingLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="useMappingCmb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="autoUpdateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="autoUpdateCmb" alignment="3" min="-2" max="-2" attributes="0"/>

@@ -4,7 +4,7 @@ import com.compomics.util.experiment.biology.genes.ensembl.EnsemblVersion;
 import com.compomics.util.experiment.biology.genes.ensembl.GeneMapping;
 import com.compomics.util.experiment.biology.genes.go.GoMapping;
 import com.compomics.util.experiment.biology.taxonomy.SpeciesFactory;
-import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpecies.EnsemblGenomeDivision;
+import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblSpecies.EnsemblDivision;
 import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import com.compomics.util.gui.waiting.waitinghandlers.ProgressDialogX;
 import com.compomics.util.parameters.identification.advanced.GeneParameters;
@@ -94,6 +94,7 @@ public class ProteinGeneDetailsProvider {
 
         // load the previous ensembl version numbers
         File ensemblVersionsFile = getEnsemblVersionsFile();
+
         if (ensemblVersionsFile.exists()) {
             loadEnsemblSpeciesVersions(ensemblVersionsFile);
         } else {
@@ -104,7 +105,9 @@ public class ProteinGeneDetailsProvider {
                 configFolder,
                 new File(configFolder, TOOL_GENE_MAPPING_SUBFOLDER + ENSEMBL_VERSIONS),
                 new File(configFolder, TOOL_GENE_MAPPING_SUBFOLDER + GO_DOMAINS),
-                true);
+                true
+        );
+
     }
 
     /**
@@ -136,83 +139,122 @@ public class ProteinGeneDetailsProvider {
         HashMap<String, GeneMapping> geneMappings = new HashMap<>(accessions.size());
         HashMap<String, GoMapping> goMappings = new HashMap<>(accessions.size());
 
-        // download/update species mapping, put them in maps per species
-        for (String uniprotTaxonomy : fastaSummary.speciesOccurrence.keySet()) {
+        // download/update species mapping and put them in maps per species
+        for (String organismName : fastaSummary.speciesOccurrence.keySet()) {
 
-            if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
+            if (!organismName.equals(SpeciesFactory.UNKNOWN)) {
 
                 try {
 
-                    Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
+                    String organismNameLowerCase = organismName.toLowerCase().replaceAll(" ", "_");
 
-                    if (taxon != null) {
+                    // if species is not found, try the synonym from the uniprot_species file
+                    if (!speciesFactory.getEnsemblSpecies().getLatinNames().contains(organismNameLowerCase)) {
 
-                        String speciesName = speciesFactory.getName(taxon);
-                        String ensemblDatasetName = speciesFactory.getEnsemblDataset(taxon);
+                        String speciesSynonym = speciesFactory.getUniprotTaxonomy().getSynonym(organismName);
 
-                        if (ensemblDatasetName != null) {
+                        if (speciesSynonym != null) {
+
+                            organismNameLowerCase = speciesSynonym.toLowerCase().replaceAll(" ", "_");
+
+                        }
+
+                    }
+
+                    if (speciesFactory.getEnsemblSpecies().getLatinNames().contains(organismNameLowerCase)) {
+
+                        EnsemblDivision ensemblDivision = speciesFactory.getEnsemblSpecies().getDivision(organismNameLowerCase);
+                        String ensemblDatasetName = speciesFactory.getEnsemblDatasetName(organismNameLowerCase, ensemblDivision);
+                        String ensemblDataset = speciesFactory.getBiomartMapping().getDataset(ensemblDatasetName);
+
+                        // check if the dataset name exists
+                        if (ensemblDataset != null) {
 
                             File geneMappingFile = getGeneMappingFile(ensemblDatasetName);
                             File goMappingFile = getGoMappingFile(ensemblDatasetName);
 
                             if (genePreferences.getAutoUpdate()) {
+
                                 boolean success = true;
+
                                 try {
-                                    if (!geneMappingFile.exists() || !goMappingFile.exists() || newVersionExists(taxon)) { //@TODO: seems like the current version is never found
-                                        success = downloadMappings(waitingHandler, taxon);
+
+                                    if (!geneMappingFile.exists() || newVersionExists(organismNameLowerCase)) {
+                                        success = downloadMappings(waitingHandler, organismName, ensemblDatasetName, ensemblDivision);
                                     }
+
                                     if (waitingHandler != null && waitingHandler.isRunCanceled()) {
                                         return null;
                                     }
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     success = false;
                                 }
+
                                 if (!success) {
-                                    waitingHandler.appendReport(PADDING + "Update of gene information for species " + speciesName + " failed.", true, true);
+                                    waitingHandler.appendReport(PADDING + "Update of gene information for species \'" + organismName + "\' failed.", true, true);
                                 }
+
                             }
 
                             if (geneMappingFile.exists()) {
+
                                 GeneMapping geneMapping = new GeneMapping();
+
                                 try {
+
                                     geneMapping.importFromFile(geneMappingFile, waitingHandler);
-                                    geneMappings.put(speciesName, geneMapping);
+                                    geneMappings.put(organismName, geneMapping);
+
                                 } catch (Exception e) {
-                                    waitingHandler.appendReport(PADDING + "Import of gene mappings for " + speciesName + " failed.", true, true);
+                                    waitingHandler.appendReport(PADDING + "Import of gene mappings for \'" + organismName + "\' failed.", true, true);
                                 }
+
                             } else {
-                                waitingHandler.appendReport(PADDING + "Gene mapping for " + speciesName + " not available.", true, true);
+                                waitingHandler.appendReport(PADDING + "Gene mapping for \'" + organismName + "\' not available.", true, true);
                             }
 
                             if (goMappingFile.exists()) {
+
                                 GoMapping goMapping = new GoMapping();
+
                                 try {
+
                                     goMapping.loadMappingsFromFile(goMappingFile, waitingHandler);
-                                    goMappings.put(speciesName, goMapping);
+                                    goMappings.put(organismName, goMapping);
+
                                 } catch (Exception e) {
-                                    waitingHandler.appendReport(PADDING + "Import of the GO mapping for " + speciesName + " failed.", true, true);
+                                    waitingHandler.appendReport(PADDING + "Import of the GO mapping for \'" + organismName + "\' failed.", true, true);
                                 }
+
                             } else {
-                                waitingHandler.appendReport(PADDING + "GO mapping for " + speciesName + " not available.", true, true);
+                                waitingHandler.appendReport(PADDING + "GO mapping for \'" + organismName + "\' not available.", true, true);
                             }
+
                         } else {
-                            waitingHandler.appendReport(PADDING + speciesName + " not available in Ensembl.", true, true);
+
+                            // waitingHandler.appendReport(PADDING + "No taxonomy found for \'" + organismName + "\'.", true, true);
                         }
+
+                    } else {
+
+                        // waitingHandler.appendReport(PADDING + "No taxonomy found for \'" + organismName + "\'.", true, true);
                     }
+
                 } catch (Exception e) {
-                    waitingHandler.appendReport(PADDING + "No taxonomy found for " + uniprotTaxonomy + ".", true, true);
+                    waitingHandler.appendReport(PADDING + "No taxonomy found for \'" + organismName + "\'.", true, true);
                 }
+
             }
+
         }
 
         // get the mappings for the proteins in the sequence factory
         GeneMaps geneMaps = new GeneMaps();
 
         if (ensemblVersionsMap == null) {
-
             ensemblVersionsMap = new HashMap<>(1);
-
         }
 
         HashMap<String, String> ensemblVersionsUsed = new HashMap<>(ensemblVersionsMap);
@@ -224,94 +266,87 @@ public class ProteinGeneDetailsProvider {
 
         for (String accession : accessions) {
 
-            String uniprotTaxonomy = proteinDetailsProvider.getTaxonomy(accession);
+            String organismName = proteinDetailsProvider.getTaxonomy(accession);
 
-            if (uniprotTaxonomy != null && !uniprotTaxonomy.equals("")) {
+            if (organismName != null && !organismName.equals("")) {
 
                 try {
-                    Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, false);
 
-                    if (taxon != null) {
+                    String geneName = proteinDetailsProvider.getGeneName(accession);
 
-                        String speciesName = speciesFactory.getName(taxon);
+                    if (geneName != null) {
 
-                        String geneName = proteinDetailsProvider.getGeneName(accession);
+                        GeneMapping geneMapping = geneMappings.get(organismName);
 
-                        if (geneName != null) {
+                        if (geneMapping != null) {
 
-                            GeneMapping geneMapping = geneMappings.get(speciesName);
+                            String chromosome = geneMapping.getChromosome(geneName);
 
-                            if (geneMapping != null) {
-
-                                String chromosome = geneMapping.getChromosome(geneName);
-
-                                if (chromosome != null) {
-
-                                    geneNameToChromosomeMap.put(geneName, chromosome);
-
-                                }
-
-                                String ensemblId = geneMapping.getEnsemblAccession(geneName);
-
-                                if (ensemblId != null) {
-
-                                    geneNameToEnsemblIdMap.put(geneName, ensemblId);
-
-                                }
+                            if (chromosome != null) {
+                                geneNameToChromosomeMap.put(geneName, chromosome);
                             }
+
+                            String ensemblId = geneMapping.getEnsemblAccession(geneName);
+
+                            if (ensemblId != null) {
+                                geneNameToEnsemblIdMap.put(geneName, ensemblId);
+                            }
+
                         }
 
-                        GoMapping goMapping = goMappings.get(speciesName);
-
-                        if (goMapping != null) {
-
-                            HashSet<String> goTerms = proteinToGoMap.get(accession);
-
-                            if (goTerms == null) {
-
-                                goTerms = new HashSet<>(1);
-                                proteinToGoMap.put(accession, goTerms);
-
-                            }
-
-                            HashSet<String> newTerms = goMapping.getGoAccessions(accession);
-
-                            if (newTerms != null) {
-
-                                goTerms.addAll(newTerms);
-
-                                for (String goTerm : newTerms) {
-
-                                    String goName = goMapping.getTermName(goTerm);
-
-                                    if (goName != null) {
-
-                                        goNamesMap.put(goTerm, goName);
-
-                                    }
-
-                                    HashSet<String> proteins = goToProteinMap.get(goTerm);
-
-                                    if (proteins == null) {
-
-                                        proteins = new HashSet<>(1);
-                                        goToProteinMap.put(goTerm, proteins);
-
-                                    }
-
-                                    proteins.add(accession);
-
-                                }
-                            }
-                        }
                     }
+
+                    GoMapping goMapping = goMappings.get(organismName);
+
+                    if (goMapping != null) {
+
+                        HashSet<String> goTerms = proteinToGoMap.get(accession);
+
+                        if (goTerms == null) {
+
+                            goTerms = new HashSet<>(1);
+                            proteinToGoMap.put(accession, goTerms);
+
+                        }
+
+                        HashSet<String> newTerms = goMapping.getGoAccessions(accession);
+
+                        if (newTerms != null) {
+
+                            goTerms.addAll(newTerms);
+
+                            for (String goTerm : newTerms) {
+
+                                String goName = goMapping.getTermName(goTerm);
+
+                                if (goName != null) {
+                                    goNamesMap.put(goTerm, goName);
+                                }
+
+                                HashSet<String> proteins = goToProteinMap.get(goTerm);
+
+                                if (proteins == null) {
+                                    proteins = new HashSet<>(1);
+                                    goToProteinMap.put(goTerm, proteins);
+                                }
+
+                                proteins.add(accession);
+
+                            }
+
+                        }
+
+                    }
+
                 } catch (Exception e) {
 
                     // Taxon not available, ignore
                     e.printStackTrace();
 
                 }
+
             }
+
         }
 
         geneMaps.setEnsemblVersionsMap(ensemblVersionsUsed);
@@ -322,6 +357,7 @@ public class ProteinGeneDetailsProvider {
         geneMaps.setGoNamesMap(goNamesMap);
 
         return geneMaps;
+
     }
 
     /**
@@ -338,7 +374,7 @@ public class ProteinGeneDetailsProvider {
      *
      * @return true if downloading went OK
      *
-     * @throws MalformedURLException if an MalformedURLException occurs
+     * @throws MalformedURLException if a MalformedURLException occurs
      * @throws IOException if an IOException occurs
      */
     public boolean downloadGeneSequences(
@@ -362,7 +398,14 @@ public class ProteinGeneDetailsProvider {
 
         String waitingText = "Downloading gene sequences. Please Wait...";
 
-        return queryEnsembl(requestXml, waitingText, destinationFile, ensemblType, waitingHandler);
+        return queryEnsembl(
+                requestXml,
+                waitingText,
+                destinationFile,
+                ensemblType,
+                waitingHandler
+        );
+
     }
 
     /**
@@ -370,7 +413,7 @@ public class ProteinGeneDetailsProvider {
      *
      * @param ensemblType the Ensembl type, e.g., default or plants
      * @param ensemblSchemaName the Ensembl schema name, e.g., default or
-     * plants_mart_18
+     * plants_mart
      * @param ensemblDbName the Ensembl db name of the selected species
      * @param swissProtMapping if true, use the uniprotswissprot_accession
      * parameter, if false use the uniprotsptrembl parameter
@@ -402,21 +445,27 @@ public class ProteinGeneDetailsProvider {
         // construct data
         String requestXml = "query=<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<!DOCTYPE Query>"
-                + "<Query  virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
+                + "<Query virtualSchemaName = \"" + ensemblSchemaName + "\" formatter = \"TSV\" header = \"0\" uniqueRows = \"1\" count = \"\" datasetConfigVersion = \"0.7\" >"
                 + "<Dataset name = \"" + ensemblDbName + "\" interface = \"default\" >"
                 + "<Attribute name = " + accessionMapping + " />";
 
         requestXml += "<Attribute name = \"goslim_goa_accession\" />"
                 + "<Attribute name = \"goslim_goa_description\" />";
 
-        requestXml += "</Dataset>"
-                + "</Query>";
+        requestXml += "</Dataset></Query>";
 
-        // @TODO: have to check if goslim_goa_accession and goslim_goa_description is available
         File tempFile = getGoMappingFile(ensemblDbName);
 
         String waitingText = "Downloading GO Mappings. Please Wait...";
-        return queryEnsembl(requestXml, waitingText, tempFile, ensemblType, waitingHandler);
+
+        return queryEnsembl(
+                requestXml,
+                waitingText,
+                tempFile,
+                ensemblType,
+                waitingHandler
+        );
+
     }
 
     /**
@@ -436,7 +485,14 @@ public class ProteinGeneDetailsProvider {
             File destinationFile,
             String ensemblType
     ) throws MalformedURLException, IOException {
-        return queryEnsembl(requestXml, destinationFile, ensemblType, null);
+
+        return queryEnsembl(
+                requestXml,
+                destinationFile,
+                ensemblType,
+                null
+        );
+
     }
 
     /**
@@ -459,7 +515,15 @@ public class ProteinGeneDetailsProvider {
             String ensemblType,
             WaitingHandler waitingHandler
     ) throws MalformedURLException, IOException {
-        return queryEnsembl(requestXml, null, destinationFile, ensemblType, waitingHandler);
+
+        return queryEnsembl(
+                requestXml,
+                null,
+                destinationFile,
+                ensemblType,
+                waitingHandler
+        );
+
     }
 
     /**
@@ -504,6 +568,7 @@ public class ProteinGeneDetailsProvider {
             String lineBreak = System.getProperty("line.separator");
 
             try {
+
                 wr.write(requestXml);
                 wr.flush();
 
@@ -523,61 +588,90 @@ public class ProteinGeneDetailsProvider {
 
                         // get the response
                         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
                         try {
                             FileWriter w = new FileWriter(destinationFile);
+
                             try {
+
                                 BufferedWriter bw = new BufferedWriter(w);
 
                                 try {
                                     String rowLine = br.readLine();
 
                                     if (rowLine != null && rowLine.startsWith("Query ERROR")) {
+
                                         if (rowLine.lastIndexOf("Attribute goslim_goa_accession NOT FOUND") != -1) {
                                             success = false;
                                         } else if (rowLine.lastIndexOf("Attribute uniprotswissprot_accession NOT FOUND") != -1) {
                                             success = false;
+                                        } else if (rowLine.lastIndexOf("Attribute uniprotswissprot NOT FOUND") != -1) {
+                                            success = false;
+                                        } else if (rowLine.lastIndexOf("Attribute uniprotsptrembl NOT FOUND") != -1) {
+                                            success = false;
                                         } else {
                                             throw new IllegalArgumentException("Query error: " + rowLine);
                                         }
+
                                     } else {
+
                                         while (rowLine != null && success) {
+
                                             if (waitingHandler != null) {
+
                                                 if (waitingHandler.isRunCanceled()) {
                                                     break;
                                                 }
+
                                                 if (waitingHandler instanceof ProgressDialogX) {
                                                     waitingHandler.setWaitingText(waitingText + " (" + counter++ + " rows downloaded)");
                                                 }
+
                                             } else {
+
                                                 int thousand = ++counter / 10000;
+
                                                 if (thousand > lastThousand) {
                                                     System.out.println(waitingText + " (" + counter + " rows downloaded)");
                                                     lastThousand = thousand;
                                                 }
+
                                             }
+
                                             bw.write(rowLine + lineBreak);
                                             rowLine = br.readLine();
                                         }
+
                                     }
+
                                 } finally {
                                     bw.close();
                                 }
+
                             } finally {
                                 w.close();
                             }
+
                         } finally {
                             br.close();
                         }
+
                     } else {
+
                         if (waitingHandler != null) {
                             waitingHandler.setRunCanceled();
                         }
+
                         throw new IllegalArgumentException("The mapping file could not be created.");
+
                     }
+
                 }
+
             } finally {
                 wr.close();
             }
+
         }
 
         return success;
@@ -588,17 +682,19 @@ public class ProteinGeneDetailsProvider {
      *
      * @param ensemblType the Ensembl type, e.g., default or plants
      * @param ensemblSchemaName the Ensembl schema name, e.g., default or
-     * plants_mart_18
+     * plants_mart
      * @param ensemblDatasetName the Ensembl dataset name of the selected
      * species
      * @param ensemblVersion the Ensembl version
      * @param waitingHandler the waiting handler
      *
-     * @throws MalformedURLException if an MalformedURLException occurs
+     * @return true if downloading went OK
+     *
+     * @throws MalformedURLException if a MalformedURLException occurs
      * @throws IOException if an IOException occurs
      * @throws IllegalArgumentException if an IllegalArgumentException occurs
      */
-    public void downloadGeneMappings(
+    public boolean downloadGeneMappings(
             String ensemblType,
             String ensemblSchemaName,
             String ensemblDatasetName,
@@ -616,6 +712,8 @@ public class ProteinGeneDetailsProvider {
                 + "<Attribute name = \"chromosome_name\" />"
                 + "</Dataset>"
                 + "</Query>";
+        
+        boolean success = true;
 
         // @TODO: use the queryEnsembl method here as well?
         if (!waitingHandler.isRunCanceled()) {
@@ -629,6 +727,7 @@ public class ProteinGeneDetailsProvider {
             String lineBreak = System.getProperty("line.separator");
 
             try {
+
                 wr.write(requestXml);
                 wr.flush();
 
@@ -642,30 +741,49 @@ public class ProteinGeneDetailsProvider {
 
                     // get the response
                     BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
                     try {
+
                         FileWriter w = new FileWriter(tempFile);
+
                         try {
+
                             BufferedWriter bw = new BufferedWriter(w);
+
                             try {
+
                                 String rowLine = br.readLine();
 
-                                if (rowLine != null && rowLine.startsWith("Query ERROR")) {
+                                if (rowLine.lastIndexOf("Attribute external_gene_name NOT FOUND") != -1) {
+
+                                    success = false;
+                                    
+                                } else if (rowLine != null && rowLine.startsWith("Query ERROR")) {
+
                                     throw new IllegalArgumentException("Query error on line: " + rowLine);
+
                                 } else {
+
                                     while (rowLine != null && !waitingHandler.isRunCanceled()) {
+
                                         if (waitingHandler instanceof ProgressDialogX) {
                                             waitingHandler.setWaitingText("Downloading Gene Mappings. Please Wait... (" + counter++ + " rows downloaded)");
                                         }
+
                                         bw.write(rowLine + lineBreak);
                                         rowLine = br.readLine();
                                     }
+
                                 }
+
                             } finally {
                                 bw.close();
                             }
+
                         } finally {
                             w.close();
                         }
+
                     } finally {
                         br.close();
                     }
@@ -673,11 +791,17 @@ public class ProteinGeneDetailsProvider {
                     if (!waitingHandler.isRunCanceled()) {
                         updateEnsemblVersion(ensemblDatasetName, "Ensembl " + ensemblVersion);
                     }
+
                 }
+
             } finally {
                 wr.close();
             }
+
         }
+
+        return success;
+        
     }
 
     /**
@@ -717,11 +841,13 @@ public class ProteinGeneDetailsProvider {
     ) {
 
         if (!getGeneMappingFolder().exists()) {
+
             boolean folderCreated = getGeneMappingFolder().mkdirs();
 
             if (!folderCreated) {
                 throw new IllegalArgumentException("Could not create the gene mapping folder.");
             }
+
         }
 
         File targetEnsemblVersionsFile = getEnsemblVersionsFile();
@@ -731,6 +857,7 @@ public class ProteinGeneDetailsProvider {
         HashMap<String, Boolean> localUpdateSpeciesEnsembl = new HashMap<>();
 
         try {
+
             if (!targetEnsemblVersionsFile.exists()) {
 
                 boolean fileCreated = targetEnsemblVersionsFile.createNewFile();
@@ -742,11 +869,13 @@ public class ProteinGeneDetailsProvider {
                 IoUtil.copyFile(sourceEnsemblVersionsFile, targetEnsemblVersionsFile);
 
                 localEnsemblVersionsMap = getEnsemblSpeciesVersions(targetEnsemblVersionsFile);
+
                 for (Map.Entry<String, String> entry : localEnsemblVersionsMap.entrySet()) {
                     Integer speciesEnsemblVersionNew = getEnsemblVersionFromFile(sourceEnsemblVersionsFile, entry.getKey());
                     updateEnsemblVersion(entry.getKey(), "Ensembl " + speciesEnsemblVersionNew); // we actually just need to update the map
                     localUpdateSpeciesEnsembl.put(entry.getKey(), true);
                 }
+
             } else {
 
                 // file exists, just update every species ensembl version
@@ -764,35 +893,52 @@ public class ProteinGeneDetailsProvider {
                         if (speciesEnsemblVersionOld == null
                                 || speciesEnsemblVersionOld.equals(speciesEnsemblVersionNew) && updateEqualVersion
                                 || speciesEnsemblVersionOld < speciesEnsemblVersionNew) {
+
                             localUpdateSpeciesEnsembl.put(entry.getKey(), true);
                             updateEnsemblVersion(entry.getKey(), "Ensembl " + speciesEnsemblVersionNew);
+
                         } else {
+
                             localUpdateSpeciesEnsembl.put(entry.getKey(), false);
                         }
+
                     } else {
+
                         localUpdateSpeciesEnsembl.put(entry.getKey(), false);
                     }
+
                 }
+
             }
+
         } catch (IOException e) {
+
             e.printStackTrace();
             throw new IllegalArgumentException("Could not create or update the Ensembl versions file.");
+
         }
 
         try {
+
             if (!targetGoDomainsFile.exists()) {
+
                 boolean fileCreated = targetGoDomainsFile.createNewFile();
+
                 if (!fileCreated) {
                     throw new IllegalArgumentException("Could not create the GO domains file.");
                 }
+
             }
+
             IoUtil.copyFile(sourceGoDomainsFile, targetGoDomainsFile);
+
         } catch (IOException e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Could not create the GO domains file.");
         }
 
         for (Map.Entry<String, Boolean> entry : localUpdateSpeciesEnsembl.entrySet()) {
+
             if (entry.getValue()) {
 
                 File sourceSpeciesGoMappingsFile = new File(configFolder, TOOL_GENE_MAPPING_SUBFOLDER + entry.getKey() + GO_MAPPING_FILE_SUFFIX);
@@ -803,10 +949,13 @@ public class ProteinGeneDetailsProvider {
                 try {
 
                     if (!targetSpeciesGoMappingsFile.exists()) {
+
                         boolean fileCreated = targetSpeciesGoMappingsFile.createNewFile();
+
                         if (!fileCreated) {
                             throw new IllegalArgumentException("Could not create the default species GO mapping file.");
                         }
+
                     }
 
                     IoUtil.copyFile(sourceSpeciesGoMappingsFile, targetSpeciesGoMappingsFile);
@@ -817,21 +966,30 @@ public class ProteinGeneDetailsProvider {
                 }
 
                 try {
+
                     if (!targetSpeciesGeneMappingFile.exists()) {
+
                         boolean fileCreated = targetSpeciesGeneMappingFile.createNewFile();
+
                         if (!fileCreated) {
                             throw new IllegalArgumentException("Could not create the default species gene mapping file.");
                         }
+
                     }
 
                     IoUtil.copyFile(sourceSpeciesGeneMappingFile, targetSpeciesGeneMappingFile);
 
                 } catch (IOException e) {
+
                     e.printStackTrace();
                     throw new IllegalArgumentException("Could not create the default species gene mapping file.");
+
                 }
+
             }
+
         }
+
     }
 
     /**
@@ -852,22 +1010,30 @@ public class ProteinGeneDetailsProvider {
         if (ensemblVersionsMap == null) {
             ensemblVersionsMap = new HashMap<>();
         }
+
         ensemblVersionsMap.put(ensemblDatasetName, ensemblVersion);
 
         FileWriter w = new FileWriter(getEnsemblVersionsFile());
+
         try {
+
             BufferedWriter bw = new BufferedWriter(w);
+
             try {
+
                 for (String key : ensemblVersionsMap.keySet()) {
                     bw.write(key + SEPARATOR + ensemblVersionsMap.get(key));
                     bw.newLine();
                 }
+
             } finally {
                 bw.close();
             }
+
         } finally {
             w.close();
         }
+
     }
 
     /**
@@ -912,12 +1078,13 @@ public class ProteinGeneDetailsProvider {
                 br.close();
 
             }
-            
+
         } finally {
             r.close();
         }
-        
+
         return version;
+
     }
 
     /**
@@ -932,25 +1099,31 @@ public class ProteinGeneDetailsProvider {
             File ensemblVersionsFile
     ) throws FileNotFoundException, IOException {
 
-        HashMap<String, String> localEnsemblVersionsMap = new HashMap<String, String>();
+        HashMap<String, String> localEnsemblVersionsMap = new HashMap<>();
 
         // load the existing ensembl version numbers
         FileReader r = new FileReader(ensemblVersionsFile);
 
         try {
+
             BufferedReader br = new BufferedReader(r);
 
             try {
+
                 String line = br.readLine();
 
                 while (line != null) {
+
                     String[] elements = line.split("\\t");
                     localEnsemblVersionsMap.put(elements[0], elements[1]);
                     line = br.readLine();
+
                 }
+
             } finally {
                 br.close();
             }
+
         } finally {
             r.close();
         }
@@ -974,11 +1147,15 @@ public class ProteinGeneDetailsProvider {
             String line = br.readLine();
 
             while (line != null) {
+
                 String[] elements = line.split("\\t");
                 ensemblVersionsMap.put(elements[0], elements[1]);
                 line = br.readLine();
+
             }
+
         }
+
     }
 
     /**
@@ -990,7 +1167,7 @@ public class ProteinGeneDetailsProvider {
      *
      * @throws MalformedURLException exception thrown if the URL is malformed
      */
-    private URL getEnsemblUrl(String ensemblType) throws MalformedURLException {
+    private URL getEnsemblUrl(String ensemblType) throws MalformedURLException { // what about bacteria?
 
         if (ensemblType.equalsIgnoreCase("fungi")) {
 
@@ -1013,6 +1190,7 @@ public class ProteinGeneDetailsProvider {
             return new URL("https://www.ensembl.org/biomart/martservice/result");
 
         }
+
     }
 
     /**
@@ -1020,72 +1198,94 @@ public class ProteinGeneDetailsProvider {
      * species.
      *
      * @param waitingHandler the waiting handler
-     * @param taxon the NCBI taxon of the species
+     * @param speciesName the name of the species
+     * @param ensemblDatasetName the ensemblDatasetName
+     * @param ensemblDivision the Ensembl division
      *
      * @return true if the download was successful
      *
      * @throws java.io.IOException exception thrown whenever an error occurred
      * while reading the mapping files
      */
-    public boolean downloadMappings(WaitingHandler waitingHandler, Integer taxon) throws IOException {
-
-        SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
-
-        String latinName = speciesFactory.getLatinName(taxon);
-        if (latinName == null) {
-            latinName = taxon.toString();
-        }
+    public boolean downloadMappings(
+            WaitingHandler waitingHandler,
+            String speciesName,
+            String ensemblDatasetName,
+            EnsemblDivision ensemblDivision
+    ) throws IOException {
 
         if (waitingHandler.isReport()) {
-            waitingHandler.appendReport(PADDING + "Downloading GO and gene mappings for species " + latinName + ".", true, true);
+            waitingHandler.appendReport(PADDING + "Downloading GO and gene mappings for species " + speciesName + ".", true, true);
         }
 
-        EnsemblGenomeDivision ensemblGenomeDivision = speciesFactory.getEnsemblGenomesSpecies().getDivision(taxon);
+        String ensemblType = ensemblDivision.ensemblType;
+        String schemaName = EnsemblVersion.getEnsemblSchemaName(ensemblDivision);
 
-        String ensemblType = "ensembl";
-        if (ensemblGenomeDivision != null) {
-            ensemblType = ensemblGenomeDivision.ensemblType;
-        }
-
-        String schemaName = EnsemblVersion.getEnsemblSchemaName(ensemblGenomeDivision);
         if (schemaName == null) {
             return false;
         }
 
-        String ensemblDatasetName = speciesFactory.getEnsemblDataset(taxon);
         if (ensemblDatasetName == null) {
             return false;
         }
 
         if (!waitingHandler.isRunCanceled()) {
 
-            boolean goMappingsDownloaded = downloadGoMappings(ensemblType, schemaName, ensemblDatasetName, true, waitingHandler);
+            boolean goMappingsDownloaded = downloadGoMappings(
+                    ensemblType,
+                    schemaName,
+                    ensemblDatasetName,
+                    true,
+                    waitingHandler
+            );
 
             // swiss prot mapping not found, try trembl
             if (!goMappingsDownloaded) {
-                goMappingsDownloaded = downloadGoMappings(ensemblType, schemaName, ensemblDatasetName, false, waitingHandler);
+
+                goMappingsDownloaded = downloadGoMappings(
+                        ensemblType,
+                        schemaName,
+                        ensemblDatasetName,
+                        false,
+                        waitingHandler
+                );
+
             }
 
             if (!goMappingsDownloaded) {
-                waitingHandler.appendReport(PADDING + "Gene ontology mappings not available. Downloading gene mappings only.", true, true);
+                waitingHandler.appendReport(PADDING + PADDING + "GO mappings not available. Downloading gene mappings only.", true, true);
             } else if (waitingHandler.isReport()) {
-                waitingHandler.appendReport(PADDING + "GO mappings downloaded.", true, true);
+                waitingHandler.appendReport(PADDING + PADDING + "GO mappings downloaded.", true, true);
             }
+
         }
 
         if (!waitingHandler.isRunCanceled()) {
-            downloadGeneMappings(ensemblType, schemaName, ensemblDatasetName,
-                    EnsemblVersion.getCurrentEnsemblVersion(ensemblGenomeDivision).toString(), waitingHandler);
+
+            boolean geneMappingsDownloaded = downloadGeneMappings(
+                    ensemblType,
+                    schemaName,
+                    ensemblDatasetName,
+                    EnsemblVersion.getCurrentEnsemblVersion(ensemblDivision).toString(),
+                    waitingHandler
+            );
 
             if (!waitingHandler.isRunCanceled()) {
-                if (waitingHandler.isReport()) {
-                    waitingHandler.appendReport(PADDING + "Gene mappings downloaded.", true, true);
+
+                if (!geneMappingsDownloaded) {
+                    waitingHandler.appendReport(PADDING + PADDING + "Gene mappings not available.", true, true);
+                } else if (waitingHandler.isReport()) {
+                    waitingHandler.appendReport(PADDING + PADDING + "Gene mappings downloaded.", true, true);
                 }
+
             }
+
         }
 
         boolean canceled = waitingHandler.isRunCanceled();
+
         return !canceled;
+
     }
 
     /**
@@ -1131,32 +1331,36 @@ public class ProteinGeneDetailsProvider {
     /**
      * Returns the Ensembl version for a given species.
      *
-     * @param taxon the NCBI taxon of the species
+     * @param latinName the Latin name of the species
      *
      * @return the Ensembl version for a given species.
      */
-    public String getEnsemblVersion(Integer taxon) {
+    public String getEnsemblVersion(String latinName) {
+
         SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
-        String ensemblDatasetName = speciesFactory.getEnsemblDataset(taxon);
+        String ensemblDatasetName = speciesFactory.getEnsemblDatasetName(latinName, speciesFactory.getEnsemblSpecies().getDivision(latinName));
+
         if (ensemblVersionsMap == null) {
             return null;
         }
+
         return ensemblVersionsMap.get(ensemblDatasetName);
+
     }
 
     /**
      * Returns true if a newer version of the species mapping exists in Ensembl.
      *
-     * @param taxon the NCBI taxon of the species
+     * @param latinName the Latin name of the species
      *
-     * @return rue if a newer version of the species mapping exists in Ensemble
+     * @return true if a newer version of the species mapping exists in Ensemble
      */
-    public boolean newVersionExists(Integer taxon) {
+    public boolean newVersionExists(String latinName) {
 
-        EnsemblGenomeDivision ensemblGenomeDivision = SpeciesFactory.getInstance().getEnsemblGenomesSpecies().getDivision(taxon);
+        EnsemblDivision ensemblDivision = SpeciesFactory.getInstance().getEnsemblSpecies().getDivision(latinName);
 
-        Integer latestEnsemblVersion = EnsemblVersion.getCurrentEnsemblVersion(ensemblGenomeDivision);
-        String currentEnsemblVersionAsString = getEnsemblVersion(taxon);
+        Integer latestEnsemblVersion = EnsemblVersion.getCurrentEnsemblVersion(ensemblDivision);
+        String currentEnsemblVersionAsString = getEnsemblVersion(latinName);
 
         if (currentEnsemblVersionAsString != null) {
 
@@ -1174,5 +1378,7 @@ public class ProteinGeneDetailsProvider {
         }
 
         return true;
+
     }
+
 }

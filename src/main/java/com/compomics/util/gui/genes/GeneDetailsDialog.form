@@ -92,7 +92,7 @@
                                   <Component id="ensemlbIdLabel" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
                                   <Component id="geneNameLabel" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="geneNameTxt" max="32767" attributes="0"/>
                                   <Component id="geneIdTxt" max="32767" attributes="0"/>
@@ -108,7 +108,7 @@
                               <Component id="chromosomeNameTxt" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -120,17 +120,17 @@
                           <Component id="ensemlbIdLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="geneIdTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="geneNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="geneNameTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="chromosomeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="chromosomeNameTxt" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="goAnnotationLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="goTableScrollPane" pref="206" max="32767" attributes="0"/>

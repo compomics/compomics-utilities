@@ -1,6 +1,10 @@
 package com.compomics.util.experiment.biology.genes.ensembl;
 
-import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpecies.EnsemblGenomeDivision;
+import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblSpecies.EnsemblDivision;
+import static com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblSpecies.EnsemblDivision.fungi;
+import static com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblSpecies.EnsemblDivision.metazoa;
+import static com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblSpecies.EnsemblDivision.plants;
+import static com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblSpecies.EnsemblDivision.protists;
 
 /**
  * Class for the handling of Ensembl versions.
@@ -11,26 +15,19 @@ import com.compomics.util.experiment.biology.taxonomy.mappings.EnsemblGenomesSpe
 public class EnsemblVersion {
 
     /**
-     * Empty default constructor
-     */
-    public EnsemblVersion() {
-    }
-
-    /**
-     * Returns the current Ensembl version number. Null if not found.
+     * Returns the current Ensembl version number.
      *
-     * @param ensemblGenomeDivision the Ensembl genome division, null if not
-     * Ensembl genome
+     * @param ensemblDivision the Ensembl genome division
      *
      * @return the current Ensembl version number
      */
-    public static Integer getCurrentEnsemblVersion(EnsemblGenomeDivision ensemblGenomeDivision) {
+    public static Integer getCurrentEnsemblVersion(EnsemblDivision ensemblDivision) {
 
         // @TODO: find a less hard coded way of finding the current ensembl versions!!!
-        if (ensemblGenomeDivision != null) {
-            return 55;
+        if (ensemblDivision != EnsemblDivision.vertebrates) {
+            return 57;
         } else {
-            return 107;
+            return 110;
         }
 
         // the code below used to work but is not always updated when new ensembl versions are released
@@ -78,16 +75,18 @@ public class EnsemblVersion {
     /**
      * Returns the name of the Ensembl schema for BioMart queries.
      *
-     * @param ensemblGenomeDivision the Ensembl genome division
+     * @param ensemblDivision the Ensembl division
      *
      * @return the name of the Ensembl schema for BioMart queries
      */
-    public static String getEnsemblSchemaName(EnsemblGenomeDivision ensemblGenomeDivision) {
+    public static String getEnsemblSchemaName(EnsemblDivision ensemblDivision) {
 
-        if (ensemblGenomeDivision == null) {
+        if (ensemblDivision == null) {
             return "default";
         }
-        switch (ensemblGenomeDivision) {
+
+        switch (ensemblDivision) {
+
 //            case fungi:
 //                return "fungi_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
 //            case plants:
@@ -96,8 +95,10 @@ public class EnsemblVersion {
 //                return "protists_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
 //            case metazoa:
 //                return "metazoa_mart_" + getCurrentEnsemblVersion(ensemblGenomeDivision);
+            case vertebrates:
+                return "default";
             case fungi:
-                return "fungal_mart";
+                return "fungi_mart";
             case plants:
                 return "plants_mart";
             case protists:
@@ -106,6 +107,9 @@ public class EnsemblVersion {
                 return "metazoa_mart";
             default:
                 return "default";
+
         }
+
     }
+
 }

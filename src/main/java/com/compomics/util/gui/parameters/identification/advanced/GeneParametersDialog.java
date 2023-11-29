@@ -16,12 +16,6 @@ import javax.swing.SwingConstants;
 public class GeneParametersDialog extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
-     */
-    public GeneParametersDialog() {
-    }
-
-    /**
      * The parent frame.
      */
     private java.awt.Frame parentFrame;
@@ -39,7 +33,7 @@ public class GeneParametersDialog extends javax.swing.JDialog {
     private GeneParameters genePreferences;
 
     /**
-     * Creates a new GenePreferencesDialog with a frame as owner.
+     * Creates a new GeneParametersDialog with a frame as owner.
      *
      * @param parentFrame the parent frame
      * @param genePreferences the gene preferences
@@ -47,7 +41,13 @@ public class GeneParametersDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public GeneParametersDialog(JFrame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, boolean editable) {
+    public GeneParametersDialog(
+            JFrame parentFrame,
+            GeneParameters genePreferences,
+            SearchParameters searchParameters,
+            boolean editable
+    ) {
+
         super(parentFrame, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -56,10 +56,11 @@ public class GeneParametersDialog extends javax.swing.JDialog {
         setUpGui();
         setLocationRelativeTo(parentFrame);
         setVisible(true);
+
     }
 
     /**
-     * Creates a new GenePreferencesDialog with a dialog as owner.
+     * Creates a new GeneParametersDialog with a dialog as owner.
      *
      * @param owner the dialog owner
      * @param parentFrame a parent frame
@@ -68,7 +69,14 @@ public class GeneParametersDialog extends javax.swing.JDialog {
      * @param editable boolean indicating whether the settings can be edited by
      * the user
      */
-    public GeneParametersDialog(JDialog owner, java.awt.Frame parentFrame, GeneParameters genePreferences, SearchParameters searchParameters, boolean editable) {
+    public GeneParametersDialog(
+            JDialog owner,
+            java.awt.Frame parentFrame,
+            GeneParameters genePreferences,
+            SearchParameters searchParameters,
+            boolean editable
+    ) {
+
         super(owner, true);
         this.parentFrame = parentFrame;
         this.editable = editable;
@@ -77,6 +85,7 @@ public class GeneParametersDialog extends javax.swing.JDialog {
         setUpGui();
         setLocationRelativeTo(owner);
         setVisible(true);
+
     }
 
     /**
@@ -102,12 +111,13 @@ public class GeneParametersDialog extends javax.swing.JDialog {
         } else {
             autoUpdateCmb.setSelectedIndex(1);
         }
+
     }
 
     /**
-     * Returns the gene preferences.
+     * Returns the gene parameters.
      *
-     * @return the gene preferences
+     * @return the gene parameters
      */
     public GeneParameters getGeneParameters() {
 
@@ -188,7 +198,7 @@ public class GeneParametersDialog extends javax.swing.JDialog {
                 .addGroup(mappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(useMappingLabel)
                     .addComponent(useMappingCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(mappingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(autoUpdateLabel)
                     .addComponent(autoUpdateCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -331,12 +341,19 @@ public class GeneParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
+
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        new HelpDialog(parentFrame, getClass().getResource("/helpFiles/GeneAnnotationPreferences.html"),
+
+        new HelpDialog(
+                parentFrame,
+                getClass().getResource("/helpFiles/GeneAnnotationPreferences.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
-                "Gene Annotation - Help");
+                "Gene Annotation - Help"
+        );
+
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
     }//GEN-LAST:event_helpJButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

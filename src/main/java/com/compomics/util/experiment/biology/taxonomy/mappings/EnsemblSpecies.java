@@ -11,33 +11,109 @@ import java.util.HashSet;
  * Mapping of the Ensembl species.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class EnsemblSpecies {
 
+    /////////////////////////////
+    // How to update this file:
+    //
+    // library(readr)
+    // vertibrates<-read.delim("https://ftp.ensembl.org/pub/release-110/species_EnsemblVertebrates.txt", sep="\t", row.names=NULL)
+    // plants<-read.delim("http://ftp.ensemblgenomes.org/pub/plants/current/species_EnsemblPlants.txt", sep="\t", row.names=NULL)
+    // fungi<-read.delim("http://ftp.ensemblgenomes.org/pub/fungi/current/species_EnsemblFungi.txt", sep="\t", row.names=NULL)
+    // metazoa<-read.delim("http://ftp.ensemblgenomes.org/pub/metazoa/current/species_EnsemblMetazoa.txt", sep="\t", row.names=NULL)
+    // protists<-read.delim("http://ftp.ensemblgenomes.org/pub/protists/current/species_EnsemblProtists.txt", sep="\t", row.names=NULL)
+    // combined_table = do.call("rbind", list(vertibrates, plants, fungi, metazoa, protists))
+    // write.table(combined_table, "[..]\\ensembl_all_species", sep ="\t", quote = F, col.names = T)
+    /////////////////////////////
     /**
      * The separator used to separate line contents.
      */
-    public final static String SEPARATOR = "\",\"";
+    public final static String SEPARATOR = "\t";
     /**
-     * NCBI ID to scientific name.
+     * Latin species name to common name. E.g. 'homo_sapiens' to 'Human'.
      */
-    private final HashMap<Integer, String> idToNameMap;
+    private final HashMap<String, String> latinNameToCommonNameMap;
     /**
-     * NCBI ID to common name.
+     * Latin species name to Ensembl division. E.g. 'homo_sapiens' to
+     * 'EnsemblVertebrates'.
      */
-    private final HashMap<Integer, String> idToCommonNameMap;
+    private final HashMap<String, String> latinNameToDivisionMap;
     /**
-     * NCBI ID to Ensembl assembly.
+     * Latin species name to Ensembl assembly. E.g. 'homo_sapiens' to
+     * 'GRCh38.p14'.
      */
-    private final HashMap<Integer, String> idToAssemblyMap;
+    private final HashMap<String, String> latinNameToAssemblyMap;
+    /**
+     * Latin species name to NCBI taxon ID. E.g. 'homo_sapiens' to '9606'.
+     */
+    private final HashMap<String, String> latinNameToTaxonMap;
+
+    /**
+     * Enum of the different Ensembl divisions.
+     */
+    public static enum EnsemblDivision {
+
+        vertebrates("EnsemblVertebrates", "vertebrates"),
+        bacteria("EnsemblBacteria", "bacteria"),
+        fungi("EnsemblFungi", "fungi"),
+        metazoa("EnsemblMetazoa", "metazoa"),
+        plants("EnsemblPlants", "plants"),
+        protists("EnsemblProtists", "protists");
+        /**
+         * The name in the Ensembl mapping file.
+         */
+        public final String ensemblName;
+        /**
+         * The schema name for XML queries.
+         */
+        public final String ensemblType;
+
+        /**
+         * Constructor.
+         *
+         * @param ensemblName the name in the Ensembl mapping file
+         * @param ensemblType the Ensembl type for XML queries
+         */
+        private EnsemblDivision(String ensemblName, String ensemblType) {
+            this.ensemblName = ensemblName;
+            this.ensemblType = ensemblType;
+        }
+
+        /**
+         * Returns the EnsemblDivision corresponding to the given Ensembl name.
+         * Null if not found.
+         *
+         * @param ensemblName the Ensembl name
+         *
+         * @return the EnsemblDivision
+         */
+        public static EnsemblDivision getEnsemblDivisionFromName(String ensemblName) {
+
+            for (EnsemblDivision ensemblDivision : values()) {
+
+                if (ensemblDivision.ensemblName.equals(ensemblName)) {
+                    return ensemblDivision;
+                }
+
+            }
+
+            return null;
+        }
+
+    }
 
     /**
      * Constructor.
      */
     public EnsemblSpecies() {
-        idToNameMap = new HashMap<>();
-        idToCommonNameMap = new HashMap<>();
-        idToAssemblyMap = new HashMap<>();
+
+        latinNameToCommonNameMap = new HashMap<>();
+        latinNameToDivisionMap = new HashMap<>();
+        latinNameToAssemblyMap = new HashMap<>();
+        latinNameToTaxonMap = new HashMap<>();
+
     }
 
     /**
@@ -55,85 +131,112 @@ public class EnsemblSpecies {
         FileReader r = new FileReader(speciesFile);
 
         try {
+
             BufferedReader br = new BufferedReader(r);
 
             try {
+
+                // skip the header;
+                br.readLine();
+
                 String line = br.readLine();
 
-                while ((line = br.readLine()) != null) {
+                while (line != null) {
 
                     line = line.trim();
 
                     if (line.length() > 0) {
 
                         line = line.substring(1, line.length() - 1);
-                        String[] elements = line.split(SEPARATOR);
-                        String id = elements[2].trim();
-                        String scientificName = elements[1].trim();
-                        String commonName = elements[0].trim();
-                        String assembly = elements[3].trim();
 
-                        if (!id.equals("") && !id.equals("-")) {
-                            Integer taxon = Integer.valueOf(id);
-                            if (!scientificName.equals("-")) {
-                                idToNameMap.put(taxon, scientificName);
-                            }
-                            if (!commonName.equals("-")) {
-                                idToCommonNameMap.put(taxon, commonName);
-                            }
-                            if (!assembly.equals("-")) {
-                                idToAssemblyMap.put(taxon, assembly);
-                            }
-                        }
+                        String[] elements = line.split(SEPARATOR);
+
+                        String commonName = elements[1].trim();
+                        String scientificName = elements[2].trim();
+                        String division = elements[3].trim();
+                        String taxon = elements[4].trim();
+                        String assembly = elements[5].trim();
+
+                        latinNameToCommonNameMap.put(scientificName, commonName);
+                        latinNameToDivisionMap.put(scientificName, division);
+                        latinNameToAssemblyMap.put(scientificName, assembly);
+                        latinNameToTaxonMap.put(scientificName, taxon);
+
                     }
+
+                    line = br.readLine();
+
                 }
+
             } finally {
                 br.close();
             }
+
         } finally {
             r.close();
         }
+
     }
 
     /**
-     * Returns the scientific name corresponding to the given NCBI taxon.
+     * Returns the common name corresponding to the given Latin name.
      *
-     * @param id the NCBI taxon
-     *
-     * @return the scientific name
-     */
-    public String getScientificName(Integer id) {
-        return idToNameMap.get(id);
-    }
-
-    /**
-     * Returns the common name corresponding to the given NCBI taxon.
-     *
-     * @param id the NCBI taxon
+     * @param latinName the Latin name, e.g. 'homo_sapiens'.
      *
      * @return the common name
      */
-    public String getCommonName(Integer id) {
-        return idToCommonNameMap.get(id);
+    public String getCommonName(String latinName) {
+        return latinNameToCommonNameMap.get(latinName);
     }
 
     /**
-     * Returns the Ensembl assembly corresponding to the given NCBI taxon.
+     * Returns the division corresponding to the given Latin name.
      *
-     * @param id the NCBI taxon
+     * @param latinName the Latin name, e.g. 'homo_sapiens'.
+     *
+     * @return the Ensembl division
+     */
+    public EnsemblDivision getDivision(String latinName) {
+
+        String ensemblDivisionName = latinNameToDivisionMap.get(latinName);
+
+        if (ensemblDivisionName == null) {
+            return null;
+        }
+
+        return EnsemblDivision.getEnsemblDivisionFromName(ensemblDivisionName);
+
+    }
+
+    /**
+     * Returns the Ensembl assembly corresponding to the given Latin name.
+     *
+     * @param latinName the Latin name, e.g. 'homo_sapiens'.
      *
      * @return the Ensembl assembly
      */
-    public String getAssembly(Integer id) {
-        return idToAssemblyMap.get(id);
+    public String getAssembly(String latinName) {
+        return latinNameToAssemblyMap.get(latinName);
     }
 
     /**
-     * Returns the taxons in this map.
+     * Returns the NCBI taxon corresponding to the given Latin name.
      *
-     * @return the taxons in this map
+     * @param latinName the Latin name, e.g. 'homo_sapiens'.
+     *
+     * @return the NCBI taxon
      */
-    public HashSet<Integer> getTaxons() {
-        return new HashSet<>(idToAssemblyMap.keySet());
+    public String getTaxon(String latinName) {
+        return latinNameToTaxonMap.get(latinName);
     }
+
+    /**
+     * Returns the Latin names in this map.
+     *
+     * @return the Latin names in this map
+     */
+    public HashSet<String> getLatinNames() {
+        return new HashSet<>(latinNameToAssemblyMap.keySet());
+    }
+
 }

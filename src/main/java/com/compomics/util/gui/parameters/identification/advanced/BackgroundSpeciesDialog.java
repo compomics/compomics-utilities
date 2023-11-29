@@ -5,7 +5,7 @@ import com.compomics.util.experiment.io.biology.protein.FastaSummary;
 import com.compomics.util.gui.error_handlers.HelpDialog;
 import com.compomics.util.parameters.identification.advanced.GeneParameters;
 import java.awt.Toolkit;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -20,12 +20,6 @@ import javax.swing.SwingConstants;
  * @author Harald Barsnes
  */
 public class BackgroundSpeciesDialog extends javax.swing.JDialog {
-
-    /**
-     * Empty default constructor
-     */
-    public BackgroundSpeciesDialog() {
-    }
 
     /**
      * The parent frame.
@@ -48,9 +42,9 @@ public class BackgroundSpeciesDialog extends javax.swing.JDialog {
      */
     private SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
     /**
-     * A map from the species names used in the drop down menu to the taxon.
+     * A list of the species names used in the drop down menu.
      */
-    private HashMap<String, Integer> speciesMap;
+    private ArrayList<String> species;
 
     /**
      * Creates a new GenePreferencesDialog with a frame as owner.
@@ -98,7 +92,7 @@ public class BackgroundSpeciesDialog extends javax.swing.JDialog {
 
         // set the species
         Vector availableSpecies = new Vector();
-        speciesMap = new HashMap<>();
+        species = new ArrayList<>();
 
         int selectedIndex = 0;
 
@@ -106,12 +100,12 @@ public class BackgroundSpeciesDialog extends javax.swing.JDialog {
 
             TreeMap<String, Integer> speciesOccurrence = fastaSummary.speciesOccurrence;
 
-            // Select the background species based on occurrence in the factory
+            // select the background species based on occurrence in the factory
             for (Entry<String, Integer> entry : speciesOccurrence.entrySet()) {
 
-                String uniprotTaxonomy = entry.getKey();
+                String organismName = entry.getKey();
 
-                if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN)) {
+                if (!organismName.equals(SpeciesFactory.UNKNOWN)) {
 
                     Integer occurrence = entry.getValue();
 
@@ -119,22 +113,16 @@ public class BackgroundSpeciesDialog extends javax.swing.JDialog {
 
                         try {
 
-                            Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
+                            if (genePreferences.getBackgroundSpecies() != null
+                                    && genePreferences.getBackgroundSpecies().equalsIgnoreCase(organismName)) {
 
-                            if (taxon != null) {
-
-                                if (genePreferences.getBackgroundSpecies() != null
-                                        && genePreferences.getBackgroundSpecies().intValue() == taxon) {
-
-                                    selectedIndex = availableSpecies.size();
-
-                                }
-
-                                String tempSpecies = speciesFactory.getName(taxon) + " (" + occurrence + ")";
-                                availableSpecies.add(tempSpecies);
-                                speciesMap.put(tempSpecies, taxon);
+                                selectedIndex = availableSpecies.size();
 
                             }
+
+                            String tempSpecies = organismName + " (" + occurrence + ")";
+                            availableSpecies.add(tempSpecies);
+                            species.add(organismName);
 
                         } catch (Exception e) {
                             // taxon not available, ignore
@@ -149,7 +137,7 @@ public class BackgroundSpeciesDialog extends javax.swing.JDialog {
         }
 
         speciesCmb.setModel(new DefaultComboBoxModel(availableSpecies));
-        
+
         if (!availableSpecies.isEmpty()) {
             speciesCmb.setSelectedIndex(selectedIndex);
         }
@@ -316,11 +304,14 @@ public class BackgroundSpeciesDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+
         if (speciesCmb.getSelectedIndex() != -1) {
-            genePreferences.setBackgroundSpecies(speciesMap.get((String) speciesCmb.getSelectedItem()));
-        }    
+            genePreferences.setBackgroundSpecies(species.get(speciesCmb.getSelectedIndex()));
+        }
+
         dispose();
         setVisible(false);
+
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**
@@ -366,12 +357,18 @@ public class BackgroundSpeciesDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void helpJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpJButtonActionPerformed
+
         setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        new HelpDialog(parentFrame, getClass().getResource("/helpFiles/GeneAnnotationPreferences.html"),
+
+        new HelpDialog(
+                parentFrame, getClass().getResource("/helpFiles/GeneAnnotationPreferences.html"),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/help.GIF")),
                 Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/peptide-shaker.gif")),
-                "Gene Annotation - Help");
+                "Gene Annotation - Help"
+        );
+
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
     }//GEN-LAST:event_helpJButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -10,23 +10,45 @@ import java.util.HashMap;
  * Mapping of the species to BioMart dataset.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class BiomartMapping {
 
+    /////////////////////////////
+    // How to update this file:
+    //
+    // install.packages("BiocManager")
+    // library(biomaRt)
+    //
+    // ensembl=useMart("ensembl")
+    // vertibrate_table = listDatasets(ensembl)
+    // ensembl=useMart("plants_mart", host="https://plants.ensembl.org")
+    // plants_table = listDatasets(ensembl)
+    // ensembl=useMart("fungi_mart", host="https://fungi.ensembl.org")
+    // fungi_table = listDatasets(ensembl)
+    // ensembl=useMart("metazoa_mart", host="https://metazoa.ensembl.org")
+    // metazoa_table = listDatasets(ensembl)
+    // ensembl=useMart("protists_mart", host="https://protists.ensembl.org")
+    // protists_table = listDatasets(ensembl)
+    // combined_table = do.call("rbind", list(vertibrate_table, plants_table, fungi_table, metazoa_table, protists_table))
+    // write.table(combined_table, "[..]\\ensembl_biomart_databases", sep ="\t", quote = F, col.names = T, row.names = F)
+    //
+    // Note: There is no biomart for bacteria...
+    /////////////////////////////
     /**
      * The separator used to separate line contents.
      */
     public final static String SEPARATOR = "\t";
     /**
-     * Ensembl assembly to BioMart dataset.
+     * Dataset name to dataset version.
      */
-    private final HashMap<String, String> assemblyToDataset;
+    private final HashMap<String, String> datasetNameToDatasetVersion;
 
     /**
      * Constructor.
      */
     public BiomartMapping() {
-        assemblyToDataset = new HashMap<>();
+        datasetNameToDatasetVersion = new HashMap<>();
     }
 
     /**
@@ -34,19 +56,21 @@ public class BiomartMapping {
      * overwritten.
      *
      * @param ensemblFile the Ensembl BioMart file
-     * @param ensemblGenomeFile the Ensembl genome BioMart file
      *
      * @throws IOException exception thrown whenever an error occurred while
      * reading the file.
      */
-    public void loadMapping(File ensemblFile, File ensemblGenomeFile) throws IOException {
+    public void loadMapping(File ensemblFile) throws IOException {
 
         FileReader r = new FileReader(ensemblFile);
 
         try {
+
             BufferedReader br = new BufferedReader(r);
 
             try {
+                br.readLine(); // skip the header
+
                 String line;
 
                 while ((line = br.readLine()) != null) {
@@ -56,60 +80,35 @@ public class BiomartMapping {
                     if (line.length() > 0) {
 
                         String[] elements = line.split(SEPARATOR);
-                        String dataset = elements[0].trim();
-                        String assembly = elements[1].trim();
-                        if (!assembly.equals("") && !dataset.equals("")) {
-                            assemblyToDataset.put(assembly, dataset);
-                        }
+                        String datasetName = elements[0].trim();
+                        String datasetVersion = elements[2].trim();
+
+                        datasetNameToDatasetVersion.put(datasetName, datasetVersion);
+
                     }
+
                 }
+
             } finally {
                 br.close();
             }
+
         } finally {
             r.close();
         }
 
-        r = new FileReader(ensemblGenomeFile);
-
-        try {
-            BufferedReader br = new BufferedReader(r);
-
-            try {
-                String line;
-
-                while ((line = br.readLine()) != null) {
-
-                    line = line.trim();
-
-                    if (line.length() > 0) {
-
-                        String[] elements = line.split(SEPARATOR);
-                        String dataset = elements[0].trim();
-                        String version = elements[1].trim();
-                        elements = version.split(" ");
-                        String assembly = elements[0].trim();
-                        if (!assembly.equals("") && !dataset.equals("")) {
-                            assemblyToDataset.put(assembly, dataset);
-                        }
-                    }
-                }
-            } finally {
-                br.close();
-            }
-        } finally {
-            r.close();
-        }
     }
 
     /**
      * Returns the Ensembl dataset for the given assembly. Null if not found.
      *
-     * @param assembly the assembly
+     * @param datasetName the dataset name. E.g. 'hsapiens_gene_ensembl' or
+     * 'acomosus_eg_gene'.
      *
-     * @return the Ensembl dataset
+     * @return the Ensembl dataset version
      */
-    public String getDataset(String assembly) {
-        return assemblyToDataset.get(assembly);
+    public String getDataset(String datasetName) {
+        return datasetNameToDatasetVersion.get(datasetName);
     }
+
 }

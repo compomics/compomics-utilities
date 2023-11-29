@@ -23,9 +23,9 @@ public class GeneParameters extends ExperimentObject {
      */
     private Boolean useGeneMapping;
     /**
-     * The taxon of the species selected as background for the GO analysis.
+     * The Latin name of the species selected as background for the GO analysis.
      */
-    private Integer backgroundSpecies;
+    private String backgroundSpecies;
 
     /**
      * Create a new GenePreferences object.
@@ -49,11 +49,13 @@ public class GeneParameters extends ExperimentObject {
      * @return a boolean indicating whether gene mappings should be used
      */
     public Boolean getUseGeneMapping() {
-        
+
         if (useGeneMapping == null) {
             useGeneMapping = true;
         }
+
         return useGeneMapping;
+
     }
 
     /**
@@ -63,8 +65,9 @@ public class GeneParameters extends ExperimentObject {
      * be used
      */
     public void setUseGeneMapping(Boolean useGeneMapping) {
-        
+
         this.useGeneMapping = useGeneMapping;
+
     }
 
     /**
@@ -74,11 +77,13 @@ public class GeneParameters extends ExperimentObject {
      * automatically updated
      */
     public Boolean getAutoUpdate() {
-        
+
         if (autoUpdate == null) {
             autoUpdate = true;
         }
+
         return autoUpdate;
+
     }
 
     /**
@@ -88,8 +93,9 @@ public class GeneParameters extends ExperimentObject {
      * be automatically updated
      */
     public void setAutoUpdate(Boolean autoUpdate) {
-        
+
         this.autoUpdate = autoUpdate;
+
     }
 
     /**
@@ -101,29 +107,32 @@ public class GeneParameters extends ExperimentObject {
      * as these ones.
      */
     public boolean equals(GeneParameters genePreferences) {
-        
+
         return getAutoUpdate().equals(genePreferences.getAutoUpdate());
+
     }
 
     /**
-     * Returns the taxon of the species selected as background species.
+     * Returns the Latin name of the species selected as background species.
      *
-     * @return the taxon of the species selected as background species
+     * @return the Latin name of the species selected as background species
      */
-    public Integer getBackgroundSpecies() {
-        
+    public String getBackgroundSpecies() {
+
         return backgroundSpecies;
+
     }
 
     /**
      * Sets the taxon of the species selected as background species.
      *
-     * @param selectedBackgroundSpecies the taxon of the species selected as
-     * background species
+     * @param selectedBackgroundSpecies the Latin name of the species selected
+     * as background species
      */
-    public void setBackgroundSpecies(Integer selectedBackgroundSpecies) {
-        
+    public void setBackgroundSpecies(String selectedBackgroundSpecies) {
+
         this.backgroundSpecies = selectedBackgroundSpecies;
+
     }
 
     /**
@@ -133,21 +142,17 @@ public class GeneParameters extends ExperimentObject {
      */
     public void setBackgroundSpeciesFromFastaSummary(FastaSummary fastaSummary) {
 
-        
-
-        SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
-
         try {
 
             TreeMap<String, Integer> speciesOccurrence = fastaSummary.speciesOccurrence;
             Integer occurrenceMax = null;
 
-            // Select the background species based on occurrence in the factory
+            // select the background species based on occurrence in the factory
             for (Entry<String, Integer> entry : speciesOccurrence.entrySet()) {
 
-                String uniprotTaxonomy = entry.getKey();
+                String latinName = entry.getKey();
 
-                if (!uniprotTaxonomy.equals(SpeciesFactory.UNKNOWN) && getUseGeneMapping()) {
+                if (!latinName.equals(SpeciesFactory.UNKNOWN) && getUseGeneMapping()) {
 
                     Integer occurrence = entry.getValue();
 
@@ -156,23 +161,22 @@ public class GeneParameters extends ExperimentObject {
                         occurrenceMax = occurrence;
 
                         try {
+                            
+                            String organismNameLowerCase = latinName.toLowerCase().replaceAll(" ", "_");
+                            setBackgroundSpecies(organismNameLowerCase);
 
-                            Integer taxon = speciesFactory.getUniprotTaxonomy().getId(uniprotTaxonomy, true);
-
-                            if (taxon != null) {
-
-                                setBackgroundSpecies(taxon);
-
-                            }
                         } catch (Exception e) {
 
-                            // Taxon not available, ignore
+                            // taxon not available, ignore
                             e.printStackTrace();
 
                         }
                     }
+
                 }
+
             }
+
         } catch (Exception e) {
             // Not able to read the species, ignore
             e.printStackTrace();
@@ -185,7 +189,6 @@ public class GeneParameters extends ExperimentObject {
      * @return a short description of the parameters
      */
     public String getShortDescription() {
-        
 
         String newLine = System.getProperty("line.separator");
         StringBuilder output = new StringBuilder();
@@ -194,9 +197,7 @@ public class GeneParameters extends ExperimentObject {
 
         if (backgroundSpecies != null) {
 
-            SpeciesFactory speciesFactory = SpeciesFactory.getInstance();
-            String speciesName = speciesFactory.getName(backgroundSpecies);
-            output.append("Species: ").append(speciesName).append(".").append(newLine);
+            output.append("Species: ").append(backgroundSpecies).append(".").append(newLine);
 
         } else {
 
@@ -206,4 +207,5 @@ public class GeneParameters extends ExperimentObject {
 
         return output.toString();
     }
+
 }

@@ -9,7 +9,6 @@ import com.compomics.util.experiment.identification.spectrum_assumptions.Peptide
 import com.compomics.util.parameters.identification.search.SearchParameters;
 import com.compomics.util.experiment.identification.matches.ModificationMatch;
 import com.compomics.util.experiment.identification.matches.SpectrumMatch;
-import com.compomics.util.experiment.identification.spectrum_assumptions.PeptideAssumptionParameter;
 import com.compomics.util.experiment.io.identification.IdfileReader;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.io.IoUtil;
@@ -314,9 +313,6 @@ public class SageIdfileReader implements IdfileReader {
                             ),
                             true
                     );
-                    
-                    // get the ms1 intensity
-                    double ms1_intensity = Double.parseDouble(elements[ms1_intensityIndex]);
 
                     // create the peptide assumption
                     PeptideAssumption peptideAssumption = new PeptideAssumption(
@@ -328,8 +324,6 @@ public class SageIdfileReader implements IdfileReader {
                             rawScore,
                             IoUtil.getFileName(sageTsvFile)
                     );
-                    
-                    peptideAssumption.addUrParam(new PeptideAssumptionParameter(ms1_intensity));
 
                     if (expandAaCombinations && AminoAcidSequence.hasCombination(peptideSequence)) {
 

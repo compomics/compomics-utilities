@@ -15,7 +15,11 @@ import java.util.TreeMap;
 public class GeneParameters extends ExperimentObject {
 
     /**
-     * If true the gene mappings will auto update.
+     * Serial version UID for post-serialization compatibility.
+     */
+    static final long serialVersionUID = -5077297373352021745L;
+    /**
+     * If true, the gene mappings will auto update.
      */
     private Boolean autoUpdate;
     /**

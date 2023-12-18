@@ -28,6 +28,7 @@ public class Charge {
         }
 
         return value > 0 ? value + "+" : value + "-";
+
     }
 
     /**
@@ -42,25 +43,15 @@ public class Charge {
     public static String getChargeAsFormattedString(int value) {
 
         if (value == 1) {
-            
             return "";
-        
-        } else if (value == 2) {
-            
-            return "++";
-            
-        } else if (value == 3) {
-            
-            return "+++";
-            
         }
-        
+
         int absValue = Math.abs(value);
 
         StringBuilder chargeAsString = new StringBuilder(absValue);
 
         for (int i = 0; i < absValue; i++) {
-            
+
             if (value > 0) {
 
                 chargeAsString.append('+');
@@ -73,5 +64,7 @@ public class Charge {
         }
 
         return chargeAsString.toString();
+
     }
+
 }

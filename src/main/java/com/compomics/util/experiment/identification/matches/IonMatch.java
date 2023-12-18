@@ -14,15 +14,10 @@ import com.compomics.util.pride.CvTerm;
  * This class represents the assignment of a peak to a theoretical ion.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class IonMatch extends ExperimentObject {
 
-    /**
-     * Empty default constructor
-     */
-    public IonMatch() {
-    }
-    
     /**
      * The matched peak m/z.
      */
@@ -41,6 +36,12 @@ public class IonMatch extends ExperimentObject {
     public int charge;
 
     /**
+     * Empty default constructor.
+     */
+    public IonMatch() {
+    }
+
+    /**
      * Constructor for an ion match.
      *
      * @param peakMz The matched peak m/z.
@@ -54,10 +55,12 @@ public class IonMatch extends ExperimentObject {
             Ion ion,
             int charge
     ) {
+
         this.peakMz = peakMz;
         this.peakIntensity = peakIntensity;
         this.ion = ion;
         this.charge = charge;
+
     }
 
     /**
@@ -66,9 +69,10 @@ public class IonMatch extends ExperimentObject {
      * @return the absolute matching error
      */
     public double getAbsoluteError() {
-        
+
         double theoreticMz = ion.getTheoreticMz(charge);
         return peakMz - theoreticMz;
+
     }
 
     /**
@@ -83,11 +87,13 @@ public class IonMatch extends ExperimentObject {
             int minIsotope,
             int maxIsotope
     ) {
-        
+
         double theoreticMz = ion.getTheoreticMz(charge);
         double measuredMz = peakMz;
         measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge;
+
         return measuredMz - theoreticMz;
+
     }
 
     /**
@@ -96,9 +102,11 @@ public class IonMatch extends ExperimentObject {
      * @return the relative matching error
      */
     public double getRelativeError() {
-        
+
         double theoreticMz = ion.getTheoreticMz(charge);
+
         return ((peakMz - theoreticMz) * 1000000) / theoreticMz;
+
     }
 
     /**
@@ -113,11 +121,13 @@ public class IonMatch extends ExperimentObject {
             int minIsotope,
             int maxIsotope
     ) {
-        
+
         double theoreticMz = ion.getTheoreticMz(charge);
         double measuredMz = peakMz;
         measuredMz -= getIsotopeNumber(minIsotope, maxIsotope) * Atom.C.getDifferenceToMonoisotopic(1) / charge;
+
         return ((measuredMz - theoreticMz) * 1000000) / theoreticMz;
+
     }
 
     /**
@@ -135,10 +145,12 @@ public class IonMatch extends ExperimentObject {
             int minIsotope,
             int maxIsotope
     ) {
-        
+
         double experimentalMass = peakMz * charge - charge * ElementaryIon.proton.getTheoreticMass();
         double result = (experimentalMass - ion.getTheoreticMass()) / Atom.C.getDifferenceToMonoisotopic(1);
+
         return Math.min(Math.max((int) Math.round(result), minIsotope), maxIsotope);
+
     }
 
     /**
@@ -172,7 +184,6 @@ public class IonMatch extends ExperimentObject {
     public double getError(
             boolean isPpm
     ) {
-        
 
         return isPpm ? getRelativeError() : getAbsoluteError();
 
@@ -184,12 +195,13 @@ public class IonMatch extends ExperimentObject {
      * @return the annotation to use for the given ion match
      */
     public String getPeakAnnotation() {
-        
+
         return getPeakAnnotation(
                 false,
                 ion,
                 charge
         );
+
     }
 
     /**
@@ -204,11 +216,13 @@ public class IonMatch extends ExperimentObject {
             Ion ion,
             int charge
     ) {
+
         return getPeakAnnotation(
                 false,
                 ion,
                 charge
         );
+
     }
 
     /**
@@ -224,11 +238,13 @@ public class IonMatch extends ExperimentObject {
             Ion ion,
             int charge
     ) {
+
         return getMatchKey(
                 ion,
                 charge,
                 null
         );
+
     }
 
     /**
@@ -259,23 +275,26 @@ public class IonMatch extends ExperimentObject {
         int ionSubType = ion.getSubType();
         int fragmentIonNumber;
 
-        if (ionType == Ion.IonType.PEPTIDE_FRAGMENT_ION) {
+        switch (ionType) {
 
-            PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ion);
-            fragmentIonNumber = fragmentIon.getNumber();
+            case PEPTIDE_FRAGMENT_ION:
+                PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ion);
+                fragmentIonNumber = fragmentIon.getNumber();
+                break;
 
-        } else if (ionType == Ion.IonType.TAG_FRAGMENT_ION) {
+            case TAG_FRAGMENT_ION:
+                TagFragmentIon tagFragmentIon = ((TagFragmentIon) ion);
+                fragmentIonNumber = tagFragmentIon.getNumber();
+                break;
 
-            TagFragmentIon tagFragmentIon = ((TagFragmentIon) ion);
-            fragmentIonNumber = tagFragmentIon.getNumber();
-
-        } else {
-
-            fragmentIonNumber = 0;
+            default:
+                fragmentIonNumber = 0;
+                break;
 
         }
 
         String neutralLossesAsString = ion.getNeutralLossesAsString();
+
         String key = getMatchKey(
                 ionTypeIndex,
                 ionSubType,
@@ -342,70 +361,61 @@ public class IonMatch extends ExperimentObject {
         StringBuilder result = new StringBuilder();
 
         switch (ion.getType()) {
+
             case PEPTIDE_FRAGMENT_ION:
-                
+
                 if (html) {
-                
                     result.append("<html>");
-                
                 }
-                
+
                 result.append(ion.getSubTypeAsString());
 
                 // add fragment ion number
                 PeptideFragmentIon fragmentIon = ((PeptideFragmentIon) ion);
-                
+
                 if (html) {
-                
                     result.append("<sub>").append(fragmentIon.getNumber()).append("</sub>");
-                
                 } else {
-                
                     result.append(fragmentIon.getNumber());
-                
+
                 }
 
                 // add any neutral losses
                 if (html) {
-                    
+
                     String neutralLoss = ion.getNeutralLossesAsString();
 
                     for (int i = 0; i < neutralLoss.length(); i++) {
-                        
+
                         if (Character.isDigit(neutralLoss.charAt(i))) {
-
                             result.append("<sub>").append(neutralLoss.charAt(i)).append("</sub>");
-
                         } else {
-
                             result.append(neutralLoss.charAt(i));
-
                         }
+
                     }
-                    
+
                 } else {
-
                     result.append(ion.getNeutralLossesAsString());
-
                 }
 
                 // add charge
                 result.append(Charge.getChargeAsFormattedString(charge));
-                
+
                 if (html) {
-
                     result.append("</html>");
-
                 }
 
                 return result.toString();
 
             case TAG_FRAGMENT_ION:
+
                 TagFragmentIon tagFragmentIon = (TagFragmentIon) ion;
 
                 if (html) {
                     result.append("<html>");
                 }
+
                 // add type
                 result.append(ion.getSubTypeAsString());
 
@@ -417,19 +427,23 @@ public class IonMatch extends ExperimentObject {
                 }
 
                 // add charge
-                result.append(Charge.toString(charge));
+                result.append(Charge.getChargeAsFormattedString(charge));
 
                 // add any neutral losses
                 if (html) {
+
                     String neutralLoss = ion.getNeutralLossesAsString();
 
                     for (int i = 0; i < neutralLoss.length(); i++) {
+
                         if (Character.isDigit(neutralLoss.charAt(i))) {
                             result.append("<sub>").append(neutralLoss.charAt(i)).append("</sub>");
                         } else {
                             result.append(neutralLoss.charAt(i));
                         }
+
                     }
+
                 } else {
                     result.append(ion.getNeutralLossesAsString());
                 }
@@ -437,12 +451,15 @@ public class IonMatch extends ExperimentObject {
                 if (html) {
                     result.append("</html>");
                 }
+
                 return result.toString();
 
             case PRECURSOR_ION:
+
                 if (html) {
                     result.append("<html>");
                 }
+
                 result.append(ion.getSubTypeAsString()).append("-");
 
                 // add charge
@@ -450,30 +467,41 @@ public class IonMatch extends ExperimentObject {
 
                 // add any neutral losses
                 String neutralLoss = ion.getNeutralLossesAsString();
+
                 if (html) {
+
                     for (int i = 0; i < neutralLoss.length(); i++) {
+
                         if (Character.isDigit(neutralLoss.charAt(i))) {
                             result.append("<sub>").append(neutralLoss.charAt(i)).append("</sub>");
                         } else {
                             result.append(neutralLoss.charAt(i));
                         }
+
                     }
+
                 } else {
                     result.append(neutralLoss);
                 }
+
                 if (html) {
                     result.append("</html>");
                 }
+
                 return result.toString();
 
             default:
+
                 if (html) {
                     result.append("<html>");
                 }
+
                 result.append(ion.getName());
+
                 if (html) {
                     result.append("</html>");
                 }
+
                 return result.toString();
 
         }
@@ -488,12 +516,13 @@ public class IonMatch extends ExperimentObject {
     public String getPeakAnnotation(
             boolean html
     ) {
-        
+
         return getPeakAnnotation(
                 html,
                 ion,
                 charge
         );
+
     }
 
     /**
@@ -502,13 +531,14 @@ public class IonMatch extends ExperimentObject {
      * @return the pride CV term for the ion match m/z
      */
     public CvTerm getMZPrideCvTerm() {
-        
+
         return new CvTerm(
                 "PRIDE",
                 "PRIDE:0000188",
                 "product ion m/z",
                 Double.toString(peakMz)
         );
+
     }
 
     /**
@@ -517,13 +547,14 @@ public class IonMatch extends ExperimentObject {
      * @return the pride CV term for the ion match intensity
      */
     public CvTerm getIntensityPrideCvTerm() {
-        
+
         return new CvTerm(
-                "PRIDE", 
-                "PRIDE:0000189", 
-                "product ion intensity", 
+                "PRIDE",
+                "PRIDE:0000189",
+                "product ion intensity",
                 Double.toString(peakIntensity)
         );
+
     }
 
     /**
@@ -535,21 +566,22 @@ public class IonMatch extends ExperimentObject {
      * @return the pride CV term for the ion match error
      */
     public CvTerm getIonMassErrorPrideCvTerm(
-            int minIsotope, 
+            int minIsotope,
             int maxIsotope
     ) {
-        
+
         return new CvTerm(
-                "PRIDE", 
-                "PRIDE:0000190", 
-                "product ion mass error", 
+                "PRIDE",
+                "PRIDE:0000190",
+                "product ion mass error",
                 Double.toString(
                         getAbsoluteError(
-                                minIsotope, 
+                                minIsotope,
                                 maxIsotope
                         )
                 )
         );
+
     }
 
     /**
@@ -558,13 +590,14 @@ public class IonMatch extends ExperimentObject {
      * @return the pride CV term for the ion match charge
      */
     public CvTerm getChargePrideCvTerm() {
-        
+
         return new CvTerm(
-                "PRIDE", 
-                "PRIDE:0000204", 
-                "product ion charge", 
+                "PRIDE",
+                "PRIDE:0000204",
+                "product ion charge",
                 Integer.toString(charge)
         );
+
     }
 
     /**
@@ -573,18 +606,18 @@ public class IonMatch extends ExperimentObject {
     public enum MzErrorType {
 
         Absolute(
-                "Absolute", 
-                "Absolute error", 
+                "Absolute",
+                "Absolute error",
                 "m/z"
         ),
         RelativePpm(
-                "Relative (ppm)", 
-                "Relative error in ppm", 
+                "Relative (ppm)",
+                "Relative error in ppm",
                 "ppm"
         ),
         Statistical(
-                "Statistical", 
-                "Probability to reach this error according to the error distribution", 
+                "Statistical",
+                "Probability to reach this error according to the error distribution",
                 "%p"
         );
         /**
@@ -608,8 +641,8 @@ public class IonMatch extends ExperimentObject {
          * @param unit the unit to use
          */
         private MzErrorType(
-                String name, 
-                String description, 
+                String name,
+                String description,
                 String unit
         ) {
             this.name = name;
@@ -628,17 +661,19 @@ public class IonMatch extends ExperimentObject {
         public static MzErrorType getMzErrorType(
                 int index
         ) {
-        
+
             MzErrorType[] values = MzErrorType.values();
-            
+
             if (index >= 0 && index < values.length) {
-            
+
                 return values[index];
-            
+
             }
-            
+
             return null;
-        
+
         }
+
     }
+
 }

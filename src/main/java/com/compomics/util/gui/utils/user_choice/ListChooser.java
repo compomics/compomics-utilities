@@ -15,11 +15,12 @@ import javax.swing.table.JTableHeader;
  * Dialog for choosing an item in a list.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public abstract class ListChooser extends javax.swing.JDialog {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public ListChooser() {
     }
@@ -49,15 +50,27 @@ public abstract class ListChooser extends javax.swing.JDialog {
      * @param multipleSelection boolean indicating whether the user should be
      * allowed to select multiple items.
      */
-    protected ListChooser(java.awt.Frame parent, ArrayList<String> items, String dialogTitle, String panelTitle, String instructionsLabel, boolean multipleSelection) {
+    protected ListChooser(
+            java.awt.Frame parent,
+            ArrayList<String> items,
+            String dialogTitle,
+            String panelTitle,
+            String instructionsLabel,
+            boolean multipleSelection
+    ) {
+
         super(parent, true);
+
         if (items == null || items.isEmpty()) {
             throw new IllegalArgumentException("No item to select.");
         }
+
         initComponents();
         this.items = items;
+
         setUpGui(dialogTitle, panelTitle, instructionsLabel, multipleSelection);
         setLocationRelativeTo(parent);
+
     }
 
     /**
@@ -71,15 +84,26 @@ public abstract class ListChooser extends javax.swing.JDialog {
      * @param multipleSelection boolean indicating whether the user should be
      * allowed to select multiple items.
      */
-    protected ListChooser(javax.swing.JDialog parent, ArrayList<String> items, String dialogTitle, String panelTitle, String instructionsLabel, boolean multipleSelection) {
+    protected ListChooser(
+            javax.swing.JDialog parent,
+            ArrayList<String> items,
+            String dialogTitle,
+            String panelTitle,
+            String instructionsLabel,
+            boolean multipleSelection
+    ) {
+
         super(parent, true);
+
         if (items == null || items.isEmpty()) {
             throw new IllegalArgumentException("No item to select.");
         }
+
         initComponents();
         this.items = items;
         setUpGui(dialogTitle, panelTitle, instructionsLabel, multipleSelection);
         setLocationRelativeTo(parent);
+
     }
 
     /**
@@ -91,25 +115,36 @@ public abstract class ListChooser extends javax.swing.JDialog {
      * @param multipleSelection boolean indicating whether the user should be
      * allowed to select multiple items.
      */
-    private void setUpGui(String dialogTitle, String panelTitle, String instructionsLabel, boolean multipleSelection) {
+    private void setUpGui(
+            String dialogTitle,
+            String panelTitle,
+            String instructionsLabel,
+            boolean multipleSelection
+    ) {
+
         if (dialogTitle != null) {
             setTitle(dialogTitle);
         } else {
             setTitle("Selection");
         }
+
         if (panelTitle != null) {
             ((TitledBorder) itemsPanel.getBorder()).setTitle(panelTitle);
         }
+
         if (instructionsLabel != null) {
             itemsLabel.setText(instructionsLabel);
         }
+
         // make sure that the scroll panes are see-through
         itemsTableScrollPane.getViewport().setOpaque(false);
+
         if (multipleSelection) {
             itemsTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         } else {
             itemsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         }
+
     }
 
     /**
@@ -172,11 +207,11 @@ public abstract class ListChooser extends javax.swing.JDialog {
      * @return the items selected by the user in a list
      */
     public HashSet<String> getSelectedItems() {
-        
+
         return Arrays.stream(itemsTable.getSelectedRows())
                 .mapToObj(row -> items.get(row))
                 .collect(Collectors.toCollection(HashSet::new));
-        
+
     }
 
     /**
@@ -299,8 +334,8 @@ public abstract class ListChooser extends javax.swing.JDialog {
 
     /**
      * Cancel the dialog without saving.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         canceled = true;
@@ -309,8 +344,8 @@ public abstract class ListChooser extends javax.swing.JDialog {
 
     /**
      * Close the dialog.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         dispose();
@@ -337,10 +372,13 @@ public abstract class ListChooser extends javax.swing.JDialog {
 
         @Override
         public int getRowCount() {
+
             if (items == null) {
                 return 0;
             }
+
             return items.size();
+
         }
 
         @Override
@@ -350,6 +388,7 @@ public abstract class ListChooser extends javax.swing.JDialog {
 
         @Override
         public String getColumnName(int column) {
+
             switch (column) {
                 case 0:
                     return " ";
@@ -358,10 +397,12 @@ public abstract class ListChooser extends javax.swing.JDialog {
                 default:
                     return "";
             }
+
         }
 
         @Override
         public Object getValueAt(int row, int column) {
+
             switch (column) {
                 case 0:
                     return row + 1;
@@ -370,21 +411,27 @@ public abstract class ListChooser extends javax.swing.JDialog {
                 default:
                     return "";
             }
+
         }
 
         @Override
         public Class getColumnClass(int columnIndex) {
+
             for (int i = 0; i < getRowCount(); i++) {
                 if (getValueAt(i, columnIndex) != null) {
                     return getValueAt(i, columnIndex).getClass();
                 }
             }
+
             return String.class;
+
         }
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex > 0;
+            return false;
         }
+
     }
+
 }

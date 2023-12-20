@@ -22,6 +22,7 @@ import com.compomics.util.parameters.identification.advanced.SequenceMatchingPar
 import com.compomics.util.parameters.identification.search.ModificationParameters;
 import com.compomics.util.experiment.identification.filtering.items.AssumptionFilterItem;
 import com.compomics.util.experiment.identification.peptide_shaker.PSParameter;
+import com.compomics.util.experiment.identification.validation.MatchValidationLevel;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import java.util.ArrayList;
 import java.util.Map;
@@ -30,6 +31,7 @@ import java.util.Map;
  * Peptide Assumption filter.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class AssumptionFilter extends MatchFilter {
 
@@ -109,7 +111,7 @@ public class AssumptionFilter extends MatchFilter {
             IdentificationParameters identificationParameters,
             SequenceProvider sequenceProvider,
             ProteinDetailsProvider proteinDetailsProvider,
-            SpectrumProvider spectrumProvider 
+            SpectrumProvider spectrumProvider
     ) {
 
         SpectrumMatch spectrumMatch = identification.getSpectrumMatch(spectrumMatchKey);
@@ -163,15 +165,11 @@ public class AssumptionFilter extends MatchFilter {
     ) {
 
         if (exceptions.contains(spectrumMatchKey)) {
-
             return false;
-
         }
 
         if (manualValidation.contains(spectrumMatchKey)) {
-
             return true;
-
         }
 
         for (String itemName : valuesMap.keySet()) {
@@ -195,9 +193,7 @@ public class AssumptionFilter extends MatchFilter {
             );
 
             if (!validated) {
-
                 return false;
-
             }
         }
 
@@ -246,37 +242,49 @@ public class AssumptionFilter extends MatchFilter {
         AssumptionFilterItem filterItem = AssumptionFilterItem.getItem(itemName);
 
         if (filterItem == null) {
-
-            throw new IllegalArgumentException("Filter item " + itemName + " not recognized as spectrum assumption filter item.");
-
+            throw new IllegalArgumentException(
+                    "Filter item "
+                    + itemName
+                    + " not recognized as spectrum assumption filter item."
+            );
         }
 
         String input = value.toString();
+
         switch (filterItem) {
+
             case precrusorMz:
+
                 double precursorMz = spectrumProvider.getPrecursorMz(
                         spectrumFile,
                         spectrumTitle
                 );
+
                 return filterItemComparator.passes(input, precursorMz);
 
             case precrusorRT:
+
                 double precursorRT = spectrumProvider.getPrecursorRt(
                         spectrumFile,
                         spectrumTitle
                 );
+
                 return filterItemComparator.passes(input, precursorRT);
 
             case precrusorCharge:
+
                 int charge = peptideAssumption.getIdentificationCharge();
                 return filterItemComparator.passes(input, charge);
 
             case precrusorMzErrorDa:
+
                 precursorMz = spectrumProvider.getPrecursorMz(
                         spectrumFile,
                         spectrumTitle
                 );
+
                 SearchParameters searchParameters = identificationParameters.getSearchParameters();
+
                 double mzError = Math.abs(
                         peptideAssumption.getDeltaMz(
                                 precursorMz,
@@ -285,14 +293,18 @@ public class AssumptionFilter extends MatchFilter {
                                 searchParameters.getMaxIsotopicCorrection()
                         )
                 );
+
                 return filterItemComparator.passes(input, mzError);
 
             case precrusorMzErrorPpm:
+
                 precursorMz = spectrumProvider.getPrecursorMz(
                         spectrumFile,
                         spectrumTitle
                 );
+
                 searchParameters = identificationParameters.getSearchParameters();
+
                 mzError = Math.abs(
                         peptideAssumption.getDeltaMz(
                                 precursorMz,
@@ -301,57 +313,69 @@ public class AssumptionFilter extends MatchFilter {
                                 searchParameters.getMaxIsotopicCorrection()
                         )
                 );
+
                 return filterItemComparator.passes(input, mzError);
 
             case precrusorMzErrorStat:
+
                 precursorMz = spectrumProvider.getPrecursorMz(
                         spectrumFile,
                         spectrumTitle
                 );
+
                 searchParameters = identificationParameters.getSearchParameters();
+
                 mzError = peptideAssumption.getDeltaMz(
-                        precursorMz, 
-                        identificationParameters.getSearchParameters().isPrecursorAccuracyTypePpm(), 
-                        searchParameters.getMinIsotopicCorrection(), 
+                        precursorMz,
+                        identificationParameters.getSearchParameters().isPrecursorAccuracyTypePpm(),
+                        searchParameters.getMinIsotopicCorrection(),
                         searchParameters.getMaxIsotopicCorrection()
                 );
+
                 NonSymmetricalNormalDistribution precDeviationDistribution = identificationFeaturesGenerator.getMassErrorDistribution(spectrumFile);
+
                 double p = mzError > precDeviationDistribution.getMean()
                         ? precDeviationDistribution.getDescendingCumulativeProbabilityAt(mzError)
                         : precDeviationDistribution.getCumulativeProbabilityAt(mzError);
+
                 return filterItemComparator.passes(input, p);
 
             case sequenceCoverage:
+
                 Spectrum spectrum = spectrumProvider.getSpectrum(
-                        spectrumFile, 
+                        spectrumFile,
                         spectrumTitle
                 );
+
                 Peptide peptide = peptideAssumption.getPeptide();
                 AnnotationParameters annotationPreferences = identificationParameters.getAnnotationParameters();
                 ModificationParameters modificationParameters = identificationParameters.getSearchParameters().getModificationParameters();
                 SequenceMatchingParameters modificationSequenceMatchingParameters = identificationParameters.getModificationLocalizationParameters().getSequenceMatchingParameters();
                 PeptideSpectrumAnnotator peptideSpectrumAnnotator = new PeptideSpectrumAnnotator();
+
                 SpecificAnnotationParameters specificAnnotationPreferences = annotationPreferences.getSpecificAnnotationParameters(
-                        spectrumFile, 
-                        spectrumTitle, 
-                        peptideAssumption, 
-                        modificationParameters, 
-                        sequenceProvider, 
-                        modificationSequenceMatchingParameters, 
+                        spectrumFile,
+                        spectrumTitle,
+                        peptideAssumption,
+                        modificationParameters,
+                        sequenceProvider,
+                        modificationSequenceMatchingParameters,
                         peptideSpectrumAnnotator
                 );
+
                 Map<Integer, ArrayList<IonMatch>> matches = peptideSpectrumAnnotator.getCoveredAminoAcids(
-                        annotationPreferences, 
-                        specificAnnotationPreferences, 
-                        spectrumFile, 
-                        spectrumTitle, 
-                        spectrum, 
-                        peptide, 
-                        modificationParameters, 
-                        sequenceProvider, 
-                        modificationSequenceMatchingParameters, 
+                        annotationPreferences,
+                        specificAnnotationPreferences,
+                        spectrumFile,
+                        spectrumTitle,
+                        spectrum,
+                        peptide,
+                        modificationParameters,
+                        sequenceProvider,
+                        modificationSequenceMatchingParameters,
                         true
                 );
+
                 double nCovered = 0;
                 int nAA = peptide.getSequence().length();
 
@@ -360,9 +384,7 @@ public class AssumptionFilter extends MatchFilter {
                     ArrayList<IonMatch> matchesAtAa = matches.get(i);
 
                     if (matchesAtAa != null && !matchesAtAa.isEmpty()) {
-
                         nCovered++;
-
                     }
                 }
 
@@ -371,22 +393,30 @@ public class AssumptionFilter extends MatchFilter {
                 return filterItemComparator.passes(input, coverage);
 
             case algorithmScore:
+
                 double score = peptideAssumption.getRawScore();
+
                 return filterItemComparator.passes(input, score);
 
             case confidence:
+
                 PSParameter psParameter = (PSParameter) (identification.getSpectrumMatch(spectrumMatchKey)).getUrParam(PSParameter.dummy);
                 double confidence = psParameter.getConfidence();
+
                 return filterItemComparator.passes(input, confidence);
 
             case validationStatus:
+
                 psParameter = (PSParameter) (identification.getSpectrumMatch(spectrumMatchKey)).getUrParam(PSParameter.dummy);
                 Integer validation = psParameter.getMatchValidationLevel().getIndex();
-                return filterItemComparator.passes(input, validation.toString());
+
+                return filterItemComparator.passes(Double.toString(MatchValidationLevel.getMatchValidationLevel(input).getIndex()), validation);
 
             case stared:
+
                 psParameter = (PSParameter) (identification.getSpectrumMatch(spectrumMatchKey)).getUrParam(PSParameter.dummy);
                 String starred = psParameter.getStarred() ? FilterItemComparator.trueFalse[0] : FilterItemComparator.trueFalse[1];
+
                 return filterItemComparator.passes(input, starred);
 
             default:
@@ -403,4 +433,5 @@ public class AssumptionFilter extends MatchFilter {
     public FilterItem getFilterItem(String itemName) {
         return AssumptionFilterItem.getItem(itemName);
     }
+
 }

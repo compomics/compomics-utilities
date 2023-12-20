@@ -12,6 +12,7 @@ import com.compomics.util.experiment.io.biology.protein.SequenceProvider;
 import com.compomics.util.experiment.identification.filtering.items.PeptideFilterItem;
 import com.compomics.util.experiment.identification.peptide_shaker.PSParameter;
 import com.compomics.util.experiment.identification.peptide_shaker.PSModificationScores;
+import com.compomics.util.experiment.identification.validation.MatchValidationLevel;
 import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import java.util.HashSet;
 import java.util.Set;
@@ -60,7 +61,7 @@ public class PeptideFilter extends MatchFilter {
      * @param description the description of the filter
      */
     public PeptideFilter(
-            String name, 
+            String name,
             String description
     ) {
 
@@ -81,10 +82,10 @@ public class PeptideFilter extends MatchFilter {
      * @param reportFailed a report for when the filter is not passed
      */
     public PeptideFilter(
-            String name, 
-            String description, 
-            String condition, 
-            String reportPassed, 
+            String name,
+            String description,
+            String condition,
+            String reportPassed,
             String reportFailed
     ) {
 
@@ -104,17 +105,17 @@ public class PeptideFilter extends MatchFilter {
 
     @Override
     public boolean isValidated(
-            String itemName, 
-            FilterItemComparator filterItemComparator, 
-            Object value, 
-            long matchKey, 
-            Identification identification, 
-            GeneMaps geneMaps, 
+            String itemName,
+            FilterItemComparator filterItemComparator,
+            Object value,
+            long matchKey,
+            Identification identification,
+            GeneMaps geneMaps,
             IdentificationFeaturesGenerator identificationFeaturesGenerator,
-            IdentificationParameters identificationParameters, 
+            IdentificationParameters identificationParameters,
             SequenceProvider sequenceProvider,
             ProteinDetailsProvider proteinDetailsProvider,
-            SpectrumProvider spectrumProvider 
+            SpectrumProvider spectrumProvider
     ) {
 
         PeptideFilterItem filterItem = PeptideFilterItem.getItem(itemName);
@@ -127,16 +128,21 @@ public class PeptideFilter extends MatchFilter {
 
         String input = value.toString();
         PeptideMatch peptideMatch;
+
         switch (filterItem) {
 
             case proteinAccession:
+
                 peptideMatch = identification.getPeptideMatch(matchKey);
+
                 return filterItemComparator.passes(input, peptideMatch.getPeptide()
                         .getProteinMapping()
                         .keySet());
 
             case proteinDescription:
+
                 peptideMatch = identification.getPeptideMatch(matchKey);
+
                 return filterItemComparator.passes(input, peptideMatch.getPeptide()
                         .getProteinMapping()
                         .keySet()
@@ -147,54 +153,75 @@ public class PeptideFilter extends MatchFilter {
                         .collect(Collectors.toList()));
 
             case sequence:
+
                 peptideMatch = identification.getPeptideMatch(matchKey);
+
                 return filterItemComparator.passes(
-                        input, 
+                        input,
                         peptideMatch.getPeptide().getSequence()
                 );
 
             case modification:
+
                 peptideMatch = identification.getPeptideMatch(matchKey);
                 PSModificationScores modificationScores = (PSModificationScores) peptideMatch.getUrParam(PSModificationScores.dummy);
                 Set<String> modifications = modificationScores == null ? new HashSet<>(0)
                         : modificationScores.getScoredModifications();
+
                 return filterItemComparator.passes(input, modifications);
 
             case nPSMs:
+
                 peptideMatch = identification.getPeptideMatch(matchKey);
                 int nPsms = peptideMatch.getSpectrumCount();
+
                 return filterItemComparator.passes(input, nPsms);
 
             case nValidatedPSMs:
+
                 nPsms = identificationFeaturesGenerator.getNValidatedSpectraForPeptide(matchKey);
+
                 return filterItemComparator.passes(input, nPsms);
 
             case nConfidentPSMs:
+
                 nPsms = identificationFeaturesGenerator.getNConfidentSpectraForPeptide(matchKey);
-                return filterItemComparator.passes(input, nPsms
-                );
+
+                return filterItemComparator.passes(input, nPsms);
+
             case confidence:
+
                 peptideMatch = identification.getPeptideMatch(matchKey);
                 PSParameter psParameter = (PSParameter) peptideMatch.getUrParam(PSParameter.dummy);
                 double confidence = psParameter.getConfidence();
+
                 return filterItemComparator.passes(input, confidence);
 
             case proteinInference:
+
                 peptideMatch = identification.getPeptideMatch(matchKey);
                 psParameter = (PSParameter) peptideMatch.getUrParam(PSParameter.dummy);
                 int pi = psParameter.getProteinInferenceGroupClass();
+
                 return filterItemComparator.passes(input, pi);
 
             case validationStatus:
+
                 peptideMatch = identification.getPeptideMatch(matchKey);
                 psParameter = (PSParameter) peptideMatch.getUrParam(PSParameter.dummy);
                 int validation = psParameter.getMatchValidationLevel().getIndex();
-                return filterItemComparator.passes(input, validation);
+
+                return filterItemComparator.passes(
+                        Double.toString(MatchValidationLevel.getMatchValidationLevel(input).getIndex()),
+                        validation
+                );
 
             case stared:
+
                 peptideMatch = identification.getPeptideMatch(matchKey);
                 psParameter = (PSParameter) peptideMatch.getUrParam(PSParameter.dummy);
                 String starred = psParameter.getStarred() ? FilterItemComparator.trueFalse[0] : FilterItemComparator.trueFalse[1];
+
                 return filterItemComparator.passes(input, starred);
 
             default:

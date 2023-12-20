@@ -549,12 +549,12 @@ public class FilterDialog extends javax.swing.JDialog {
         ListChooser listChooser = null;
         if (filterItem.needsModifications()) {
             
-            if (allModifications != null && allModifications.size() > 0) {
+            if (allModifications != null && !allModifications.isEmpty()) {
                 listChooser = new ModificationChooser(this, allModifications, false); //@TODO: allow multiple selection
             }
         } else {
             ArrayList<String> possibilities = filterItem.getPossibilities();
-            if (possibilities != null && possibilities.size() > 0) {
+            if (possibilities != null && !possibilities.isEmpty()) {
                 listChooser = new StringListChooser(this, possibilities, null, null, null, false);
             }
         }

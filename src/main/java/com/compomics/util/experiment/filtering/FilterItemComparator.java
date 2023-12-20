@@ -8,6 +8,7 @@ import java.util.stream.Stream;
  * Comparators for filter items.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public enum FilterItemComparator {
 
@@ -33,6 +34,14 @@ public enum FilterItemComparator {
     public static final String[] trueFalse = {"Yes", "No"};
 
     /**
+     * Empty default constructor.
+     */
+    private FilterItemComparator() {
+        name = "";
+        description = "";
+    }
+
+    /**
      * Constructor.
      *
      * @param symbol symbol to use
@@ -53,34 +62,38 @@ public enum FilterItemComparator {
      * using this comparator
      */
     public boolean passes(String threshold, double value) {
+
         switch (this) {
+
             case equal:
                 return Double.parseDouble(threshold) == value;
-            
+
             case higher:
                 return value > Double.parseDouble(threshold);
-                
+
             case lower:
                 return value < Double.parseDouble(threshold);
-                
+
             case higherOrEqual:
                 return value >= Double.parseDouble(threshold);
-                
+
             case lowerOrEqual:
                 return value <= Double.parseDouble(threshold);
-            
+
             case contains:
                 return Double.toString(value).contains(threshold);
-            
+
             case excludes:
                 return !Double.toString(value).contains(threshold);
-            
+
             case matches:
                 return Double.toString(value).matches(threshold);
-            
+
             default:
                 throw new IllegalArgumentException("Filter comparator not implemented for item " + this.name + ".");
+
         }
+
     }
 
     /**
@@ -93,43 +106,46 @@ public enum FilterItemComparator {
      * using this comparator
      */
     public boolean passes(String threshold, String value) {
-        
+
         switch (this) {
+
             case equal:
                 return threshold.equals(value);
-            
+
             case higher:
                 double thresholdDouble = Double.parseDouble(threshold);
                 double valueDouble = Double.parseDouble(value);
                 return valueDouble > thresholdDouble;
-                
+
             case lower:
                 thresholdDouble = Double.parseDouble(threshold);
                 valueDouble = Double.parseDouble(value);
                 return valueDouble < thresholdDouble;
-                
+
             case higherOrEqual:
                 thresholdDouble = Double.parseDouble(threshold);
                 valueDouble = Double.parseDouble(value);
                 return valueDouble >= thresholdDouble;
-                
+
             case lowerOrEqual:
                 thresholdDouble = Double.parseDouble(threshold);
                 valueDouble = Double.parseDouble(value);
                 return valueDouble <= thresholdDouble;
-            
+
             case contains:
                 return value.contains(threshold);
-            
+
             case excludes:
                 return !value.contains(threshold);
-            
+
             case matches:
                 return value.matches(threshold);
-            
+
             default:
                 throw new IllegalArgumentException("Filter comparator not implemented for item " + this.name + ".");
+
         }
+
     }
 
     /**
@@ -143,9 +159,9 @@ public enum FilterItemComparator {
      * using this comparator
      */
     public boolean passes(String threshold, Collection<String> values) {
-        
+
         return passes(threshold, values.stream());
-        
+
     }
 
     /**
@@ -159,9 +175,9 @@ public enum FilterItemComparator {
      * using this comparator
      */
     public boolean passes(String threshold, String[] values) {
-        
+
         return passes(threshold, Arrays.stream(values));
-        
+
     }
 
     /**
@@ -175,8 +191,9 @@ public enum FilterItemComparator {
      * using this comparator
      */
     public boolean passes(String threshold, Stream<String> values) {
-        
+
         switch (this) {
+
             case higher:
             case equal:
             case lower:
@@ -184,26 +201,21 @@ public enum FilterItemComparator {
             case lowerOrEqual:
             case contains:
             case matches:
-                values.anyMatch(value -> passes(threshold, value));
-                
+                return values.anyMatch(value -> passes(threshold, value));
+
             case excludes:
-                values.allMatch(value -> passes(threshold, value));
-                
+                return values.allMatch(value -> passes(threshold, value));
+
             default:
                 throw new IllegalArgumentException("Filter comparator not implemented for item " + this.name + ".");
+
         }
+
     }
-    
+
     @Override
     public String toString() {
         return name;
     }
 
-    /**
-     * Empty default constructor
-     */
-    private FilterItemComparator() {
-        name = "";
-        description = "";
-    }
 }

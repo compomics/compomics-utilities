@@ -12,7 +12,7 @@ import javax.swing.table.TableColumnModel;
 public class StringListChooser extends ListChooser {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public StringListChooser() {
     }

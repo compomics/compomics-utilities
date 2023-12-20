@@ -18,7 +18,7 @@ import org.jfree.chart.plot.PlotOrientation;
 public class ModificationChooser extends ListChooser {
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     public ModificationChooser() {
     }

@@ -26,6 +26,14 @@ public enum PsmFilterItem implements FilterItem {
     public final String description;
 
     /**
+     * Empty default constructor.
+     */
+    private PsmFilterItem() {
+        name = "";
+        description = "";
+    }
+
+    /**
      * Constructor.
      *
      * @param name name of the filtering item
@@ -44,12 +52,17 @@ public enum PsmFilterItem implements FilterItem {
      * @return the item of interest
      */
     public static PsmFilterItem getItem(String itemName) {
+
         for (PsmFilterItem filterItem : PsmFilterItem.values()) {
+
             if (filterItem.name.equals(itemName)) {
                 return filterItem;
             }
+
         }
+
         return null;
+
     }
 
     @Override
@@ -64,59 +77,74 @@ public enum PsmFilterItem implements FilterItem {
 
     @Override
     public FilterItem[] getPossibleValues() {
+
         PsmFilterItem[] values = values();
         AssumptionFilterItem[] assumptionValues = AssumptionFilterItem.values();
         int totalLength = values.length + assumptionValues.length;
         FilterItem[] result = new FilterItem[totalLength];
+
         int i = 0;
+
         for (; i < values.length; i++) {
             result[i] = values[i];
         }
+
         for (AssumptionFilterItem assumptionValue : assumptionValues) {
             result[i] = assumptionValue;
             i++;
         }
+
         return result;
+
     }
 
     @Override
     public boolean isNumber() {
+
         switch (this) {
+
             case confidence:
                 return true;
+
             default:
+
                 return false;
         }
+
     }
 
     @Override
     public ArrayList<String> getPossibilities() {
+
         switch (this) {
+
             case validationStatus:
+
                 return new ArrayList<>(Arrays.asList(MatchValidationLevel.getValidationLevelsNames()));
+
             case stared:
+
                 ArrayList<String> starred = new ArrayList<>(2);
                 starred.add("Starred");
                 starred.add("Not Starred");
+
                 return starred;
+
             default:
                 return null;
+
         }
+
     }
 
     @Override
     public boolean needsModifications() {
+
         switch (this) {
             default:
                 return false;
         }
+
     }
 
-    /**
-     * Empty default constructor
-     */
-    private PsmFilterItem() {
-        name = "";
-        description = "";
-    }
 }

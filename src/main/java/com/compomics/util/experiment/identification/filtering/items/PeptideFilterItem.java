@@ -35,14 +35,27 @@ public enum PeptideFilterItem implements FilterItem {
     public final String description;
 
     /**
+     * Empty default constructor.
+     */
+    private PeptideFilterItem() {
+        name = "";
+        description = "";
+    }
+
+    /**
      * Constructor.
      *
      * @param name name of the filtering item
      * @param description description of the filtering item
      */
-    private PeptideFilterItem(String name, String description) {
+    private PeptideFilterItem(
+            String name,
+            String description
+    ) {
+
         this.name = name;
         this.description = description;
+
     }
 
     /**
@@ -53,12 +66,17 @@ public enum PeptideFilterItem implements FilterItem {
      * @return the item of interest
      */
     public static PeptideFilterItem getItem(String itemName) {
+
         for (PeptideFilterItem filterItem : PeptideFilterItem.values()) {
+
             if (filterItem.name.equals(itemName)) {
                 return filterItem;
             }
+
         }
+
         return null;
+
     }
 
     @Override
@@ -73,62 +91,80 @@ public enum PeptideFilterItem implements FilterItem {
 
     @Override
     public FilterItem[] getPossibleValues() {
+
         PeptideFilterItem[] values = values();
         FilterItem[] result = new FilterItem[values.length];
         System.arraycopy(values, 0, result, 0, values.length);
+
         return result;
+
     }
 
     @Override
     public boolean isNumber() {
+
         switch (this) {
+
             case nPSMs:
             case nValidatedPSMs:
             case nConfidentPSMs:
             case confidence:
                 return true;
+
             default:
                 return false;
+
         }
+
     }
 
     @Override
     public ArrayList<String> getPossibilities() {
+
         switch (this) {
+
             case proteinInference:
+
                 ArrayList<String> pi = new ArrayList<>(4);
                 pi.add(PSParameter.getProteinInferenceClassAsString(PSParameter.NOT_GROUP));
                 pi.add(PSParameter.getProteinInferenceClassAsString(PSParameter.RELATED));
                 pi.add(PSParameter.getProteinInferenceClassAsString(PSParameter.RELATED_AND_UNRELATED));
                 pi.add(PSParameter.getProteinInferenceClassAsString(PSParameter.UNRELATED));
+
                 return pi;
+
             case validationStatus:
+
                 return new ArrayList<>(Arrays.asList(MatchValidationLevel.getValidationLevelsNames()));
+
             case stared:
+
                 ArrayList<String> starred = new ArrayList<>(2);
                 starred.add("Starred");
                 starred.add("Not Starred");
+
                 return starred;
+
             default:
                 return null;
+
         }
+
     }
 
     @Override
     public boolean needsModifications() {
+
         switch (this) {
+
             case modification:
                 return true;
+
             default:
                 return false;
+
         }
+
     }
 
-    /**
-     * Empty default constructor
-     */
-    private PeptideFilterItem() {
-        name = "";
-        description = "";
-    }
 }

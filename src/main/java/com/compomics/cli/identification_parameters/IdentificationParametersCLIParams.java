@@ -114,6 +114,19 @@ public enum IdentificationParametersCLIParams {
     MS_AMANDA_LOADED_PROTEINS("ms_amanda_loaded_proteins", "MS Amanda maximum number of proteins loaded into memory (1000-500000), default is '100000'", false, true),
     MS_AMANDA_LOADED_SPECTRA("ms_amanda_loaded_spectra", "MS Amanda maximum number of spectra loaded into memory (1000-500000), default is '2000'", false, true),
     MS_AMANDA_OUTPUT_FORMAT("ms_amanda_output", "MS Amanda output format option, csv or mzIdentML, default is 'csv'.", false, true),
+    MS_AMANDA_MAX_ALLOWED_CHARGE_STATE("ms_amanda_max_charge_state", "MS Amanda maximum charge state of calculated fragment ions (+2, +3, +4, Precursor - 1), default is '+2'.", false, true),
+    MS_AMANDA_MIN_PEAK_DEPTH("ms_amanda_min_peak_depth", "MS Amanda minimum number of selected peaks within peak picking window (1-30), default is '1'.", false, true),
+    MS_AMANDA_MAX_PEAK_DEPTH("ms_amanda_max_peak_depth", "MS Amanda maximum number of selected peaks within peak picking window (1-30), default is '10'.", false, true),
+    MS_AMANDA_SECOND_SEARCH("ms_amanda_second_search", "MS Amanda perform second search to identify mixed spectrawindow, 0: false, 1: true, default is '0'.", false, true),
+    MS_AMANDA_KEEP_Y1_ION("ms_amanda_keep_y1", "MS Amanda whether y1 ion shall be kept for second search, 0: false, 1: true, default is '1'.", false, true),
+    MS_AMANDA_REMOVE_WATER_LOSSES("ms_amanda_remove_water_losses", "MS Amanda whether water losses shall be removed for second search, 0: false, 1: true, default is '1'.", false, true),
+    MS_AMANDA_REMOVE_AMMONIA_LOSSES("ms_amanda_remove_ammonia_losses", "MS Amanda whether ammonia losses shall be removed for second search, 0: false, 1: true, default is '1'.", false, true),
+    MS_AMANDA_EXCLUDE_FIRST_PRECURSOR("ms_amanda_exclude_first_precusor", "MS Amanda exclude original precursor in second search, 0: false, 1: true, default is '1'.", false, true),
+    MS_AMANDA_MAX_MULTIPLE_PRECURORS("ms_amanda_max_multiple_precursors", "MS Amanda maximum number of different precursors for second search (1-10), default is '5'.", false, true),
+    MS_AMANDA_CONSIDERED_CHARGE_STATES_FOR_PRECURSOR("ms_amanda_considered_charge_states", "MS Amanda charges to be tested for precursors (no deisotoping) where the charge cannot be defined (+2; +3; +2, +3; +2, +3, +4; +3, +4; +2, +3, +4, +5), default is '+2,+3'.", false, true),
+    MS_AMANDA_COMBINE_CHARGE_STATES("ms_amanda_combine_charge_states", "MS Amanda considered charges combined in one result, 0: false, 1: true, default is '1'.", false, true),
+    MS_AMANDA_RUN_PERCOLATOR("ms_amanda_run_percolator", "MS Amanda automatically run percolator and add q-values to output file, 0: false, 1: true, default is '0'.", false, true),
+    MS_AMANDA_GENERATE_PIN_FILE("ms_amanda_pin_file", "MS Amanda Generate file for percolator; filename is the same as stated in output filename with suffix _pin.tsv., 0: false, 1: true, default is '0'.", false, true),
     //////////////////////////////////
     // MyriMatch specific parameters
     //////////////////////////////////
@@ -594,6 +607,19 @@ public enum IdentificationParametersCLIParams {
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_LOADED_PROTEINS.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_LOADED_SPECTRA.description + "\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_OUTPUT_FORMAT.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_OUTPUT_FORMAT.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_MAX_ALLOWED_CHARGE_STATE.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MAX_ALLOWED_CHARGE_STATE.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_MIN_PEAK_DEPTH.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MIN_PEAK_DEPTH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_MAX_PEAK_DEPTH.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MAX_PEAK_DEPTH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_SECOND_SEARCH.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_SECOND_SEARCH.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_KEEP_Y1_ION.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_KEEP_Y1_ION.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_REMOVE_WATER_LOSSES.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_REMOVE_WATER_LOSSES.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_REMOVE_AMMONIA_LOSSES.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_REMOVE_AMMONIA_LOSSES.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_EXCLUDE_FIRST_PRECURSOR.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_EXCLUDE_FIRST_PRECURSOR.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_MAX_MULTIPLE_PRECURORS.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_MAX_MULTIPLE_PRECURORS.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_CONSIDERED_CHARGE_STATES_FOR_PRECURSOR.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_CONSIDERED_CHARGE_STATES_FOR_PRECURSOR.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_COMBINE_CHARGE_STATES.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_COMBINE_CHARGE_STATES.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_RUN_PERCOLATOR.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_RUN_PERCOLATOR.description + "\n";
+        output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MS_AMANDA_GENERATE_PIN_FILE.id) + " " + IdentificationParametersCLIParams.MS_AMANDA_GENERATE_PIN_FILE.description + "\n";
 
         output += "\n\nMS-GF+ advanced parameters:\n\n";
         output += "-" + String.format(CommandLineUtils.FORMATTER, IdentificationParametersCLIParams.MSGF_DECOY.id) + " " + IdentificationParametersCLIParams.MSGF_DECOY.description + "\n";

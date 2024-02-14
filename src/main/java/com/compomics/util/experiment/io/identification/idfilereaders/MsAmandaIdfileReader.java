@@ -97,7 +97,9 @@ public class MsAmandaIdfileReader implements IdfileReader {
             if (versionNumberString.toLowerCase().startsWith("#version: ")) {
                 softwareVersion = versionNumberString.substring("#version: ".length()).trim();
             }
+
         }
+
     }
 
     @Override
@@ -120,6 +122,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
                 null,
                 true
         );
+
     }
 
     @Override
@@ -149,6 +152,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
 
             // parse the header line
             String[] headers = headerString.split("\t");
+
             int scanNumberIndex = -1,
                     titleIndex = -1,
                     sequenceIndex = -1,
@@ -161,10 +165,21 @@ public class MsAmandaIdfileReader implements IdfileReader {
                     rtIndex = -1,
                     nrMatchesPeaksIndex = -1,
                     filenameIndex = -1,
-                    amandaWeightedProbabilityIndex = -1;
+                    amandaWeightedProbabilityIndex = -1,
+                    missedCleavagesIndex = -1,
+                    residuesIndex = -1,
+                    fragmentIonsIndex = -1,
+                    deltaMIndex = -1,
+                    averageMs2ErrorIndex = -1,
+                    assignedIntensityFractionIndex = -1,
+                    binomScoreIndex = -1,
+                    searchDepthIndex = -1,
+                    idIndex = -1,
+                    percolatorQValueIndex = -1;
 
             // get the column index of the headers
             for (int i = 0; i < headers.length; i++) {
+
                 String header = headers[i];
 
                 if (header.equalsIgnoreCase("Scan Number")) {
@@ -193,7 +208,28 @@ public class MsAmandaIdfileReader implements IdfileReader {
                     nrMatchesPeaksIndex = i;
                 } else if (header.equalsIgnoreCase("Filename")) {
                     filenameIndex = i;
+                } else if (header.equalsIgnoreCase("number of missed cleavages")) {
+                    missedCleavagesIndex = i;
+                } else if (header.equalsIgnoreCase("number of residues")) {
+                    residuesIndex = i;
+                } else if (header.equalsIgnoreCase("number of considered fragment ions")) {
+                    fragmentIonsIndex = i;
+                } else if (header.equalsIgnoreCase("delta M")) {
+                    deltaMIndex = i;
+                } else if (header.equalsIgnoreCase("avg MS2 error[ppm]")) {
+                    averageMs2ErrorIndex = i;
+                } else if (header.equalsIgnoreCase("assigned intensity fraction")) {
+                    assignedIntensityFractionIndex = i;
+                } else if (header.equalsIgnoreCase("binom score")) {
+                    binomScoreIndex = i;
+                } else if (header.equalsIgnoreCase("SearchDepth")) {
+                    searchDepthIndex = i;
+                } else if (header.equalsIgnoreCase("Id")) {
+                    idIndex = i;
+                } else if (header.equalsIgnoreCase("percolator:Q value")) {
+                    percolatorQValueIndex = i;
                 }
+
             }
 
             // check if all the required header are found
@@ -203,8 +239,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
                 throw new IllegalArgumentException("Mandatory columns are missing in the MS Amanda csv file. Please check the file!");
             }
 
-            String line;
-            String currentSpectrumTitle = null;
+            String line, currentSpectrumTitle = null;
             SpectrumMatch currentMatch = null;
 
             // get the psms
@@ -213,6 +248,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
                 String[] elements = line.split("\t");
 
                 if (!line.trim().isEmpty()) { // @TODO: make this more robust?
+
                     //String scanNumber = elements[scanNumberIndex]; // not currently used
                     String spectrumTitle = elements[titleIndex].trim();
                     String peptideSequence = elements[sequenceIndex].toUpperCase();
@@ -239,6 +275,23 @@ public class MsAmandaIdfileReader implements IdfileReader {
                     //String rtAsText = elements[rtIndex]; // not currently used, and not mandatory, as old csv files didn't have this one...
                     //double rt = Util.readDoubleAsString(rtAsText); // @TODO: have to escape retention times such as PT2700.460000S
                     String fileName = elements[filenameIndex];
+                    //int missedCleavages = Integer.parseInt(elements[missedCleavagesIndex]); // not currently used
+                    //int numberOfResidues = Integer.parseInt(elements[residuesIndex]); // not currently used
+                    //int numberOfconsideredFragmentIons = Integer.parseInt(elements[fragmentIonsIndex]); // not currently used
+                    //String deltaMAsText = elements[deltaMIndex]; // not currently used
+                    //double deltaM = Util.readDoubleAsString(deltaMAsText);
+                    //String averageMs2ErrorAsText = elements[averageMs2ErrorIndex]; // not currently used
+                    //double averageMs2Error = Util.readDoubleAsString(averageMs2ErrorAsText);
+                    //String assignedIntensityFractionAsText = elements[assignedIntensityFractionIndex]; // not currently used
+                    //double assignedIntensityFraction = Util.readDoubleAsString(assignedIntensityFractionAsText);
+                    //String binomScoreAsText = elements[binomScoreIndex]; // not currently used
+                    //double binomScore = Util.readDoubleAsString(binomScoreAsText);  
+                    //int searchDepth = searchDepthIndex != -1 ? Integer.parseInt(elements[searchDepthIndex]) : 1; // not currently used
+                    //int msAmandaHitId = Integer.parseInt(elements[idIndex]); // not currently used
+                    //String percolatorQValueAsText = elements[percolatorQValueIndex];
+                    //if (percolatorQValueAsText.equalsIgnoreCase("NA")) {
+                    //    double percolatorQValue = Util.readDoubleAsString(percolatorQValueAsText); // not currently used
+                    //}
 
                     // remove any html from the title
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "UTF-8");
@@ -292,18 +345,29 @@ public class MsAmandaIdfileReader implements IdfileReader {
 
                                 if (modFixedStatus.equalsIgnoreCase("variable")) {
 
-                                    utilitiesModifications.add(new ModificationMatch(modMass + "@" + peptideSequence.charAt(modSite - 1), modSite));
+                                    utilitiesModifications.add(
+                                            new ModificationMatch(
+                                                    modMass + "@" + peptideSequence.charAt(modSite - 1), 
+                                                    modSite
+                                            )
+                                    );
 
                                 }
 
                             } catch (Exception e) {
                                 throw new IllegalArgumentException("Error parsing modification: " + modificationString + ".");
                             }
+
                         }
+
                     }
 
                     // create the peptide
-                    Peptide peptide = new Peptide(peptideSequence, utilitiesModifications.toArray(new ModificationMatch[utilitiesModifications.size()]), true);
+                    Peptide peptide = new Peptide(
+                            peptideSequence,
+                            utilitiesModifications.toArray(new ModificationMatch[utilitiesModifications.size()]),
+                            true
+                    );
 
                     // create the peptide assumption
                     PeptideAssumption peptideAssumption = new PeptideAssumption(
@@ -353,13 +417,16 @@ public class MsAmandaIdfileReader implements IdfileReader {
                         break;
 
                     }
+
                 }
+
             }
 
             // add the last match, if any
             if (currentMatch != null) {
                 result.add(currentMatch);
             }
+
         }
 
         return result;
@@ -372,11 +439,14 @@ public class MsAmandaIdfileReader implements IdfileReader {
 
     @Override
     public HashMap<String, ArrayList<String>> getSoftwareVersions() {
+
         HashMap<String, ArrayList<String>> result = new HashMap<>();
         ArrayList<String> versions = new ArrayList<>();
         versions.add(softwareVersion);
         result.put(softwareName, versions);
+
         return result;
+
     }
 
     @Override

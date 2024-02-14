@@ -31,7 +31,7 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      */
     private String instrumentID = "b, y";
     /**
-     * The maximum rank [1-999]. 
+     * The maximum rank [1-999].
      */
     private Integer maxRank = 10;
     /**
@@ -95,6 +95,62 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      * The output format: csv or mzIdentML.
      */
     private String outputFormat = "csv";
+    /**
+     * Maximum charge state of calculated fragment ions (+2, +3, +4, Precursor -
+     * 1).
+     */
+    private String maxAllowedChargeState = "+2";
+    /**
+     * Minimum number of selected peaks within peak picking window (1-30).
+     */
+    private Integer minPeakDepth = 1;
+    /**
+     * Maximum number of selected peaks within peak picking window (1-30).
+     */
+    private Integer maxPeakDepth = 10;
+    /**
+     * Perform second search to identify mixed spectra.
+     */
+    private Boolean performSecondSearch = false;
+    /**
+     * Whether y1 ion shall be kept for second search.
+     */
+    private Boolean keepY1Ion = true;
+    /**
+     * Whether water losses shall be removed for second search.
+     */
+    private Boolean removeWaterLosses = true;
+    /**
+     * Whether ammonia losses shall be removed for second search.
+     */
+    private Boolean removeAmmoniaLosses = true;
+    /**
+     * Exclude original precursor in second search.
+     */
+    private Boolean excludeFirstPrecursor = true;
+    /**
+     * Maximum number of different precursors for second search (1-10).
+     */
+    private Integer maxMultiplePrecursors = 5;
+    /**
+     * Which charges shall be tested for precursors (no deisotoping) where the
+     * charge cannot be defined (+2; +3; +2, +3; +2, +3, +4; +3, +4; +2, +3, +4,
+     * +5).
+     */
+    private String consideredChargesForPrecursors = "+2,+3";
+    /**
+     * Considered charges are combined in one result.
+     */
+    private Boolean combineConsideredCharges = true;
+    /**
+     * Automatically run percolator and add q-values to output file.
+     */
+    private Boolean runPercolator = false;
+    /**
+     * Generate file for percolator; filename is the same as stated in output
+     * filename with suffix _pin.tsv.
+     */
+    private Boolean generatePInFile = false;
 
     /**
      * Constructor.
@@ -160,6 +216,46 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
             if (!getOutputFormat().equalsIgnoreCase(msAmandaParameters.getOutputFormat())) {
                 return false;
             }
+            if (!getMaxAllowedChargeState().equalsIgnoreCase(msAmandaParameters.getMaxAllowedChargeState())) {
+                return false;
+            }
+            if (!getMinPeakDepth().equals(msAmandaParameters.getMinPeakDepth())) {
+                return false;
+            }
+            if (!getMaxPeakDepth().equals(msAmandaParameters.getMaxPeakDepth())) {
+                return false;
+            }
+            if (!getPerformSecondSearch().equals(msAmandaParameters.getPerformSecondSearch())) {
+                return false;
+            }
+            if (!getKeepY1Ion().equals(msAmandaParameters.getKeepY1Ion())) {
+                return false;
+            }
+            if (!getRemoveWaterLosses().equals(msAmandaParameters.getRemoveWaterLosses())) {
+                return false;
+            }
+            if (!getRemoveAmmoniaLosses().equals(msAmandaParameters.getRemoveAmmoniaLosses())) {
+                return false;
+            }
+            if (!getExcludeFirstPrecursor().equals(msAmandaParameters.getExcludeFirstPrecursor())) {
+                return false;
+            }
+            if (!getMaxMultiplePrecursors().equals(msAmandaParameters.getMaxMultiplePrecursors())) {
+                return false;
+            }
+            if (!getConsideredChargesForPrecursors().equalsIgnoreCase(msAmandaParameters.getConsideredChargesForPrecursors())) {
+                return false;
+            }
+            if (!getCombineConsideredCharges().equals(msAmandaParameters.getCombineConsideredCharges())) {
+                return false;
+            }
+            if (!getRunPercolator().equals(msAmandaParameters.getRunPercolator())) {
+                return false;
+            }
+            if (!getGeneratePInFile().equals(msAmandaParameters.getGeneratePInFile())) {
+                return false;
+            }
+
             return true;
         }
 
@@ -231,6 +327,45 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
         output.append(newLine);
         output.append("OUTPUT_FORMAT=");
         output.append(outputFormat);
+        output.append(newLine);
+        output.append("MAX_ALLOWED_CHARGE_STATE=");
+        output.append(maxAllowedChargeState);
+        output.append(newLine);
+        output.append("MIN_PEAK_DEPTH=");
+        output.append(minPeakDepth);
+        output.append(newLine);
+        output.append("MAX_PEAK_DEPTH=");
+        output.append(maxPeakDepth);
+        output.append(newLine);
+        output.append("PERFORM_SECOND_SEARCH=");
+        output.append(performSecondSearch);
+        output.append(newLine);
+        output.append("KEEP_Y1_ION=");
+        output.append(keepY1Ion);
+        output.append(newLine);
+        output.append("REMOVE_WATER_LOSSES=");
+        output.append(removeWaterLosses);
+        output.append(newLine);
+        output.append("REMOVE_AMMONIA_LOSSES=");
+        output.append(removeAmmoniaLosses);
+        output.append(newLine);
+        output.append("EXCLUDE_FIRST_PRECURSOR=");
+        output.append(excludeFirstPrecursor);
+        output.append(newLine);
+        output.append("MAX_MULTIPLE_PRECURSORS=");
+        output.append(maxMultiplePrecursors);
+        output.append(newLine);
+        output.append("CONSIDERED_CHARGES_FOR_PRECURSORS=");
+        output.append(consideredChargesForPrecursors);
+        output.append(newLine);
+        output.append("COMBINE_CHARGE_STATES=");
+        output.append(combineConsideredCharges);
+        output.append(newLine);
+        output.append("RUN_PERCOLATOR=");
+        output.append(runPercolator);
+        output.append(newLine);
+        output.append("GENERATE_PIN_FILE=");
+        output.append(generatePInFile);
         output.append(newLine);
 
         return output.toString();
@@ -318,10 +453,13 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      * @return true if in low memory mode
      */
     public boolean isLowMemoryMode() {
+
         if (lowMemoryMode == null) {
             lowMemoryMode = true;
         }
+
         return lowMemoryMode;
+
     }
 
     /**
@@ -340,10 +478,13 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      * @return true if deisotoping is to be performed
      */
     public boolean isPerformDeisotoping() {
+
         if (performDeisotoping == null) {
             performDeisotoping = true;
         }
+
         return performDeisotoping;
+
     }
 
     /**
@@ -361,10 +502,13 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      * @return the maximum number of modifications
      */
     public Integer getMaxModifications() {
+
         if (maxModifications == null) {
             maxModifications = 3;
         }
+
         return maxModifications;
+
     }
 
     /**
@@ -382,10 +526,13 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      * @return the maximum number of variable modifications
      */
     public Integer getMaxVariableModifications() {
+
         if (maxVariableModifications == null) {
             maxVariableModifications = 4;
         }
+
         return maxVariableModifications;
+
     }
 
     /**
@@ -406,10 +553,13 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      * peptide
      */
     public Integer getMaxModificationSites() {
+
         if (maxModificationSites == null) {
             maxModificationSites = 6;
         }
+
         return maxModificationSites;
+
     }
 
     /**
@@ -429,10 +579,13 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      * @return the maximum number of water and ammonia losses per peptide
      */
     public Integer getMaxNeutralLosses() {
+
         if (maxNeutralLosses == null) {
             maxNeutralLosses = 1;
         }
+
         return maxNeutralLosses;
+
     }
 
     /**
@@ -453,10 +606,13 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      * peptide
      */
     public Integer getMaxNeutralLossesPerModification() {
+
         if (maxNeutralLossesPerModification == null) {
             maxNeutralLossesPerModification = 2;
         }
+
         return maxNeutralLossesPerModification;
+
     }
 
     /**
@@ -476,10 +632,13 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      * @return the the minimum peptide length
      */
     public Integer getMinPeptideLength() {
+
         if (minPeptideLength == null) {
             minPeptideLength = 6;
         }
+
         return minPeptideLength;
+
     }
 
     /**
@@ -490,17 +649,20 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
     public void setMinPeptideLength(Integer minPeptideLength) {
         this.minPeptideLength = minPeptideLength;
     }
-    
+
     /**
      * Returns the maximum peptide length.
      *
      * @return the the maximum peptide length
      */
     public Integer getMaxPeptideLength() {
+
         if (maxPeptideLength == null) {
             maxPeptideLength = 30;
         }
+
         return maxPeptideLength;
+
     }
 
     /**
@@ -518,10 +680,13 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      * @return the maximum number of proteins loaded into memory
      */
     public Integer getMaxLoadedProteins() {
+
         if (maxLoadedProteins == null) {
             maxLoadedProteins = 100000;
         }
+
         return maxLoadedProteins;
+
     }
 
     /**
@@ -540,10 +705,13 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      * @return the maximum number of spectra loaded into memory
      */
     public Integer getMaxLoadedSpectra() {
+
         if (maxLoadedSpectra == null) {
             maxLoadedSpectra = 2000;
         }
+
         return maxLoadedSpectra;
+
     }
 
     /**
@@ -554,17 +722,20 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
     public void setMaxLoadedSpectra(Integer maxLoadedSpectra) {
         this.maxLoadedSpectra = maxLoadedSpectra;
     }
-    
+
     /**
      * Returns the output format.
      *
      * @return the outputFormat
      */
     public String getOutputFormat() {
+
         if (outputFormat == null) {
             outputFormat = "csv";
         }
+
         return outputFormat;
+
     }
 
     /**
@@ -575,7 +746,7 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
     public void setOutputFormat(String outputFormat) {
         this.outputFormat = outputFormat;
     }
-    
+
     /**
      * Returns true if target and decoy are ranked separately, false if shared
      * rank.
@@ -584,18 +755,330 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      * rank
      */
     public boolean reportBothBestHitsForTD() {
+
         if (reportBothBestHitsForTD == null) {
             reportBothBestHitsForTD = true;
         }
+
         return reportBothBestHitsForTD;
+
     }
 
     /**
      * Set if target and decoy are ranked separately or shared.
-     * 
+     *
      * @param reportBothBestHitsForTD the reportBothBestHitsForTD to set
      */
     public void setReportBothBestHitsForTD(boolean reportBothBestHitsForTD) {
         this.reportBothBestHitsForTD = reportBothBestHitsForTD;
     }
+
+    /**
+     * Returns the maximum allowed charge state.
+     *
+     * @return the maximum allowed charge state
+     */
+    public String getMaxAllowedChargeState() {
+
+        if (maxAllowedChargeState == null) {
+            maxAllowedChargeState = "+2";
+        }
+
+        return maxAllowedChargeState;
+
+    }
+
+    /**
+     * Set the maximum allowed charge state.
+     *
+     * @param maxAllowedChargeState the max allowed charge state
+     */
+    public void setMaxAllowedChargeState(String maxAllowedChargeState) {
+        this.maxAllowedChargeState = maxAllowedChargeState;
+    }
+
+    /**
+     * Returns the minimum peak depth.
+     *
+     * @return the minimum peak depth
+     */
+    public Integer getMinPeakDepth() {
+
+        if (minPeakDepth == null) {
+            minPeakDepth = 1;
+        }
+
+        return minPeakDepth;
+
+    }
+
+    /**
+     * Set the minimum peak depth.
+     *
+     * @param minPeakDepth the minimum peak depth
+     */
+    public void setMinPeakDepth(Integer minPeakDepth) {
+        this.minPeakDepth = minPeakDepth;
+    }
+
+    /**
+     * Returns the maximum peak depth.
+     *
+     * @return the maximum peak depth
+     */
+    public Integer getMaxPeakDepth() {
+        return maxPeakDepth;
+    }
+
+    /**
+     * Set the maximum peak depth.
+     *
+     * @param maxPeakDepth the maximum peak depth
+     */
+    public void setMaxPeakDepth(Integer maxPeakDepth) {
+        this.maxPeakDepth = maxPeakDepth;
+    }
+
+    /**
+     * Returns true if a second search is to be performed.
+     *
+     * @return true if a second search is to be performed
+     */
+    public Boolean getPerformSecondSearch() {
+
+        if (performSecondSearch == null) {
+            performSecondSearch = false;
+        }
+
+        return performSecondSearch;
+
+    }
+
+    /**
+     * Set if a second search is to be performed.
+     *
+     * @param performSecondSearch whether a second search is to be performed
+     */
+    public void setPerformSecondSearch(Boolean performSecondSearch) {
+        this.performSecondSearch = performSecondSearch;
+    }
+
+    /**
+     * Returns true if the Y1 ions are to be kept.
+     *
+     * @return true if the Y1 ions are to be kept
+     */
+    public Boolean getKeepY1Ion() {
+
+        if (keepY1Ion == null) {
+            keepY1Ion = true;
+        }
+
+        return keepY1Ion;
+
+    }
+
+    /**
+     * Set whether the Y1 ions are to be kept.
+     *
+     * @param keepY1Ion whether the Y1 ions are to be kept
+     */
+    public void setKeepY1Ion(Boolean keepY1Ion) {
+        this.keepY1Ion = keepY1Ion;
+    }
+
+    /**
+     * Returns true if the water losses are to be removed.
+     *
+     * @return true if the water losses are to be removed
+     */
+    public Boolean getRemoveWaterLosses() {
+
+        if (removeWaterLosses == null) {
+            removeWaterLosses = true;
+        }
+
+        return removeWaterLosses;
+
+    }
+
+    /**
+     * Set whether the water losses are to be removed.
+     *
+     * @param removeWaterLosses whether the water losses are to be removed
+     */
+    public void setRemoveWaterLosses(Boolean removeWaterLosses) {
+        this.removeWaterLosses = removeWaterLosses;
+    }
+
+    /**
+     * Returns true if the ammonia losses are to be removed.
+     *
+     * @return the removeAmmoniaLosses
+     */
+    public Boolean getRemoveAmmoniaLosses() {
+
+        if (removeAmmoniaLosses == null) {
+            removeAmmoniaLosses = true;
+        }
+
+        return removeAmmoniaLosses;
+
+    }
+
+    /**
+     * Set whether the ammonia losses are to be removed.
+     *
+     * @param removeAmmoniaLosses whether the ammonia losses are to be removed
+     */
+    public void setRemoveAmmoniaLosses(Boolean removeAmmoniaLosses) {
+        this.removeAmmoniaLosses = removeAmmoniaLosses;
+    }
+
+    /**
+     * Returns true if the first precursor is to be excluded.
+     *
+     * @return true if the first precursor is to be excluded
+     */
+    public Boolean getExcludeFirstPrecursor() {
+
+        if (excludeFirstPrecursor == null) {
+            excludeFirstPrecursor = true;
+        }
+
+        return excludeFirstPrecursor;
+
+    }
+
+    /**
+     * Set whether the first precursor is to be excluded.
+     *
+     * @param excludeFirstPrecursor whether the first precursor is to be
+     * excluded
+     */
+    public void setExcludeFirstPrecursor(Boolean excludeFirstPrecursor) {
+        this.excludeFirstPrecursor = excludeFirstPrecursor;
+    }
+
+    /**
+     * Returns the maximum number of precursors.
+     *
+     * @return the maximum number of precursors
+     */
+    public Integer getMaxMultiplePrecursors() {
+
+        if (maxMultiplePrecursors == null) {
+            maxMultiplePrecursors = 5;
+        }
+
+        return maxMultiplePrecursors;
+
+    }
+
+    /**
+     * Set the maximum number of precursors.
+     *
+     * @param maxMultiplePrecursors the maximum number of precursors
+     */
+    public void setMaxMultiplePrecursors(Integer maxMultiplePrecursors) {
+        this.maxMultiplePrecursors = maxMultiplePrecursors;
+    }
+
+    /**
+     * Returns the considered charges for precursors.
+     *
+     * @return the considered charges for precursors
+     */
+    public String getConsideredChargesForPrecursors() {
+
+        if (consideredChargesForPrecursors == null) {
+            consideredChargesForPrecursors = "+2,+3";
+        }
+
+        return consideredChargesForPrecursors;
+
+    }
+
+    /**
+     * Set the considered charges for precursors.
+     *
+     * @param consideredChargesForPrecursors the considered charges for
+     * precursors
+     */
+    public void setConsideredChargesForPrecursors(String consideredChargesForPrecursors) {
+        this.consideredChargesForPrecursors = consideredChargesForPrecursors;
+    }
+
+    /**
+     * Returns true if considered charges are combined in one result.
+     *
+     * @return true if considered charges are combined in one result
+     */
+    public Boolean getCombineConsideredCharges() {
+
+        if (combineConsideredCharges == null) {
+            combineConsideredCharges = true;
+        }
+
+        return combineConsideredCharges;
+
+    }
+
+    /**
+     * Set if considered charges are combined in one result.
+     *
+     * @param combineConsideredCharges combine considered charges in one result
+     */
+    public void setCombineConsideredCharges(Boolean combineConsideredCharges) {
+        this.combineConsideredCharges = combineConsideredCharges;
+    }
+
+    /**
+     * Returns true if Percolator is to be run.
+     *
+     * @return true if Percolator is to be run
+     */
+    public Boolean getRunPercolator() {
+
+        if (runPercolator == null) {
+            runPercolator = false;
+        }
+
+        return runPercolator;
+
+    }
+
+    /**
+     * Set if Percolator is to be run.
+     *
+     * @param runPercolator if Percolator is to be run
+     */
+    public void setRunPercolator(Boolean runPercolator) {
+        this.runPercolator = runPercolator;
+    }
+
+    /**
+     * Returns true if a PIn file is to be generated.
+     *
+     * @return true if a PIn file is to be generated
+     */
+    public Boolean getGeneratePInFile() {
+
+        if (generatePInFile == null) {
+            generatePInFile = false;
+        }
+
+        return generatePInFile;
+
+    }
+
+    /**
+     * Set whether a PIn file is to be generated.
+     *
+     * @param generatePInFile hether a PIn file is to be generated
+     */
+    public void setGeneratePInFile(Boolean generatePInFile) {
+        this.generatePInFile = generatePInFile;
+    }
+
 }

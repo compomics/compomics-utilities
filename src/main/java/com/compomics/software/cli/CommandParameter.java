@@ -29,7 +29,7 @@ public class CommandParameter {
     public static boolean inIntegerRange(String argType, String arg, int minValue, int maxValue) {
         boolean valid = true;
         try {
-            int value = Integer.valueOf(arg);
+            int value = Integer.parseInt(arg);
             if (value < minValue || value > maxValue) {
                 System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Not in the range [" + minValue + " - " + maxValue + "]." + System.getProperty("line.separator"));
                 valid = false;
@@ -56,7 +56,7 @@ public class CommandParameter {
     public static boolean inDoubleRange(String argType, String arg, double minValue, double maxValue) {
         boolean valid = true;
         try {
-            double value = Double.valueOf(arg);
+            double value = Double.parseDouble(arg);
             if (value < minValue || value > maxValue) {
                 System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Not in the range [" + minValue + " - " + maxValue + "]." + System.getProperty("line.separator"));
                 valid = false;
@@ -120,7 +120,7 @@ public class CommandParameter {
     public static boolean isBooleanInput(String argType, String arg) {
         boolean valid = true;
         try {
-            int value = Integer.valueOf(arg);
+            int value = Integer.parseInt(arg);
             if (value != 0 && value != 1) {
                 System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Found " + value + " where 0 or 1 was expected." + System.getProperty("line.separator"));
                 valid = false;
@@ -203,7 +203,7 @@ public class CommandParameter {
     public static boolean isPositiveDouble(String argType, String arg, boolean allowZero) {
         boolean valid = true;
         try {
-            double value = Double.valueOf(arg);
+            double value = Double.parseDouble(arg);
             if (allowZero) {
                 if (value < 0) {
                     System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Negative value found." + System.getProperty("line.separator"));
@@ -234,7 +234,7 @@ public class CommandParameter {
     public static boolean isPositiveInteger(String argType, String arg, boolean allowZero) {
         boolean valid = true;
         try {
-            int value = Integer.valueOf(arg);
+            int value = Integer.parseInt(arg);
             if (allowZero) {
                 if (value < 0) {
                     System.out.println(System.getProperty("line.separator") + "Error parsing the " + argType + " option: Negative value found." + System.getProperty("line.separator"));

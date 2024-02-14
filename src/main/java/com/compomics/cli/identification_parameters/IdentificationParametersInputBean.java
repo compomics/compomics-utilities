@@ -778,6 +778,86 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_ALLOWED_CHARGE_STATE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_ALLOWED_CHARGE_STATE.id);
+            List<String> supportedInput = Arrays.asList("+2", "+3", "+4", "Precursor - 1");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.MS_AMANDA_MAX_ALLOWED_CHARGE_STATE.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEAK_DEPTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEAK_DEPTH.id);
+            if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEAK_DEPTH.id, arg, 1, 30)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_PEAK_DEPTH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_PEAK_DEPTH.id);
+            if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.MS_AMANDA_MAX_PEAK_DEPTH.id, arg, 1, 30)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_SECOND_SEARCH.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_SECOND_SEARCH.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_SECOND_SEARCH.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_KEEP_Y1_ION.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_KEEP_Y1_ION.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_KEEP_Y1_ION.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_REMOVE_WATER_LOSSES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_REMOVE_WATER_LOSSES.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_REMOVE_WATER_LOSSES.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_REMOVE_AMMONIA_LOSSES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_REMOVE_AMMONIA_LOSSES.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_REMOVE_AMMONIA_LOSSES.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_EXCLUDE_FIRST_PRECURSOR.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_EXCLUDE_FIRST_PRECURSOR.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_EXCLUDE_FIRST_PRECURSOR.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_MULTIPLE_PRECURORS.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_MULTIPLE_PRECURORS.id);
+            if (!CommandParameter.inIntegerRange(IdentificationParametersCLIParams.MS_AMANDA_MAX_MULTIPLE_PRECURORS.id, arg, 1, 10)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_CONSIDERED_CHARGE_STATES_FOR_PRECURSOR.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_CONSIDERED_CHARGE_STATES_FOR_PRECURSOR.id);
+            List<String> supportedInput = Arrays.asList("+2", "+3", "+2, +3", "+2, +3, +4", "+3, +4", "+2, +3, +4, +5");
+            if (!CommandParameter.isInList(IdentificationParametersCLIParams.MS_AMANDA_CONSIDERED_CHARGE_STATES_FOR_PRECURSOR.id, arg, supportedInput)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_COMBINE_CHARGE_STATES.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_COMBINE_CHARGE_STATES.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_COMBINE_CHARGE_STATES.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_RUN_PERCOLATOR.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_RUN_PERCOLATOR.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_RUN_PERCOLATOR.id, arg)) {
+                return false;
+            }
+        }
+        if (aLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_GENERATE_PIN_FILE.id)) {
+            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_GENERATE_PIN_FILE.id);
+            if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.MS_AMANDA_GENERATE_PIN_FILE.id, arg)) {
+                return false;
+            }
+        }
         //////////////////////////////////
         // MyriMatch
         //////////////////////////////////
@@ -3133,6 +3213,69 @@ public class IdentificationParametersInputBean {
         if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_OUTPUT_FORMAT.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_OUTPUT_FORMAT.id);
             msAmandaParameters.setOutputFormat(arg);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_ALLOWED_CHARGE_STATE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_ALLOWED_CHARGE_STATE.id);
+            msAmandaParameters.setMaxAllowedChargeState(arg);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEAK_DEPTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MIN_PEAK_DEPTH.id);
+            Integer option = Integer.valueOf(arg);
+            msAmandaParameters.setMinPeakDepth(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_PEAK_DEPTH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_PEAK_DEPTH.id);
+            Integer option = Integer.valueOf(arg);
+            msAmandaParameters.setMaxPeakDepth(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_SECOND_SEARCH.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_SECOND_SEARCH.id);
+            Integer option = Integer.valueOf(arg);
+            msAmandaParameters.setPerformSecondSearch(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_KEEP_Y1_ION.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_KEEP_Y1_ION.id);
+            Integer option = Integer.valueOf(arg);
+            msAmandaParameters.setKeepY1Ion(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_REMOVE_WATER_LOSSES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_REMOVE_WATER_LOSSES.id);
+            Integer option = Integer.valueOf(arg);
+            msAmandaParameters.setRemoveWaterLosses(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_REMOVE_AMMONIA_LOSSES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_REMOVE_AMMONIA_LOSSES.id);
+            Integer option = Integer.valueOf(arg);
+            msAmandaParameters.setRemoveAmmoniaLosses(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_EXCLUDE_FIRST_PRECURSOR.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_EXCLUDE_FIRST_PRECURSOR.id);
+            Integer option = Integer.valueOf(arg);
+            msAmandaParameters.setExcludeFirstPrecursor(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_MAX_MULTIPLE_PRECURORS.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_MAX_MULTIPLE_PRECURORS.id);
+            Integer option = Integer.valueOf(arg);
+            msAmandaParameters.setMaxMultiplePrecursors(option);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_CONSIDERED_CHARGE_STATES_FOR_PRECURSOR.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_CONSIDERED_CHARGE_STATES_FOR_PRECURSOR.id);
+            msAmandaParameters.setConsideredChargesForPrecursors(arg);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_COMBINE_CHARGE_STATES.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_COMBINE_CHARGE_STATES.id);
+            Integer option = Integer.valueOf(arg);
+            msAmandaParameters.setCombineConsideredCharges(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_RUN_PERCOLATOR.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_RUN_PERCOLATOR.id);
+            Integer option = Integer.valueOf(arg);
+            msAmandaParameters.setRunPercolator(option == 1);
+        }
+        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_GENERATE_PIN_FILE.id)) {
+            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_GENERATE_PIN_FILE.id);
+            Integer option = Integer.valueOf(arg);
+            msAmandaParameters.setGeneratePInFile(option == 1);
         }
 
         ///////////////////////////////////

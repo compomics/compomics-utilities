@@ -57,7 +57,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
      * @param msConvertParameters initial parameters, ignored if null
      */
     public MsConvertParametersDialog(
-            java.awt.Frame parent, 
+            java.awt.Frame parent,
             MsConvertParameters msConvertParameters
     ) {
 
@@ -113,14 +113,14 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
             JMenuItem tempFilterMenuItem = new javax.swing.JMenuItem(tempFilter.name);
 
             tempFilterMenuItem.addActionListener(new java.awt.event.ActionListener() {
-                
+
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     if (!filters.containsKey(tempFilter.number)) {
                         filters.put(tempFilter.number, "");
                         updateTable();
                     }
                 }
-                
+
             });
 
             addFilterMenu.add(tempFilterMenuItem);
@@ -131,28 +131,29 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         utilitiesUserParameters = UtilitiesUserParameters.loadUserParameters();
 
         if (utilitiesUserParameters.getProteoWizardPath() == null) {
-            
+
             int option = JOptionPane.showConfirmDialog(
-                    this, 
-                    "Cannot find ProteoWizard. Do you want to download it now?", 
-                    "Download ProteoWizard?", 
+                    this,
+                    "Cannot find ProteoWizard. Do you want to download it now?",
+                    "Download ProteoWizard?",
                     JOptionPane.YES_NO_OPTION
             );
 
             if (option == JOptionPane.YES_OPTION) {
-                
+
                 openWebPage();
-            
+
             }
         }
 
         // display the current path
         if (utilitiesUserParameters != null) {
-            
+
             installationJTextField.setText(utilitiesUserParameters.getProteoWizardPath());
             lastSelectedFolder = utilitiesUserParameters.getProteoWizardPath();
-        
+
         }
+
     }
 
     /**
@@ -406,46 +407,49 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
         boolean formatCheck = true;
-        
+
         ProteoWizardMsFormat selectedFormat = (ProteoWizardMsFormat) outputFormatCmb.getSelectedItem();
 
         if (selectedFormat != ProteoWizardMsFormat.mgf && selectedFormat != ProteoWizardMsFormat.mzML) {
-            
+
             int value = JOptionPane.showConfirmDialog(
-                    this, 
-                    "MzML and mgf are the only format compatible with SearchGUI. Proceed anyway?",
-                    "Output Format Warning", 
-                    JOptionPane.YES_NO_OPTION, 
+                    this,
+                    "mzML and mgf are the only formats compatible with SearchGUI. Proceed anyway?",
+                    "Output Format Warning",
+                    JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE
             );
 
             if (value == JOptionPane.NO_OPTION) {
-                
+
                 formatCheck = false;
-            
+
             }
         }
 
         if (formatCheck) {
-            
+
             utilitiesUserParameters.setProteoWizardPath(installationJTextField.getText());
-            
+
             try {
-            
+
                 UtilitiesUserParameters.saveUserParameters(utilitiesUserParameters);
                 dispose();
-            
+
             } catch (Exception e) {
-            
+
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(
-                        this, 
-                        "An error occurred while saving the preferences.", 
-                        "Error", 
+                        this,
+                        "An error occurred while saving the preferences.",
+                        "Error",
                         JOptionPane.WARNING_MESSAGE
                 );
+
             }
+
         }
+
     }//GEN-LAST:event_okButtonActionPerformed
 
     /**
@@ -454,7 +458,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void removeFilterMenuItemMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeFilterMenuItemMouseReleased
-        
+
         int row = filtersTable.getSelectedRow();
 
         if (row >= 0) {
@@ -491,6 +495,7 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
             filtersPopupMenu.show(filtersTable, evt.getX(), evt.getY());
 
         }
+
     }//GEN-LAST:event_filtersTableMouseReleased
 
     /**
@@ -546,23 +551,23 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
 
         File selectedFile = FileChooserUtil.getUserSelectedFolder(
-                this, 
-                "ProteoWizard Installation Folder", 
-                lastSelectedFolder, 
-                "ProteoWizard installation folder", 
-                "OK", 
+                this,
+                "ProteoWizard Installation Folder",
+                lastSelectedFolder,
+                "ProteoWizard installation folder",
+                "OK",
                 true
         );
 
         if (selectedFile != null) {
-            
+
             // check if it is a valid folder
             if (!(new File(selectedFile, "msconvert.exe").exists() || new File(selectedFile, "msconvert").exists())) {
 
                 JOptionPane.showMessageDialog(
-                        this, 
-                        "The selected folder is not a valid ProteoWizard folder.", 
-                        "Wrong Folder Selected", 
+                        this,
+                        "The selected folder is not a valid ProteoWizard folder.",
+                        "Wrong Folder Selected",
                         JOptionPane.WARNING_MESSAGE
                 );
                 okButton.setEnabled(false);
@@ -575,7 +580,9 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
                 okButton.setEnabled(true);
 
             }
+
         }
+
     }//GEN-LAST:event_browseButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -715,18 +722,18 @@ public class MsConvertParametersDialog extends javax.swing.JDialog {
         public boolean isCellEditable(int row, int column) {
             return column > 0;
         }
+
     }
 
     /**
      * Opens the ProteoWizard web page.
      */
     private void openWebPage() {
-        
+
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
-        
         BareBonesBrowserLaunch.openURL("http://proteowizard.sourceforge.net");
-        
         this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-    
+
     }
+
 }

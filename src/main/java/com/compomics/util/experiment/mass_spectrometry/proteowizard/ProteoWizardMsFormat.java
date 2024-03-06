@@ -1,7 +1,6 @@
 package com.compomics.util.experiment.mass_spectrometry.proteowizard;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  * The mass spectrometry formats supported by ProteoWizard.
@@ -48,11 +47,11 @@ public enum ProteoWizardMsFormat {
      */
     mz5(8, "mz5", "mz5", "mzML based on HDF5", ".mz5", true, true),
     /**
-     * Thermo/Waters raw format.
+     * Thermo/Waters RAW format.
      */
     raw(9, "raw", null, "Thermo/Waters raw format", ".raw", true, false),
     /**
-     * Agilent/Bruker d format.
+     * Agilent/Bruker D format.
      */
     d(10, "d", null, "Agilent/Buker d format", ".d", true, false),
     /**
@@ -60,17 +59,37 @@ public enum ProteoWizardMsFormat {
      */
     fid(11, "fid", null, "Bruker FID format", ".fid", true, false),
     /**
-     * Bruker FID format.
+     * Bruker YEP format.
      */
     yep(12, "yep", null, "Bruker YEP format", ".yep", true, false),
     /**
-     * Bruker FID format.
+     * Bruker BAF format.
      */
     baf(13, "baf", null, "Bruker BAF format", ".baf", true, false),
     /**
-     * Applied Biosystems wiff format.
+     * Bruker TDF format.
      */
-    wiff(14, "wiff", null, "Applied Biosystems wiff format", ".wiff", true, false);
+    tdf(14, "tdf", null, "Bruker TDF format", ".tdf", true, false),
+    /**
+     * Bruker TSF format.
+     */
+    tsf(14, "tsf", null, "Bruker TSF format", ".tsf", true, false),
+    /**
+     * Sciex WIFF format.
+     */
+    wiff(16, "wiff", null, "Sciex wiff format", ".wiff", true, false),
+    /**
+     * Sciex WIFF2 format.
+     */
+    wiff2(17, "wiff2", null, "Sciex wiff2 format", ".wiff2", true, false),
+    /**
+     * ABI T2D format.
+     */
+    td2(18, "td2", null, "ABI T2D format", ".td2", true, false),
+    /**
+     * Shimadzu LCD format.
+     */
+    lcd(19, "td2", null, "Shimadzu LCD format", ".lcd", true, false);
 
     /**
      * The index of the format.
@@ -113,7 +132,15 @@ public enum ProteoWizardMsFormat {
      * @param rawFormat is this a format for raw data
      * @param outputFormat it this s format that can be used as output
      */
-    private ProteoWizardMsFormat(int index, String commandLineOption, String name, String description, String fileNameEnding, boolean rawFormat, boolean outputFormat) {
+    private ProteoWizardMsFormat(
+            int index,
+            String commandLineOption,
+            String name,
+            String description,
+            String fileNameEnding,
+            boolean rawFormat,
+            boolean outputFormat
+    ) {
         this.index = index;
         this.commandLineOption = commandLineOption;
         this.name = name;
@@ -135,7 +162,10 @@ public enum ProteoWizardMsFormat {
      * @param outputFormat get output formats, null return both
      * @return the list formats
      */
-    public static ProteoWizardMsFormat[] getDataFormats(Boolean raw, Boolean outputFormat) {
+    public static ProteoWizardMsFormat[] getDataFormats(
+            Boolean raw,
+            Boolean outputFormat
+    ) {
 
         ArrayList<ProteoWizardMsFormat> rawFormats = new ArrayList<>();
 
@@ -160,12 +190,14 @@ public enum ProteoWizardMsFormat {
         return rawFormats.toArray(
                 new ProteoWizardMsFormat[rawFormats.size()]
         );
+
     }
 
     /**
-     * Empty default constructor
+     * Empty default constructor.
      */
     private ProteoWizardMsFormat() {
+
         index = 0;
         commandLineOption = "";
         name = "";
@@ -173,5 +205,7 @@ public enum ProteoWizardMsFormat {
         rawFormat = false;
         fileNameEnding = "";
         outputFormat = false;
+
     }
+
 }

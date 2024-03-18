@@ -179,6 +179,10 @@ public class Advocate extends ExperimentObject {
      */
     public static final Advocate sage = new Advocate(36, "Sage", AdvocateType.search_engine, new Color(108, 108, 0));
     /**
+     * The MSFragger search engine.
+     */
+    public static final Advocate msFragger = new Advocate(37, "MSFragger", AdvocateType.search_engine, new java.awt.Color(128, 128, 0));
+    /**
      * Advocate type for mzId files where no software is annotated.
      */
     public static final Advocate genericMzId = new Advocate(100, "mzid", AdvocateType.unknown);
@@ -307,7 +311,7 @@ public class Advocate extends ExperimentObject {
      * @return the implemented advocates in an array
      */
     public static Advocate[] values() {
-        Advocate[] result = new Advocate[39 + userAdvocates.size()];
+        Advocate[] result = new Advocate[40 + userAdvocates.size()];
         int i = 0;
         result[i] = peptideShaker;
         result[++i] = onyaseEngine;
@@ -348,6 +352,7 @@ public class Advocate extends ExperimentObject {
         result[++i] = identiPy;
         result[++i] = coss;
         result[++i] = sage;
+        result[++i] = msFragger;
 
         for (Advocate advocate : userAdvocates.values()) {
             result[++i] = advocate;
@@ -482,6 +487,8 @@ public class Advocate extends ExperimentObject {
             return "29682971";
         } else if (this == sage) {
             return "37819886";
+        } else if (this == msFragger) {
+            return "28394336";
         } else {
             return null;
         }

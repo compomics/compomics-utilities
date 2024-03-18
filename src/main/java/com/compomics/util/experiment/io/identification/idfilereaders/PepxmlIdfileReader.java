@@ -124,7 +124,7 @@ public class PepxmlIdfileReader implements IdfileReader {
         XmlPullParser parser = factory.newPullParser();
 
         // Create a reader for the input file.
-        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(idFile)) {
+        try (SimpleFileReader reader = SimpleFileReader.getFileReader(idFile)) {
 
             // Set the XML Pull Parser to read from this reader.
             parser.setInput(reader.getReader());
@@ -604,12 +604,23 @@ public class PepxmlIdfileReader implements IdfileReader {
     ) throws XmlPullParserException, IOException {
 
         for (int i = 0; i < parser.getAttributeCount(); i++) {
+
             String name = parser.getAttributeName(i);
+
             if (name.equals("search_engine")) {
+
                 searchEngine = parser.getAttributeValue(i);
+
             } else if (name.equals("search_engine_version")) {
+
                 searchEngineVersion = parser.getAttributeValue(i);
+
+                if (searchEngineVersion.lastIndexOf("MSFragger") != -1) {
+                    searchEngine = "MSFragger";
+                }
+
             }
+
         }
 
         // extract the required information about the modifications

@@ -4,7 +4,6 @@ import com.compomics.util.experiment.mass_spectrometry.SpectrumProvider;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.io.IoUtil;
-import static com.compomics.util.io.IoUtil.ENCODING;
 import com.compomics.util.io.compression.ZstdUtils;
 import com.compomics.util.threading.SimpleSemaphore;
 import com.compomics.util.waiting.WaitingHandler;
@@ -55,11 +54,15 @@ public class CmsFileReader implements SpectrumProvider {
     /**
      * The index of the spectra.
      */
-    private final HashMap<String, Integer> indexMap;
+    private final HashMap<String, Long> indexMap;
     /**
      * Map of the precursor m/z.
      */
-    private final HashMap<String, Double> precrursorMzMap;
+    private final HashMap<String, Double> precursorMzMap;
+    /**
+     * The array of the start indexes per buffer.
+     */
+    private ArrayList<Long> bufferStartIndexes = new ArrayList();
     /**
      * Mutex to synchronize threads.
      */
@@ -73,9 +76,9 @@ public class CmsFileReader implements SpectrumProvider {
      */
     private final FileChannel fc;
     /**
-     * The mapped byte buffer.
+     * The mapped byte buffers.
      */
-    private final MappedByteBuffer mappedByteBuffer;
+    private ArrayList<MappedByteBuffer> mappedByteBuffers;
 
     /**
      * Constructor allocating for single thread usage.
@@ -92,10 +95,13 @@ public class CmsFileReader implements SpectrumProvider {
             WaitingHandler waitingHandler
     ) throws FileNotFoundException, IOException {
 
+        mappedByteBuffers = new ArrayList<>();
+
         // @TODO: use the waiting handler
         raf = new RandomAccessFile(file, "r");
 
         try {
+
             byte[] fileMagicNumber = new byte[CmsFileUtils.MAGIC_NUMBER.length];
             raf.read(fileMagicNumber);
 
@@ -117,21 +123,21 @@ public class CmsFileReader implements SpectrumProvider {
             int length = raf.readInt();
             int uncompressedLength = raf.readInt();
 
-            byte[] compressedTitles = new byte[length];
-            raf.read(compressedTitles);
+            byte[] compressedFooter = new byte[length];
+            raf.read(compressedFooter);
 
-            byte[] titlesByteArray = uncompress(compressedTitles, uncompressedLength);
-            String titlesIndexString = new String(titlesByteArray, 0, titlesByteArray.length, ENCODING);
-            String[] titlesIndexStringSplit = titlesIndexString.split(CmsFileUtils.TITLE_SEPARATOR);
+            byte[] footerByteArray = uncompress(compressedFooter, uncompressedLength);
+            String footerAsString = new String(footerByteArray, 0, footerByteArray.length, IoUtil.ENCODING);
+            String[] footerAsStringSplit = footerAsString.split(CmsFileUtils.TITLE_SEPARATOR);
 
-            int nTitles = (titlesIndexStringSplit.length - 1) / 2;
+            int nTitles = (footerAsStringSplit.length - 1) / 2;
             indexMap = new HashMap<>(nTitles);
             titles = new String[nTitles];
 
             for (int i = 0; i < nTitles; i++) {
 
-                String title = titlesIndexStringSplit[i];
-                int index = Integer.parseInt(titlesIndexStringSplit[i + nTitles]);
+                String title = footerAsStringSplit[i];
+                long index = Long.parseLong(footerAsStringSplit[i + nTitles]);
                 indexMap.put(title, index);
                 titles[i] = title;
 
@@ -139,7 +145,7 @@ public class CmsFileReader implements SpectrumProvider {
 
             postcursorMap = new HashMap<>();
 
-            String postcursorMapAsText = titlesIndexStringSplit[titlesIndexStringSplit.length - 1];
+            String postcursorMapAsText = footerAsStringSplit[footerAsStringSplit.length - 2];
 
             if (!postcursorMapAsText.equalsIgnoreCase("null")) {
 
@@ -160,19 +166,52 @@ public class CmsFileReader implements SpectrumProvider {
                     postcursorMap.get(precusorKey).addAll(Arrays.asList(postcursorsSplit));
 
                 }
+
             }
 
-            precrursorMzMap = new HashMap<>(nTitles);
+            precursorMzMap = new HashMap<>(nTitles);
 
-            long size = footerPosition - CmsFileWriter.HEADER_LENGTH;
+            String bufferStartIndexesAsText = footerAsStringSplit[footerAsStringSplit.length - 1];
+            bufferStartIndexesAsText = bufferStartIndexesAsText.substring(1, bufferStartIndexesAsText.length() - 1);
+
+            String[] bufferStartIndexesSplit = bufferStartIndexesAsText.split(", ");
+
+            for (String indexAsString : bufferStartIndexesSplit) {
+                bufferStartIndexes.add(Long.valueOf(indexAsString));
+            }
+
+            long maxIndex = footerPosition - CmsFileWriter.HEADER_LENGTH;
 
             fc = raf.getChannel();
 
-            mappedByteBuffer = fc.map(FileChannel.MapMode.READ_ONLY, CmsFileWriter.HEADER_LENGTH, size);
+            if (bufferStartIndexes.size() == 1) {
+
+                long startIndex = CmsFileWriter.HEADER_LENGTH;
+                mappedByteBuffers.add(fc.map(FileChannel.MapMode.READ_ONLY, startIndex, maxIndex));
+
+            } else {
+
+                for (int i = 0; i < bufferStartIndexes.size() - 1; i++) {
+
+                    long startIndex = bufferStartIndexes.get(i);
+                    long size = bufferStartIndexes.get(i + 1) - startIndex;
+
+                    mappedByteBuffers.add(fc.map(FileChannel.MapMode.READ_ONLY, startIndex, size));
+
+                }
+
+                // special case for the final buffer
+                long startIndex = bufferStartIndexes.get(bufferStartIndexes.size() - 1);
+                long size = footerPosition - startIndex;
+
+                mappedByteBuffers.add(fc.map(FileChannel.MapMode.READ_ONLY, startIndex, size));
+
+            }
 
         } finally {
             raf.close();
         }
+
     }
 
     /**
@@ -182,11 +221,11 @@ public class CmsFileReader implements SpectrumProvider {
      *
      * @return the spectrum
      */
-    private Spectrum getSpectrum(int spectrumIndex) {
+    private Spectrum getSpectrum(long spectrumIndex) {
 
         mutex.acquire();
 
-        mappedByteBuffer.position(spectrumIndex);
+        MappedByteBuffer mappedByteBuffer = getMappedByteBuffer(spectrumIndex);
 
         double precursorMz = mappedByteBuffer.getDouble();
         double precursorRt = mappedByteBuffer.getDouble();
@@ -248,7 +287,7 @@ public class CmsFileReader implements SpectrumProvider {
      */
     public Spectrum getSpectrum(String spectrumTitle) {
 
-        int index = indexMap.get(spectrumTitle);
+        long index = indexMap.get(spectrumTitle);
 
         return getSpectrum(index);
 
@@ -263,11 +302,11 @@ public class CmsFileReader implements SpectrumProvider {
      */
     public Precursor getPrecursor(String spectrumTitle) {
 
-        int index = indexMap.get(spectrumTitle);
+        long spectrumIndex = indexMap.get(spectrumTitle);
 
         mutex.acquire();
 
-        mappedByteBuffer.position(index);
+        MappedByteBuffer mappedByteBuffer = getMappedByteBuffer(spectrumIndex);
 
         double precursorMz = mappedByteBuffer.getDouble();
         double precursorRt = mappedByteBuffer.getDouble();
@@ -308,18 +347,18 @@ public class CmsFileReader implements SpectrumProvider {
      */
     public double getPrecursorMz(String spectrumTitle) {
 
-        Double precursorMz = precrursorMzMap.get(spectrumTitle);
+        Double precursorMz = precursorMzMap.get(spectrumTitle);
 
         if (precursorMz == null) {
 
-            int index = indexMap.get(spectrumTitle);
+            long spectrumIndex = indexMap.get(spectrumTitle);
 
             mutex.acquire();
 
-            mappedByteBuffer.position(index);
+            MappedByteBuffer mappedByteBuffer = getMappedByteBuffer(spectrumIndex);
 
             precursorMz = mappedByteBuffer.getDouble();
-            precrursorMzMap.put(spectrumTitle, precursorMz);
+            precursorMzMap.put(spectrumTitle, precursorMz);
 
             mutex.release();
 
@@ -338,11 +377,12 @@ public class CmsFileReader implements SpectrumProvider {
      */
     public double getPrecursorRt(String spectrumTitle) {
 
-        int index = indexMap.get(spectrumTitle);
+        long spectrumIndex = indexMap.get(spectrumTitle);
 
         mutex.acquire();
 
-        mappedByteBuffer.position(index + Double.BYTES);
+        MappedByteBuffer mappedByteBuffer = getMappedByteBuffer(spectrumIndex);
+        mappedByteBuffer.getDouble(); // @TODO: better way of doing this?
 
         double precursorRt = mappedByteBuffer.getDouble();
 
@@ -361,11 +401,14 @@ public class CmsFileReader implements SpectrumProvider {
      */
     public int getSpectrumLevel(String spectrumTitle) {
 
-        int index = indexMap.get(spectrumTitle);
+        long spectrumIndex = indexMap.get(spectrumTitle);
 
         mutex.acquire();
 
-        mappedByteBuffer.position(index + 3 * Double.BYTES);
+        MappedByteBuffer mappedByteBuffer = getMappedByteBuffer(spectrumIndex);
+        mappedByteBuffer.getDouble(); // @TODO: better way of doing this?
+        mappedByteBuffer.getDouble(); // @TODO: better way of doing this?
+        mappedByteBuffer.getDouble(); // @TODO: better way of doing this?
 
         int spectrumLevel = mappedByteBuffer.getInt();
 
@@ -384,11 +427,14 @@ public class CmsFileReader implements SpectrumProvider {
      */
     public double[][] getPeaks(String spectrumTitle) {
 
-        int index = indexMap.get(spectrumTitle);
+        long spectrumIndex = indexMap.get(spectrumTitle);
 
         mutex.acquire();
 
-        mappedByteBuffer.position(index + 3 * Double.BYTES);
+        MappedByteBuffer mappedByteBuffer = getMappedByteBuffer(spectrumIndex);
+        mappedByteBuffer.getDouble(); // @TODO: better way of doing this?
+        mappedByteBuffer.getDouble(); // @TODO: better way of doing this?
+        mappedByteBuffer.getDouble(); // @TODO: better way of doing this?
 
         int compressedDataLength = mappedByteBuffer.getInt();
         int nPeaks = mappedByteBuffer.getInt();
@@ -559,7 +605,9 @@ public class CmsFileReader implements SpectrumProvider {
 
         try {
 
-            IoUtil.closeBuffer(mappedByteBuffer);
+            for (MappedByteBuffer mappedByteBuffer : mappedByteBuffers) {
+                IoUtil.closeBuffer(mappedByteBuffer);
+            }
 
             raf.close();
 
@@ -568,6 +616,7 @@ public class CmsFileReader implements SpectrumProvider {
             throw new RuntimeException(e);
 
         }
+
     }
 
     @Override
@@ -592,6 +641,57 @@ public class CmsFileReader implements SpectrumProvider {
             return postcursorMap.get(spectrumTitle);
 
         }
+
+    }
+
+    /**
+     * Returns the mapped buffer for the given spectrum index.
+     *
+     * @param spectrumIndex the index of the spectrum
+     * @return the mapped buffer for the given spectrum index
+     */
+    private MappedByteBuffer getMappedByteBuffer(long spectrumIndex) {
+
+        MappedByteBuffer mappedByteBuffer = null;
+
+        if (bufferStartIndexes.size() == 1) {
+
+            long startIndex = bufferStartIndexes.get(0);
+            mappedByteBuffer = mappedByteBuffers.get(0);
+            mappedByteBuffer.position((int) (spectrumIndex - startIndex));
+
+            return mappedByteBuffer;
+
+        }
+
+        for (int i = 1; i < bufferStartIndexes.size(); i++) {
+
+            long startIndex = bufferStartIndexes.get(i - 1);
+            long endIndex = bufferStartIndexes.get(i);
+
+            if (spectrumIndex >= startIndex && spectrumIndex < endIndex) {
+
+                mappedByteBuffer = mappedByteBuffers.get(i - 1);
+                mappedByteBuffer.position((int) (spectrumIndex - startIndex));
+
+                return mappedByteBuffer;
+
+            }
+
+        }
+
+        // special case for the final buffer
+        if (mappedByteBuffer == null) {
+
+            long startIndex = bufferStartIndexes.get(bufferStartIndexes.size() - 1);
+            mappedByteBuffer = mappedByteBuffers.get(bufferStartIndexes.size() - 1);
+            mappedByteBuffer.position((int) (spectrumIndex - startIndex));
+
+            return mappedByteBuffer;
+
+        }
+
+        return null;
 
     }
 

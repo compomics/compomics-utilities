@@ -8,12 +8,11 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
-import static com.compomics.util.io.IoUtil.ENCODING;
-import static com.compomics.util.experiment.io.mass_spectrometry.cms.CmsFileUtils.MAGIC_NUMBER;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Precursor;
 import com.compomics.util.experiment.mass_spectrometry.spectra.PrecursorParameter;
 import com.compomics.util.experiment.mass_spectrometry.spectra.Spectrum;
 import com.compomics.util.experiment.personalization.UrParameter;
+import com.compomics.util.io.IoUtil;
 import com.compomics.util.io.compression.ZstdUtils;
 import io.airlift.compress.zstd.ZstdCompressor;
 import java.util.HashMap;
@@ -29,11 +28,20 @@ public class CmsFileWriter implements AutoCloseable {
     /**
      * The length of the file header.
      */
-    public static final int HEADER_LENGTH = MAGIC_NUMBER.length + Long.BYTES + 5 * Double.BYTES;
+    public static final int HEADER_LENGTH = CmsFileUtils.MAGIC_NUMBER.length + Long.BYTES + 5 * Double.BYTES;
     /**
      * The random access file to write to.
      */
     private final RandomAccessFile raf;
+    /**
+     * The size of the current buffer content. Used for splitting up larger
+     * files into multiple mapped buffers when reading.
+     */
+    private int currentBufferContent = 0;
+    /**
+     * The array of the start indexes per buffer.
+     */
+    private ArrayList<Long> bufferStartIndexes = new ArrayList();
     /**
      * The minimal precursor m/z.
      */
@@ -57,7 +65,7 @@ public class CmsFileWriter implements AutoCloseable {
     /**
      * List of the index of the spectra.
      */
-    private final ArrayList<Integer> indexes = new ArrayList<>();
+    private final ArrayList<Long> indexes = new ArrayList<>();
     /**
      * Map of which MSn spectra an MS(n-1) spectrum has created. The key is the
      * identifier of the MS(n-1) spectrum and the resulting list contains the
@@ -86,6 +94,8 @@ public class CmsFileWriter implements AutoCloseable {
         raf = new RandomAccessFile(outputFile, "rw");
         raf.seek(HEADER_LENGTH);
 
+        bufferStartIndexes.add(raf.getFilePointer());
+
     }
 
     /**
@@ -102,18 +112,12 @@ public class CmsFileWriter implements AutoCloseable {
             Spectrum spectrum
     ) throws IOException {
 
-        long index = raf.getFilePointer() - CmsFileWriter.HEADER_LENGTH;
+        long index = raf.getFilePointer();
 
-        if (index > Integer.MAX_VALUE) {
-
-            throw new IOException("File exceeds memory mapped reader max buffer size.");
-
-        }
+        indexes.add(index);
+        titles.add(spectrumTitle);
 
         int nPeaks = spectrum.mz.length;
-
-        indexes.add((int) index);
-        titles.add(spectrumTitle);
 
         // update the precusor mapping
         UrParameter tempPrecursorParameter = spectrum.getUrParam(PrecursorParameter.dummy);
@@ -163,6 +167,7 @@ public class CmsFileWriter implements AutoCloseable {
         } else {
 
             compressedData = new TempByteArray(buffer.array(), 0);
+
         }
 
         buffer = ByteBuffer.allocate(3 * Double.BYTES + (4 + possibleCharges.length) * Integer.BYTES + compressedData.length);
@@ -185,6 +190,18 @@ public class CmsFileWriter implements AutoCloseable {
         byte[] arrayToWrite = buffer.array();
 
         raf.write(arrayToWrite, 0, arrayToWrite.length);
+
+        // see if we need to start a new buffer
+        if (currentBufferContent + arrayToWrite.length > CmsFileUtils.MAX_BUFFER_SIZE) {
+
+            bufferStartIndexes.add(index);
+            currentBufferContent = arrayToWrite.length;
+
+        } else {
+
+            currentBufferContent += arrayToWrite.length;
+
+        }
 
         if (minMz > precursorMz) {
 
@@ -286,7 +303,7 @@ public class CmsFileWriter implements AutoCloseable {
         }
 
         String precursorMapAsString;
-        
+
         if (!precursorMap.isEmpty()) {
             precursorMapAsString = precursorMapString.toString();
         } else {
@@ -296,16 +313,17 @@ public class CmsFileWriter implements AutoCloseable {
         String titleIndexString = String.join(CmsFileUtils.TITLE_SEPARATOR,
                 titleString,
                 indexString,
-                precursorMapAsString
+                precursorMapAsString,
+                bufferStartIndexes.toString()
         );
 
-        byte[] titleBytes = titleIndexString.getBytes(ENCODING);
+        byte[] titleBytes = titleIndexString.getBytes(IoUtil.ENCODING);
         compressAndWrite(titleBytes);
 
         raf.seek(0);
 
         ByteBuffer buffer = ByteBuffer.allocate(HEADER_LENGTH);
-        buffer.put(MAGIC_NUMBER)
+        buffer.put(CmsFileUtils.MAGIC_NUMBER)
                 .putLong(footerPosition)
                 .putDouble(minMz)
                 .putDouble(maxMz)

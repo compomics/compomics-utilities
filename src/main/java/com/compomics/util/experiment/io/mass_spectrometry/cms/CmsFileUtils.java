@@ -1,12 +1,13 @@
 package com.compomics.util.experiment.io.mass_spectrometry.cms;
 
-import static com.compomics.util.io.IoUtil.ENCODING;
+import com.compomics.util.io.IoUtil;
 import java.io.UnsupportedEncodingException;
 
 /**
  * Utils to store ms files.
  *
  * @author Marc Vaudel
+ * @author Harald Barsnes
  */
 public class CmsFileUtils {
 
@@ -22,6 +23,10 @@ public class CmsFileUtils {
      * The magic number of currently supported CMS files.
      */
     public static final byte[] MAGIC_NUMBER = getMagicNumber();
+    /**
+     * The maximum size per mapped buffer.
+     */
+    public static final int MAX_BUFFER_SIZE = Integer.MAX_VALUE / 2;
 
     /**
      * Returns the magic number of currently supported CMS files.
@@ -32,14 +37,15 @@ public class CmsFileUtils {
 
         try {
 
-            String magicName = "CmsFile.1.3";
-            return magicName.getBytes(ENCODING);
+            String magicName = "CmsFile.1.4";
+            return magicName.getBytes(IoUtil.ENCODING);
 
         } catch (UnsupportedEncodingException e) {
 
             throw new RuntimeException(e);
 
         }
+
     }
 
 }

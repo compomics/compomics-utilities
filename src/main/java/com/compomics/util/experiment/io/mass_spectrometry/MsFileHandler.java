@@ -68,7 +68,7 @@ public class MsFileHandler implements SpectrumProvider {
     }
 
     /**
-     * Registers a mass spectrometry file and enables querying its spectra.If
+     * Registers a mass spectrometry file and enables querying its spectra. If
      * the file is not a cms file, a cms file will be created in the cms folder
      * if not null, along the ms file otherwise.
      *
@@ -152,6 +152,7 @@ public class MsFileHandler implements SpectrumProvider {
                     cmsFile,
                     waitingHandler
             );
+
             reader = new CmsFileReader(
                     cmsFile,
                     waitingHandler
@@ -162,6 +163,7 @@ public class MsFileHandler implements SpectrumProvider {
         if (reader != null) {
             cmsFileReaderMap.put(spectrumFileNameWithoutExtension, reader);
         }
+
     }
 
     /**
@@ -212,9 +214,9 @@ public class MsFileHandler implements SpectrumProvider {
             WaitingHandler waitingHandler
     ) throws IOException {
 
-        try ( MsFileIterator iterator = MsFileIterator.getMsFileIterator(msFile, waitingHandler)) {
+        try (MsFileIterator iterator = MsFileIterator.getMsFileIterator(msFile, waitingHandler)) {
 
-            try ( CmsFileWriter writer = new CmsFileWriter(cmsFile)) {
+            try (CmsFileWriter writer = new CmsFileWriter(cmsFile)) {
 
                 String spectrumTitle;
 
@@ -225,7 +227,9 @@ public class MsFileHandler implements SpectrumProvider {
 
                 }
             }
+
         }
+
     }
 
     /**
@@ -317,6 +321,7 @@ public class MsFileHandler implements SpectrumProvider {
         }
 
         return null;
+
     }
 
     @Override
@@ -331,6 +336,7 @@ public class MsFileHandler implements SpectrumProvider {
         }
 
         return Double.NaN;
+
     }
 
     @Override
@@ -345,6 +351,7 @@ public class MsFileHandler implements SpectrumProvider {
         }
 
         return Double.NaN;
+
     }
 
     @Override
@@ -359,6 +366,7 @@ public class MsFileHandler implements SpectrumProvider {
         }
 
         return Double.NaN;
+
     }
 
     @Override
@@ -373,6 +381,7 @@ public class MsFileHandler implements SpectrumProvider {
         }
 
         return Double.NaN;
+
     }
 
     @Override
@@ -384,6 +393,7 @@ public class MsFileHandler implements SpectrumProvider {
                 )
                 .min()
                 .orElse(Double.NaN);
+
     }
 
     @Override
@@ -395,6 +405,7 @@ public class MsFileHandler implements SpectrumProvider {
                 )
                 .max()
                 .orElse(Double.NaN);
+
     }
 
     @Override
@@ -406,6 +417,7 @@ public class MsFileHandler implements SpectrumProvider {
                 )
                 .max()
                 .orElse(Double.NaN);
+
     }
 
     @Override
@@ -417,6 +429,7 @@ public class MsFileHandler implements SpectrumProvider {
                 )
                 .max()
                 .orElse(Double.NaN);
+
     }
 
     @Override
@@ -459,7 +472,7 @@ public class MsFileHandler implements SpectrumProvider {
 
     @Override
     public ArrayList<String> getPostcursorSpectrumTitles(
-            String fileNameWithoutExtension, 
+            String fileNameWithoutExtension,
             String spectrumTitle
     ) {
 

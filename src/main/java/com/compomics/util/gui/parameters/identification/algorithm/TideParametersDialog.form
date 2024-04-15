@@ -593,23 +593,12 @@
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="chargesLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                                          <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="useFlankingLabel" min="-2" pref="200" max="-2" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="chargesCombo" min="-2" pref="200" max="-2" attributes="0"/>
-                                      <Component id="useFlankingCmb" alignment="0" min="-2" pref="200" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="useFlankingLabel" min="-2" pref="200" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="useFlankingCmb" min="-2" pref="200" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="28" max="32767" attributes="0"/>
+                          <EmptySpace pref="33" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -637,11 +626,6 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="minPeaksLbl" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="minPeaksTxt" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="chargesLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="chargesCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -683,7 +667,7 @@
                               <Component id="outputFormatLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="outputFormatCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace pref="47" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -749,24 +733,6 @@
                   <Events>
                     <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="numberMatchesTxtKeyReleased"/>
                   </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="chargesLabel">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Charges"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="chargesCombo">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="4">
-                        <StringItem index="0" value="1"/>
-                        <StringItem index="1" value="2"/>
-                        <StringItem index="2" value="3"/>
-                        <StringItem index="3" value="all"/>
-                      </StringArray>
-                    </Property>
-                    <Property name="selectedIndex" type="int" value="3"/>
-                  </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="removePrecursorPeakLabel">
                   <Properties>

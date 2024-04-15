@@ -120,6 +120,8 @@ public class TideParameters extends ExperimentObject implements IdentificationAl
      * spectrum will be searched and spectra with multiple charge states will be
      * searched once at each charge state. With 1, 2, or 3 only spectra with
      * that charge will be searched.
+     * 
+     * @deprecated Removed in Tide 4.2 (or earlier)
      */
     private String spectrumCharges = "all";
     /**
@@ -323,9 +325,6 @@ public class TideParameters extends ExperimentObject implements IdentificationAl
             if (!minSpectrumPeaks.equals(tideParameters.getMinSpectrumPeaks())) {
                 return false;
             }
-            if (!spectrumCharges.equalsIgnoreCase(tideParameters.getSpectrumCharges())) {
-                return false;
-            }
             if (!removePrecursor.equals(tideParameters.getRemovePrecursor())) {
                 return false;
             }
@@ -465,9 +464,6 @@ public class TideParameters extends ExperimentObject implements IdentificationAl
         output.append(newLine);
         output.append("MIN_SPECTRUM_PEAKS=");
         output.append(minSpectrumPeaks);
-        output.append(newLine);
-        output.append("SPECTRUM_CHARGES=");
-        output.append(spectrumCharges);
         output.append(newLine);
         output.append("REMOVE_PRECURSOR=");
         output.append(removePrecursor);
@@ -933,6 +929,7 @@ public class TideParameters extends ExperimentObject implements IdentificationAl
      * Returns the spectrum charges to search for.
      *
      * @return the spectrumCharges
+     * @deprecated Removed in Tide 4.2 (or earlier)
      */
     public String getSpectrumCharges() {
         return spectrumCharges;
@@ -942,6 +939,7 @@ public class TideParameters extends ExperimentObject implements IdentificationAl
      * Set the spectrum charges to search for.
      *
      * @param spectrumCharges the spectrumCharges to set
+     * @deprecated Removed in Tide 4.2 (or earlier)
      */
     public void setSpectrumCharges(String spectrumCharges) {
         this.spectrumCharges = spectrumCharges;

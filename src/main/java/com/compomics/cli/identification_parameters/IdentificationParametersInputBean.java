@@ -1226,13 +1226,6 @@ public class IdentificationParametersInputBean {
                 return false;
             }
         }
-        if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_SPECTRUM_CHARGES.id)) {
-            String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_SPECTRUM_CHARGES.id);
-            List<String> supportedInput = Arrays.asList("1", "2", "3", "all");
-            if (!CommandParameter.isInList(IdentificationParametersCLIParams.TIDE_SPECTRUM_CHARGES.id, arg, supportedInput)) {
-                return false;
-            }
-        }
         if (aLine.hasOption(IdentificationParametersCLIParams.TIDE_REMOVE_PREC.id)) {
             String arg = aLine.getOptionValue(IdentificationParametersCLIParams.TIDE_REMOVE_PREC.id);
             if (!CommandParameter.isBooleanInput(IdentificationParametersCLIParams.TIDE_REMOVE_PREC.id, arg)) {
@@ -3555,10 +3548,6 @@ public class IdentificationParametersInputBean {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_MIN_SPECTRUM_PEAKS.id);
             Integer option = Integer.valueOf(arg);
             tideParameters.setMinSpectrumPeaks(option);
-        }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_SPECTRUM_CHARGES.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_SPECTRUM_CHARGES.id);
-            tideParameters.setSpectrumCharges(arg);
         }
         if (commandLine.hasOption(IdentificationParametersCLIParams.TIDE_REMOVE_PREC.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.TIDE_REMOVE_PREC.id);

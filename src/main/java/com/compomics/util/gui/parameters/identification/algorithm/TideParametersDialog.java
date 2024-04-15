@@ -81,7 +81,6 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
         removeMethionineCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         exactPvalueCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         spScoreCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        chargesCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         useNeutralLossCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         outputFormatCombo.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         removeTempFoldersCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -117,7 +116,6 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
         maxSpectrumMzTxt.setEnabled(editable);
         minPeaksTxt.setEditable(editable);
         minPeaksTxt.setEnabled(editable);
-        chargesCombo.setEnabled(editable);
         removePrecursorPeakCombo.setEnabled(editable);
         removePrecursorPeakToleranceTxt.setEditable(editable);
         removePrecursorPeakToleranceTxt.setEnabled(editable);
@@ -223,9 +221,6 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
         }
         if (tideParameters.getMinSpectrumPeaks() != null) {
             minPeaksTxt.setText(tideParameters.getMinSpectrumPeaks() + "");
-        }
-        if (tideParameters.getSpectrumCharges() != null) {
-            chargesCombo.setSelectedItem(tideParameters.getSpectrumCharges());
         }
         if (tideParameters.getRemovePrecursor() != null) {
             if (tideParameters.getRemovePrecursor()) {
@@ -356,7 +351,6 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
             result.setMinSpectrumPeaks(Integer.valueOf(input));
         }
 
-        result.setSpectrumCharges((String) chargesCombo.getSelectedItem());
         result.setRemovePrecursor(removePrecursorPeakCombo.getSelectedIndex() == 0);
 
         input = removePrecursorPeakToleranceTxt.getText().trim();
@@ -443,8 +437,6 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
         maxSpectrumMzTxt = new javax.swing.JTextField();
         numberMatchesLabel = new javax.swing.JLabel();
         numberMatchesTxt = new javax.swing.JTextField();
-        chargesLabel = new javax.swing.JLabel();
-        chargesCombo = new javax.swing.JComboBox();
         removePrecursorPeakLabel = new javax.swing.JLabel();
         removePrecursorPeakCombo = new javax.swing.JComboBox();
         removePrecursorPeakToleranceLbl = new javax.swing.JLabel();
@@ -779,11 +771,6 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
             }
         });
 
-        chargesLabel.setText("Charges");
-
-        chargesCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "all" }));
-        chargesCombo.setSelectedIndex(3);
-
         removePrecursorPeakLabel.setText("Remove Precursor Peak (PP)");
 
         removePrecursorPeakCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
@@ -912,17 +899,10 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
                             .addComponent(removePrecursorPeakCombo, 0, 200, Short.MAX_VALUE)
                             .addComponent(removePrecursorPeakToleranceTxt)))
                     .addGroup(searchPanelLayout.createSequentialGroup()
-                        .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(searchPanelLayout.createSequentialGroup()
-                                .addComponent(chargesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, searchPanelLayout.createSequentialGroup()
-                                .addComponent(useFlankingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)))
-                        .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(chargesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(useFlankingCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(28, Short.MAX_VALUE))
+                        .addComponent(useFlankingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(useFlankingCmb, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         searchPanelLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {minPeaksTxt, removePrecursorPeakCombo});
@@ -948,10 +928,6 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minPeaksLbl)
                     .addComponent(minPeaksTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
-                .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chargesLabel)
-                    .addComponent(chargesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(removePrecursorPeakLabel)
@@ -984,7 +960,7 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
                 .addGroup(searchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(outputFormatLabel)
                     .addComponent(outputFormatCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Search", searchPanel);
@@ -1389,8 +1365,6 @@ public class TideParametersDialog extends javax.swing.JDialog implements Algorit
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel advancedSettingsWarningLabel;
     private javax.swing.JPanel backgroundPanel;
-    private javax.swing.JComboBox chargesCombo;
-    private javax.swing.JLabel chargesLabel;
     private javax.swing.JButton closeButton;
     private javax.swing.JComboBox decoyFormatCombo;
     private javax.swing.JLabel decoySeedLabel;

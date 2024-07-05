@@ -596,7 +596,7 @@ public class CometParametersDialog extends javax.swing.JDialog implements Algori
 
         isotopeCorrectionLabel.setText("Isotope Correction");
 
-        isotopeCorrectionCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No Correction", "0, +1", "0, +1, +2", "0, +1, +2, +3", "-8, -4, 0, +4, +8" }));
+        isotopeCorrectionCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No Correction", "0, +1", "0, +1, +2", "0, +1, +2, +3", "-1, 0, +1, +2, +3", "-1, 0, +1", "-3, -2, -1, 0, +1, +2, +3", "-8, -4, 0, +4, +8" }));
         isotopeCorrectionCmb.setSelectedIndex(3);
 
         precursorMassLabel.setText("Precursor Mass (min - max)");

@@ -93,7 +93,6 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         removeWaterLossesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         removeAmmoniaLossesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         excludeFirstPrecursorCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
-        consideredChargesForPrecursorsCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         combineConsideredChargesCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         runPercolatorCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
         generatePInFileCmb.setRenderer(new com.compomics.util.gui.renderers.AlignedListCellRenderer(SwingConstants.CENTER));
@@ -119,7 +118,6 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         removeWaterLossesCmb.setEnabled(editable);
         removeAmmoniaLossesCmb.setEnabled(editable);
         excludeFirstPrecursorCmb.setEnabled(editable);
-        consideredChargesForPrecursorsCmb.setEnabled(editable);
         combineConsideredChargesCmb.setEnabled(editable);
         runPercolatorCmb.setEnabled(editable);
         generatePInFileCmb.setEnabled(editable);
@@ -224,7 +222,6 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         minPeakDepthComboBox.setSelectedItem(msAmandaParameters.getMinPeakDepth());
         maxPeakDepthComboBox.setSelectedItem(msAmandaParameters.getMaxPeakDepth());
         maxMultiplePrecursorsCmb.setSelectedItem(msAmandaParameters.getMaxMultiplePrecursors());
-        consideredChargesForPrecursorsCmb.setSelectedItem(msAmandaParameters.getConsideredChargesForPrecursors());
 
         minPeptideLengthTxt.setText(msAmandaParameters.getMinPeptideLength().toString());
         maxPeptideLengthTxt.setText(msAmandaParameters.getMaxPeptideLength().toString());
@@ -307,7 +304,6 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         result.setRemoveAmmoniaLosses(removeAmmoniaLossesCmb.getSelectedIndex() == 0);
         result.setExcludeFirstPrecursor(excludeFirstPrecursorCmb.getSelectedIndex() == 0);
         result.setMaxMultiplePrecursors(Integer.valueOf((String) maxMultiplePrecursorsCmb.getSelectedItem()));
-        result.setConsideredChargesForPrecursors((String) consideredChargesForPrecursorsCmb.getSelectedItem());
         result.setCombineConsideredCharges(combineConsideredChargesCmb.getSelectedIndex() == 0);
         result.setRunPercolator(runPercolatorCmb.getSelectedIndex() == 0);
         result.setGeneratePInFile(generatePInFileCmb.getSelectedIndex() == 0);
@@ -372,8 +368,6 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         excludeFirstPrecursorCmb = new javax.swing.JComboBox();
         maxMultiplePrecursorsLabel = new javax.swing.JLabel();
         maxMultiplePrecursorsCmb = new javax.swing.JComboBox();
-        consideredChargesForPrecursorsLabel = new javax.swing.JLabel();
-        consideredChargesForPrecursorsCmb = new javax.swing.JComboBox();
         basicPanel = new javax.swing.JPanel();
         monoIsotopicLabel = new javax.swing.JLabel();
         monoIsotopicCmb = new javax.swing.JComboBox();
@@ -673,11 +667,6 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         maxMultiplePrecursorsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "3", "7", "8", "9", "10" }));
         maxMultiplePrecursorsCmb.setSelectedIndex(4);
 
-        consideredChargesForPrecursorsLabel.setText("Considered Charges For Precursors");
-
-        consideredChargesForPrecursorsCmb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "+2", "+3", "+2, +3", "+2, +3, +4", "+3, +4", "+2, +3, +4, +5" }));
-        consideredChargesForPrecursorsCmb.setSelectedIndex(2);
-
         javax.swing.GroupLayout secondSearchPanelLayout = new javax.swing.GroupLayout(secondSearchPanel);
         secondSearchPanel.setLayout(secondSearchPanelLayout);
         secondSearchPanelLayout.setHorizontalGroup(
@@ -708,11 +697,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, secondSearchPanelLayout.createSequentialGroup()
                         .addComponent(maxMultiplePrecursorsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maxMultiplePrecursorsCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, secondSearchPanelLayout.createSequentialGroup()
-                        .addComponent(consideredChargesForPrecursorsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(consideredChargesForPrecursorsCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(maxMultiplePrecursorsCmb, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         secondSearchPanelLayout.setVerticalGroup(
@@ -742,11 +727,7 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
                 .addGroup(secondSearchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxMultiplePrecursorsLabel)
                     .addComponent(maxMultiplePrecursorsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
-                .addGroup(secondSearchPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(consideredChargesForPrecursorsLabel)
-                    .addComponent(consideredChargesForPrecursorsCmb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addContainerGap(191, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Second Search", secondSearchPanel);
@@ -1102,7 +1083,6 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
         removeAmmoniaLossesCmb.setEnabled(performSecondSearchCmb.getSelectedIndex() == 0);
         excludeFirstPrecursorCmb.setEnabled(performSecondSearchCmb.getSelectedIndex() == 0);
         maxMultiplePrecursorsCmb.setEnabled(performSecondSearchCmb.getSelectedIndex() == 0);
-        consideredChargesForPrecursorsCmb.setEnabled(performSecondSearchCmb.getSelectedIndex() == 0);
 
     }//GEN-LAST:event_performSecondSearchCmbActionPerformed
 
@@ -1259,8 +1239,6 @@ public class MsAmandaParametersDialog extends javax.swing.JDialog implements Alg
     private javax.swing.JButton closeButton;
     private javax.swing.JComboBox combineConsideredChargesCmb;
     private javax.swing.JLabel combineConsideredChargesLabel;
-    private javax.swing.JComboBox consideredChargesForPrecursorsCmb;
-    private javax.swing.JLabel consideredChargesForPrecursorsLabel;
     private javax.swing.JComboBox decoyDatabaseCmb;
     private javax.swing.JLabel decoyDatabaseLabel;
     private javax.swing.JComboBox excludeFirstPrecursorCmb;

@@ -3251,10 +3251,6 @@ public class IdentificationParametersInputBean {
             Integer option = Integer.valueOf(arg);
             msAmandaParameters.setMaxMultiplePrecursors(option);
         }
-        if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_CONSIDERED_CHARGE_STATES_FOR_PRECURSOR.id)) {
-            String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_CONSIDERED_CHARGE_STATES_FOR_PRECURSOR.id);
-            msAmandaParameters.setConsideredChargesForPrecursors(arg);
-        }
         if (commandLine.hasOption(IdentificationParametersCLIParams.MS_AMANDA_COMBINE_CHARGE_STATES.id)) {
             String arg = commandLine.getOptionValue(IdentificationParametersCLIParams.MS_AMANDA_COMBINE_CHARGE_STATES.id);
             Integer option = Integer.valueOf(arg);

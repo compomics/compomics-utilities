@@ -136,6 +136,9 @@ public class MsAmandaParameters extends ExperimentObject implements Identificati
      * Which charges shall be tested for precursors (no deisotoping) where the
      * charge cannot be defined (+2; +3; +2, +3; +2, +3, +4; +3, +4; +2, +3, +4,
      * +5).
+     *
+     * @deprecated Remove in MS Amanda 3.0.21. Combined with the
+     * ConsideredCharges option.
      */
     private String consideredChargesForPrecursors = "+2,+3";
     /**

@@ -70,9 +70,10 @@ public class CometParameters extends ExperimentObject implements IdentificationA
     /**
      * Isotope correction setting. 0: analyzes no isotope offsets, just the
      * given precursor mass, 1: searches 0, +1 isotope offsets, 2: searches 0,
-     * +1, +2 isotope offsets, 3: searches 0, +1, +2, +3 isotope offsets, 4:
-     * searches -8, -4, 0, +4, +8 isotope offsets (for +4/+8 stable isotope
-     * labeling).
+     * +1, +2 isotope offsets, 3: searches 0, +1, +2, +3 isotope offsets, 4: -1,
+     * 0, +1, +2, +3 isotope offsets, 5: searches -1, 0, +1 isotope offsets, 6:
+     * searches -3, -2, -1, 0, +1, +2, +3 isotope offsets, 7: searches -8, -4,
+     * 0, +4, +8 isotope offsets (for +4/+8 stable isotope labeling).
      */
     private Integer isotopeCorrection = 3;
     /**
@@ -142,12 +143,12 @@ public class CometParameters extends ExperimentObject implements IdentificationA
      * The maximal peptide length. Maximum length for Comet is 63.
      */
     private Integer maxPeptideLength = 30;
+
     /**
      * Scales (multiplies) the neutral loss mass value by the number of modified
      * residues in the fragment.
      */
     // private Boolean scaleFragmentNL = false; // @TODO: re-add next time we break backwards compatibility
-
     /**
      * Constructor.
      */

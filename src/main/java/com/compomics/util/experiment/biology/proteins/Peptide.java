@@ -545,12 +545,12 @@ public class Peptide extends ExperimentObject {
     }
 
     /**
-     * Returns the 0 based end index of the peptide on the protein sequence.
+     * Returns the 0-based end index of the peptide on the protein sequence.
      *
      * @param proteinAccession the protein accession
      * @param peptideStart the peptide start index
      *
-     * @return the 0 based end index of the peptide on the protein sequence
+     * @return the 0-based end index of the peptide on the protein sequence
      */
     public int getPeptideEnd(
             String proteinAccession,

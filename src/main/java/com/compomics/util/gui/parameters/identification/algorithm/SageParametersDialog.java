@@ -353,6 +353,7 @@ public class SageParametersDialog extends javax.swing.JDialog implements Algorit
         result.setDeisotope(deisotopeCmb.getSelectedIndex() == 0);
         result.setChimera(chimericSpectraCmb.getSelectedIndex() == 0);
         result.setPredictRt(predictRtCmb.getSelectedIndex() == 0);
+        result.setWideWindow(wideWindowCmb.getSelectedIndex() == 0);
         result.setCombineChargeStates(combineChargeStatesCmb.getSelectedIndex() == 0);
 
         input = minNumberOfPeaksTxt.getText().trim();

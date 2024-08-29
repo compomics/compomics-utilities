@@ -104,7 +104,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
     /**
      * Byte size of index chuck.
      */
-    private final int indexChunkSize = 100 * 1024 * 1024;
+    private final int indexChunkSize = 100 * 1024 * 1024 * 2;
     /**
      * Sampled suffix array.
      */
@@ -1877,6 +1877,7 @@ public class FMIndex extends ExperimentObject implements FastaMapper, SequencePr
                     int index = binarySearch(boundaries.get(indexPart), pos);
                     String accession = accessions.get(indexPart)[index];
 
+                    // @TODO: the "pos - boundaries.get(indexPart)[index]" value can be wrong when having more than one chunk
                     PeptideProteinMapping peptideProteinMapping = new PeptideProteinMapping(accession, currentPeptide, pos - boundaries.get(indexPart)[index]);
                     peptideProteinMapping.fmIndexPosition = j;
                     allMatches.add(peptideProteinMapping);

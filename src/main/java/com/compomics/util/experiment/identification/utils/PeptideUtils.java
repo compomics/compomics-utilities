@@ -596,8 +596,8 @@ public class PeptideUtils {
      * Returns the number of enzymatic termini for the given peptide coordinates
      * and enzyme on this protein.
      *
-     * @param peptideStart the 0 based index of the peptide start on the protein
-     * @param peptideEnd the 0 based index of the peptide end on the protein
+     * @param peptideStart the 0-based index of the peptide start on the protein
+     * @param peptideEnd the 0-based index of the peptide end on the protein
      * @param proteinSequence the protein sequence
      * @param enzyme the enzyme to use
      *
@@ -635,7 +635,7 @@ public class PeptideUtils {
             nEnzymatic++;
 
         } else {
-
+            
             char aaBefore = proteinSequence.charAt(peptideEnd);
             char aaAfter = proteinSequence.charAt(peptideEnd + 1);
 

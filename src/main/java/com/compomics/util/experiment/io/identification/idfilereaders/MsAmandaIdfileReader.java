@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Iterator;
 import javax.xml.bind.JAXBException;
 
 /**
@@ -89,7 +90,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
      */
     private void extractVersionNumber() {
 
-        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(msAmandaCsvFile)) {
+        try (SimpleFileReader reader = SimpleFileReader.getFileReader(msAmandaCsvFile)) {
 
             // read the version number, if available, requires ms amanda version 1.0.0.3196 or newer
             String versionNumberString = reader.readLine();
@@ -135,9 +136,9 @@ public class MsAmandaIdfileReader implements IdfileReader {
     )
             throws IOException, IllegalArgumentException, SQLException, ClassNotFoundException, InterruptedException, JAXBException {
 
-        ArrayList<SpectrumMatch> result = new ArrayList<>();
+        HashMap<String, HashMap<String, SpectrumMatch>> tempResults = new HashMap<>();
 
-        try ( SimpleFileReader reader = SimpleFileReader.getFileReader(msAmandaCsvFile)) {
+        try (SimpleFileReader reader = SimpleFileReader.getFileReader(msAmandaCsvFile)) {
 
             // check if the version number is included, ms amanda version 1.0.0.3196 or newer
             String versionNumberString = reader.readLine();
@@ -239,8 +240,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
                 throw new IllegalArgumentException("Mandatory columns are missing in the MS Amanda csv file. Please check the file!");
             }
 
-            String line, currentSpectrumTitle = null;
-            SpectrumMatch currentMatch = null;
+            String line;
 
             // get the psms
             while ((line = reader.readLine()) != null) {
@@ -296,17 +296,13 @@ public class MsAmandaIdfileReader implements IdfileReader {
                     // remove any html from the title
                     spectrumTitle = URLDecoder.decode(spectrumTitle, "UTF-8");
 
-                    // set up the yet empty spectrum match, or add to the current match
-                    if (currentMatch == null || (currentSpectrumTitle != null && !currentSpectrumTitle.equalsIgnoreCase(spectrumTitle))) {
+                    // set up the yet empty spectrum match
+                    if (!tempResults.containsKey(fileName)) {
+                        tempResults.put(fileName, new HashMap<>());
+                    }
 
-                        // add the previous match, if any
-                        if (currentMatch != null) {
-                            result.add(currentMatch);
-                        }
-
-                        currentMatch = new SpectrumMatch(fileName, spectrumTitle);
-                        currentSpectrumTitle = spectrumTitle;
-
+                    if (!tempResults.get(fileName).containsKey(spectrumTitle)) {
+                        tempResults.get(fileName).put(spectrumTitle, new SpectrumMatch(fileName, spectrumTitle));
                     }
 
                     // get the modifications
@@ -347,7 +343,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
 
                                     utilitiesModifications.add(
                                             new ModificationMatch(
-                                                    modMass + "@" + peptideSequence.charAt(modSite - 1), 
+                                                    modMass + "@" + peptideSequence.charAt(modSite - 1),
                                                     modSite
                                             )
                                     );
@@ -372,7 +368,7 @@ public class MsAmandaIdfileReader implements IdfileReader {
                     // create the peptide assumption
                     PeptideAssumption peptideAssumption = new PeptideAssumption(
                             peptide,
-                            rank,
+                            rank, // @TODO: what to do about the rank..?
                             Advocate.msAmanda.getIndex(),
                             charge,
                             msAmandaRawScore,
@@ -402,13 +398,13 @@ public class MsAmandaIdfileReader implements IdfileReader {
                                     peptideAssumption.getIdentificationFile()
                             );
 
-                            currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), newAssumption);
+                            tempResults.get(fileName).get(spectrumTitle).addPeptideAssumption(Advocate.msAmanda.getIndex(), newAssumption);
 
                         }
 
                     } else {
 
-                        currentMatch.addPeptideAssumption(Advocate.msAmanda.getIndex(), peptideAssumption);
+                        tempResults.get(fileName).get(spectrumTitle).addPeptideAssumption(Advocate.msAmanda.getIndex(), peptideAssumption);
 
                     }
 
@@ -422,14 +418,21 @@ public class MsAmandaIdfileReader implements IdfileReader {
 
             }
 
-            // add the last match, if any
-            if (currentMatch != null) {
-                result.add(currentMatch);
+        }
+
+        ArrayList<SpectrumMatch> allSpectrumMatches = new ArrayList<>();
+
+        for (String fileName : tempResults.keySet()) {
+
+            for (String spectrumTitle : tempResults.get(fileName).keySet()) {
+
+                allSpectrumMatches.add(tempResults.get(fileName).get(spectrumTitle));
+
             }
 
         }
 
-        return result;
+        return allSpectrumMatches;
     }
 
     @Override

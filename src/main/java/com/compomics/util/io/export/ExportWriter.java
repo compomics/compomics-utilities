@@ -181,7 +181,7 @@ public abstract class ExportWriter {
      * Notifies the writer that data of a lower hierarchical depth will be
      * written, e.g. going from peptide to protein.
      */
-    public abstract void decreseDepth();
+    public abstract void decreaseDepth();
 
     /**
      * Returns an export writer for the desired format.
@@ -191,13 +191,19 @@ public abstract class ExportWriter {
      * @param separator the separator for a text export
      * @param nSeparationLines the number of separation lines between two
      * sections for a text export
-     * @param gzip if true export test as gzipped file
+     * @param gzip if true export text as gzipped file
      *
      * @return an export writer for the desired format
      *
      * @throws IOException if an IOException occurs
      */
-    public static ExportWriter getExportWriter(ExportFormat exportFormat, File destinationFile, String separator, int nSeparationLines, boolean gzip) throws IOException {
+    public static ExportWriter getExportWriter(
+            ExportFormat exportFormat,
+            File destinationFile,
+            String separator,
+            int nSeparationLines,
+            boolean gzip
+    ) throws IOException {
 
         switch (exportFormat) {
 
@@ -211,5 +217,7 @@ public abstract class ExportWriter {
                 throw new IllegalArgumentException("No exporter implemented for format " + exportFormat.name + ".");
 
         }
+
     }
+
 }

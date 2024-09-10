@@ -58,7 +58,7 @@ public class TextWriter extends ExportWriter {
      * @throws IOException if an IOException occurs
      */
     public TextWriter(File destinationFile, String separator, int nSeparationLines, boolean gzip) throws IOException {
-        
+
         this.separator = separator;
         this.exportFormat = ExportFormat.text;
         this.nSeparationLines = nSeparationLines;
@@ -76,6 +76,7 @@ public class TextWriter extends ExportWriter {
             this.writer = new BufferedWriter(new FileWriter(destinationFile));
 
         }
+
     }
 
     @Override
@@ -85,24 +86,33 @@ public class TextWriter extends ExportWriter {
 
     @Override
     public void writeMainTitle(String text, WorkbookStyle textStyle) throws IOException {
+
         if (text != null) {
+
             writer.write(text);
+
             for (int i = 1; i <= nSeparationLines; i++) {
                 writer.newLine();
             }
+
         }
+
     }
 
     @Override
     public void startNewSection(String sectionTitle, WorkbookStyle textStyle) throws IOException {
+
         if (sectionTitle != null) {
             writer.newLine();
             writer.write(sectionTitle);
         }
+
         for (int i = 1; i <= nSeparationLines; i++) {
             writer.newLine();
         }
+
         nSections++;
+
     }
 
     @Override
@@ -131,7 +141,7 @@ public class TextWriter extends ExportWriter {
     }
 
     @Override
-    public void decreseDepth() {
+    public void decreaseDepth() {
         // Nothing to do here
     }
 }

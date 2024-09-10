@@ -77,16 +77,18 @@ public class ExcelWriter extends ExportWriter {
         workbook = null;
         destinationFile = null;
     }
-    
+
     /**
      * Constructor.
      *
      * @param destinationFile the file where to write the data
      */
     public ExcelWriter(File destinationFile) {
+
         this.destinationFile = destinationFile;
         workbook = new HSSFWorkbook();
         exportFormat = ExportFormat.excel;
+
     }
 
     /**
@@ -117,13 +119,20 @@ public class ExcelWriter extends ExportWriter {
     }
 
     @Override
-    public void write(String text, WorkbookStyle textStyle) throws IOException {
+    public void write(
+            String text,
+            WorkbookStyle textStyle
+    ) throws IOException {
+
         if (currentRow == null) {
+
             if (currentSheet == null) {
                 throw new IllegalArgumentException("No section started to write in.");
             }
+
             currentRow = currentSheet.createRow(rowNumber);
             rowNumber++;
+
             if (textStyle != null) {
                 currentRow.setHeightInPoints(textStyle.getStandardHeight());
             } else if (workbookStyle != null) {
@@ -131,17 +140,24 @@ public class ExcelWriter extends ExportWriter {
             } else {
                 currentRow.setHeightInPoints(12.75f);
             }
+
         }
+
         if (textStyle != null) {
             currentCellStyle = textStyle.getStandardStyle(hierarchicalDepth);
         } else if (workbookStyle != null) {
             currentCellStyle = workbookStyle.getStandardStyle(hierarchicalDepth);
         }
+
         currentCellContent.append(text);
+
     }
 
     @Override
-    public void writeMainTitle(String text, WorkbookStyle textStyle) throws IOException {
+    public void writeMainTitle(
+            String text,
+            WorkbookStyle textStyle
+    ) throws IOException {
 
         if (text != null) {
 
@@ -151,6 +167,7 @@ public class ExcelWriter extends ExportWriter {
 
             Cell cell = row.createCell(0);
             cell.setCellValue(text);
+
             if (textStyle != null) {
                 row.setHeightInPoints(textStyle.getMainTitleRowHeight());
                 CellStyle cellStyle = textStyle.getStandardStyle(hierarchicalDepth);
@@ -165,31 +182,47 @@ public class ExcelWriter extends ExportWriter {
 
             sheetNumber++;
         }
+
     }
 
     @Override
-    public void startNewSection(String sectionTitle, WorkbookStyle textStyle) throws IOException {
+    public void startNewSection(
+            String sectionTitle,
+            WorkbookStyle textStyle
+    ) throws IOException {
+
         if (currentCellContent.length() > 0) {
             addSeparator();
         }
+
         rowNumber = 0;
         cellNumber = 0;
         String sheetName = sectionTitle;
+
         if (sheetName == null) {
             sheetName = sheetNumber++ + "";
         }
+
         currentRow = null;
         currentSheet = workbook.createSheet(sheetName);
+
     }
 
     @Override
-    public void writeHeaderText(String text, WorkbookStyle textStyle) throws IOException {
+    public void writeHeaderText(
+            String text,
+            WorkbookStyle textStyle
+    ) throws IOException {
+
         if (currentRow == null) {
+
             if (currentSheet == null) {
                 throw new IllegalArgumentException("No section started to write in.");
             }
+
             currentRow = currentSheet.createRow(rowNumber);
             rowNumber++;
+
             if (textStyle != null) {
                 currentRow.setHeightInPoints(textStyle.getHeaderHeight());
             } else if (workbookStyle != null) {
@@ -197,23 +230,33 @@ public class ExcelWriter extends ExportWriter {
             } else {
                 currentRow.setHeightInPoints(12.75f);
             }
+
         }
+
         if (textStyle != null) {
             currentCellStyle = textStyle.getHeaderStyle(hierarchicalDepth);
         } else if (workbookStyle != null) {
             currentCellStyle = workbookStyle.getHeaderStyle(hierarchicalDepth);
         }
+
         currentCellContent.append(text);
+
     }
 
     @Override
-    public void addSeparator(WorkbookStyle textStyle) throws IOException {
+    public void addSeparator(
+            WorkbookStyle textStyle
+    ) throws IOException {
+
         if (currentRow == null) {
+
             if (currentSheet == null) {
                 throw new IllegalArgumentException("No section started to write in.");
             }
+
             currentRow = currentSheet.createRow(rowNumber);
             rowNumber++;
+
             if (textStyle != null) {
                 currentRow.setHeightInPoints(textStyle.getStandardHeight());
             } else if (workbookStyle != null) {
@@ -221,51 +264,73 @@ public class ExcelWriter extends ExportWriter {
             } else {
                 currentRow.setHeightInPoints(12.75f);
             }
+
         }
+
         Cell cell = currentRow.createCell(cellNumber);
         cellNumber++;
         String content = currentCellContent.toString();
+
         try {
+
             Double value = Double.valueOf(content);
             cell.setCellValue(value);
             //cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+
         } catch (Exception e) {
+
             if (!content.equals("")) {
                 cell.setCellValue(content);
             }
+
         }
+
         currentCellContent = new StringBuilder();
+
         if (currentCellStyle != null) {
             cell.setCellStyle(currentCellStyle);
         }
+
         currentCellStyle = null;
+
     }
 
     @Override
     public void newLine() throws IOException {
+
         if (currentRow == null) {
+
             if (currentSheet == null) {
                 throw new IllegalArgumentException("No section to write in.");
             }
+
             currentRow = currentSheet.createRow(rowNumber);
             rowNumber++;
+
         } else {
+
             if (currentCellContent.length() > 0) {
                 addSeparator();
             }
+
             currentRow = null;
         }
+
         cellNumber = 0;
+
     }
 
     @Override
     public void close() throws IOException, FileNotFoundException {
+
         FileOutputStream fileOut = new FileOutputStream(destinationFile);
+
         try {
             workbook.write(fileOut);
         } finally {
             fileOut.close();
         }
+
     }
 
     @Override
@@ -274,13 +339,18 @@ public class ExcelWriter extends ExportWriter {
     }
 
     @Override
-    public void decreseDepth() {
+    public void decreaseDepth() {
+
         Integer originalRow = collapsedRow.get(hierarchicalDepth);
+
         if (originalRow == null) {
             throw new IllegalArgumentException("No original row found for hierarchical depth " + originalRow + ".");
         }
+
         currentSheet.groupRow(originalRow, rowNumber);
         currentSheet.setRowGroupCollapsed(originalRow, true);
         hierarchicalDepth--;
+
     }
+
 }

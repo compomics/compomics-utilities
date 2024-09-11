@@ -635,7 +635,7 @@ public class PeptideUtils {
             nEnzymatic++;
 
         } else {
-            
+
             char aaBefore = proteinSequence.charAt(peptideEnd);
             char aaAfter = proteinSequence.charAt(peptideEnd + 1);
 
@@ -877,5 +877,7 @@ public class PeptideUtils {
                 + modSite
                 + " not supported."
         );
+
     }
+
 }

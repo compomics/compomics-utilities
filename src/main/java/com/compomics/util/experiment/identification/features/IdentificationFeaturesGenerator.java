@@ -2243,7 +2243,7 @@ public class IdentificationFeaturesGenerator {
 
     /**
      * Returns a summary of the modifications present on the sequence. Example:
-     * S&lt;p&gt;EQVEM&lt;mox&gt;CE gives Phosphoylation of S (S1);Oxidation of
+     * S&lt;p&gt;EQVEM&lt;mox&gt;CE gives Phosphorylation of S (S1);Oxidation of
      * M (M6).
      *
      * @param sequence the amino acid sequence
